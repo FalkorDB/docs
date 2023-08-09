@@ -5,6 +5,8 @@ description: A Graph database built on Redis
 type: docs
 ---
 
+{% include navigation.html}
+
 [![Discord](https://img.shields.io/discord/697882427875393627?style=flat-square)](https://discord.gg/gWBRT6P)
 [![Github](https://img.shields.io/static/v1?label=&message=repository&color=5961FF&logo=github)](https://github.com/FalkorDB/FalkorDB/)
 
