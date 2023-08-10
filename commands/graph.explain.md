@@ -1,3 +1,9 @@
+---
+title: "GRAPH.EXPLAIN"
+description: >
+    Returns a query execution plan without running the query
+---
+
 Constructs a query execution plan but does not run it. Inspect this execution plan to better
 understand how your query will get executed.
 
