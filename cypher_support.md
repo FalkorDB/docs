@@ -1,11 +1,10 @@
 ---
 title: "Cypher coverage"
-linkTitle: "Cypher coverage"
-weight: 7
 description: >
     FalkorDB implements a subset of the Cypher language, which is growing as development continues.
-    This document is based on the Cypher Query Language Reference (version 9), available at [OpenCypher Resources](https://www.opencypher.org/resources).
 ---
+
+This document is based on the Cypher Query Language Reference (version 9), available at [OpenCypher Resources](https://www.opencypher.org/resources).
 
 ## Patterns
 Patterns are fully supported.
