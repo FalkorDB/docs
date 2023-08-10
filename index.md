@@ -5,9 +5,6 @@ description: A Graph database built on Redis
 type: docs
 ---
 
-[![Discord](https://img.shields.io/discord/697882427875393627?style=flat-square)](https://discord.gg/gWBRT6P)
-[![Github](https://img.shields.io/static/v1?label=&message=repository&color=5961FF&logo=github)](https://github.com/FalkorDB/FalkorDB/)
-
 FalkorDB is a graph database built on Redis. This graph database uses [GraphBlas](http://faculty.cse.tamu.edu/davis/GraphBLAS.html) under the hood for its [sparse adjacency matrix](https://en.wikipedia.org/wiki/Adjacency_matrix) graph representation.
 
 ## Primary features
