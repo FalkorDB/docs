@@ -1,3 +1,9 @@
+---
+title: "GRAPH.LIST"
+description: >
+    Lists all graph keys in the keyspace
+---
+
 Lists all graph keys in the keyspace.
 ```sh
 127.0.0.1:6379> GRAPH.LIST
