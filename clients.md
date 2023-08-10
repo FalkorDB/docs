@@ -1,11 +1,13 @@
 ---
 title: "FalkorDB Client Libraries"
-linkTitle: "Clients"
-weight: 2
 description: >
-    The full functionality of FalkorDB is available through `redis-cli` and the Redis API.  [RedisInsight](https://redis.com/redis-enterprise/redis-insight/) is a visual tool that provides capabilities to design, develop and optimize into a single easy-to-use environment, and has built-in support for FalkorDB.
-    In addition there are several client libraries to improve abstractions and allow for a more natural experience in a project's native language. Additionally, these clients take advantage of some FalkorDB features that may reduce network throughput in some circumstances.
+    Redis clients that support FalkorDB API
 ---
+
+The full functionality of FalkorDB is available through `redis-cli` and the Redis API.  
+
+In addition there are several client libraries to improve abstractions and allow for a more natural experience in a project's native language. Additionally, these clients take advantage of some FalkorDB features that may reduce network throughput in some circumstances.
+
 
 ## Currently available Libraries
 
