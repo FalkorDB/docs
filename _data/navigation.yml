@@ -11,9 +11,9 @@
       url: /commands/graph.ro_query
     - title: GRAPH.DELETE
       url: /commands/graph.delete
-    - title: GRAPH.CONSTRAINT-CREATE
+    - title: GRAPH.CONSTRAINT CREATE
       url: /commands/graph.constraint-create
-    - title: GRAPH.CONSTRAINT-DROP
+    - title: GRAPH.CONSTRAINT DROP
       url: /commands/graph.constraint-drop  
     - title: GRAPH.EXPLAIN
       url: /commands/graph.explain
@@ -23,9 +23,9 @@
       url: /commands/graph.list
     - title: GRAPH.SLOWLOG
       url: /commands/graph.slowlog
-    - title: GRAPH.CONFIG-GET
+    - title: GRAPH.CONFIG GET
       url: /commands/graph.config-get
-    - title: GRAPH.CONFIG-SET
+    - title: GRAPH.CONFIG SET
       url: /commands/graph.config-set 
 - title: Cypher Support
   url: /cypher_support
