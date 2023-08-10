@@ -1,3 +1,9 @@
+---
+title: "GRAPH.CONFIG-SET"
+description: >
+    Updates a FalkorDB configuration
+---
+
 Set the value of a RedisGraph configuration parameter.
 
 Values set using `GRAPH.CONFIG SET` are not persisted after server restart.
