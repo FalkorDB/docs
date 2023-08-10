@@ -1,4 +1,11 @@
 ---
+title: "GRAPH.CONSTRAINT CREATE"
+description: >
+    Creates a constraint on specified graph
+---
+
+
+---
 syntax: |
   GRAPH.CONSTRAINT CREATE key 
     MANDATORY|UNIQUE
