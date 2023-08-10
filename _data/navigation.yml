@@ -4,6 +4,13 @@
   url: /configuration
 - title: Commands
   url: /commands
+  sublinks:
+    - title: Graph.QUERY
+      url: /commands/graph.query
+    - title: GRAPH.DELETE
+      url: /commands/graph.delete
+    - title: GRAPH.EXPLAIN
+      url: /commands/graph.explain
 - title: Cypher Support
   url: /cypher_support
 - title: Clients
