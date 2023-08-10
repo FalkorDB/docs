@@ -1,8 +1,6 @@
 ---
-title: "FalkorDB: A High Performance In-Memory Graph Database"
-linkTitle: "Design"
-weight: 3 
-description: ""
+title: "The FalkorDB Design"
+description: "FalkorDB: A High Performance In-Memory Graph Database"
 ---
 
 ## Abstract
