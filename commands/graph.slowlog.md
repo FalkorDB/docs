@@ -1,3 +1,9 @@
+---
+title: "GRAPH.SLOWLOG"
+description: >
+    Returns a list containing up to 10 of the slowest queries issued against the given graph
+---
+
 Returns a list containing up to 10 of the slowest queries issued against the given graph ID.
 
 Each item in the list has the following structure:
