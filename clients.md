@@ -114,4 +114,4 @@ In addition there are several client libraries to improve abstractions and allow
 
 ## Implementing a client
 
-Information on some of the tasks involved in writing a RedisGraph client can be found in the [Client Specification](/docs/design/client_spec).
+Information on some of the tasks involved in writing a RedisGraph client can be found in the [Client Specification](/design/client_spec).

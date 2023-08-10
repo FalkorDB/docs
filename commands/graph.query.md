@@ -61,7 +61,7 @@ The syntax is based on [Cypher](http://www.opencypher.org/). [Most](/cypher_supp
 * [UNION](#union)
 * [UNWIND](#unwind)
 * [FOREACH](#foreach)
-* [CALL {}](/docs/commands/graph.query.md#call-)
+* [CALL {}](/commands/graph.query.md#call-)
 
 #### MATCH
 
