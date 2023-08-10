@@ -1,4 +1,11 @@
 ---
+title: "GRAPH.CONSTRAINT DROP"
+description: >
+    Deletes a constraint from specified graph
+---
+
+
+---
 syntax: |
   GRAPH.CONSTRAINT DROP key 
     MANDATORY|UNIQUE
