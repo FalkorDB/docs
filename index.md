@@ -18,14 +18,13 @@ FalkorDB is a graph database built on Redis. This graph database uses [GraphBlas
   * Queries are translated into linear algebra expressions
 
 To see FalkorDB in action, visit [Demos](https://github.com/FalkorDB/FalkorDB/tree/master/demo).
-To read the docs, visit [redis.io](https://redis.io/docs/stack/graph/).
 
 ## Docker
 
 To quickly try out FalkorDB, launch an instance using docker:
 
 ```
-docker run -p 6379:6379 -it --rm redis/redis-stack-server
+docker run -p 6379:6379 -it --rm fakordb/fakordb
 ```
 
 ### Give it a try
@@ -74,7 +73,7 @@ How many riders represent team Ducati?
 
 Requirements:
 
-* The FalkorDB repository: `git clone --recurse-submodules -j8 https://github.com/FalkorDB/FalkorDB.git`
+* Clone the FalkorDB repository: `git clone --recurse-submodules -j8 https://github.com/FalkorDB/FalkorDB.git`
 
 * On Ubuntu Linux, run: `apt-get install build-essential cmake m4 automake peg libtool autoconf python3`
 
@@ -85,14 +84,10 @@ To build, run `make` in the project's directory.
 
 Congratulations! You can find the compiled binary at: `src/falkordb.so`
 
-## Installing FalkorDB
-
-FalkorDB is part of [Redis Stack](/docs/stack). See the [Redis Stack download page](/download) for installation options.
-
 ## Using FalkorDB
 
 Before using FalkorDB, you should familiarize yourself with its commands and syntax as detailed in the
-[command reference](/falkordb/commands).
+[command reference](/commands).
 
 You can call FalkorDB's commands from any Redis client.
 
@@ -124,18 +119,18 @@ reply = r.graph("social").query("MATCH (r:Rider)-[:rides]->(t:Team {name:'Ducati
 
 Language-specific clients have been written by the community and the FalkorDB team for 6 languages.
 
-The full list and links can be found on the [Clients](/docs/clients) page.
+The full list and links can be found on the [Clients](/clients) page.
 
 ## Data import
 
 The falkordb team maintains the [falkordb-bulk-loader](https://github.com/falkordb/falkordb-bulk-loader) for importing new graphs from CSV files.
 
-The data format used by this tool is described in the [GRAPH.BULK implementation details](/docs/stack/graph/design/bulk_spec).
+The data format used by this tool is described in the [GRAPH.BULK implementation details](/design/bulk_spec).
 
 ## Mailing List / Forum
 
-Got questions? Feel free to ask at the [FalkorDB forum](https://forum.redis.com/c/modules/falkordb).
+Got questions? Feel free to ask at the [FalkorDB forum](https://github.com/FalkorDB/FalkorDB/discussions).
 
 ## License
 
-FalkorDB is licensed under the [the Server Side Public License v1 (SSPLv1)](https://redis.com/legal/licenses/).
+FalkorDB is licensed under the [the Server Side Public License v1 (SSPLv1)](https://github.com/FalkorDB/FalkorDB/blob/master/LICENSE.txt).
