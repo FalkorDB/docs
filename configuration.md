@@ -1,10 +1,11 @@
 ---
 title: "Configuration Parameters"
-linkTitle: "Configuration"
-weight: 3
 description: >
-    FalkorDB supports multiple module configuration parameters. Some of these parameters can only be set at load-time, while other parameters can be set either on load-time or on run-time.
+    FalkorDB supports multiple module configuration parameters. 
 ---
+
+FalkorDB supports multiple module configuration parameters. 
+Some of these parameters can only be set at load-time, while other parameters can be set either on load-time or on run-time.
 
 ## Setting configuration parameters on module load
 
