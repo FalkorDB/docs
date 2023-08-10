@@ -9,13 +9,13 @@ Executes the given query against a specified graph.
 
 Arguments: `Graph name, Query, Timeout [optional]`
 
-Returns: [Result set](/redisgraph/design/result_structure)
+Returns: [Result set](/design/result_structure)
 
 ### Queries and Parameterized Queries
 
 The execution plans of queries, both regular and parameterized, are cached (up to [CACHE_SIZE](/configuration/#cache_size) unique queries are cached). Therefore, it is recommended to use parametrized queries when executing many queries with the same pattern but different constants.
 
-Query-level timeouts can be set as described in [the configuration section](/redisgraph/configuration#timeout).
+Query-level timeouts can be set as described in [the configuration section](/configuration#timeout).
 
 #### Command structure
 
