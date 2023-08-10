@@ -1,8 +1,8 @@
 ---
-title: FalkorDB
-linkTitle: Graph
-description: A Graph database built on Redis
-type: docs
+title: FalkorDB Docs
+description: >
+    The fastest way to your knowledge
+    A Graph database built on Redis
 ---
 
 FalkorDB is a graph database built on Redis. This graph database uses [GraphBlas](http://faculty.cse.tamu.edu/davis/GraphBLAS.html) under the hood for its [sparse adjacency matrix](https://en.wikipedia.org/wiki/Adjacency_matrix) graph representation.
