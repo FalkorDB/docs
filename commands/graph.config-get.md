@@ -1,3 +1,9 @@
+---
+title: "GRAPH.CONFIG-GET"
+description: >
+    Retrieves a FalkorDB configuration
+---
+
 Retrieves the current value of a RedisGraph configuration parameter.
 
 RedisGraph configuration parameters are detailed [here](/docs/stack/graph/configuration).
