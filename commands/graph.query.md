@@ -41,7 +41,7 @@ GRAPH.QUERY us_government "CYPHER state_name='Hawaii' MATCH (p:president)-[:born
 
 ### Query language
 
-The syntax is based on [Cypher](http://www.opencypher.org/). [Most](https://redis.io/docs/stack/graph/cypher_support/) of the language is supported. RedisGraph-specific extensions are also described below.
+The syntax is based on [Cypher](http://www.opencypher.org/). [Most](https://redis.io/docs/stack/graph/cypher_support/) of the language is supported. FalkorDB-specific extensions are also described below.
 
 1. [Clauses](#query-structure)
 2. [Functions](#functions)
@@ -1052,7 +1052,7 @@ This section contains information on all supported functions from the Cypher que
 | type(_relationship_)              | Returns a string: the type of _relationship_ <br> Returns null when _relationship_ evaluates to null                                        |
 | typeOf(_expr_) *                  | (Since RedisGraph v2.12) <br> Returns a string: the type of a literal, an expression's evaluation, an alias, a node's property, or a relationship's property <br> Return value is one of `Map`, `String`, `Integer`, `Boolean`, `Float`, `Node`, `Edge`, `List`, `Path`, `Point`, or `Null` |
 
-&#42; RedisGraph-specific extensions to Cypher
+&#42; FalkorDB-specific extensions to Cypher
 
 ## Aggregating functions
 
@@ -1086,7 +1086,7 @@ This section contains information on all supported functions from the Cypher que
 | tail(_expr_)                         | Returns a sublist of a list, which contains all its elements except the first <br> Returns an empty list when _expr_ containst less than 2 elements. <br> Returns null when _expr_ evaluates to null |
 | [reduce(...)](#reduce)               | Returns a scalar produced by evaluating an expression against each list member |
 
-&#42; RedisGraph-specific extensions to Cypher
+&#42; FalkorDB-specific extensions to Cypher
 
 ## Mathematical operators
 
@@ -1116,11 +1116,11 @@ This section contains information on all supported functions from the Cypher que
 | sign(_expr_)              | Returns the signum of a numeric value: 0 when _expr_ evaluates to 0, -1 when _expr_ evaluates to a negative numeric value, and 1 when _expr_ evaluates to a positive numeric value <br> Returns null when _expr_ evaluates to null |
 | sqrt(_expr_)              | Returns the square root of a numeric value <br> Returns nan when _expr_ evaluates to a negative value and null when _expr_ evaluates to null |
 
-&#42; RedisGraph-specific extensions to Cypher
+&#42; FalkorDB-specific extensions to Cypher
 
-&#42;&#42; RedisGraph-specific behavior: to avoid possible loss of precision, when _expr_ evaluates to an integer - the result is an integer as well
+&#42;&#42; FalkorDB-specific behavior: to avoid possible loss of precision, when _expr_ evaluates to an integer - the result is an integer as well
 
-&#42;&#42;&#42; RedisGraph-specific behavior: tie-breaking method is "half away from zero"
+&#42;&#42;&#42; FalkorDB-specific behavior: tie-breaking method is "half away from zero"
 
 ## Trigonometric functions
 
@@ -1160,7 +1160,7 @@ This section contains information on all supported functions from the Cypher que
 | trim(_str_)                         | Returns _str_ with leading and trailing whitespace removed <br> Returns null when _str_ evaluates to null |
 | size(_str_)                         | Returns the number of characters in _str_ <br> Returns null when _str_ evaluates to null                  |
 
-&#42; RedisGraph-specific extensions to Cypher
+&#42; FalkorDB-specific extensions to Cypher
 
 ## Point functions
 
@@ -1186,7 +1186,7 @@ This section contains information on all supported functions from the Cypher que
 | toStringList(_exprList_)    | Converts a list to a list of strings. Each element in the list is converted using toStringOrNull() | 
 | toStringOrNull(_expr_)      | Returns a string when _expr_ evaluates to a string <br> Converts an integer, float, Boolean, string, or point to a string representation <br> Returns null when _expr_ evaluates to null <br> Returns null for other types |
 
-&#42; RedisGraph-specific behavior: rounding method when converting a floating point to an integer is "toward negative infinity (floor)"
+&#42; FalkorDB-specific behavior: rounding method when converting a floating point to an integer is "toward negative infinity (floor)"
 
 ## Node functions
 
@@ -1195,7 +1195,7 @@ This section contains information on all supported functions from the Cypher que
 |indegree(_node_ [, _reltype_ ...]) * <br> indegree(_node_ [, _reltypeList_]) *   | When no relationship types are specified: Returns the number of _node_'s incoming edges <br> When one or more relationship types are specified: Returns the number of _node's_ incoming edges with one of the given relationship types <br> Return null when _node_ evaluates to null <br> the _reltypeList_ syntax is supported since RedisGraph v2.10.8 |
 |outdegree(_node_ [, _reltype_ ...]) * <br> outdegree(_node_ [, _reltypeList_]) * | When no relationship types are specified: Returns the number of _node_'s outgoing edges <br> When one or more relationship types are specified: Returns the number of _node's_ outgoing edges with one of the given relationship types <br> Return null when _node_ evaluates to null <br> the _reltypeList_ syntax is supported since RedisGraph v2.10.8 |
 
-&#42; RedisGraph-specific extensions to Cypher
+&#42; FalkorDB-specific extensions to Cypher
 
 ## Path functions
 
@@ -1206,7 +1206,7 @@ This section contains information on all supported functions from the Cypher que
 | length(_path_)                       | Return the length (number of edges) of _path_ <br> Returns null if _path_ evaluates to null             |
 | [shortestPath(...)](#shortestPath) * | Return the shortest path that resolves the given pattern                                                |
 
-&#42; RedisGraph-specific extensions to Cypher
+&#42; FalkorDB-specific extensions to Cypher
 
 ### List comprehensions
 List comprehensions are a syntactical construct that accepts an array and produces another based on the provided map and filter directives.
@@ -1395,7 +1395,7 @@ It can yield two outputs:
 
 ## Indexing
 
-RedisGraph supports single-property indexes for node labels and for relationship type. String, numeric, and geospatial data types can be indexed.
+FalkorDB supports single-property indexes for node labels and for relationship type. String, numeric, and geospatial data types can be indexed.
 
 ### Creating an index for a node label
 
@@ -1474,7 +1474,7 @@ GRAPH.QUERY DEMO_GRAPH "DROP INDEX ON :FOLLOW(created_at)"
 
 ## Full-text indexing
 
-RedisGraph leverages the indexing capabilities of [RediSearch](/docs/stack/search/index.html) to provide full-text indices through procedure calls. 
+FalkorDB leverages the indexing capabilities of [RediSearch](/docs/stack/search/index.html) to provide full-text indices through procedure calls. 
 
 ### Creating a full-text index for a node label
 

@@ -20,9 +20,9 @@ A column in the result set can be populated with graph entities (nodes or relati
 
 ### Scalars
 
-RedisGraph replies are formatted using the [RESP protocol](https://redis.io/topics/protocol). The current RESP iteration provides fewer data types than RedisGraph supports internally, so displayed results are mapped as follows:
+FalkorDB replies are formatted using the [RESP protocol](https://redis.io/topics/protocol). The current RESP iteration provides fewer data types than FalkorDB supports internally, so displayed results are mapped as follows:
 
-| RedisGraph type | Display format              |
+| FalkorDB type | Display format              |
 |-----------------|-----------------------------|
 | Integer         | Integer                     |
 | NULL            | NULL (nil)                  |

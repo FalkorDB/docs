@@ -3,7 +3,7 @@ title: "Implementation details for the GRAPH.BULK endpoint"
 linkTitle: "GRAPH.BULK endpoint"
 weight: 12
 description: >
-    The RedisGraph bulk loader uses the GRAPH.BULK endpoint to build a new graph from 1 or more Redis queries.
+    The FalkorDB bulk loader uses the GRAPH.BULK endpoint to build a new graph from 1 or more Redis queries.
     The bulk of these queries is binary data that is unpacked to create nodes, edges, and their properties.
     This endpoint could be used to write bespoke import tools for other data formats using the implementation details provided here.
 ---
@@ -11,7 +11,7 @@ description: >
 ## Caveats
 The main complicating factor in writing bulk importers is that Redis has a maximum string length of 512 megabytes and a default maximum query size of 1 gigabyte. As such, large imports must be written incrementally.
 
-The RedisGraph team will do their best to ensure that future updates to this logic do not break current implementations, but cannot guarantee it.
+The FalkorDB team will do their best to ensure that future updates to this logic do not break current implementations, but cannot guarantee it.
 
 ## Query Format
 
@@ -74,7 +74,7 @@ The blob consists of:
 3. `property names` - an ordered sequence of `property count` null-terminated strings, each representing the name for the property at that position.
 
 #### Property specification
-1. `property type` - A 1-byte integer corresponding to the [TYPE enum](https://github.com/RedisGraph/RedisGraph/blob/master/src/bulk_insert/bulk_insert.c#L14-L23):
+1. `property type` - A 1-byte integer corresponding to the [TYPE enum](https://github.com/FalkorDB/FalkorDB/blob/master/src/bulk_insert/bulk_insert.c#L14-L23):
 ```sh
 BI_NULL = 0,
 BI_BOOL = 1,

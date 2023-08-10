@@ -104,7 +104,7 @@ GRAPH.QUERY g "MATCH p = (a:City{name:'A'})-[*]->(g:City{name:'G'}) RETURN lengt
       2) "[A, D, C, F, G]"
 {{< / highlight >}}
 
-Using the unbounded traversal pattern `(a:City{name:'A'})-[*]->(g:City{name:'G'})`, RedisGraph traverses all possible paths from A to G. `ORDER BY length(p) LIMIT 5` ensures that you collect only [up to 5 shortest paths (minimal number of relationships). This approach is very inefficient because all possible paths would have to be traversed. Ideally, you would want to abort some traversals as soon as you are sure they would not result in the discovery of shorter paths. 
+Using the unbounded traversal pattern `(a:City{name:'A'})-[*]->(g:City{name:'G'})`, FalkorDB traverses all possible paths from A to G. `ORDER BY length(p) LIMIT 5` ensures that you collect only [up to 5 shortest paths (minimal number of relationships). This approach is very inefficient because all possible paths would have to be traversed. Ideally, you would want to abort some traversals as soon as you are sure they would not result in the discovery of shorter paths. 
 
 ### Find 5 shortest paths (in kilometers) from A to G
 

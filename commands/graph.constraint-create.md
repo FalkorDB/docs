@@ -21,7 +21,7 @@ Creates a graph constraint.
 
 A constraint is a rule enforced on graph nodes or relationships, used to guarantee a certain structure of the data.
 
-RedisGraph supports two types of constraints:
+FalkorDB supports two types of constraints:
 
 1. Mandatory constraints
 2. Unique constraints

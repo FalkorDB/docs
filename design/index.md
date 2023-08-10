@@ -1,5 +1,5 @@
 ---
-title: "RedisGraph: A High Performance In-Memory Graph Database"
+title: "FalkorDB: A High Performance In-Memory Graph Database"
 linkTitle: "Design"
 weight: 3 
 description: ""
@@ -12,15 +12,15 @@ behind relationship data and are utilizing it to its fullest. As a direct result
 the variety of graph data solutions.
 
 With the introduction of [Redis Modules](http://antirez.com/news/106) we've recognized the great potential of introducing a
-graph data structure to the Redis arsenal, and developed RedisGraph. Bringing new graph capabilities to Redis 
-through a native C implementation with an emphasis on performance, [RedisGraph](https://github.com/RedisGraph/RedisGraph) is now
+graph data structure to the Redis arsenal, and developed FalkorDB. Bringing new graph capabilities to Redis
+through a native C implementation with an emphasis on performance, [FalkorDB](https://github.com/FalkorDB/FalkorDB) is now
 available as an open source project.
 
-In this documentation, we'll discuss the internal design and features of RedisGraph and demonstrate its current capabilities.
+In this documentation, we'll discuss the internal design and features of FalkorDB and demonstrate its current capabilities.
 
-## RedisGraph At-a-Glance
+## FalkorDB At-a-Glance
 
-RedisGraph is a graph database developed from scratch on top of Redis, using the new Redis Modules API to extend Redis
+FalkorDB is a graph database developed from scratch on top of Redis, using the new Redis Modules API to extend Redis
 with new commands and capabilities. Its main features include:
 
 - Simple, fast indexing and querying
@@ -29,9 +29,9 @@ with new commands and capabilities. Its main features include:
 - Tabular result sets
 - Uses the popular graph query language [openCypher](https://neo4j.com/docs/developer-manual/3.4/cypher/)
 
-## A Little Taste: RedisGraph in Action
+## A Little Taste: FalkorDB in Action
 
-Let’s look at some of the key concepts of RedisGraph using this example over the redis-cli tool:
+Let’s look at some of the key concepts of FalkorDB using this example over the redis-cli tool:
 
 ### Constructing a graph
 
@@ -67,7 +67,7 @@ graph.QUERY IMDB 'CREATE (aldis:actor {name: "Aldis Hodge", birth_year: 1986}),
 
 ### Querying the graph
 
-RedisGraph exposes a subset of the openCypher graph language. Although only some language capabilities are supported,
+FalkorDB exposes a subset of the openCypher graph language. Although only some language capabilities are supported,
 there's enough functionality to extract valuable insights from your graphs. To execute a query, we'll use the GRAPH.QUERY
 command:
 
@@ -84,7 +84,7 @@ GRAPH.QUERY IMDB 'MATCH (a:actor)-[:act]->(m:movie {title:"Straight Outta Compto
 RETURN m.title, SUM(2020-a.birth_year), MAX(2020-a.birth_year), MIN(2020-a.birth_year), AVG(2020-a.birth_year)'
 ```
 
-RedisGraph will reply with:
+FalkorDB will reply with:
 
 ```sh
 1) 1) "m.title"
@@ -115,15 +115,15 @@ movies_count DESC"
 5) "Neil Brown,1.000000"
 ```
 
-## The Theory: Ideas behind RedisGraph
+## The Theory: Ideas behind FalkorDB
 
 ### Representation
 
-RedisGraph uses sparse adjacency matrices to represent graphs. As directed relationship connecting source node S to destination node T is
+FalkorDB uses sparse adjacency matrices to represent graphs. As directed relationship connecting source node S to destination node T is
 recorded within an adjacency matrix M, by setting M's S,T entry to 1 (M[S,T]=1).
 As a rule of thumb, matrix rows represent source nodes while matrix columns represent destination nodes.
 
-Every graph stored within RedisGraph has at least one matrix, referred to as THE adjacency matrix (relation-type agnostic). In addition, every relation with a type has its own dedicated matrix. Consider a graph with two relationships types:
+Every graph stored within FalkorDB has at least one matrix, referred to as THE adjacency matrix (relation-type agnostic). In addition, every relation with a type has its own dedicated matrix. Consider a graph with two relationships types:
 
 1. visits
 2. friend
@@ -138,7 +138,7 @@ A 'visit' relationship E that connects node A to node B, sets THE adjacency matr
 
 To accommodate typed nodes, one additional matrix is allocated per label, and a label matrix is symmetric with ones along the main diagonal. Assume that node N was labeled as a Person, then the Person matrix P sets position P[N,N] to 1.
 
-This design lets RedisGraph modify its graph easily, including:
+This design lets FalkorDB modify its graph easily, including:
 
 - Adding new nodes simply extends matrices, adding additional rows and columns
 - Adding new relationships by setting the relevant entries at the relevant matrices
@@ -161,7 +161,7 @@ Note that matrix multiplication is an associative and distributive operation. Th
 
 ### GraphBLAS
 
-To perform all of these operations for sparse matrices, RedisGraph uses [GraphBLAS](http://graphblas.org/) - a standard API similar to BLAS. The current implementation uses the CSC sparse matrix format (compressed sparse columns), although the underlying format is subject to change.
+To perform all of these operations for sparse matrices, FalkorDB uses [GraphBLAS](http://graphblas.org/) - a standard API similar to BLAS. The current implementation uses the CSC sparse matrix format (compressed sparse columns), although the underlying format is subject to change.
 
 ## Query language: openCypher
 
@@ -169,11 +169,11 @@ There are a number of graph query languages, so we didn't want to reinvent the w
 While the openCypher project provides a parser for the language, we decided to create our own parser. We used Lex as a tokenizer and Lemon to generate a C target parser.
 
 As mentioned earlier, only a subset of the language is currently supported, but we plan to continue adding new capabilities
-and extend RedisGraph's openCypher capabilities.
+and extend FalkorDB's openCypher capabilities.
 
 ## Runtime: query execution
 
-Let's review the steps RedisGraph takes when executing a query.
+Let's review the steps FalkorDB takes when executing a query.
 
 Consider this query that finds all actors who played alongside Aldis Hodge and are over 30 years old:
 
@@ -181,7 +181,7 @@ Consider this query that finds all actors who played alongside Aldis Hodge and a
 MATCH (aldis::actor {name:"Aldis Hodge"})-[:act]->(m:movie)<-[:act]-(a:actor) WHERE a.age > 30 RETURN m.title, a.name
 ```
 
-RedisGraph will:
+FalkorDB will:
 
 - Parse the query, and build an abstract syntax tree (AST)
 - Compose traversal algebraic expressions
@@ -205,15 +205,15 @@ During runtime, the WHERE clause is used to construct a filter tree, and each no
 ## Benchmarks
 
 Depending on the underlying hardware results may vary. However, inserting a new relationship is done in O(1).
-RedisGraph is able to create over 1 million nodes under half a second and form 500K relations within 0.3 of a second.
+FalkorDB is able to create over 1 million nodes under half a second and form 500K relations within 0.3 of a second.
 
 ## License
 
-RedisGraph is published under the [Redis Source Available License 2.0 (RSALv2) or the Server Side Public License v1 (SSPLv1)](https://redis.com/legal/licenses/).
+FalkorDB is published under the [Server Side Public License v1 (SSPLv1)](https://redis.com/legal/licenses/).
 
 ## Conclusion
 
-Although RedisGraph is still a young project, it can be an alternative to other graph databases. With its subset of
+Although FalkorDB is still a young project, it can be an alternative to other graph databases. With its subset of
 operations, you can use it to analyze and explore graph data. Being a Redis Module, this project is accessible from
 every Redis client without adjustments. It's our intention to keep on improving and extending
-RedisGraph with the help of the open source community.
+FalkorDB with the help of the open source community.

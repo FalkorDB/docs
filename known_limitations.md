@@ -7,7 +7,7 @@ description: ""
 
 ## Relationship uniqueness in patterns
 
-When a relation in a match pattern is not referenced elsewhere in the query, RedisGraph will only verify that at least one matching relation exists (rather than operating on every matching relation).
+When a relation in a match pattern is not referenced elsewhere in the query, FalkorDB will only verify that at least one matching relation exists (rather than operating on every matching relation).
 
 In some queries, this will cause unexpected behaviors. Consider a graph with 2 nodes and 2 relations between them:
 
@@ -44,13 +44,13 @@ For example, given the query:
 UNWIND [1,2,3] AS value CREATE (a {property: value}) RETURN a LIMIT 1
 ```
 
-One node should be created with its 'property' set to 1. RedisGraph will currently create three nodes, and only return the first.
+One node should be created with its 'property' set to 1. FalkorDB will currently create three nodes, and only return the first.
 
 This limitation affects all eager operations: CREATE, SET, DELETE, MERGE, and projections with aggregate functions.
 
 ## Indexing limitations
 
-One way in which RedisGraph will optimize queries is by introducing index scans when a filter is specified on an indexed label-property pair.
+One way in which FalkorDB will optimize queries is by introducing index scans when a filter is specified on an indexed label-property pair.
 
 The current index implementation, however, does not handle not-equal (`<>`) filters.
 

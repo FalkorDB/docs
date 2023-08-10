@@ -4,11 +4,11 @@ description: >
     Retrieves a FalkorDB configuration
 ---
 
-Retrieves the current value of a RedisGraph configuration parameter.
+Retrieves the current value of a FalkorDB configuration parameter.
 
-RedisGraph configuration parameters are detailed [here](/docs/stack/graph/configuration).
+FalkorDB configuration parameters are detailed [here](/docs/stack/graph/configuration).
 
-`*` can be used to retrieve the value of all RedisGraph configuration parameters.
+`*` can be used to retrieve the value of all FalkorDB configuration parameters.
 
 ```
 127.0.0.1:6379> graph.config get *

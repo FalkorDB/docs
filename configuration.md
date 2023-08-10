@@ -275,7 +275,7 @@ $ redis-cli GRAPH.CONFIG SET QUERY_MEM_CAPACITY 1048576
 ### VKEY_MAX_ENTITY_COUNT
 
 To lower the time Redis is blocked when replicating large graphs,
-RedisGraph serializes the graph in a number of virtual keys.
+FalkorDB serializes the graph in a number of virtual keys.
 
 One virtual key is created for every N graph entities,
 where N is the value defined by this configuration.

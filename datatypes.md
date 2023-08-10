@@ -1,8 +1,8 @@
 ---
-title: "RedisGraph data types"
+title: "FalkorDB data types"
 linkTitle: "Data types"
 weight: 4
-description: "RedisGraph supports a number of distinct data types, some of which can be persisted as property values and some of which are ephemeral."
+description: "FalkorDB supports a number of distinct data types, some of which can be persisted as property values and some of which are ephemeral."
 ---
 
 ## Graph types
@@ -57,7 +57,7 @@ All scalar types may be provided by queries or stored as property values on node
 
 ### Strings
 
-RedisGraph strings are Unicode character sequences. When using Redis with a TTY (such as invoking RedisGraph commands from the terminal via `redis-cli`), some code points may not be decoded, as in:
+FalkorDB strings are Unicode character sequences. When using Redis with a TTY (such as invoking FalkorDB commands from the terminal via `redis-cli`), some code points may not be decoded, as in:
 
 ```sh
 $ redis-cli GRAPH.QUERY G "RETURN '日本人' as stringval"
@@ -75,7 +75,7 @@ stringval
 
 ### Booleans
 
-Boolean values are specified as `true` or `false`. Internally, they are stored as numerics, with 1 representing true and 0 representing false. As RedisGraph considers types in its comparisons, 1 is not considered equal to `true`:
+Boolean values are specified as `true` or `false`. Internally, they are stored as numerics, with 1 representing true and 0 representing false. As FalkorDB considers types in its comparisons, 1 is not considered equal to `true`:
 
 ```sh
 $ redis-cli GRAPH.QUERY G "RETURN 1 = true"
@@ -85,21 +85,21 @@ $ redis-cli GRAPH.QUERY G "RETURN 1 = true"
 
 ### Integers
 
-All RedisGraph integers are treated as 64-bit signed integers.
+All FalkorDB integers are treated as 64-bit signed integers.
 
 ### Floating-point values
 
-All RedisGraph floating-point values are treated as 64-bit signed doubles.
+All FalkorDB floating-point values are treated as 64-bit signed doubles.
 
 ### Geospatial Points
 
-The Point data type is a set of latitude/longitude coordinates, stored within RedisGraph as a pair of 32-bit floats. It is instantiated using the [point() function call](/commands/graph.query/#point-functions).
+The Point data type is a set of latitude/longitude coordinates, stored within FalkorDB as a pair of 32-bit floats. It is instantiated using the [point() function call](/commands/graph.query/#point-functions).
 
 ### Nulls
 
-In RedisGraph, `null` is used to stand in for an unknown or missing value.
+In FalkorDB, `null` is used to stand in for an unknown or missing value.
 
-Since we cannot reason broadly about unknown values, `null` is an important part of RedisGraph's 3-valued truth table. For example, the comparison `null = null` will evaluate to `null`, as we lack adequate information about the compared values. Similarly, `null in [1,2,3]` evaluates to `null`, since the value we're looking up is unknown.
+Since we cannot reason broadly about unknown values, `null` is an important part of FalkorDB's 3-valued truth table. For example, the comparison `null = null` will evaluate to `null`, as we lack adequate information about the compared values. Similarly, `null in [1,2,3]` evaluates to `null`, since the value we're looking up is unknown.
 
 Unlike all other scalars, `null` cannot be stored as a property value.
 

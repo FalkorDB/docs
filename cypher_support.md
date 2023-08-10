@@ -3,7 +3,7 @@ title: "Cypher coverage"
 linkTitle: "Cypher coverage"
 weight: 7
 description: >
-    RedisGraph implements a subset of the Cypher language, which is growing as development continues.
+    FalkorDB implements a subset of the Cypher language, which is growing as development continues.
     This document is based on the Cypher Query Language Reference (version 9), available at [OpenCypher Resources](https://www.opencypher.org/resources).
 ---
 
@@ -39,7 +39,7 @@ NULL is supported as a representation of a missing or undefined value.
 
 ## Comparability, equality, orderability, and equivalence
 This is a somewhat nebulous area in Cypher itself, with a lot of edge cases.
-Broadly speaking, RedisGraph behaves as expected with string and numeric values.
+Broadly speaking, FalkorDB behaves as expected with string and numeric values.
 There are likely some behaviors involving the numerics NaN, -inf, inf, and possibly -0.0 that deviate from the Cypher standard.
 We do not support any of these properties at the type level, meaning nodes and relationships are not internally comparable.
 
@@ -115,11 +115,11 @@ Parameters may be specified to allow for more flexible query construction:
 ```sh
 CYPHER name_param = "Niccolò Machiavelli" birth_year_param = 1469 MATCH (p:Person {name: $name_param, birth_year: $birth_year_param}) RETURN p
 ```
-The example above shows the syntax used by `redis-cli` to set parameters, but 
-each RedisGraph client introduces a language-appropriate method for setting parameters,
+The example above shows the syntax used by `redis-cli` to set parameters, but
+each FalkorDB client introduces a language-appropriate method for setting parameters,
 and is described in their documentation.
 
 ## Non-Cypher queries
-+ RedisGraph provides the `GRAPH.EXPLAIN` command to print the execution plan of a provided query.
++ FalkorDB provides the `GRAPH.EXPLAIN` command to print the execution plan of a provided query.
 + `GRAPH.DELETE` will remove a graph and all Redis keys associated with it.
 - We do not currently provide support for queries that retrieve schemas, though the LABELS and TYPE scalar functions may be used to get a graph overview.

@@ -4,13 +4,13 @@ description: >
     Updates a FalkorDB configuration
 ---
 
-Set the value of a RedisGraph configuration parameter.
+Set the value of a FalkorDB configuration parameter.
 
 Values set using `GRAPH.CONFIG SET` are not persisted after server restart.
 
-RedisGraph configuration parameters are detailed [here](/docs/stack/graph/configuration).
+FalkorDB configuration parameters are detailed [here](/docs/stack/graph/configuration).
 
-Note: As detailed in the link above, not all RedisGraph configuration parameters can be set at run-time.
+Note: As detailed in the link above, not all FalkorDB configuration parameters can be set at run-time.
 
 ```
 127.0.0.1:6379> graph.config get TIMEOUT
