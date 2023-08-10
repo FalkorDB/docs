@@ -1,7 +1,5 @@
 ---
 title: "GRAPH.QUERY"
-linkTitle: "GRAPH.QUERY"
-weight: 1
 description: >
     Executes the given query against a specified graph
 ---
@@ -15,11 +13,11 @@ Returns: [Result set](/redisgraph/design/result_structure)
 
 ### Queries and Parameterized Queries
 
-The execution plans of queries, both regular and parameterized, are cached (up to [CACHE_SIZE](https://redis.io/docs/stack/graph/configuration/#cache_size) unique queries are cached). Therefore, it is recommended to use parametrized queries when executing many queries with the same pattern but different constants.
+The execution plans of queries, both regular and parameterized, are cached (up to [CACHE_SIZE](/configuration/#cache_size) unique queries are cached). Therefore, it is recommended to use parametrized queries when executing many queries with the same pattern but different constants.
 
 Query-level timeouts can be set as described in [the configuration section](/redisgraph/configuration#timeout).
 
-#### Query structure: 
+#### Command structure
 
 `GRAPH.QUERY graph_name "query"`
 
@@ -29,7 +27,7 @@ example:
 GRAPH.QUERY us_government "MATCH (p:president)-[:born]->(:state {name:'Hawaii'}) RETURN p"
 ```
 
-#### Parametrized query structure: 
+#### Parametrized query structure:
 
 `GRAPH.QUERY graph_name "CYPHER param=val [param=val ...] query"`
 
@@ -41,7 +39,7 @@ GRAPH.QUERY us_government "CYPHER state_name='Hawaii' MATCH (p:president)-[:born
 
 ### Query language
 
-The syntax is based on [Cypher](http://www.opencypher.org/). [Most](https://redis.io/docs/stack/graph/cypher_support/) of the language is supported. FalkorDB-specific extensions are also described below.
+The syntax is based on [Cypher](http://www.opencypher.org/). [Most](/cypher_support/) of the language is supported. FalkorDB-specific extensions are also described below.
 
 1. [Clauses](#query-structure)
 2. [Functions](#functions)
@@ -140,6 +138,7 @@ Returns all actors related to 'Charlie Sheen' by 1 to 3 hops.
 ##### Bidirectional path traversal
 
 If a relationship pattern does not specify a direction, it will match regardless of which node is the source and which is the destination:
+
 ```sh
 -[:TYPE]-
 ```
@@ -209,26 +208,26 @@ The `algo.SPpaths` procedure returns one, _n_, or all minimal-weight, [optionall
 
 Input arguments:
 
-- A map containing:
-  - `sourceNode`: Mandatory. Must be of type node
-  - `targetNode`: Mandatory. Must be of type node
-  - `relTypes`: Optional. Array of zero or more relationship types. A relationship must have one of these types to be part of the path. If not specified or empty: the path may contain any relationship.
-  - `relDirection`: Optional. string. one of `'incoming'`, `'outgoing'`, `'both'`. If not specified: `'outgoing'`.
-  - `pathCount`: Optional. Number of minimal-weight paths to retrieve. Non-negative integer. If not specified: 1
+* A map containing:
+  * `sourceNode`: Mandatory. Must be of type node
+  * `targetNode`: Mandatory. Must be of type node
+  * `relTypes`: Optional. Array of zero or more relationship types. A relationship must have one of these types to be part of the path. If not specified or empty: the path may contain any relationship.
+  * `relDirection`: Optional. string. one of `'incoming'`, `'outgoing'`, `'both'`. If not specified: `'outgoing'`.
+  * `pathCount`: Optional. Number of minimal-weight paths to retrieve. Non-negative integer. If not specified: 1
 
-    - `0`: retrieve all minimal-weight paths (all reported paths have the same weight)
+    * `0`: retrieve all minimal-weight paths (all reported paths have the same weight)
 
       Order: 1st : minimal cost, 2nd: minimal length.
 
-    - `1`: retrieve a single minimal-weight path
+    * `1`: retrieve a single minimal-weight path
 
       When multiple equal-weight paths exist: (preferences: 1st : minimal cost, 2nd: minimal length)
 
-    - _n_ > 1: retrieve up to _n_ minimal-weight paths (reported paths may have different weights)
+    * _n_ > 1: retrieve up to _n_ minimal-weight paths (reported paths may have different weights)
 
       When multiple equal-weight paths exist: (preferences: 1st : minimal cost, 2nd: minimal length)
 
-  - `weightProp`: Optional. If not specified: use the default weight: 1 for each relationship.
+  * `weightProp`: Optional. If not specified: use the default weight: 1 for each relationship.
 
     The name of the property that represents the weight of each relationship (integer / float)
 
@@ -236,49 +235,49 @@ Input arguments:
 
     Note: when all weights are equal: minimal-weight ≡ shortest-path.
 
-  - `costProp`: Optional. If not specified: use the default cost: 1 for each relationship.
+  * `costProp`: Optional. If not specified: use the default cost: 1 for each relationship.
 
     The name of the property that represents the cost of each relationship (integer / float)
 
     If such property doesn't exist, or if its value is not a positive numeric - use the default cost: 1
 
-  - `maxLen`: Optional. Maximal path length (number of relationships along the path). Positive integer. 
+  * `maxLen`: Optional. Maximal path length (number of relationships along the path). Positive integer. 
 
     If not specified: no maximal length constraint.
 
-  - `maxCost`: Optional. Positive numeric. If not specified: no maximal cost constraint.
+  * `maxCost`: Optional. Positive numeric. If not specified: no maximal cost constraint.
 
     The maximal cumulative cost for the relationships along the path.
-    
+
 Result:
 
-  - Paths conforming to the input arguments. For each reported path:
+* Paths conforming to the input arguments. For each reported path:
 
-    - `path` - the path
+  * `path` - the path
 
-    - `pathWeight` - the path’s weight
+  * `pathWeight` - the path’s weight
 
-    - `pathCost` - the path’s cost
+  * `pathCost` - the path’s cost
 
-    To retrieve additional information:
+  To retrieve additional information:
 
-    - The path’s length can be retrieved with `length(path)`
+  * The path’s length can be retrieved with `length(path)`
 
-    - An array of the nodes along the path can be retrieved with `nodes(path)`
+  * An array of the nodes along the path can be retrieved with `nodes(path)`
 
-    - The path’s first node can be retrieved with `nodes(path)[0]`
+  * The path’s first node can be retrieved with `nodes(path)[0]`
 
-    - The path’s last node can be retrieved with `nodes(path)[-1]`
+  * The path’s last node can be retrieved with `nodes(path)[-1]`
 
-    - An array of the relationship's costs along the path can be retrieved with `[r in relationships(path) | r.cost]` where cost is the name of the cost property
+  * An array of the relationship's costs along the path can be retrieved with `[r in relationships(path) | r.cost]` where cost is the name of the cost property
 
-    - An array of the relationship's weights along the path can be retrieved with `[r in relationships(path) | r.weight]` where weight is the name of the weight property
+  * An array of the relationship's weights along the path can be retrieved with `[r in relationships(path) | r.weight]` where weight is the name of the weight property
 
 Behavior in presence on multiple-edges:
 
-  - multi-edges are two or more edges connecting the same pair of vertices (possibly with different weights and costs). 
+* multi-edges are two or more edges connecting the same pair of vertices (possibly with different weights and costs). 
 
-  - All matching edges are considered. Paths with identical vertices and different edges are different paths. The following are 3 different paths ('n1', 'n2', and 'n3' are nodes; 'e1', 'e2', 'e3', and 'e4' are edges): (n1)-[e1]-(n2)-[e2]-(n3),  (n1)-[e1]-(n2)-[e3]-(n3),  (n1)-[e4]-(n2)-[e3]-(n3)
+* All matching edges are considered. Paths with identical vertices and different edges are different paths. The following are 3 different paths ('n1', 'n2', and 'n3' are nodes; 'e1', 'e2', 'e3', and 'e4' are edges): (n1)-[e1]-(n2)-[e2]-(n3),  (n1)-[e1]-(n2)-[e3]-(n3),  (n1)-[e4]-(n2)-[e3]-(n3)
 
 Example:
 
@@ -300,27 +299,27 @@ The `algo.SSpaths` procedure returns one, _n_, or all minimal-weight, [optionall
 
 Input arguments:
 
-- A map containing:
-  - `sourceNode`: Mandatory. Must be of type node
-  - `relTypes`: Optional. Array of zero or more relationship types. A relationship must have one of these types to be part of the path. If not specified or empty: the path may contain any relationship.
-  - `relDirection`: Optional. string. one of `'incoming'`, `'outgoing'`, `'both'`. If not specified: `'outgoing'`.
-  - `pathCount`: Optional. Number of minimal-weight paths to retrieve. Non-negative integer. If not specified: 1
+* A map containing:
+  * `sourceNode`: Mandatory. Must be of type node
+  * `relTypes`: Optional. Array of zero or more relationship types. A relationship must have one of these types to be part of the path. If not specified or empty: the path may contain any relationship.
+  * `relDirection`: Optional. string. one of `'incoming'`, `'outgoing'`, `'both'`. If not specified: `'outgoing'`.
+  * `pathCount`: Optional. Number of minimal-weight paths to retrieve. Non-negative integer. If not specified: 1
 
     This number is global (not per source-target pair); all returned paths may be with the same target.
 
-    - `0`: retrieve all minimal-weight paths (all reported paths have the same weight)
+    * `0`: retrieve all minimal-weight paths (all reported paths have the same weight)
 
       Order: 1st : minimal cost, 2nd: minimal length.
 
-    - `1`: retrieve a single minimal-weight path
+    * `1`: retrieve a single minimal-weight path
 
       When multiple equal-weight paths exist: (preferences: 1st : minimal cost, 2nd: minimal length)
 
-    - _n_ > 1: retrieve up to _n_ minimal-weight paths (reported paths may have different weights)
+    * _n_ > 1: retrieve up to _n_ minimal-weight paths (reported paths may have different weights)
 
       When multiple equal-weight paths exist: (preferences: 1st : minimal cost, 2nd: minimal length)
 
-  - `weightProp`: Optional. If not specified: use the default weight: 1 for each relationship.
+  * `weightProp`: Optional. If not specified: use the default weight: 1 for each relationship.
 
     The name of the property that represents the weight of each relationship (integer / float)
 
@@ -328,49 +327,40 @@ Input arguments:
 
     Note: when all weights are equal: minimal-weight ≡ shortest-path.
 
-  - `costProp`: Optional. If not specified: use the default cost: 1 for each relationship.
+  * `costProp`: Optional. If not specified: use the default cost: 1 for each relationship.
 
     The name of the property that represents the cost of each relationship (integer / float)
 
     If such property doesn't exist, or if its value is not a positive numeric - use the default cost: 1
 
-  - `maxLen`: Optional. Maximal path length (number of relationships along the path). Positive integer. 
+  * `maxLen`: Optional. Maximal path length (number of relationships along the path). Positive integer. 
 
     If not specified: no maximal length constraint.
 
-  - `maxCost`: Optional. Positive numeric. If not specified: no maximal cost constraint.
+  * `maxCost`: Optional. Positive numeric. If not specified: no maximal cost constraint.
 
     The maximal cumulative cost for the relationships along the path.
-    
+
 Result:
 
-  - Paths conforming to the input arguments. For each reported path:
+* Paths conforming to the input arguments. For each reported path:
+  * `path` - the path
+  * `pathWeight` - the path’s weight
+  * `pathCost` - the path’s cost
 
-    - `path` - the path
+  To retrieve additional information:
 
-    - `pathWeight` - the path’s weight
-
-    - `pathCost` - the path’s cost
-
-    To retrieve additional information:
-
-    - The path’s length can be retrieved with `length(path)`
-
-    - An array of the nodes along the path can be retrieved with `nodes(path)`
-
-    - The path’s first node can be retrieved with `nodes(path)[0]`
-
-    - The path’s last node can be retrieved with `nodes(path)[-1]`
-
-    - An array of the relationship's costs along the path can be retrieved with `[r in relationships(path) | r.cost]` where cost is the name of the cost property
-
-    - An array of the relationship's weights along the path can be retrieved with `[r in relationships(path) | r.weight]` where weight is the name of the weight property
+  * The path’s length can be retrieved with `length(path)`
+  * An array of the nodes along the path can be retrieved with `nodes(path)`
+  * The path’s first node can be retrieved with `nodes(path)[0]`
+  * The path’s last node can be retrieved with `nodes(path)[-1]`
+  * An array of the relationship's costs along the path can be retrieved with `[r in relationships(path) | r.cost]` where cost is the name of the cost property
+  * An array of the relationship's weights along the path can be retrieved with `[r in relationships(path) | r.weight]` where weight is the name of the weight property
 
 Behavior in presence on multiple-edges:
 
-  - multi-edges are two or more edges connecting the same pair of vertices (possibly with different weights and costs). 
-
-  - All matching edges are considered. Paths with identical vertices and different edges are different paths. The following are 3 different paths ('n1', 'n2', and 'n3' are nodes; 'e1', 'e2', 'e3', and 'e4' are edges): (n1)-[e1]-(n2)-[e2]-(n3), (n1)-[e1]-(n2)-[e3]-(n3), (n1)-[e4]-(n2)-[e3]-(n3)
+* multi-edges are two or more edges connecting the same pair of vertices (possibly with different weights and costs). 
+* All matching edges are considered. Paths with identical vertices and different edges are different paths. The following are 3 different paths ('n1', 'n2', and 'n3' are nodes; 'e1', 'e2', 'e3', and 'e4' are edges): (n1)-[e1]-(n2)-[e2]-(n3), (n1)-[e1]-(n2)-[e3]-(n3), (n1)-[e4]-(n2)-[e3]-(n3)
 
 Example:
 
@@ -381,7 +371,6 @@ CALL algo.SSpaths( {sourceNode: s, relTypes: ['r1', 'r2', 'r3'], relDirection: '
 YIELD path, pathCost, pathWeight
 RETURN path ORDER BY pathCost"
 ```
-
 
 #### OPTIONAL MATCH
 
@@ -428,16 +417,16 @@ This clause is not mandatory, but if you want to filter results, you can specify
 
 Supported operations:
 
-- `=`
-- `<>`
-- `<`
-- `<=`
-- `>`
-- `>=`
-- `CONTAINS`
-- `ENDS WITH`
-- `IN`
-- `STARTS WITH`
+* `=`
+* `<>`
+* `<`
+* `<=`
+* `>`
+* `>=`
+* `CONTAINS`
+* `ENDS WITH`
+* `IN`
+* `STARTS WITH`
 
 Predicates can be combined using AND / OR / NOT.
 
@@ -445,17 +434,17 @@ Be sure to wrap predicates within parentheses to control precedence.
 
 Examples:
 
-```
+```sql
 WHERE (actor.name = "john doe" OR movie.rating > 8.8) AND movie.votes <= 250)
 ```
 
-```
+```sql
 WHERE actor.age >= director.age AND actor.age > 32
 ```
 
 It is also possible to specify equality predicates within nodes using the curly braces as such:
 
-```
+```sql
 (:President {name:"Jed Bartlett"})-[:WON]->(:State)
 ```
 
@@ -530,15 +519,15 @@ Here we group data by movie title and for each movie, and we find its youngest a
 
 Supported aggregation functions include:
 
-- `avg`
-- `collect`
-- `count`
-- `max`
-- `min`
-- `percentileCont`
-- `percentileDisc`
-- `stDev`
-- `sum`
+* `avg`
+* `collect`
+* `count`
+* `max`
+* `min`
+* `percentileCont`
+* `percentileDisc`
+* `stDev`
+* `sum`
 
 #### ORDER BY
 
@@ -581,7 +570,7 @@ GRAPH.QUERY DEMO_GRAPH "MATCH (p:Person) RETURN p ORDER BY p.name SKIP 100 LIMIT
 Although not mandatory, you can use the limit clause
 to limit the number of records returned by a query:
 
-```
+```sql
 LIMIT <max records to return>
 ```
 
@@ -715,7 +704,7 @@ If all path elements are introduced by MERGE, a match failure will cause all ele
 
 The MERGE path can be followed by ON MATCH SET and ON CREATE SET directives to conditionally set properties depending on whether or not the match succeeded.
 
-**Merging nodes**
+##### Merging nodes
 
 To merge a single node with a label:
 
@@ -735,7 +724,7 @@ To merge a single node, specifying both label and property:
 GRAPH.QUERY DEMO_GRAPH "MERGE (michael:Person { name: 'Michael Douglas' })"
 ```
 
-**Merging paths**
+##### Merging paths
 
 Because MERGE either matches or creates a full path, it is easy to accidentally create duplicate nodes.
 
@@ -766,7 +755,7 @@ GRAPH.QUERY DEMO_GRAPH
  MERGE (charlie)-[r:ACTED_IN]->(wallStreet)"
 ```
 
-**On Match and On Create directives**
+##### On Match and On Create directives
 
 Using ON MATCH and ON CREATE, MERGE can set properties differently depending on whether a pattern is matched or created.
 
@@ -781,11 +770,13 @@ GRAPH.QUERY DEMO_GRAPH
 ```
 
 #### WITH
+
 The WITH clause allows parts of queries to be independently executed and have their results handled uniquely.
 
 This allows for more flexible query composition as well as data manipulations that would otherwise not be possible in a single query.
 
 If, for example, we wanted to find all children in our graph who are above the average age of all people:
+
 ```sh
 GRAPH.QUERY DEMO_GRAPH
 "MATCH (p:Person) WITH AVG(p.age) AS average_age MATCH (:Person)-[:PARENT_OF]->(child:Person) WHERE child.age > average_age return child
@@ -799,6 +790,7 @@ GRAPH.QUERY DEMO_GRAPH
 ```
 
 #### UNION
+
 The UNION clause is used to combine the result of multiple queries.
 
 UNION combines the results of two or more queries into a single result set that includes all the rows that belong to all queries in the union.
@@ -817,6 +809,7 @@ MATCH (n:Movie) RETURN n.title AS name"
 ```
 
 #### UNWIND
+
 The UNWIND clause breaks down a given list into a sequence of records; each contains a single element in the list.
 
 The order of the records preserves the original list order.
@@ -989,7 +982,6 @@ CALL {
 RETURN n, m, x, y, z, e, q"
 ```
 Runtime: 99 ms. -->
-
 
 * Side-effects.
 
@@ -1209,6 +1201,7 @@ This section contains information on all supported functions from the Cypher que
 &#42; FalkorDB-specific extensions to Cypher
 
 ### List comprehensions
+
 List comprehensions are a syntactical construct that accepts an array and produces another based on the provided map and filter directives.
 
 They are a common construct in functional languages and modern high-level languages. In Cypher, they use the syntax:
@@ -1217,10 +1210,9 @@ They are a common construct in functional languages and modern high-level langua
 [element IN array WHERE condition | output elem]
 ```
 
-- `array` can be any expression that produces an array: a literal, a property reference, or a function call.
-- `WHERE condition` is an optional argument to only project elements that pass a certain criteria. If omitted, all elements in the array will be represented in the output.
-- `| output elem` is an optional argument that allows elements to be transformed in the output array. If omitted, the output elements will be the same as their corresponding inputs.
-
+* `array` can be any expression that produces an array: a literal, a property reference, or a function call.
+* `WHERE condition` is an optional argument to only project elements that pass a certain criteria. If omitted, all elements in the array will be represented in the output.
+* `| output elem` is an optional argument that allows elements to be transformed in the output array. If omitted, the output elements will be the same as their corresponding inputs.
 
 The following query collects all paths of any length, then for each produces an array containing the `name` property of every node with a `rank` property greater than 10:
 
@@ -1229,6 +1221,7 @@ MATCH p=()-[*]->() RETURN [node IN nodes(p) WHERE node.rank > 10 | node.name]
 ```
 
 #### Existential comprehension functions
+
 The functions `any()`, `all()`, `single()` and `none()` use a simplified form of the list comprehension syntax and return a boolean value.
 
 ```sh
@@ -1294,6 +1287,7 @@ END
 ```
 
 #### Reduce
+
 The `reduce()` function accepts a starting value and updates it by evaluating an expression against each element of the list:
 
 ```sh
@@ -1303,7 +1297,9 @@ RETURN reduce(sum = 0, n IN [1,2,3] | sum + n)
 `sum` will successively have the values 0, 1, 3, and 6, with 6 being the output of the function call.
 
 ### Point
+
 The `point()` function expects one map argument of the form:
+
 ```sh
 RETURN point({latitude: lat_value, longitude: lon_val})
 ```
@@ -1313,7 +1309,9 @@ The key names `latitude` and `longitude` are case-sensitive.
 The point constructed by this function can be saved as a node/relationship property or used within the query, such as in a `distance` function call.
 
 ### shortestPath
+
 The `shortestPath()` function is invoked with the form:
+
 ```sh
 MATCH (a {v: 1}), (b {v: 4}) RETURN shortestPath((a)-[:L*]->(b))
 ```
@@ -1321,9 +1319,11 @@ MATCH (a {v: 1}), (b {v: 4}) RETURN shortestPath((a)-[:L*]->(b))
 The sole `shortestPath` argument is a traversal pattern. This pattern's endpoints must be resolved prior to the function call, and no property filters may be introduced in the pattern. The relationship pattern may specify any number of relationship types (including zero) to be considered. If a minimum number of edges to traverse is specified, it may only be 0 or 1, while any number may be used for the maximum. If 0 is specified as the minimum, the source node will be included in the returned path. If no shortest path can be found, NULL is returned.
 
 ### JSON format
+
 `toJSON()` returns the input value in JSON formatting. For primitive data types and arrays, this conversion is conventional. Maps and map projections (`toJSON(node { .prop} )`) are converted to JSON objects, as are nodes and relationships.
 
 The format for a node object in JSON is:
+
 ```sh
 {
   "type": "node",
@@ -1336,6 +1336,7 @@ The format for a node object in JSON is:
 ```
 
 The format for a relationship object in JSON is:
+
 ```sh
 {
   "type": "relationship",
@@ -1350,12 +1351,15 @@ The format for a relationship object in JSON is:
 ```
 
 ## Procedures
+
 Procedures are invoked using the syntax:
+
 ```sh
 GRAPH.QUERY social "CALL db.labels()"
 ```
 
 Or the variant:
+
 ```sh
 GRAPH.QUERY social "CALL db.labels() YIELD label"
 ```
@@ -1379,6 +1383,7 @@ YIELD modifiers are only required if explicitly specified; by default the value 
 ### Algorithms
 
 #### BFS
+
 The breadth-first-search algorithm accepts 3 arguments:
 
 `source-node (node)` - The root of the search.
@@ -1474,7 +1479,7 @@ GRAPH.QUERY DEMO_GRAPH "DROP INDEX ON :FOLLOW(created_at)"
 
 ## Full-text indexing
 
-FalkorDB leverages the indexing capabilities of [RediSearch](/docs/stack/search/index.html) to provide full-text indices through procedure calls. 
+FalkorDB leverages the indexing capabilities of [RediSearch](https://redis.io/docs/interact/search-and-query/) to provide full-text indices through procedure calls.
 
 ### Creating a full-text index for a node label
 
@@ -1491,6 +1496,7 @@ GRAPH.QUERY DEMO_GRAPH "CALL db.idx.fulltext.createNodeIndex('Person', 'firstNam
 ```
 
 RediSearch provide 2 index configuration options:
+
 1. Language - Define which language to use for stemming text which is adding the base form of a word to the index. This allows the query for "going" to also return results for "go" and "gone", for example.
 2. Stopwords - These are words that are usually so common that they do not add much information to search, but take up a lot of space and CPU time in the index.
 
@@ -1501,6 +1507,7 @@ GRAPH.QUERY DEMO_GRAPH "CALL db.idx.fulltext.createNodeIndex({ label: 'Movie', l
 ```
 
 RediSearch provide 3 additional field configuration options:
+
 1. Weight - The importance of the text in the field
 2. Nostem - Skip stemming when indexing text
 3. Phonetic - Enable phonetic search on the text
@@ -1525,6 +1532,7 @@ GRAPH.QUERY DEMO_GRAPH
 ```
 
 This CALL clause can be interleaved with other Cypher clauses to perform more elaborate manipulations:
+
 ```sh
 GRAPH.QUERY DEMO_GRAPH
 "CALL db.idx.fulltext.queryNodes('Movie', 'Book') YIELD node AS m
@@ -1549,7 +1557,8 @@ RETURN m ORDER BY m.rating"
 3) 1) "Query internal execution time: 0.226914 milliseconds"
 ```
 
-In addition to yielding matching nodes, full-text index scans will return the score of each node. This is the [TF-IDF](/docs/stack/search/reference/scoring/#tfidf-default) score of the node, which is informed by how many times the search terms appear in the node and how closely grouped they are. This can be observed in the example:
+In addition to yielding matching nodes, full-text index scans will return the score of each node. This is the [TF-IDF](https://redis.io/docs/interact/search-and-query/advanced-concepts/scoring/#tfidf-default) score of the node, which is informed by how many times the search terms appear in the node and how closely grouped they are. This can be observed in the example:
+
 ```sh
 GRAPH.QUERY DEMO_GRAPH
 "CALL db.idx.fulltext.queryNodes('Node', 'hello world') YIELD node, score RETURN score, node.val"
@@ -1567,6 +1576,6 @@ GRAPH.QUERY DEMO_GRAPH
 
 For a node label, the full-text index deletion syntax is:
 
-```
+```sh
 GRAPH.QUERY DEMO_GRAPH "CALL db.idx.fulltext.drop('Movie')"
 ```

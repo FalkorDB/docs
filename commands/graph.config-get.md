@@ -6,7 +6,7 @@ description: >
 
 Retrieves the current value of a FalkorDB configuration parameter.
 
-FalkorDB configuration parameters are detailed [here](/docs/stack/graph/configuration).
+FalkorDB configuration parameters are detailed [here](/configuration).
 
 `*` can be used to retrieve the value of all FalkorDB configuration parameters.
 

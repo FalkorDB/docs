@@ -8,7 +8,7 @@ Set the value of a FalkorDB configuration parameter.
 
 Values set using `GRAPH.CONFIG SET` are not persisted after server restart.
 
-FalkorDB configuration parameters are detailed [here](/docs/stack/graph/configuration).
+FalkorDB configuration parameters are detailed [here](/configuration).
 
 Note: As detailed in the link above, not all FalkorDB configuration parameters can be set at run-time.
 
