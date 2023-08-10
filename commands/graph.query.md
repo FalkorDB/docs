@@ -1,3 +1,12 @@
+---
+title: "GRAPH.QUERY"
+linkTitle: "GRAPH.QUERY"
+weight: 1
+description: >
+    Executes the given query against a specified graph
+---
+
+
 Executes the given query against a specified graph.
 
 Arguments: `Graph name, Query, Timeout [optional]`
