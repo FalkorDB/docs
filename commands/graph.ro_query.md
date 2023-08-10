@@ -1,3 +1,9 @@
+---
+title: "GRAPH.RO_QUERY"
+description: >
+    Executes a given read only query against a specified graph
+---
+
 Executes a given read only query against a specified graph.
 
 Arguments: `Graph name, Query, Timeout [optional]`
