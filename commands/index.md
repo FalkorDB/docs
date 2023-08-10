@@ -8,11 +8,11 @@ description: >
 
 ## Overview
 
-### RedisGraph Features
+### FalkorDB Features
 
-RedisGraph exposes graph database functionality within Redis using the [openCypher](https://opencypher.org/) query language. Its basic commands accept openCypher queries, while additional commands are exposed for configuration or metadata retrieval.
+FalkorDB exposes graph database functionality within Redis using the [openCypher](https://opencypher.org/) query language. Its basic commands accept openCypher queries, while additional commands are exposed for configuration or metadata retrieval.
 
-### RedisGraph API
+### FalkorDB API
 
 Command details can be retrieved by filtering for the [module](/commands/?group=graph) or for a specific command, e.g., `GRAPH.QUERY`.
 The details include the syntax for the commands, where:

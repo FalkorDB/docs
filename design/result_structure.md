@@ -1,9 +1,9 @@
 ---
-title: "RedisGraph Result Set Structure"
+title: "FalkorDB Result Set Structure"
 linkTitle: "Result Set Structure"
 weight: 11
 description: >
-    This document describes the format RedisGraph uses to print data when accessed through the `redis-cli` utility.
+    This document describes the format FalkorDB uses to print data when accessed through the `redis-cli` utility.
     The [language-specific clients](/graph/clients) retrieve data in a more succinct format, and provide their own functionality for printing result sets.
 ---
 

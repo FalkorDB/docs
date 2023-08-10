@@ -3,7 +3,7 @@
 - title: Configuration
   url: /configuration
 - title: Commands
-  url: /commands
+  url: /commands/
   sublinks:
     - title: Graph.QUERY
       url: /commands/graph.query
@@ -33,6 +33,15 @@
   url: /clients
 - title: Data Types
   url: /datatypes
+- title: Design 
+  url: /design/
+  sublinks:
+    - title: Result Structure
+      url: /design/result_structure
+    - title: Client Specification
+      url: /design/client_spec
+    - title: Bulk Specification
+      url: /design/bulk_spec      
 - title: Path Algorithms
   url: /path_algorithm
 - title: Known Limitations
