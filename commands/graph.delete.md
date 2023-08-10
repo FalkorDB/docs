@@ -1,3 +1,9 @@
+---
+title: "GRAPH.DELETE"
+description: >
+    Completely removes the graph and all of its entities
+---
+
 Completely removes the graph and all of its entities.
 
 Arguments: `Graph name`
