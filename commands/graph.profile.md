@@ -1,3 +1,9 @@
+---
+title: "GRAPH.PROFILE"
+description: >
+    Executes a query and returns an execution plan augmented with metrics for each operation's execution
+---
+
 Executes a query and produces an execution plan augmented with metrics for each operation's execution.
 
 Arguments: `Graph name, Query`
