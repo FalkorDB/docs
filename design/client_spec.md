@@ -10,6 +10,7 @@ description: >
 ## Retrieving the compact result set
 
 Appending the flag `--compact` to any query issued to the GRAPH.QUERY endpoint will cause the server to issue results in the compact format. Because we don't store connection-specific configurations, all queries should be issued with this flag.
+
 ```sh
 GRAPH.QUERY demo "MATCH (a) RETURN a" --compact
 ```
@@ -33,6 +34,7 @@ Additionally, two enums are exposed:
 ## Decoding the result set
 
 Given the graph created by the query:
+
 ```sh
 GRAPH.QUERY demo "CREATE (:plant {name: 'Tree'})-[:GROWS {season: 'Autumn'}]->(:fruit {name: 'Apple'})"
 ```
@@ -40,6 +42,7 @@ GRAPH.QUERY demo "CREATE (:plant {name: 'Tree'})-[:GROWS {season: 'Autumn'}]->(:
 Let's formulate a query that returns 3 columns: nodes, relationships, and scalars, in that order.
 
 Verbose (default):
+
 ```sh
 127.0.0.1:6379> GRAPH.QUERY demo "MATCH (a)-[e]->(b) RETURN a, e, b.name"
 1) 1) "a"
@@ -68,6 +71,7 @@ Verbose (default):
 ```
 
 Compact:
+
 ```sh
 127.0.0.1:6379> GRAPH.QUERY demo "MATCH (a)-[e]->(b) RETURN a, e, b.name" --compact
 1) 1) 1) (integer) 1
@@ -95,11 +99,12 @@ Compact:
 3) 1) "Query internal execution time: 1.085412 milliseconds"
 ```
 
-These results are being parsed by `redis-cli`, which adds such visual cues as array indexing and indentation, as well as type hints like `(integer)`. The actual data transmitted is formatted using the [RESP protocol](https://redis.io/topics/protocol). All of the current RedisGraph clients rely upon a stable Redis client in the same language (such as [redis-rb](https://github.com/redis/redis-rb) for Ruby) which handles RESP decoding. 
+These results are being parsed by `redis-cli`, which adds such visual cues as array indexing and indentation, as well as type hints like `(integer)`. The actual data transmitted is formatted using the [RESP protocol](https://redis.io/topics/protocol). All of the current RedisGraph clients rely upon a stable Redis client in the same language (such as [redis-rb](https://github.com/redis/redis-rb) for Ruby) which handles RESP decoding.
 
 ### Top-level array results
 
 The result set above had 3 members in its top-level array:
+
 ```sh
 1) Header row
 2) Result rows
@@ -107,6 +112,7 @@ The result set above had 3 members in its top-level array:
 ```
 
 All queries that have a `RETURN` clause will have these 3 members. Queries that don't return results have only one member in the outermost array, the query statistics:
+
 ```sh
 127.0.0.1:6379> GRAPH.QUERY demo "CREATE (:plant {name: 'Tree'})-[:GROWS {season: 'Autumn'}]->(:fruit {name: 'Apple'})" --compact
 1) 1) "Labels added: 2"
@@ -116,11 +122,12 @@ All queries that have a `RETURN` clause will have these 3 members. Queries that 
    5) "Query internal execution time: 1.972868 milliseconds"
 ```
 
-Rather than introspecting on the query being emitted, the client implementation can check whether this array contains 1 or 3 elements to choose how to format data. 
+Rather than introspecting on the query being emitted, the client implementation can check whether this array contains 1 or 3 elements to choose how to format data.
 
 ### Reading the header row
 
 Our sample query `MATCH (a)-[e]->(b) RETURN a, e, b.name` generated the header:
+
 ```sh
 1) 1) (integer) 1
    2) "a"
@@ -133,6 +140,7 @@ Our sample query `MATCH (a)-[e]->(b) RETURN a, e, b.name` generated the header:
 The 4 array members correspond, in order, to the 3 entities described in the RETURN clause.
 
 Each is emitted as a 2-array:
+
 ```sh
 1) ColumnType (enum)
 2) column name (string)
@@ -145,6 +153,7 @@ The first element is the [ColumnType enum](https://github.com/RedisGraph/RedisGr
 The entity representations in this section will closely resemble those found in [Result Set Graph Entities](result_structure#graph-entities).
 
 Our query produced one row of results with 3 columns (as described by the header):
+
 ```sh
 1) 1) 1) (integer) 8
       2) 1) (integer) 0
@@ -163,6 +172,7 @@ Our query produced one row of results with 3 columns (as described by the header
    3) 1) (integer) 2
       2) "Apple"
 ```
+
 Each element is emitted as a 2-array - [`ValueType`, value].
 
 It is the client's responsibility to store the [ValueType enum](https://github.com/RedisGraph/RedisGraph/blob/master/src/resultset/formatters/resultset_formatter.h#L21-L28). RedisGraph guarantees that this enum may be extended in the future, but the existing values will not be altered.
@@ -230,11 +240,12 @@ Property keys, node labels, and relationship types are all returned as IDs rathe
 
 As such, the client should store a string array for each of these 3 mappings, and print the appropriate string for the user by checking an array at position _ID_. If an ID greater than the array length is encountered, the local array should be updated with a procedure call.
 
-These calls are described generally in the [Procedures documentation](/commands/graph.query/#procedures).
+These calls are described generally in the [Procedures documentation](/commands/graph.query#procedures).
 
 To retrieve each full mapping, the appropriate calls are:
 
 `db.labels()`
+
 ```sh
 127.0.0.1:6379> GRAPH.QUERY demo "CALL db.labels()"
 1) 1) "label"
@@ -244,6 +255,7 @@ To retrieve each full mapping, the appropriate calls are:
 ```
 
 `db.relationshipTypes()`
+
 ```sh
 127.0.0.1:6379> GRAPH.QUERY demo "CALL db.relationshipTypes()"
 1) 1) "relationshipType"
@@ -252,6 +264,7 @@ To retrieve each full mapping, the appropriate calls are:
 ```
 
 `db.propertyKeys()`
+
 ```sh
 127.0.0.1:6379> GRAPH.QUERY demo "CALL db.propertyKeys()"
 1) 1) "propertyKey"
@@ -261,9 +274,11 @@ To retrieve each full mapping, the appropriate calls are:
 ```
 
 Because the cached values never become outdated, it is possible to just retrieve new values with slightly more complex constructions:
+
 ```sh
 CALL db.propertyKeys() YIELD propertyKey RETURN propertyKey SKIP [cached_array_length]
 ```
+
 Though the property calls are quite efficient regardless of whether this optimization is used.
 
 As an example, the Python client checks its local array of labels to resolve every label ID [as seen here](https://github.com/RedisGraph/redisgraph-py/blob/d65ec325b1909489845427b7100dcba6c4050b66/redisgraph/graph.py#L20-L32).
@@ -273,4 +288,3 @@ In the case of an IndexError, it issues a procedure call to fully refresh its la
 ## Reference clients
 
 All the logic described in this document has been implemented in most of the clients listed in [Client Libraries](clients). Among these, `node-redis`, `redis-py` and `jedis` are currently the most sophisticated.
-

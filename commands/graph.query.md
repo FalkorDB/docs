@@ -13,7 +13,7 @@ Returns: [Result set](/design/result_structure)
 
 ### Queries and Parameterized Queries
 
-The execution plans of queries, both regular and parameterized, are cached (up to [CACHE_SIZE](/configuration/#cache_size) unique queries are cached). Therefore, it is recommended to use parametrized queries when executing many queries with the same pattern but different constants.
+The execution plans of queries, both regular and parameterized, are cached (up to [CACHE_SIZE](/configuration#cache_size) unique queries are cached). Therefore, it is recommended to use parametrized queries when executing many queries with the same pattern but different constants.
 
 Query-level timeouts can be set as described in [the configuration section](/configuration#timeout).
 
@@ -39,7 +39,7 @@ GRAPH.QUERY us_government "CYPHER state_name='Hawaii' MATCH (p:president)-[:born
 
 ### Query language
 
-The syntax is based on [Cypher](http://www.opencypher.org/). [Most](/cypher_support/) of the language is supported. FalkorDB-specific extensions are also described below.
+The syntax is based on [Cypher](http://www.opencypher.org/). [Most](/cypher_support) of the language is supported. FalkorDB-specific extensions are also described below.
 
 1. [Clauses](#query-structure)
 2. [Functions](#functions)
@@ -61,7 +61,7 @@ The syntax is based on [Cypher](http://www.opencypher.org/). [Most](/cypher_supp
 * [UNION](#union)
 * [UNWIND](#unwind)
 * [FOREACH](#foreach)
-* [CALL {}](/commands/graph.query.md#call-)
+* [CALL {}](#call-)
 
 #### MATCH
 

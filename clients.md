@@ -8,7 +8,6 @@ The full functionality of FalkorDB is available through `redis-cli` and the Redi
 
 In addition there are several client libraries to improve abstractions and allow for a more natural experience in a project's native language. Additionally, these clients take advantage of some FalkorDB features that may reduce network throughput in some circumstances.
 
-
 ## Currently available Libraries
 
 | Project                                                   | Language   | License | Author                                      | Stars                                                             | Package | 
@@ -110,7 +109,6 @@ In addition there are several client libraries to improve abstractions and allow
 [rustis-url]: https://github.com/dahomey-technologies/rustis
 [rustis-author]: https://github.com/dahomey-technologies
 [rustis-stars]: https://img.shields.io/github/stars/dahomey-technologies/rustis.svg?style=social&amp;label=Star&amp;maxAge=2592000
-
 
 ## Implementing a client
 
