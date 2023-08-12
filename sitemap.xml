@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset
+      xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+            http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+<!-- created with Free Online Sitemap Generator www.xml-sitemaps.com -->
+
+
+<url>
+  <loc>http://docs.falkordb.com/</loc>
+  <lastmod>2023-08-12T11:14:46+00:00</lastmod>
+  <priority>1.00</priority>
+</url>
+<url>
+  <loc>http://docs.falkordb.com/configuration</loc>
+  <lastmod>2023-08-12T11:14:46+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>http://docs.falkordb.com/commands/</loc>
+  <lastmod>2023-08-12T11:14:46+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>http://docs.falkordb.com/commands/graph.query</loc>
+  <lastmod>2023-08-12T11:14:46+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>http://docs.falkordb.com/commands/graph.ro_query</loc>
+  <lastmod>2023-08-12T11:14:46+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>http://docs.falkordb.com/commands/graph.delete</loc>
+  <lastmod>2023-08-12T11:14:46+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>http://docs.falkordb.com/commands/graph.constraint-create</loc>
+  <lastmod>2023-08-12T11:14:46+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>http://docs.falkordb.com/commands/graph.constraint-drop</loc>
+  <lastmod>2023-08-12T11:14:46+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>http://docs.falkordb.com/commands/graph.explain</loc>
+  <lastmod>2023-08-12T11:14:46+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>http://docs.falkordb.com/commands/graph.profile</loc>
+  <lastmod>2023-08-12T11:14:46+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>http://docs.falkordb.com/commands/graph.list</loc>
+  <lastmod>2023-08-12T11:14:46+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>http://docs.falkordb.com/commands/graph.slowlog</loc>
+  <lastmod>2023-08-12T11:14:46+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>http://docs.falkordb.com/commands/graph.config-get</loc>
+  <lastmod>2023-08-12T11:14:46+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>http://docs.falkordb.com/commands/graph.config-set</loc>
+  <lastmod>2023-08-12T11:14:46+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>http://docs.falkordb.com/cypher_support</loc>
+  <lastmod>2023-08-12T11:14:46+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>http://docs.falkordb.com/clients</loc>
+  <lastmod>2023-08-12T11:14:46+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>http://docs.falkordb.com/datatypes</loc>
+  <lastmod>2023-08-12T11:14:46+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>http://docs.falkordb.com/design/</loc>
+  <lastmod>2023-08-12T11:14:46+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>http://docs.falkordb.com/design/result_structure</loc>
+  <lastmod>2023-08-12T11:14:46+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>http://docs.falkordb.com/design/client_spec</loc>
+  <lastmod>2023-08-12T11:14:46+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>http://docs.falkordb.com/design/bulk_spec</loc>
+  <lastmod>2023-08-12T11:14:46+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>http://docs.falkordb.com/path_algorithm</loc>
+  <lastmod>2023-08-12T11:14:46+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>http://docs.falkordb.com/known_limitations</loc>
+  <lastmod>2023-08-12T11:14:46+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>http://docs.falkordb.com/commands/?group=graph</loc>
+  <lastmod>2023-08-12T11:14:46+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+
+
+</urlset>
