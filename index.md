@@ -23,7 +23,7 @@ To see FalkorDB in action, visit [Demos](https://github.com/FalkorDB/FalkorDB/tr
 To quickly try out FalkorDB, launch an instance using docker:
 
 ```
-docker run -p 6379:6379 -it --rm fakordb/fakordb
+docker run -p 6379:6379 -it --rm falkordb/falkordb:edge
 ```
 
 ### Give it a try
