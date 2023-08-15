@@ -1,12 +1,12 @@
 ---
-title: "Implementation details for the GRAPH.BULK endpoint"
-linkTitle: "GRAPH.BULK endpoint"
-weight: 12
+tile: "GRAPH.BULK endpoint specification"
 description: >
-    The FalkorDB bulk loader uses the GRAPH.BULK endpoint to build a new graph from 1 or more Redis queries.
-    The bulk of these queries is binary data that is unpacked to create nodes, edges, and their properties.
-    This endpoint could be used to write bespoke import tools for other data formats using the implementation details provided here.
+    Implementation details for the GRAPH.BULK endpoint
 ---
+
+The FalkorDB bulk loader uses the GRAPH.BULK endpoint to build a new graph from 1 or more Redis queries.
+The bulk of these queries is binary data that is unpacked to create nodes, edges, and their properties.
+This endpoint could be used to write bespoke import tools for other data formats using the implementation details provided here.
 
 ## Caveats
 The main complicating factor in writing bulk importers is that Redis has a maximum string length of 512 megabytes and a default maximum query size of 1 gigabyte. As such, large imports must be written incrementally.
