@@ -4,8 +4,9 @@ description: >
    Technical specification for writing FalkorDB client libraries
 ---
 
-  By design, there is not a full standard for RedisGraph clients to adhere to. Areas such as pretty-print formatting, query validation, and transactional and multithreaded capabilities have no canonically correct behavior, and the implementer is free to choose the approach and complexity that suits them best.
-    RedisGraph does, however, provide a compact result set format for clients that minimizes the amount of redundant data transmitted from the server. Implementers are encouraged to take advantage of this format, as it provides better performance and removes ambiguity from decoding certain data. This approach requires clients to be capable of issuing procedure calls to the server and performing a small amount of client-side caching.
+By design, there is not a full standard for FalkorDB clients to adhere to. Areas such as pretty-print formatting, query validation, and transactional and multithreaded capabilities have no canonically correct behavior, and the implementer is free to choose the approach and complexity that suits them best.
+
+FalkorDB does, however, provide a compact result set format for clients that minimizes the amount of redundant data transmitted from the server. Implementers are encouraged to take advantage of this format, as it provides better performance and removes ambiguity from decoding certain data. This approach requires clients to be capable of issuing procedure calls to the server and performing a small amount of client-side caching.
 
 
 ## Retrieving the compact result set
@@ -28,9 +29,9 @@ Instructions on how to efficiently convert these IDs in the [Procedure Calls](#p
 
 Additionally, two enums are exposed:
 
-[ColumnType](https://github.com/RedisGraph/RedisGraph/blob/ff108d7e21061025166a35d29be1a1cb5bac6d55/src/resultset/formatters/resultset_formatter.h#L14-L19), which as of RedisGraph v2.1.0 will always be `COLUMN_SCALAR`. This enum is retained for backwards compatibility, and may be ignored by the client unless RedisGraph versions older than v2.1.0 must be supported.
+[ColumnType](https://github.com/FalkorDB/FalkorDB/blob/ff108d7e21061025166a35d29be1a1cb5bac6d55/src/resultset/formatters/resultset_formatter.h#L14-L19), which as of RedisGraph v2.1.0 will always be `COLUMN_SCALAR`. This enum is retained for backwards compatibility, and may be ignored by the client unless RedisGraph versions older than v2.1.0 must be supported.
 
-[ValueType](https://github.com/RedisGraph/RedisGraph/blob/ff108d7e21061025166a35d29be1a1cb5bac6d55/src/resultset/formatters/resultset_formatter.h#L21-L28) indicates the data type (such as Node, integer, or string) of each returned value. Each value is emitted as a 2-array, with this enum in the first position and the actual value in the second. Each property on a graph entity also has a scalar as its value, so this construction is nested in each value of the properties array when a column contains a node or relationship.
+[ValueType](https://github.com/FalkorDB/FalkorDB/blob/ff108d7e21061025166a35d29be1a1cb5bac6d55/src/resultset/formatters/resultset_formatter.h#L21-L28) indicates the data type (such as Node, integer, or string) of each returned value. Each value is emitted as a 2-array, with this enum in the first position and the actual value in the second. Each property on a graph entity also has a scalar as its value, so this construction is nested in each value of the properties array when a column contains a node or relationship.
 
 ## Decoding the result set
 
@@ -100,7 +101,7 @@ Compact:
 3) 1) "Query internal execution time: 1.085412 milliseconds"
 ```
 
-These results are being parsed by `redis-cli`, which adds such visual cues as array indexing and indentation, as well as type hints like `(integer)`. The actual data transmitted is formatted using the [RESP protocol](https://redis.io/topics/protocol). All of the current RedisGraph clients rely upon a stable Redis client in the same language (such as [redis-rb](https://github.com/redis/redis-rb) for Ruby) which handles RESP decoding.
+These results are being parsed by `redis-cli`, which adds such visual cues as array indexing and indentation, as well as type hints like `(integer)`. The actual data transmitted is formatted using the [RESP protocol](https://redis.io/topics/protocol). All of the current FalkorDB clients rely upon a stable Redis client in the same language (such as [redis-rb](https://github.com/redis/redis-rb) for Ruby) which handles RESP decoding.
 
 ### Top-level array results
 
@@ -147,7 +148,7 @@ Each is emitted as a 2-array:
 2) column name (string)
 ```
 
-The first element is the [ColumnType enum](https://github.com/RedisGraph/RedisGraph/blob/master/src/resultset/formatters/resultset_formatter.h#L14-L19), which as of RedisGraph v2.1.0 will always be `COLUMN_SCALAR`. This element is retained for backwards compatibility, and may be ignored by the client unless RedisGraph versions older than v2.1.0 must be supported.
+The first element is the [ColumnType enum](https://github.com/FalkorDB/FalkorDB/blob/master/src/resultset/formatters/resultset_formatter.h#L14-L19), which as of RedisGraph v2.1.0 will always be `COLUMN_SCALAR`. This element is retained for backwards compatibility, and may be ignored by the client unless RedisGraph versions older than v2.1.0 must be supported.
 
 ### Reading result rows
 
@@ -176,7 +177,7 @@ Our query produced one row of results with 3 columns (as described by the header
 
 Each element is emitted as a 2-array - [`ValueType`, value].
 
-It is the client's responsibility to store the [ValueType enum](https://github.com/RedisGraph/RedisGraph/blob/master/src/resultset/formatters/resultset_formatter.h#L21-L28). RedisGraph guarantees that this enum may be extended in the future, but the existing values will not be altered.
+It is the client's responsibility to store the [ValueType enum](https://github.com/FalkorDB/FalkorDB/blob/master/src/resultset/formatters/resultset_formatter.h#L21-L28). FalkorDB guarantees that this enum may be extended in the future, but the existing values will not be altered.
 
 The `ValueType` for the first entry is `VALUE_NODE`. The node representation contains 3 top-level elements:
 
