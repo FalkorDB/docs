@@ -20,7 +20,7 @@ loadmodule ./falkordb.so [OPT VAL]...
 From the [Redis CLI](https://redis.io/docs/manual/cli/), using the [MODULE LOAD](https://redis.io/commands/module-load/) command:
 
 ```
-127.0.0.6379> MODULE LOAD redisgraph.so [OPT VAL]...
+127.0.0.6379> MODULE LOAD falkordb.so [OPT VAL]...
 ```
 
 From the command line:
@@ -202,7 +202,7 @@ When a query execution time exceeds the maximal execution time, the query is abo
 #### Example
 
 ```
-$ redis-server --loadmodule ./redisgraph.so TIMEOUT_MAX 1000
+$ redis-server --loadmodule ./falkordb.so TIMEOUT_MAX 1000
 ```
 
 ---
@@ -223,7 +223,7 @@ For a given query, this default maximal execution time can be overridden by the 
 #### Example
 
 ```
-$ redis-server --loadmodule ./redisgraph.so TIMEOUT_MAX 2000 TIMEOUT_DEFAULT 1000
+$ redis-server --loadmodule ./falkordb.so TIMEOUT_MAX 2000 TIMEOUT_DEFAULT 1000
 ```
 
 ---
@@ -266,7 +266,7 @@ The configuration argument is the maximum number of bytes that can be allocated 
 #### Example
 
 ```sh
-$ redis-server --loadmodule ./redisgraph.so QUERY_MEM_CAPACITY 1048576 // 1 megabyte limit
+$ redis-server --loadmodule ./falkordb.so QUERY_MEM_CAPACITY 1048576 // 1 megabyte limit
 
 $ redis-cli GRAPH.CONFIG SET QUERY_MEM_CAPACITY 1048576
 ```
