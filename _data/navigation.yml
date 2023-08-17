@@ -6,27 +6,27 @@
   url: /commands/
   sublinks:
     - title: Graph.QUERY
-      url: /commands/graph.query
+      url: /commands/query
     - title: Graph.RO_QUERY
-      url: /commands/graph.ro_query
+      url: /commands/graph_ro_query
     - title: GRAPH.DELETE
-      url: /commands/graph.delete
+      url: /commands/graph_delete
     - title: GRAPH.CONSTRAINT CREATE
-      url: /commands/graph.constraint-create
+      url: /commands/graph_constraint-create
     - title: GRAPH.CONSTRAINT DROP
-      url: /commands/graph.constraint-drop  
+      url: /commands/graph_constraint-drop  
     - title: GRAPH.EXPLAIN
-      url: /commands/graph.explain
+      url: /commands/graph_explain
     - title: GRAPH.PROFILE
-      url: /commands/graph.profile
+      url: /commands/graph_profile
     - title: GRAPH.LIST
-      url: /commands/graph.list
+      url: /commands/graph_list
     - title: GRAPH.SLOWLOG
-      url: /commands/graph.slowlog
+      url: /commands/graph_slowlog
     - title: GRAPH.CONFIG GET
-      url: /commands/graph.config-get
+      url: /commands/graph_config-get
     - title: GRAPH.CONFIG SET
-      url: /commands/graph.config-set 
+      url: /commands/graph_config-set 
 - title: Cypher Support
   url: /cypher_support
 - title: Clients
