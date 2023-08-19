@@ -6,7 +6,7 @@
   url: /commands/
   sublinks:
     - title: Graph.QUERY
-      url: /commands/query
+      url: /commands/graph_query
     - title: Graph.RO_QUERY
       url: /commands/graph_ro_query
     - title: GRAPH.DELETE
