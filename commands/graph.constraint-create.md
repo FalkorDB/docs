@@ -7,7 +7,7 @@ description: >
 
 ---
 syntax: |
-  GRAPH.CONSTRAINT CREATE key 
+  GRAPH.CONSTRAINT CREATE key
     MANDATORY|UNIQUE
     NODE label | RELATIONSHIP reltype
     PROPERTIES propCount prop [prop...]  
@@ -42,7 +42,7 @@ Consider a unique constraint over the attributes: `first_name` and `last_name` o
 This constraint will enforce that any combination of `first_name`, `last_name` is unique.
 E.g., a graph can contain the following `Person` nodes:
 
-```
+```sql
 (:Person {first_name:'Frank', last_name:'Costanza'})
 (:Person {first_name:'Estelle', last_name:'Costanza'})
 ```
@@ -52,11 +52,11 @@ But trying to create a third node with `first_name` Frank and `last_name` Costan
 <note><b>Notes:</b>
 
 - A unique constraint requires the existence of an exact-match index prior to its creation. For example, trying to create a unique constraint governing attributes: `first_name` and `last_name` of nodes with label `Person` without having an exact-match index over `Person`'s `first_name` and `last_name` attributes will fail.
-   
+
 - A unique constraint is enforced for a given node or edge only if all the constrainted properties are defined (non-null).
 - Unique constraints are not enforced for array-valued properties.
 - Trying to delete an index that supports a constraint will fail.
-   
+
 </note>
 
 ## Creating a constraint
@@ -117,14 +117,13 @@ is a list of `propCount` property names.
 
 @simple-string-reply - `PENDING` if executed correctly and the constraint is being created asynchronously, or @error-reply otherwise.
 
-
 ## Examples
 
 ### Creating a unique constraint for a node label
 
 To create a unique constraint for all nodes with label `Person` enforcing uniqueness on the combination of values of attributes `first_name` and `last_name`, issue the following commands:
 
-```
+```sh
 redis> GRAPH.QUERY g "CREATE INDEX FOR (p:Person) ON (p.first_name, p.last_name)"
 1) 1) "Indices created: 2"
    2) "Cached execution: 0"
@@ -139,7 +138,7 @@ Since RedisGraph 2.12 indexes are constructed asynchronously. The constraint con
 
 To create a mandatory constraint for all edges with relationship-type `Visited`, enforcing the existence of a `date` attribute, issue the following command:
 
-```
+```sh
 redis> GRAPH.CONSTRAINT CREATE g MANDATORY RELATIONSHIP Visited PROPERTIES 1 date
 PENDING
 ```
@@ -152,7 +151,7 @@ See [GRAPH.CONSTRAINT DROP](/commands/graph.constraint-drop)
 
 To list all constraints enforced on a given graph, use the `db.constraints` procedure:
 
-```
+```sql
 GRAPH.RO_QUERY <key> "CALL db.constraints()"
 ```
 
@@ -168,7 +167,7 @@ For each constraint the procedure will yield the following fields:
 
 Example:
 
-```
+```sh
 redis> GRAPH.RO_QUERY g "call db.constraints()"
 1) 1) "type"
    2) "label"

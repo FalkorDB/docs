@@ -8,122 +8,122 @@
 
 <url>
   <loc>http://docs.falkordb.com/</loc>
-  <lastmod>2023-08-19T11:14:46+00:00</lastmod>
+  <lastmod>2023-08-21T11:14:46+00:00</lastmod>
   <priority>1.00</priority>
 </url>
 <url>
   <loc>http://docs.falkordb.com/configuration</loc>
-  <lastmod>2023-08-19T11:14:46+00:00</lastmod>
+  <lastmod>2023-08-21T11:14:46+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
   <loc>http://docs.falkordb.com/commands/</loc>
-  <lastmod>2023-08-19T11:14:46+00:00</lastmod>
+  <lastmod>2023-08-21T11:14:46+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
-  <loc>http://docs.falkordb.com/commands/graph_query</loc>
-  <lastmod>2023-08-19T11:14:46+00:00</lastmod>
+  <loc>http://docs.falkordb.com/commands/graph.query</loc>
+  <lastmod>2023-08-21T11:14:46+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
-  <loc>http://docs.falkordb.com/commands/graph_ro_query</loc>
-  <lastmod>2023-08-19T11:14:46+00:00</lastmod>
+  <loc>http://docs.falkordb.com/commands/graph.ro_query</loc>
+  <lastmod>2023-08-21T11:14:46+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
-  <loc>http://docs.falkordb.com/commands/graph_delete</loc>
-  <lastmod>2023-08-19T11:14:46+00:00</lastmod>
+  <loc>http://docs.falkordb.com/commands/graph.delete</loc>
+  <lastmod>2023-08-21T11:14:46+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
-  <loc>http://docs.falkordb.com/commands/graph_constraint-create</loc>
-  <lastmod>2023-08-19T11:14:46+00:00</lastmod>
+  <loc>http://docs.falkordb.com/commands/graph.constraint-create</loc>
+  <lastmod>2023-08-21T11:14:46+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
-  <loc>http://docs.falkordb.com/commands/graph_constraint-drop</loc>
-  <lastmod>2023-08-19T11:14:46+00:00</lastmod>
+  <loc>http://docs.falkordb.com/commands/graph.constraint-drop</loc>
+  <lastmod>2023-08-21T11:14:46+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
-  <loc>http://docs.falkordb.com/commands/graph_explain</loc>
-  <lastmod>2023-08-19T11:14:46+00:00</lastmod>
+  <loc>http://docs.falkordb.com/commands/graph.explain</loc>
+  <lastmod>2023-08-21T11:14:46+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
-  <loc>http://docs.falkordb.com/commands/graph_profile</loc>
-  <lastmod>2023-08-19T11:14:46+00:00</lastmod>
+  <loc>http://docs.falkordb.com/commands/graph.profile</loc>
+  <lastmod>2023-08-21T11:14:46+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
-  <loc>http://docs.falkordb.com/commands/graph_list</loc>
-  <lastmod>2023-08-19T11:14:46+00:00</lastmod>
+  <loc>http://docs.falkordb.com/commands/graph.list</loc>
+  <lastmod>2023-08-21T11:14:46+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
-  <loc>http://docs.falkordb.com/commands/graph_slowlog</loc>
-  <lastmod>2023-08-19T11:14:46+00:00</lastmod>
+  <loc>http://docs.falkordb.com/commands/graph.slowlog</loc>
+  <lastmod>2023-08-21T11:14:46+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
-  <loc>http://docs.falkordb.com/commands/graph_config-get</loc>
-  <lastmod>2023-08-19T11:14:46+00:00</lastmod>
+  <loc>http://docs.falkordb.com/commands/graph.config-get</loc>
+  <lastmod>2023-08-21T11:14:46+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
-  <loc>http://docs.falkordb.com/commands/graph_config-set</loc>
-  <lastmod>2023-08-19T11:14:46+00:00</lastmod>
+  <loc>http://docs.falkordb.com/commands/graph.config-set</loc>
+  <lastmod>2023-08-21T11:14:46+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
   <loc>http://docs.falkordb.com/cypher_support</loc>
-  <lastmod>2023-08-19T11:14:46+00:00</lastmod>
+  <lastmod>2023-08-21T11:14:46+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
   <loc>http://docs.falkordb.com/clients</loc>
-  <lastmod>2023-08-19T11:14:46+00:00</lastmod>
+  <lastmod>2023-08-21T11:14:46+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
   <loc>http://docs.falkordb.com/datatypes</loc>
-  <lastmod>2023-08-19T11:14:46+00:00</lastmod>
+  <lastmod>2023-08-21T11:14:46+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
   <loc>http://docs.falkordb.com/design/</loc>
-  <lastmod>2023-08-19T11:14:46+00:00</lastmod>
+  <lastmod>2023-08-21T11:14:46+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
   <loc>http://docs.falkordb.com/design/result_structure</loc>
-  <lastmod>2023-08-19T11:14:46+00:00</lastmod>
+  <lastmod>2023-08-21T11:14:46+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
   <loc>http://docs.falkordb.com/design/client_spec</loc>
-  <lastmod>2023-08-19T11:14:46+00:00</lastmod>
+  <lastmod>2023-08-21T11:14:46+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
   <loc>http://docs.falkordb.com/design/bulk_spec</loc>
-  <lastmod>2023-08-19T11:14:46+00:00</lastmod>
+  <lastmod>2023-08-21T11:14:46+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
   <loc>http://docs.falkordb.com/path_algorithm</loc>
-  <lastmod>2023-08-19T11:14:46+00:00</lastmod>
+  <lastmod>2023-08-21T11:14:46+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
   <loc>http://docs.falkordb.com/known_limitations</loc>
-  <lastmod>2023-08-19T11:14:46+00:00</lastmod>
+  <lastmod>2023-08-21T11:14:46+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
   <loc>http://docs.falkordb.com/commands/?group=graph</loc>
-  <lastmod>2023-08-19T11:14:46+00:00</lastmod>
+  <lastmod>2023-08-21T11:14:46+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 
