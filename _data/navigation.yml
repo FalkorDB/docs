@@ -29,6 +29,8 @@
       url: /commands/graph.config-set 
 - title: Cypher Support
   url: /cypher_support
+- title: LLM support 
+  url: /llm_support
 - title: Clients
   url: /clients
 - title: Data Types
