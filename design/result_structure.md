@@ -1,14 +1,12 @@
 ---
 title: "FalkorDB Result Set Structure"
-linkTitle: "Result Set Structure"
-weight: 11
-description: >
-    The Result Set's format
+description: The Result Set's format
 ---
 
-This document describes the format FalkorDB uses to print data when accessed through the `redis-cli` utility. The [language-specific clients](/graph/clients) retrieve data in a more succinct format, and provide their own functionality for printing result sets. 
+This document describes the format FalkorDB uses to print data when accessed through the `redis-cli` utility. The [language-specific clients](/graph/clients) retrieve data in a more succinct format, and provide their own functionality for printing result sets.
 
 ## Top-level members
+
 Queries that return data emit an array with 3 top-level members:
 
 1. The header describing the returned records. This is an array which corresponds precisely in order and naming to the RETURN clause of the query.
@@ -31,7 +29,6 @@ FalkorDB replies are formatted using the [RESP protocol](https://redis.io/topics
 | Boolean         | String ("true"/"false")     |
 | Double          | String (15-digit precision) |
 
-
 ### Graph Entities
 
 When full entities are specified in a RETURN clause, all data relevant to each entity value is emitted within a nested array. Key-value pairs in the data, such as the combination of a property name and its corresponding value, are represented as 2-arrays.
@@ -47,7 +44,7 @@ The node representation contains 3 top-level elements:
 3. The key-value pairs of all properties the node possesses.
 
 ```sh
-[	
+[
     [“id”, ID (integer)]
     [“labels”,
         [label (string) X label count]
@@ -69,7 +66,7 @@ The relation representation contains 5 top-level elements:
 5. The key-value pairs of all properties the relation possesses.
 
 ```sh
-[	
+[
     [“id”, ID (integer)]
     [“type”, type (string)]
     [“src_node”, source node ID (integer)]
@@ -83,10 +80,12 @@ The relation representation contains 5 top-level elements:
 ### Collections
 
 #### Arrays
+
 When array values are specified in a RETURN clause, the representation in the response is the array string representation. This is done solely for better readability of the response.
 The string representation of an array which contains graph entities, will print only their ID. A node string representation is round braces around its ID, and edge string representation is brackets around the edge ID.
 
 #### Paths
+
 Returned path value is the string representation of an array with the path's nodes and edges, interleaved.
 
 ## Example
@@ -127,4 +126,3 @@ We can run a query that returns a node, a relation, and a scalar value.
       3) "Dunder Mifflin"
 3) 1) "Query internal execution time: 1.858986 milliseconds"
 ```
-

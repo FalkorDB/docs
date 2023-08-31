@@ -1,9 +1,6 @@
 ---
 title: "References"
-linkTitle: "References"
-weight: 8
-description: >
-    Quick start
+description: Quick start
 ---
 
 * [Development Tutorial](https://developer.redis.com/howtos/redisgraph/)

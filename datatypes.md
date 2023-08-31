@@ -1,7 +1,5 @@
 ---
 title: "FalkorDB data types"
-linkTitle: "Data types"
-weight: 4
 description: "FalkorDB supports a number of distinct data types, some of which can be persisted as property values and some of which are ephemeral."
 ---
 

@@ -1,8 +1,6 @@
 ---
 title: "Path algorithms"
-linkTitle: "Path algorithms"
 description: "Learn how to use algo.SPpaths and algo.SSpaths to find single-pair and single-source paths"
-weight: 7
 ---
 
 RedisGraph 2.10 introduced two new path-finding algorithms, or more accurately, minimum-weight, optionally bounded-cost, and optionally bounded-length path-finding algorithms, `algo.SPpaths` and `algo.SSpaths`.

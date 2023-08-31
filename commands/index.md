@@ -1,9 +1,6 @@
 ---
 title: "Commands"
-linkTitle: "Commands"
-weight: 1
-description: >
-    Commands overview
+description: Commands overview
 ---
 
 ## Overview
