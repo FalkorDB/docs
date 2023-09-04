@@ -13,7 +13,7 @@ Returns: [Result set](/design/result_structure)
 
 ### Queries and Parameterized Queries
 
-The execution plans of queries, both regular and parameterized, are cached (up to [CACHE_SIZE](/configuration#cache_size) unique queries are cached). Therefore, it is recommended to use parametrized queries when executing many queries with the same pattern but different constants.
+The execution plans of queries, both regular and parameterized, are cached (up to [CACHE_SIZE](/configuration#cache_size) unique queries are cached). Therefore, it is recommended to use parameterized queries when executing many queries with the same pattern but different constants.
 
 Query-level timeouts can be set as described in [the configuration section](/configuration#timeout).
 

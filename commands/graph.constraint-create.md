@@ -157,7 +157,7 @@ GRAPH.RO_QUERY <key> "CALL db.constraints()"
 
 For each constraint the procedure will yield the following fields:
 
-| Field        | Desc                                                   |
+| Field        | Description                                            |
 | ------------ | ------------------------------------------------------ |
 | `type`       | type of constraint, either `UNIQUE` or `MANDATORY`     |
 | `label`      | label or relationship-type enforced by the constraint  |

@@ -113,9 +113,11 @@ rustis
 tombatron
 tompro
 xyxel
+alister
 
 RediSearch
 Stopwords
+stopwords
 
 slowlog
 SLOWLOG
@@ -131,6 +133,7 @@ multithreaded
 FOREACH
 subquery
 subqueries
+reachability
 
 isEmpty
 IDentifier
@@ -147,9 +150,49 @@ percentileDisc
 stDev
 stDevP
 
+costProp
+maxCost
+pathCost
+pathCount
+relTypes
+sourceNode
+pathWeight
+targetNode
+propCount
+
 NumItems
 dedup
 dups
 idx
 insertListElements
 sublist
+
+
+exprList
+toBoolean
+toBooleanList
+toBooleanOrNull
+toFloat
+toFloatList
+toFloatOrNull
+toInteger
+toIntegerList
+toIntegerOrNull
+toString
+toStringList
+toStringOrNull
+toJSON
+
+ceil
+nan
+signum
+sqrt
+epel
+
+namespace
+parallelizing
+
+jinja
+Aldis
+alister
+Costanza
