@@ -81,6 +81,7 @@ unserializable
 geospatial
 Geospatial
 
+RO
 TTY
 FOF
 CSC
@@ -88,7 +89,7 @@ CSV
 IDF
 TF
 BFS
-
+nd
 ISC
 JS
 KJDev
@@ -129,6 +130,7 @@ enums
 
 transactional
 multithreaded
+duplications
 
 FOREACH
 subquery
@@ -152,13 +154,16 @@ stDevP
 
 costProp
 maxCost
+maxLen
 pathCost
 pathCount
 relTypes
+reltype
 sourceNode
 pathWeight
 targetNode
 propCount
+relDirection
 
 NumItems
 dedup
@@ -183,6 +188,11 @@ toStringList
 toStringOrNull
 toJSON
 
+indegree
+outdegree
+reltype
+reltypeList
+
 ceil
 nan
 signum
@@ -196,3 +206,47 @@ jinja
 Aldis
 alister
 Costanza
+compton
+Miesha
+
+Parametrized
+ascii
+entrypoint
+unaliased
+
+acos
+arccosine
+arcsine
+arctangent
+asin
+atan
+haversin
+versine
+lon
+
+JSON
+lTrim
+len
+matchRegEx
+rTrim
+replaceRegEx
+str
+strList
+substring
+toLower
+toUpper
+whitespace
+
+UNIQIE
+createNodeIndex
+dbms
+fulltext
+pageRank
+pagerank
+propertyKeys
+queryNodes
+relationshipTypes
+
+acyclic
+Nostem
+Implementers
