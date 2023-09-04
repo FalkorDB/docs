@@ -53,7 +53,7 @@ But trying to create a third node with `first_name` Frank and `last_name` Costan
 
 - A unique constraint requires the existence of an exact-match index prior to its creation. For example, trying to create a unique constraint governing attributes: `first_name` and `last_name` of nodes with label `Person` without having an exact-match index over `Person`'s `first_name` and `last_name` attributes will fail.
 
-- A unique constraint is enforced for a given node or edge only if all the constrainted properties are defined (non-null).
+- A unique constraint is enforced for a given node or edge only if all the constrained properties are defined (non-null).
 - Unique constraints are not enforced for array-valued properties.
 - Trying to delete an index that supports a constraint will fail.
 
@@ -61,9 +61,9 @@ But trying to create a third node with `first_name` Frank and `last_name` Costan
 
 ## Creating a constraint
 
-To create a constraint, use the `GRAPH.CONSTRAINT CREATE` command as folllows:
+To create a constraint, use the `GRAPH.CONSTRAINT CREATE` command as follows:
 
-```
+```sh
 GRAPH.CONSTRAINT CREATE key constraintType {NODE label | RELATIONSHIP reltype} PROPERTIES propCount prop [prop...]
 ```
 

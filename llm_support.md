@@ -1,6 +1,6 @@
 ---
 title: "LLM support"
-description: "FalkorDB supports a number of LLM framworks."
+description: "FalkorDB supports a number of LLM frameworks."
 ---
 
 ## LLM frameworks
