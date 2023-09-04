@@ -26,6 +26,7 @@ VKEY
 LRU
 AOF
 GraphBLAS
+GraphBlas
 runtime
 MotoGP
 Ducati
@@ -60,3 +61,5 @@ Booleans
 DateTime
 LocalDateTime
 LocalTime
+OpenMP
+CMD
