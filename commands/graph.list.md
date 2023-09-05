@@ -2,7 +2,7 @@
 title: "GRAPH.LIST"
 description: >
     Lists all graph keys in the keyspace
-    parent: "Commands"
+parent: "Commands"
 ---
 
 Lists all graph keys in the keyspace.

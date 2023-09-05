@@ -1,5 +1,6 @@
 ---
 title: "Configuration Parameters"
+nav_order: 2
 description: >
     FalkorDB supports multiple module configuration parameters. 
 ---

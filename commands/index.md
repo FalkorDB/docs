@@ -1,6 +1,7 @@
 ---
 title: "Commands"
 description: Commands overview
+nav_order: 3
 has_children: true
 ---
 

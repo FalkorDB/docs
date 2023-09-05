@@ -1,5 +1,6 @@
 ---
-title: "FalkorDB Client Libraries"
+title: "Client Libraries"
+nav_order: 4
 description: >
     Redis clients that support FalkorDB API
 ---
@@ -10,8 +11,8 @@ In addition there are several client libraries to improve abstractions and allow
 
 ## Currently available Libraries
 
-| Project                                                   | Language   | License | Author                                      | Stars                                                             | Package | 
-| --------------------------------------------------------- | ---------- | ------- | ------------------------------------------- | ----------------------------------------------------------------- | ------- | 
+| Project                                                   | Language   | License | Author                                      | Stars                                                             | Package |
+| --------------------------------------------------------- | ---------- | ------- | ------------------------------------------- | ----------------------------------------------------------------- | ------- |
 | [jedis][jedis-url] | Java | MIT | [Redis][redis-url] | ![Stars][jedis-stars] | [Maven][jedis-package]||
 | [redis-py][redis-py-url] | Python | MIT | [Redis][redis-url] | ![Stars][redis-py-stars] | [pypi][redis-py-package]||
 | [node-redis][node-redis-url] | Node.JS | MIT | [Redis][redis-url] | ![Stars][node-redis-stars] | [npm][node-redis-package]||
