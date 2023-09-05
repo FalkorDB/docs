@@ -1,6 +1,7 @@
 ---
 title: "Commands"
 description: Commands overview
+has_children: true
 ---
 
 ## Overview
