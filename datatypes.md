@@ -1,6 +1,7 @@
 ---
-title: "FalkorDB data types"
+title: "Data types"
 description: "FalkorDB supports a number of distinct data types, some of which can be persisted as property values and some of which are ephemeral."
+nav_order: 5
 ---
 
 ## Graph types

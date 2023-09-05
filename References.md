@@ -1,6 +1,7 @@
 ---
 title: "References"
 description: Quick start
+nav_order: 998
 ---
 
 * [Development Tutorial](https://developer.redis.com/howtos/redisgraph/)
