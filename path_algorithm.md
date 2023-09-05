@@ -1,5 +1,6 @@
 ---
 title: "Path algorithms"
+nav_order: 5
 description: "Learn how to use algo.SPpaths and algo.SSpaths to find single-pair and single-source paths"
 ---
 
