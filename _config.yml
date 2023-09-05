@@ -1,4 +1,4 @@
-remote-theme: just-the-docs/just-the-docs
+remote_theme: just-the-docs/just-the-docs
 title: FalkorDB Docs
 description: The FalkorDB documentation
 logo: "/images/falkor-logo.png"
