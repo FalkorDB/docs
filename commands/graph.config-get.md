@@ -2,6 +2,7 @@
 title: "GRAPH.CONFIG-GET"
 description: >
     Retrieves a FalkorDB configuration
+parent: "Commands"
 ---
 
 Retrieves the current value of a FalkorDB configuration parameter.

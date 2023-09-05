@@ -2,6 +2,7 @@
 title: "GRAPH.CONFIG-SET"
 description: >
     Updates a FalkorDB configuration
+parent: "Commands"    
 ---
 
 Set the value of a FalkorDB configuration parameter.

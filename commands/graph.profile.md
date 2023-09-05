@@ -2,6 +2,7 @@
 title: "GRAPH.PROFILE"
 description: >
     Executes a query and returns an execution plan augmented with metrics for each operation's execution
+parent: "Commands"
 ---
 
 Executes a query and produces an execution plan augmented with metrics for each operation's execution.

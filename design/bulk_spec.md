@@ -2,6 +2,7 @@
 tile: "GRAPH.BULK endpoint specification"
 description: >
     Implementation details for the GRAPH.BULK endpoint
+parent: "The FalkorDB Design"
 ---
 
 The FalkorDB bulk loader uses the GRAPH.BULK endpoint to build a new graph from 1 or more Redis queries.

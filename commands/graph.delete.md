@@ -2,6 +2,7 @@
 title: "GRAPH.DELETE"
 description: >
     Completely removes the graph and all of its entities
+parent: "Commands"    
 ---
 
 Completely removes the graph and all of its entities.

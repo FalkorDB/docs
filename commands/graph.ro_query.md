@@ -2,6 +2,7 @@
 title: "GRAPH.RO_QUERY"
 description: >
     Executes a given read only query against a specified graph
+parent: "Commands"    
 ---
 
 Executes a given read only query against a specified graph.

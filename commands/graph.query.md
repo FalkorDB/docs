@@ -2,6 +2,7 @@
 title: "GRAPH.QUERY"
 description: >
     Executes the given query against a specified graph
+parent: "Commands"    
 ---
 
 

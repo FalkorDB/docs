@@ -2,6 +2,7 @@
 title: "GRAPH.EXPLAIN"
 description: >
     Returns a query execution plan without running the query
+parent: "Commands"    
 ---
 
 Constructs a query execution plan but does not run it. Inspect this execution plan to better

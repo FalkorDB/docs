@@ -2,6 +2,7 @@
 title: "GRAPH.CONSTRAINT DROP"
 description: >
     Deletes a constraint from specified graph
+parent: "Commands"
 ---
 
 

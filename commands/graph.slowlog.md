@@ -2,6 +2,7 @@
 title: "GRAPH.SLOWLOG"
 description: >
     Returns a list containing up to 10 of the slowest queries issued against the given graph
+parent: "Commands"    
 ---
 
 Returns a list containing up to 10 of the slowest queries issued against the given graph ID.

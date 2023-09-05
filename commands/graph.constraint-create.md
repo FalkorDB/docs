@@ -2,6 +2,7 @@
 title: "GRAPH.CONSTRAINT CREATE"
 description: >
     Creates a constraint on specified graph
+parent: "Commands"    
 ---
 
 
