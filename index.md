@@ -1,7 +1,9 @@
 ---
+layout: default
 title: FalkorDB Docs
-description: >
-    The fastest way to your knowledge
+nav_order: 1
+description: "The fastest way to your knowledge"
+permalink: /
 ---
 
 FalkorDB is a graph database built on Redis. This graph database uses [GraphBLAS](http://faculty.cse.tamu.edu/davis/GraphBLAS.html) under the hood for its [sparse adjacency matrix](https://en.wikipedia.org/wiki/Adjacency_matrix) graph representation.

@@ -1,6 +1,7 @@
 ---
 title: "The FalkorDB Design"
 description: "FalkorDB: A High Performance In-Memory Graph Database"
+has_children: true
 ---
 
 ## Abstract
