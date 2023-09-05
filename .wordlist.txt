@@ -250,3 +250,5 @@ relationshipTypes
 acyclic
 Nostem
 Implementers
+permalink
+nav
