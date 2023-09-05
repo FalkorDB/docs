@@ -3,11 +3,12 @@ title: FalkorDB Docs
 description: The FalkorDB documentation
 logo: "/images/falkor-logo.png"
 favicon_ico: "/images/favicon.ico"
+ga_tracking: G-0V4CX90653
 
 search_enabled: true
 
 aux_links:
-  "FalkorDN on GitHub":
+  "FalkorDB on GitHub":
     - "//github.com/falkordb/falkordb"
 
 # Makes Aux links open in a new tab. Default is false
