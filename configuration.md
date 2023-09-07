@@ -30,6 +30,12 @@ From the command line:
 $ redis-server --loadmodule ./falkordb.so [OPT VAL]...
 ```
 
+When running a dokcer container 
+
+```
+docker run -p 6379:6379 -it -e FALKORDB_ARGS="[OPT VAL]" --rm falkordb/falkordb:edge
+```
+
 ## Setting configuration parameters at run-time (for supported parameters)
 
 FalkorDB exposes the `GRAPH.CONFIG` endpoint to allowing for the setting and retrieval of configuration parameters at run-time.
