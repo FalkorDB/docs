@@ -5,8 +5,13 @@ description: >
     FalkorDB supports multiple module configuration parameters. 
 ---
 
-FalkorDB supports multiple module configuration parameters. 
+FalkorDB supports [Redis configuration](https://redis.io/docs/management/config/) and multiple module configuration parameters. 
 Some of these parameters can only be set at load-time, while other parameters can be set either on load-time or on run-time.
+
+For example the following will run the server with global authentication password and 4 threads.
+```
+docker run -p 6379:6379 -it -e REDIS_ARGS="--requirepass redis-stack" -e FALKORDB_ARGS="THREAD_COUNT 4" --rm falkordb/falkordb:edge
+```
 
 ## Setting configuration parameters on module load
 
