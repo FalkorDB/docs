@@ -20,8 +20,10 @@ FalkorDB is a graph database built on Redis. This graph database uses [GraphBLAS
   * Nodes can have multiple labels
   * Relationships have a relationship type
 * Graphs represented as sparse adjacency matrices
-* [OpenCypher](http://www.opencypher.org/) with proprietary extensions as a query language
   * Queries are translated into linear algebra expressions
+* [OpenCypher](http://www.opencypher.org/) with proprietary extensions as a query language
+* Support of both (RESP)[https://redis.io/docs/reference/protocol-spec/] and (Bolt)[https://en.wikipedia.org/wiki/Bolt_(network_protocol)]
+* Indexing - FullText, Vector & Numeric
 
 To see FalkorDB in action, visit [Demos](https://github.com/FalkorDB/FalkorDB/tree/master/demo).
 
