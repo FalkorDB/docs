@@ -35,7 +35,7 @@ From the command line:
 $ redis-server --loadmodule ./falkordb.so [OPT VAL]...
 ```
 
-When running a dokcer container 
+When running a docker container 
 
 ```
 docker run -p 6379:6379 -it -e FALKORDB_ARGS="[OPT VAL]" --rm falkordb/falkordb:edge
