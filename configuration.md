@@ -9,7 +9,8 @@ FalkorDB supports [Redis configuration](https://redis.io/docs/management/config/
 Some of these parameters can only be set at load-time, while other parameters can be set either on load-time or on run-time.
 
 For example the following will run the server with global authentication password and 4 threads.
-```
+
+```sh
 docker run -p 6379:6379 -it -e REDIS_ARGS="--requirepass redis-stack" -e FALKORDB_ARGS="THREAD_COUNT 4" --rm falkordb/falkordb:edge
 ```
 
@@ -25,7 +26,7 @@ loadmodule ./falkordb.so [OPT VAL]...
 
 From the [Redis CLI](https://redis.io/docs/manual/cli/), using the [MODULE LOAD](https://redis.io/commands/module-load/) command:
 
-```
+```sh
 127.0.0.6379> MODULE LOAD falkordb.so [OPT VAL]...
 ```
 
@@ -35,9 +36,9 @@ From the command line:
 $ redis-server --loadmodule ./falkordb.so [OPT VAL]...
 ```
 
-When running a docker container 
+When running a docker container
 
-```
+```sh
 docker run -p 6379:6379 -it -e FALKORDB_ARGS="[OPT VAL]" --rm falkordb/falkordb:edge
 ```
 
@@ -91,7 +92,7 @@ The number of threads in FalkorDB's thread pool. This is equivalent to the maxim
 
 #### Example
 
-```
+```sh
 $ redis-server --loadmodule ./falkordb.so THREAD_COUNT 4
 ```
 
@@ -107,7 +108,7 @@ The max number of queries for FalkorDB to cache. When a new query is encountered
 
 #### Example
 
-```
+```sh
 $ redis-server --loadmodule ./falkordb.so CACHE_SIZE 10
 ```
 
@@ -123,7 +124,7 @@ The maximum number of threads that OpenMP may use for computation per query. The
 
 #### Example
 
-```
+```sh
 $ redis-server --loadmodule ./falkordb.so OMP_THREAD_COUNT 1
 ```
 
@@ -149,7 +150,7 @@ The minimum value for `NODE_CREATION_BUFFER` is 128. Values lower than this will
 
 #### Example
 
-```
+```sh
 $ redis-server --loadmodule ./falkordb.so NODE_CREATION_BUFFER 200
 ```
 
@@ -165,7 +166,7 @@ Setting the maximum number of queued queries allows the server to reject incomin
 
 #### Example
 
-```
+```sh
 $ redis-server --loadmodule ./falkordb.so MAX_QUEUED_QUERIES 500
 
 $ redis-cli GRAPH.CONFIG SET MAX_QUEUED_QUERIES 500
@@ -190,7 +191,7 @@ The `TIMEOUT` query parameter of the `GRAPH.QUERY`, `GRAPH.RO_QUERY`, and `GRAPH
 
 #### Example
 
-```
+```sh
 $ redis-server --loadmodule ./falkordb.so TIMEOUT 1000
 ```
 
@@ -213,7 +214,7 @@ When a query execution time exceeds the maximal execution time, the query is abo
 
 #### Example
 
-```
+```sh
 $ redis-server --loadmodule ./falkordb.so TIMEOUT_MAX 1000
 ```
 
@@ -234,12 +235,11 @@ For a given query, this default maximal execution time can be overridden by the 
 
 #### Example
 
-```
+```sh
 $ redis-server --loadmodule ./falkordb.so TIMEOUT_MAX 2000 TIMEOUT_DEFAULT 1000
 ```
 
 ---
-
 
 ### RESULTSET_SIZE
 
@@ -251,7 +251,7 @@ Result set size is a limit on the number of records that should be returned by a
 
 #### Example
 
-```
+```sh
 127.0.0.1:6379> GRAPH.CONFIG SET RESULTSET_SIZE 3
 OK
 127.0.0.1:6379> GRAPH.QUERY G "UNWIND range(1, 5) AS x RETURN x"
@@ -337,7 +337,7 @@ A number within the range [0, 1000]
 
 Retrieve all paths in a graph with a timeout of 500 milliseconds.
 
-```
+```sh
 GRAPH.QUERY wikipedia "MATCH p=()-[*]->() RETURN p" TIMEOUT 500
 ```
 
