@@ -8,7 +8,7 @@ permalink: /
 
 # FalkorDB Docs
 
-[![Dockerhub](https://img.shields.io/docker/pulls/falkordb/falkordb?label=Docker)](https://hub.docker.com/r/falkordb/falkordb/)
+[![Docker Hub](https://img.shields.io/docker/pulls/falkordb/falkordb?label=Docker)](https://hub.docker.com/r/falkordb/falkordb/)
 [![Discord](https://img.shields.io/discord/1146782921294884966?style=flat-square)](https://discord.gg/ErBEqN9E)
 
 FalkorDB is a graph database built on Redis. This graph database uses [GraphBLAS](http://faculty.cse.tamu.edu/davis/GraphBLAS.html) under the hood for its [sparse adjacency matrix](https://en.wikipedia.org/wiki/Adjacency_matrix) graph representation.
@@ -23,7 +23,7 @@ FalkorDB is a graph database built on Redis. This graph database uses [GraphBLAS
   * Queries are translated into linear algebra expressions
 * [OpenCypher](http://www.opencypher.org/) with proprietary extensions as a query language
 * Support of both [RESP](https://redis.io/docs/reference/protocol-spec/) and [Bolt](https://en.wikipedia.org/wiki/Bolt_(network_protocol))
-* Indexing - FullText, Vector & Numeric
+* Indexing - Full-Text Search, Vector Similarly & Numeric
 
 To see FalkorDB in action, visit [Demos](https://github.com/FalkorDB/FalkorDB/tree/master/demo).
 
