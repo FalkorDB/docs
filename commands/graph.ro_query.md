@@ -1,5 +1,6 @@
 ---
 title: "GRAPH.RO_QUERY"
+nav_order: 2
 description: >
     Executes a given read only query against a specified graph
 parent: "Commands"    

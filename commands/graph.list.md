@@ -1,5 +1,6 @@
 ---
 title: "GRAPH.LIST"
+nav_order: 5
 description: >
     Lists all graph keys in the keyspace
 parent: "Commands"

@@ -1,5 +1,6 @@
 ---
 title: "GRAPH.DELETE"
+nav_order: 3
 description: >
     Completely removes the graph and all of its entities
 parent: "Commands"    

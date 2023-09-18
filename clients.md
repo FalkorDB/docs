@@ -49,7 +49,6 @@ In addition there are several client libraries to improve abstractions and allow
 [node-redis-stars]: https://img.shields.io/github/stars/redis/node-redis.svg?style=social&amp;label=Star&amp;maxAge=2592000
 [node-redis-package]: https://www.npmjs.com/package/redis
 
-
 [redisgraph-rb-author]: https://redislabs.com
 [redisgraph-rb-url]: https://github.com/RedisGraph/redisgraph-rb
 [redisgraph-rb-stars]: https://img.shields.io/github/stars/RedisGraph/redisgraph-rb.svg?style=social&amp;label=Star&amp;maxAge=2592000
@@ -61,7 +60,6 @@ In addition there are several client libraries to improve abstractions and allow
 [rueidis-url]: https://github.com/rueian/rueidis
 [rueidis-author]: https://github.com/rueian
 [rueidis-stars]: https://img.shields.io/github/stars/rueian/rueidis.svg?style=social&amp;label=Star&amp;maxAge=2592000
-
 
 [rgraph-author]: https://github.com/Sceat
 [rgraph-url]: https://github.com/HydreIO/rgraph
@@ -79,10 +77,6 @@ In addition there are several client libraries to improve abstractions and allow
 [redisgraph_php-url]: https://github.com/jpbourbon/redisgraph_php
 [redisgraph_php-stars]: https://img.shields.io/github/stars/jpbourbon/redisgraph_php.svg?style=social&amp;label=Star&amp;maxAge=2592000
 
-[redislabs-redisgraph-php-author]: https://github.com/mkorkmaz
-[redislabs-redisgraph-php-url]: https://github.com/mkorkmaz/redislabs-redisgraph-php
-[redislabs-redisgraph-php-stars]: https://img.shields.io/github/stars/mkorkmaz/redislabs-redisgraph-php.svg?style=social&amp;label=Star&amp;maxAge=2592000
-
 [redisgraph-ex-author]: https://github.com/crflynn
 [redisgraph-ex-url]: https://github.com/crflynn/redisgraph-ex
 [redisgraph-ex-stars]: https://img.shields.io/github/stars/crflynn/redisgraph-ex.svg?style=social&amp;label=Star&amp;maxAge=2592000
@@ -98,10 +92,6 @@ In addition there are several client libraries to improve abstractions and allow
 [NRedisGraph-author]: https://github.com/tombatron
 [NRedisGraph-url]: https://github.com/tombatron/NRedisGraph
 [NRedisGraph-stars]: https://img.shields.io/github/stars/tombatron/NRedisGraph.svg?style=social&amp;label=Star&amp;maxAge=2592000
-
-[RedisGraphDotNet.Client-author]: https://github.com/Sgawrys
-[RedisGraphDotNet.Client-url]: https://github.com/Sgawrys/RedisGraphDotNet.Client
-[RedisGraphDotNet.Client-stars]: https://img.shields.io/github/stars/Sgawrys/RedisGraphDotNet.Client.svg?style=social&amp;label=Star&amp;maxAge=2592000
 
 [RedisGraph.jl-author]: https://github.com/xyxel
 [RedisGraph.jl-url]: https://github.com/xyxel/RedisGraph.jl

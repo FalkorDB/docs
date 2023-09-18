@@ -1,5 +1,6 @@
 ---
 title: "GRAPH.QUERY"
+nav_order: 1
 description: >
     Executes the given query against a specified graph
 parent: "Commands"    

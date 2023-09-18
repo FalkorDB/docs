@@ -1,5 +1,6 @@
 ---
 title: "GRAPH.EXPLAIN"
+nav_order: 4
 description: >
     Returns a query execution plan without running the query
 parent: "Commands"    

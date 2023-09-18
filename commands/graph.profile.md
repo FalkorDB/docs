@@ -1,5 +1,6 @@
 ---
 title: "GRAPH.PROFILE"
+nav_order: 6
 description: >
     Executes a query and returns an execution plan augmented with metrics for each operation's execution
 parent: "Commands"
