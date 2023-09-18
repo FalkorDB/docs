@@ -116,12 +116,31 @@ The exact method for doing that depends on your client of choice.
 This code snippet shows how to use FalkorDB with raw Redis commands from Python using
 [redis-py](https://github.com/redis/redis-py):
 
+{% tabs log %}
+
+{% tab log python %}
+
 ```python
 import redis
 
 r = redis.Redis()
 reply = r.graph("social").query("MATCH (r:Rider)-[:rides]->(t:Team {name:'Ducati'}) RETURN count(r)")
 ```
+
+{% endtab %}
+
+{% tab log node %}
+
+```javascript
+import redis
+
+r = redis.Redis()
+reply = r.graph("social").query("MATCH (r:Rider)-[:rides]->(t:Team {name:'Ducati'}) RETURN count(r)")
+```
+
+{% endtab %}
+
+{% endtabs %}
 
 ## Client libraries
 
