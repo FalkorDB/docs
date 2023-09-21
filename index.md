@@ -27,8 +27,7 @@ FalkorDB is a graph database built on Redis. This graph database uses [GraphBLAS
 
 To see FalkorDB in action, visit [Demos](https://github.com/FalkorDB/FalkorDB/tree/master/demo).
 
-You can also pick getting started [demos for the leading programming languages](https://github.com/FalkorDB/demos), such as Java, Python & Nodejs.
-
+You can also pick getting started [demos for the leading programming languages](https://github.com/FalkorDB/demos), such as Java, Python & NodeJS.
 
 ## Docker
 
