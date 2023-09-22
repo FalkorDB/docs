@@ -122,6 +122,7 @@ fulltext
 geospatial
 hasLabels
 haversin
+https
 hydre
 idx
 indegree
