@@ -57,6 +57,10 @@ We do not support any of these properties at the type level, meaning nodes and r
 + MATCH
 + OPTIONAL MATCH
 
+  **Unsupported:**
+  
+- Label expressions
+
 ### Projecting Clauses
 
 + RETURN
