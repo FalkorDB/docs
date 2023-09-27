@@ -8,8 +8,11 @@ ga_tracking: G-0V4CX90653
 search_enabled: true
 
 aux_links:
-  "FalkorDB on GitHub":
+  "Docs Reposity":
+    - "//github.com/falkordb/docs"
+  "FalkorDB Reposity":
     - "//github.com/falkordb/falkordb"
+
 
 # Makes Aux links open in a new tab. Default is false
 aux_links_new_tab: true
