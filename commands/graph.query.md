@@ -1581,3 +1581,70 @@ For a node label, the full-text index deletion syntax is:
 ```sh
 GRAPH.QUERY DEMO_GRAPH "CALL db.idx.fulltext.drop('Movie')"
 ```
+
+## Vector indexing
+
+With the introduction of the vector data-type a new type of index was introduce.
+A vector index is a dedicated index for indexing and retrieving vectors
+
+To create this type of index use the following syntax:
+
+```sh
+CREATE VECTOR INDEX FOR <entity_pattern> ON <entity_attribute> OPTIONS <options>
+```
+
+For example, to create a vector index over all Product nodes description attribute
+use the following syntax:
+
+```sh
+CREATE VECTOR INDEX FOR (p:Product) ON (p.description) OPTIONS {dim:128, similarityFunction:'euclidean'}
+```
+
+Please note when creating a vector index both the vector dimension and similarity function
+must be provided. At the moment the only supported similarity function is 'euclidean'.
+
+### Query vector index
+
+Vector indices are used to retrieved similar vectors to a given query vector
+using the similarity function as a measure of "distance"
+
+To query the index use the vector.query procedure as follows:
+
+```sh
+CALL db.idx.vector.query( {
+    type: 'NODE'/'RELATIONSHIP',
+    label: <label>,
+    attribute: <attribute_name>
+    query: <query_vector>
+    k:<number_of_vectors> } ) YIELD entity
+```
+
+To query for up to 10 similar Product descriptions to a given query description vector
+issue the following procedure call:
+
+```sh
+CALL db.idx.vector.query( {
+    type: 'NODE',
+    label: 'Product',
+    attribute: 'description',
+    query: vector32f(<array_of_vector_elements>),
+    k:10 } ) YIELD entity, score
+```
+
+The procedure can yield both the indexed entity assigned to the found similar vector
+and a similarity score of that entity.
+
+### Deleting a vector index
+
+To remove a vector index simply issue the drop index command as follows:
+
+```sh
+DROP VECTOR INDEX FOR <entity_pattern> (<entity_attribute>)
+```
+
+For example to drop the vector index over Product description invoke:
+
+```sh
+DROP VECTOR INDEX FOR (p:Product) ON (p.description)
+```
+
