@@ -161,6 +161,7 @@ pathCost
 pathCount
 pathNodes
 pathWeight
+pzac
 pdf
 percentileCont
 percentileDisc
@@ -177,6 +178,7 @@ randomUUID
 rb
 reachability
 redis
+redgraph
 redisgraph
 relDirection
 relTypes
