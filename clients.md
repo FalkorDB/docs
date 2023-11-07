@@ -15,7 +15,7 @@ In addition there are several client libraries to improve abstractions and allow
 | --------------------------------------------------------- | ---------- | ------- | ------------------------------------------- | ----------------------------------------------------------------- | ------- |
 | [jedis][jedis-url] | Java | MIT | [Redis][redis-url] | ![Stars][jedis-stars] | [Maven][jedis-package]||
 | [redis-py][redis-py-url] | Python | MIT | [Redis][redis-url] | ![Stars][redis-py-stars] | [pypi][redis-py-package]||
-| [node-redis][node-redis-url] | Node.JS | MIT | [Redis][redis-url] | ![Stars][node-redis-stars] | [npm][node-redis-package]||
+| [node-falkordb][node-falkordb-url] | Node.JS | MIT | [FalkorDB][falkordb-url] | ![Stars][node-falkordb-stars] | [npm][node-falkordb-package]||
 | [nredisstack][nredisstack-url] | .NET | MIT | [Redis][redis-url] | ![Stars][nredisstack-stars] | [nuget][nredisstack-package]||
 | [redisgraph-rb][redisgraph-rb-url]                        | Ruby       | BSD     | [Redis][redisgraph-rb-author]          | [![redisgraph-rb-stars]][redisgraph-rb-url]                       | [GitHub][redisgraph-rb-url] ||
 | [redgraph][redgraph-url]                                  | Ruby       | MIT     | [pzac][redgraph-author]                | [![redgraph-stars]][redgraph-url]                       | [GitHub][redgraph-url] ||
@@ -31,8 +31,10 @@ In addition there are several client libraries to improve abstractions and allow
 | [rustis][rustis-url]                                     | Rust       | MIT          | [Dahomey Technologies][rustis-author]       | [![rustis-stars]][rustis-url]    | [Crate](https://crates.io/crates/rustis) |
 | [NRedisGraph][NRedisGraph-url]                            | C#         | BSD     | [tombatron][NRedisGraph-author]             | [![NRedisGraph-stars]][NRedisGraph-url]                           | [GitHub][NRedisGraph-url] ||
 | [RedisGraph.jl][RedisGraph.jl-url]                        | Julia      | MIT     | [xyxel][RedisGraph.jl-author]               | [![RedisGraph.jl-stars]][RedisGraph.jl-url]                       | [GitHub][RedisGraph.jl-url] ||
+| [node-redis][node-redis-url] (Deprecated) | Node.JS | MIT | [Redis][redis-url] | ![Stars][node-redis-stars] | [npm][node-redis-package]||
 
 [redis-url]: https://redis.com
+[falkordb-url]: https://www.falkordb.com
 
 [redis-py-url]: https://github.com/redis/redis-py
 [redis-py-stars]: https://img.shields.io/github/stars/redis/redis-py.svg?style=social&amp;label=Star&amp;maxAge=2592000
@@ -49,6 +51,10 @@ In addition there are several client libraries to improve abstractions and allow
 [node-redis-url]: https://github.com/redis/node-redis
 [node-redis-stars]: https://img.shields.io/github/stars/redis/node-redis.svg?style=social&amp;label=Star&amp;maxAge=2592000
 [node-redis-package]: https://www.npmjs.com/package/redis
+
+[node-falkordb-url]: https://github.com/falkordb/node-falkordb
+[node-falkordb-stars]: https://img.shields.io/github/stars/falkordb/node-falkordb.svg?style=social&amp;label=Star&amp;maxAge=2592000
+[node-falkordb-package]: https://www.npmjs.com/package/falkordb
 
 [redisgraph-rb-author]: https://redislabs.com
 [redisgraph-rb-url]: https://github.com/RedisGraph/redisgraph-rb
