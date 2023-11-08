@@ -38,6 +38,7 @@ JSON
 KJDev
 Kepner
 Keren
+Kubernetes
 LLM
 LRU
 LangChain
@@ -237,3 +238,4 @@ versine
 weightProp
 whitespace
 xyxel
+yaml
