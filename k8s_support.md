@@ -17,7 +17,7 @@ To deploy FalkorDB to Kubernetes we need to use:
 * [Helm charts](https://bitnami.com/stack/redis/helm)
 * [Docker image](https://hub.docker.com/r/falkordb/falkordb)
 
-And follow this steps:
+And follow these steps:
 
 ### Step 1: Create a `values.yaml` File
 
@@ -102,4 +102,4 @@ The output should resemble the following:
    2) "Query internal execution time: 0.290600 milliseconds"
 ```
 
-In summary, this guide provides clear steps for deploying FalkorDB on Kubernetes using Helm charts and Docker images. It covers the creation of a values.yaml file for configuration, Helm chart installation, password retrieval, enabling external connections, connecting to FalkorDB with redis-cli, and running a basic Cypher query for verification. We hope this documentation helps you successfully set up FalkorDB in your Kubernetes environment. If you have any questions or encounter any issues during the process, please don't hesitate to reach out for assistance. Thank you for choosing FalkorDB!
+In summary, this guide provides steps for deploying FalkorDB on Kubernetes using Helm charts and Docker images. It covers the creation of a values.yaml file for configuration, Helm chart installation, password retrieval, enabling external connections, connecting to FalkorDB with redis-cli, and running a basic Cypher query for verification. We hope this documentation helped you to set up FalkorDB in your Kubernetes environment. If you have any questions or encounter any issues during the process, please don't hesitate to reach out for assistance. Thank you for choosing FalkorDB!
