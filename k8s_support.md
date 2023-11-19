@@ -21,7 +21,7 @@ And follow these steps:
 
 ### Step 1: Create a `values.yaml` File
 
-1.Create a values.yaml file with the following content:
+Create a values.yaml file with the following content:
 
 ```yaml
 image:
