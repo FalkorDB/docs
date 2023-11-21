@@ -1,7 +1,7 @@
 ---
 title: "BOLT protocol support"
 nav_order: 10
-description: "Connecting FalkorDB using BOLT protocol."
+description: "Connecting to FalkorDB using BOLT protocol."
 ---
 
 ## BOLT protocol support for FalkorDB
@@ -42,4 +42,3 @@ bash
 ```bash
 python main.py
 ```
-
