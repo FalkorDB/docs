@@ -1584,20 +1584,27 @@ GRAPH.QUERY DEMO_GRAPH "CALL db.idx.fulltext.drop('Movie')"
 
 ## Vector indexing
 
-With the introduction of the vector data-type a new type of index was introduce.
-A vector index is a dedicated index for indexing and retrieving vectors
+With the introduction of the `vector` data-type a new type of index was introduce.
+A vector index is a dedicated index for indexing and searching through vectors
 
 To create this type of index use the following syntax:
 
-```sh
+```cypher
 CREATE VECTOR INDEX FOR <entity_pattern> ON <entity_attribute> OPTIONS <options>
 ```
 
-For example, to create a vector index over all Product nodes description attribute
+For example, to create a vector index over all `Product` nodes `description` attribute
 use the following syntax:
 
-```sh
-CREATE VECTOR INDEX FOR (p:Product) ON (p.description) OPTIONS {dim:128, similarityFunction:'euclidean'}
+```cypher
+CREATE VECTOR INDEX FOR (p:Product) ON (p.description) OPTIONS {dimension:128, similarityFunction:'euclidean'}
+```
+
+Similarly to create a vector index over all `Call` relationships `summary` attribute
+use the following syntax:
+
+```cypher
+CREATE VECTOR INDEX FOR ()-[e:Call]->() ON (e.summary) OPTIONS {dimension:128, similarityFunction:'euclidean'}
 ```
 
 Please note when creating a vector index both the vector dimension and similarity function
@@ -1605,46 +1612,56 @@ must be provided. At the moment the only supported similarity function is 'eucli
 
 ### Query vector index
 
-Vector indices are used to retrieved similar vectors to a given query vector
+Vector indices are used to search for similar vectors to a given query vector
 using the similarity function as a measure of "distance"
 
-To query the index use the vector.query procedure as follows:
+To query the index use either `db.idx.vector.queryNodes` for node retrieval or
+`db.idx.vector.queryRelationships` for relationships.
 
-```sh
-CALL db.idx.vector.query( {
-    type: 'NODE'/'RELATIONSHIP',
-    label: <label>,
-    attribute: <attribute_name>
-    query: <query_vector>
-    k:<number_of_vectors> } ) YIELD entity
+```cypher
+CALL db.idx.vector.queryNodes(
+    label: STRING,
+    attribute: STRING,
+    k: INTEGER,
+    query: VECTOR
+) YIELD node, score
 ```
 
-To query for up to 10 similar Product descriptions to a given query description vector
+```cypher
+CALL db.idx.vector.queryRelationships(
+    relationshipType: STRING,
+    attribute: STRING,
+    k: INTEGER,
+    query: VECTOR
+) YIELD relationship, score
+```
+
+To query up to 10 similar `Product` descriptions to a given query description vector
 issue the following procedure call:
 
-```sh
-CALL db.idx.vector.query( {
-    type: 'NODE',
-    label: 'Product',
-    attribute: 'description',
-    query: vector32f(<array_of_vector_elements>),
-    k:10 } ) YIELD entity, score
+```cypher
+CALL db.idx.vector.queryNodes(
+    'Product',
+    'description',
+    10,
+    vecf32(<array_of_vector_elements>),
+    ) YIELD node
 ```
 
 The procedure can yield both the indexed entity assigned to the found similar vector
-and a similarity score of that entity.
+in addition to a similarity score of that entity.
 
 ### Deleting a vector index
 
-To remove a vector index simply issue the drop index command as follows:
+To remove a vector index simply issue the `drop index` command as follows:
 
-```sh
+```cypher
 DROP VECTOR INDEX FOR <entity_pattern> (<entity_attribute>)
 ```
 
 For example to drop the vector index over Product description invoke:
 
-```sh
+```cypher
 DROP VECTOR INDEX FOR (p:Product) ON (p.description)
 ```
 
