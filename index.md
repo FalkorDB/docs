@@ -11,7 +11,7 @@ permalink: /
 [![Docker Hub](https://img.shields.io/docker/pulls/falkordb/falkordb?label=Docker)](https://hub.docker.com/r/falkordb/falkordb/)
 [![Discord](https://img.shields.io/discord/1146782921294884966?style=flat-square)](https://discord.gg/ErBEqN9E)
 
-FalkorDB is a blazingly fast graph database used for low latency & high throughput scenarios, under the hood it runs [GraphBLAS](http://faculty.cse.tamu.edu/davis/GraphBLAS.html)  to perform graph operations using sparse algebraic constructs.
+FalkorDB is a blazingly fast graph database used for low latency & high throughput scenarios, under the hood it runs [GraphBLAS](http://faculty.cse.tamu.edu/davis/GraphBLAS.html)  to perform graph operations using sparse linear algebra.
 
 ## Primary features
 
