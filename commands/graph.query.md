@@ -1018,6 +1018,7 @@ This section contains information on all supported functions from the Cypher que
 * [Type conversion functions](#type-conversion-functions)
 * [Node functions](#node-functions)
 * [Path functions](#path-functions)
+* [Vector functions](#vector-functions)
 
 ## Predicate functions
 
@@ -1201,6 +1202,14 @@ This section contains information on all supported functions from the Cypher que
 | [shortestPath(...)](#shortestPath) * | Return the shortest path that resolves the given pattern                                                |
 
 &#42; FalkorDB-specific extensions to Cypher
+
+
+## Vector functions
+
+| Function                              | Description|
+| ------------------------------------- | :----------|
+| vecf32(_array_)                       | Creates a new float 32 vector <br> all elements of input array must be of type float |
+| euclideanDistance(_vector_, _vector_) | Returns the Euclidean distance between the two input vectors |
 
 ### List comprehensions
 
