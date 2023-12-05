@@ -240,3 +240,5 @@ whitespace
 xyxel
 yaml
 uri
+euclideanDistance
+vecf
