@@ -240,6 +240,7 @@ whitespace
 xyxel
 yaml
 uri
+vec
 euclideanDistance
 vecf
 Dani
