@@ -240,3 +240,8 @@ whitespace
 xyxel
 yaml
 uri
+Dani
+Dovizioso
+Pedrosa
+Rossi
+localhost
