@@ -1206,10 +1206,10 @@ This section contains information on all supported functions from the Cypher que
 
 ## Vector functions
 
-| Function                              | Description|
-| ------------------------------------- | :----------|
-| vecf32(_array_)                       | Creates a new float 32 vector <br> all elements of input array must be of type float |
-| euclideanDistance(_vector_, _vector_) | Returns the Euclidean distance between the two input vectors |
+| Function                                  | Description|
+| ----------------------------------------- | :----------|
+| vecf32(_array_)                           | Creates a new float 32 vector <br> all elements of input array must be of type float |
+| vec.euclideanDistance(_vector_, _vector_) | Returns the Euclidean distance between the two input vectors |
 
 ### List comprehensions
 
