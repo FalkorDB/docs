@@ -242,3 +242,8 @@ yaml
 uri
 euclideanDistance
 vecf
+Dani
+Dovizioso
+Pedrosa
+Rossi
+localhost
