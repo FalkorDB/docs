@@ -11,7 +11,7 @@ Some of these parameters can only be set at load-time, while other parameters ca
 For example the following will run the server with global authentication password and 4 threads.
 
 ```sh
-docker run -p 6379:6379 -it -e REDIS_ARGS="--requirepass redis-stack" -e FALKORDB_ARGS="THREAD_COUNT 4" --rm falkordb/falkordb:edge
+docker run -p 6379:6379 -it -e REDIS_ARGS="--requirepass falkordb" -e FALKORDB_ARGS="THREAD_COUNT 4" --rm falkordb/falkordb:edge
 ```
 
 ## Setting configuration parameters on module load
@@ -44,7 +44,7 @@ docker run -p 6379:6379 -it -e FALKORDB_ARGS="[OPT VAL]" --rm falkordb/falkordb:
 
 ## Setting configuration parameters at run-time (for supported parameters)
 
-FalkorDB exposes the `GRAPH.CONFIG` endpoint to allowing for the setting and retrieval of configuration parameters at run-time.
+FalkorDB exposes the `GRAPH.CONFIG` command to allowing for the setting and retrieval of configuration parameters at run-time.
 
 To set the value of a configuration parameter at run-time (for supported parameters), simply run:
 
@@ -63,7 +63,7 @@ Values set using `GRAPH.CONFIG SET` are not persisted after server restart.
 
 ## FalkorDB configuration parameters
 
-The following table summarizes which configuration parameters can be set at module load-time and which can be set on run-time:
+The following table summarizes which configuration parameters can be set at module load-time and which can also be set at run-time:
 
 | Configuration Parameter                                      | Load-time          | Run-time             |
 | :-------                                                     | :-----             | :-----------         |
@@ -71,6 +71,7 @@ The following table summarizes which configuration parameters can be set at modu
 | [CACHE_SIZE](#cache_size)                                    | :white_check_mark: | :white_large_square: |
 | [OMP_THREAD_COUNT](#omp_thread_count)                        | :white_check_mark: | :white_large_square: |
 | [NODE_CREATION_BUFFER](#node_creation_buffer)                | :white_check_mark: | :white_large_square: |
+| [BOLT_PORT](#bolt_port)                                      | :white_check_mark: | :white_large_square: |
 | [MAX_QUEUED_QUERIES](#max_queued_queries)                    | :white_check_mark: | :white_check_mark:   |
 | [TIMEOUT](#timeout) (deprecated in RedisGraph v2.10)         | :white_check_mark: | :white_check_mark:   |
 | [TIMEOUT_MAX](#timeout_max) (since RedisGraph v2.10)         | :white_check_mark: | :white_check_mark:   |
@@ -155,6 +156,21 @@ $ redis-server --loadmodule ./falkordb.so NODE_CREATION_BUFFER 200
 ```
 
 ---
+
+
+### BOLT_PORT
+The Bolt port configuration determines the port number on which FalkorDB handles the [bolt protocol](https://en.wikipedia.org/wiki/Bolt_(network_protocol))
+
+#### Default
+`BOLT_PORT` -1 (disabled).
+
+#### Example
+```sh
+$ redis-server --loadmodule ./falkordb.so BOLT_PORT 7687
+```
+
+---
+
 
 ### MAX_QUEUED_QUERIES
 
