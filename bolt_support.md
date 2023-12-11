@@ -15,7 +15,7 @@ Before you begin, ensure that you have a FalkorDB instance up and running.
 You can use our Docker image for this purpose.
 
 ```bash
-docker run -p 6379:6379 -p7678:7678 -it -e FALKORDB_ARGS="BOLT_PORT 7678" --rm falkordb/falkordb:edge
+docker run -p 6379:6379 -p7678:7678 -it -e REDIS_ARGS="--requirepass falkordb" -e FALKORDB_ARGS="BOLT_PORT 7678" --rm falkordb/falkordb:edge
 ```
 
 Additionally, install the necessary BOLT drivers:
