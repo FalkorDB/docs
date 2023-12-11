@@ -61,22 +61,24 @@ print(row[0])
             RETURN count(r)""")
 
 print(row[0])
-# Prints:
-    ```
-    For additional demos please see visit [Demos](https://github.com/FalkorDB/demos).
+# Prints: 1
+```
+
+For additional demos please see visit [Demos](https://github.com/FalkorDB/demos).
 
 ## Client libraries
 
-    Language-specific clients have been written by the community and the FalkorDB team.
-    The full list and links can be found on the [Clients](/clients) page.
+Language-specific clients have been written by the community and the FalkorDB team.
+The full list and links can be found on the [Clients](/clients) page.
 
 ## Data import
-    When loading large graphs from CSV files, we recommend using [falkordb-bulk-loader](https://github.com/falkordb/falkordb-bulk-loader)
+
+When loading large graphs from CSV files, we recommend using [falkordb-bulk-loader](https://github.com/falkordb/falkordb-bulk-loader)
 
 ## Mailing List / Forum
 
-    Got questions? Please contact us at the [FalkorDB forum](https://github.com/FalkorDB/FalkorDB/discussions).
+Got questions? Please contact us at the [FalkorDB forum](https://github.com/FalkorDB/FalkorDB/discussions).
 
 ## License
 
-    FalkorDB is licensed under the [the Server Side Public License v1 (SSPLv1)](https://github.com/FalkorDB/FalkorDB/blob/master/LICENSE.txt).
+FalkorDB is licensed under the [the Server Side Public License v1 (SSPLv1)](https://github.com/FalkorDB/FalkorDB/blob/master/LICENSE.txt).
