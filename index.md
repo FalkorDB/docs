@@ -30,7 +30,7 @@ Launch an instance using docker, or use our [sandbox](https://cloud.falkordb.com
 docker run -p 6379:6379 -it --rm falkordb/falkordb:latest
 ```
 
-Once loaded you can interact with FalkorDB using any of the supported [client libraries](https://github.com/falkorDB/falkordb#Client-libraries)
+Once loaded you can interact with FalkorDB using any of the supported [client libraries](/clients)
 
 Here we'll use [FalkorDB Python client](https://pypi.org/project/FalkorDB/) to create a small graph representing a subset of motorcycle riders and teams taking part in the MotoGP league, once created we'll start querying our data.
 
@@ -42,23 +42,23 @@ db = FalkorDB(host='localhost', port=6379)
 
 # Create the 'MotoGP' graph
 g = db.select_graph('MotoGP')
-g.query("""CREATE (:Rider {name:'Valentino Rossi'})-[:rides]->(:Team {name:'Yamaha'}),
-        (:Rider {name:'Dani Pedrosa'})-[:rides]->(:Team {name:'Honda'}),
-        (:Rider {name:'Andrea Dovizioso'})-[:rides]->(:Team {name:'Ducati'})""")
+g.query("""CREATE
+           (:Rider {name:'Valentino Rossi'})-[:rides]->(:Team {name:'Yamaha'}),
+           (:Rider {name:'Dani Pedrosa'})-[:rides]->(:Team {name:'Honda'}),
+           (:Rider {name:'Andrea Dovizioso'})-[:rides]->(:Team {name:'Ducati'})""")
 
 # Query which riders represents Yamaha?
 res = g.query("""MATCH (r:Rider)-[:rides]->(t:Team)
-        WHERE t.name = 'Yamaha'
-        RETURN r.name""")
+                 WHERE t.name = 'Yamaha'
+                 RETURN r.name""")
 
 for row in res.result_set:
-print(row[0])
+    print(row[0])
 
 # Prints: "Valentino Rossi"
 
 # Query how many riders represent team Ducati ?
-    res = g.query("""MATCH (r:Rider)-[:rides]->(t:Team {name:'Ducati'})
-            RETURN count(r)""")
+res = g.query("""MATCH (r:Rider)-[:rides]->(t:Team {name:'Ducati'}) RETURN count(r)""")
 
 print(row[0])
 # Prints: 1
