@@ -6,11 +6,19 @@ description: "Connecting to FalkorDB using BOLT protocol."
 
 ## BOLT protocol support for FalkorDB
 
-FalkorDB provides support for querying using BOLT drivers. This guide will walk you through the process of connecting to FalkorDB using the BOLT protocol.
+FalkorDB provides support for querying using BOLT drivers.
+This guide will walk you through the process of connecting to FalkorDB using the BOLT protocol.
 
 ### Prerequisites
 
-Before you begin, ensure that you have a FalkorDB instance up and running. You can use either Docker or the FalkorDB sandbox for this purpose. Additionally, install the necessary BOLT drivers:
+Before you begin, ensure that you have a FalkorDB instance up and running.
+You can use our Docker image for this purpose.
+
+```bash
+docker run -p 6379:6379 -it -e FALKORDB_ARGS="BOLT_PORT 7678" --rm falkordb/falkordb:edge
+```
+
+Additionally, install the necessary BOLT drivers:
 
 ```bash
 pip install neo4j
