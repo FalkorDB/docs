@@ -9,29 +9,29 @@ description: >
 
 | Project                                                   | Language   | License    | Author                                      | Package                                  |
 | --------------------------------------------------------- | ---------- | ---------- | ------------------------------------------- | ---------------------------------------- |
-| [falkordb-py][falkordb-py-url]                            | Python     | MIT        | [FalkorDB][falkordb-url]                    | [pypi][falkordb-py-package]              ||
-| [node-falkordb][node-falkordb-url]                        | Node.JS    | MIT        | [FalkorDB][falkordb-url]                    | [npm][node-falkordb-package]             ||
+| [falkordb-py][falkordb-py-url]                            | Python     | MIT        | [FalkorDB][falkordb-url]                    | [pypi][falkordb-py-package]              |
+| [node-falkordb][node-falkordb-url]                        | Node.JS    | MIT        | [FalkorDB][falkordb-url]                    | [npm][node-falkordb-package]             |
 
 ## Additional Clients
 
 | Project                                                   | Language   | License    | Author                                      | Package                                  |
 | --------------------------------------------------------- | ---------- | ---------- | ------------------------------------------- | ---------------------------------------- |
-| [jedis][jedis-url]                                        | Java       | MIT        | [Redis][redis-url]                          | [Maven][jedis-package]                   ||
-| [nredisstack][nredisstack-url]                            | .NET       | MIT        | [Redis][redis-url]                          | [nuget][nredisstack-package]             ||
-| [redisgraph-rb][redisgraph-rb-url]                        | Ruby       | BSD        | [Redis][redisgraph-rb-author]               | [GitHub][redisgraph-rb-url]              ||
-| [redgraph][redgraph-url]                                  | Ruby       | MIT        | [pzac][redgraph-author]                     | [GitHub][redgraph-url]                   ||
-| [redisgraph-go][redisgraph-go-url]                        | Go         | BSD        | [Redis][redisgraph-go-author]               | [GitHub][redisgraph-go-url]              ||
-| [rueidis][rueidis-url]                                    | Go         | Apache 2.0 | [Rueian][rueidis-author]                    | [GitHub][rueidis-url]                    ||
-| [ioredisgraph][ioredisgraph-url]                          | JavaScript | ISC        | [Jonah][ioredisgraph-author]                | [GitHub][ioredisgraph-url]               ||
-| [@hydre/rgraph][rgraph-url]                               | JavaScript | MIT        | [Sceat][rgraph-author]                      | [GitHub][rgraph-url]                     ||
-| [php-redis-graph][php-redis-graph-url]                    | PHP        | MIT        | [KJDev][php-redis-graph-author]             | [GitHub][php-redis-graph-url]            ||
-| [redisgraph_php][redisgraph_php-url]                      | PHP        | MIT        | [jpbourbon][redisgraph_php-author]          | [GitHub][redisgraph_php-url]             ||
-| [redisgraph-ex][redisgraph-ex-url]                        | Elixir     | MIT        | [crflynn][redisgraph-ex-author]             | [GitHub][redisgraph-ex-url]              ||
-| [redisgraph-rs][redisgraph-rs-url]                        | Rust       | MIT        | [malte-v][redisgraph-rs-author]             | [GitHub][redisgraph-rs-url]              ||
-| [redis_graph][redis_graph-url]                            | Rust       | BSD        | [tompro][redis_graph-author]                | [GitHub][redis_graph-url]                ||
-| [rustis][rustis-url]                                      | Rust       | MIT        | [Dahomey Technologies][rustis-author]       | [Crate](https://crates.io/crates/rustis) ||
-| [NRedisGraph][NRedisGraph-url]                            | C#         | BSD        | [tombatron][NRedisGraph-author]             | [GitHub][NRedisGraph-url]                ||
-| [RedisGraph.jl][RedisGraph.jl-url]                        | Julia      | MIT        | [xyxel][RedisGraph.jl-author]               | [GitHub][RedisGraph.jl-url]              ||
+| [jedis][jedis-url]                                        | Java       | MIT        | [Redis][redis-url]                          | [Maven][jedis-package]                   |
+| [nredisstack][nredisstack-url]                            | .NET       | MIT        | [Redis][redis-url]                          | [nuget][nredisstack-package]             |
+| [redisgraph-rb][redisgraph-rb-url]                        | Ruby       | BSD        | [Redis][redisgraph-rb-author]               | [GitHub][redisgraph-rb-url]              |
+| [redgraph][redgraph-url]                                  | Ruby       | MIT        | [pzac][redgraph-author]                     | [GitHub][redgraph-url]                   |
+| [redisgraph-go][redisgraph-go-url]                        | Go         | BSD        | [Redis][redisgraph-go-author]               | [GitHub][redisgraph-go-url]              |
+| [rueidis][rueidis-url]                                    | Go         | Apache 2.0 | [Rueian][rueidis-author]                    | [GitHub][rueidis-url]                    |
+| [ioredisgraph][ioredisgraph-url]                          | JavaScript | ISC        | [Jonah][ioredisgraph-author]                | [GitHub][ioredisgraph-url]               |
+| [@hydre/rgraph][rgraph-url]                               | JavaScript | MIT        | [Sceat][rgraph-author]                      | [GitHub][rgraph-url]                     |
+| [php-redis-graph][php-redis-graph-url]                    | PHP        | MIT        | [KJDev][php-redis-graph-author]             | [GitHub][php-redis-graph-url]            |
+| [redisgraph_php][redisgraph_php-url]                      | PHP        | MIT        | [jpbourbon][redisgraph_php-author]          | [GitHub][redisgraph_php-url]             |
+| [redisgraph-ex][redisgraph-ex-url]                        | Elixir     | MIT        | [crflynn][redisgraph-ex-author]             | [GitHub][redisgraph-ex-url]              |
+| [redisgraph-rs][redisgraph-rs-url]                        | Rust       | MIT        | [malte-v][redisgraph-rs-author]             | [GitHub][redisgraph-rs-url]              |
+| [redis_graph][redis_graph-url]                            | Rust       | BSD        | [tompro][redis_graph-author]                | [GitHub][redis_graph-url]                |
+| [rustis][rustis-url]                                      | Rust       | MIT        | [Dahomey Technologies][rustis-author]       | [Crate](https://crates.io/crates/rustis) |
+| [NRedisGraph][NRedisGraph-url]                            | C#         | BSD        | [tombatron][NRedisGraph-author]             | [GitHub][NRedisGraph-url]                |
+| [RedisGraph.jl][RedisGraph.jl-url]                        | Julia      | MIT        | [xyxel][RedisGraph.jl-author]               | [GitHub][RedisGraph.jl-url]              |
 
 [redis-url]: https://redis.com
 [falkordb-url]: https://www.falkordb.com
