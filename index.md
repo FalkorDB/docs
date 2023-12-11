@@ -53,15 +53,12 @@ res = g.query("""MATCH (r:Rider)-[:rides]->(t:Team)
                  RETURN r.name""")
 
 for row in res.result_set:
-    print(row[0])
-
-# Prints: "Valentino Rossi"
+    print(row[0]) # Prints: "Valentino Rossi"
 
 # Query how many riders represent team Ducati ?
 res = g.query("""MATCH (r:Rider)-[:rides]->(t:Team {name:'Ducati'}) RETURN count(r)""")
 
-print(row[0])
-# Prints: 1
+print(row[0]) # Prints: 1
 ```
 
 For additional demos please see visit [Demos](https://github.com/FalkorDB/demos).
