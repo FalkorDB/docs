@@ -5,13 +5,18 @@ description: >
     FalkorDB Clients
 ---
 
-## Clients
+## Official Clients
+
+| Project                                                   | Language   | License    | Author                                      | Stars                                           | Package                                  |
+| --------------------------------------------------------- | ---------- | ---------- | ------------------------------------------- | ----------------------------------------------- | ---------------------------------------- |
+| [falkordb-py][falkordb-py-url]                            | Python     | MIT        | [FalkorDB][falkordb-url]                    | ![Stars][falkordb-py-stars]                     | [pypi][falkordb-py-package]              ||
+| [node-falkordb][node-falkordb-url]                        | Node.JS    | MIT        | [FalkorDB][falkordb-url]                    | ![Stars][node-falkordb-stars]                   | [npm][node-falkordb-package]             ||
+
+## Additional Clients
 
 | Project                                                   | Language   | License    | Author                                      | Stars                                           | Package                                  |
 | --------------------------------------------------------- | ---------- | ---------- | ------------------------------------------- | ----------------------------------------------- | ---------------------------------------- |
 | [jedis][jedis-url]                                        | Java       | MIT        | [Redis][redis-url]                          | ![Stars][jedis-stars]                           | [Maven][jedis-package]                   ||
-| [falkordb-py][falkordb-py-url]                            | Python     | MIT        | [FalkorDB][falkordb-url]                    | ![Stars][falkordb-py-stars]                     | [pypi][falkordb-py-package]              ||
-| [node-falkordb][node-falkordb-url]                        | Node.JS    | MIT        | [FalkorDB][falkordb-url]                    | ![Stars][node-falkordb-stars]                   | [npm][node-falkordb-package]             ||
 | [nredisstack][nredisstack-url]                            | .NET       | MIT        | [Redis][redis-url]                          | ![Stars][nredisstack-stars]                     | [nuget][nredisstack-package]             ||
 | [redisgraph-rb][redisgraph-rb-url]                        | Ruby       | BSD        | [Redis][redisgraph-rb-author]               | [![redisgraph-rb-stars]][redisgraph-rb-url]     | [GitHub][redisgraph-rb-url]              ||
 | [redgraph][redgraph-url]                                  | Ruby       | MIT        | [pzac][redgraph-author]                     | [![redgraph-stars]][redgraph-url]               | [GitHub][redgraph-url]                   ||
