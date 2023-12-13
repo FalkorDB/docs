@@ -11,12 +11,12 @@ description: >
 | --------------------------------------------------------- | ---------- | ---------- | ------------------------------------------- | ---------------------------------------- |
 | [falkordb-py][falkordb-py-url]                            | Python     | MIT        | [FalkorDB][falkordb-url]                    | [pypi][falkordb-py-package]              |
 | [node-falkordb][node-falkordb-url]                        | Node.JS    | MIT        | [FalkorDB][falkordb-url]                    | [npm][node-falkordb-package]             |
+| [jfalkordb][jfalkordb-url]                        | Java    | BSD        | [FalkorDB][falkordb-url]                    | [maven][jfalkordb-package]             |
 
 ## Additional Clients
 
 | Project                                                   | Language   | License    | Author                                      | Package                                  |
 | --------------------------------------------------------- | ---------- | ---------- | ------------------------------------------- | ---------------------------------------- |
-| [jedis][jedis-url]                                        | Java       | MIT        | [Redis][redis-url]                          | [Maven][jedis-package]                   |
 | [nredisstack][nredisstack-url]                            | .NET       | MIT        | [Redis][redis-url]                          | [nuget][nredisstack-package]             |
 | [redisgraph-rb][redisgraph-rb-url]                        | Ruby       | BSD        | [Redis][redisgraph-rb-author]               | [GitHub][redisgraph-rb-url]              |
 | [redgraph][redgraph-url]                                  | Ruby       | MIT        | [pzac][redgraph-author]                     | [GitHub][redgraph-url]                   |
@@ -39,8 +39,8 @@ description: >
 [falkordb-py-url]: https://github.com/falkordb/falkordb-py
 [falkordb-py-package]: https://pypi.python.org/pypi/falkordb
 
-[jedis-url]: https://github.com/redis/jedis
-[Jedis-package]: https://search.maven.org/artifact/redis.clients/jedis
+[jfalkordb-url]: https://github.com/falkordb/jfalkordb
+[jfalkordb-package]: https://search.maven.org/artifact/com.falkordb/jfalkordb
 
 [nredisstack-url]: https://github.com/redis/nredisstack
 [nredisstack-package]: https://www.nuget.org/packages/nredisstack/
