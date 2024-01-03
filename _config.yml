@@ -6,6 +6,7 @@ favicon_ico: "/images/favicon.ico"
 ga_tracking: G-0V4CX90653
 
 search_enabled: true
+color_scheme: dark
 
 aux_links:
   "Docs Reposity":
