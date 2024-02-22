@@ -7,6 +7,7 @@ description: "Connecting to FalkorDB using BOLT protocol."
 ## [EXPERIMENTAL] BOLT protocol support for FalkorDB 
 
 FalkorDB provides an experimental support for querying using BOLT drivers.
+We intend to extend the support in the future versions, the current version is not meant to be used in production.
 This guide will walk you through the process of connecting to FalkorDB using the [BOLT protocol](https://en.wikipedia.org/wiki/Bolt_(network_protocol))
 
 ### Prerequisites
