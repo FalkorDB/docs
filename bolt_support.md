@@ -4,9 +4,10 @@ nav_order: 10
 description: "Connecting to FalkorDB using BOLT protocol."
 ---
 
-## BOLT protocol support for FalkorDB
+## [EXPERIMENTAL] BOLT protocol support for FalkorDB 
 
-FalkorDB provides support for querying using BOLT drivers.
+FalkorDB provides an experimental support for querying using BOLT drivers.
+We intend to extend the support in the future versions, the current version is not meant to be used in production.
 This guide will walk you through the process of connecting to FalkorDB using the [BOLT protocol](https://en.wikipedia.org/wiki/Bolt_(network_protocol))
 
 ### Prerequisites
@@ -15,8 +16,13 @@ Before you begin, ensure that you have a FalkorDB instance up and running.
 You can use our Docker image for this purpose.
 
 ```bash
-docker run -p 6379:6379 -p7678:7678 -it -e REDIS_ARGS="--requirepass falkordb" -e FALKORDB_ARGS="BOLT_PORT 7678" --rm falkordb/falkordb:edge
+docker run -p 6379:6379 -p 7678:7678 -p 3000:3000 -it -e REDIS_ARGS="--requirepass falkordb" -e FALKORDB_ARGS="BOLT_PORT 7678" --rm falkordb/falkordb:latest
 ```
+
+#### Ports 
+- 6379 - FalkorDB
+- 7678 - Bolt
+- 3000 - Falkor-Browser
 
 Additionally, install the necessary BOLT drivers:
 

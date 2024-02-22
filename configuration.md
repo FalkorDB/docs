@@ -11,7 +11,7 @@ Some of these parameters can only be set at load-time, while other parameters ca
 For example the following will run the server with global authentication password and 4 threads.
 
 ```sh
-docker run -p 6379:6379 -it -e REDIS_ARGS="--requirepass falkordb" -e FALKORDB_ARGS="THREAD_COUNT 4" --rm falkordb/falkordb:edge
+docker run -p 6379:6379 -p 3000:3000 -it -e REDIS_ARGS="--requirepass falkordb" -e FALKORDB_ARGS="THREAD_COUNT 4" --rm falkordb/falkordb:latest
 ```
 
 ## Setting configuration parameters on module load
@@ -39,7 +39,7 @@ $ redis-server --loadmodule ./falkordb.so [OPT VAL]...
 When running a docker container
 
 ```sh
-docker run -p 6379:6379 -it -e FALKORDB_ARGS="[OPT VAL]" --rm falkordb/falkordb:edge
+docker run -p 6379:6379 -p 3000:3000 -it -e FALKORDB_ARGS="[OPT VAL]" --rm falkordb/falkordb:latest
 ```
 
 ## Setting configuration parameters at run-time (for supported parameters)
