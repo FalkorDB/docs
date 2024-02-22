@@ -18,6 +18,11 @@ You can use our Docker image for this purpose.
 docker run -p 6379:6379 -p 7678:7678 -p 3000:3000 -it -e REDIS_ARGS="--requirepass falkordb" -e FALKORDB_ARGS="BOLT_PORT 7678" --rm falkordb/falkordb:latest
 ```
 
+#### Ports 
+- 6379 - FalkorDB
+- 7678 - Bolt
+- 3000 - Falkor-Browser
+
 Additionally, install the necessary BOLT drivers:
 
 ```bash
