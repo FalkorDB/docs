@@ -7,10 +7,8 @@ parent: "Commands"
 
 Usage: `GRAPH.COPY <src> <dest>`
 
-The `GRAPH.COPY` command creates a copy of a graph asynchronously, while the copy is performed
+The `GRAPH.COPY` command creates a copy of a graph, while the copy is performed
 the `src` graph is fully accessible.
-
-Overall memory overhead is proportional to the `src` graph size.
 
 Example:
 ```
