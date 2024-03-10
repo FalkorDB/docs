@@ -65,21 +65,21 @@ Values set using `GRAPH.CONFIG SET` are not persisted after server restart.
 
 The following table summarizes which configuration parameters can be set at module load-time and which can also be set at run-time:
 
-| Configuration Parameter                                      | Load-time          | Run-time             |
-| :-------                                                     | :-----             | :-----------         |
-| [THREAD_COUNT](#thread_count)                                | :white_check_mark: | :white_large_square: |
-| [CACHE_SIZE](#cache_size)                                    | :white_check_mark: | :white_large_square: |
-| [OMP_THREAD_COUNT](#omp_thread_count)                        | :white_check_mark: | :white_large_square: |
-| [NODE_CREATION_BUFFER](#node_creation_buffer)                | :white_check_mark: | :white_large_square: |
-| [BOLT_PORT](#bolt_port)                                      | :white_check_mark: | :white_large_square: |
-| [MAX_QUEUED_QUERIES](#max_queued_queries)                    | :white_check_mark: | :white_check_mark:   |
-| [TIMEOUT](#timeout) (deprecated in RedisGraph v2.10)         | :white_check_mark: | :white_check_mark:   |
-| [TIMEOUT_MAX](#timeout_max) (since RedisGraph v2.10)         | :white_check_mark: | :white_check_mark:   |
-| [TIMEOUT_DEFAULT](#timeout_default) (since RedisGraph v2.10) | :white_check_mark: | :white_check_mark:   |
-| [RESULTSET_SIZE](#resultset_size)                            | :white_check_mark: | :white_check_mark:   |
-| [QUERY_MEM_CAPACITY](#query_mem_capacity)                    | :white_check_mark: | :white_check_mark:   |
-| [VKEY_MAX_ENTITY_COUNT](#vkey_max_entity_count)              | :white_check_mark: | :white_check_mark:   |
-| [EFFECTS_THRESHOLD](#effects_threshold)                      | :white_check_mark: | :white_check_mark:   |
+| Configuration Parameter                                      | Load-time| Run-time|
+| :-------                                                     | :-----| :-----|
+| [THREAD_COUNT](#thread_count)                                | V | X |
+| [CACHE_SIZE](#cache_size)                                    | V | X |
+| [OMP_THREAD_COUNT](#omp_thread_count)                        | V | X |
+| [NODE_CREATION_BUFFER](#node_creation_buffer)                | V | X |
+| [BOLT_PORT](#bolt_port)                                      | V | X |
+| [MAX_QUEUED_QUERIES](#max_queued_queries)                    | V | V |
+| [TIMEOUT](#timeout) (deprecated in RedisGraph v2.10)         | V | V |
+| [TIMEOUT_MAX](#timeout_max) (since RedisGraph v2.10)         | V | V |
+| [TIMEOUT_DEFAULT](#timeout_default) (since RedisGraph v2.10) | V | V |
+| [RESULTSET_SIZE](#resultset_size)                            | V | V |
+| [QUERY_MEM_CAPACITY](#query_mem_capacity)                    | V | V |
+| [VKEY_MAX_ENTITY_COUNT](#vkey_max_entity_count)              | V | V |
+| [EFFECTS_THRESHOLD](#effects_threshold)                      | V | V |
 
 ---
 
