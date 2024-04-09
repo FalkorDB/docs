@@ -10,35 +10,35 @@ has_children: true
 
 Cypher query consists of 1 or more clauses
 
-* [MATCH](/match)
-* [OPTIONAL MATCH](/optional-match)
-* [WHERE](/where)
-* [RETURN](/return)
-* [ORDER BY](/order-by)
-* [SKIP](/skip)
-* [LIMIT](/limit)
-* [CREATE](/create)
-* [MERGE](/merge)
-* [DELETE](/delete)
-* [SET](/set)
-* [WITH](/with)
-* [UNION](/union)
-* [UNWIND](/unwind)
-* [FOREACH](/foreach)
-* [CALL {}](/call-)
+* [MATCH](/cypher/match)
+* [OPTIONAL MATCH](/cypher/optional_match)
+* [WHERE](/cypher/where)
+* [RETURN](/cypher/return)
+* [ORDER BY](/cypher/order_by)
+* [SKIP](/cypher/skip)
+* [LIMIT](/cypher/limit)
+* [CREATE](/cypher/create)
+* [MERGE](/cypher/merge)
+* [DELETE](/cypher/delete)
+* [SET](/cypher/set)
+* [WITH](/cypher/with)
+* [UNION](/cypher/union)
+* [UNWIND](/cypher/unwind)
+* [FOREACH](/cypher/foreach)
+* [CALL {}](/cypher/call)
 
 # Cypher functions
 
-FalkorDB supports [functions](/functions)
+FalkorDB supports [functions](/cypher/functions)
 
 # Cypher procedures
 
-FalkorDB supports [procedures](/procedures)
+FalkorDB supports [procedures](/cypher/procedures)
 
 # Cypher algorithms
 
-FalkorDB implemented Graph [Algorithms](/algorithms)
+FalkorDB implemented Graph [Algorithms](/cypher/algorithms)
 
 # Cypher indexing
 
-FalkorDB supports [indexing](/index)
+FalkorDB supports [indexing](/cypher/index)
