@@ -41,4 +41,4 @@ GRAPH.QUERY us_government "CYPHER state_name='Hawaii' MATCH (p:president)-[:born
 
 ### Query language
 
-The syntax is based on [Cypher](http://www.opencypher.org/). [Most](/cypher_support) of the language is supported. See [Cypher documentation](/cypher).
+The syntax is based on [Cypher](http://www.opencypher.org/). [Most](/cypher_support) of the language is supported. See [Cypher documentation](/cypher/cypher).
