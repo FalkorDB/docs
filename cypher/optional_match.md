@@ -1,5 +1,5 @@
 ---
-title: "OPTIONAL MATCH clause"
+title: "OPTIONAL MATCH"
 nav_order: 2
 description: >
     FalkorDB implements a subset of the Cypher language, which is growing as development continues.

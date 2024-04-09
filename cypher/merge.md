@@ -1,5 +1,5 @@
 ---
-title: "MERGE clause"
+title: "MERGE"
 nav_order: 11
 description: >
     FalkorDB implements a subset of the Cypher language, which is growing as development continues.

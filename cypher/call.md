@@ -1,5 +1,5 @@
 ---
-title: "CALL clause"
+title: "CALL"
 nav_order: 16
 description: >
     FalkorDB implements a subset of the Cypher language, which is growing as development continues.

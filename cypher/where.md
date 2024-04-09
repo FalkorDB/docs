@@ -1,5 +1,5 @@
 ---
-title: "WHERE clause"
+title: "WHERE"
 nav_order: 3
 description: >
     FalkorDB implements a subset of the Cypher language, which is growing as development continues.

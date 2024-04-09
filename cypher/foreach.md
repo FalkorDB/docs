@@ -1,5 +1,5 @@
 ---
-title: "FOREACH clause"
+title: "FOREACH"
 nav_order: 15
 description: >
     FalkorDB implements a subset of the Cypher language, which is growing as development continues.

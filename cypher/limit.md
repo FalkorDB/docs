@@ -1,5 +1,5 @@
 ---
-title: "LIMIT clause"
+title: "LIMIT"
 nav_order: 7
 description: >
     FalkorDB implements a subset of the Cypher language, which is growing as development continues.

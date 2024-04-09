@@ -1,5 +1,5 @@
 ---
-title: "CREATE clause"
+title: "CREATE"
 nav_order: 8
 description: >
     FalkorDB implements a subset of the Cypher language, which is growing as development continues.

@@ -1,5 +1,5 @@
 ---
-title: "ORDER BY clause"
+title: "ORDER BY"
 nav_order: 5
 description: >
     FalkorDB implements a subset of the Cypher language, which is growing as development continues.
