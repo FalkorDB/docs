@@ -9,9 +9,9 @@ search_enabled: true
 color_scheme: dark
 
 aux_links:
-  "Docs Reposity":
+  "Docs Repository":
     - "//github.com/falkordb/docs"
-  "FalkorDB Reposity":
+  "FalkorDB Repository":
     - "//github.com/falkordb/falkordb"
 
 

@@ -2,6 +2,7 @@
 title: "Known limitations"
 description: ""
 nav_order: 1000
+parent: "Cypher Language"
 ---
 
 ## Relationship uniqueness in patterns
