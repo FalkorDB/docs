@@ -6,9 +6,9 @@ description: >
 has_children: true
 ---
 
-# Cypher clauses
+# Clauses
 
-Cypher query consists of 1 or more clauses
+Cypher query consists of one or more clauses
 
 * [MATCH](/cypher/match)
 * [OPTIONAL MATCH](/cypher/optional_match)
@@ -27,18 +27,18 @@ Cypher query consists of 1 or more clauses
 * [FOREACH](/cypher/foreach)
 * [CALL {}](/cypher/call)
 
-# Cypher functions
+# Functions
 
-FalkorDB supports [functions](/cypher/functions)
+See list of available [Functions](/cypher/functions)
 
-# Cypher procedures
+# Procedures
 
-FalkorDB supports [procedures](/cypher/procedures)
+See list of available [Procedures](/cypher/procedures)
 
-# Cypher algorithms
+# Algorithms
 
-FalkorDB implemented Graph [Algorithms](/cypher/algorithms)
+See list of available graph [Algorithms](/cypher/algorithms)
 
-# Cypher indexing
+# Indexing
 
-FalkorDB supports [indexing](/cypher/index)
+See how to utilize [Indexing](/cypher/index)
