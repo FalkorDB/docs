@@ -1,5 +1,5 @@
 ---
-title: "RETURN clause"
+title: "RETURN"
 nav_order: 4
 description: >
     FalkorDB implements a subset of the Cypher language, which is growing as development continues.

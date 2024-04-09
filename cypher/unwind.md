@@ -1,5 +1,5 @@
 ---
-title: "UNWIND clause"
+title: "UNWIND"
 nav_order: 14
 description: >
     FalkorDB implements a subset of the Cypher language, which is growing as development continues.

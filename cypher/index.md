@@ -1,5 +1,5 @@
 ---
-title: "Index"
+title: "Indexing"
 nav_order: 20
 description: >
     FalkorDB implements a subset of the Cypher language, which is growing as development continues.

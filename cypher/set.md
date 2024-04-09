@@ -1,5 +1,5 @@
 ---
-title: "SET clause"
+title: "SET"
 nav_order: 10
 description: >
     FalkorDB implements a subset of the Cypher language, which is growing as development continues.

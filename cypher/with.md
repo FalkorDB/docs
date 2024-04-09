@@ -1,5 +1,5 @@
 ---
-title: "WITH clause"
+title: "WITH"
 nav_order: 12
 description: >
     FalkorDB implements a subset of the Cypher language, which is growing as development continues.

@@ -1,5 +1,5 @@
 ---
-title: "DELETE clause"
+title: "DELETE"
 nav_order: 9
 description: >
     FalkorDB implements a subset of the Cypher language, which is growing as development continues.
