@@ -1,3 +1,4 @@
+---
 title: "UNION clause"
 nav_order: 13
 description: >

@@ -1,3 +1,4 @@
+---
 title: "MATCH clause"
 nav_order: 1
 description: >
@@ -296,7 +297,7 @@ Result:
   * An array of the relationship's weights along the path can be retrieved with `[r in relationships(path) | r.weight]` where weight is the name of the weight property
 
 Behavior in presence on multiple-edges:
-
+---
 * multi-edges are two or more edges connecting the same pair of vertices (possibly with different weights and costs). 
 * All matching edges are considered. Paths with identical vertices and different edges are different paths. The following are 3 different paths ('n1', 'n2', and 'n3' are nodes; 'e1', 'e2', 'e3', and 'e4' are edges): (n1)-[e1]-(n2)-[e2]-(n3), (n1)-[e1]-(n2)-[e3]-(n3), (n1)-[e4]-(n2)-[e3]-(n3)
 

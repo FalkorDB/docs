@@ -1,3 +1,4 @@
+---
 title: "MERGE clause"
 nav_order: 11
 description: >

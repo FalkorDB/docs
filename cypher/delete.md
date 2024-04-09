@@ -1,3 +1,4 @@
+---
 title: "DELETE clause"
 nav_order: 9
 description: >

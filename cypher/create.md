@@ -1,3 +1,4 @@
+---
 title: "CREATE clause"
 nav_order: 8
 description: >

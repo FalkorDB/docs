@@ -1,3 +1,4 @@
+---
 title: "Algorithms"
 nav_order: 19
 description: >
