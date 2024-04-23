@@ -4,11 +4,11 @@ nav_order: 9
 description: "Deploy FalkorDB to Kubernetes."
 ---
 
-## Kubernetes support for FalkorDB
+# Kubernetes support for FalkorDB
 
 FalkorDB can be deployed on Kubernetes using Helm charts and Docker images. This guide will walk you through the process.
 
-### Prerequisites
+## Prerequisites
 
 Before you begin, make sure you have Helm installed on your Kubernetes cluster.
 
@@ -19,7 +19,7 @@ To deploy FalkorDB to Kubernetes we need to use:
 
 And follow these steps:
 
-### Step 1: Create a `values.yaml` File
+## Step 1: Create a `values.yaml` File
 
 Create a values.yaml file with the following content:
 
@@ -41,7 +41,7 @@ This file specify the FalkorDB image(you can choose different tags)
 and configure the master and slave to load the FalkorDB module.
 For additional configurations [see the official Helm chart documentation](https://github.com/bitnami/charts/blob/main/bitnami/redis/values.yaml)
 
-### Step 2: Install FalkorDB Helm Charts
+## Step 2: Install FalkorDB Helm Charts
 Install the helm charts using the following command:
 
 ```bash
@@ -51,7 +51,7 @@ helm install -f values.yaml my-falkordb oci://registry-1.docker.io/bitnamicharts
 This command deploys FalkorDB with the configuration from values.yaml.
 After running this command, instructions on how to connect to the FalkorDB server will be displayed.
 
-### Step 3: Retrieve the FalkorDB Password
+## Step 3: Retrieve the FalkorDB Password
 
 To connect to FalkorDB, you need the Redis password. Retrieve it using the following command:
 
@@ -59,7 +59,7 @@ To connect to FalkorDB, you need the Redis password. Retrieve it using the follo
 export REDIS_PASSWORD=$(kubectl get secret --namespace default my-release-redis -o jsonpath="{.data.redis-password}" | base64 -d)
 ```
 
-### Step 4: Enable External Connections
+## Step 4: Enable External Connections
 
 In a new terminal, run the following command to port-forward to the FalkorDB server, allowing external connections:
 
@@ -67,7 +67,7 @@ In a new terminal, run the following command to port-forward to the FalkorDB ser
 kubectl port-forward --namespace default svc/my-falkordb-redis-master 6379:6379
 ```
 
-### Step 5: Connect to FalkorDB Using `redis-cli`
+## Step 5: Connect to FalkorDB Using `redis-cli`
 
 You can now connect to FalkorDB using redis-cli with the following command:
 
@@ -75,7 +75,7 @@ You can now connect to FalkorDB using redis-cli with the following command:
 REDISCLI_AUTH="$REDIS_PASSWORD" redis-cli -h 127.0.0.1 -p 6379
 ```
 
-### Step 6: Run a Simple Cypher Query
+## Step 6: Run a Simple Cypher Query
 
 To test your FalkorDB installation, run a simple Cypher query:
 
