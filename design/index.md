@@ -5,6 +5,8 @@ has_children: true
 nav_order: 999
 ---
 
+# The FalkorDB Design
+
 ## Abstract
 
 Graph-based data is everywhere nowadays. Facebook, Google, Twitter and Pinterest are just a few who've realize the power
