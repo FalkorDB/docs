@@ -5,6 +5,8 @@ description: >
 parent: "Commands"    
 ---
 
+# GRAPH.CONFIG-SET
+
 Set the value of a FalkorDB configuration parameter.
 
 Values set using `GRAPH.CONFIG SET` are not persisted after server restart.

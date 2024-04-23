@@ -5,6 +5,8 @@ description: >
 parent: "Commands"
 ---
 
+# GRAPH.COPY
+
 Usage: `GRAPH.COPY <src> <dest>`
 
 The `GRAPH.COPY` command creates a copy of a graph, while the copy is performed

@@ -6,6 +6,8 @@ description: >
 parent: "Commands"    
 ---
 
+# GRAPH.DELETE
+
 Completely removes the graph and all of its entities.
 
 Arguments: `Graph name`

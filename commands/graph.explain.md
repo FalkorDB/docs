@@ -6,6 +6,8 @@ description: >
 parent: "Commands"    
 ---
 
+# GRAPH.EXPLAIN
+
 Constructs a query execution plan but does not run it. Inspect this execution plan to better
 understand how your query will get executed.
 

@@ -6,6 +6,8 @@ description: >
 parent: "Commands"    
 ---
 
+# GRAPH.RO_QUERY
+
 Executes a given read only query against a specified graph.
 
 Arguments: `Graph name, Query, Timeout [optional]`
