@@ -5,6 +5,8 @@ nav_order: 1000
 parent: "Cypher Language"
 ---
 
+# Known limitations
+
 ## Relationship uniqueness in patterns
 
 When a relation in a match pattern is not referenced elsewhere in the query, FalkorDB will only verify that at least one matching relation exists (rather than operating on every matching relation).
