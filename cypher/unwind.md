@@ -2,7 +2,7 @@
 title: "UNWIND"
 nav_order: 14
 description: >
-    FalkorDB implements a subset of the Cypher language, which is growing as development continues.
+    The UNWIND clause breaks down a given list into a sequence of records; each contains a single element in the list.
 parent: "Cypher Language"
 ---
 

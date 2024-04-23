@@ -2,7 +2,7 @@
 title: "Algorithms"
 nav_order: 19
 description: >
-    FalkorDB implements a subset of the Cypher language, which is growing as development continues.
+    FalkorDB supported algorithms like BFS.
 parent: "Cypher Language"
 ---
 

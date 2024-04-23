@@ -2,7 +2,7 @@
 title: "MERGE"
 nav_order: 11
 description: >
-    FalkorDB implements a subset of the Cypher language, which is growing as development continues.
+    The MERGE clause ensures that a path exists in the graph (either the path already exists, or it needs to be created).
 parent: "Cypher Language"
 ---
 

@@ -1,6 +1,6 @@
 ---
 title: "Known limitations"
-description: ""
+description: "FalkorDB Known limitations"
 nav_order: 1000
 parent: "Cypher Language"
 ---

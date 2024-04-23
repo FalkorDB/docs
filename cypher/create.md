@@ -2,7 +2,7 @@
 title: "CREATE"
 nav_order: 8
 description: >
-    FalkorDB implements a subset of the Cypher language, which is growing as development continues.
+    CREATE is used to introduce new nodes and relationships.
 parent: "Cypher Language"
 ---
 
