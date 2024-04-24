@@ -2,7 +2,7 @@
 title: "OPTIONAL MATCH"
 nav_order: 2
 description: >
-    FalkorDB implements a subset of the Cypher language, which is growing as development continues.
+    The OPTIONAL MATCH clause is a MATCH variant that produces null values for elements that do not match successfully, rather than the all-or-nothing logic for patterns in MATCH clauses.
 parent: "Cypher Language"
 ---
 

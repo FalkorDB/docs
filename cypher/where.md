@@ -2,7 +2,7 @@
 title: "WHERE"
 nav_order: 3
 description: >
-    FalkorDB implements a subset of the Cypher language, which is growing as development continues.
+    Optional clause used to filter results based on predicates.
 parent: "Cypher Language"
 ---
 

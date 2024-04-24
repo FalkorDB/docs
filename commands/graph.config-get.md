@@ -5,6 +5,8 @@ description: >
 parent: "Commands"
 ---
 
+# GRAPH.CONFIG-GET
+
 Retrieves the current value of a FalkorDB configuration parameter.
 
 FalkorDB configuration parameters are detailed [here](/configuration).

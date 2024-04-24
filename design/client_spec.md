@@ -5,6 +5,8 @@ description: >
 parent: "The FalkorDB Design"   
 ---
 
+# Client Specification
+
 By design, there is not a full standard for FalkorDB clients to adhere to. Areas such as pretty-print formatting, query validation, and transactional and multithreaded capabilities have no canonically correct behavior, and the implementer is free to choose the approach and complexity that suits them best.
 
 FalkorDB does, however, provide a compact result set format for clients that minimizes the amount of redundant data transmitted from the server. Implementers are encouraged to take advantage of this format, as it provides better performance and removes ambiguity from decoding certain data. This approach requires clients to be capable of issuing procedure calls to the server and performing a small amount of client-side caching.

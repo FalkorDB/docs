@@ -1,10 +1,12 @@
 ---
-title: "FalkorDB Result Set Structure"
+title: "Result Set Structure"
 description: The Result Set's format
 parent: "The FalkorDB Design"
 ---
 
-This document describes the format FalkorDB uses to print data when accessed through the `redis-cli` utility. The [language-specific clients](/graph/clients) retrieve data in a more succinct format, and provide their own functionality for printing result sets.
+# Result Set Structure
+
+This document describes the format FalkorDB uses to print data when accessed through the `redis-cli` utility. The [language-specific clients](/clients) retrieve data in a more succinct format, and provide their own functionality for printing result sets.
 
 ## Top-level members
 

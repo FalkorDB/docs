@@ -2,7 +2,7 @@
 title: "SKIP"
 nav_order: 6
 description: >
-    FalkorDB implements a subset of the Cypher language, which is growing as development continues.
+    The optional skip clause allows a specified number of records to be omitted from the result set.
 parent: "Cypher Language"
 ---
 

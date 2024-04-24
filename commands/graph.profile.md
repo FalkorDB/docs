@@ -6,6 +6,8 @@ description: >
 parent: "Commands"
 ---
 
+# GRAPH.PROFILE
+
 Executes a query and produces an execution plan augmented with metrics for each operation's execution.
 
 Arguments: `Graph name, Query`

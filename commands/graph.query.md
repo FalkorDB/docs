@@ -6,6 +6,7 @@ description: >
 parent: "Commands"    
 ---
 
+# GRAPH.QUERY
 
 Executes the given query against a specified graph.
 

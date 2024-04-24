@@ -2,7 +2,7 @@
 title: "Indexing"
 nav_order: 20
 description: >
-    FalkorDB implements a subset of the Cypher language, which is growing as development continues.
+    FalkorDB supports single-property indexes for node labels and for relationship type. String, numeric, and geospatial data types can be indexed.
 parent: "Cypher Language"
 ---
 

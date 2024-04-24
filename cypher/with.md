@@ -2,7 +2,7 @@
 title: "WITH"
 nav_order: 12
 description: >
-    FalkorDB implements a subset of the Cypher language, which is growing as development continues.
+    The WITH clause allows parts of queries to be independently executed and have their results handled uniquely.
 parent: "Cypher Language"
 ---
 

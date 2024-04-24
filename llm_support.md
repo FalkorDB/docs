@@ -1,10 +1,10 @@
 ---
-title: "LLM support"
+title: "LLM frameworks support"
 nav_order: 8
 description: "FalkorDB supports a number of LLM frameworks."
 ---
 
-## LLM frameworks
+# LLM frameworks support
 
 We are working on adding support for FalkorDB in most of the LLM frameworks including:
 

@@ -5,7 +5,7 @@ description: >
     FalkorDB Clients
 ---
 
-## Official Clients
+# Official Clients
 
 | Project                                                   | Language   | License    | Author                                      | Package                                  |
 | --------------------------------------------------------- | ---------- | ---------- | ------------------------------------------- | ---------------------------------------- |

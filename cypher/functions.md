@@ -2,7 +2,7 @@
 title: "Functions"
 nav_order: 17
 description: >
-    FalkorDB implements a subset of the Cypher language, which is growing as development continues.
+    Information on all supported functions from the Cypher query language
 parent: "Cypher Language"
 ---
 

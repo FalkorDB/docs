@@ -2,7 +2,7 @@
 title: "FOREACH"
 nav_order: 15
 description: >
-    FalkorDB implements a subset of the Cypher language, which is growing as development continues.
+    The FOREACH clause feeds the components of a list to a sub-query comprised of updating clauses only
 parent: "Cypher Language"
 ---
 

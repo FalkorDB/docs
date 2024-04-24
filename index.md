@@ -24,7 +24,7 @@ FalkorDB is a blazing fast graph database used for low latency & high throughput
 
 ## Give it a try
 
-Launch an instance using docker, or use our [sandbox](https://cloud.falkordb.com/sandbox)
+Launch an instance using docker, or use [FalkorDB Clouds](https://app.falkordb.cloud)
 
 ```sh
 docker run -p 6379:6379 -p 3000:3000 -it --rm falkordb/falkordb:latest

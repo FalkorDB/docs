@@ -2,7 +2,7 @@
 title: "DELETE"
 nav_order: 9
 description: >
-    FalkorDB implements a subset of the Cypher language, which is growing as development continues.
+    DELETE is used to remove both nodes and relationships.
 parent: "Cypher Language"
 ---
 

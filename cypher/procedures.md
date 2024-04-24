@@ -2,7 +2,7 @@
 title: "Procedures"
 nav_order: 18
 description: >
-    FalkorDB implements a subset of the Cypher language, which is growing as development continues.
+    Procedures calling using with CALL and YIELD.
 parent: "Cypher Language"
 ---
 

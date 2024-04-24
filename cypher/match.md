@@ -2,7 +2,7 @@
 title: "MATCH"
 nav_order: 1
 description: >
-    FalkorDB implements a subset of the Cypher language, which is growing as development continues.
+    Match describes the relationship between queried entities, using ascii art to represent pattern(s) to match against.
 parent: "Cypher Language"
 ---
 

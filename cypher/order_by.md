@@ -2,7 +2,7 @@
 title: "ORDER BY"
 nav_order: 5
 description: >
-    FalkorDB implements a subset of the Cypher language, which is growing as development continues.
+    Order by specifies that the output be sorted and how.
 parent: "Cypher Language"
 ---
 

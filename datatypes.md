@@ -4,11 +4,11 @@ description: "FalkorDB supports a number of distinct data types, some of which c
 nav_order: 5
 ---
 
-## Graph types
+# Graph types
 
 All graph types are either structural elements of the graph or projections thereof. None can be stored as a property value.
 
-### Nodes
+## Nodes
 
 Nodes are persistent graph elements that can be connected to each other via relationships.
 
@@ -22,7 +22,7 @@ When querying nodes, multiple labels can be specified. Only nodes that hold all 
 $ redis-cli GRAPH.QUERY G "MATCH (n:Place:Continent) RETURN n"
 ```
 
-### Relationships
+## Relationships
 
 Relationships are persistent graph elements that connect one node to another.
 
@@ -38,7 +38,7 @@ When querying relationships, multiple types can be specified when separated by t
 $ redis-cli GRAPH.QUERY G "MATCH (:Person)-[r:RESIDENT_OF|:VISITOR_TO]->(:Place {name: 'London'}) RETURN r"
 ```
 
-### Paths
+## Paths
 
 Paths are alternating sequences of nodes and edges, starting and ending with a node.
 

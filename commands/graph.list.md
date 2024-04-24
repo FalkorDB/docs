@@ -6,6 +6,8 @@ description: >
 parent: "Commands"
 ---
 
+# GRAPH.LIST
+
 Lists all graph keys in the keyspace.
 
 ```sh

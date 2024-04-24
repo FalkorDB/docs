@@ -2,7 +2,7 @@
 title: "UNION"
 nav_order: 13
 description: >
-    FalkorDB implements a subset of the Cypher language, which is growing as development continues.
+    The UNION clause is used to combine the result of multiple queries.
 parent: "Cypher Language"
 ---
 
