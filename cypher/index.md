@@ -216,6 +216,17 @@ CREATE VECTOR INDEX FOR ()-[e:Call]->() ON (e.summary) OPTIONS {dimension:128, s
 Please note when creating a vector index both the vector dimension and similarity function
 must be provided. At the moment the only supported similarity function is 'euclidean'.
 
+## Inserting vectors
+
+To create a new vector use the [vecf32](/cypher/functions#vector-functions) function
+as follows:
+
+```cypher
+CREATE (p: Product {description: vecf32([2.1, 0.82, 1.3])})
+```
+
+The above query creates a new `Product` node with a `description` attribute containing a vector.
+
 ## Query vector index
 
 Vector indices are used to search for similar vectors to a given query vector
