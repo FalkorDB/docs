@@ -250,3 +250,5 @@ Dovizioso
 Pedrosa
 Rossi
 localhost
+BGSAVE
+RDB
