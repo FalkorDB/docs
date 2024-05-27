@@ -33,7 +33,7 @@ master:
   extraFlags:
   - "--loadmodule /FalkorDB/bin/linux-x64-release/src/falkordb.so"
 
-slave:
+replica:
   extraFlags:
   - "--loadmodule /FalkorDB/bin/linux-x64-release/src/falkordb.so"
 ```
