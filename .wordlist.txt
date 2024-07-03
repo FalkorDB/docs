@@ -58,6 +58,7 @@ NodeJS
 Nostem
 NumItems
 OMP
+OpenAI
 OpenCypher
 OpenMP
 Ouaknine
@@ -72,6 +73,7 @@ RedisGraph
 RedisInsight
 Roi
 Rueian
+SDK
 SLOWLOG
 SPpaths
 SSPLv
