@@ -28,6 +28,7 @@ Geospatial
 GrAPL
 GraphBLAS
 GraphBlas
+GraphRAG
 IDF
 IDentifier
 IPDPS
