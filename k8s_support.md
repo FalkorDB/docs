@@ -37,6 +37,7 @@ replica:
   extraFlags:
   - "--loadmodule /FalkorDB/bin/linux-x64-release/src/falkordb.so"
 ```
+
 This file specify the FalkorDB image(you can choose different tags)
 and configure the master and slave to load the FalkorDB module.
 For additional configurations [see the official Helm chart documentation](https://github.com/bitnami/charts/blob/main/bitnami/redis/values.yaml)
