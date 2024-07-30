@@ -6,7 +6,7 @@ description: "Learn how to use algo.SPpaths and algo.SSpaths to find single-pair
 
 # Path algorithms
 
-RedisGraph 2.10 introduced two new path-finding algorithms, or more accurately, minimum-weight, optionally bounded-cost, and optionally bounded-length path-finding algorithms, `algo.SPpaths` and `algo.SSpaths`.
+In v2.10 introduced two new path-finding algorithms, or more accurately, minimum-weight, optionally bounded-cost, and optionally bounded-length path-finding algorithms, `algo.SPpaths` and `algo.SSpaths`.
 
 `algo.SPpaths` and `algo.SSpaths` can solve a wide range of real-world problems, where minimum-weight paths need to be found. `algo.SPpaths` finds paths between a given pair of nodes, while `algo.SSpaths` finds paths from a given source node. Weight can represent time, distance, price, or any other measurement. A bound can be set on another property (e.g., finding a minimum-time bounded-price way to reach from point A to point B). Both algorithms are performant and have low memory requirements.
 
@@ -44,9 +44,9 @@ GRAPH.QUERY g "CREATE (a:City{name:'A'}), (b:City{name:'B'}), (c:City{name:'C'})
 
 ![Road network](../images/graph_query_city.png)
 
-## Before RedisGraph 2.10
+## Before v2.10
 
-Before 2.10, you were able to solve these queries:
+Before v2.10, you were able to solve these queries:
 
 * Find the shortest path (by number of roads) from A to G
 * Find all the shortest paths (by number of roads) from A to G

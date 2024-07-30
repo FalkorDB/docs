@@ -75,9 +75,9 @@ The following table summarizes which configuration parameters can be set at modu
 | [NODE_CREATION_BUFFER](#node_creation_buffer)                | V | X |
 | [BOLT_PORT](#bolt_port)                                      | V | X |
 | [MAX_QUEUED_QUERIES](#max_queued_queries)                    | V | V |
-| [TIMEOUT](#timeout) (deprecated in RedisGraph v2.10)         | V | V |
-| [TIMEOUT_MAX](#timeout_max) (since RedisGraph v2.10)         | V | V |
-| [TIMEOUT_DEFAULT](#timeout_default) (since RedisGraph v2.10) | V | V |
+| [TIMEOUT](#timeout) (deprecated in v2.10)         | V | V |
+| [TIMEOUT_MAX](#timeout_max) (since v2.10)         | V | V |
+| [TIMEOUT_DEFAULT](#timeout_default) (since v2.10) | V | V |
 | [RESULTSET_SIZE](#resultset_size)                            | V | V |
 | [QUERY_MEM_CAPACITY](#query_mem_capacity)                    | V | V |
 | [VKEY_MAX_ENTITY_COUNT](#vkey_max_entity_count)              | V | V |
@@ -204,8 +204,8 @@ The `TIMEOUT` query parameter of the `GRAPH.QUERY`, `GRAPH.RO_QUERY`, and `GRAPH
 
 #### Default
 
-- Before RedisGraph v2.10: `TIMEOUT` is off (set to `0`).
-- Since RedisGraph v2.10: `TIMEOUT` is not specified; `TIMEOUT_MAX` and `TIMEOUT_DEFAULT` are specified instead.
+- Before v2.10: `TIMEOUT` is off (set to `0`).
+- Since v2.10: `TIMEOUT` is not specified; `TIMEOUT_MAX` and `TIMEOUT_DEFAULT` are specified instead.
 
 #### Example
 
@@ -217,7 +217,7 @@ $ redis-server --loadmodule ./falkordb.so TIMEOUT 1000
 
 ### TIMEOUT_MAX
 
-(Since RedisGraph v2.10)
+(Since v2.10)
 
 The `TIMEOUT_MAX` configuration parameter specifies the maximum execution time for both read and write queries, in milliseconds.
 
@@ -227,8 +227,8 @@ When a query execution time exceeds the maximal execution time, the query is abo
 
 #### Default
 
-- Before RedisGraph v2.10: unspecified and unsupported.
-- Since RedisGraph v2.10: `TIMEOUT_MAX` is off (set to `0`).
+- Before v2.10: unspecified and unsupported.
+- Since v2.10: `TIMEOUT_MAX` is off (set to `0`).
 
 #### Example
 
@@ -240,7 +240,7 @@ $ redis-server --loadmodule ./falkordb.so TIMEOUT_MAX 1000
 
 ### TIMEOUT_DEFAULT
 
-(Since RedisGraph v2.10)
+(Since v2.10)
 
 The `TIMEOUT_DEFAULT` configuration parameter specifies the default maximal execution time for both read and write queries, in milliseconds.
 
@@ -248,8 +248,8 @@ For a given query, this default maximal execution time can be overridden by the 
 
 #### Default
 
-- Before RedisGraph v2.10: unspecified and unsupported.
-- Since RedisGraph v2.10: `TIMEOUT_DEFAULT` is equal to `TIMEOUT_MAX` (set to `0`).
+- Before v2.10: unspecified and unsupported.
+- Since v2.10: `TIMEOUT_DEFAULT` is equal to `TIMEOUT_MAX` (set to `0`).
 
 #### Example
 
@@ -343,11 +343,11 @@ A number within the range [0, 1000]
 
 ### Query Timeout
 
-- Before RedisGraph v2.10, or if `TIMEOUT_DEFAULT` and `TIMEOUT_MAX` are not specified:
+- Before v2.10, or if `TIMEOUT_DEFAULT` and `TIMEOUT_MAX` are not specified:
 
   `TIMEOUT` allows overriding the `TIMEOUT` configuration parameter for a single read query. Write queries do not timeout.
 
-- Since RedisGraph v2.10, if either `TIMEOUT_DEFAULT` or `TIMEOUT_MAX` are specified:
+- Since v2.10, if either `TIMEOUT_DEFAULT` or `TIMEOUT_MAX` are specified:
 
   `TIMEOUT` allows overriding the `TIMEOUT_DEFAULT` configuration parameter value for a single `GRAPH.QUERY`, `GRAPH.RO_QUERY`, or `GRAPH.PROFILE` command. The `TIMEOUT` value cannot exceed the `TIMEOUT_MAX` value (the command would abort with a `(error) The query TIMEOUT parameter value cannot exceed the TIMEOUT_MAX configuration parameter value` reply).
 
