@@ -32,7 +32,7 @@ Instructions on how to efficiently convert these IDs in the [Procedure Calls](#p
 
 Additionally, two enums are exposed:
 
-[ColumnType](https://github.com/FalkorDB/FalkorDB/blob/ff108d7e21061025166a35d29be1a1cb5bac6d55/src/resultset/formatters/resultset_formatter.h#L14-L19), which as of RedisGraph v2.1.0 will always be `COLUMN_SCALAR`. This enum is retained for backwards compatibility, and may be ignored by the client unless RedisGraph versions older than v2.1.0 must be supported.
+[ColumnType](https://github.com/FalkorDB/FalkorDB/blob/ff108d7e21061025166a35d29be1a1cb5bac6d55/src/resultset/formatters/resultset_formatter.h#L14-L19), which as of v2.1.0 will always be `COLUMN_SCALAR`. This enum is retained for backwards compatibility, and may be ignored by the client unless versions older than v2.1.0 must be supported.
 
 [ValueType](https://github.com/FalkorDB/FalkorDB/blob/ff108d7e21061025166a35d29be1a1cb5bac6d55/src/resultset/formatters/resultset_formatter.h#L21-L28) indicates the data type (such as Node, integer, or string) of each returned value. Each value is emitted as a 2-array, with this enum in the first position and the actual value in the second. Each property on a graph entity also has a scalar as its value, so this construction is nested in each value of the properties array when a column contains a node or relationship.
 

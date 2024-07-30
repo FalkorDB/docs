@@ -134,7 +134,7 @@ redis> GRAPH.CONSTRAINT CREATE g UNIQUE NODE Person PROPERTIES 2 first_name last
 PENDING
 ```
 
-Since RedisGraph 2.12 indexes are constructed asynchronously. The constraint construction will start once the index is fully constructed.
+Since v2.12 indexes are constructed asynchronously. The constraint construction will start once the index is fully constructed.
 
 ### Creating a mandatory constraint for a relationship type
 
