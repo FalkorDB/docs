@@ -45,6 +45,8 @@ db = FalkorDB(host='localhost', port=6379)
 
 # Create the 'MotoGP' graph
 g = db.select_graph('MotoGP')
+# Clear out this graph in case you've run this script before.
+g.delete()
 g.query("""CREATE
            (:Rider {name:'Valentino Rossi'})-[:rides]->(:Team {name:'Yamaha'}),
            (:Rider {name:'Dani Pedrosa'})-[:rides]->(:Team {name:'Honda'}),
@@ -61,7 +63,7 @@ for row in res.result_set:
 # Query how many riders represent team Ducati ?
 res = g.query("""MATCH (r:Rider)-[:rides]->(t:Team {name:'Ducati'}) RETURN count(r)""")
 
-print(row[0]) # Prints: 1
+print(res.result_set[0][0]) # Prints: 1
 ```
 
 For additional demos please see visit [Demos](https://github.com/FalkorDB/demos).
