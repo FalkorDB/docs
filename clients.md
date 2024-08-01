@@ -10,8 +10,9 @@ description: >
 | Project                                                   | Language   | License    | Author                                      | Package                                  |
 | --------------------------------------------------------- | ---------- | ---------- | ------------------------------------------- | ---------------------------------------- |
 | [falkordb-py][falkordb-py-url]                            | Python     | MIT        | [FalkorDB][falkordb-url]                    | [pypi][falkordb-py-package]              |
-| [node-falkordb][node-falkordb-url]                        | Node.JS    | MIT        | [FalkorDB][falkordb-url]                    | [npm][node-falkordb-package]             |
-| [jfalkordb][jfalkordb-url]                        | Java    | BSD        | [FalkorDB][falkordb-url]                    | [maven][jfalkordb-package]             |
+| [falkordb-ts][falkordb-ts-url]                            | Node.JS    | MIT        | [FalkorDB][falkordb-url]                    | [npm][falkordb-ts-package]               |
+| [jfalkordb][jfalkordb-url]                                | Java       | BSD        | [FalkorDB][falkordb-url]                    | [maven][jfalkordb-package]               |
+| [falkordb-rs][falkordb-rs-url]                            | Rust       | MIT        | [FalkorDB][falkordb-url]                    | [crates][falkordb-rs-package]             |
 
 ## Additional Clients
 
@@ -42,14 +43,17 @@ description: >
 [jfalkordb-url]: https://github.com/falkordb/jfalkordb
 [jfalkordb-package]: https://search.maven.org/artifact/com.falkordb/jfalkordb
 
+[falkordb-ts-url]: https://github.com/falkordb/falkordb-ts
+[falkordb-ts-package]: https://www.npmjs.com/package/falkordb
+
+[falkordb-rs-url]: https://github.com/falkordb/falkordb-rs
+[falkordb-rs-package]: https://crates.io/crates/falkordb
+
 [nredisstack-url]: https://github.com/redis/nredisstack
 [nredisstack-package]: https://www.nuget.org/packages/nredisstack/
 
 [node-redis-url]: https://github.com/redis/node-redis
 [node-redis-package]: https://www.npmjs.com/package/redis
-
-[node-falkordb-url]: https://github.com/falkordb/node-falkordb
-[node-falkordb-package]: https://www.npmjs.com/package/falkordb
 
 [redisgraph-rb-author]: https://redislabs.com
 [redisgraph-rb-url]: https://github.com/RedisGraph/redisgraph-rb
