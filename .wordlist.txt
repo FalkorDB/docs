@@ -117,6 +117,7 @@ dockerfile
 duplications
 dups
 endNode
+endtab
 endtabs
 entrypoint
 enum
