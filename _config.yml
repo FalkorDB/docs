@@ -20,4 +20,5 @@ aux_links_new_tab: true
 
 plugins:
   - jekyll-sitemap
+  - jekyll-tabs
   
