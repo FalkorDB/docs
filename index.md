@@ -20,7 +20,7 @@ FalkorDB is a blazing fast graph database used for low latency & high throughput
 
 * Adopting the [Property Graph Model](https://github.com/opencypher/openCypher/blob/master/docs/property-graph-model.adoc)
 * Supports [OpenCypher](http://www.opencypher.org/) query language with proprietary extensions
-* Offers Full-Text Search, Vector Similarly & Numeric indexing.
+* Offers [Full-Text Search](/cypher/#full-text-indexing), [Vector Similarly](/cypher/#vector-indexing) & [Numeric indexing](cypher/#indexing).
 * Interacts via either [RESP](https://redis.io/docs/reference/protocol-spec/) and [Bolt](https://en.wikipedia.org/wiki/Bolt_(network_protocol)) protocols
 * Graphs represented as sparse adjacency matrices
 
