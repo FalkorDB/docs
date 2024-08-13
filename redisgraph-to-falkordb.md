@@ -4,7 +4,7 @@ nav_order: 11
 description: "Migrate from RedisGraph to FalkorDB."
 ---
 
-## FalkorDB is compatible with RedisGraph RDB files.
+# FalkorDB is compatible with RedisGraph RDB files.
 
 For the migration, execute the following steps:
 

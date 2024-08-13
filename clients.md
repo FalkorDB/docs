@@ -7,12 +7,13 @@ description: >
 
 # Official Clients
 
-| Project                                                   | Language   | License    | Author                                      | Package                                  |
-| --------------------------------------------------------- | ---------- | ---------- | ------------------------------------------- | ---------------------------------------- |
-| [falkordb-py][falkordb-py-url]                            | Python     | MIT        | [FalkorDB][falkordb-url]                    | [pypi][falkordb-py-package]              |
-| [falkordb-ts][falkordb-ts-url]                            | Node.JS    | MIT        | [FalkorDB][falkordb-url]                    | [npm][falkordb-ts-package]               |
-| [jfalkordb][jfalkordb-url]                                | Java       | BSD        | [FalkorDB][falkordb-url]                    | [maven][jfalkordb-package]               |
-| [falkordb-rs][falkordb-rs-url]                            | Rust       | MIT        | [FalkorDB][falkordb-url]                    | [crates][falkordb-rs-package]             |
+| Project                            | Docs                 | Language   | License    | Author                                      | Package                                  |
+| -----------------------------------|--------------------- | ---------- | ---------- | ------------------------------------------- | ---------------------------------------- |
+| [falkordb-py][falkordb-py-url]    |  [Pydoc][falkordb-py-docs]                   | Python     | MIT        | [FalkorDB][falkordb-url]                    | [pypi][falkordb-py-package]              |
+| [falkordb-ts][falkordb-ts-url]    |  [JSDoc][falkordb-ts-docs] | Node.JS    | MIT        | [FalkorDB][falkordb-url]                    | [npm][falkordb-ts-package]               |
+| [jfalkordb][jfalkordb-url]        |  [javadocs][jfalkordb-docs] | Java       | BSD        | [FalkorDB][falkordb-url]                    | [maven][jfalkordb-package]               |
+| [falkordb-rs][falkordb-rs-url]    |  [docs.rs][falkordb-rs-docs]| Rust       | MIT        | [FalkorDB][falkordb-url]                    | [crates][falkordb-rs-package]             |
+| [falkordb-go][falkordb-go-url]    |  [godoc][falkordb-go-docs] | Go       | BSD        | [FalkorDB][falkordb-url]                    | [crates][falkordb-go-package]             |
 
 ## Additional Clients
 
@@ -39,15 +40,23 @@ description: >
 
 [falkordb-py-url]: https://github.com/falkordb/falkordb-py
 [falkordb-py-package]: https://pypi.python.org/pypi/falkordb
+[falkordb-py-docs]: https://falkordb-py.readthedocs.io/en/latest/
 
 [jfalkordb-url]: https://github.com/falkordb/jfalkordb
 [jfalkordb-package]: https://search.maven.org/artifact/com.falkordb/jfalkordb
+[jfalkordb-docs]: https://www.javadoc.io/doc/com.falkordb/jfalkordb
 
 [falkordb-ts-url]: https://github.com/falkordb/falkordb-ts
 [falkordb-ts-package]: https://www.npmjs.com/package/falkordb
+[falkordb-ts-docs]: https://www.npmjs.com/package/falkordb
 
 [falkordb-rs-url]: https://github.com/falkordb/falkordb-rs
 [falkordb-rs-package]: https://crates.io/crates/falkordb
+[falkordb-rs-docs]: https://docs.rs/falkordb/latest/falkordb
+
+[falkordb-go-url]: https://github.com/falkordb/falkordb-go
+[falkordb-go-package]: https://github.com/falkordb/falkordb-go
+[falkordb-go-docs]: https://pkg.go.dev/github.com/FalkorDB/falkordb-go
 
 [nredisstack-url]: https://github.com/redis/nredisstack
 [nredisstack-package]: https://www.nuget.org/packages/nredisstack/
