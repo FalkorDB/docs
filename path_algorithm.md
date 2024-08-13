@@ -32,15 +32,15 @@ This graph represents a road network with 7 cities (A, B, C, and so on) and 11 o
 
 Let's create the graph.
 
-{{< highlight bash >}}
+```bash
 GRAPH.QUERY g "CREATE (a:City{name:'A'}), (b:City{name:'B'}), (c:City{name:'C'}), (d:City{name:'D'}), (e:City{name:'E'}), (f:City{name:'F'}), (g:City{name:'G'}), (a)-[:Road{time:4, dist:3}]->(b), (a)-[:Road{time:3, dist:8}]->(c), (a)-[:Road{time:4, dist:2}]->(d), (b)-[:Road{time:5, dist:7}]->(e), (b)-[:Road{time:5, dist:5}]->(d), (d)-[:Road{time:4, dist:5}]->(e), (c)-[:Road{time:3, dist:6}]->(f), (d)-[:Road{time:1, dist:4}]->(c), (d)-[:Road{time:2, dist:12}]->(f), (e)-[:Road{time:5, dist:5}]->(g), (f)-[:Road{time:4, dist:2}]->(g)"
- {{< / highlight >}}
+ ```
 
 If you're using RedisInsight v2, you can create and visualize the graph by slightly modifying the above query: you'll have to assign aliases to all nodes and relationships, and return them:
 
-{{< highlight bash >}}
+```bash
 GRAPH.QUERY g "CREATE (a:City{name:'A'}), (b:City{name:'B'}), (c:City{name:'C'}), (d:City{name:'D'}), (e:City{name:'E'}), (f:City{name:'F'}), (g:City{name:'G'}), (a)-[r1:Road{time:4, dist:3}]->(b), (a)-[r2:Road{time:3, dist:8}]->(c), (a)-[r3:Road{time:4, dist:2}]->(d), (b)-[r4:Road{time:5, dist:7}]->(e), (b)-[r5:Road{time:5, dist:5}]->(d), (d)-[r6:Road{time:4, dist:5}]->(e), (c)-[r7:Road{time:3, dist:6}]->(f), (d)-[r8:Road{time:1, dist:4}]->(c), (d)-[r9:Road{time:2, dist:12}]->(f), (e)-[r10:Road{time:5, dist:5}]->(g), (f)-[r11:Road{time:4, dist:2}]->(g) RETURN a,b,c,d,e,f,g,r1,r2,r3,r4,r5,r6,r7,r8,r9,r10,r11"
-{{< / highlight >}}
+```
 
 ![Road network](../images/graph_query_city.png)
 
@@ -55,13 +55,13 @@ Before v2.10, you were able to solve these queries:
 
 ### Find the shortest path (by number of roads) from A to G
 
-{{< highlight bash >}}
+```bash
 GRAPH.QUERY g "MATCH (a:City{name:'A'}),(g:City{name:'G'}) WITH shortestPath((a)-[*]->(g)) as p RETURN length(p), [n in nodes(p) | n.name] as pathNodes"
 1) 1) "length(p)"
    2) "pathNodes"
 2) 1) 1) (integer) 3
       2) "[A, D, F, G]"
-{{< / highlight >}}
+```
 
 `shortestPath` returns one of the shortest paths. If there is more than one, only one is retrieved.
 
@@ -71,7 +71,7 @@ With RedisInsight v2, you can visualize a path simply by returning it.
 
 ### Find all the shortest paths (by number of roads) from A to G
 
-{{< highlight bash >}}
+```bash
 GRAPH.QUERY g "MATCH (a:City{name:'A'}),(g:City{name:'G'}) WITH a,g MATCH p=allShortestPaths((a)-[*]->(g)) RETURN length(p), [n in nodes(p) | n.name] as pathNodes"
 1) 1) "length(p)"
    2) "pathNodes"
@@ -83,13 +83,13 @@ GRAPH.QUERY g "MATCH (a:City{name:'A'}),(g:City{name:'G'}) WITH a,g MATCH p=allS
       2) "[A, D, E, G]"
    4) 1) (integer) 3
       2) "[A, B, E, G]"
-{{< / highlight >}}
+```
 
 All `allShortestPaths` results have, by definition, the same length (number of roads).
  
 ### Find 5 shortest paths (by number of roads) from A to G
 
-{{< highlight bash >}}
+```bash
 GRAPH.QUERY g "MATCH p = (a:City{name:'A'})-[*]->(g:City{name:'G'}) RETURN length(p), [n in nodes(p) | n.name] as pathNodes ORDER BY length(p) LIMIT 5"
 1) 1) "length(p)"
    2) "pathNodes"
@@ -103,7 +103,7 @@ GRAPH.QUERY g "MATCH p = (a:City{name:'A'})-[*]->(g:City{name:'G'}) RETURN lengt
       2) "[A, C, F, G]"
    5) 1) (integer) 4
       2) "[A, D, C, F, G]"
-{{< / highlight >}}
+```
 
 Using the unbounded traversal pattern `(a:City{name:'A'})-[*]->(g:City{name:'G'})`, FalkorDB traverses all possible paths from A to G. `ORDER BY length(p) LIMIT 5` ensures that you collect only [up to 5 shortest paths (minimal number of relationships). This approach is very inefficient because all possible paths would have to be traversed. Ideally, you would want to abort some traversals as soon as you are sure they would not result in the discovery of shorter paths. 
 
@@ -111,7 +111,7 @@ Using the unbounded traversal pattern `(a:City{name:'A'})-[*]->(g:City{name:'G'}
 
 In a similarly inefficient manner, you can traverse all possible paths and collect the 5 shortest paths (in kilometers).
 
-{{< highlight bash >}}
+```bash
 GRAPH.QUERY g "MATCH p = (a:City{name:'A'})-[*]->(g:City{name:'G'}) WITH p,reduce(dist=0, n IN relationships(p) | dist+n.dist) as dist return dist,[n IN nodes(p) | n.name] as pathNodes ORDER BY dist LIMIT 5"
 1) 1) "dist"
    2) "pathNodes"
@@ -125,7 +125,7 @@ GRAPH.QUERY g "MATCH p = (a:City{name:'A'})-[*]->(g:City{name:'G'}) WITH p,reduc
       2) "[A, D, F, G]"
    5) 1) (integer) 16
       2) "[A, C, F, G]"
-{{< / highlight >}}
+```
 
 Again, instead of traversing all possible paths, you would want to abort some traversals as soon as you are sure that they would not result in the discovery of shorter paths.
  
@@ -159,35 +159,35 @@ With `algo.SPaths`, you can solve queries like this.
 
 Set `weightProp` to `dist`:
 
-{{< highlight bash >}}
+```bash
 GRAPH.QUERY g "MATCH (a:City{name:'A'}),(g:City{name:'G'}) CALL algo.SPpaths( {sourceNode: a, targetNode: g, relTypes: ['Road'], weightProp: 'dist'} ) YIELD path, pathWeight RETURN pathWeight, [n in nodes(path) | n.name] as pathNodes"
 1) 1) "pathWeight"
    2) "pathNodes"
 2) 1) 1) "12"
       2) "[A, D, E, G]"
-{{< / highlight >}} 
+```
 
 ### Find the fastest path (in minutes) from A to G
 
 Continue as before, but now set `weightProp` to `time`.
 
-{{< highlight bash >}}
+```bash
 GRAPH.QUERY g "MATCH (a:City{name:'A'}),(g:City{name:'G'}) CALL algo.SPpaths( {sourceNode: a, targetNode: g, relTypes: ['Road'], weightProp: 'time'} ) YIELD path, pathWeight RETURN pathWeight, [n in nodes(path) | n.name] as pathNodes"
 1) 1) "pathWeight"
    2) "pathNodes"
 2) 1) 1) "10"
       2) "[A, D, F, G]"
-{{< / highlight >}}
+```
 
 ### Find the shortest paths (in kilometers) from A to G
 
-{{< highlight bash >}}
+```bash
 GRAPH.QUERY g "MATCH (a:City{name:'A'}),(g:City{name:'G'}) CALL algo.SPpaths( {sourceNode: a, targetNode: g, relTypes: ['Road'], pathCount: 0, weightProp: 'dist'} ) YIELD path, pathWeight RETURN pathWeight, [n in nodes(path) | n.name] as pathNodes"
 1) 1) "pathWeight"
    2) "pathNodes"
 2) 1) 1) "12"
       2) "[A, D, E, G]"
-{{< / highlight >}}
+```
 
 In the example above, you also specified the `pathCount` argument, where `pathCount` is the number of paths to report: 
 
@@ -199,7 +199,7 @@ In the example above, you also specified the `pathCount` argument, where `pathCo
 
 ### Find 5 shortest paths (in kilometers) from A to G
 
-{{< highlight bash >}}
+```bash
 GRAPH.QUERY g "MATCH (a:City{name:'A'}),(g:City{name:'G'}) CALL algo.SPpaths( {sourceNode: a, targetNode: g, relTypes: ['Road'], pathCount: 5, weightProp: 'dist'} ) YIELD path, pathWeight RETURN pathWeight, [n in nodes(path) | n.name] ORDER BY pathWeight"
 1) 1) "pathWeight"
    2) "[n in nodes(path) | n.name]"
@@ -213,13 +213,13 @@ GRAPH.QUERY g "MATCH (a:City{name:'A'}),(g:City{name:'G'}) CALL algo.SPpaths( {s
       2) "[A, C, F, G]"
    5) 1) "16"
       2) "[A, D, F, G]"
-{{< / highlight >}}
+```
 
 ### Find 2 shortest paths (in kilometers) from A to G, where you can reach G in up to 12 minutes
 
 Another interesting feature is the introduction of path constraints ('bounded-cost'). Suppose that you want to find only paths where you can reach G in 12 minutes or less.
 
-{{< highlight bash >}}
+```bash
 GRAPH.QUERY g "MATCH (a:City{name:'A'}),(g:City{name:'G'}) CALL algo.SPpaths( {sourceNode: a, targetNode: g, relTypes: ['Road'], pathCount: 2, weightProp: 'dist', costProp: 'time', maxCost: 12} ) YIELD path, pathWeight, pathCost RETURN pathWeight, pathCost, [n in nodes(path) | n.name] ORDER BY pathWeight"
 1) 1) "pathWeight"
    2) "pathCost"
@@ -229,7 +229,7 @@ GRAPH.QUERY g "MATCH (a:City{name:'A'}),(g:City{name:'G'}) CALL algo.SPpaths( {s
       3) "[A, D, C, F, G]"
    2) 1) "16"
       2) "10"
-{{< / highlight >}}
+```
 
 In the example above, you added the following optional arguments:
 
@@ -248,7 +248,7 @@ You also yielded:
 
 Another interesting feature is the ability to revert or ignore the relationship direction.
 
-{{< highlight bash >}}
+```bash
 GRAPH.QUERY g "MATCH (a:City{name:'D'}),(g:City{name:'G'}) CALL algo.SPpaths( {sourceNode: a, targetNode: g, relTypes: ['Road'], relDirection: 'both', pathCount: 1000, weightProp: 'dist'} ) YIELD path, pathWeight RETURN pathWeight, [n in nodes(path) | n.name] as pathNodes ORDER BY pathWeight"
 1) 1) "pathWeight"
    2) "pathNodes"
@@ -272,7 +272,7 @@ GRAPH.QUERY g "MATCH (a:City{name:'D'}),(g:City{name:'G'}) CALL algo.SPpaths( {s
        2) "[D, E, B, A, C, F, G]"
    10) 1) "41"
        2) "[D, F, C, A, B, E, G]"
-{{< / highlight >}}
+```
 
 In the example above, you added the following optional argument:
 
@@ -282,7 +282,7 @@ In the example above, you added the following optional argument:
 
 Suppose you want to repeat the query above but also limit the path-length (number of relationships along to path) to 4:
 
-{{< highlight bash >}}
+```bash
 GRAPH.QUERY g "MATCH (a:City{name:'D'}),(g:City{name:'G'}) CALL algo.SPpaths( {sourceNode: a, targetNode: g, relTypes: ['Road'], relDirection: 'both', pathCount: 1000, weightProp: 'dist', maxLen: 4} ) YIELD path, pathWeight RETURN pathWeight, [n in nodes(path) | n.name] as pathNodes ORDER BY pathWeight"
 1) 1) "pathWeight"
    2) "pathNodes"
@@ -298,7 +298,7 @@ GRAPH.QUERY g "MATCH (a:City{name:'D'}),(g:City{name:'G'}) CALL algo.SPpaths( {s
       2) "[D, B, E, G]"
    6) 1) "18"
       2) "[D, A, C, F, G]"
-{{< / highlight >}}
+```
 
 In the example above, you specified the following optional constraint:
 
@@ -314,7 +314,7 @@ That's what the `algo.SSpaths` procedure (SS stands for _single source_) is all 
 
 ### Find all paths from A if the trip is limited to 10 kilometers
 
-{{< highlight bash >}}
+```bash
 GRAPH.QUERY g "MATCH (a:City{name:'A'}) CALL algo.SSpaths( {sourceNode: a, relTypes: ['Road'], pathCount: 1000, costProp: 'dist', maxCost: 10} ) YIELD path, pathCost RETURN pathCost, [n in nodes(path) | n.name] as pathNodes ORDER BY pathCost"
 1) 1) "pathCost"
    2) "pathNodes"
@@ -332,11 +332,11 @@ GRAPH.QUERY g "MATCH (a:City{name:'A'}) CALL algo.SSpaths( {sourceNode: a, relTy
       2) "[A, C]"
    7) 1) "10"
       2) "[A, B, E]"
-{{< / highlight >}} 
+``` 
 
 ### Find all paths from A if the trip is limited to 8 minutes
 
-{{< highlight bash >}}
+```bash
 GRAPH.QUERY g "MATCH (a:City{name:'A'}) CALL algo.SSpaths( {sourceNode: a, relTypes: ['Road'], pathCount: 1000, costProp: 'time', maxCost: 8} ) YIELD path, pathCost RETURN pathCost, [n in nodes(path) | n.name] as pathNodes ORDER BY pathCost"
 1) 1) "pathCost"
    2) "pathNodes"
@@ -356,11 +356,11 @@ GRAPH.QUERY g "MATCH (a:City{name:'A'}) CALL algo.SSpaths( {sourceNode: a, relTy
       2) "[A, D, C, F]"
    8) 1) "8"
       2) "[A, D, E]"
-{{< / highlight >}} 
+``` 
 
 ### Find 5 shortest paths (in kilometers) from A
 
-{{< highlight bash >}}
+```bash
 GRAPH.QUERY g "MATCH (a:City{name:'A'}) CALL algo.SSpaths( {sourceNode: a, relTypes: ['Road'], pathCount: 5, weightProp: 'dist', costProp: 'cost'} ) YIELD path, pathWeight, pathCost RETURN pathWeight, pathCost, [n in nodes(path) | n.name] as pathNodes ORDER BY pathWeight"
 1) 1) "pathWeight"
    2) "pathCost"
@@ -380,11 +380,11 @@ GRAPH.QUERY g "MATCH (a:City{name:'A'}) CALL algo.SSpaths( {sourceNode: a, relTy
    5) 1) "8"
       2) "1"
       3) "[A, C]"
-{{< / highlight >}} 
+``` 
 
 ### Find 5 shortest paths (in kilometers) from A if the trip is limited to 6 minutes
 
-{{< highlight bash >}}
+```bash
 GRAPH.QUERY g "MATCH (a:City{name:'A'}) CALL algo.SSpaths( {sourceNode: a, relTypes: ['Road'], pathCount: 5, weightProp: 'dist', costProp: 'time', maxCost: 6} ) YIELD path, pathWeight, pathCost RETURN pathWeight, pathCost, [n in nodes(path) | n.name] as pathNodes ORDER BY pathWeight"
 1) 1) "pathWeight"
    2) "pathCost"
@@ -404,4 +404,4 @@ GRAPH.QUERY g "MATCH (a:City{name:'A'}) CALL algo.SSpaths( {sourceNode: a, relTy
    5) 1) "14"
       2) "6"
       3) "[A, D, F]"
-{{< / highlight >}}
+```

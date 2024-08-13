@@ -5,3 +5,18 @@
 
 
 # https://docs.falkordb.com
+
+
+
+# Build
+
+```bash
+bundle install
+bundle exec jekyll build
+```
+
+# Run
+
+```bash
+bundle exec jekyll serve
+```

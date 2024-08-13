@@ -37,6 +37,9 @@ Once loaded you can interact with FalkorDB using any of the supported [client li
 
 Here we'll use [FalkorDB Python client](https://pypi.org/project/FalkorDB/) to create a small graph representing a subset of motorcycle riders and teams taking part in the MotoGP league, once created we'll start querying our data.
 
+{% tabs started %}
+
+{% tab started python %}
 ```python
 from falkordb import FalkorDB
 
@@ -65,6 +68,13 @@ res = g.query("""MATCH (r:Rider)-[:rides]->(t:Team {name:'Ducati'}) RETURN count
 
 print(res.result_set[0][0]) # Prints: 1
 ```
+{% endtab %}
+
+{% endtabs %}
+
+
+
+
 
 For additional demos please see visit [Demos](https://github.com/FalkorDB/demos).
 
