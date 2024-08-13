@@ -38,7 +38,38 @@ Once loaded you can interact with FalkorDB using any of the supported [client li
 Here we'll use [FalkorDB Python client](https://pypi.org/project/FalkorDB/) to create a small graph representing a subset of motorcycle riders and teams taking part in the MotoGP league, once created we'll start querying our data.
 
 
-{% include examples/index/example.html %}
+## Example Code in Multiple Languages
+
+{% capture python_code %}
+# Python example
+print("Hello, World!")
+{% endcapture %}
+
+{% capture javascript_code %}
+// JavaScript example
+console.log("Hello, World!");
+{% endcapture %}
+
+{% capture cpp_code %}
+// C++ example
+#include <iostream>
+int main() {
+  std::cout << "Hello, World!" << std::endl;
+  return 0;
+}
+{% endcapture %}
+
+{% assign tabs = 
+  [
+    { "language": "Python", "code": python_code }, 
+    { "language": "JavaScript", "code": javascript_code }, 
+    { "language": "C++", "code": cpp_code }
+  ] 
+%}
+
+{% include code_tabs.html name="example1" tabs=tabs %}
+
+
 
 ```python
 from falkordb import FalkorDB
