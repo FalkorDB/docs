@@ -37,6 +37,9 @@ Once loaded you can interact with FalkorDB using any of the supported [client li
 
 Here we'll use [FalkorDB Python client](https://pypi.org/project/FalkorDB/) to create a small graph representing a subset of motorcycle riders and teams taking part in the MotoGP league, once created we'll start querying our data.
 
+
+{% include examples/index/example.html %}
+
 ```python
 from falkordb import FalkorDB
 
