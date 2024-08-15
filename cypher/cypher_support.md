@@ -6,6 +6,8 @@ description: >
 parent: "Cypher Language"
 ---
 
+# Cypher coverage
+
 This document is based on the Cypher Query Language Reference (version 9), available at [OpenCypher Resources](https://www.opencypher.org/resources).
 
 ## Patterns

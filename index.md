@@ -20,7 +20,7 @@ FalkorDB is a blazing fast graph database used for low latency & high throughput
 
 * Adopting the [Property Graph Model](https://github.com/opencypher/openCypher/blob/master/docs/property-graph-model.adoc)
 * Supports [OpenCypher](http://www.opencypher.org/) query language with proprietary extensions
-* Offers Full-Text Search, Vector Similarly & Numeric indexing.
+* Offers [Full-Text Search](/cypher/#full-text-indexing), [Vector Similarly](/cypher/#vector-indexing) & [Numeric indexing](cypher/#indexing).
 * Interacts via either [RESP](https://redis.io/docs/reference/protocol-spec/) and [Bolt](https://en.wikipedia.org/wiki/Bolt_(network_protocol)) protocols
 * Graphs represented as sparse adjacency matrices
 
@@ -45,6 +45,8 @@ db = FalkorDB(host='localhost', port=6379)
 
 # Create the 'MotoGP' graph
 g = db.select_graph('MotoGP')
+# Clear out this graph in case you've run this script before.
+g.delete()
 g.query("""CREATE
            (:Rider {name:'Valentino Rossi'})-[:rides]->(:Team {name:'Yamaha'}),
            (:Rider {name:'Dani Pedrosa'})-[:rides]->(:Team {name:'Honda'}),
@@ -61,7 +63,7 @@ for row in res.result_set:
 # Query how many riders represent team Ducati ?
 res = g.query("""MATCH (r:Rider)-[:rides]->(t:Team {name:'Ducati'}) RETURN count(r)""")
 
-print(row[0]) # Prints: 1
+print(res.result_set[0][0]) # Prints: 1
 {% endcapture %}
 
 {% capture cpp_code %}
