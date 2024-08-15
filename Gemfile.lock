@@ -41,6 +41,8 @@ GEM
       webrick (>= 1.0)
     jekyll-sass-converter (1.5.2)
       sass (~> 3.4)
+    jekyll-sitemap (1.4.0)
+      jekyll (>= 3.7, < 5.0)
     jekyll-tabs (1.2.1)
       jekyll (>= 3.0, < 5.0)
     jekyll-watch (2.2.1)
@@ -101,7 +103,8 @@ PLATFORMS
 DEPENDENCIES
   concurrent-ruby (~> 1.3)
   jekyll (~> 3.10)
-  jekyll-tabs
+  jekyll-sitemap (~> 1.4)
+  jekyll-tabs (~> 1.2)
   public_suffix (~> 6.0)
   rexml (~> 3.3)
 
