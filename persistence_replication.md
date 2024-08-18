@@ -61,7 +61,6 @@ docker run -d \
   -p 6379:6379 \
   falkordb/falkordb
 ```
-
 Here:
 
 The -e REPLICATION_MODE=master flag sets this instance as the master.
@@ -96,8 +95,23 @@ To verify that your setup is working correctly:
 * Persistence Check: Stop the FalkorDB container and start it again. The data should persist across restarts.
 
 ```bash
+redis-cli graph.query mygraph "CREATE (:Database {name:'falkordb'})"
+
 docker stop falkordb
 docker start falkordb
+
+redis-cli graph.query mygraph "MATCH (n) return n"
+# Output should be:
+# 1) 1) "n"
+# 2) 1) 1) 1) 1) "id"
+#             2) (integer) 0
+#          2) 1) "labels"
+#             2) 1) "Database"
+#          3) 1) "properties"
+#             2) 1) 1) "name"
+#                   2) "falkordb"
+# 3) 1) "Cached execution: 1"
+#    2) "Query internal execution time: 0.122645 milliseconds"
 ```
 
 * Replication Check: Insert some data into the master instance and check if it is available in the replica.
@@ -105,13 +119,23 @@ docker start falkordb
 ```bash
 # Connect to the master
 docker exec -it falkordb-master /bin/bash
-falkordb-cli set key "Hello, FalkorDB!"
+redis-cli graph.query mygraph "CREATE (:Database {name:'falkordb'})"
 exit
 
 # Connect to the replica
 docker exec -it falkordb-replica1 /bin/bash
-falkordb-cli get key
-# Output should be "Hello, FalkorDB!"
+redis-cli graph.query mygraph "MATCH (n) return n"
+# Output should be:
+# 1) 1) "n"
+# 2) 1) 1) 1) 1) "id"
+#             2) (integer) 0
+#          2) 1) "labels"
+#             2) 1) "Database"
+#          3) 1) "properties"
+#             2) 1) 1) "name"
+#                   2) "falkordb"
+# 3) 1) "Cached execution: 1"
+#    2) "Query internal execution time: 0.122645 milliseconds"
 ```
 
 ## Conclusion
