@@ -214,6 +214,7 @@ This section contains information on all supported functions from the Cypher que
 | ----------------------------------------- | :----------|
 | vecf32(_array_)                           | Creates a new float 32 vector <br> all elements of input array must be of type float |
 | vec.euclideanDistance(_vector_, _vector_) | Returns the Euclidean distance between the two input vectors |
+| vec.cosineDistance(_vector_, _vector_)    | Returns the Cosine distance between the two input vectors |
 
 ### List comprehensions
 
