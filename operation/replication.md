@@ -1,13 +1,12 @@
 ---
-title: "Persistence and Replication"
-nav_order: 8
-description: "Configuring FalkorDB Docker for Persistence and Replication
-"
+title: "Replication"
+nav_order: 2
+description: "Configuring FalkorDB Docker for Replication"
 ---
 
-# Configuring FalkorDB Docker for Persistence and Replication
+# Configuring FalkorDB Docker for Replication
 
-FalkorDB supports advanced configurations to enable data persistence and replication, ensuring that your data is safe and available across different instances. This guide will walk you through setting up FalkorDB in Docker with persistence and replication enabled.
+FalkorDB supports advanced configurations to enable replication, ensuring that your data is available and synchronized across multiple instances. This guide will walk you through setting up FalkorDB in Docker with replication enabled, providing high availability and data redundancy.
 
 ## Prerequisites
 
@@ -17,38 +16,11 @@ Before you begin, ensure you have the following:
 * A working FalkorDB Docker image. You can pull it from Docker Hub.
 * Basic knowledge of Docker commands and configurations.
 
-## Step 1: Setting Up Persistence
-
-Persistence in FalkorDB allows you to store your data on the host machine, ensuring that it is not lost when the container restarts.
-
-### 1.1 Create a Persistent Volume
-
-First, create a Docker volume to store the data:
-
-```bash
-docker volume create falkordb_data
-```
-
-This volume will be used to store the database files.
-
-### 1.2 Start FalkorDB with the Persistent Volume
-
-You can now run FalkorDB with the volume attached:
-
-```bash
-docker run -d --name falkordb -v falkordb_data:/data -p 6379:6379 falkordb/falkordb
-```
-
-In this configuration:
-
-The -v falkordb_data:/data flag mounts the volume to the /data directory inside the container.
-FalkorDB will use this directory to store its data.
-
-## Step 2: Configuring Replication
+## Step 1: Configuring Replication
 
 Replication ensures that your data is available across multiple FalkorDB instances. You can configure one instance as the master and others as replicas.
 
-### 2.1 Setting Up the Master Instance
+### 1.1 Setting Up the Master Instance
 
 Start the master FalkorDB instance:
 
@@ -66,7 +38,7 @@ Here:
 The -e REPLICATION_MODE=master flag sets this instance as the master.
 The -e REPLICATION_ID=master1 assigns a unique ID to the master.
 
-### 2.2 Configuring the Replica Instances
+### 1.2 Configuring the Replica Instances
 
 Next, start the replica instances that will replicate data from the master:
 
@@ -88,31 +60,9 @@ In this setup:
 
 You can add additional replicas by repeating the command with different container names and REPLICATION_IDs.
 
-## Step 3: Verifying the Setup
+## Step 2: Verifying the Setup
 
 To verify that your setup is working correctly:
-
-* Persistence Check: Stop the FalkorDB container and start it again. The data should persist across restarts.
-
-```bash
-redis-cli graph.query mygraph "CREATE (:Database {name:'falkordb'})"
-
-docker stop falkordb
-docker start falkordb
-
-redis-cli graph.query mygraph "MATCH (n) return n"
-# Output should be:
-# 1) 1) "n"
-# 2) 1) 1) 1) 1) "id"
-#             2) (integer) 0
-#          2) 1) "labels"
-#             2) 1) "Database"
-#          3) 1) "properties"
-#             2) 1) 1) "name"
-#                   2) "falkordb"
-# 3) 1) "Cached execution: 1"
-#    2) "Query internal execution time: 0.122645 milliseconds"
-```
 
 * Replication Check: Insert some data into the master instance and check if it is available in the replica.
 
@@ -140,4 +90,6 @@ redis-cli graph.query mygraph "MATCH (n) return n"
 
 ## Conclusion
 
-With persistence and replication configured, FalkorDB is now set up for reliable data storage and high availability. You can scale this setup by adding more replicas or by implementing Redis Sentinel for automatic failover.
+With replication configured, FalkorDB is now set up for high availability and data redundancy, ensuring that your data is synchronized across multiple instances. This setup provides a robust and fault-tolerant environment for your applications.
+
+If you're interested in learning more about clustering and scaling out, be sure to check out the [Cluster](/operation/cluster) chapter in the documentation.
