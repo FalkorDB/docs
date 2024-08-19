@@ -199,6 +199,17 @@ To create this type of index use the following syntax:
 CREATE VECTOR INDEX FOR <entity_pattern> ON <entity_attribute> OPTIONS <options>
 ```
 
+The options are:
+```
+{
+   dimension: INT, // Requiered, length of the vector to be indexed
+   similarityFunction: STRING, // Requiered, currently only euclidean is allowed
+   M: INT, // Optional, maximum number of outgoing edges per node. default 16
+   efConstruction: INT, // Optional, number of candidates during construction. default 200
+   efRuntime: INT // Optional, number of candidates during search. default 10
+}
+```
+
 For example, to create a vector index over all `Product` nodes `description` attribute
 use the following syntax:
 
