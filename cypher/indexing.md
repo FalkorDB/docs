@@ -40,7 +40,7 @@ GRAPH.QUERY DEMO_GRAPH
 "MATCH (:Employer {name: 'Dunder Mifflin'})-[:EMPLOYS]->(p:Person) RETURN p"
 ```
 
-An example of utilizing a geospatial index to find `Employer` nodes within 5 kilometers of Scranton is:
+An example of utilizing a geospatial index to find `Employer` nodes within 5 kilometers of Scranton are:
 
 ```sh
 GRAPH.QUERY DEMO_GRAPH
