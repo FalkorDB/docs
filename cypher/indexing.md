@@ -241,7 +241,7 @@ The above query creates a new `Product` node with a `description` attribute cont
 ## Query vector index
 
 Vector indices are used to search for similar vectors to a given query vector
-using the similarity function as a measure of "distance"
+using the similarity function as a measure of "distance".
 
 To query the index use either `db.idx.vector.queryNodes` for node retrieval or
 `db.idx.vector.queryRelationships` for relationships.
