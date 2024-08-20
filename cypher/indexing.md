@@ -105,7 +105,7 @@ GRAPH.QUERY DEMO_GRAPH "CALL db.idx.fulltext.createNodeIndex('Person', 'firstNam
 
 RediSearch provide 2 index configuration options:
 
-1. Language - Define which language to use for stemming text which is adding the base form of a word to the index. This allows the query for "going" to also return results for "go" and "gone", for example.
+1. Language - Define which language to use for stemming text, which is adding the base form of a word to the index. This allows the query for "going" to also return results for "go" and "gone", for example.
 2. Stopwords - These are words that are usually so common that they do not add much information to search, but take up a lot of space and CPU time in the index.
 
 To construct a full-text index on the `title` property using `German` language and using custom stopwords of all nodes with label `Movie`, use the syntax:
@@ -190,7 +190,7 @@ GRAPH.QUERY DEMO_GRAPH "CALL db.idx.fulltext.drop('Movie')"
 
 # Vector indexing
 
-With the introduction of the `vector` data-type a new type of index was introduce.
+With the introduction of the `vector` data-type a new type of index was introduced.
 A vector index is a dedicated index for indexing and searching through vectors
 
 To create this type of index use the following syntax:
@@ -281,7 +281,7 @@ in addition to a similarity score of that entity.
 
 ## Deleting a vector index
 
-To remove a vector index simply issue the `drop index` command as follows:
+To remove a vector index, simply issue the `drop index` command as follows:
 
 ```cypher
 DROP VECTOR INDEX FOR <entity_pattern> (<entity_attribute>)
