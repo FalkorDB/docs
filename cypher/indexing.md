@@ -287,7 +287,7 @@ To remove a vector index simply issue the `drop index` command as follows:
 DROP VECTOR INDEX FOR <entity_pattern> (<entity_attribute>)
 ```
 
-For example to drop the vector index over Product description invoke:
+For example, to drop the vector index over Product description, invoke:
 
 ```cypher
 DROP VECTOR INDEX FOR (p:Product) ON (p.description)
