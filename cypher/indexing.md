@@ -191,7 +191,7 @@ GRAPH.QUERY DEMO_GRAPH "CALL db.idx.fulltext.drop('Movie')"
 # Vector indexing
 
 With the introduction of the `vector` data-type a new type of index was introduced.
-A vector index is a dedicated index for indexing and searching through vectors
+A vector index is a dedicated index for indexing and searching through vectors.
 
 To create this type of index use the following syntax:
 
