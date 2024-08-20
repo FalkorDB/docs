@@ -224,7 +224,7 @@ use the following syntax:
 CREATE VECTOR INDEX FOR ()-[e:Call]->() ON (e.summary) OPTIONS {dimension:128, similarityFunction:'euclidean'}
 ```
 
-Please note when creating a vector index both the vector dimension and similarity function
+Please note, when creating a vector index, both the vector dimension and similarity function
 must be provided. At the moment the only supported similarity function is 'euclidean'.
 
 ## Inserting vectors
