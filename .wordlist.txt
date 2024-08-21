@@ -262,3 +262,5 @@ Rossi
 localhost
 BGSAVE
 RDB
+scalable
+scalability
