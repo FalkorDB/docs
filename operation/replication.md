@@ -19,8 +19,17 @@ Before you begin, ensure you have the following:
 ## Step 1: Configuring Replication
 
 Replication ensures that your data is available across multiple FalkorDB instances. You can configure one instance as the master and others as replicas.
+For that to work with Docker, we need to first set up a network.
 
-### 1.1 Setting Up the Master Instance
+### 1.1 Creating a Network
+
+First, create a Docker network to allow communication between the FalkorDB nodes.
+
+```bash
+docker network create falkordb-network
+```
+
+### 1.1 Setting up the Master Instance
 
 Start the master FalkorDB instance:
 
@@ -28,37 +37,35 @@ Start the master FalkorDB instance:
 docker run -d \
   --name falkordb-master \
   -v falkordb_data:/data \
-  -e REPLICATION_MODE=master \
-  -e REPLICATION_ID=master1 \
   -p 6379:6379 \
+  --network falkordb-network \
   falkordb/falkordb
 ```
-Here:
 
-The -e REPLICATION_MODE=master flag sets this instance as the master.
-The -e REPLICATION_ID=master1 assigns a unique ID to the master.
+This instance will be created in the Standalone mode, as master.
 
-### 1.2 Configuring the Replica Instances
+### 1.2 Setting up the Replica Instance
 
-Next, start the replica instances that will replicate data from the master:
+Next, start the replica instance:
 
 ```bash
 docker run -d \
   --name falkordb-replica1 \
-  -e REPLICATION_MODE=replica \
-  -e REPLICATION_MASTER_HOST=falkordb-master \
-  -e REPLICATION_ID=replica1 \
-  -p 6379:6379 \
+  -p 6380:6379 \
+  --network falkordb-network \
   falkordb/falkordb
 ```
 
-In this setup:
+### 1.3 Configuring Replication
 
-* The -e REPLICATION_MODE=replica flag sets the instance as a replica.
-* The -e REPLICATION_MASTER_HOST=falkordb-master flag specifies the master instance's hostname or IP address.
-* The -e REPLICATION_ID=replica1 assigns a unique ID to this replica.
+Connect to the replica instance and configure it to replicate data from the master:
 
-You can add additional replicas by repeating the command with different container names and REPLICATION_IDs.
+```bash
+docker exec -it falkordb-replica1 /bin/bash 
+redis-cli replicaof falkordb-master 6379
+```
+
+This command tells the replica to replicate data from the master instance.
 
 ## Step 2: Verifying the Setup
 
@@ -74,7 +81,7 @@ exit
 
 # Connect to the replica
 docker exec -it falkordb-replica1 /bin/bash
-redis-cli graph.query mygraph "MATCH (n) return n"
+redis-cli graph.ro_query mygraph "MATCH (n) return n"
 # Output should be:
 # 1) 1) "n"
 # 2) 1) 1) 1) 1) "id"

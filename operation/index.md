@@ -11,11 +11,11 @@ Table of Contents
 
 ## 1. [Configuring Persistence](/operation/persistence)
 
-Learn how to set up FalkorDB with data persistence, ensuring that your data remains intact even after container restarts.
+Learn how to set up FalkorDB with data persistence, ensuring that your data remains intact even after server restarts.
 
 ## 2. [Configuring Replication](/operation/replication)
 
-Set up replication in FalkorDB to achieve high availability and data redundancy across multiple instances.
+Set up replication in FalkorDB to achieve high availability and data redundancy across multiple nodes.
 
 ## 3. [Setting Up a Cluster](/operation/cluster)
 

@@ -41,7 +41,7 @@ docker run -d --name falkordb -v falkordb_data:/data -p 6379:6379 falkordb/falko
 In this configuration:
 
 The -v falkordb_data:/data flag mounts the volume to the /data directory inside the container.
-FalkorDB will use this directory to store its data.
+FalkorDB will use the /data directory by default.
 
 ## Step 2: Verifying the Setup
 

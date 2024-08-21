@@ -6,7 +6,7 @@ description: "Configuring FalkorDB Docker for Cluster"
 
 # Setting Up a FalkorDB Cluster
 
-Setting up a FalkorDB cluster enables you to distribute your data across multiple nodes, providing horizontal scalability and improved fault tolerance. This guide will walk you through the steps to configure a FalkorDB cluster using Docker.
+Setting up a FalkorDB cluster enables you to distribute your data across multiple nodes, providing horizontal scalability and improved fault tolerance. This guide will walk you through the steps to configure a FalkorDB cluster with 3 masters and 1 replica for each, using Docker.
 
 ## Prerequisites
 
@@ -28,55 +28,74 @@ This network will enable the containers to communicate with each other.
 
 ## Step 2: Launching FalkorDB Nodes
 
-Next, you need to launch multiple FalkorDB instances that will form the cluster. For example, you can start three nodes:
+Next, you need to launch multiple FalkorDB instances that will form the cluster. For example, you can start six nodes:
 
-### 2.1 Start the First Node
-
-```bash
-docker run -d \
-  --name falkordb-node1 \
-  --net falkordb-cluster-network \
-  -e CLUSTER_MODE=enabled \
-  -e CLUSTER_ID=node1 \
-  falkordb/falkordb
-```
-
-### 2.2 Start the Second Node
+### 2.1 Start the nodes
 
 ```bash
 docker run -d \
-  --name falkordb-node2 \
-  --net falkordb-cluster-network \
-  -e CLUSTER_MODE=enabled \
-  -e CLUSTER_ID=node2 \
+  --name node1 \
+  --network falkordb-cluster-network \
+  -p 6379:6379 \
+  -e 'FALKORDB_ARGS=--cluster-enabled yes' \
   falkordb/falkordb
 ```
-
-### 2.3 Start the Third Node
 
 ```bash
 docker run -d \
-  --name falkordb-node3 \
-  --net falkordb-cluster-network \
-  -e CLUSTER_MODE=enabled \
-  -e CLUSTER_ID=node3 \
+  --name node2 \
+  --network falkordb-cluster-network \
+  -p 6380:6379 \
+  -e 'FALKORDB_ARGS=--cluster-enabled yes' \
   falkordb/falkordb
 ```
 
-In these commands:
+```bash
+docker run -d \
+  --name node3 \
+  --network falkordb-cluster-network \
+  -p 6381:6379 \
+  -e 'FALKORDB_ARGS=--cluster-enabled yes' \
+  falkordb/falkordb
+```
 
-* The --net falkordb-cluster-network flag connects the container to the network created in Step 1.
-* The -e CLUSTER_MODE=enabled flag enables clustering mode.
-* The -e CLUSTER_ID flag assigns a unique identifier to each node.
+```bash
+docker run -d \
+  --name node4 \
+  --network falkordb-cluster-network \
+  -p 6382:6379 \
+  -e 'FALKORDB_ARGS=--cluster-enabled yes' \
+  falkordb/falkordb
+```
+
+```bash
+docker run -d \
+  --name node5 \
+  --network falkordb-cluster-network \
+  -p 6383:6379 \
+  -e 'FALKORDB_ARGS=--cluster-enabled yes' \
+  falkordb/falkordb
+```
+
+```bash
+docker run -d \
+  --name node6 \
+  --network falkordb-cluster-network \
+  -p 6384:6379 \
+  -e 'FALKORDB_ARGS=--cluster-enabled yes' \
+  falkordb/falkordb
+```
+
+In this command, the --network falkordb-cluster-network flag connects the container to the network created in Step 1.
 
 ## Step 3: Configuring the Cluster
 
-Once all nodes are up, you need to connect them to form a cluster. Use the falkordb-cli tool inside one of the nodes to initiate the cluster setup.
+Once all nodes are up, you need to connect them to form a cluster. Use the redis-cli tool inside one of the nodes to initiate the cluster setup.
 
 ### 3.1 Connect to a Node
 
 ```bash
-docker exec -it falkordb-node1 /bin/bash
+docker exec -it node1 /bin/bash
 ```
 
 ### 3.2 Initiate the Cluster
@@ -84,7 +103,7 @@ docker exec -it falkordb-node1 /bin/bash
 Inside the container, use the following command to form the cluster:
 
 ```bash
-redis-cli cluster create node1 node2 node3
+redis-cli --cluster create node1:6379 node2:6379 node3:6379 node4:6379 node5:6379 node6:6379 --cluster-replicas 1
 ```
 
 This command will join node1, node2, and node3 into a cluster.
@@ -94,9 +113,8 @@ This command will join node1, node2, and node3 into a cluster.
 You can verify the status of the cluster with:
 
 ```bash
-redis-cli cluster status
+redis-cli --cluster check node1:6379
 ```
-
 This command will display the status of each node and their roles (master/replica).
 
 ## Step 4: Scaling the Cluster
@@ -109,21 +127,21 @@ For example, to add a new node:
 
 ```bash
 docker run -d \
-  --name falkordb-node4 \
-  --net falkordb-cluster-network \
-  -e CLUSTER_MODE=enabled \
-  -e CLUSTER_ID=node4 \
+  --name node7 \
+  --network falkordb-cluster-network \
+  -p 6385:6379 \
+  -e 'FALKORDB_ARGS=--cluster-enabled yes' \
   falkordb/falkordb
 ```
 
 ### 4.2 Add the Node to the Cluster
 
 ```bash
-docker exec -it falkordb-node1 /bin/bash
-redis-cli cluster add node4
+docker exec -it node1 /bin/bash
+redis-cli --cluster add-node node7:6379 node1:6379
 ```
 
-This will integrate node4 into the existing cluster.
+This will add node7 into the existing cluster.
 
 ## Conclusion
 
