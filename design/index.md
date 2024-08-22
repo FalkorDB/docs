@@ -29,7 +29,7 @@ with new commands and capabilities. Its main features include:
 - Data stored in RAM using memory-efficient custom data structures
 - On-disk persistence
 - Tabular result sets
-- Uses the popular graph query language [openCypher](https://neo4j.com/docs/developer-manual/3.4/cypher/)
+- Uses the popular graph query language [openCypher](https://opencypher.org/)
 
 ## A Little Taste: FalkorDB in Action
 
