@@ -2,6 +2,7 @@
 title: "Persistence"
 nav_order: 1
 description: "Configuring FalkorDB Docker for Persistence"
+parent: "Operations"
 ---
 
 # Configuring FalkorDB Docker for Persistence
