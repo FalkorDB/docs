@@ -254,6 +254,7 @@ yaml
 uri
 vec
 euclideanDistance
+cosineDistance
 vecf
 Dani
 Dovizioso
