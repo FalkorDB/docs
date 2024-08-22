@@ -125,6 +125,7 @@ enums
 epel
 expr
 exprList
+failover
 falkordb
 fulltext
 geospatial
@@ -132,6 +133,7 @@ godoc
 hasLabels
 haversin
 https
+hostname
 hydre
 idx
 indegree
@@ -261,3 +263,5 @@ Rossi
 localhost
 BGSAVE
 RDB
+scalable
+scalability
