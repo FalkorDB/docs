@@ -74,5 +74,5 @@ redis-cli graph.query mygraph "MATCH (n) return n"
 
 With persistence configured, FalkorDB is now set up for reliable data storage that remains intact across container restarts. This setup ensures that your data is consistently saved, providing a stable and dependable environment for your applications. 
 
-If you're interested in learning more about high availability and replication, be sure to check out the [replication](/operation/replication) chapter in the documentation.
+If you're interested in learning more about high availability and replication, be sure to check out the [replication](/operations/replication) chapter in the documentation.
 

@@ -100,4 +100,4 @@ redis-cli graph.ro_query mygraph "MATCH (n) return n"
 
 With replication configured, FalkorDB is now set up for high availability and data redundancy, ensuring that your data is synchronized across multiple instances. This setup provides a robust and fault-tolerant environment for your applications.
 
-If you're interested in learning more about clustering and scaling out, be sure to check out the [Cluster](/operation/cluster) chapter in the documentation.
+If you're interested in learning more about clustering and scaling out, be sure to check out the [Cluster](/operations/cluster) chapter in the documentation.
