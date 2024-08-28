@@ -21,6 +21,6 @@ Set up replication in FalkorDB to achieve high availability and data redundancy 
 
 Discover how to configure a FalkorDB cluster for horizontal scalability and improved fault tolerance, distributing your data across multiple nodes.
 
-## 4. [Deploy FalkorDB to Kubernetes](/operations/k8s_support.md)
+## 4. [Deploy FalkorDB to Kubernetes](/operations/k8s_support)
 
 Learn how falkorDB can be deployed on Kubernetes using Helm charts and Docker images.
