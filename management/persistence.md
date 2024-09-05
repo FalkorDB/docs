@@ -1,7 +1,8 @@
 ---
 title: Persistence
-linkTitle: Persistence
+nav_order: 1
 description: How FalkorDB writes data to disk
+parent: Management
 ---
 
 Persistence refers to the writing of data to durable storage, such as a solid-state disk (SSD). FalkorDB provides a range of persistence options. These include:

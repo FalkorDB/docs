@@ -1,4 +1,4 @@
-name: Deploy PR previews
+name: Deploy PR preview
 
 on:
   pull_request:
@@ -27,3 +27,4 @@ jobs:
         uses: rossjrw/pr-preview-action@v1
         with:
           source-dir: ./output
+          preview-branch: main
