@@ -8,6 +8,7 @@ parent: "Operations"
 # Configuring FalkorDB Docker for Persistence
 
 FalkorDB supports advanced configurations to enable data persistence, ensuring that your data is safe and remains intact even after container restarts. This guide will walk you through setting up FalkorDB in Docker with persistence enabled.
+To understand how to customize the persistence configuration with RDB or/and AOF, please check the [Persistence](../management/persistence.md) section.
 
 ## Prerequisites
 
