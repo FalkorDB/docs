@@ -1,7 +1,7 @@
 ---
 title: "Management"
 nav_order: 10
-description: "An administrator's guide to Redis"
+description: "An administrator's guide to FalkorDB"
 ---
 
 # Management
