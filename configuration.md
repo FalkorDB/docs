@@ -337,7 +337,7 @@ A number within the range [0, 1000]
 
 #### Default
 
-`MAX_INFO_QUERIES` is 10000.
+`MAX_INFO_QUERIES` is 1000.
 
 ---
 
