@@ -7,7 +7,8 @@ parent: "integration"
 
 | Request Name  | Request Endpoint | Request Method | Request Headers | Request Parameters | Body | Successful Response | Description|
 | ------------- | ---------------- | -------------- | --------------- | ------------------ | ---- | ------------------- | ---------- |
-| Login         | [/api/auth/providers](http://localhost:3000/api/auth/providers)                                                                             | GET            | None                                            | None                                                                                                  | None                                                                                                                                       | Status Code: 200 <pre><code>{"credentials": {\
+| Login         | [/api/auth/providers](http://localhost:3000/api/auth/providers)                                                                             | GET            | None                                            | None                                                                                                  | None                                                                                                                                       | Status Code: 200 
+<pre><code>{"credentials": {\
 "id": "credentials",\
 "name": "Credentials",\
 "type": "credentials",\
