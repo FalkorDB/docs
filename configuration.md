@@ -69,19 +69,21 @@ The following table summarizes which configuration parameters can be set at modu
 
 | Configuration Parameter                                      | Load-time| Run-time|
 | :-------                                                     | :-----| :-----|
-| [THREAD_COUNT](#thread_count)                                | V | X |
-| [CACHE_SIZE](#cache_size)                                    | V | X |
-| [OMP_THREAD_COUNT](#omp_thread_count)                        | V | X |
-| [NODE_CREATION_BUFFER](#node_creation_buffer)                | V | X |
-| [BOLT_PORT](#bolt_port)                                      | V | X |
-| [MAX_QUEUED_QUERIES](#max_queued_queries)                    | V | V |
-| [TIMEOUT](#timeout) (deprecated in v2.10)         | V | V |
-| [TIMEOUT_MAX](#timeout_max) (since v2.10)         | V | V |
-| [TIMEOUT_DEFAULT](#timeout_default) (since v2.10) | V | V |
-| [RESULTSET_SIZE](#resultset_size)                            | V | V |
-| [QUERY_MEM_CAPACITY](#query_mem_capacity)                    | V | V |
-| [VKEY_MAX_ENTITY_COUNT](#vkey_max_entity_count)              | V | V |
-| [EFFECTS_THRESHOLD](#effects_threshold)                      | V | V |
+| [THREAD_COUNT](#thread_count)                                | V     | X     |
+| [CACHE_SIZE](#cache_size)                                    | V     | X     |
+| [OMP_THREAD_COUNT](#omp_thread_count)                        | V     | X     |
+| [NODE_CREATION_BUFFER](#node_creation_buffer)                | V     | X     |
+| [BOLT_PORT](#bolt_port)                                      | V     | X     |
+| [MAX_QUEUED_QUERIES](#max_queued_queries)                    | V     | V     |
+| [TIMEOUT](#timeout) (deprecated in v2.10)                    | V     | V     |
+| [TIMEOUT_MAX](#timeout_max) (since v2.10)                    | V     | V     |
+| [TIMEOUT_DEFAULT](#timeout_default) (since v2.10)            | V     | V     |
+| [RESULTSET_SIZE](#resultset_size)                            | V     | V     |
+| [QUERY_MEM_CAPACITY](#query_mem_capacity)                    | V     | V     |
+| [VKEY_MAX_ENTITY_COUNT](#vkey_max_entity_count)              | V     | V     |
+| [EFFECTS_THRESHOLD](#effects_threshold)                      | V     | V     |
+| [CMD_INFO](#cmd_info)                                        | V     | V     |
+| [MAX_INFO_QUERIES](#max_info_queries)                        | V     | V     |
 
 ---
 
@@ -335,7 +337,7 @@ A number within the range [0, 1000]
 
 #### Default
 
-`MAX_INFO_QUERIES` is 10000.
+`MAX_INFO_QUERIES` is 1000.
 
 ---
 
