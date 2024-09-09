@@ -1,5 +1,5 @@
 ---
-tile: "Rest API"
+title: "Rest API"
 description: >
  Rest API detailed doc
 parent: "integration"
