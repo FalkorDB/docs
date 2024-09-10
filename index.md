@@ -37,7 +37,7 @@ Once loaded you can interact with FalkorDB using any of the supported [client li
 
 Here we'll use [FalkorDB Python client](https://pypi.org/project/FalkorDB/) to create a small graph representing a subset of motorcycle riders and teams taking part in the MotoGP league, once created we'll start querying our data.
 
-```python
+{% capture python_code %}
 from falkordb import FalkorDB
 
 # Connect to FalkorDB
@@ -64,11 +64,23 @@ for row in res.result_set:
 res = g.query("""MATCH (r:Rider)-[:rides]->(t:Team {name:'Ducati'}) RETURN count(r)""")
 
 print(res.result_set[0][0]) # Prints: 1
-```
+{% endcapture %}
+
+{% capture cpp_code %}
+from falkordb import FalkorDB111
+{% endcapture %}
+
+{% include code_tabs.html id="aa" python=python_code javascript=cpp_code cpp=cpp_code %}
 
 For additional demos please see visit [Demos](https://github.com/FalkorDB/demos).
 
 ## Client libraries
+
+{% capture cpp_code1 %}
+from falkordb import FalkorDB111
+{% endcapture %}
+
+{% include code_tabs.html id="bb" python=cpp_code1 javascript=cpp_code1 cpp=cpp_code1 %}
 
 Language-specific clients have been written by the community and the FalkorDB team.
 The full list and links can be found on the [Clients](/clients) page.
