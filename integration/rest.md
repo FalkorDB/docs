@@ -5,20 +5,349 @@ description: >
 parent: "integration"
 ---
 
-| Request Name  | Request Endpoint | Request Method | Request Headers | Request Parameters | Body | Successful Response | Description|
-| ------------- | ---------------- | -------------- | --------------- | ------------------ | ---- | ------------------- | ---------- |
-| Login | [/api/auth/providers](http://localhost:3000/api/auth/providers)  | GET | None | None | None | Status Code: 200<br>{<br>"credentials": {<br>"id": "credentials",<br>"name": "Credentials",<br>"type": "credentials",<br>"signinUrl": "http://localhost:3000/api/auth/signin/credentials",<br>"callbackUrl": "http://localhost:3000/api/auth/callback/credentials"<br>}<br>} | This request is used for user authentication. |
-| Logout  | [/api/auth/signout](http://localhost:3000/api/auth/signout) | POST  | Content-Type: application/x-www-form-urlencoded | None | x-www-form-urlencoded:<br>1- Key: csrfToken – value: insert csrfToken<br>2- Key: callbackUrl – value: /login<br>3- Key: json - value: true | Status Code: 200<br>{<br>"url": "http://localhost:3000/api/auth/signout?csrf=true"<br>} | <br>This request is used to sign out users, ending their current authenticated session and logging them out of the system |
-| Modify config role | [/api/graph?config=MAX_QUEUED_QUERIES&value=10](http://localhost:3000/api/graph?config=MAX_QUEUED_QUERIES&value=10)  | POST  | Authorization: Cookie | 1\. Key: config - Value: MAX_QUEUED_QUERIES (required)<br>2\. Key: value - Value: A number (required) | None | Status Code: 200<br>Response Body:<br>{ "config": "OK" } | This request is used to set a configuration value for MAX_QUEUED_QUERIES. It accepts a number as the value for the configuration and requires authorization via a cookie in the headers. |
-| Get config role value | [/api/graph?config=MAX_QUEUED_QUERIES](http://localhost:3000/api/graph?config=MAX_QUEUED_QUERIES)  | GET | Authorization: Cookie | 1\. Key: config - Value: MAX_QUEUED_QUERIES (required)<br>2\. Key: value - Value: A number (required) | None | Status code: 200<br>{"config": [ "MAX_QUEUED_QUERIES",25 ]} | This request is used to get a configuration value for MAX_QUEUED_QUERIES. It accepts a number as the value for the configuration and requires authorization via a cookie in the headers. |
-| Create new user  | [/api/user](http://localhost:3000/api/user)  | POST  | Authorization: Cookie | None | {<br>"username":"user",<br>"password":"password",<br>"role":"Read-Write"<br>} | Status Code: 201<br>{ "message": "User created"} | This request is used to create a new user with specified credentials. The required data, including the username, password, and role, is passed in the body of the request. Authorization is provided via a cookie in the headers.  |
-| Delete user  | [/api/user](http://localhost:3000/api/user)  | DELETE | Authorization: Cookie | None | {<br>"users":<br>[<br>{<br>"username":"userName",<br>"role":"Read-Write"<br>}<br>]<br>} | Status Code: 200<br>{<br>"message": "Users deleted"<br>} | This request is used to delete a user with specified credentials. The required data, including the username and role, is passed in the body of the request. Authorization is provided via a cookie in the headers.  |
-| Get All Users | [/api/user](http://localhost:3000/api/user)  | GET | Authorization: Cookie | None | None | Status Code: 200<br>{<br>"result": [<br>{<br>"username": "default",<br>"role": "Admin",<br>"checked": false<br>}<br>]<br>} | This request retrieves a list of all users. Authorization is required via a cookie in the headers.<br><br><br><br><br><br><br> |
-| Modify User Role | [/api/user/userName?role=Read-Only](http://localhost:3000/api/user/userName?role=Read-Only) | PATCH | Authorization: Cookie | 1\. Key: role - value: (e.g. Admin, Read-Only, Read-Write)<br>2\. userName  | None | Status Code: 200<br>{<br>"message": "Users created"<br>} | <br>This request updates the role of a specific user. The userName in the URL must be replaced with the actual username of the user whose role is being modified, and the role query parameter must be set to the desired role (e.g. Admin, Read-Only, Read-Write). Authorization is required via a cookie in the headers. |
-| Create new Graph | [/api/graph/graphName?query=RETURN%201](http://localhost:3000/api/graph/graphName?query=RETURN%201) | GET | Authorization: Cookie | 1\. Graph name  | None | Status Code: 200<br>{<br>"result": {<br>"metadata": [<br>"Cached execution: 0",<br>"Query internal execution time: 7.198178 milliseconds"<br>],<br>"data": [<br>{<br>"1": 1<br>}<br>]<br>}<br>} | This request creates a new graph with the specified name. Authorization is required via a cookie in the headers. The response includes metadata and data from the query execution. |
-| Delete Graph | [/api/graph/graphName](http://localhost:3000/api/graph/graphName) | DELETE | Authorization: Cookie | 1\. Graph name  | None | Status Code: 200<br>{<br>"message": "GraphName graph deleted"<br>}  | This request deletes the graph with the specified name. Authorization is required via a cookie in the headers. The response confirms the deletion of the graph. |
-| Get All Graphs | [/api/graph](http://localhost:3000/api/graph) | GET | Authorization: Cookie | None | None | Status Code: 200<br>{<br>"result": [ "graphName" ]<br>} | This request retrieves a list of all graphs. Authorization is required via a cookie in the headers. The response includes a list of graph names.  |
-| Run A Query  | [/api/graph/graphName?query=yourQuery](http://localhost:3000/api/graph/graphName?query=yourQuery)  | GET | Authorization: Cookie | 1\. Graph name<br>2\. Key: query - value: yourQuery | None | Status Code: 200<br>{<br>"result": {<br>"metadata": [<br>"Nodes created: 40",<br>"Relationships created: 20",<br>"Cached execution: 1",<br>"Query internal execution time: 0.201420 milliseconds"<br>],<br>"data": [ { queryData… } ]<br>} | This request runs a query on the specified graph. Authorization is required via a cookie in the headers. The response includes metadata about the query execution and the resulting data. |
-| Duplicate A Graph  | [/api/graph/destinationGraphName?sourceName=yourSourceName](http://localhost:3000/api/graph/destinationGraphName?sourceName=yourSourceName) | POST  | Authorization: Cookie | 1\. destinationGraphName<br>2\. Key: sourceName - Value: yourSourceName  | None | Status Code: 200<br>{ "success": "OK" } | This request duplicates a graph from a source to a destination. Authorization is required via a cookie in the headers. The response confirms the successful duplication of the graph. |
-| Create New Schema  | [/api/graph/schemaName?query=RETURN%201](http://localhost:3000/api/graph/schemaName?query=RETURN%201)  | GET | Authorization: Cookie | 1\. schemaName  | None | Status Code: 200<br>{<br>"result": {<br>"metadata": [<br>"Cached execution: 0",<br>"Query internal execution time: 0.153307 milliseconds"<br>],<br>"data": [<br>{<br>"1": 1<br>}<br>]<br>}<br>} | This request creates a new schema with the specified name. Authorization is required via a cookie in the headers. The response includes metadata and data from the query execution.<br> |
-| Delete A Schema  | [/api/graph/schemaName](http://localhost:3000/api/graph/schemaName) | DELETE | Authorization: Cookie | 1\. schemaName  | None | Status Code: 200<br>{<br>"message": "schemaName graph deleted"<br>} | This request deletes the schema with the specified name. Authorization is required via a cookie in the headers. The response confirms the deletion of the schema. |
+### **Login** - `GET /api/auth/providers`
+
+This endpoint retrieves information about authentication providers and their respective URLs for sign-in and callback.
+
+#### Responses
+
+- **200**: Successful authentication provider retrieval
+  - Content-Type: `application/json`
+  - Example response:
+
+    ```json
+    {
+      "credentials": {
+        "id": "credentials",
+        "name": "Credentials",
+        "type": "credentials",
+        "signinUrl": "http://localhost:3000/api/auth/signin/credentials",
+        "callbackUrl": "http://localhost:3000/api/auth/callback/credentials"
+      }
+    }
+    ```
+
+### **Logout** - `POST /api/auth/signout`
+
+This endpoint signs out a user, ending their authenticated session.
+
+#### Request Body
+
+- Content-Type: `application/x-www-form-urlencoded`
+- Example request:
+
+    ```json
+    {
+      "csrfToken": "insert csrfToken",
+      "callbackUrl": "/login",
+      "json": true
+    }
+    ```
+
+#### Responses
+
+- **200**: Successful logout
+  - Content-Type: `application/json`
+  - Example response:
+
+    ```json
+    {
+      "url": "http://localhost:3000/api/auth/signout?csrf=true"
+    }
+    ```
+
+### **Set Configuration Value** - `POST /api/config`
+
+This endpoint sets a configuration value for `MAX_QUEUED_QUERIES`.
+
+#### Parameters
+
+- `cookie` (header, required): Cookie header with session and auth tokens.
+- `config` (query, required): The configuration name.
+- `value` (query, required): The integer value to set.
+
+#### Responses
+
+- **200**: Successful configuration update
+  - Content-Type: `application/json`
+  - Example response:
+
+    ```json
+    {
+      "config": "OK"
+    }
+    ```
+
+### **Get Configuration Value** - `GET /api/config`
+
+This endpoint retrieves the value for `MAX_QUEUED_QUERIES`.
+
+#### Parameters
+
+- `cookie` (header, required): Cookie header with session and auth tokens.
+- `config` (query, required): The name of the configuration to retrieve.
+
+#### Responses
+
+- **200**: Successful configuration retrieval
+  - Content-Type: `application/json`
+  - Example response:
+
+    ```json
+    {
+      "config": [
+        "MAX_QUEUED_QUERIES",
+        25
+      ]
+    }
+    ```
+
+### **Create New User** - `POST /api/user`
+
+This endpoint creates a new user with specified credentials.
+
+#### Request Body
+
+- Content-Type: `application/json`
+- Example request:
+
+    ```json
+    {
+      "username": "user",
+      "password": "Pass123@",
+      "role": "Read-Write"
+    }
+    ```
+
+#### Responses
+
+- **201**: User created successfully
+  - Content-Type: `application/json`
+  - Example response:
+
+    ```json
+    {
+      "message": "User created"
+    }
+    ```
+
+### **Delete User** - `POST /api/user`
+
+This endpoint deletes a user based on their username and role.
+
+#### Request Body
+
+- Content-Type: `application/json`
+- Example request:
+
+    ```json
+    {
+      "users": [
+        {
+          "username": "userName",
+          "role": "Read-Write"
+        }
+      ]
+    }
+    ```
+
+#### Responses
+
+- **200**: User deleted successfully
+  - Content-Type: `application/json`
+  - Example response:
+
+    ```json
+    {
+      "message": "User deleted"
+    }
+    ```
+
+### **Get All Users** - `GET /api/user`
+
+This endpoint retrieves a list of all users.
+
+#### Responses
+
+- **200**: List of users retrieved successfully
+  - Content-Type: `application/json`
+  - Example response:
+
+    ```json
+    {
+      "result": [
+        {
+          "username": "default",
+          "role": "Admin",
+          "checked": false
+        }
+      ]
+    }
+    ```
+
+### **Modify A User** - `PATCH /api/user/{userName}`
+
+This endpoint updates the role of a specific user.
+
+#### Parameters
+
+- `cookie` (header, required): Cookie header with session and auth tokens.
+- `userName` (path, required): The username of the user to modify.
+- `role` (query, required): The new role to assign to the user (`Admin`, `Read-Only`, `Read-Write`).
+
+#### Responses
+
+- **200**: User updated successfully
+  - Content-Type: `application/json`
+  - Example response:
+
+    ```json
+    {
+      "message": "User role updated"
+    }
+    ```
+
+### **Create A Graph & Run A Query** - `GET /api/graph/{graphName}`
+
+This endpoint creates a graph and runs a query.
+
+#### Parameters
+
+- `cookie` (header, required): Cookie header with session and auth tokens.
+- `graphName` (path, required): The name of the graph to be created.
+- `query` (query, required): The query to run, such as `RETURN 1`.
+
+#### Responses
+
+- **200**: Graph created and query executed
+  - Content-Type: `application/json`
+  - Example response:
+
+    ```json
+    {
+      "result": {
+        "metadata": [
+          "Nodes created: 40",
+          "Relationships created: 20",
+          "Cached execution: 1",
+          "Query internal execution time: 0.201420 milliseconds"
+        ],
+        "data": [
+          {
+            "queryData": "exampleData"
+          }
+        ]
+      }
+    }
+    ```
+
+### **Delete A Graph** - `DELETE /api/graph/{graphName}`
+
+This endpoint deletes a specified graph.
+
+#### Parameters
+
+- `cookie` (header, required): Cookie header with session and auth tokens.
+- `graphName` (path, required): The name of the graph to be deleted.
+
+#### Responses
+
+- **200**: Graph deleted successfully
+  - Content-Type: `application/json`
+  - Example response:
+
+    ```json
+    {
+      "message": "GraphName graph deleted"
+    }
+    ```
+
+### **Get All Graphs** - `GET /api/graph`
+
+This endpoint retrieves a list of all graphs.
+
+#### Responses
+
+- **200**: List of graphs retrieved successfully
+  - Content-Type: `application/json`
+  - Example response:
+
+    ```json
+    {
+      "result": [
+        "graphName"
+      ]
+    }
+    ```
+
+### **Duplicate A Graph** - `POST /api/graph/{destinationGraphName}`
+
+This endpoint duplicates a graph from source to destination.
+
+#### Parameters
+
+- `destinationGraphName` (path, required): The name of the destination graph.
+- `sourceName` (query, required): The name of the source graph to duplicate.
+
+#### Responses
+
+- **200**: Graph duplicated successfully
+  - Content-Type: `application/json`
+  - Example response:
+
+    ```json
+    {
+      "success": "OK"
+    }
+    ```
+
+### **Create New Schema & Run A Query** - `GET /api/graph/{schemaName}`
+
+This endpoint creates a new schema and runs a query.
+
+#### Parameters
+
+- `schemaName` (path, required): The name of the schema to create.
+- `query` (query, required): The query to execute.
+
+#### Responses
+
+- **200**: Schema created and query executed
+  - Content-Type: `application/json`
+  - Example response:
+
+    ```json
+    {
+      "result": {
+        "metadata": [
+          "Cached execution: 0",
+          "Query internal execution time: 0.153307 milliseconds"
+        ],
+        "data": [
+          {
+            "1": 1
+          }
+        ]
+      }
+    }
+    ```
+
+### **Delete A Schema** - `DELETE /api/graph/{schemaName}`
+
+This endpoint deletes a specified schema.
+
+#### Parameters
+
+- `schemaName` (path, required): The name of the schema to delete.
+
+#### Responses
+
+- **200**: Schema deleted successfully
+  - Content-Type: `application/json`
+  - Example response:
+
+    ```json
+    {
+      "message": "SchemaName schema deleted"
+    }
+    ```
