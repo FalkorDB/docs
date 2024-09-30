@@ -5,6 +5,25 @@ description: >
 parent: "integration"
 ---
 
+## Table of Contents
+
+- [Login - GET /api/auth/providers](#login---get-apiauthproviders)
+- [Logout - POST /api/auth/signout](#logout---post-apiauthsignout)
+- [Set Configuration Value - POST /api/config](#set-configuration-value---post-apiconfig)
+- [Get Configuration Value - GET /api/config](#get-configuration-value---get-apiconfig)
+- [Create New User - POST /api/user](#create-new-user---post-apiuser)
+- [Delete User - POST /api/user](#delete-user---post-apiuser)
+- [Get All Users - GET /api/user](#get-all-users---get-apiuser)
+- [Modify a User - PATCH /api/user/{userName}](#modify-a-user---patch-apiuserusername)
+- [Create a Graph & Run A Query - GET /api/graph/{graphName}](#create-a-graph--run-a-query---get-apigraphgraphname)
+- [Delete a Graph - DELETE /api/graph/{graphName}](#delete-a-graph---delete-apigraphgraphname)
+- [Get All Graphs - GET /api/graph](#get-all-graphs---get-apigraph)
+- [Duplicate a Graph - POST /api/graph/{destinationGraphName}](#duplicate-a-graph---post-apigraphdestinationgraphname)
+- [Create New Schema & Run A Query - GET /api/graph/{schemaName}](#create-new-schema--run-a-query---get-apigraphschemaname)
+- [Delete a Schema - DELETE /api/graph/{schemaName}](#delete-a-schema---delete-apigraphschemaname)
+
+---
+
 ### **Login** - `GET /api/auth/providers`
 
 This endpoint retrieves information about authentication providers and their respective URLs for sign-in and callback.
