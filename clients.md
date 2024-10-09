@@ -20,6 +20,7 @@ description: >
 | Project                                                   | Language   | License    | Author                                      | Package                                  |
 | --------------------------------------------------------- | ---------- | ---------- | ------------------------------------------- | ---------------------------------------- |
 | [nredisstack][nredisstack-url]                            | .NET       | MIT        | [Redis][redis-url]                          | [nuget][nredisstack-package]             |
+| [falkordb_ex][falkordb_ex-url]                            | Elixir     | MIT        | [Sebastian][falkordb_ex-author]             | [GitHub][falkordb_ex-url]                |
 | [redisgraph-rb][redisgraph-rb-url]                        | Ruby       | BSD        | [Redis][redisgraph-rb-author]               | [GitHub][redisgraph-rb-url]              |
 | [redgraph][redgraph-url]                                  | Ruby       | MIT        | [pzac][redgraph-author]                     | [GitHub][redgraph-url]                   |
 | [redisgraph-go][redisgraph-go-url]                        | Go         | BSD        | [Redis][redisgraph-go-author]               | [GitHub][redisgraph-go-url]              |
@@ -60,6 +61,10 @@ description: >
 
 [nredisstack-url]: https://github.com/redis/nredisstack
 [nredisstack-package]: https://www.nuget.org/packages/nredisstack/
+
+[falkordb_ex-url]: https://github.com/georgfaust/falkordb_ex
+[falkordb_ex-author]: https://github.com/georgfaust
+
 
 [node-redis-url]: https://github.com/redis/node-redis
 [node-redis-package]: https://www.npmjs.com/package/redis
