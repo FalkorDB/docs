@@ -6,7 +6,7 @@ description: "The fastest way to your knowledge"
 permalink: /
 ---
 
-# FalkorDB
+# FalkorDB Docs
 
 [![Docker Hub](https://img.shields.io/docker/pulls/falkordb/falkordb?label=Docker)](https://hub.docker.com/r/falkordb/falkordb/)
 [![Discord](https://img.shields.io/discord/1146782921294884966?style=flat-square)](https://discord.gg/ErBEqN9E)
