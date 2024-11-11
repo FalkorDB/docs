@@ -1,7 +1,7 @@
 ---
 title: "FalkorDB License"
 nav_order: 1100
-description: "Undserstanding the FalkorDB License"
+description: "Understanding the FalkorDB License"
 ---
 
 # FalkorDB License
