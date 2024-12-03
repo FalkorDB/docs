@@ -49,14 +49,14 @@ Usage: `ACL SETUSER <username> [rule1] [rule2] ...`
     * on / off: Enables or disables the user account.
     * nopass: Allows access without a password.
     * password:<password>: Sets a password for the user.
-    * ~<pattern>: Restricts access to keys matching the given pattern.
+    * ~<pattern>: Restricts access to graphs matching the given pattern.
     * +<command>: Grants permission to execute specific commands.
     * -<command>: Denies permission to execute specific commands.
 
 #### Example
 
 ```
-> ACL SETUSER john on >password123 +GET +SET ~*
+> ACL SETUSER john on >password123 +GRAPH.LIST +GRAPH.RO_QUERY ~*
 ```
 
 ### ACL GETUSER
@@ -77,8 +77,8 @@ Usage: `ACL GETUSER <username>`
 ```
 1) "on"
 2) ">password123"
-3) "+GET"
-4) "+SET"
+3) "+GRAPH.LIST"
+4) "+GRAPH.RO_QUERY"
 5) "~*"
 ```
 
