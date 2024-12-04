@@ -78,7 +78,7 @@ from falkordb import FalkorDB
 
 # Connect to FalkorDB
 client = FalkorDB(host="localhost", port=6379, password="your-password")
-graph = db.select_graph('social')
+graph = client.select_graph('social')
 ```
 
 ### Execute Cypher Queries
