@@ -127,7 +127,7 @@ query = """
 MATCH (bob:User {name: "Bob"})-[:CREATED]->(post:Post)
 RETURN post.content AS PostContent
 """
-result = client.ro_query(query)
+result = graph.ro_query(query)
 
 print("Posts created by Bob:")
 for record in result:
