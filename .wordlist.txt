@@ -1,3 +1,4 @@
+ACL
 AOF
 AST
 Aldis
@@ -16,6 +17,7 @@ ColumnType
 Costanza
 Cypher
 DateTime
+DELUSER
 Ducati
 FOF
 FOREACH
@@ -25,6 +27,7 @@ FalkorDB's
 FalkorDBQAChain
 Gadepally
 Geospatial
+GETUSER
 GPL
 GrAPL
 GraphBLAS
@@ -77,6 +80,7 @@ RedisGraph
 RedisInsight
 Roi
 Rueian
+SETUSER
 SDK
 SDKs
 SLOWLOG
@@ -85,6 +89,7 @@ SSPLv
 SSpaths
 Sceat
 Stopwords
+Subcommands
 TF
 TTY
 UNIQIE
@@ -220,6 +225,7 @@ startNode
 stopwords
 str
 strList
+subcommands
 sublist
 subqueries
 subquery
