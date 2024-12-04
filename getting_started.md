@@ -78,6 +78,7 @@ from falkordb import FalkorDB
 
 # Connect to FalkorDB
 client = FalkorDB(host="localhost", port=6379, password="your-password")
+graph = db.select_graph('social')
 ```
 
 ### Execute Cypher Queries
@@ -98,7 +99,8 @@ CREATE (bob)-[:FRIENDS_WITH {since: 1684108800}]->(charlie)
 CREATE (alice)-[:CREATED {time: 1701388800}]->(post1)
 CREATE (bob)-[:CREATED {time: 1701475200}]->(post2)
 """
-client.execute_cypher(create_query)
+
+graph.query(create_query)
 print("Graph created successfully!")
 ```
 
@@ -110,7 +112,7 @@ query = """
 MATCH (alice:User {name: "Alice"})-[:FRIENDS_WITH]->(friend)
 RETURN friend.name AS Friend
 """
-result = client.execute_cypher(query)
+result = graph.ro_query(query)
 
 print("Alice's friends:")
 for record in result:
@@ -125,7 +127,7 @@ query = """
 MATCH (bob:User {name: "Bob"})-[:CREATED]->(post:Post)
 RETURN post.content AS PostContent
 """
-result = client.execute_cypher(query)
+result = client.ro_query(query)
 
 print("Posts created by Bob:")
 for record in result:
