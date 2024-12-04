@@ -225,6 +225,7 @@ startNode
 stopwords
 str
 strList
+subcommands
 sublist
 subqueries
 subquery
