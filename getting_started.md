@@ -1,3 +1,10 @@
+---
+title: "Getting Started"
+nav_order: 2
+description: >
+    Getting Started with FalkorDB Graph Database.
+---
+
 
 # Getting Started with FalkorDB
 
