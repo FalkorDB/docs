@@ -44,7 +44,8 @@ Let's create a simple graph for a social network where:
 | CREATED           | User       | Post     | `time`       |
 
 
-![image](https://github.com/user-attachments/assets/213e47e7-1439-4f1e-beb4-64dceb9ecc9b)
+![FalkorDB-Model a Social Network as a Graph](https://github.com/user-attachments/assets/57d9b837-661e-4500-a9f2-88e754382d29)
+
 
 
 ---
