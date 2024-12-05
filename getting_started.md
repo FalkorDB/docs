@@ -145,7 +145,7 @@ for record in result:
 
 ## Step 4: Explore Further
 
-Congratulations! 🎉 You've successfully modeled, loaded, and queried a social network graph with FalkorDB.  
+Congratulations! 🎉 You have successfully modeled, loaded, and queried a social network graph with FalkorDB.
 
 Next, dive deeper into FalkorDB's powerful features:
 - [Advanced Cypher](/cypher)
