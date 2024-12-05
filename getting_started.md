@@ -43,6 +43,10 @@ Let's create a simple graph for a social network where:
 | FRIENDS_WITH      | User       | User     | `since`      |
 | CREATED           | User       | Post     | `time`       |
 
+
+![image](https://github.com/user-attachments/assets/213e47e7-1439-4f1e-beb4-64dceb9ecc9b)
+
+
 ---
 
 ## Step 2: Load Data into FalkorDB
@@ -103,6 +107,8 @@ CREATE (bob)-[:CREATED {time: 1701475200}]->(post2)
 graph.query(create_query)
 print("Graph created successfully!")
 ```
+
+![image](https://github.com/user-attachments/assets/f67c9a1d-4b80-435d-9038-b7e1f931da74)
 
 #### Query the Graph
 
