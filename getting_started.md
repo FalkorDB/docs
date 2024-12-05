@@ -29,7 +29,7 @@ and accessing it using the [FalkorDB Python client](/clients) with [Cypher](/cyp
 
 Let's create a simple graph for a social network where:  
 - **Nodes** represent `User` and `Post`.
-- **Relationships** connect `User`s with a `FRIENDS_WITH` relation, and `User`s are connected via a `CREATED` relations to `Post`s  
+- **Relationships** connect `User`s with a `FRIENDS_WITH` relationship, and `User`s are connected via a `CREATED` relationship to `Post`s
 
 ### Graph Schema
 
