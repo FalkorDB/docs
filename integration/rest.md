@@ -1,7 +1,7 @@
 ---
 title: "Rest API"
-description: >
- Rest API detailed doc
+nav_order: 1
+description: "Rest API detailed doc"
 parent: "integration"
 ---
 
