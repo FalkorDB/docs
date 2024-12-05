@@ -15,7 +15,9 @@ and accessing it using the [FalkorDB Python client](/clients) with [Cypher](/cyp
 
 ## Prerequisites
 
-1. **FalkorDB Instance**: Set up FalkorDB (on-prem or cloud). [Learn More](/configuration).  
+1. **FalkorDB Instance**: Set up FalkorDB (on-prem or cloud). 
+   - [Run FalkorDB Docker](https://hub.docker.com/r/falkordb/falkordb/)
+   - [Create a FalkorDB Cloud Instance](https://app.falkordb.cloud/signup)
 2. **Python Installed**: Ensure you have Python 3.8+ installed.  
 3. **Install FalkorDB Python Client**:
    
@@ -43,10 +45,7 @@ Let's create a simple graph for a social network where:
 | FRIENDS_WITH      | User       | User     | `since`      |
 | CREATED           | User       | Post     | `time`       |
 
-
 ![FalkorDB-Model a Social Network as a Graph](https://github.com/user-attachments/assets/57d9b837-661e-4500-a9f2-88e754382d29)
-
-
 
 ---
 
@@ -116,6 +115,9 @@ print("Graph created successfully!")
 ```python
 # Find all friends of Alice
 query = """
+
+date and time as they are right now can be confusing, either use Python to create timestamps from actual dates or consider changing the attribute to something else which doesn't require time / date datatype
+
 MATCH (alice:User {name: "Alice"})-[:FRIENDS_WITH]->(friend)
 RETURN friend.name AS Friend
 """
