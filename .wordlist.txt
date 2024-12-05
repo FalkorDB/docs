@@ -2,6 +2,7 @@ AOF
 AST
 Aldis
 Analytics
+APIs
 BFS
 BLAS
 Benchmarking
