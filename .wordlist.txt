@@ -3,6 +3,7 @@ AOF
 AST
 Aldis
 Analytics
+APIs
 BFS
 BLAS
 Benchmarking
@@ -189,6 +190,7 @@ percentileDisc
 performant
 permalink
 php
+prem
 propCount
 propertyKeys
 py
