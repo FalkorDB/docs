@@ -80,7 +80,7 @@ const db = await FalkorDB.connect({
 
 console.log('Connected to FalkorDB')
 
-const graph = db.selectGraph('myGraph')
+const graph = db.selectGraph('MotoGP')
 
 await graph.query(`CREATE (:Rider {name:'Valentino Rossi'})-[:rides]->(:Team {name:'Yamaha'}),
         (:Rider {name:'Dani Pedrosa'})-[:rides]->(:Team {name:'Honda'}),
@@ -98,7 +98,47 @@ console.log(await db.info())
 db.close()
 {% endcapture %}
 
-{% include code_tabs.html id="code_tabs_0" python=python_code javascript=javascript_code %}
+
+{% capture java_code %}
+package com.falkordb;
+
+import com.falkordb.*;
+import java.util.*;
+
+public class FalkorDBExample {
+    public static void main(String[] args) {
+        // Connect to FalkorDB
+        Driver driver = FalkorDB.driver("localhost", 6379);
+
+        // Select the graph
+        Graph graph = driver.graph("MotoGP");
+
+        // Create graph data
+        graph.query("CREATE (:Rider {name:'Valentino Rossi'})-[:rides]->(:Team {name:'Yamaha'}), " +
+                    "(:Rider {name:'Dani Pedrosa'})-[:rides]->(:Team {name:'Honda'}), " +
+                    "(:Rider {name:'Andrea Dovizioso'})-[:rides]->(:Team {name:'Ducati'})");
+
+        // Query with parameters
+        Map<String, Object> params = new HashMap<>();
+        params.put("name", "Yamaha");
+
+        ResultSet resultSet = graph.query(
+            "MATCH (r:Rider)-[:rides]->(t:Team) " +
+            "WHERE t.name = $name RETURN r.name", params);
+
+        // Process query results
+        for (Record record : resultSet) {
+            String riderName = record.getValue("r.name").toString();
+            System.out.println(riderName); // Valentino Rossi
+        }
+
+        // Close the connection
+        driver.close();
+    }
+}
+{% endcapture %}
+
+{% include code_tabs.html id="code_tabs_0" python=python_code javascript=javascript_code java=java_code %}
 
 For additional demos please see visit [Demos](https://github.com/FalkorDB/demos).
 
