@@ -26,7 +26,7 @@ Query-level timeouts can be set as described in [the configuration section](/con
 
 example:
 
-{% capture bash_0 %}
+{% capture shell_0 %}
 GRAPH.QUERY us_government "MATCH (p:president)-[:born]->(:state {name:'Hawaii'}) RETURN p"
 {% endcapture %}
 
@@ -34,7 +34,7 @@ GRAPH.QUERY us_government "MATCH (p:president)-[:born]->(:state {name:'Hawaii'})
 graph.query("MATCH (p:president)-[:born]->(:state {name:'Hawaii'}) RETURN p")
 {% endcapture %}
 
-{% include code_tabs.html id="tabs_0" bash=bash_0 python=python_0 %}
+{% include code_tabs.html id="tabs_0" shell=shell_0 python=python_0 %}
 
 
 #### Parametrized query structure:
@@ -43,7 +43,7 @@ graph.query("MATCH (p:president)-[:born]->(:state {name:'Hawaii'}) RETURN p")
 
 example:
 
-{% capture bash_1 %}
+{% capture shell_1 %}
 GRAPH.QUERY us_government "CYPHER state_name='Hawaii' MATCH (p:president)-[:born]->(:state {name:$state_name}) RETURN p"
 {% endcapture %}
 
@@ -51,7 +51,7 @@ GRAPH.QUERY us_government "CYPHER state_name='Hawaii' MATCH (p:president)-[:born
 graph.query("MATCH (p:president)-[:born]->(:state {name:$state_name}) RETURN p", {'state_name': 'Hawaii'})
 {% endcapture %}
 
-{% include code_tabs.html id="tabs_1" bash=bash_1 python=python_1 %}
+{% include code_tabs.html id="tabs_1" shell=shell_1 python=python_1 %}
 
 ### Query language
 
