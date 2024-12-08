@@ -118,6 +118,7 @@ compton
 conf
 config
 costProp
+cpp
 createNodeIndex
 crflynn
 dbms
@@ -141,6 +142,7 @@ geospatial
 godoc
 hasLabels
 haversin
+html
 https
 hostname
 hydre
@@ -150,6 +152,7 @@ insertListElements
 ioredisgraph
 isEmpty
 javadocs
+javascript
 jedis
 jfalkordb
 jinja
