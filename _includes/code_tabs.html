@@ -3,8 +3,8 @@
 
   {% for code_name in codes %}
   {% if include[code_name] %}
-  <input type="radio" id="tab{{ include.id }}{{ forloop.index }}" name="tab" {% if forloop.first %}checked{% endif %}>
-  <label for="tab{{ include.id }}{{ forloop.index }}">{{ code_name }}</label>
+  <input type="radio" id="tab_{{ include.id }}_{{ forloop.index }}" name="tab_{{ include.id }}" {% if forloop.first %}checked{% endif %}>
+  <label for="tab_{{ include.id }}_{{ forloop.index }}">{{ code_name }}</label>
   {% endif %}
   {% endfor %}
 
