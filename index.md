@@ -98,7 +98,7 @@ console.log(await db.info())
 db.close()
 {% endcapture %}
 
-{% include code_tabs.html id="code_tabs_10 python=python_code javascript=javascript_code cpp=cpp_code %}
+{% include code_tabs.html id="code_tabs_0" python=python_code javascript=javascript_code %}
 
 For additional demos please see visit [Demos](https://github.com/FalkorDB/demos).
 
