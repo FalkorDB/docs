@@ -48,7 +48,7 @@ GRAPH.QUERY us_government "CYPHER state_name='Hawaii' MATCH (p:president)-[:born
 {% endcapture %}
 
 {% capture python_1 %}
-graph.query("MATCH (p:president)-[:born]->(:state {name:$state_name}) RETURN p", {params: {state_name: 'Hawaii'}})
+graph.query("MATCH (p:president)-[:born]->(:state {name:$state_name}) RETURN p", {'state_name': 'Hawaii'})
 {% endcapture %}
 
 {% include code_tabs.html id="tabs_1" bash=bash_1 python=python_1 %}
