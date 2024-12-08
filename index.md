@@ -70,8 +70,8 @@ print(res.result_set[0][0]) # Prints: 1
 import { FalkorDB } from 'falkordb';
 
 const db = await FalkorDB.connect({
-    username: 'myUsername',
-    password: 'myPassword',
+    // username: 'myUsername',
+    // password: 'myPassword',
     socket: {
         host: 'localhost',
         port: 6379
