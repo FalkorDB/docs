@@ -1,7 +1,8 @@
 ---
 title: "Kubernetes support"
-nav_order: 9
+nav_order: 4
 description: "Deploy FalkorDB to Kubernetes."
+parent: "Operations"
 ---
 
 # Kubernetes support for FalkorDB
