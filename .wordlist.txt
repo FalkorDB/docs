@@ -117,7 +117,9 @@ codebase
 compton
 conf
 config
+const
 costProp
+cpp
 createNodeIndex
 crflynn
 dbms
@@ -141,6 +143,7 @@ geospatial
 godoc
 hasLabels
 haversin
+html
 https
 hostname
 hydre
@@ -150,6 +153,7 @@ insertListElements
 ioredisgraph
 isEmpty
 javadocs
+javascript
 jedis
 jfalkordb
 jinja
@@ -165,6 +169,9 @@ matchRegEx
 maxCost
 maxLen
 multithreaded
+myGraph
+myPassword
+myUsername
 namespace
 nan
 nav
@@ -179,6 +186,7 @@ outdegree
 pageRank
 pagerank
 parallelizing
+params
 pathCost
 pathCount
 pathNodes
@@ -215,6 +223,7 @@ rueidis
 runtime
 rustis
 sbin
+selectGraph
 schemas
 shortestPath
 signum
@@ -267,6 +276,7 @@ vec
 euclideanDistance
 cosineDistance
 vecf
+
 Dani
 Dovizioso
 Pedrosa
@@ -277,7 +287,6 @@ RDB
 scalable
 scalability
 falkorDB
-
 
 GraphName
 api

@@ -37,7 +37,7 @@ Once loaded you can interact with FalkorDB using any of the supported [client li
 
 Here we'll use [FalkorDB Python client](https://pypi.org/project/FalkorDB/) to create a small graph representing a subset of motorcycle riders and teams taking part in the MotoGP league, once created we'll start querying our data.
 
-```python
+{% capture python_code %}
 from falkordb import FalkorDB
 
 # Connect to FalkorDB
@@ -64,7 +64,41 @@ for row in res.result_set:
 res = g.query("""MATCH (r:Rider)-[:rides]->(t:Team {name:'Ducati'}) RETURN count(r)""")
 
 print(res.result_set[0][0]) # Prints: 1
-```
+{% endcapture %}
+
+{% capture javascript_code %}
+import { FalkorDB } from 'falkordb';
+
+const db = await FalkorDB.connect({
+    username: 'myUsername',
+    password: 'myPassword',
+    socket: {
+        host: 'localhost',
+        port: 6379
+    }
+})
+
+console.log('Connected to FalkorDB')
+
+const graph = db.selectGraph('myGraph')
+
+await graph.query(`CREATE (:Rider {name:'Valentino Rossi'})-[:rides]->(:Team {name:'Yamaha'}),
+        (:Rider {name:'Dani Pedrosa'})-[:rides]->(:Team {name:'Honda'}),
+        (:Rider {name:'Andrea Dovizioso'})-[:rides]->(:Team {name:'Ducati'})`)
+
+result = await graph.query(`MATCH (r:Rider)-[:rides]->(t:Team) 
+                            WHERE t.name = $name RETURN r.name`, 
+                            {params: {name: 'Yamaha'}})
+                            
+console.log(result) // Valentino Rossi
+
+console.log(await db.list())
+console.log(await db.info())
+
+db.close()
+{% endcapture %}
+
+{% include code_tabs.html id="code_tabs_0" python=python_code javascript=javascript_code %}
 
 For additional demos please see visit [Demos](https://github.com/FalkorDB/demos).
 
