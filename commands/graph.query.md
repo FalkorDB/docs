@@ -31,7 +31,7 @@ GRAPH.QUERY us_government "MATCH (p:president)-[:born]->(:state {name:'Hawaii'})
 {% endcapture %}
 
 {% capture python_0 %}
-graph.query('MATCH (p:president)-[:born]->(:state {name:'Hawaii'}) RETURN p')
+graph.query("MATCH (p:president)-[:born]->(:state {name:'Hawaii'}) RETURN p")
 {% endcapture %}
 
 {% include code_tabs.html id="tabs_0" bash=bash_0 python=python_0 %}
