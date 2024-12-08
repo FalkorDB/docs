@@ -25,6 +25,7 @@ FOREACH
 Falkor
 FalkorDB
 FalkorDB's
+FalkorDBExample
 FalkorDBQAChain
 Gadepally
 Geospatial
@@ -107,6 +108,7 @@ allShortestPaths
 arccosine
 arcsine
 arctangent
+args
 ascii
 asin
 atan
@@ -272,6 +274,7 @@ whitespace
 xyxel
 yaml
 uri
+util
 vec
 euclideanDistance
 cosineDistance
