@@ -70,7 +70,7 @@ print(res.result_set[0][0]) # Prints: 1
 from falkordb import FalkorDB111
 {% endcapture %}
 
-{% include code_tabs.html id="aa" python=python_code javascript=cpp_code cpp=cpp_code %}
+{% include code_tabs.html id="code_tabs_10 python=python_code javascript=cpp_code cpp=cpp_code %}
 
 For additional demos please see visit [Demos](https://github.com/FalkorDB/demos).
 
@@ -80,7 +80,7 @@ For additional demos please see visit [Demos](https://github.com/FalkorDB/demos)
 from falkordb import FalkorDB111
 {% endcapture %}
 
-{% include code_tabs.html id="bb" python=cpp_code1 javascript=cpp_code1 cpp=cpp_code1 %}
+{% include code_tabs.html id="code_tabs_1" python=cpp_code1 javascript=cpp_code1 cpp=cpp_code1 %}
 
 Language-specific clients have been written by the community and the FalkorDB team.
 The full list and links can be found on the [Clients](/clients) page.
