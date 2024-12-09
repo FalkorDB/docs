@@ -46,7 +46,7 @@ RETURN n.name, labels(n)
 ```
 
 Result:
-|n.name|abels(n)|
+|n.name|labels(n)|
 |------|--------|
 |"Lori"|[Player]|
 
@@ -63,6 +63,6 @@ RETURN n.name, labels(n)
 ```
 
 Result:
-|n.name|abels(n)|
+|n.name|labels(n)|
 |------|--------|
 |"Lori"|[]      |

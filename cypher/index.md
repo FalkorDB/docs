@@ -20,6 +20,7 @@ Cypher query consists of one or more clauses
 * [CREATE](/cypher/create)
 * [MERGE](/cypher/merge)
 * [DELETE](/cypher/delete)
+* [REMOVE](/cypher/remove)
 * [SET](/cypher/set)
 * [WITH](/cypher/with)
 * [UNION](/cypher/union)
