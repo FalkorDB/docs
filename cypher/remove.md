@@ -30,6 +30,7 @@ RETURN n.name, n.score
 ```
 
 Result:
+
 |n.name|n.score|
 |------|-------|
 |"Andy"| Null  |
@@ -46,6 +47,7 @@ RETURN n.name, labels(n)
 ```
 
 Result:
+
 |n.name|labels(n)|
 |------|--------|
 |"Lori"|[Player]|
@@ -63,6 +65,7 @@ RETURN n.name, labels(n)
 ```
 
 Result:
+
 |n.name|labels(n)|
 |------|--------|
 |"Lori"|[]      |
