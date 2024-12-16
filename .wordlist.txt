@@ -325,3 +325,14 @@ tokio
 async
 falkor
 fn
+
+xxHash
+proc
+utf
+rax
+oniguruma
+libcypher
+thpool
+sds
+CRoaring
+RSALv
