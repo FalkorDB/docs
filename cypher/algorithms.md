@@ -1,6 +1,6 @@
 ---
 title: "Algorithms"
-nav_order: 19
+nav_order: 20
 description: >
     FalkorDB supported algorithms like BFS.
 parent: "Cypher Language"

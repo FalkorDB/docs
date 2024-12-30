@@ -1,6 +1,6 @@
 ---
 title: "Functions"
-nav_order: 17
+nav_order: 18
 description: >
     Information on all supported functions from the Cypher query language
 parent: "Cypher Language"

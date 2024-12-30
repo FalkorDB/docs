@@ -1,6 +1,6 @@
 ---
 title: "Indexing"
-nav_order: 20
+nav_order: 21
 description: >
     FalkorDB supports single-property indexes for node labels and for relationship type. String, numeric, and geospatial data types can be indexed.
 parent: "Cypher Language"
