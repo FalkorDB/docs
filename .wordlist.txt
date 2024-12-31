@@ -12,6 +12,7 @@ CLI
 CMD
 CSC
 CSV
+CSVs
 Cailliau
 Centos
 ColumnType
@@ -82,6 +83,7 @@ RedisGraph
 RedisInsight
 Roi
 Rueian
+Saldana
 SETUSER
 SDK
 SDKs
@@ -95,10 +97,12 @@ Subcommands
 TF
 TTY
 UNIQIE
+URIs
 UUID
 VKEY
 ValueType
 Vijay
+Vin
 acos
 acyclic
 algo
@@ -112,6 +116,7 @@ args
 ascii
 asin
 atan
+birthyear
 boolean
 ceil
 cli
@@ -124,6 +129,7 @@ costProp
 cpp
 createNodeIndex
 crflynn
+csv
 dbms
 dedup
 dockerfile

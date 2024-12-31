@@ -2,7 +2,7 @@
 title: "LOAD CSV"
 nav_order: 17
 description: >
-    LOAD CSV alows a query to access data within a CSV file
+    LOAD CSV allows a query to access data within a CSV file
 parent: "Cypher Language"
 ---
 
@@ -16,7 +16,7 @@ MERGE (a:Actor {name: row[0]})
 `LOAD CSV FROM` accepts a string containing the path to a CSV file,
 the file is parsed line by line, the current line is accessible through the 
 variable specified by `AS`. Each parsed value is treated as a `string`, use
-the right convertion functions e.g. `toInteger` to cast a value to its
+the right conversion functions e.g. `toInteger` to cast a value to its
 appropriate type.
 
 Additional clauses can follow and accesses the `row` variable
@@ -46,7 +46,7 @@ MERGE (a:Actor {name: row[0], birth_year: toInteger(row[1])})
 RETURN a.name, a.birth_year
 ```
 
-Note that we've used indicies e.g. `row[0]` to access the value at the coresponding
+Note that we've used indices e.g. `row[0]` to access the value at the corresponding
 column.
 
 In case the CSV contains a header row e.g.
@@ -74,7 +74,7 @@ is no longer an `array` but rather a `map`, accessing the individual elements
 is done via their column name.
 
 
-### Importing data from multiple csvs
+### Importing data from multiple CSVs
 
 Building on our previous example we'll introduce a second csv file `acted_in.csv`
 which ties actors to movies they've acted in
