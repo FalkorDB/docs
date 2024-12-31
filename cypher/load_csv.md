@@ -33,8 +33,9 @@ In the following example we'll load the `actors.csv` file into FalkorDB.
 
 ### actors.csv
 
-| Lee Pace       | 1979      | 
+| ||
 | ---------------|-----------|
+| Lee Pace       | 1979      | 
 | Vin Diesel     | 1967      |
 | Chris Pratt    | 1979      |
 | Zoe Saldana    | 1978      |
@@ -54,7 +55,7 @@ In case the CSV contains a header row e.g.
 ### actors.csv
 
 | name           | birthyear |
-| ---------------|-----------|
+| :--------------| :---------|
 | Lee Pace       | 1979      | 
 | Vin Diesel     | 1967      |
 | Chris Pratt    | 1979      |
@@ -83,7 +84,7 @@ which ties actors to movies they've acted in
 ### acted_in.csv
 
 | actor          | movie          |
-| ---------------|----------------|
+| :--------------| :--------------|
 | Lee Pace       | The Fall       | 
 | Vin Diesel     | Fast & Furious |
 | Chris Pratt    | Passengers     |
