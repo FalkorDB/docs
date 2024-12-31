@@ -1,6 +1,6 @@
 ---
 title: "Procedures"
-nav_order: 18
+nav_order: 19
 description: >
     Procedures calling using with CALL and YIELD.
 parent: "Cypher Language"
