@@ -48,8 +48,7 @@ done
 
 ### 2.2 Edit the /etc/hosts file and add the node container hostnames
 
-For the Redis-cli to be able to connect and automatically switch between nodes for an example when the (MOVED) operation happens,
-we have to edit the /etc/hosts file to include the container hostnames.
+For the host to be able to connect to the nodes using the container names, please update your `/etc/hosts` file using the following command.
 
 ```bash
 for i in {1..6};do
@@ -60,7 +59,7 @@ done
 
 ## Step 3: Configuring the Cluster
 
-Once all nodes are up, you need to connect them to form a cluster. Use the redis-cli tool inside one of the nodes to initiate the cluster setup.
+Once all nodes are up, you need to connect them to form a cluster. Use the `redis-cli` tool inside one of the nodes to initiate the cluster setup.
 
 ### 3.1 Initiate the Cluster
 
@@ -70,7 +69,7 @@ This command will join node1-node6 into a cluster.
 docker exec -it node1 redis-cli --cluster create node1:6379 node2:6380 node3:6381 node4:6382 node5:6383 node6:6384 --cluster-replicas 1 --cluster-yes
 ```
 
-### 3.3 Verify Cluster Status
+### 3.2 Verify Cluster Status
 
 You can verify the status of the cluster with:
 
@@ -79,35 +78,12 @@ docker exec -it node1 redis-cli --cluster check node1:6379
 ```
 This command will display the status of each node and their roles (master/replica).
 
-### 3.4 Create a Graph to test deployment
+### 3.3 Create a Graph to test deployment
 
-This will create a graph called testGraph and create nodes with different ids.
-
-We can directly execute the command (does not show that the redis-cli moved):
+The following query will create a graph named "network" within your cluster.
 
 ```bash
-redis-cli -c GRAPH.QUERY testGraph "UNWIND range(1, 100) AS id CREATE (n:Person {id: id, name: 'Person ' + toString(id), age: 20 + id % 50})"
-```
-
-Or we can run:
-A):
-
-```bash
-redis-cli -c
-```
-B):
-
-```bash
-GRAPH.QUERY testGraph "UNWIND range(1, 100) AS id CREATE (n:Person {id: id, name: 'Person ' + toString(id), age: 20 + id % 50})"
-```
-The out put will show that it was moved to the right node:
-
-```
--> Redirected to slot [15841] located at node3:6381
-1) 1) "Nodes created: 100"
-   2) "Properties set: 300"
-   3) "Cached execution: 1"
-   4) "Query internal execution time: 0.505416 milliseconds"
+redis-cli -c GRAPH.QUERY network "UNWIND range(1, 100) AS id CREATE (n:Person {id: id, name: 'Person ' + toString(id), age: 20 + id % 50})"
 ```
 
 ## Step 4: Scaling the Cluster
@@ -129,19 +105,18 @@ docker run -d \
     falkordb/falkordb
 ```
 
-### 4.2 Add the new node to the /etc/hosts file
-
-```bash
-sudo echo "127.0.0.1 node7" | sudo tee -a /etc/hosts
-```
-
-### 4.3 Add the Node to the Cluster
+### 4.2 Add the Node to the Cluster
 
 ```bash
 docker exec -it node1 redis-cli --cluster add-node node7:6385 node1:6379
 ```
-
 This will add node7 into the existing cluster.
+
+### 4.3 Add the new node to the /etc/hosts file
+
+```bash
+sudo echo "127.0.0.1 node7" | sudo tee -a /etc/hosts
+```
 
 ## Conclusion
 
