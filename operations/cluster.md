@@ -46,9 +46,9 @@ for i in {1..6}; do
 done
 ```
 
-### 2.2 Edit the /etc/hosts fil and add the node container hostnames
+### 2.2 Edit the /etc/hosts file and add the node container hostnames
 
-For the Redis-cli to be able to connect and automoatically switch between nodes for an example when the (MOVED) operation happens,
+For the Redis-cli to be able to connect and automatically switch between nodes for an example when the (MOVED) operation happens,
 we have to edit the /etc/hosts file to include the container hostnames.
 
 ```bash
@@ -79,7 +79,7 @@ docker exec -it node1 redis-cli --cluster check node1:6379
 ```
 This command will display the status of each node and their roles (master/replica).
 
-### 3.4 Create a Graphs to test deployment
+### 3.4 Create a Graph to test deployment
 
 This will create a graph called testGraph and create nodes with different ids.
 
