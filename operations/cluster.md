@@ -34,89 +34,81 @@ Next, you need to launch multiple FalkorDB instances that will form the cluster.
 ### 2.1 Start the nodes
 
 ```bash
-docker run -d \
-  --name node1 \
-  --network falkordb-cluster-network \
-  -p 6379:6379 \
-  -e 'FALKORDB_ARGS=--cluster-enabled yes' \
-  falkordb/falkordb
+for i in {1..6}; do
+  docker run -d \
+    --name node$i \
+    --hostname node$i \
+    --network falkordb-cluster-network \
+    -p $((6379 + i - 1)):$((6379 + i - 1)) \
+    -e BROWSER=0 \
+    -e "FALKORDB_ARGS=--port $((6379 + i - 1)) --cluster-enabled yes --cluster-announce-ip node$i --cluster-announce-port $((6379 + i - 1))" \
+    falkordb/falkordb
+done
 ```
+
+### 2.2 Edit the /etc/hosts fil and add the node container hostnames
+
+For the Redis-cli to be able to connect and automoatically switch between nodes for an example when the (MOVED) operation happens,
+we have to edit the /etc/hosts file to include the container hostnames.
 
 ```bash
-docker run -d \
-  --name node2 \
-  --network falkordb-cluster-network \
-  -p 6380:6379 \
-  -e 'FALKORDB_ARGS=--cluster-enabled yes' \
-  falkordb/falkordb
+for i in {1..6};do
+  sudo echo "127.0.0.1 node$i" | sudo tee -a /etc/hosts
+done
 ```
 
-```bash
-docker run -d \
-  --name node3 \
-  --network falkordb-cluster-network \
-  -p 6381:6379 \
-  -e 'FALKORDB_ARGS=--cluster-enabled yes' \
-  falkordb/falkordb
-```
-
-```bash
-docker run -d \
-  --name node4 \
-  --network falkordb-cluster-network \
-  -p 6382:6379 \
-  -e 'FALKORDB_ARGS=--cluster-enabled yes' \
-  falkordb/falkordb
-```
-
-```bash
-docker run -d \
-  --name node5 \
-  --network falkordb-cluster-network \
-  -p 6383:6379 \
-  -e 'FALKORDB_ARGS=--cluster-enabled yes' \
-  falkordb/falkordb
-```
-
-```bash
-docker run -d \
-  --name node6 \
-  --network falkordb-cluster-network \
-  -p 6384:6379 \
-  -e 'FALKORDB_ARGS=--cluster-enabled yes' \
-  falkordb/falkordb
-```
-
-In this command, the --network falkordb-cluster-network flag connects the container to the network created in Step 1.
 
 ## Step 3: Configuring the Cluster
 
 Once all nodes are up, you need to connect them to form a cluster. Use the redis-cli tool inside one of the nodes to initiate the cluster setup.
 
-### 3.1 Connect to a Node
+### 3.1 Initiate the Cluster
+
+This command will join node1-node6 into a cluster.
 
 ```bash
-docker exec -it node1 /bin/bash
+docker exec -it node1 redis-cli --cluster create node1:6379 node2:6380 node3:6381 node4:6382 node5:6383 node6:6384 --cluster-replicas 1 --cluster-yes
 ```
-
-### 3.2 Initiate the Cluster
-
-Inside the container, use the following command to form the cluster:
-
-```bash
-redis-cli --cluster create node1:6379 node2:6379 node3:6379 node4:6379 node5:6379 node6:6379 --cluster-replicas 1
-```
-
-This command will join node1, node2, and node3 into a cluster.
 
 ### 3.3 Verify Cluster Status
 
 You can verify the status of the cluster with:
 
 ```bash
-redis-cli --cluster check node1:6379
+docker exec -it node1 redis-cli --cluster check node1:6379
 ```
 This command will display the status of each node and their roles (master/replica).
+
+### 3.4 Create a Graphs to test deployment
+
+This will create a graph called testGraph and create nodes with different ids.
+
+We can directly execute the command (does not show that the redis-cli moved):
+
+```bash
+redis-cli -c GRAPH.QUERY testGraph "UNWIND range(1, 100) AS id CREATE (n:Person {id: id, name: 'Person ' + toString(id), age: 20 + id % 50})"
+```
+
+Or we can run:
+A):
+
+```bash
+redis-cli -c
+```
+B):
+
+```bash
+GRAPH.QUERY testGraph "UNWIND range(1, 100) AS id CREATE (n:Person {id: id, name: 'Person ' + toString(id), age: 20 + id % 50})"
+```
+The out put will show that it was moved to the right node:
+
+```
+-> Redirected to slot [15841] located at node3:6381
+1) 1) "Nodes created: 100"
+   2) "Properties set: 300"
+   3) "Cached execution: 1"
+   4) "Query internal execution time: 0.505416 milliseconds"
+```
 
 ## Step 4: Scaling the Cluster
 
@@ -128,18 +120,25 @@ For example, to add a new node:
 
 ```bash
 docker run -d \
-  --name node7 \
-  --network falkordb-cluster-network \
-  -p 6385:6379 \
-  -e 'FALKORDB_ARGS=--cluster-enabled yes' \
-  falkordb/falkordb
+    --name node7 \
+    --hostname node7 \
+    --network falkordb-cluster-network \
+    -p 6385:6385 \
+    -e BROWSER=0 \
+    -e "FALKORDB_ARGS=--port 6385 --cluster-enabled yes --cluster-announce-ip node7 --cluster-announce-port 6385" \
+    falkordb/falkordb
 ```
 
-### 4.2 Add the Node to the Cluster
+### 4.2 Add the new node to the /etc/hosts file
 
 ```bash
-docker exec -it node1 /bin/bash
-redis-cli --cluster add-node node7:6379 node1:6379
+sudo echo "127.0.0.1 node7" | sudo tee -a /etc/hosts
+```
+
+### 4.3 Add the Node to the Cluster
+
+```bash
+docker exec -it node1 redis-cli --cluster add-node node7:6385 node1:6379
 ```
 
 This will add node7 into the existing cluster.
