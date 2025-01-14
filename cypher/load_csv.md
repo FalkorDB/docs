@@ -8,7 +8,7 @@ parent: "Cypher Language"
 
 # LOAD CSV
 
-```sh
+```cypher
 LOAD CSV FROM 'file://actors.csv' AS row
 MERGE (a:Actor {name: row[0]})
 ```
@@ -40,7 +40,7 @@ In the following example we'll load the `actors.csv` file into FalkorDB.
 | Chris Pratt    | 1979      |
 | Zoe Saldana    | 1978      |
 
-```sh
+```cypher
 LOAD CSV FROM 'file://actors.csv'
 AS row
 MERGE (a:Actor {name: row[0], birth_year: toInteger(row[1])})
@@ -63,7 +63,7 @@ In case the CSV contains a header row e.g.
 
 Then we should use the `WITH HEADERS` variation of the `LOAD CSV` clause
 
-```
+```cypher
 LOAD CSV WITH HEADERS FROM 'file://actors.csv'
 AS row
 MERGE (a:Actor {name: row[name], birth_year: toInteger(row[birthyear])})
@@ -95,7 +95,7 @@ We'll create a new graph connecting actors to the movies they've acted in
 
 Load actors:
 
-```sh
+```cypher
 LOAD CSV WITH HEADER FROM 'file://actors.csv'
 AS row
 MERGE (a:Actor {name:row['name']})
@@ -103,7 +103,7 @@ MERGE (a:Actor {name:row['name']})
 
 Load movies and create `ACTED_IN` relations:
 
-```sh
+```cypher
 LOAD CSV WITH HEADER FROM 'file://acted_in.csv'
 AS row
 
@@ -114,11 +114,12 @@ MERGE (a)-[:ACTED_IN]->(m)
 
 ### Importing remote files
 
-FalkorDB supports the importing remote CSVs via HTTPS
+FalkorDB supports importing remote CSVs via HTTPS
 
 Below we'll be loading the bigmac dataset from calmcode.io
 
-```LOAD CSV WITH HEADERS FROM 'https://calmcode.io/static/data/bigmac.csv' AS row
+```cypher
+LOAD CSV WITH HEADERS FROM 'https://calmcode.io/static/data/bigmac.csv' AS row
 RETURN row LIMIT 4
 
 1) 1) "ROW"
@@ -128,13 +129,13 @@ RETURN row LIMIT 4
    4) 1) "{date: 2002-04-01, currency_code: NOK, name: Norway, local_price: 35.0, dollar_ex: 8.56, dollar_price: 4.088785046728971}"
 ```
 
-### Dealing with large number of columns or missing entries
+### Dealing with a large number of columns or missing entries
 
-It's likely that not all of the cells in a CSV file are present, this makes
-loading the data a bit more complicated, luckly there's an easy way around it
-which is also useful for loading a large number of columns
+It's likely that not all cells in a CSV file are present, this makes
+loading the data a bit more complicated. Luckly, there's an easy way around it
+that's also useful for loading numerous of columns
 
-Assuming this it the CSV file we're loading:
+Assuming this is the CSV file we're loading:
 
 
 ### missing_entries.csv
@@ -146,13 +147,13 @@ Assuming this it the CSV file we're loading:
 | Chris Pratt    |           |
 | Zoe Saldana    | 1978      |
 
-Note: both Vin Diesel an Chris Pratt are missing their birthyear entry
+Note: both Vin Diesel and Chris Pratt are missing their birthyear entry
 
 Upon creating the Actor nodes We don't need to explicitly specify each column as we did so far,
 the following query creates an empty Actor node and assigns the current CSV row to the node
 this inturn sets the node's attribute-set to the current row
 
-```
+```cypher
 LOAD CSV FROM 'file://missing_entries.csv' AS row
 CREATE (a:Actor)
 SET a = row
