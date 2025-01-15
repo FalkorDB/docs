@@ -84,6 +84,7 @@ The following table summarizes which configuration parameters can be set at modu
 | [EFFECTS_THRESHOLD](#effects_threshold)                      | V     | V     |
 | [CMD_INFO](#cmd_info)                                        | V     | V     |
 | [MAX_INFO_QUERIES](#max_info_queries)                        | V     | V     |
+| [IMPORT_FOLDER](#import_folder)                              | V     | X     |
 
 ---
 
@@ -379,3 +380,12 @@ total execution time / number of changes:  5ms / 5 = 1ms.
 if the average modification time is greater then `EFFECTS_THRESHOLD` the query
 will be replicated to both replicas and AOF as a graph effect otherwise the original
 query will be replicated.
+
+---
+
+### IMPORT_FOLDER
+
+The import folder configuration specifies an absolute path to a folder from which
+FalkorDB is allowed to load CSV files.
+
+Defaults to: `/var/lib/FalkorDB/import/`
