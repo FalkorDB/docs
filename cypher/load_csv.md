@@ -26,8 +26,8 @@ Additional clauses can follow and accesses the `row` variable
 ### Importing local files
 
 FalkorDB defines a data directory [see configuration](../configuration#import_folder)
-Under which local CSV files should be stored, all `file://` URIs are resolved
-relatively to that directory.
+Under which local CSV files should be stored. All `file://` URIs are resolved
+relative to that directory.
 
 In the following example we'll load the `actors.csv` file into FalkorDB.
 
@@ -114,9 +114,8 @@ MERGE (a)-[:ACTED_IN]->(m)
 
 ### Importing remote files
 
-FalkorDB supports importing remote CSVs via HTTPS
-
-Below we'll be loading the bigmac dataset from calmcode.io
+FalkorDB supports importing remote CSVs via HTTPS.
+Here's an example loading the bigmac data-set from calmcode.io:
 
 ```cypher
 LOAD CSV WITH HEADERS FROM 'https://calmcode.io/static/data/bigmac.csv' AS row
@@ -131,9 +130,9 @@ RETURN row LIMIT 4
 
 ### Dealing with a large number of columns or missing entries
 
-It's likely that not all cells in a CSV file are present, this makes
-loading the data a bit more complicated. Luckly, there's an easy way around it
-that's also useful for loading numerous of columns
+Loading data from CSV files that miss entries may cause complications.
+We've solved this (and made it useful for cases involving loading a large number of columns)
+with the following approach:
 
 Assuming this is the CSV file we're loading:
 
@@ -147,11 +146,11 @@ Assuming this is the CSV file we're loading:
 | Chris Pratt    |           |
 | Zoe Saldana    | 1978      |
 
-Note: both Vin Diesel and Chris Pratt are missing their birthyear entry
+>Note: both Vin Diesel and Chris Pratt are missing their birthyear entry
 
-Upon creating the Actor nodes We don't need to explicitly specify each column as we did so far,
-the following query creates an empty Actor node and assigns the current CSV row to the node
-this inturn sets the node's attribute-set to the current row
+When creating Actor nodes, there is no need to explicitly define each column as done previously.
+The following query creates an empty Actor node and assigns the current CSV row to it.
+This process automatically sets the node's attribute set to match the values of the current row:
 
 ```cypher
 LOAD CSV FROM 'file://missing_entries.csv' AS row
