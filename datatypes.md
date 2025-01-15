@@ -140,8 +140,9 @@ $ redis-cli GRAPH.QUERY G "MATCH (n) RETURN n {.name, .age} AS projection"
 
 You can combine two maps, where values in the second map will override corresponding values in the first map.
 For example:
-```
-127.0.0.1:6379> GRAPH.QUERY g "RETURN {a: 1, b: 2} + {a: 2, c: 3}"
+
+```sh
+$ redis-cli GRAPH.QUERY g "RETURN {a: 1, b: 2} + {a: 2, c: 3}"
 1) 1) "{a: 1, b: 2} + {a: 2, c: 3}"
 2) 1) 1) "{b: 2, a: 2, c: 3}"
 3) 1) "Cached execution: 0"
