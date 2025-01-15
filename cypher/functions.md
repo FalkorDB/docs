@@ -98,16 +98,6 @@ This section contains information on all supported functions from the Cypher que
 | ^           | Raise the first value to the power of the second         |
 | %           | Perform modulo division of the first value by the second |
 
-You can combine two maps, where values in the second map will override corresponding values in the first map.
-For example:
-```
-127.0.0.1:6379> GRAPH.QUERY g "RETURN {a: 1, b: 2} + {a: 2, c: 3}"
-1) 1) "{a: 1, b: 2} + {a: 2, c: 3}"
-2) 1) 1) "{b: 2, a: 2, c: 3}"
-3) 1) "Cached execution: 0"
-   2) "Query internal execution time: 0.467666 milliseconds"
-```
-
 ## Mathematical functions
 
 |Function                   | Description|
