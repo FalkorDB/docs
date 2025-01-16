@@ -41,39 +41,36 @@ Usage:
 
 ```cypher
 CALL algo.pageRank(
-  'NodeLabel',        // The label of the nodes to include in the computation
-  'RELATIONSHIP_TYPE' // The type of relationships to consider
+  'source-node',      // The ID or name of the starting node
+  max-level,          // The maximum depth to traverse
+  'relationship-type' // The type of relationships to consider
 )
-YIELD nodeId, score
+YIELD nodes, edges
 ```
 
-Parameters:
+Arguments:
 
-    'NodeLabel': The label of the nodes to include in the computation.
-    'RELATIONSHIP_TYPE': The type of relationships to consider. Only edges of this type will be used in the PageRank calculation.
+    source-node: The ID or name of the starting node. This is the entry point for the PageRank computation.
+    max-level: The maximum depth or level to traverse from the starting node. Controls how far the algorithm propagates.
+    relationship-type: The type of relationships to consider. Only edges of this type will be included in the computation.
 
-YIELD:
+Yields:
 
-    nodeId: The internal ID of the node.
-    score: The PageRank score assigned to the node.
+    nodes: The total number of nodes included in the computation.
+    edges: The total number of edges considered during the computation.
 
 Example:
 
 ```cypher
-CALL algo.pageRank('Page', 'LINKS_TO')
-YIELD nodeId, score
-RETURN nodeId, score
-ORDER BY score DESC
+CALL algo.pageRank('HomePage', 3, 'LINKS_TO')
+YIELD nodes, edges
+RETURN nodes, edges
 ```
 
-In this example, the algo.pageRank function computes the PageRank scores for all nodes labeled 'Page', considering only 'LINKS_TO' relationships. The results are returned with nodes ordered by their PageRank score in descending order.
+In this example, the algo.pageRank function calculates PageRank starting from the 'HomePage' node, traversing up to 3 levels deep and considering only 'LINKS_TO' relationships. It returns the count of nodes and edges involved in the computation.
 
-Note:
+Notes:
 
-    Ensure that the graph contains nodes with the specified label and relationships of the specified type; otherwise, the function may return an empty result set.
-    The PageRank algorithm assumes that the graph is directed; thus, the direction of relationships is taken into account during computation.
-    The damping factor, which represents the probability of continuing from one node to another, is typically set to 0.85. This value can influence the distribution of PageRank scores.
-    Wikipedia
-
-For more detailed information on the PageRank algorithm, refer to the Wikipedia article on PageRank.
-
+    The PageRank algorithm assumes a directed graph; the direction of relationships is significant.
+    Ensure the graph contains valid relationships of the specified type; otherwise, the computation may not yield meaningful results.
+    You can customize traversal depth using the max-level argument to balance performance and accuracy.
