@@ -39,7 +39,7 @@ on the structure of incoming links.
 
 Usage:
 
-```
+```cypher
 CALL algo.pageRank(
   'NodeLabel',        // The label of the nodes to include in the computation
   'RELATIONSHIP_TYPE' // The type of relationships to consider
@@ -59,7 +59,7 @@ YIELD:
 
 Example:
 
-```
+```cypher
 CALL algo.pageRank('Page', 'LINKS_TO')
 YIELD nodeId, score
 RETURN nodeId, score
