@@ -30,8 +30,12 @@ It can yield two outputs:
 
 Usage: `algo.pageRank`
 
-The function executes the PageRank algorithm on nodes of a specified label, considering only edges of a given relationship type. PageRank is an algorithm originally developed by Google to rank web pages by measuring their relative importance within a linked network. It assigns a numerical weight to each node, indicating its significance based on the structure of incoming links.
-Wikipedia
+The function executes the PageRank algorithm on nodes of a specified label, 
+considering only edges of a given relationship type. 
+PageRank is an algorithm originally developed by Google to rank web pages by 
+measuring their relative importance within a linked network. 
+It assigns a numerical weight to each node, indicating its significance based 
+on the structure of incoming links.
 
 Usage:
 
