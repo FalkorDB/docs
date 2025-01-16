@@ -25,6 +25,11 @@ And follow these steps:
 Create a values.yaml file with the following content:
 
 ```yaml
+global:
+  security:
+    # Required to be able to run the FalkorDB image
+    allowInsecureImages: true
+
 image:
   registry: docker.io
   repository: falkordb/falkordb
