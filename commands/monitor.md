@@ -2,14 +2,14 @@
 title: "MONITOR"
 nav_order: 110
 description: >
-  Allows administrators to observe all requests processed by the database in real-time. 
+  Allows to observe all requests processed by the database in real-time. 
 parent: "Commands"    
 ---
 
 # MONITOR
 
-Allows administrators to observe all requests processed by the database in real-time. 
-This feature is invaluable for debugging, performance analysis, and understanding the sequence of operations occurring in the database.
+Allows to observe all requests processed by the database in real-time. 
+This feature is invaluable for debugging and understanding the sequence of operations occurring in the database.
 
 Usage: `MONITOR`
 
@@ -41,10 +41,10 @@ Each line includes the following:
 
 ## Terminating MONITOR
 
-To stop the `MONITOR` stream, simply close the client connection (e.g., terminate the session or disconnect the client tool). There is no specific `UNMONITOR` command.
+To stop the `MONITOR` stream, simply close the client connection (e.g., terminate the session or disconnect the client tool).
 
 ## Best Practices
 
 - Use `MONITOR` sparingly in production environments.
 - Combine `MONITOR` with logging or analysis tools for deeper insights.
-- Restrict access to users who require diagnostic capabilities.
+- Restrict access to users who require diagnostic capabilities, see: [ACL](/commands/acl) for more details.
