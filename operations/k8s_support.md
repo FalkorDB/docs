@@ -28,15 +28,15 @@ Create a values.yaml file with the following content:
 image:
   registry: docker.io
   repository: falkordb/falkordb
-  tag: "4.0"
+  tag: "latest"
 
 master:
   extraFlags:
-  - "--loadmodule /FalkorDB/bin/linux-x64-release/src/falkordb.so"
+  - "--loadmodule /FalkorDB/bin/src/falkordb.so"
 
 replica:
   extraFlags:
-  - "--loadmodule /FalkorDB/bin/linux-x64-release/src/falkordb.so"
+  - "--loadmodule /FalkorDB/bin/src/falkordb.so"
 ```
 
 This file specify the FalkorDB image(you can choose different tags)
