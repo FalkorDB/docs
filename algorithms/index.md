@@ -14,23 +14,23 @@ Welcome to the FalkorDB Algorithms Documentation! This guide provides an overvie
 Below is the list of supported algorithms in FalkorDB. Click on an algorithm to view its detailed documentation, including syntax, examples, and practical use cases:
 
 ### Traversal Algorithms
-- [BFS](#)
+- [BFS](algorithms/BFS)
   - Performs a Breadth-First Search traversal of the graph.
 
 ### Centrality Algorithms
-- [PageRank](#)
+- [PageRank](algorithms/page_rank)
   - Measures the importance of nodes based on incoming connections.
 
 ### Connectivity Algorithms
-- [Degree](#)
+- [Degree](algorithms/degree)
   - Calculates the degree of nodes, focusing on connectivity based on edge direction and type.
 
 ### Pathfinding Algorithms
-- [Shortest Path](#)
+- [Shortest Path](algorithms/shortest_path)
   - Finds the shortest path between two nodes.
 
 ### Community Detection Algorithms
-- [Label Propagation](#)
+- [Label Propagation](algorithms/label_propagation)
   - Identifies communities based on label diffusion through the graph.
 
 ---
