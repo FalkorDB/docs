@@ -348,3 +348,5 @@ bigmac
 calmcode
 io
 influencers
+analytics
+Pathfinding
