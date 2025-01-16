@@ -50,14 +50,14 @@ YIELD nodes, edges
 
 Arguments:
 
-    source-node: The ID or name of the starting node. This is the entry point for the PageRank computation.
-    max-level: The maximum depth or level to traverse from the starting node. Controls how far the algorithm propagates.
-    relationship-type: The type of relationships to consider. Only edges of this type will be included in the computation.
+`source-node` - The ID or name of the starting node. This is the entry point for the PageRank computation.
+`max-level` - The maximum depth or level to traverse from the starting node. Controls how far the algorithm propagates.
+`relationship-type` - The type of relationships to consider. Only edges of this type will be included in the computation.
 
 Yields:
 
-    nodes: The total number of nodes included in the computation.
-    edges: The total number of edges considered during the computation.
+`nodes` - The total number of nodes included in the computation.
+`edges` - The total number of edges considered during the computation.
 
 Example:
 
