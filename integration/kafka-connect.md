@@ -16,9 +16,9 @@ parent: "integration"
 
 The connector can be built from [source](https://github.com/FalkorDB/falkordb-kafka-connect) or extract the
 connector [jar](https://github.com/FalkorDB/falkordb-kafka-connect/releases/download/v1.0.0/falkordb-kafka-connect-uber.jar)
-from the [release](https://github.com/FalkorDB/falkordb-kafka-connect/releases), There is a readme in
-the [github](https://github.com/FalkorDB/falkordb-kafka-connect?tab=readme-ov-file#how-to-run-the-example) repository
-that explain how to run the connector locally
+from the [releases](https://github.com/FalkorDB/falkordb-kafka-connect/releases). There is a README in
+the [GitHub](https://github.com/FalkorDB/falkordb-kafka-connect?tab=readme-ov-file#how-to-run-the-example) repository
+that explains how to run the connector locally.
 
 ### **Configuring the connector**
 
