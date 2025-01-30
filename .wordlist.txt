@@ -347,3 +347,6 @@ hostnames
 bigmac
 calmcode
 io
+kafka
+readme
+github
