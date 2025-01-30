@@ -188,6 +188,31 @@ For a node label, the full-text index deletion syntax is:
 GRAPH.QUERY DEMO_GRAPH "CALL db.idx.fulltext.drop('Movie')"
 ```
 
+## Creating a full-text index for a relation label
+
+To construct a full-text index on the `name` property with phonetic search of all relations with label `Manager`, use the syntax:
+
+```sh
+GRAPH.QUERY DEMO_GRAPH "CREATE FULLTEXT INDEX FOR ()-[m:Manager]-() on (m.name)"
+```
+
+## Utilizing a full-text index for a relation label
+
+An index can be invoked to match any whole words contained within:
+
+```sh
+GRAPH.QUERY DEMO_GRAPH
+"CALL db.idx.fulltext.queryRelations('Manager', 'Charlie Munger') YIELD relation RETURN relation.name"
+```
+
+## Deleting a full-text index for a relation label
+
+For a relation label, the full-text index deletion syntax is:
+
+```sh
+GRAPH.QUERY DEMO_GRAPH "CALL DROP FULLTEXT INDEX FOR ()-[m:Manager]-()  ON (m.name)"
+```
+
 # Vector indexing
 
 With the introduction of the `vector` data-type a new type of index was introduced.
