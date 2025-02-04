@@ -1,12 +1,11 @@
+---
+title: "Kafka Connect Sink"
+nav_order: 2
+description: "Kafka Connect sink detailed doc"
+parent: "integration"
+---
 
 ![FalkorDB x Kafka Connect Banner](https://github.com/user-attachments/assets/941bb532-8613-4135-b4c9-232a700da314)
-
-
-| **Title**           | **Kafka Connect Sink**            |
-|----------------------|-------------------------------------|
-| **Nav Order**        | 2                                   |
-| **Description**      | Kafka Connect sink detailed doc    |
-| **Parent**           | Integration                         |
 
 
 
