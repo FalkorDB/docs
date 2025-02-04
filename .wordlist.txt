@@ -351,3 +351,9 @@ kafka
 readme
 github
 pre
+html
+body
+table
+htmlcontent
+integration
+kafka-connect
