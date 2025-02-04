@@ -1,67 +1,54 @@
----
-title: "Kafka Connect sink"
-nav_order: 2
-description: "Kafka Connect sink detailed doc"
-parent: "integration"
----
 
-## Table of Contents
+![FalkorDB x Kafka Connect Banner](https://github.com/user-attachments/assets/941bb532-8613-4135-b4c9-232a700da314)
+
+
+| **Title**           | **Kafka Connect Sink**            |
+|----------------------|-------------------------------------|
+| **Nav Order**        | 2                                   |
+| **Description**      | Kafka Connect sink detailed doc    |
+| **Parent**           | Integration                         |
+
+
+
+## Get Started
 
 - [Obtaining the connector](#obtaining-the-connector)
 - [Configuring the connector](#configuring-the-connector)
 - [Kafka message format](#kafka-message-format)
+
 ---
 
-### **Obtaining the connector**
+### **1️⃣ Obtaining the Connector**
 
-The connector can be built from [source](https://github.com/FalkorDB/falkordb-kafka-connect) or extract the
-connector [jar](https://github.com/FalkorDB/falkordb-kafka-connect/releases/download/v1.0.0/falkordb-kafka-connect-uber.jar)
-from the [releases](https://github.com/FalkorDB/falkordb-kafka-connect/releases). There is a README in
-the [GitHub](https://github.com/FalkorDB/falkordb-kafka-connect?tab=readme-ov-file#how-to-run-the-example) repository
-that explains how to run the connector locally.
+You can build the connector from [source](https://github.com/FalkorDB/falkordb-kafka-connect) or download the pre-built  [JAR](https://github.com/FalkorDB/falkordb-kafka-connect/releases/download/v1.0.0/falkordb-kafka-connect-uber.jar) file from the releases. The GitHub repository includes a README with instructions for running the connector locally. The [GitHub](https://github.com/FalkorDB/falkordb-kafka-connect?tab=readme-ov-file#how-to-run-the-example) repository includes a README with instructions for running the connector locally.
 
-### **Configuring the connector**
+### **2️⃣ Configuring the Connector**
 
-Kafka Connector Properties Explanation
-
-This document provides a detailed explanation of the properties used to configure the FalkorDB Sink Connector for Apache
-Kafka. The configuration is specified in a properties file format.
+Kafka Connector Properties Overview: 
+This document explains the properties required to configure the FalkorDB Sink Connector for Apache Kafka. 
+>Configurations should be specified in a properties file format.
 
 #### Properties Overview
 
-- **name**: This property specifies the unique name of the connector instance. In this case, it is named
-  `falkordb-connector`. This name is used to identify the connector in the Kafka Connect framework.
+| **Property**                  | **Description**                                                                                                                                  |
+|--------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------|
+| `name`                        | Specifies the unique name of the connector instance, e.g., `falkordb-connector`. This name identifies the connector in the Kafka Connect framework. |
+| `connector.class`             | Defines the Java class that implements the connector logic. Use `com.falkordb.FalkorDBSinkConnector` to write data from Kafka topics to FalkorDB. |
+| `tasks.max`                   | Sets the maximum number of tasks for the connector. A value of `1` uses a single task. Increasing this can boost throughput but requires resources. |
+| `topics`                      | Specifies the Kafka topic(s) to consume messages from. Set to `falkordb-topic` to read messages from this topic.                                  |
+| `key.converter`               | Defines the converter class for message keys. `StringConverter` treats keys as simple strings.                                                   |
+| `value.converter`             | Specifies the converter for message values. `StringConverter` treats values as strings.                                                           |
+| `value.converter.schemas.enable` | Indicates whether schemas should be included with message values. Setting to `false` excludes schema information.                                |
+| `falkor.url`                  | Specifies the connection URL for FalkorDB. Example: `redis://localhost:6379`. Essential for connecting Kafka to FalkorDB.                         |
 
-- **connector.class**: This property defines the Java class that implements the connector logic. Here,
-  `com.falkordb.FalkorDBSinkConnector` indicates that this connector is designed to write data from Kafka topics to
-  FalkorDB.
 
-- **tasks.max**: This property sets the maximum number of tasks that can be created for this connector. A value of `1`
-  means that only one task will be used to process data from the specified topic. Increasing this number can improve
-  throughput but may require additional resources.
 
-- **topics**: This property specifies which Kafka topic(s) the connector should consume messages from. In this case, it
-  is set to `falkordb-topic`, meaning that the connector will read messages from this specific topic.
-
-- **key.converter**: This property defines the converter class used to convert message keys from Kafka into a format
-  that can be processed by the sink. Here, `StringConverter` indicates that keys will be treated as simple strings.
-
-- **value.converter**: Similar to `key.converter`, this property specifies how message values should be converted. The
-  use of `StringConverter` means that values will also be treated as strings.
-
-- **value.converter.schemas.enable**: This property indicates whether schemas should be included with message values.
-  Setting it to `false` means that no schema information will be sent along with the data, which may simplify processing
-  if schemas are not needed.
-
-- **falkor.url**: This property specifies the connection URL for FalkorDB. In this case, it points to a Redis instance
-  running on `localhost` at port `6379`. This URL is crucial for establishing a connection between the Kafka connector
-  and FalkorDB.
-
-The above properties configure a Kafka Sink Connector that reads messages from a specified topic and writes them into
+>The above properties configure a Kafka Sink Connector that reads messages from a specified topic and writes them into
 FalkorDB using string conversion for both keys and values. Adjusting these properties allows you to tailor the
 connector's behavior according to your application's requirements.
 
-Example:
+
+## Configuration Example
 
   ```properties
 name=falkordb-connector
@@ -74,7 +61,7 @@ value.converter.schemas.enable=false
 falkor.url=redis://localhost:6379
   ```
 
-### *Kafka message format*
+## Kafka Message Format
 
 #### JSON Structure Overview
 
@@ -111,42 +98,12 @@ Example:
 
 #### Key Components
 
-##### 1. `graphName`
+The table below explains essential properties for executing commands in FalkorDB through Kafka messages.
 
-- **Description**: This property specifies the name of the graph database where the command will be executed.
-- **Example**: In this case, it is set to `"falkordb"`, it is possible to have one kafka messages update multiple graphs.
-
-##### 2. `command`
-
-- **Description**: This property indicates the type of operation being performed. Here, it is set to `"GRAPH_QUERY"`,
-  signifying that a query will be executed against the graph database.
-
-##### 3. `cypherCommand`
-
-- **Description**: This property contains the actual Cypher query that will be executed. Cypher is a query language for
-  graph databases.
-- **Example**:
-
- ```cypher
-   CREATE (p:Person {name: $name_param, age: $age_param, location: $location_param}) RETURN p
- ```
-
-This command creates a new node labeled `Person` with properties for `name`, `age`, and `location`.
-
-##### 4. `parameters`
-
-- **Description**: This object holds the parameters that will replace placeholders in the `cypherCommand`. Each key
-  corresponds to a placeholder in the Cypher query.
-- **Example**:
-
-```json
-{
-  "location_param": "Location 0",
-  "age_param": 20,
-  "name_param": "Person 0"
-}
-```
-
-In this example, the parameters specify that a person named `"Person 0"` who is `20` years old and located at
-`"Location 0"` will be created.
+| **Property**      | **Description**                                                                                                           | **Example**                                                                                             | **Explainer**                                                                                         |
+|-------------------|-----------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------|
+| `graphName`       | Specifies the name of the graph database where the command will be executed.                                              | `"falkordb"`. Kafka messages can update multiple graphs.                                                |                                                    |
+| `command`         | Indicates the type of operation being performed. `"GRAPH_QUERY"` means a query will be executed against the graph database. | `"GRAPH_QUERY"`                                                                                          |                                                   |
+| `cypherCommand`   | Contains the actual Cypher query to be executed. Cypher is a query language for graph databases.                           | ```cypher CREATE (p:Person {name: $name_param, age: $age_param, location: $location_param}) RETURN p ``` | Creates a `Person` node with `name`, `age`, and `location` properties.                                |
+| `parameters`      | Holds key-value pairs for placeholders in the `cypherCommand`.                                                             | ```json {"name_param": "Person 0", "age_param": 20, "location_param": "Location 0"} ```                  | Used to define properties for the new node.                                                           |
 
