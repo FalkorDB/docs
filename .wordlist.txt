@@ -354,9 +354,4 @@ pre
 html
 body
 table
-htmlcontent
-integration
-kafka-connect
-<htmlcontent>
-integration/kafka-connect.md
-html>body>table
+Explainer
