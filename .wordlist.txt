@@ -342,3 +342,16 @@ thpool
 sds
 CRoaring
 RSALv
+
+hostnames
+bigmac
+calmcode
+io
+kafka
+readme
+github
+pre
+html
+body
+table
+Explainer

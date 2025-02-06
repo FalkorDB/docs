@@ -8,12 +8,12 @@ parent: "Cypher Language"
 
 # LOAD CSV
 
-```sh
+```cypher
 LOAD CSV FROM 'file://actors.csv' AS row
 MERGE (a:Actor {name: row[0]})
 ```
 
-`LOAD CSV FROM` accepts a string containing the path to a CSV file,
+`LOAD CSV FROM` accepts a string path to a CSV file,
 the file is parsed line by line, the current line is accessible through the 
 variable specified by `AS`. Each parsed value is treated as a `string`, use
 the right conversion functions e.g. `toInteger` to cast a value to its
@@ -25,9 +25,9 @@ Additional clauses can follow and accesses the `row` variable
 
 ### Importing local files
 
-FalkorDB defines a data directory ![see configuration](../configuration)
-Under which local CSV files should be stored, all `file://` URIs are resolved
-relatively to that directory.
+FalkorDB defines a data directory [see configuration](../configuration#import_folder)
+Under which local CSV files should be stored. All `file://` URIs are resolved
+relative to that directory.
 
 In the following example we'll load the `actors.csv` file into FalkorDB.
 
@@ -40,7 +40,7 @@ In the following example we'll load the `actors.csv` file into FalkorDB.
 | Chris Pratt    | 1979      |
 | Zoe Saldana    | 1978      |
 
-```sh
+```cypher
 LOAD CSV FROM 'file://actors.csv'
 AS row
 MERGE (a:Actor {name: row[0], birth_year: toInteger(row[1])})
@@ -63,7 +63,7 @@ In case the CSV contains a header row e.g.
 
 Then we should use the `WITH HEADERS` variation of the `LOAD CSV` clause
 
-```
+```cypher
 LOAD CSV WITH HEADERS FROM 'file://actors.csv'
 AS row
 MERGE (a:Actor {name: row[name], birth_year: toInteger(row[birthyear])})
@@ -95,7 +95,7 @@ We'll create a new graph connecting actors to the movies they've acted in
 
 Load actors:
 
-```sh
+```cypher
 LOAD CSV WITH HEADER FROM 'file://actors.csv'
 AS row
 MERGE (a:Actor {name:row['name']})
@@ -103,7 +103,7 @@ MERGE (a:Actor {name:row['name']})
 
 Load movies and create `ACTED_IN` relations:
 
-```sh
+```cypher
 LOAD CSV WITH HEADER FROM 'file://acted_in.csv'
 AS row
 
@@ -112,3 +112,83 @@ MERGE (m:Movie {title: row['movie']})
 MERGE (a)-[:ACTED_IN]->(m)
 ```
 
+### Importing remote files
+
+FalkorDB supports importing remote CSVs via HTTPS.
+Here's an example loading the bigmac data-set from calmcode.io:
+
+```cypher
+LOAD CSV WITH HEADERS FROM 'https://calmcode.io/static/data/bigmac.csv' AS row
+RETURN row LIMIT 4
+
+1) 1) "ROW"
+2) 1) 1) "{date: 2002-04-01, currency_code: PHP, name: Philippines, local_price: 65.0, dollar_ex: 51.0, dollar_price: 1.27450980392157}"
+   2) 1) "{date: 2002-04-01, currency_code: PEN, name: Peru, local_price: 8.5, dollar_ex: 3.43, dollar_price: 2.47813411078717}"
+   3) 1) "{date: 2002-04-01, currency_code: NZD, name: New Zealand, local_price: 3.6, dollar_ex: 2.24, dollar_price: 1.60714285714286}"
+   4) 1) "{date: 2002-04-01, currency_code: NOK, name: Norway, local_price: 35.0, dollar_ex: 8.56, dollar_price: 4.088785046728971}"
+```
+
+### Dealing with a large number of columns or missing entries
+
+Loading data from CSV files that miss entries may cause complications.
+We've solved this (and made it useful for cases involving loading a large number of columns)
+with the following approach:
+
+Assuming this is the CSV file we're loading:
+
+
+### missing_entries.csv
+
+| name           | birthyear |
+| :--------------| :---------|
+| Lee Pace       | 1979      |
+| Vin Diesel     |           |
+| Chris Pratt    |           |
+| Zoe Saldana    | 1978      |
+
+>Note: both Vin Diesel and Chris Pratt are missing their birthyear entry
+
+When creating Actor nodes, there is no need to explicitly define each column as done previously.
+The following query creates an empty Actor node and assigns the current CSV row to it.
+This process automatically sets the node's attribute set to match the values of the current row:
+
+```cypher
+LOAD CSV FROM 'file://missing_entries.csv' AS row
+CREATE (a:Actor)
+SET a = row
+RETURN a
+
+1) 1) "a"
+2) 1) 1) 1) 1) "id"
+            2) (integer) 0
+         2) 1) "labels"
+            2) 1) "Actor"
+         3) 1) "properties"
+            2) 1) 1) "name"
+                  2) "Zoe Saldana"
+               2) 1) "birthyear"
+                  2) "1978"
+   2) 1) 1) 1) "id"
+            2) (integer) 1
+         2) 1) "labels"
+            2) 1) "Actor"
+         3) 1) "properties"
+            2) 1) 1) "name"
+                  2) "Chris Pratt"
+   3) 1) 1) 1) "id"
+            2) (integer) 2
+         2) 1) "labels"
+            2) 1) "Actor"
+         3) 1) "properties"
+            2) 1) 1) "name"
+                  2) "Vin Diesel"
+   4) 1) 1) 1) "id"
+            2) (integer) 3
+         2) 1) "labels"
+            2) 1) "Actor"
+         3) 1) "properties"
+            2) 1) 1) "name"
+                  2) "Lee Pace"
+               2) 1) "birthyear"
+                  2) "1979"
+```

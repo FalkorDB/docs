@@ -34,89 +34,57 @@ Next, you need to launch multiple FalkorDB instances that will form the cluster.
 ### 2.1 Start the nodes
 
 ```bash
-docker run -d \
-  --name node1 \
-  --network falkordb-cluster-network \
-  -p 6379:6379 \
-  -e 'FALKORDB_ARGS=--cluster-enabled yes' \
-  falkordb/falkordb
+for i in {1..6}; do
+  docker run -d \
+    --name node$i \
+    --hostname node$i \
+    --network falkordb-cluster-network \
+    -p $((6379 + i - 1)):$((6379 + i - 1)) \
+    -e BROWSER=0 \
+    -e "FALKORDB_ARGS=--port $((6379 + i - 1)) --cluster-enabled yes --cluster-announce-ip node$i --cluster-announce-port $((6379 + i - 1))" \
+    falkordb/falkordb
+done
 ```
+
+### 2.2 Edit the /etc/hosts file and add the node container hostnames
+
+For the host to be able to connect to the nodes using the container names, please update your `/etc/hosts` file using the following command.
 
 ```bash
-docker run -d \
-  --name node2 \
-  --network falkordb-cluster-network \
-  -p 6380:6379 \
-  -e 'FALKORDB_ARGS=--cluster-enabled yes' \
-  falkordb/falkordb
+for i in {1..6};do
+  sudo echo "127.0.0.1 node$i" | sudo tee -a /etc/hosts
+done
 ```
 
-```bash
-docker run -d \
-  --name node3 \
-  --network falkordb-cluster-network \
-  -p 6381:6379 \
-  -e 'FALKORDB_ARGS=--cluster-enabled yes' \
-  falkordb/falkordb
-```
-
-```bash
-docker run -d \
-  --name node4 \
-  --network falkordb-cluster-network \
-  -p 6382:6379 \
-  -e 'FALKORDB_ARGS=--cluster-enabled yes' \
-  falkordb/falkordb
-```
-
-```bash
-docker run -d \
-  --name node5 \
-  --network falkordb-cluster-network \
-  -p 6383:6379 \
-  -e 'FALKORDB_ARGS=--cluster-enabled yes' \
-  falkordb/falkordb
-```
-
-```bash
-docker run -d \
-  --name node6 \
-  --network falkordb-cluster-network \
-  -p 6384:6379 \
-  -e 'FALKORDB_ARGS=--cluster-enabled yes' \
-  falkordb/falkordb
-```
-
-In this command, the --network falkordb-cluster-network flag connects the container to the network created in Step 1.
 
 ## Step 3: Configuring the Cluster
 
-Once all nodes are up, you need to connect them to form a cluster. Use the redis-cli tool inside one of the nodes to initiate the cluster setup.
+Once all nodes are up, you need to connect them to form a cluster. Use the `redis-cli` tool inside one of the nodes to initiate the cluster setup.
 
-### 3.1 Connect to a Node
+### 3.1 Initiate the Cluster
 
-```bash
-docker exec -it node1 /bin/bash
-```
-
-### 3.2 Initiate the Cluster
-
-Inside the container, use the following command to form the cluster:
+This command will join node1-node6 into a cluster.
 
 ```bash
-redis-cli --cluster create node1:6379 node2:6379 node3:6379 node4:6379 node5:6379 node6:6379 --cluster-replicas 1
+docker exec -it node1 redis-cli --cluster create node1:6379 node2:6380 node3:6381 node4:6382 node5:6383 node6:6384 --cluster-replicas 1 --cluster-yes
 ```
 
-This command will join node1, node2, and node3 into a cluster.
-
-### 3.3 Verify Cluster Status
+### 3.2 Verify Cluster Status
 
 You can verify the status of the cluster with:
 
 ```bash
-redis-cli --cluster check node1:6379
+docker exec -it node1 redis-cli --cluster check node1:6379
 ```
 This command will display the status of each node and their roles (master/replica).
+
+### 3.3 Create a Graph to test deployment
+
+The following query will create a graph named "network" within your cluster.
+
+```bash
+redis-cli -c GRAPH.QUERY network "UNWIND range(1, 100) AS id CREATE (n:Person {id: id, name: 'Person ' + toString(id), age: 20 + id % 50})"
+```
 
 ## Step 4: Scaling the Cluster
 
@@ -128,21 +96,27 @@ For example, to add a new node:
 
 ```bash
 docker run -d \
-  --name node7 \
-  --network falkordb-cluster-network \
-  -p 6385:6379 \
-  -e 'FALKORDB_ARGS=--cluster-enabled yes' \
-  falkordb/falkordb
+    --name node7 \
+    --hostname node7 \
+    --network falkordb-cluster-network \
+    -p 6385:6385 \
+    -e BROWSER=0 \
+    -e "FALKORDB_ARGS=--port 6385 --cluster-enabled yes --cluster-announce-ip node7 --cluster-announce-port 6385" \
+    falkordb/falkordb
 ```
 
 ### 4.2 Add the Node to the Cluster
 
 ```bash
-docker exec -it node1 /bin/bash
-redis-cli --cluster add-node node7:6379 node1:6379
+docker exec -it node1 redis-cli --cluster add-node node7:6385 node1:6379
 ```
-
 This will add node7 into the existing cluster.
+
+### 4.3 Add the new node to the /etc/hosts file
+
+```bash
+sudo echo "127.0.0.1 node7" | sudo tee -a /etc/hosts
+```
 
 ## Conclusion
 
