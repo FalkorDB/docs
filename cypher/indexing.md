@@ -189,7 +189,7 @@ GRAPH.QUERY DEMO_GRAPH "CALL db.idx.fulltext.drop('Movie')"
 ```
 
 ## Creating Full-Text indexing for Relation Labels
-To create a full-text index on the name property of all relations with the label Manager and enable phonetic search, use the following synax:
+To create a full-text index on the name property of all relations with the label Manager and enable phonetic search, use the following syntax:
 
 
 ```sh
