@@ -201,7 +201,7 @@ To search for specific words within the indexed relations, use:
 
 ```sh
 GRAPH.QUERY DEMO_GRAPH
-"CALL db.idx.fulltext.queryRelations('Manager', 'Charlie Munger') YIELD relation RETURN relation.name"
+"CALL db.idx.fulltext.queryRelationships('Manager', 'Charlie Munger') YIELD relationship RETURN relationship.name"
 ```
 
 ## Deleting a Full-Text Index
