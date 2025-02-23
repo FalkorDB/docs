@@ -18,7 +18,7 @@ FalkorDB delivers an **accurate, multi-tenant RAG solution powered by a low-late
 
 * Our solution is purpose-built for development teams working with complex, interconnected data—whether structured or unstructured—in real-time or interactive user environments. 
 
-* The system supports the OpenCypher query language with proprietary enhancements that streamline interactions with graph data. Its efficient graph traversal and query capabilities render it well-suited for production environments.
+* The system supports the OpenCypher query language with proprietary enhancements that streamline interactions with graph data, and its efficient graph traversal and query capabilities render it well-suited for production environments.
 
 ### Choose Your Path
 *   **Graph Path:** If you're interested in utilizing FalkorDB as a property graph database with OpenCypher support, continue with the sections below.
@@ -29,7 +29,7 @@ FalkorDB delivers an **accurate, multi-tenant RAG solution powered by a low-late
 
 * Adopts the [Property Graph Model](https://github.com/opencypher/openCypher/blob/master/docs/property-graph-model.adoc)
 * Supports [OpenCypher](http://www.opencypher.org/) query language with proprietary extensions
-* Offers [Full-Text Search](/cypher/indexing#full-text-indexing), [Vector Similarly](/cypher/indexing#vector-indexing) & [Numeric indexing](/cypher/indexing).
+* Offers [Full-Text Search](/cypher/indexing#full-text-indexing), [Vector Similarity](/cypher/indexing#vector-indexing) & [Numeric indexing](/cypher/indexing).
 * Interacts via either [RESP](https://redis.io/docs/reference/protocol-spec/) and [Bolt](https://en.wikipedia.org/wiki/Bolt_(network_protocol)) protocols
 * Graphs represented as sparse adjacency matrices
 * Supports GraphRAG with the [GraphRAG SDK](https://github.com/FalkorDB/GraphRAG-SDK) for advanced graph reasoning and generative AI tasks.
