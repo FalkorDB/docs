@@ -2,7 +2,7 @@
 title: "Rest API"
 nav_order: 1
 description: "Rest API detailed doc"
-parent: "integration"
+parent: "Integration"
 ---
 
 ## Table of Contents
