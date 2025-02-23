@@ -358,3 +358,4 @@ Explainer
 propname
 propvalue
 ro
+GenAI
