@@ -206,7 +206,31 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 }
 {% endcapture %}
 
-{% include code_tabs.html id="code_tabs_0" python=python_code javascript=javascript_code java=java_code rust=rust_code %}
+{% capture shell_code %}
+$ redis-cli -h localhost -p 6379
+
+127.0.0.1:6379> GRAPH.QUERY MotoGP "CREATE (:Rider {name:'Valentino Rossi'})-[:rides]->(:Team {name:'Yamaha'}), (:Rider {name:'Dani Pedrosa'})-[:rides]->(:Team {name:'Honda'}), (:Rider {name:'Andrea Dovizioso'})-[:rides]->(:Team {name:'Ducati'})"
+1) 1) "Labels added: 2"
+   2) "Nodes created: 6"
+   3) "Properties set: 6"
+   4) "Relationships created: 3"
+   5) "Cached execution: 0"
+   6) "Query internal execution time: 9.155705 milliseconds"
+
+127.0.0.1:6379> GRAPH.QUERY MotoGP "MATCH (r:Rider)-[:rides]->(t:Team) WHERE t.name = 'Yamaha' RETURN r.name"
+1) 1) "r.name"
+2) 1) 1) "Valentino Rossi"
+3) 1) "Cached execution: 0"
+   2) "Query internal execution time: 5.389149 milliseconds"
+
+127.0.0.1:6379> GRAPH.QUERY MotoGP "MATCH (r:Rider)-[:rides]->(t:Team {name:'Ducati'}) RETURN count(r)"
+1) 1) "count(r)"
+2) 1) 1) (integer) 1
+3) 1) "Cached execution: 0"
+   2) "Query internal execution time: 1.153678 milliseconds"
+{% endcapture %}
+
+{% include code_tabs.html id="code_tabs_0" python=python_code javascript=javascript_code java=java_code rust=rust_code shell=shell_code %}
 
 For additional demos please see visit [Demos](https://github.com/FalkorDB/demos).
 
