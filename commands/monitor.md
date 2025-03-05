@@ -36,7 +36,7 @@ Each line includes the following:
 ## Considerations
 
 - **Security:** Ensure `MONITOR` is used only by trusted users. It exposes all incoming commands, including potentially sensitive data.
-- **Overhead:** `MONITOR` can slow down the database, especially under high load, due to the additional I/O required to stream the logs.
+- **Overhead:** `MONITOR` can slow down the database, especially under high load, due to the additional I/O required for streaming the logs.
 - **Connection Restriction:** Typically, `MONITOR` should be run from a dedicated connection. Mixing it with other commands can result in undefined behavior.
 
 ## Terminating MONITOR
