@@ -2,7 +2,7 @@
 title: "MONITOR"
 nav_order: 110
 description: >
-  Allows to observe all requests processed by the database in real-time. 
+  Allows you to observe all requests processed by the database in real-time.
 parent: "Commands"    
 ---
 
