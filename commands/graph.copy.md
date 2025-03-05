@@ -9,8 +9,7 @@ parent: "Commands"
 
 Usage: `GRAPH.COPY <src> <dest>`
 
-The `GRAPH.COPY` command creates a copy of a graph, while the copy is performed
-the `src` graph is fully accessible.
+The GRAPH.COPY command creates a copy of a graph while leaving the source graph fully accessible.
 
 Example:
 
@@ -45,7 +44,7 @@ graph_a = db.select_graph('A')
 result = graph_a.query('CREATE (:Account {number: 516637})')
 
 # Copy Graph 'A' to 'Z'
-graph_z = graph_a.copy('A', 'Z')
+graph_z = graph_a.copy('Z')
 
 # Graphs list including 'A' and 'Z'
 graph_list = db.list()
