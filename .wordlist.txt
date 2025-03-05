@@ -348,3 +348,15 @@ hostnames
 bigmac
 calmcode
 io
+kafka
+readme
+github
+pre
+html
+body
+table
+Explainer
+propname
+propvalue
+ro
+GenAI
