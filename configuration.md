@@ -412,7 +412,7 @@ Delta max pending changes determines the number of creations & deletions held
 by delta matrices before a matrix flush is required, setting this value too low
 will result in frequent matrix flush which will hurt performance, setting this value
 too high will also effect performance as
-intermidate delta matrices will incure a large number of changes.
+intermediate delta matrices will incur a large number of changes.
 
 Defaults to: `10000`
 
