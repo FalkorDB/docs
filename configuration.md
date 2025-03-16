@@ -63,32 +63,31 @@ GRAPH.CONFIG GET *
 
 Values set using `GRAPH.CONFIG SET` are not persisted after server restart.
 
-## FalkorDB configuration parameters
+## FalkorDB Configuration Parameters
 
-The following table summarizes which configuration parameters can be set at module load-time and which can also be set at run-time:
+FalkorDB supports various configuration parameters that can be set at **load-time** (module initialization) and/or **run-time** (during operation). The table below uses `✓` for supported settings and `✗` for unsupported settings. 
 
-| Configuration Parameter                                      | Load-time| Run-time|
-| :-------                                                     | :-----| :-----|
-| [THREAD_COUNT](#thread_count)                                | V     | X     |
-| [CACHE_SIZE](#cache_size)                                    | V     | X     |
-| [OMP_THREAD_COUNT](#omp_thread_count)                        | V     | X     |
-| [NODE_CREATION_BUFFER](#node_creation_buffer)                | V     | X     |
-| [BOLT_PORT](#bolt_port)                                      | V     | X     |
-| [MAX_QUEUED_QUERIES](#max_queued_queries)                    | V     | V     |
-| [TIMEOUT](#timeout) (deprecated in v2.10)                    | V     | V     |
-| [TIMEOUT_MAX](#timeout_max) (since v2.10)                    | V     | V     |
-| [TIMEOUT_DEFAULT](#timeout_default) (since v2.10)            | V     | V     |
-| [RESULTSET_SIZE](#resultset_size)                            | V     | V     |
-| [QUERY_MEM_CAPACITY](#query_mem_capacity)                    | V     | V     |
-| [VKEY_MAX_ENTITY_COUNT](#vkey_max_entity_count)              | V     | V     |
-| [EFFECTS_THRESHOLD](#effects_threshold)                      | V     | V     |
-| [CMD_INFO](#cmd_info)                                        | V     | V     |
-| [MAX_INFO_QUERIES](#max_info_queries)                        | V     | V     |
-| [IMPORT_FOLDER](#import_folder)                              | V     | X     |
-| [DELAY_INDEXING](#delay_indexing)                            | V     | X     |
-| [DELTA_MAX_PENDING_CHANGES](#delta_max_pending_changes)      | V     | X     |
-| [ASYNC_DELETE](#async_delete)                                | V     | X     |
-
+| Configuration Parameter                               | Load-time | Run-time | Notes                     |
+|:------------------------------------------------------|:---------:|:--------:|:--------------------------|
+| [THREAD_COUNT](#thread_count)                         |    ✓      |    ✗     |                           |
+| [CACHE_SIZE](#cache_size)                             |    ✓      |    ✗     |                           |
+| [OMP_THREAD_COUNT](#omp_thread_count)                 |    ✓      |    ✗     |                           |
+| [NODE_CREATION_BUFFER](#node_creation_buffer)         |    ✓      |    ✗     |                           |
+| [BOLT_PORT](#bolt_port)                               |    ✓      |    ✗     |                           |
+| [MAX_QUEUED_QUERIES](#max_queued_queries)             |    ✓      |    ✓     |                           |
+| [TIMEOUT](#timeout)                                   |    ✓      |    ✓     | *Deprecated in v2.10*     |
+| [TIMEOUT_MAX](#timeout_max)                           |    ✓      |    ✓     | *Introduced in v2.10*     |
+| [TIMEOUT_DEFAULT](#timeout_default)                   |    ✓      |    ✓     | *Introduced in v2.10*     |
+| [RESULTSET_SIZE](#resultset_size)                     |    ✓      |    ✓     |                           |
+| [QUERY_MEM_CAPACITY](#query_mem_capacity)             |    ✓      |    ✓     |                           |
+| [VKEY_MAX_ENTITY_COUNT](#vkey_max_entity_count)       |    ✓      |    ✓     |                           |
+| [EFFECTS_THRESHOLD](#effects_threshold)               |    ✓      |    ✓     |                           |
+| [CMD_INFO](#cmd_info)                                 |    ✓      |    ✓     |                           |
+| [MAX_INFO_QUERIES](#max_info_queries)                 |    ✓      |    ✓     |                           |
+| [IMPORT_FOLDER](#import_folder)                       |    ✓      |    ✗     |                           |
+| [DELAY_INDEXING](#delay_indexing)                     |    ✓      |    ✗     |                           |
+| [DELTA_MAX_PENDING_CHANGES](#delta_max_pending_changes)|    ✓      |    ✗     |                           |
+| [ASYNC_DELETE](#async_delete)                         |    ✓      |    ✗     |                           |
 ---
 
 ### THREAD_COUNT
