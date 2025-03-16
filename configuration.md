@@ -85,6 +85,9 @@ The following table summarizes which configuration parameters can be set at modu
 | [CMD_INFO](#cmd_info)                                        | V     | V     |
 | [MAX_INFO_QUERIES](#max_info_queries)                        | V     | V     |
 | [IMPORT_FOLDER](#import_folder)                              | V     | X     |
+| [DELAY_INDEXING](#delay_indexing)                            | V     | X     |
+| [DELTA_MAX_PENDING_CHANGES](#delta_max_pending_changes)      | V     | X     |
+| [ASYNC_DELETE](#async_delete)                                | V     | X     |
 
 ---
 
@@ -389,3 +392,37 @@ The import folder configuration specifies an absolute path to a folder from whic
 FalkorDB is allowed to load CSV files.
 
 Defaults to: `/var/lib/FalkorDB/import/`
+
+---
+
+### DELAY_INDEXING
+
+Delay indexing configuration if set to `yes` will delay index construction during
+database load, speeding up the overall loading time, indexes will be constructed
+asynchronously once the DB is fully loaded, during construction time the database
+is fully functional.
+
+Defaults to: `no`
+
+---
+
+### DELTA_MAX_PENDING_CHANGES
+
+Delta max pending changes determines the number of creations & deletions held
+by delta matrices before a matrix flush is required, setting this value too low
+will result in frequent matrix flush which will hurt performance, setting this value
+too high will also effect performance as
+intermidate delta matrices will incure a large number of changes.
+
+Defaults to: `10000`
+
+---
+
+### ASYNC_DELETE
+
+Controls how graphs are discarded, when set to `yes` graph are freed on a dedicated thread
+leaving the server's main thread free,
+otherwise graphs are freed on the server's main thread.
+
+Defaults to `yes`
+
