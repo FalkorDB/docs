@@ -198,7 +198,7 @@ $ redis-cli GRAPH.CONFIG SET MAX_QUEUED_QUERIES 500
 
 ### TIMEOUT
 
-(Deprecated in FalkorDB v2.10 It is recommended to use `TIMEOUT_MAX` and `TIMEOUT_DEFAULT` instead)
+(**Deprecated**. It is recommended to use `TIMEOUT_MAX` and `TIMEOUT_DEFAULT` instead)
 
 The `TIMEOUT` configuration parameter specifies the default maximal execution time for read queries, in milliseconds. Write queries do not timeout.
 
