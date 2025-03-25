@@ -20,3 +20,14 @@ aux_links_new_tab: true
 
 plugins:
   - jekyll-sitemap
+
+# Footer last edited timestamp
+last_edit_timestamp: true 
+last_edit_time_format: "%b %e %Y at %I:%M %p" # uses ruby's time format: https://ruby-doc.org/stdlib-2.7.0/libdoc/time/rdoc/Time.html
+
+# Footer "Edit this page on GitHub" link text
+gh_edit_link: true
+gh_edit_link_text: "Edit this page on GitHub."
+gh_edit_repository: "https://github.com/FalkorDB/docs/"
+gh_edit_branch: "main"
+gh_edit_view_mode: "edit"
