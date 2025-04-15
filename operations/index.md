@@ -1,6 +1,6 @@
 ---
 title: "Operations"
-nav_order: 10
+nav_order: 12
 description: "Configuring FalkorDB Docker"
 ---
 

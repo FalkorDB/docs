@@ -1,6 +1,6 @@
 ---
 title: "BOLT protocol support"
-nav_order: 10
+nav_order: 11
 description: "Connecting to FalkorDB using BOLT protocol."
 ---
 

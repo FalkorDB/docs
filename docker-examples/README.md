@@ -1,6 +1,6 @@
 ---
 title: Building Docker
-nav_order: 6
+nav_order: 8
 description: "Building docker container examples"
 ---
 

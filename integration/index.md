@@ -2,7 +2,7 @@
 title: "Integration"
 description: "Learn how to integrate FalkorDB into your applications with REST APIs"
 has_children: true
-nav_order: 5
+nav_order: 7
 ---
 
 # Integration
