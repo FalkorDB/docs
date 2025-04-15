@@ -14,4 +14,6 @@ Learn how to leverage FalkorDB's flexible APIs and SDKs to build high-performanc
 ## Topics in This Section
 
 - [REST API](./rest.md): Learn how to interact with FalkorDB using its REST API for seamless integration with your applications.
+- [Kafka Connect](./kafka-connect.md): Learn how to interact with FalkorDB using Kafka Connect sink to replicate data from third-party applications.
+
 

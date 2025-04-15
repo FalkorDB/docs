@@ -14,6 +14,7 @@ description: >
 | [jfalkordb][jfalkordb-url]        |  [javadocs][jfalkordb-docs] | Java       | BSD        | [FalkorDB][falkordb-url]                    | [maven][jfalkordb-package]               |
 | [falkordb-rs][falkordb-rs-url]    |  [docs.rs][falkordb-rs-docs]| Rust       | MIT        | [FalkorDB][falkordb-url]                    | [crates][falkordb-rs-package]             |
 | [falkordb-go][falkordb-go-url]    |  [godoc][falkordb-go-docs] | Go       | BSD        | [FalkorDB][falkordb-url]                    | [crates][falkordb-go-package]             |
+| [NFalkorDB][nfalkordb-url]        |  [readme][nfalkordb-docs]   | C#       | Apache-2.0        | [FalkorDB][falkordb-url]                    | [crates][nfalkordb-package]             |
 
 ## Additional Clients
 
@@ -65,6 +66,9 @@ description: >
 [falkordb_ex-url]: https://github.com/georgfaust/falkordb_ex
 [falkordb_ex-author]: https://github.com/georgfaust
 
+[NFalkorDB-url]: https://github.com/falkordb/NFalkorDB
+[NFalkorDB-package]: https://www.nuget.org/packages/NFalkorDB
+[NFalkorDB-docs]: https://github.com/FalkorDB/NFalkorDB/blob/master/README.md
 
 [node-redis-url]: https://github.com/redis/node-redis
 [node-redis-package]: https://www.npmjs.com/package/redis
