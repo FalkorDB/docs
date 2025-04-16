@@ -15,7 +15,7 @@ Usage: `MONITOR`
 
 ## Example
 
-```
+```sh
 > MONITOR
 ```
 
