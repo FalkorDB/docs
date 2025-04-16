@@ -25,7 +25,7 @@ The command returns the number of replicas that have acknowledged the write oper
 
 ### Basic Usage
 
-```
+```sh
 > GRAPH.QUERY mygraph "CREATE (:Person {name: 'Alice'})"
 OK
 > WAIT 1 10000
