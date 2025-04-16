@@ -5,26 +5,37 @@ nav_order: 1
 description: "The fastest way to your knowledge"
 permalink: /
 ---
+[![Docker Hub](https://img.shields.io/docker/pulls/falkordb/falkordb?label=Docker&style=flat-square)](https://hub.docker.com/r/falkordb/falkordb/)
+[![Discord](https://img.shields.io/discord/1146782921294884966?style=flat-square)](https://discord.gg/ErBEqN9E) 
+[![Try Free](https://img.shields.io/badge/Try%20Free-FalkorDB%20Cloud-FF8101?labelColor=FDE900&style=flat-square)](https://app.falkordb.cloud)
+
+![FalkorDB Docs Readme Banner](https://github.com/user-attachments/assets/201b07e1-ac6d-4593-98cf-e58946d7766c)
 
 # FalkorDB
+### The Graph platform developers use to achieve accurate GraphRAG for enterprise GenAI
 
-[![Docker Hub](https://img.shields.io/docker/pulls/falkordb/falkordb?label=Docker)](https://hub.docker.com/r/falkordb/falkordb/)
-[![Discord](https://img.shields.io/discord/1146782921294884966?style=flat-square)](https://discord.gg/ErBEqN9E)
+### About FalkorDB
+FalkorDB delivers an **accurate, multi-tenant RAG solution powered by a low-latency, scalable graph database technology.** 
 
-[![Try Free](https://img.shields.io/badge/Try%20Free-FalkorDB%20Cloud-FF8101?labelColor=FDE900&style=for-the-badge&link=https://app.falkordb.cloud)](https://app.falkordb.cloud)
+* Our solution is purpose-built for development teams working with complex, interconnected data—whether structured or unstructured—in real-time or interactive user environments. 
 
-FalkorDB is a blazing fast graph database used for low latency & high throughput scenarios. Under the hood, it runs [GraphBLAS](http://faculty.cse.tamu.edu/davis/GraphBLAS.html) to perform graph operations using sparse linear algebra.
+* The system supports the OpenCypher query language with proprietary enhancements that streamline interactions with graph data, and its efficient graph traversal and query capabilities render it well-suited for production environments.
 
-## Primary features
+### Choose Your Path
+*   **Graph Path:** If you're interested in utilizing FalkorDB as a property graph database with OpenCypher support, continue with the sections below.
+*   **GraphRAG Path:** If you're aiming to implement advanced graph reasoning and generative AI tasks, jump directly to the [GraphRAG SDK](https://github.com/FalkorDB/GraphRAG-SDK) section [1].
 
-* Adopting the [Property Graph Model](https://github.com/opencypher/openCypher/blob/master/docs/property-graph-model.adoc)
+
+## Primary Features
+
+* Adopts the [Property Graph Model](https://github.com/opencypher/openCypher/blob/master/docs/property-graph-model.adoc)
 * Supports [OpenCypher](http://www.opencypher.org/) query language with proprietary extensions
-* Offers [Full-Text Search](/cypher/indexing#full-text-indexing), [Vector Similarly](/cypher/indexing#vector-indexing) & [Numeric indexing](/cypher/indexing).
+* Offers [Full-Text Search](/cypher/indexing#full-text-indexing), [Vector Similarity](/cypher/indexing#vector-indexing) & [Numeric indexing](/cypher/indexing).
 * Interacts via either [RESP](https://redis.io/docs/reference/protocol-spec/) and [Bolt](https://en.wikipedia.org/wiki/Bolt_(network_protocol)) protocols
 * Graphs represented as sparse adjacency matrices
 * Supports GraphRAG with the [GraphRAG SDK](https://github.com/FalkorDB/GraphRAG-SDK) for advanced graph reasoning and generative AI tasks.
 
-## Give it a try
+## Get Started
 
 Launch an instance using docker, or use [FalkorDB Clouds](https://app.falkordb.cloud)
 
@@ -196,7 +207,31 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 }
 {% endcapture %}
 
-{% include code_tabs.html id="code_tabs_0" python=python_code javascript=javascript_code java=java_code rust=rust_code %}
+{% capture shell_code %}
+$ redis-cli -h localhost -p 6379
+
+127.0.0.1:6379> GRAPH.QUERY MotoGP "CREATE (:Rider {name:'Valentino Rossi'})-[:rides]->(:Team {name:'Yamaha'}), (:Rider {name:'Dani Pedrosa'})-[:rides]->(:Team {name:'Honda'}), (:Rider {name:'Andrea Dovizioso'})-[:rides]->(:Team {name:'Ducati'})"
+1) 1) "Labels added: 2"
+   2) "Nodes created: 6"
+   3) "Properties set: 6"
+   4) "Relationships created: 3"
+   5) "Cached execution: 0"
+   6) "Query internal execution time: 9.155705 milliseconds"
+
+127.0.0.1:6379> GRAPH.QUERY MotoGP "MATCH (r:Rider)-[:rides]->(t:Team) WHERE t.name = 'Yamaha' RETURN r.name"
+1) 1) "r.name"
+2) 1) 1) "Valentino Rossi"
+3) 1) "Cached execution: 0"
+   2) "Query internal execution time: 5.389149 milliseconds"
+
+127.0.0.1:6379> GRAPH.QUERY MotoGP "MATCH (r:Rider)-[:rides]->(t:Team {name:'Ducati'}) RETURN count(r)"
+1) 1) "count(r)"
+2) 1) 1) (integer) 1
+3) 1) "Cached execution: 0"
+   2) "Query internal execution time: 1.153678 milliseconds"
+{% endcapture %}
+
+{% include code_tabs.html id="code_tabs_0" python=python_code javascript=javascript_code java=java_code rust=rust_code shell=shell_code %}
 
 For additional demos please see visit [Demos](https://github.com/FalkorDB/demos).
 

@@ -63,6 +63,7 @@ Miesha
 MotoGP
 NRedisGraph
 NaN
+NFalkorDB
 NodeJS
 Nostem
 NumItems
@@ -347,3 +348,15 @@ hostnames
 bigmac
 calmcode
 io
+kafka
+readme
+github
+pre
+html
+body
+table
+Explainer
+propname
+propvalue
+ro
+GenAI
