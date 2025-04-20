@@ -1,31 +1,29 @@
 ---
-title: "GRAPH.MEMORY"
-description: >
-    The GRAPH.MEMORY command returns detailed memory usage statistics for the specified graph.
-    This command can be used to monitor memory consumption at the graph level,
-    providing insight into how much memory is used by various internal data structures such as
-    nodes, edges, schemas, and indices.
-
+Command: "GRAPH.MEMORY"
+Description: >
+    Returns detailed memory usage statistics for a specified graph. Useful for monitoring and optimizing internal structures like nodes, edges, schemas, and indices within FalkorDB deployments.
     This information is useful for debugging, monitoring, and optimizing graph workloads in FalkorDB deployments.
-parent: "Commands"
+Parent: "Commands"
 ---
 
 # GRAPH.MEMORY
 
-The GRAPH.MEMORY command returns detailed memory usage statistics for the specified graph.
-This command can be used to monitor memory consumption at the graph level,
-providing insight into how much memory is used by various internal data structures such as
-nodes, edges, schemas, and indices.
+Returns detailed memory usage metrics for a given graph. This command helps diagnose memory bottlenecks and assess storage overhead across internal components such as:
 
-This information is useful for debugging, monitoring, and optimizing graph workloads in FalkorDB deployments.
+- Label and relation matrices
+- Node and edge storage
+- Indices and schema allocations
 
-The optional `SAMPLES` option can be provided, where count is the number of sampled graph entities.
-The samples are averaged to estimate the total size. By default, this option is set to 100.
+You can optionally sample a subset of graph entities to estimate usage. The default sample size is 100 entities.
 
+## Syntax
 
-Usage: `GRAPH.MEMORY USAGE <graph_id> [SAMPLES <count>]`
+`GRAPH.MEMORY USAGE <graph_id> [SAMPLES <count>]`
+- graph_id: ID of the target graph.
+- SAMPLES <count> (optional): Number of entities to sample for estimation (default: 100).
 
-```sh
+## Example
+```
 127.0.0.1:6379> GRAPH.MEMORY USAGE flights
  1) "total_graph_sz_mb"
  2) (integer) 1086
@@ -43,14 +41,14 @@ Usage: `GRAPH.MEMORY USAGE <graph_id> [SAMPLES <count>]`
 
 ## Output
 
-The command returns an array of key-value pairs, where each pair represents a specific memory metric and its value (in MB).
+The command returns an array of key-value pairs, each representing a specific memory metric and its value (in MB).
 
 | Metric Name                | Type    | Description                                                                                   |
 |:---------------------------|:--------|:---------------------------------------------------|
 | `total_graph_sz_mb`        | integer | Total memory consumed by the graph.                |
 | `label_matrices_sz_mb`     | integer | Amount of memory used for node labels tracking.    |
 | `relation_matrices_sz_mb`  | integer | Amount of memory used for graph topology tracking. |
-| `node_storage_sz_mb`       | integer | Amount of memory used for nodes storage.           |
-| `edge_storage_sz_mb`       | integer | Amount of memory used for relationships storage.   |
+| `node_storage_sz_mb`       | integer | Amount of memory used for node storage.           |
+| `edge_storage_sz_mb`       | integer | Amount of memory used for relationship storage.   |
 | `indices_sz_mb`            | integer | Amount of memory consumed by indices.              |
 
