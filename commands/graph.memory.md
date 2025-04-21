@@ -33,9 +33,9 @@ Usage: `GRAPH.MEMORY USAGE <graph_id> [SAMPLES <count>]`
  4) (integer) 96
  5) "relation_matrices_sz_mb"
  6) (integer) 64
- 7) "node_storage_sz_mb"
+ 7) "amortized_node_storage_sz_mb"
  8) (integer) 120
- 9) "edge_storage_sz_mb"
+ 9) "amortized_edge_storage_sz_mb"
 10) (integer) 54
 11) "indices_sz_mb"
 12) (integer) 752
@@ -45,12 +45,12 @@ Usage: `GRAPH.MEMORY USAGE <graph_id> [SAMPLES <count>]`
 
 The command returns an array of key-value pairs, where each pair represents a specific memory metric and its value (in MB).
 
-| Metric Name                | Type    | Description                                                                                   |
-|:---------------------------|:--------|:---------------------------------------------------|
-| `total_graph_sz_mb`        | integer | Total memory consumed by the graph.                |
-| `label_matrices_sz_mb`     | integer | Amount of memory used for node labels tracking.    |
-| `relation_matrices_sz_mb`  | integer | Amount of memory used for graph topology tracking. |
-| `node_storage_sz_mb`       | integer | Amount of memory used for nodes storage.           |
-| `edge_storage_sz_mb`       | integer | Amount of memory used for relationships storage.   |
-| `indices_sz_mb`            | integer | Amount of memory consumed by indices.              |
+| Metric Name                    | Type    | Description                                        |
+|:-------------------------------|:--------|:---------------------------------------------------|
+| `total_graph_sz_mb`            | integer | Total memory consumed by the graph.                |
+| `label_matrices_sz_mb`         | integer | Amount of memory used for node labels tracking.    |
+| `relation_matrices_sz_mb`      | integer | Amount of memory used for graph topology tracking. |
+| `amortized_node_storage_sz_mb` | integer | Amount of memory used for nodes storage.           |
+| `amortized_edge_storage_sz_mb` | integer | Amount of memory used for relationships storage.   |
+| `indices_sz_mb`                | integer | Amount of memory consumed by indices.              |
 
