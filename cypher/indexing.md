@@ -249,7 +249,7 @@ CREATE VECTOR INDEX FOR ()-[e:Call]->() ON (e.summary) OPTIONS {dimension:128, s
 ```
 
 Please note, when creating a vector index, both the vector dimension and similarity function
-must be provided. At the moment the only supported similarity function is 'euclidean'.
+must be provided. At the moment the only supported similarity functions are 'euclidean' or 'cosine'.
 
 ## Inserting vectors
 
