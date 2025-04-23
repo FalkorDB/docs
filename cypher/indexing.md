@@ -2,13 +2,15 @@
 title: "Indexing"
 nav_order: 21
 description: >
-    FalkorDB supports single-property indexes for node labels and for relationship type. String, numeric, and geospatial data types can be indexed.
+    FalkorDB supports single-property indexes for node labels and for relationship type.
+    String, boolean, numeric, geospatial and array data types can be indexed.
 parent: "Cypher Language"
 ---
 
 # Indexing
 
-FalkorDB supports single-property indexes for node labels and for relationship type. String, numeric, and geospatial data types can be indexed.
+FalkorDB supports single-property indexes for node labels and for relationship type.
+String, boolean, numeric, geospatial and array data types can be indexed.
 
 ## Creating an index for a node label
 
@@ -48,6 +50,28 @@ GRAPH.QUERY DEMO_GRAPH
 ```
 
 Geospatial indexes can currently only be leveraged with `<` and `<=` filters; matching nodes outside of the given radius is performed using conventional matching.
+
+### Array values
+FalkorDB can index arrays, this alows for a quick lookup of individual array elements.
+For example: when we want to find Student nodes which have at the grade 92 in their `score_card` array attribute
+
+```
+// Index Student score_card
+GRAPH.QUERY DEMO_GRAPH "CREATE INDEX FOR (s:Student) ON (s.score_card)"
+
+// Introduce a few Student nodes
+GRAPH.QUERY DEMO_GRAPH "CREATE (:Student {score_card:[83, 62, 91, 87]}), (:Student {score_card:[73, 89, 75, 96]})"
+
+// Look up students with a score of 91 on their score card
+GRAPH.QUERY DEMO_GRAPH "MATCH (s:Student) WHERE 91 IN s.score_card RETURN s"
+```
+
+Using the `IN` predicate we can specify the element we're searching for in the
+entities array attribute. Please note that the array can contain a mixture of different data types
+e.g.: `CREATE (:Student {score_card:[true, 'str', 91, -2.1, point({latitude: 30, longitude: 32})]})`
+
+At the moment only string, boolean and numeric elements are indexed, any other data type
+will not be able to utilize the index, and will cause FalkorDB to fallback on non index scan.
 
 ## Creating an index for a relationship type
 
