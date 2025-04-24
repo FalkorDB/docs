@@ -52,7 +52,7 @@ GRAPH.QUERY DEMO_GRAPH
 Geospatial indexes can currently only be leveraged with `<` and `<=` filters; matching nodes outside of the given radius is performed using conventional matching.
 
 ### Array values
-FalkorDB can index arrays, this alows for a quick lookup of individual array elements.
+FalkorDB can index arrays, this allows for a quick lookup of individual array elements.
 For example: when we want to find Student nodes which have at the grade 92 in their `score_card` array attribute
 
 ```
