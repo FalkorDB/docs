@@ -52,7 +52,7 @@ Geospatial indexes can currently only be leveraged with `<` and `<=` filters; ma
 
 ### Array values
 FalkorDB can index arrays, this allows for a quick lookup of individual array elements.
-For example: when we want to find Student nodes which have at the grade 92 in their `score_card` array attribute
+For example, to find Student nodes with a grade of 92 in their `score_card` array attribute.
 
 ```
 // Index Student score_card
@@ -69,8 +69,8 @@ Using the `IN` predicate we can specify the element we're searching for in the
 entities array attribute. Please note that the array can contain a mixture of different data types
 e.g.: `CREATE (:Student {score_card:[true, 'str', 91, -2.1, point({latitude: 30, longitude: 32})]})`
 
-At the moment only string, boolean and numeric elements are indexed, any other data type
-will not be able to utilize the index, and will cause FalkorDB to fallback on non index scan.
+At the moment, only string, boolean, and numeric elements are indexed; any other data type
+will not be able to utilize the index and will cause FalkorDB to fall back to a non-index scan.
 
 ## Creating an index for a relationship type
 
