@@ -9,8 +9,7 @@ parent: "Cypher Language"
 
 # Indexing
 
-FalkorDB supports single-property indexes for node labels and for relationship type.
-String, boolean, numeric, geospatial and array data types can be indexed.
+FalkorDB now supports single-property indexes for node labels and relationship types. It can index various data types, including strings, booleans, numerics, geospatial data, and arrays.
 
 ## Creating an index for a node label
 
