@@ -5,15 +5,13 @@ description: "Algorithms"
 
 # Algorithms
 
-## 1. [WCC](/algorithms/wcc)
+## 1. [WCC](/algorithms/algo_wcc)
 
-## 2. [PageRank](/algorithms/pagerank)
+## 2. [PageRank](/algorithms/algo_pagerank)
 
-## 3. [All Neighbors](/algorithms/all_neighbors)
+## 3. [All Paths](/algorithms/algo_spath)
 
-## 4. [All Paths](/algorithms/all_paths)
+## 4. [All Shortest Paths](/algorithms/algo_sspath)
 
-## 5. [All Shortest Paths](/algorithms/all_shortest_paths)
-
-## 6. [BFS](/algorithms/bfs)
+## 5. [BFS](/algorithms/algo_bfs)
 

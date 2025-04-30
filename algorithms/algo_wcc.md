@@ -1,4 +1,9 @@
-# Weakly Connected Components (WCC) - FalkorDB Documentation
+---
+title: "Weakly Connected Components (WCC)"
+description: "Weakly Connected Components (WCC)"
+---
+
+# Weakly Connected Components (WCC)
 
 ## Overview
 
