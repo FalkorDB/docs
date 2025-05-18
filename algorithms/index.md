@@ -15,28 +15,28 @@ This overview summarizes the available algorithms and links to their individual 
 
 ## Pathfinding Algorithms
 
-- **[BFS](./algo_bfs.md)**  
+- **[BFS](./bfs.md)**  
   Performs a breadth-first search starting from a source node and optionally stopping at target nodes or maximum depth.
 
-- **[SPPATH](./algo_spath.md)**  
+- **[SPPATH](./sppath.md)**  
   Computes the shortest paths between a source and one or more destination nodes.
 
-- **[SSPATH](./algo_sspath.md)**  
+- **[SSPATH](./sspath.md)**  
   Enumerates all paths from a single source node to other nodes, based on constraints like edge filters and depth.
 
 ## Centrality Measures
 
-- **[PageRank](./algo_pagerank.md)**  
+- **[PageRank](./pagerank.md)**  
   Computes the PageRank score of each node in the graph, representing its influence based on the structure of incoming links.
 
 ## Community Detection
 
-- **[WCC (Weakly Connected Components)](./algo_wcc.md)**  
+- **[WCC (Weakly Connected Components)](./wcc.md)**  
   Finds weakly connected components in a graph, where each node is reachable from others ignoring edge directions.
 
 ---
 
 These procedures are part of FalkorDB's built-in algorithm library and are invoked using the `CALL algo.<name>(config)` syntax.  
-For path expressions like `shortestPath()` used directly in Cypher queries, refer to the [Cypher Path Functions section](../cypher).
+For path expressions like `shortestPath()` used directly in Cypher queries, refer to the [Cypher Path Functions section](../cypher/functions.md#path-functions).
 
 For feedback or contributions, visit [FalkorDB on GitHub](https://github.com/FalkorDB/docs).

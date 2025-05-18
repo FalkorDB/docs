@@ -198,12 +198,13 @@ This section contains information on all supported functions from the Cypher que
 
 ## Path functions
 
-| Function                             | Description|
-| ------------------------------------ | :----------|
-| nodes(_path_)                        | Returns a list containing all the nodes in _path_ <br> Returns null if _path_ evaluates to null         |
-| relationships(_path_)                | Returns a list containing all the relationships in _path_ <br> Returns null if _path_ evaluates to null |
-| length(_path_)                       | Return the length (number of edges) of _path_ <br> Returns null if _path_ evaluates to null             |
-| [shortestPath(...)](#shortestPath) * | Return the shortest path that resolves the given pattern                                                |
+| Function                                      | Description|
+| ----------------------------------------------| :----------|
+| nodes(_path_)                                 | Returns a list containing all the nodes in _path_ <br> Returns null if _path_ evaluates to null         |
+| relationships(_path_)                         | Returns a list containing all the relationships in _path_ <br> Returns null if _path_ evaluates to null |
+| length(_path_)                                | Return the length (number of edges) of _path_ <br> Returns null if _path_ evaluates to null             |
+| [shortestPath(...)](#about-path-functions) *          | Return the shortest path that resolves the given pattern                                                |
+| [allShortestPaths(...)](#allShortestPaths) *  | Returns all the shortest paths between a pair of entities
 
 &#42; FalkorDB-specific extensions to Cypher
 
@@ -324,15 +325,56 @@ The key names `latitude` and `longitude` are case-sensitive.
 
 The point constructed by this function can be saved as a node/relationship property or used within the query, such as in a `distance` function call.
 
-### shortestPath
+### About Path Functions
 
-The `shortestPath()` function is invoked with the form:
+The following graph:
 
-```sh
-MATCH (a {v: 1}), (b {v: 4}) RETURN shortestPath((a)-[:L*]->(b))
-```
+![Road network](../images/road_network.png)
+
+represents a road network with 7 cities (A, B, C, and so on) and 11 one-way roads. Each road has a distance (say, in kilometers) and trip time (say, in minutes).
+
+
+#### shortestPath
+
+`shortestPath` returns one of the shortest paths. If there is more than one, only one is retrieved.
 
 The sole `shortestPath` argument is a traversal pattern. This pattern's endpoints must be resolved prior to the function call, and no property filters may be introduced in the pattern. The relationship pattern may specify any number of relationship types (including zero) to be considered. If a minimum number of edges to traverse is specified, it may only be 0 or 1, while any number may be used for the maximum. If 0 is specified as the minimum, the source node will be included in the returned path. If no shortest path can be found, NULL is returned.
+
+Example Usage: Find the shortest path (by number of roads) from A to G
+
+```bash
+GRAPH.QUERY g "MATCH (a:City{name:'A'}),(g:City{name:'G'}) WITH shortestPath((a)-[*]->(g)) as p RETURN length(p), [n in nodes(p) | n.name] as pathNodes"
+1) 1) "length(p)"
+   2) "pathNodes"
+2) 1) 1) (integer) 3
+      2) "[A, D, F, G]"
+```
+
+![Road network](../images/graph_query_road.png)
+
+### allShortestPaths
+
+All `allShortestPaths` results have, by definition, the same length (number of roads).
+
+Example Usage: Find all the shortest paths (by number of roads) from A to G
+
+```bash
+GRAPH.QUERY g "MATCH (a:City{name:'A'}),(g:City{name:'G'}) WITH a,g MATCH p=allShortestPaths((a)-[*]->(g)) RETURN length(p), [n in nodes(p) | n.name] as pathNodes"
+1) 1) "length(p)"
+   2) "pathNodes"
+2) 1) 1) (integer) 3
+      2) "[A, D, F, G]"
+   2) 1) (integer) 3
+      2) "[A, C, F, G]"
+   3) 1) (integer) 3
+      2) "[A, D, E, G]"
+   4) 1) (integer) 3
+      2) "[A, B, E, G]"
+```
+
+
+
+
 
 ### JSON format
 
