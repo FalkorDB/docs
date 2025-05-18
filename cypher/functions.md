@@ -204,7 +204,7 @@ This section contains information on all supported functions from the Cypher que
 | relationships(_path_)                         | Returns a list containing all the relationships in _path_ <br> Returns null if _path_ evaluates to null |
 | length(_path_)                                | Return the length (number of edges) of _path_ <br> Returns null if _path_ evaluates to null             |
 | [shortestPath(...)](#about-path-functions) *          | Return the shortest path that resolves the given pattern                                                |
-| [allShortestPaths(...)](#allShortestPaths) *  | Returns all the shortest paths between a pair of entities
+| [allShortestPaths(...)](#about-path-functions) *  | Returns all the shortest paths between a pair of entities
 
 &#42; FalkorDB-specific extensions to Cypher
 
@@ -352,11 +352,11 @@ GRAPH.QUERY g "MATCH (a:City{name:'A'}),(g:City{name:'G'}) WITH shortestPath((a)
 
 ![Road network](../images/graph_query_road.png)
 
-### allShortestPaths
+#### allShortestPaths
 
 All `allShortestPaths` results have, by definition, the same length (number of roads).
 
-Example Usage: Find all the shortest paths (by number of roads) from A to G
+Examples Usage: Find all the shortest paths (by number of roads) from A to G
 
 ```bash
 GRAPH.QUERY g "MATCH (a:City{name:'A'}),(g:City{name:'G'}) WITH a,g MATCH p=allShortestPaths((a)-[*]->(g)) RETURN length(p), [n in nodes(p) | n.name] as pathNodes"
@@ -371,6 +371,8 @@ GRAPH.QUERY g "MATCH (a:City{name:'A'}),(g:City{name:'G'}) WITH a,g MATCH p=allS
    4) 1) (integer) 3
       2) "[A, B, E, G]"
 ```
+
+Using the unbounded traversal pattern `(a:City{name:'A'})-[*]->(g:City{name:'G'})`, FalkorDB traverses all possible paths from A to G. `ORDER BY length(p) LIMIT 5` ensures that you collect only [up to 5 shortest paths (minimal number of relationships). This approach is very inefficient because all possible paths would have to be traversed. Ideally, you would want to abort some traversals as soon as you are sure they would not result in the discovery of shorter paths. 
 
 
 

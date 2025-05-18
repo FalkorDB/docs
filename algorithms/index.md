@@ -24,6 +24,7 @@ This overview summarizes the available algorithms and links to their individual 
 - **[SSPATH](./sspath.md)**  
   Enumerates all paths from a single source node to other nodes, based on constraints like edge filters and depth.
 
+For path expressions like `shortestPath()` used directly in Cypher queries, refer to the [Cypher Path Functions section](../cypher/functions.md#path-functions).
 ## Centrality Measures
 
 - **[PageRank](./pagerank.md)**  
@@ -34,9 +35,3 @@ This overview summarizes the available algorithms and links to their individual 
 - **[WCC (Weakly Connected Components)](./wcc.md)**  
   Finds weakly connected components in a graph, where each node is reachable from others ignoring edge directions.
 
----
-
-These procedures are part of FalkorDB's built-in algorithm library and are invoked using the `CALL algo.<name>(config)` syntax.  
-For path expressions like `shortestPath()` used directly in Cypher queries, refer to the [Cypher Path Functions section](../cypher/functions.md#path-functions).
-
-For feedback or contributions, visit [FalkorDB on GitHub](https://github.com/FalkorDB/docs).
