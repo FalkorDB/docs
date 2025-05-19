@@ -51,6 +51,7 @@ YIELD path, pathWeight, pathCost
 
 ## Examples:
 Lets take this Road Network Grpah as an example:
+
 ![Road network](../images/road_network.png)
 
 ### Example: Shortest Path by Distance from City A to City G:

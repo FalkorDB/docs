@@ -76,3 +76,14 @@ CALL algo.SSpaths({
 YIELD path, pathWeight, pathCost
 RETURN pathWeight, pathCost, [n in nodes(path) | n.name] AS pathNodes
 ORDER BY pathWeight
+```
+
+#### Expected Result:
+| pathWeight | pathCost |  pathNodes |   
+| -----------|----------| ---------- |
+| `2`        | `1`      |  [A, D]    | 
+| `3`        | `1`      |  [A, B]    | 
+| `6`        | `2`      |  [A, D, C] | 
+| `7`        | `2`      |  [A, D, E] | 
+| `8`        | `1`      |  [A, C]    | 
+

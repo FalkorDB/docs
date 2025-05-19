@@ -56,47 +56,16 @@ Lets take this Social Grpah as an example:
 
 ![Graph BFS](../images/wcc.png)
 
+There are 3 different communities in this graph:
+- Alice, Bob, Charlie
+- David, Emma
+- Frank 
 
+### Example: Analyzing Social Networks
+
+Find isolated communities in a social network
 ```cypher
-CALL algo.wcc({
-  nodeLabels: ["Person"],
-  relationshipTypes: ["KNOWS"]
-})
-YIELD node, componentId
-RETURN node.name, componentId
-```
 
-### Creating a Social Network Graph
-
-```cypher
-// Create users in different communities
-CREATE 
-  // Community 1
-  (alice:User {name: 'Alice'}),
-  (bob:User {name: 'Bob'}),
-  (charlie:User {name: 'Charlie'}),
-  
-  // Community 2
-  (david:User {name: 'David'}),
-  (emma:User {name: 'Emma'}),
-  
-  // Community 3
-  (frank:User {name: 'Frank'})
-
-  // Create relationships within communities
-  (alice)-[:FOLLOWS]->(bob),
-  (bob)-[:FRIENDS_WITH]->(charlie),
-  (charlie)-[:FOLLOWS]->(alice),
-  
-  (david)-[:FRIENDS_WITH]->(emma)
-  
-  // Note that Frank is isolated and forms his own community
-```
-
-### Analyzing Social Networks
-
-```cypher
-// Find isolated communities in a social network
 CALL algo.wcc({
   nodeLabels: ["User"],
   relationshipTypes: ["FOLLOWS", "FRIENDS_WITH"],

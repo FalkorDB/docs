@@ -46,26 +46,21 @@ This example demonstrates how to use BFS to find potential friend recommendation
 
 #### Setup the Graph
 
-```
-// Create Person nodes representing users in a social network
-CREATE (alice:Person {name: 'Alice', age: 28, city: 'New York'})
-CREATE (bob:Person {name: 'Bob', age: 32, city: 'Boston'})
-CREATE (charlie:Person {name: 'Charlie', age: 35, city: 'Chicago'})
-CREATE (david:Person {name: 'David', age: 29, city: 'Denver'})
-CREATE (eve:Person {name: 'Eve', age: 31, city: 'San Francisco'})
-CREATE (frank:Person {name: 'Frank', age: 27, city: 'Miami'})
+```cypher
+CREATE 
+  (alice:Person {name: 'Alice', age: 28, city: 'New York'}),
+  (bob:Person {name: 'Bob', age: 32, city: 'Boston'}),
+  (charlie:Person {name: 'Charlie', age: 35, city: 'Chicago'}),
+  (david:Person {name: 'David', age: 29, city: 'Denver'}),
+  (eve:Person {name: 'Eve', age: 31, city: 'San Francisco'}),
+  (frank:Person {name: 'Frank', age: 27, city: 'Miami'}),
 
-// Create FRIEND relationships
-UNWIND [
-  ['Alice', 'Bob'],
-  ['Alice', 'Charlie'],
-  ['Bob', 'David'],
-  ['Charlie', 'Eve'],
-  ['David', 'Frank'],
-  ['Eve', 'Frank']
-] AS pair
-MATCH (a:Person {name: pair[0]}), (b:Person {name: pair[1]})
-CREATE (a)-[:FRIEND]->(b)
+  (alice)-[:FRIEND]->(bob),
+  (alice)-[:FRIEND]->(charlie),
+  (bob)-[:FRIEND]->(david),
+  (charlie)-[:FRIEND]->(eve),
+  (david)-[:FRIEND]->(frank),
+  (eve)-[:FRIEND]->(frank)
 ```
 
 ![Graph BFS](../images/graph_bfs.png)
