@@ -48,7 +48,12 @@ YIELD path, pathWeight, pathCost
 | `pathWeight` | Integer | Sum of the weightProp across the path |
 | `pathCost`   | Integer | Sum of the costProp across the path (if used) |
 
-## Example: Shortest Path by Distance
+
+## Examples:
+Lets take this Road Network Grpah as an example:
+![Road network](../images/road_network.png)
+
+### Example: Shortest Path by Distance from City A to City G:
 
 ```cypher
 MATCH (a:City{name:'A'}), (g:City{name:'G'})
@@ -62,7 +67,13 @@ YIELD path, pathWeight
 RETURN pathWeight, [n in nodes(path) | n.name] AS pathNodes
 ```
 
-## Example: Bounded Cost Path
+#### Expected Result:
+| pathWeight | pathNodes     |
+|------------|---------------|
+| `12`       | [A, D, E G]   | 
+
+
+### Example: Bounded Cost Path from City A to City G:
 
 ```cypher
 MATCH (a:City{name:'A'}), (g:City{name:'G'})
@@ -78,5 +89,11 @@ CALL algo.SPpaths({
 YIELD path, pathWeight, pathCost
 RETURN pathWeight, pathCost, [n in nodes(path) | n.name] AS pathNodes
 ```
+
+#### Expected Result:
+| pathWeight | pathCost | pathNodes       |   
+|------------|----------| --------------- |
+| `16`       |  `10`    | [A, D, F G]     | 
+| `14`       |  `12`    | [A, D, C F, G]  | 
 
 ---

@@ -67,6 +67,8 @@ CREATE
   (paper5)-[:CITES]->(paper4)
 ```
 
+![Graph PR](../images/graph_page_rank.png)
+
 Now we can run the PageRank algorithm on this citation network:
 
 ```cypher

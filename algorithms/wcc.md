@@ -52,6 +52,11 @@ The procedure returns a stream of records with the following fields:
 
 ## Examples
 
+Lets take this Social Grpah as an example:
+
+![Graph BFS](../images/wcc.png)
+
+
 ```cypher
 CALL algo.wcc({
   nodeLabels: ["Person"],
@@ -78,15 +83,14 @@ CREATE
   // Community 3
   (frank:User {name: 'Frank'})
 
-// Create relationships within communities
-CREATE
+  // Create relationships within communities
   (alice)-[:FOLLOWS]->(bob),
   (bob)-[:FRIENDS_WITH]->(charlie),
   (charlie)-[:FOLLOWS]->(alice),
   
   (david)-[:FRIENDS_WITH]->(emma)
   
-// Note that Frank is isolated and forms his own community
+  // Note that Frank is isolated and forms his own community
 ```
 
 ### Analyzing Social Networks

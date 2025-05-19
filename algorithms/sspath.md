@@ -26,9 +26,15 @@ YIELD path, pathWeight, pathCost
 
 ## Parameters
 
-Same as `algo.SPpaths`, except `targetNode` is omitted.
+Same as [`algo.SPpaths`](./sspath.md#syntax), except `targetNode` is omitted.
 
-## Example: All Shortest Paths by Distance (up to 10 km)
+## Examples:
+Lets take this Road Network Grpah as an example:
+
+![Road network](../images/road_network.png)
+
+
+### Example: All Shortest Paths by Distance (up to 10 km)
 
 ```cypher
 MATCH (a:City{name:'A'})
@@ -44,7 +50,20 @@ RETURN pathCost, [n in nodes(path) | n.name] AS pathNodes
 ORDER BY pathCost
 ```
 
-## Example: Top 5 Shortest Paths from A by Distance
+#### Expected Result:
+| pathCost |  pathNodes |   
+|----------| ---------- |
+| `2`      |  [A, D]    | 
+| `3`      |  [A, B]    | 
+| `6`      |  [A, D, C] | 
+| `7`      |  [A, D, E] | 
+| `8`      |  [A, B, D] | 
+| `8`      |  [A, C]    | 
+| `10`     |  [A, B, E] | 
+
+---
+
+### Example: Top 5 Shortest Paths from A by Distance
 
 ```cypher
 MATCH (a:City{name:'A'})

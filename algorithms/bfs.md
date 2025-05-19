@@ -56,20 +56,26 @@ CREATE (eve:Person {name: 'Eve', age: 31, city: 'San Francisco'})
 CREATE (frank:Person {name: 'Frank', age: 27, city: 'Miami'})
 
 // Create FRIEND relationships
-CREATE (alice)-[:FRIEND]->(bob)
-CREATE (alice)-[:FRIEND]->(charlie)
-CREATE (bob)-[:FRIEND]->(david)
-CREATE (charlie)-[:FRIEND]->(eve)
-CREATE (david)-[:FRIEND]->(frank)
-CREATE (eve)-[:FRIEND]->(frank)
+UNWIND [
+  ['Alice', 'Bob'],
+  ['Alice', 'Charlie'],
+  ['Bob', 'David'],
+  ['Charlie', 'Eve'],
+  ['David', 'Frank'],
+  ['Eve', 'Frank']
+] AS pair
+MATCH (a:Person {name: pair[0]}), (b:Person {name: pair[1]})
+CREATE (a)-[:FRIEND]->(b)
 ```
+
+![Graph BFS](../images/graph_bfs.png)
 
 #### Find Friends of Friends (Potential Recommendations)
 
 ```
 // Find Alice's friends-of-friends (potential recommendations)
-MATCH (aline:Person {name: 'Alice'})
-CALL algo.bfs(me, 2, 'FRIEND')
+MATCH (alice:Person {name: 'Alice'})
+CALL algo.bfs(alice, 2, 'FRIEND')
 YIELD nodes
 
 // Process results to get only depth 2 connections (friends of friends)
