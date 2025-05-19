@@ -5,6 +5,8 @@ description: "Rest API detailed doc"
 parent: "Integration"
 ---
 
+# Rest API
+
 ## Table of Contents
 
 - [Login - GET /api/auth/providers](#login---get-apiauthproviders)
