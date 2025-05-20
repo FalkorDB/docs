@@ -5,9 +5,9 @@ description: "Kafka Connect sink detailed doc"
 parent: "Integration"
 ---
 
+# Kafka Connect Sink
+
 ![FalkorDB x Kafka Connect Banner](https://github.com/user-attachments/assets/941bb532-8613-4135-b4c9-232a700da314)
-
-
 
 ## Get Started
 
