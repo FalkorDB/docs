@@ -52,7 +52,7 @@ The procedure returns a stream of records with the following fields:
 
 ## Examples
 
-Lets take this Social Grpah as an example:
+Lets take this Social Graph as an example:
 
 ![Graph BFS](../images/wcc.png)
 

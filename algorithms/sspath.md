@@ -29,7 +29,7 @@ YIELD path, pathWeight, pathCost
 Same as [`algo.SPpaths`](./sspath.md#syntax), except `targetNode` is omitted.
 
 ## Examples:
-Lets take this Road Network Grpah as an example:
+Lets take this Road Network Graph as an example:
 
 ![Road network](../images/road_network.png)
 

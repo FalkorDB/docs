@@ -18,10 +18,10 @@ This overview summarizes the available algorithms and links to their individual 
 - **[BFS](./bfs.md)**  
   Performs a breadth-first search starting from a source node and optionally stopping at target nodes or maximum depth.
 
-- **[SPPATH](./sppath.md)**  
+- **[SPpath](./sppath.md)**  
   Computes the shortest paths between a source and one or more destination nodes.
 
-- **[SSPATH](./sspath.md)**  
+- **[SSpath](./sspath.md)**  
   Enumerates all paths from a single source node to other nodes, based on constraints like edge filters and depth.
 
 For path expressions like `shortestPath()` used directly in Cypher queries, refer to the [Cypher Path Functions section](../cypher/functions.md#path-functions).

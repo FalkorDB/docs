@@ -50,7 +50,7 @@ YIELD path, pathWeight, pathCost
 
 
 ## Examples:
-Lets take this Road Network Grpah as an example:
+Lets take this Road Network Graph as an example:
 
 ![Road network](../images/road_network.png)
 
