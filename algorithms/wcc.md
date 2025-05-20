@@ -55,7 +55,7 @@ The procedure returns a stream of records with the following fields:
 
 Lets take this Social Graph as an example:
 
-![Graph BFS](../images/wcc.png)
+![Graph WCC](../images/wcc.png)
 
 There are 3 different communities in this graph:
 - Alice, Bob, Charlie
