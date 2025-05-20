@@ -1,7 +1,7 @@
 ---
-
 title: "algo.SSpaths"
 description: "Explore all shortest paths from a single source node with weight, cost, and length constraints."
+parent: "Algorithms"
 ---
 
 # `algo.SSpaths` - Single Source Paths
@@ -26,7 +26,7 @@ YIELD path, pathWeight, pathCost
 
 ## Parameters
 
-Same as [`algo.SPpaths`](./sspath.md#syntax), except `targetNode` is omitted.
+Same as [`algo.SPpaths`](./sppath.md), except `targetNode` is omitted.
 
 ## Examples:
 Lets take this Road Network Graph as an example:

@@ -1,6 +1,7 @@
 ---
 title: "Weakly Connected Components (WCC)"
 description: "Weakly Connected Components (WCC)"
+parent: "Algorithms"
 ---
 
 # Weakly Connected Components (WCC)

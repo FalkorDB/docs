@@ -1,6 +1,7 @@
 ---
 title: "PageRank"
-description: "PageRank"
+description: "Rank nodes based on the number and quality of edges pointing to them, simulating the likelihood of a random traversal landing on each node."
+parent: "Algorithms"
 ---
 
 # PageRank
@@ -17,6 +18,7 @@ The underlying assumption is that more important nodes are likely to receive mor
 
 The algorithm assigns each node a score, where higher scores indicate greater importance.
 The score for a node is derived recursively from the scores of the nodes that link to it, with a damping factor typically applied to prevent rank sinks.
+For example, in a network of academic papers, a paper cited by many other highly cited papers will receive a high PageRank score, reflecting its influence in the field.
 
 ## Syntax
 

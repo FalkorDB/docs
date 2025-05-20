@@ -1,3 +1,10 @@
+---
+title: "Algorithms"
+description: Graph Algorithms Overview
+nav_order: 3
+has_children: true
+---
+
 # FalkorDB Algorithms Overview
 
 FalkorDB offers a suite of graph algorithms optimized for high-performance graph analytics.  

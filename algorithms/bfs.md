@@ -1,6 +1,7 @@
 ---
 title: "BFS"
-description: "BFS"
+description: "Breadth-First Search (BFS) explores a graph level by level, visiting all neighbors of a node before moving to the next depth."
+parent: "Algorithms"
 ---
 
 # BFS
@@ -35,14 +36,10 @@ YIELD nodes, edges
 
 ## Examples
 
-### Basic BFS Traversal
-
-This example demonstrates a basic BFS traversal starting from a person node.
-
-
 ### Social Network Friend Recommendations
 
 This example demonstrates how to use BFS to find potential friend recommendations in a social network.
+By exploring friends of friends, BFS uncovers second-degree connections—people you may know through mutual friends—which are often strong candidates for relevant and meaningful recommendations.
 
 #### Setup the Graph
 

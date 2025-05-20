@@ -1,13 +1,15 @@
 ---
 title: "algo.SPpaths"
 description: "Find shortest paths between two nodes with advanced cost and length constraints."
+parent: "Algorithms"
 ---
 
 # `algo.SPpaths` - Shortest Path (Single Pair)
 
 The `algo.SPpaths` procedure finds the shortest paths between a **source** and a **target** node, optionally constrained by cost, path length, and the number of paths to return.
 
-It is designed for efficient and scalable computation of paths in large graphs, using properties like distance, time, or price as weights.
+It is designed for efficient and scalable computation of paths in large graphs, using properties like distance, time, or price as weights. 
+For example, it can be used to find the fastest driving route between two cities, the cheapest shipping option in a logistics network, or the shortest communication path in a computer network.
 
 ## Syntax
 
