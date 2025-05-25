@@ -212,6 +212,27 @@ To delete the full-text index for a specific relation label, use:
 GRAPH.QUERY DEMO_GRAPH "CALL DROP FULLTEXT INDEX FOR ()-[m:Manager]-()  ON (m.name)"
 ```
 
+## Array Indices
+
+FalkorDB supports indexing on array properties containing scalar values (e.g., integers, floats, strings), enabling efficient lookups for elements within such arrays.
+
+Note: Complex types like nested arrays, maps, or vectors are not supported for indexing.
+
+The following example demonstrates how to index and search an array property:
+
+```sh
+# Create a node with an array property
+GRAPH.QUERY DEMO_GRAPH "CREATE (:Person {samples: [-21, 30.5, 0, 90, 3.14]})"
+
+# Create an index on the array property
+GRAPH.QUERY DEMO_GRAPH "CREATE INDEX FOR (p:Person) ON (p.samples)"
+
+# Use the index to search for nodes containing a specific value in the array
+GRAPH.QUERY DEMO_GRAPH "MATCH (p:Person) WHERE 90 IN p.samples RETURN p"
+```
+
+
+
 # Vector indexing
 
 With the introduction of the `vector` data-type a new type of index was introduced.
