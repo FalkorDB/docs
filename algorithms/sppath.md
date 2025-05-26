@@ -30,25 +30,25 @@ YIELD path, pathWeight, pathCost
 
 ## Parameters
 
-| Name            | Type     | Description |
-|-----------------|----------|-------------|
-| `sourceNode`    | Node     | Starting node |
-| `targetNode`    | Node     | Destination node |
-| `relTypes`      | Array    | List of relationship types to follow |
-| `weightProp`    | String   | Property to minimize along the path (e.g., `dist`, `time`) |
-| `costProp`      | String   | Property to constrain the total value (optional) |
-| `maxCost`       | Integer  | Upper bound on total cost (optional) |
-| `maxLen`        | Integer  | Max number of relationships in the path (optional) |
-| `relDirection`  | String   | Traversal direction (`outgoing`, `incoming`, `both`) |
+| Name            | Type     | Description                                                                          |
+|-----------------|----------|--------------------------------------------------------------------------------------|
+| `sourceNode`    | Node     | Starting node                                                                        |
+| `targetNode`    | Node     | Destination node                                                                     |
+| `relTypes`      | Array    | List of relationship types to follow                                                 |
+| `weightProp`    | String   | Property to minimize along the path (e.g., `dist`, `time`)                           |
+| `costProp`      | String   | Property to constrain the total value (optional)                                     |
+| `maxCost`       | Integer  | Upper bound on total cost (optional)                                                 |
+| `maxLen`        | Integer  | Max number of relationships in the path (optional)                                   |
+| `relDirection`  | String   | Traversal direction (`outgoing`, `incoming`, `both`)                                 |
 | `pathCount`     | Integer  | Number of paths to return (0 = all shortest, 1 = default, n = max number of results) |
 
 ## Returns
 
-| Name         | Type    | Description |
-|--------------|---------|-------------|
-| `path`       | Path    | Discovered path from source to target |
-| `pathWeight` | Integer | Sum of the weightProp across the path |
-| `pathCost`   | Integer | Sum of the costProp across the path (if used) |
+| Name         | Type    | Description                                    |
+|--------------|---------|------------------------------------------------|
+| `path`       | Path    | Discovered path from source to target          |
+| `pathWeight` | Integer | Sum of the weightProp across the path          |
+| `pathCost`   | Integer | Sum of the costProp across the path (if used)  |
 
 
 ## Examples:

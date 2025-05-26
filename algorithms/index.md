@@ -32,13 +32,16 @@ This overview summarizes the available algorithms and links to their individual 
   Enumerates all paths from a single source node to other nodes, based on constraints like edge filters and depth.
 
 For path expressions like `shortestPath()` used directly in Cypher queries, refer to the [Cypher Path Functions section](../cypher/functions.md#path-functions).
+
 ## Centrality Measures
 
 - **[PageRank](./pagerank.md)**  
   Computes the PageRank score of each node in the graph, representing its influence based on the structure of incoming links.
 
+- **[Betweenness Centrality](./betweenness_centrality.md)**  
+  Calculates the number of shortest paths that pass through each node, indicating its importance as a connector in the graph.
+
 ## Community Detection
 
 - **[WCC (Weakly Connected Components)](./wcc.md)**  
   Finds weakly connected components in a graph, where each node is reachable from others ignoring edge directions.
-

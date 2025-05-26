@@ -41,7 +41,7 @@ YIELD nodes, edges
 This example demonstrates how to use BFS to find potential friend recommendations in a social network.
 By exploring friends of friends, BFS uncovers second-degree connections—people you may know through mutual friends—which are often strong candidates for relevant and meaningful recommendations.
 
-#### Setup the Graph
+#### Create the Graph
 
 ```cypher
 CREATE 

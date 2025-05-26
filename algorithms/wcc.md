@@ -51,7 +51,7 @@ The procedure returns a stream of records with the following fields:
 | `node`        | Node    | The node entity included in the component                           |
 | `componentId` | Integer | Identifier of the weakly connected component the node belongs to    |
 
-## Examples
+## Examples:
 
 Lets take this Social Graph as an example:
 
@@ -62,18 +62,50 @@ There are 3 different communities in this graph:
 - David, Emma
 - Frank 
 
-### Example: Analyzing Social Networks
+### Create the Graph
 
-Find isolated communities in a social network
 ```cypher
+CREATE 
+  (alice:User {name: 'Alice'}),
+  (bob:User {name: 'Bob'}),
+  (charlie:User {name: 'Charlie'}),
+  
+  (david:User {name: 'David'}),
+  (emma:User {name: 'Emma'}),
+  
+  (frank:User {name: 'Frank'}),
 
-CALL algo.wcc({
-  nodeLabels: ["User"],
-  relationshipTypes: ["FOLLOWS", "FRIENDS_WITH"],
-})
-YIELD componentId
+  (alice)-[:FOLLOWS]->(bob),
+  (bob)-[:FRIENDS_WITH]->(charlie),
+  (charlie)-[:FOLLOWS]->(alice),
+  
+  (david)-[:FRIENDS_WITH]->(emma)
+```
 
-// Get community sizes
-RETURN componentId AS communityId, count(*) AS communitySize
-ORDER BY communitySize DESC
+### Example: Find isolated communities in a social network
+```cypher
+CALL algo.WCC(null) yield node, componentId
+```
+
+#### Expected Results
+| node                           | componentId |
+|--------------------------------|-------------|
+| `(:User {name: "Alice"})`      | 0           |
+| `(:User {name: "Bob"})`        | 0           |
+| `(:User {name: "Charlie"})`    | 0           |
+| `(:User {name: "David"})`      | 3           |
+| `(:User {name: "Emma"})`       | 3           |
+| `(:User {name: "Frank"})`      | 5           |
+
+### Example: Group Communities together into a single list
+```cypher
+CALL algo.WCC(null) yield node, componentId return collect(node.name), componentId
+```
+
+#### Expected Results
+| collect(node.name)         | componentId |
+|----------------------------|-------------|
+| `[David, Emma]`            | 3           |
+| `[Frank]`                  | 5           |
+| `[Alice, Bob, Charlie]`    | 0           |
 ```

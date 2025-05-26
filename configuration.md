@@ -85,7 +85,6 @@ The following table summarizes which configuration parameters can be set at modu
 | [CMD_INFO](#cmd_info)                                        | V     | V     |
 | [MAX_INFO_QUERIES](#max_info_queries)                        | V     | V     |
 | [IMPORT_FOLDER](#import_folder)                              | V     | X     |
-| [DEDUPLICATE_STRINGS](#deduplicate_strings)                  | V     | X     |
 
 ---
 
@@ -393,24 +392,3 @@ FalkorDB is allowed to load CSV files.
 Defaults to: `/var/lib/FalkorDB/import/`
 
 ---
-
-### DEDUPLICATE_STRINGS
-
-Enables or disables string pooling for identical string values across nodes, edges, and properties. When enabled, FalkorDB deduplicates identical string values by referencing a single instance in memory.
-
-This reduces overall memory usage in graphs where repeated string values (such as country names, roles, or categories) are common. It can especially improve memory efficiency for large-scale graphs with many duplicated property values.
-
-#### Default
-
-`DEDUPLICATE_STRINGS` is `no`.
-
-#### Valid values
-
-- `yes`: Enables string interning (deduplication)
-- `no`: Disables string interning
-
-#### Example
-
-```sh
-$ redis-server --loadmodule ./falkordb.so DEDUPLICATE_STRINGS yes
-```
