@@ -26,17 +26,17 @@ GRAPH.MEMORY USAGE <graph-name> [SAMPLES <count>]
 
 Returns an array of memory usage values, in **MB**, corresponding to different components:
 
-| Field                                         | Description                                                   |
-|-----------------------------------------------|---------------------------------------------------------------|
-| `total_graph_sz_mb`                           | Total memory used by the graph                                |
-| `label_matrices_sz_mb`                        | Memory used to hold label matrices                            |
-| `relation_matrices_sz_mb`                     | Memory used to hold relation matrices                         |
-| `amortized_node_block_sz_mb`                  | Memory used to hold nodes matrices                            |
-| `amortized_node_attributes_by_label_sz_mb`    | Memory used to hold labeled node attributes, split by label   |
-| `amortized_unlabeled_nodes_attributes_sz_mb`  | Memory used to hold non-labeled node attributes               |
-| `amortized_edge_block_sz_mb`                  | Memory used to hold edges matrices                            |
-| `amortized_edge_attributes_by_type_sz_mb`     | Memory used to hold lebeld edge attributes, split by label    |
-| `indices_sz_mb`                               | Memory used by indices (if any)                               |
+| Field                                         | Description                                                       |
+|-----------------------------------------------|-------------------------------------------------------------------|
+| `total_graph_sz_mb`                           | Total memory used by the graph                                    |
+| `label_matrices_sz_mb`                        | Memory used by label matrices                                     |
+| `relation_matrices_sz_mb`                     | Memory used relationship type matrices                            |
+| `amortized_node_block_sz_mb`                  | Memory used by nodes                                              |
+| `amortized_node_attributes_by_label_sz_mb`    | Memory used by node attributes, split by node label               |
+| `amortized_unlabeled_nodes_attributes_sz_mb`  | Memory used by node attributes with no label                      |
+| `amortized_edge_block_sz_mb`                  | Memory used by edges                                              |
+| `amortized_edge_attributes_by_type_sz_mb`     | Memory used by edge attributes, split by relationship type        |
+| `indices_sz_mb`                               | Memory used by indices (if any)                                   |
 
 ## Example
 
