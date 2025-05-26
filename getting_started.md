@@ -81,8 +81,8 @@ You can execute these commands using the FalkorDB Python client.
 from falkordb import FalkorDB
 
 # Connect to FalkorDB
-client = FalkorDB(host="localhost", port=6379, password="your-password")
-graph = client.select_graph('social')
+db = FalkorDB(host="localhost", port=6379, password="your-password")
+graph = db.select_graph('social')
 ```
 
 ### Execute Cypher Queries
@@ -115,17 +115,15 @@ print("Graph created successfully!")
 ```python
 # Find all friends of Alice
 query = """
-
-date and time as they are right now can be confusing, either use Python to create timestamps from actual dates or consider changing the attribute to something else which doesn't require time / date datatype
-
-MATCH (alice:User {name: "Alice"})-[:FRIENDS_WITH]->(friend)
+MATCH (alice:User {name: 'Alice'})-[:FRIENDS_WITH]->(friend)
 RETURN friend.name AS Friend
 """
-result = graph.ro_query(query)
+
+result = graph.ro_query(query).result_set
 
 print("Alice's friends:")
 for record in result:
-    print(record["Friend"])
+    print(record[0])
 ```
 
 #### Query Relationships
@@ -133,14 +131,15 @@ for record in result:
 ```python
 # Find posts created by Bob
 query = """
-MATCH (bob:User {name: "Bob"})-[:CREATED]->(post:Post)
+MATCH (bob:User {name: 'Bob'})-[:CREATED]->(post:Post)
 RETURN post.content AS PostContent
 """
-result = graph.ro_query(query)
+
+result = graph.ro_query(query).result_set
 
 print("Posts created by Bob:")
 for record in result:
-    print(record["PostContent"])
+    print(record[0])
 ```
 
 ---
