@@ -46,6 +46,6 @@ For path expressions like `shortestPath()` used directly in Cypher queries, refe
 - **[WCC (Weakly Connected Components)](./wcc.md)**  
   Finds weakly connected components in a graph, where each node is reachable from others ignoring edge directions.
 
-- **[CDLP (Community Detection Label Propegation)](./cdlp.md)**
+- **[CDLP (Community Detection Label Propagation)](./cdlp.md)**
   Detects communities in a network, by propagating labels through the graph structure.
 

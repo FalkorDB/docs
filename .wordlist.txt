@@ -13,6 +13,8 @@ CMD
 CSC
 CSV
 CSVs
+CDLP
+communityId
 Cailliau
 Centos
 ColumnType
