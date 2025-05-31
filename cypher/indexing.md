@@ -8,9 +8,11 @@ parent: "Cypher Language"
 
 # Indexing
 
+## Range Index
+
 FalkorDB supports single-property indexes for node labels and for relationship type. String, numeric, and geospatial data types can be indexed.
 
-## Creating an index for a node label
+### Creating an index for a node label
 
 For a node label, the index creation syntax is:
 
@@ -49,7 +51,7 @@ GRAPH.QUERY DEMO_GRAPH
 
 Geospatial indexes can currently only be leveraged with `<` and `<=` filters; matching nodes outside of the given radius is performed using conventional matching.
 
-## Creating an index for a relationship type
+### Creating an index for a relationship type
 
 For a relationship type, the index creation syntax is:
 
@@ -69,7 +71,7 @@ GRAPH.EXPLAIN DEMO_GRAPH "MATCH (p:Person {id: 0})-[f:FOLLOW]->(fp) WHERE 0 < f.
 
 This can significantly improve the runtime of queries that traverse super nodes or when we want to start traverse from relationships.
 
-## Deleting an index for a node label
+### Deleting an index for a node label
 
 For a node label, the index deletion syntax is:
 
@@ -77,12 +79,31 @@ For a node label, the index deletion syntax is:
 GRAPH.QUERY DEMO_GRAPH "DROP INDEX ON :Person(age)"
 ```
 
-## Deleting an index for a relationship type
+### Deleting an index for a relationship type
 
 For a relationship type, the index deletion syntax is:
 
 ```sh
 GRAPH.QUERY DEMO_GRAPH "DROP INDEX ON :FOLLOW(created_at)"
+```
+
+### Array Indices
+
+FalkorDB supports indexing on array properties containing scalar values (e.g., integers, floats, strings), enabling efficient lookups for elements within such arrays.
+
+Note: Complex types like nested arrays, maps, or vectors are not supported for indexing.
+
+The following example demonstrates how to index and search an array property:
+
+```sh
+# Create a node with an array property
+GRAPH.QUERY DEMO_GRAPH "CREATE (:Person {samples: [-21, 30.5, 0, 90, 3.14]})"
+
+# Create an index on the array property
+GRAPH.QUERY DEMO_GRAPH "CREATE INDEX FOR (p:Person) ON (p.samples)"
+
+# Use the index to search for nodes containing a specific value in the array
+GRAPH.QUERY DEMO_GRAPH "MATCH (p:Person) WHERE 90 IN p.samples RETURN p"
 ```
 
 # Full-text indexing
