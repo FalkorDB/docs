@@ -427,7 +427,7 @@ Imagine a package tracking system where deliveries follow a priority-based routi
 
 ```
 MATCH p=(:Warehouse)-[s:Shipment]->(:Warehouse)
-WHERE coalesce(prev(s.priority)) <= s.priority
+WHERE coalesce(prev(s.priority), s.priority) <= s.priority
 RETURN p
 ```
 
