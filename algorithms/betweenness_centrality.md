@@ -14,7 +14,7 @@ Betweenness Centrality is a graph algorithm that quantifies the importance of a 
 
 The core idea of Betweenness Centrality is that a node is more important if it lies on many of the shortest paths connecting other nodes. It’s particularly useful in understanding information flow or communication efficiency in a graph.
 
-For example, in a social network, a person who frequently connects otherwise unconnected groups would have high betweenness centrality.
+> For example, in a social network, a person who frequently connects otherwise unconnected groups would have high betweenness centrality.
 
 ## Syntax
 
