@@ -377,6 +377,7 @@ Pathfinding
 Brin
 Sergey
 lookups
+prev
 componentId
 Betweenness
 betweenness
