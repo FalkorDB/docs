@@ -50,7 +50,7 @@ This section contains information on all supported functions from the Cypher que
 | timestamp()                       | Returns the current system timestamp (milliseconds since epoch)                                                                             |
 | type(_relationship_)              | Returns a string: the type of _relationship_ <br> Returns null when _relationship_ evaluates to null                                        |
 | typeOf(_expr_) *                  | Returns a string: the type of a literal, an expression's evaluation, an alias, a node's property, or a relationship's property <br> Return value is one of `Map`, `String`, `Integer`, `Boolean`, `Float`, `Node`, `Edge`, `List`, `Path`, `Point`, or `Null` |
-| prev(_expr_) *                  | Stores the last value it was given and returns it the next time it's called, in the first call it returns null. Usefull for variable length traverse to filter the edge by the previouse one  |
+| prev(_expr_) *                    | Stores the previous value and returns it on the next call; returns `null` on the first call. Useful for variable-length traversal filtering of edges based on the prior value.  |
 
 &#42; FalkorDB-specific extensions to Cypher
 
