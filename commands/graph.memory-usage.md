@@ -1,6 +1,7 @@
 ---
 title: "GRAPH.MEMORY USAGE"
 description: "Report memory consumption statistics for a specific graph"
+parent: "Commands"    
 ---
 
 # GRAPH.MEMORY USAGE
