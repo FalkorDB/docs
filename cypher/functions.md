@@ -50,6 +50,7 @@ This section contains information on all supported functions from the Cypher que
 | timestamp()                       | Returns the current system timestamp (milliseconds since epoch)                                                                             |
 | type(_relationship_)              | Returns a string: the type of _relationship_ <br> Returns null when _relationship_ evaluates to null                                        |
 | typeOf(_expr_) *                  | Returns a string: the type of a literal, an expression's evaluation, an alias, a node's property, or a relationship's property <br> Return value is one of `Map`, `String`, `Integer`, `Boolean`, `Float`, `Node`, `Edge`, `List`, `Path`, `Point`, or `Null` |
+| prev(_expr_) *                  | Stores the last value it was given and returns it the next time it's called, in the first call it returns null. Usefull for variable length traverse to filter the edge by the previouse one  |
 
 &#42; FalkorDB-specific extensions to Cypher
 
@@ -409,3 +410,30 @@ The format for a relationship object in JSON is:
   "end": dest_node(node)
 }
 ```
+
+### Variable length traverse filtering
+
+Consider a logistics network where:
+
+* Nodes (Warehouse) represent distribution centers.
+* Edges (Shipment) represent routes where packages are shipped.
+* Each shipment has an increasing priority level.
+
+Imagine a package tracking system where deliveries follow a priority-based routing:
+
+* Each shipment (Shipment) has a priority value (s.priority).
+* We want to ensure that package priority never decreases as it moves through the network.
+* The query filters paths where the previous shipment (prev(s.priority)) has a lower or equal priority than the current one (s.priority).
+
+```
+MATCH p=(:Warehouse)-[s:Shipment]->(:Warehouse)
+WHERE coalesce(prev(s.priority)) <= s.priority
+RETURN p
+```
+
+* MATCH p=(:Warehouse)-[s:Shipment]->(:Warehouse)
+  Finds shipment paths between warehouses.
+* WHERE coalesce(prev(s.priority)) <= s.priority
+  Ensures that priority never decreases along the route.
+* RETURN p
+  Returns valid paths where shipments maintain or increase priority.
