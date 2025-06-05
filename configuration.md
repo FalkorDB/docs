@@ -383,9 +383,12 @@ query will be replicated.
 
 ---
 
+
 ### IMPORT_FOLDER
 
 The import folder configuration specifies an absolute path to a folder from which
 FalkorDB is allowed to load CSV files.
 
 Defaults to: `/var/lib/FalkorDB/import/`
+
+---
