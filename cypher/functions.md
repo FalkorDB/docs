@@ -50,7 +50,7 @@ This section contains information on all supported functions from the Cypher que
 | timestamp()                       | Returns the current system timestamp (milliseconds since epoch)                                                                             |
 | type(_relationship_)              | Returns a string: the type of _relationship_ <br> Returns null when _relationship_ evaluates to null                                        |
 | typeOf(_expr_) *                  | Returns a string: the type of a literal, an expression's evaluation, an alias, a node's property, or a relationship's property <br> Return value is one of `Map`, `String`, `Integer`, `Boolean`, `Float`, `Node`, `Edge`, `List`, `Path`, `Point`, or `Null` |
-| prev(_expr_) *                    | Stores the previous value and returns it on the next call; returns `null` on the first call. Useful for variable-length traversal filtering of edges based on the prior value.  |
+| prev(_expr_) *                    | Stores the previous value and returns it on the next call; returns `null` on the first call. Useful for variable-length traversal filtering of edges based on the prior value. |
 
 &#42; FalkorDB-specific extensions to Cypher
 
@@ -234,7 +234,7 @@ They are a common construct in functional languages and modern high-level langua
 
 The following query collects all paths of any length, then for each produces an array containing the `name` property of every node with a `rank` property greater than 10:
 
-```sh
+```cypher
 MATCH p=()-[*]->() RETURN [node IN nodes(p) WHERE node.rank > 10 | node.name]
 ```
 
@@ -242,7 +242,7 @@ MATCH p=()-[*]->() RETURN [node IN nodes(p) WHERE node.rank > 10 | node.name]
 
 The functions `any()`, `all()`, `single()` and `none()` use a simplified form of the list comprehension syntax and return a boolean value.
 
-```sh
+```cypher
 any(element IN array WHERE condition)
 ```
 
@@ -258,7 +258,7 @@ Pattern comprehensions are a method of producing a list composed of values found
 
 The following query returns the name of a `Person` node and a list of all their friends' ages:
 
-```sh
+```cypher
 MATCH (n:Person)
 RETURN
 n.name,
@@ -267,7 +267,7 @@ n.name,
 
 Optionally, a `WHERE` clause may be embedded in the pattern comprehension to filter results. In this query, all friends' ages will be gathered for friendships that started before 2010:
 
-```sh
+```cypher
 MATCH (n:Person)
 RETURN
 n.name,
@@ -282,7 +282,7 @@ Optionally, an `ELSE` argument may also be specified to indicate what to do if n
 
 In its simple form, there is only one expression to evaluate and it immediately follows the `CASE` keyword:
 
-```sh
+```cypher
 MATCH (n)
 RETURN
 CASE n.title
@@ -294,7 +294,7 @@ END
 
 In its generic form, no expression follows the `CASE` keyword. Instead, each `WHEN` statement specifies its own expression:
 
-```sh
+```cypher
 MATCH (n)
 RETURN
 CASE
@@ -308,7 +308,7 @@ END
 
 The `reduce()` function accepts a starting value and updates it by evaluating an expression against each element of the list:
 
-```sh
+```cypher
 RETURN reduce(sum = 0, n IN [1,2,3] | sum + n)
 ```
 
@@ -318,7 +318,7 @@ RETURN reduce(sum = 0, n IN [1,2,3] | sum + n)
 
 The `point()` function expects one map argument of the form:
 
-```sh
+```cypher
 RETURN point({latitude: lat_value, longitude: lon_val})
 ```
 
@@ -344,7 +344,7 @@ The sole `shortestPath` argument is a traversal pattern. This pattern's endpoint
 Example Usage: Find the shortest path (by number of roads) from A to G
 
 ```bash
-GRAPH.QUERY g "MATCH (a:City{name:'A'}),(g:City{name:'G'}) WITH shortestPath((a)-[*]->(g)) as p RETURN length(p), [n in nodes(p) | n.name] as pathNodes"
+$ GRAPH.QUERY g "MATCH (a:City{name:'A'}),(g:City{name:'G'}) WITH shortestPath((a)-[*]->(g)) as p RETURN length(p), [n in nodes(p) | n.name] as pathNodes"
 1) 1) "length(p)"
    2) "pathNodes"
 2) 1) 1) (integer) 3
@@ -360,7 +360,7 @@ All `allShortestPaths` results have, by definition, the same length (number of r
 Examples Usage: Find all the shortest paths (by number of roads) from A to G
 
 ```bash
-GRAPH.QUERY g "MATCH (a:City{name:'A'}),(g:City{name:'G'}) WITH a,g MATCH p=allShortestPaths((a)-[*]->(g)) RETURN length(p), [n in nodes(p) | n.name] as pathNodes"
+$ GRAPH.QUERY g "MATCH (a:City{name:'A'}),(g:City{name:'G'}) WITH a,g MATCH p=allShortestPaths((a)-[*]->(g)) RETURN length(p), [n in nodes(p) | n.name] as pathNodes"
 1) 1) "length(p)"
    2) "pathNodes"
 2) 1) 1) (integer) 3
@@ -374,10 +374,6 @@ GRAPH.QUERY g "MATCH (a:City{name:'A'}),(g:City{name:'G'}) WITH a,g MATCH p=allS
 ```
 
 Using the unbounded traversal pattern `(a:City{name:'A'})-[*]->(g:City{name:'G'})`, FalkorDB traverses all possible paths from A to G. `ORDER BY length(p) LIMIT 5` ensures that you collect only [up to 5 shortest paths (minimal number of relationships). This approach is very inefficient because all possible paths would have to be traversed. Ideally, you would want to abort some traversals as soon as you are sure they would not result in the discovery of shorter paths. 
-
-
-
-
 
 ### JSON format
 
@@ -425,15 +421,15 @@ Imagine a package tracking system where deliveries follow a priority-based routi
 * We want to ensure that package priority never decreases as it moves through the network.
 * The query filters paths where the previous shipment (prev(s.priority)) has a lower or equal priority than the current one (s.priority).
 
-```
+```cypher
 MATCH p=(:Warehouse)-[s:Shipment]->(:Warehouse)
 WHERE coalesce(prev(s.priority), s.priority) <= s.priority
 RETURN p
 ```
 
-* MATCH p=(:Warehouse)-[s:Shipment]->(:Warehouse)
+* `MATCH p=(:Warehouse)-[s:Shipment]->(:Warehouse)`
   Finds shipment paths between warehouses.
-* WHERE coalesce(prev(s.priority)) <= s.priority
+* `WHERE coalesce(prev(s.priority)) <= s.priority`
   Ensures that priority never decreases along the route.
-* RETURN p
+* `RETURN p`
   Returns valid paths where shipments maintain or increase priority.
