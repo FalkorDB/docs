@@ -21,11 +21,9 @@ WCC serves as a common algorithm in scenarios such as:
 WCC initializes by assigning each node to its own component. It iteratively scans for edges linking nodes across different components and merges them, ignoring the directionality of edges throughout the process. The algorithm terminates when no further merges occur, producing a collection of disjoint connected components.
 
 ### Performance
-
-WCC operates with a time complexity of **O(|V| + |E|)**, where:
-- **|V|** represents the total number of nodes
-- **|E|** represents the total number of edges
-
+WCC operates with a time complexity of **O(\|V\| + \|E\|)**, where:
+- **\|V\|** represents the total number of nodes
+- **\|E\|** represents the total number of edges
 This linear complexity makes WCC efficient for large graphs.
 
 ## Syntax
