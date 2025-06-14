@@ -1,3 +1,9 @@
+---
+title: "Degree"
+description: "Measures the number of incoming or outgoing conections for all nodes."
+parent: "Algorithms"
+---
+
 # Degree Procedure Documentation
 
 ## Introduction
@@ -20,20 +26,24 @@ Here are some practical scenarios where the **Degree Procedure** can be applied:
 
 ## Syntax
 
-```plaintext
-CALL algo.degree(config)
+The procedure has the following call signature:
+```procedure input:
+CALL algo.dgree({
+	'srcLabels':      		[<label>, ...],
+	'dir':         	  		'incoming' / 'outgoing' / 'both',
+	'relationshipTypes':    [<type>, ...],
+	'destLabels':     		[<label>, ...],
+})
 ```
 
 ### Parameters
 
-The `config` parameter is a Map object containing the following optional keys:
-
-| Key           | Type   | Default    | Description                                                            |
-| ------------- | ------ | ---------- | ---------------------------------------------------------------------- |
-| `source`      | String | `null`     | Specifies the label of nodes for which the degree is computed.         |
-| `dir`         | String | `outgoing` | Direction of edges to consider: `incoming` or `outgoing`.              |
-| `relation`    | String | `null`     | Specifies the type of edges to consider.                               |
-| `destination` | String | `null`     | Specifies the label of nodes reachable via the edges being considered. |
+| Name                | Type                  | Description                                | Default   |
+|---------------------|-----------------------|--------------------------------------------|-----------|
+| `srcLabels`      	  | [optional] [string[]] | type of nodes for which degree is computed | All Nodes |
+| `dir`         	  | [optional] [string]   | 'incoming', 'outgoing', or 'both'          | outgoing  |
+| `relationshipTypes` | [optional] [string[]] | the type of edges to consider              | All edges |
+| `destLabels` 		  | [optional] [string[]] | type of reachable nodes                    | All Nodes |
 
 ---
 
@@ -90,7 +100,7 @@ CREATE (p2)-[:VISITED]->(c2:City {id: 4})
 ### Example 1: Compute the outgoing degree for all nodes
 
 ```plaintext
-CALL algo.degree({})
+CALL algo.degree()
 ```
 
 #### Result:
@@ -107,7 +117,7 @@ CALL algo.degree({})
 ### Example 2: Compute the outgoing degree for specific node types
 
 ```plaintext
-CALL algo.degree({source: 'Person'})
+CALL algo.degree({srcLabels: ['Person']})
 ```
 
 #### Result:
@@ -119,10 +129,10 @@ CALL algo.degree({source: 'Person'})
 
 ---
 
-### Example 3: Compute the outgoing degree for a specific relationship type
+### Example 3: Compute the total degree for a specific relationship type
 
 ```plaintext
-CALL algo.degree({source: 'Person', relation: 'FRIEND', dir: 'outgoing'})
+CALL algo.degree({srcLabels: ['Person'], relationshipTypes: ['FRIEND'], dir: 'total'})
 ```
 
 #### Result:
@@ -130,13 +140,14 @@ CALL algo.degree({source: 'Person', relation: 'FRIEND', dir: 'outgoing'})
 | Node | Degree |
 | ---- | ------ |
 | 1    | 1      |
+| 2    | 1      |
 
 ---
 
 ### Example 4: Compute the incoming degree for reachable nodes of a specific type
 
 ```plaintext
-CALL algo.degree({source: 'Person', relation: 'VISITED', dir: 'incoming', destination: 'City'})
+CALL algo.degree({srcLabels: ['Person'], relationshipTypes: ['VISITED'], dir: 'incoming', destLabels: ['City']})
 ```
 
 #### Result:
@@ -146,4 +157,13 @@ CALL algo.degree({source: 'Person', relation: 'VISITED', dir: 'incoming', destin
 | 3    | 2      |
 | 4    | 1      |
 
+## Usage Notes
 
+- When `both` is specified, the in and out degrees of the node are summed. So if 
+    (a)-[:R]->(b) and (b)-[:R]->(a) then (a) would have a degree of 2 when 
+    `both` is specified.
+- When multiple labels are specified, the nodes' degrees accross each of those 
+    labels are summed together.
+- This algorithm counts multi-edges and self-edges towards the degree.
+- Computationally cheapest when computing the outdegree, especially on 
+    undirected graphs.
