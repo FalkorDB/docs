@@ -93,6 +93,7 @@ CREATE (p2)-[:VISITED]->(c1)
 CREATE (p2)-[:VISITED]->(c2:City {id: 4})
 ```
 
+![Example Graph](../images/person_city.png)
 ---
 
 ## Examples and Results
