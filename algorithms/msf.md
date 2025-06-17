@@ -11,7 +11,9 @@ parent: "Algorithms"
 The Minimum Spanning Forest (MSF) identifies the minimum weight acyclic graph (tree) spanning every node in each connected component in the graph, disregarding edge directions. Any nodes that shared a weakly connected component still share that component in the MSF subgraph.
 
 MSF serves as a common algorithm in scenarios such as:
-- 
+- Designing a cost-effective road network connecting several cities.
+- Identifying core connections in a social network.
+- Optimizing the layout of power grids to minimize cable length.
 
 ## Algorithm Details
 
@@ -44,14 +46,11 @@ The procedure returns a stream of records with the following fields:
 
 ## Examples:
 
-Lets take this Social Graph as an example:
+Lets take this City as an example:
 
 ![City Graph](../images/city_plan.png)
 
-There are 3 different communities in this graph:
-- Alice, Bob, Charlie
-- David, Emma
-- Frank 
+
 
 ### Create the Graph
 
@@ -64,22 +63,28 @@ CREATE
   (Water:UTIL),
   (Building_A:RES),
   (Building_B:RES),
-  (CityHall)-[rA:ROAD {cost: 5}]->(CourtHouse),
-  (CityHall)-[rB:ROAD {cost: 7}]->(FireStation),
-  (CourtHouse)-[rC:ROAD {cost: 4}]->(Building_A),
-  (FireStation)-[rD:ROAD {cost: 6}]->(Building_B),
-  (Building_A)-[rF:ROAD {cost: 8}]->(Building_B),
-  (Electricity)-[rG:ROAD {cost: 3}]->(Building_A),
-  (Water)-[rH:ROAD {cost: 2}]->(Building_B),
-  (CityHall)-[tA:TRAM {cost: 3}]->(Building_A),
-  (CourtHouse)-[tB:TRAM {cost: 5}]->(Building_B),
-  (FireStation)-[tC:TRAM {cost: 4}]->(Electricity)
-  RETURN *
+  (CityHall)-[rA:ROAD {cost: 2.2}]->(CourtHouse),
+  (CityHall)-[rB:ROAD {cost: 8.0}]->(FireStation),
+  (CourtHouse)-[rC:ROAD {cost: 3.4}]->(Building_A),
+  (FireStation)-[rD:ROAD {cost: 3.0}]->(Building_B),
+  (Building_A)-[rF:ROAD {cost: 5.2}]->(Building_B),
+  (Electricity)-[rG:ROAD {cost: 0.7}]->(Building_A),
+  (Water)-[rH:ROAD {cost: 2.3}]->(Building_B),
+  (CityHall)-[tA:TRAM {cost: 1.5}]->(Building_A),
+  (CourtHouse)-[tB:TRAM {cost: 7.3}]->(Building_B),
+  (FireStation)-[tC:TRAM {cost: 1.2}]->(Electricity)
 ```
 ### Example: Find cheapest road network:
 ```cypher
-CALL algo.WCC(null) yield node, componentId
+CALL algo.MSF() YIELD edge, weight
 ```
 
 #### Expected Results
-<!-- TODO -->
+| Edge      | weight |
+|-----------|--------|
+| `[:ROAD]` | 0.7    |
+| `[:TRAM]` | 1.2    |
+| `[:TRAM]` | 1.5    |
+| `[:ROAD]` | 2.2    |
+| `[:ROAD]` | 2.3    |
+| `[:ROAD]` | 3.0    |
