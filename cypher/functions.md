@@ -159,8 +159,7 @@ This section contains information on all supported functions from the Cypher que
 | toUpper(_str_)                      | Returns _str_ in uppercase <br> Returns null when _str_ evaluates to null                                 |
 | trim(_str_)                         | Returns _str_ with leading and trailing whitespace removed <br> Returns null when _str_ evaluates to null |
 | size(_str_)                         | Returns the number of characters in _str_ <br> Returns null when _str_ evaluates to null                  |
-
-&#42; FalkorDB-specific extensions to Cypher
+| intern(_str_)                       | Returns a deduplicated, memory-efficient representation of _str_ <br> Returns null when _str_ evaluates to null |
 
 ## Point functions
 
