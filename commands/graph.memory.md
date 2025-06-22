@@ -23,6 +23,7 @@ You can optionally sample a subset of graph entities to estimate usage. The defa
 - SAMPLES <count> (optional): Number of entities to sample for estimation (default: 100).
 
 ## Example
+
 ```
 127.0.0.1:6379> GRAPH.MEMORY USAGE flights
  1) "total_graph_sz_mb"
