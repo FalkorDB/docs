@@ -159,8 +159,7 @@ This section contains information on all supported functions from the Cypher que
 | toUpper(_str_)                      | Returns _str_ in uppercase <br> Returns null when _str_ evaluates to null                                 |
 | trim(_str_)                         | Returns _str_ with leading and trailing whitespace removed <br> Returns null when _str_ evaluates to null |
 | size(_str_)                         | Returns the number of characters in _str_ <br> Returns null when _str_ evaluates to null                  |
-
-&#42; FalkorDB-specific extensions to Cypher
+| [intern(_str_)](#intern)            | Returns a deduplicated, memory-efficient representation of _str_ <br> Returns null when _str_ evaluates to null |
 
 ## Point functions
 
@@ -313,6 +312,19 @@ RETURN reduce(sum = 0, n IN [1,2,3] | sum + n)
 ```
 
 `sum` will successively have the values 0, 1, 3, and 6, with 6 being the output of the function call.
+
+### Intern
+
+The `intern()` function expects a single string argument:
+
+```cypher
+"CREATE (:A {v:intern('VERY LONG STRING')})"
+```
+
+This function deduplicates the input string by storing a single internal copy across the database. 
+It is especially useful for repeated string values—like country names, email domains, or tags—in large graphs.
+Interned strings can be stored as node or relationship properties, and behave identically to regular strings in queries, 
+with the added benefit of reduced memory usage.
 
 ### Point
 
