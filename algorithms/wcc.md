@@ -21,6 +21,7 @@ WCC serves as a common algorithm in scenarios such as:
 WCC initializes by assigning each node to its own component. It iteratively scans for edges linking nodes across different components and merges them, ignoring the directionality of edges throughout the process. The algorithm terminates when no further merges occur, producing a collection of disjoint connected components.
 
 ### Performance
+
 WCC operates with a time complexity of **O(\|V\| + \|E\|)**, where:
 - **\|V\|** represents the total number of nodes
 - **\|E\|** represents the total number of edges
@@ -42,6 +43,7 @@ The procedure accepts an optional configuration `Map` with the following paramet
 | `relationshipTypes` | Array | All relationship types | Array of relationship types to define which edges are traversed                  |
 
 ### Return Values
+
 The procedure returns a stream of records with the following fields:
 
 | Name          | Type    | Description                                                         |
@@ -81,11 +83,13 @@ CREATE
 ```
 
 ### Example: Find isolated communities in a social network
+
 ```cypher
 CALL algo.WCC(null) yield node, componentId
 ```
 
 #### Expected Results
+
 | node                           | componentId |
 |--------------------------------|-------------|
 | `(:User {name: "Alice"})`      | 0           |
@@ -96,11 +100,13 @@ CALL algo.WCC(null) yield node, componentId
 | `(:User {name: "Frank"})`      | 5           |
 
 ### Example: Group Communities together into a single list
+
 ```cypher
 CALL algo.WCC(null) yield node, componentId return collect(node.name), componentId
 ```
 
 #### Expected Results
+
 | collect(node.name)         | componentId |
 |----------------------------|-------------|
 | `[David, Emma]`            | 3           |
