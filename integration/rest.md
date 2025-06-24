@@ -34,6 +34,13 @@ parent: "Integration"
 ### Schema
 - [Create New Schema & Run A Query - GET /api/graph/{schemaName}](#create-new-schema--run-a-query---get-apigraphschemaname)
 - [Delete a Schema - DELETE /api/graph/{schemaName}](#delete-a-schema---delete-apigraphschemaname)
+- [Get Schema Count - GET /api/schema/{schemaName}/count](#get-schema-count---get-apischemaschemaname-count)
+- [Add Schema Node - POST /api/schema/{schemaName}/{nodeId}](#add-schema-node---post-apischemaschemaname-nodeid)
+- [Delete Schema Node - DELETE /api/schema/{schemaName}/{nodeId}](#delete-schema-node---delete-apischemaschemaname-nodeid)
+- [Add Schema Attribute - PATCH /api/schema/{schemaName}/{nodeId}/{attributeName}](#add-schema-attribute---patch-apischemaschemaname-nodeid-attributename)
+- [Delete Schema Attribute - DELETE /api/schema/{schemaName}/{nodeId}/{attributeName}](#delete-schema-attribute---delete-apischemaschemaname-nodeid-attributename)
+- [Add Schema Label - POST /api/schema/{schemaName}/{nodeId}/label](#add-schema-label---post-apischemaschemaname-nodeid-label)
+- [Delete Schema Label - DELETE /api/schema/{schemaName}/{nodeId}/label](#delete-schema-label---delete-apischemaschemaname-nodeid-label)
 
 ---
 
@@ -601,5 +608,268 @@ This endpoint deletes a specified schema.
     ```json
     {
       "message": "SchemaName schema deleted"
+    }
+    ```
+
+### **Get Schema Count** - `GET /api/schema/{schemaName}/count`
+
+This endpoint retrieves the count of nodes and edges in a specified schema.
+
+#### Parameters
+
+- `cookie` (header, required): Cookie header with session and auth tokens.
+- `schemaName` (path, required): The name of the schema to count nodes and edges.
+
+#### Responses
+
+- **200**: Schema count retrieved successfully
+  - Content-Type: `application/json`
+  - Example response:
+
+    ```json
+    {
+      "result": {
+        "data": [
+          {
+            "nodes": 0,
+            "edges": 0
+          }
+        ]
+      }
+    }
+    ```
+
+### **Add Schema Node** - `POST /api/schema/{schemaName}/{nodeId}`
+
+This endpoint adds a node to a schema.
+
+#### Parameters
+
+- `cookie` (header, required): Cookie header with session and auth tokens.
+- `schemaName` (path, required): The name of the schema.
+- `nodeId` (path, required): The ID of the node to add (use -1 for new nodes).
+
+#### Request Body
+
+- Content-Type: `application/json`
+- Example request:
+
+    ```json
+    {
+      "type": true,
+      "label": ["your_label_name"],
+      "attributes": [["attribute_name", ["String", "default_value", "true", "true"]]],
+      "selectedNodes": [null, null]
+    }
+    ```
+
+#### Responses
+
+- **200**: Schema node added successfully
+  - Content-Type: `application/json`
+  - Example response:
+
+    ```json
+    {
+      "result": {
+        "metadata": [
+          "Labels added: 1",
+          "Nodes created: 1",
+          "Properties set: 1",
+          "Cached execution: 0",
+          "Query internal execution time: 0.987458 milliseconds"
+        ],
+        "data": [
+          {
+            "n": {
+              "id": 0,
+              "labels": [
+                "your_label_name"
+              ],
+              "properties": {
+                "attribute_name": "String!*default_value"
+              }
+            }
+          }
+        ]
+      }
+    }
+    ```
+
+### **Delete Schema Node** - `DELETE /api/schema/{schemaName}/{nodeId}`
+
+This endpoint deletes a node from a schema.
+
+#### Parameters
+
+- `cookie` (header, required): Cookie header with session and auth tokens.
+- `schemaName` (path, required): The name of the schema.
+- `nodeId` (path, required): The ID of the node to delete.
+
+#### Request Body
+
+- Content-Type: `application/json`
+- Example request:
+
+    ```json
+    {
+      "type": true
+    }
+    ```
+
+#### Responses
+
+- **200**: Schema node deleted successfully
+  - Content-Type: `application/json`
+  - Example response:
+
+    ```json
+    {
+      "message": "Node deleted successfully"
+    }
+    ```
+
+### **Add Schema Attribute** - `PATCH /api/schema/{schemaName}/{nodeId}/{attributeName}`
+
+This endpoint adds an attribute to a node in a schema.
+
+#### Parameters
+
+- `cookie` (header, required): Cookie header with session and auth tokens.
+- `schemaName` (path, required): The name of the schema.
+- `nodeId` (path, required): The ID of the node to which the attribute will be added.
+- `attributeName` (path, required): The name of the attribute to add.
+
+#### Request Body
+
+- Content-Type: `application/json`
+- Example request:
+
+    ```json
+    {
+      "type": true,
+      "attribute": ["String", "default_value", "true", "true"]
+    }
+    ```
+
+#### Responses
+
+- **200**: Schema node attribute added successfully
+  - Content-Type: `application/json`
+  - Example response:
+
+    ```json
+    {
+      "message": "Attribute updated successfully"
+    }
+    ```
+
+### **Delete Schema Attribute** - `DELETE /api/schema/{schemaName}/{nodeId}/{attributeName}`
+
+This endpoint deletes an attribute from a node in a schema.
+
+#### Parameters
+
+- `cookie` (header, required): Cookie header with session and auth tokens.
+- `schemaName` (path, required): The name of the schema.
+- `nodeId` (path, required): The ID of the node from which the attribute will be deleted.
+- `attributeName` (path, required): The name of the attribute to delete.
+
+#### Request Body
+
+- Content-Type: `application/json`
+- Example request:
+
+    ```json
+    {
+      "type": true
+    }
+    ```
+
+#### Responses
+
+- **200**: Schema node attribute deleted successfully
+  - Content-Type: `application/json`
+  - Example response:
+
+    ```json
+    {
+      "message": "Attribute deleted successfully"
+    }
+    ```
+
+### **Add Schema Label** - `POST /api/schema/{schemaName}/{nodeId}/label`
+
+This endpoint adds a label to a node in a schema.
+
+#### Parameters
+
+- `cookie` (header, required): Cookie header with session and auth tokens.
+- `schemaName` (path, required): The name of the schema.
+- `nodeId` (path, required): The ID of the node to which the label will be added.
+
+#### Request Body
+
+- Content-Type: `application/json`
+- Example request:
+
+    ```json
+    {
+      "label": "your_label_name"
+    }
+    ```
+
+#### Responses
+
+- **200**: Schema node label added successfully
+  - Content-Type: `application/json`
+  - Example response:
+
+    ```json
+    {
+      "result": {
+        "metadata": [
+          "Cached execution: 0",
+          "Query internal execution time: 0.417250 milliseconds"
+        ]
+      }
+    }
+    ```
+
+### **Delete Schema Label** - `DELETE /api/schema/{schemaName}/{nodeId}/label`
+
+This endpoint deletes a label from a node in a schema.
+
+#### Parameters
+
+- `cookie` (header, required): Cookie header with session and auth tokens.
+- `schemaName` (path, required): The name of the schema.
+- `nodeId` (path, required): The ID of the node from which the label will be deleted.
+
+#### Request Body
+
+- Content-Type: `application/json`
+- Example request:
+
+    ```json
+    {
+      "label": "your_label_name"
+    }
+    ```
+
+#### Responses
+
+- **200**: Schema node label deleted successfully
+  - Content-Type: `application/json`
+  - Example response:
+
+    ```json
+    {
+      "result": {
+        "metadata": [
+          "Cached execution: 0",
+          "Query internal execution time: 0.829917 milliseconds"
+        ]
+      }
     }
     ```
