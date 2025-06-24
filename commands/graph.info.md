@@ -5,7 +5,7 @@ description: >
 parent: "Commands"
 ---
 
-# GRAPH.INFO [Section [Section ...]]
+# GRAPH.INFO
 
 Returns information and statistics about the current executing commands.
 
