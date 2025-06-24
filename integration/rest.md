@@ -5,6 +5,8 @@ description: "Rest API detailed doc"
 parent: "Integration"
 ---
 
+# Rest API
+
 ## Table of Contents
 
 ### Authentication

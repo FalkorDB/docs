@@ -75,9 +75,9 @@ The following table summarizes which configuration parameters can be set at modu
 | [NODE_CREATION_BUFFER](#node_creation_buffer)                | V     | X     |
 | [BOLT_PORT](#bolt_port)                                      | V     | X     |
 | [MAX_QUEUED_QUERIES](#max_queued_queries)                    | V     | V     |
-| [TIMEOUT](#timeout) (deprecated in v2.10)                    | V     | V     |
-| [TIMEOUT_MAX](#timeout_max) (since v2.10)                    | V     | V     |
-| [TIMEOUT_DEFAULT](#timeout_default) (since v2.10)            | V     | V     |
+| [TIMEOUT](#timeout)                                          | V     | V     |
+| [TIMEOUT_MAX](#timeout_max)                                  | V     | V     |
+| [TIMEOUT_DEFAULT](#timeout_default)                          | V     | V     |
 | [RESULTSET_SIZE](#resultset_size)                            | V     | V     |
 | [QUERY_MEM_CAPACITY](#query_mem_capacity)                    | V     | V     |
 | [VKEY_MAX_ENTITY_COUNT](#vkey_max_entity_count)              | V     | V     |
@@ -383,9 +383,12 @@ query will be replicated.
 
 ---
 
+
 ### IMPORT_FOLDER
 
 The import folder configuration specifies an absolute path to a folder from which
 FalkorDB is allowed to load CSV files.
 
 Defaults to: `/var/lib/FalkorDB/import/`
+
+---
