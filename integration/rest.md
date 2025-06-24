@@ -25,22 +25,22 @@ parent: "Integration"
 - [Get All Graphs - GET /api/graph](#get-all-graphs---get-apigraph)
 - [Duplicate a Graph - POST /api/graph/{destinationGraphName}](#duplicate-a-graph---post-apigraphdestinationgraphname)
 - [Get Graph Count - GET /api/graph/{graphName}/count](#get-graph-count---get-apigraphgraphnamecount)
-- [Add Node Attribute - POST /api/graph/{graphName}/{nodeId}/{attributeName}](#add-node-attribute---post-apigraphgraphnamenodeidattributename)
-- [Delete Node Attribute - DELETE /api/graph/{graphName}/{nodeId}/{attributeName}](#delete-node-attribute---delete-apigraphgraphnamenodeidattributename)
-- [Add Node Label - POST /api/graph/{graphName}/{nodeId}/label](#add-node-label---post-apigraphgraphnamenodeidlabel)
-- [Delete Node Label - DELETE /api/graph/{graphName}/{nodeId}/label](#delete-node-label---delete-apigraphgraphnamenodeidlabel)
-- [Delete Node - DELETE /api/graph/{graphName}/{nodeId}](#delete-node---delete-apigraphgraphnamenodeid)
+- [Add Node Attribute - POST /api/graph/{graphName}/{id}/{attribute}](#add-node-attribute---post-apigraphgraphnameidattribute)
+- [Delete Node Attribute - DELETE /api/graph/{graphName}/{id}/{attribute}](#delete-node-attribute---delete-apigraphgraphnameidattribute)
+- [Add Node Label - POST /api/graph/{graphName}/{id}/label](#add-node-label---post-apigraphgraphnameidlabel)
+- [Delete Node Label - DELETE /api/graph/{graphName}/{id}/label](#delete-node-label---delete-apigraphgraphnameidlabel)
+- [Delete Node - DELETE /api/graph/{graphName}/{id}](#delete-node---delete-apigraphgraphnameid)
 
 ### Schema
 - [Create New Schema & Run A Query - GET /api/graph/{schemaName}](#create-new-schema--run-a-query---get-apigraphschemaname)
 - [Delete a Schema - DELETE /api/graph/{schemaName}](#delete-a-schema---delete-apigraphschemaname)
 - [Get Schema Count - GET /api/schema/{schemaName}/count](#get-schema-count---get-apischemaschemaname-count)
-- [Add Schema Node - POST /api/schema/{schemaName}/{nodeId}](#add-schema-node---post-apischemaschemaname-nodeid)
-- [Delete Schema Node - DELETE /api/schema/{schemaName}/{nodeId}](#delete-schema-node---delete-apischemaschemaname-nodeid)
-- [Add Schema Attribute - PATCH /api/schema/{schemaName}/{nodeId}/{attributeName}](#add-schema-attribute---patch-apischemaschemaname-nodeid-attributename)
-- [Delete Schema Attribute - DELETE /api/schema/{schemaName}/{nodeId}/{attributeName}](#delete-schema-attribute---delete-apischemaschemaname-nodeid-attributename)
-- [Add Schema Label - POST /api/schema/{schemaName}/{nodeId}/label](#add-schema-label---post-apischemaschemaname-nodeid-label)
-- [Delete Schema Label - DELETE /api/schema/{schemaName}/{nodeId}/label](#delete-schema-label---delete-apischemaschemaname-nodeid-label)
+- [Add Schema Node - POST /api/schema/{schemaName}/{id}](#add-schema-node---post-apischemaschemanameid)
+- [Delete Schema Node - DELETE /api/schema/{schemaName}/{id}](#delete-schema-node---delete-apischemaschemanameid)
+- [Add Schema Attribute - PATCH /api/schema/{schemaName}/{id}/{attribute}](#add-schema-attribute---patch-apischemaschemanameidattribute)
+- [Delete Schema Attribute - DELETE /api/schema/{schemaName}/{id}/{attribute}](#delete-schema-attribute---delete-apischemaschemanameidattribute)
+- [Add Schema Label - POST /api/schema/{schemaName}/{id}/label](#add-schema-label---post-apischemaschemanameidlabel)
+- [Delete Schema Label - DELETE /api/schema/{schemaName}/{id}/label](#delete-schema-label---delete-apischemaschemanameidlabel)
 
 ---
 
@@ -378,7 +378,7 @@ This endpoint retrieves the count of nodes and edges in a specified graph.
     }
     ```
 
-### **Add Node Attribute** - `POST /api/graph/{graphName}/{nodeId}/{attributeName}`
+### **Add Node Attribute** - `POST /api/graph/{graphName}/{id}/{attribute}`
 
 This endpoint adds an attribute to a node in a graph.
 
@@ -386,8 +386,8 @@ This endpoint adds an attribute to a node in a graph.
 
 - `cookie` (header, required): Cookie header with session and auth tokens.
 - `graphName` (path, required): The name of the graph.
-- `nodeId` (path, required): The ID of the node to which the attribute will be added.
-- `attributeName` (path, required): The name of the attribute to add.
+- `id` (path, required): The ID of the node to which the attribute will be added.
+- `attribute` (path, required): The name of the attribute to add.
 
 #### Request Body
 
@@ -418,7 +418,7 @@ This endpoint adds an attribute to a node in a graph.
     }
     ```
 
-### **Delete Node Attribute** - `DELETE /api/graph/{graphName}/{nodeId}/{attributeName}`
+### **Delete Node Attribute** - `DELETE /api/graph/{graphName}/{id}/{attribute}`
 
 This endpoint deletes an attribute from a node in a graph.
 
@@ -426,8 +426,8 @@ This endpoint deletes an attribute from a node in a graph.
 
 - `cookie` (header, required): Cookie header with session and auth tokens.
 - `graphName` (path, required): The name of the graph.
-- `nodeId` (path, required): The ID of the node from which the attribute will be deleted.
-- `attributeName` (path, required): The name of the attribute to delete.
+- `id` (path, required): The ID of the node from which the attribute will be deleted.
+- `attribute` (path, required): The name of the attribute to delete.
 
 #### Request Body
 
@@ -457,7 +457,7 @@ This endpoint deletes an attribute from a node in a graph.
     }
     ```
 
-### **Add Node Label** - `POST /api/graph/{graphName}/{nodeId}/label`
+### **Add Node Label** - `POST /api/graph/{graphName}/{id}/label`
 
 This endpoint adds a label to a node in a graph.
 
@@ -465,7 +465,7 @@ This endpoint adds a label to a node in a graph.
 
 - `cookie` (header, required): Cookie header with session and auth tokens.
 - `graphName` (path, required): The name of the graph.
-- `nodeId` (path, required): The ID of the node to which the label will be added.
+- `id` (path, required): The ID of the node to which the label will be added.
 
 #### Request Body
 
@@ -490,7 +490,7 @@ This endpoint adds a label to a node in a graph.
     }
     ```
 
-### **Delete Node Label** - `DELETE /api/graph/{graphName}/{nodeId}/label`
+### **Delete Node Label** - `DELETE /api/graph/{graphName}/{id}/label`
 
 This endpoint deletes a label from a node in a graph.
 
@@ -498,7 +498,7 @@ This endpoint deletes a label from a node in a graph.
 
 - `cookie` (header, required): Cookie header with session and auth tokens.
 - `graphName` (path, required): The name of the graph.
-- `nodeId` (path, required): The ID of the node from which the label will be deleted.
+- `id` (path, required): The ID of the node from which the label will be deleted.
 
 #### Request Body
 
@@ -523,7 +523,7 @@ This endpoint deletes a label from a node in a graph.
     }
     ```
 
-### **Delete Node** - `DELETE /api/graph/{graphName}/{nodeId}`
+### **Delete Node** - `DELETE /api/graph/{graphName}/{id}`
 
 This endpoint deletes a node from a graph.
 
@@ -531,7 +531,7 @@ This endpoint deletes a node from a graph.
 
 - `cookie` (header, required): Cookie header with session and auth tokens.
 - `graphName` (path, required): The name of the graph.
-- `nodeId` (path, required): The ID of the node to delete.
+- `id` (path, required): The ID of the node to delete.
 
 #### Request Body
 
@@ -639,7 +639,7 @@ This endpoint retrieves the count of nodes and edges in a specified schema.
     }
     ```
 
-### **Add Schema Node** - `POST /api/schema/{schemaName}/{nodeId}`
+### **Add Schema Node** - `POST /api/schema/{schemaName}/{id}`
 
 This endpoint adds a node to a schema.
 
@@ -647,7 +647,7 @@ This endpoint adds a node to a schema.
 
 - `cookie` (header, required): Cookie header with session and auth tokens.
 - `schemaName` (path, required): The name of the schema.
-- `nodeId` (path, required): The ID of the node to add (use -1 for new nodes).
+- `id` (path, required): The ID of the node to add (use -1 for new nodes).
 
 #### Request Body
 
@@ -696,7 +696,7 @@ This endpoint adds a node to a schema.
     }
     ```
 
-### **Delete Schema Node** - `DELETE /api/schema/{schemaName}/{nodeId}`
+### **Delete Schema Node** - `DELETE /api/schema/{schemaName}/{id}`
 
 This endpoint deletes a node from a schema.
 
@@ -704,7 +704,7 @@ This endpoint deletes a node from a schema.
 
 - `cookie` (header, required): Cookie header with session and auth tokens.
 - `schemaName` (path, required): The name of the schema.
-- `nodeId` (path, required): The ID of the node to delete.
+- `id` (path, required): The ID of the node to delete.
 
 #### Request Body
 
@@ -729,7 +729,7 @@ This endpoint deletes a node from a schema.
     }
     ```
 
-### **Add Schema Attribute** - `PATCH /api/schema/{schemaName}/{nodeId}/{attributeName}`
+### **Add Schema Attribute** - `PATCH /api/schema/{schemaName}/{id}/{attribute}`
 
 This endpoint adds an attribute to a node in a schema.
 
@@ -737,8 +737,8 @@ This endpoint adds an attribute to a node in a schema.
 
 - `cookie` (header, required): Cookie header with session and auth tokens.
 - `schemaName` (path, required): The name of the schema.
-- `nodeId` (path, required): The ID of the node to which the attribute will be added.
-- `attributeName` (path, required): The name of the attribute to add.
+- `id` (path, required): The ID of the node to which the attribute will be added.
+- `attribute` (path, required): The name of the attribute to add.
 
 #### Request Body
 
@@ -764,7 +764,7 @@ This endpoint adds an attribute to a node in a schema.
     }
     ```
 
-### **Delete Schema Attribute** - `DELETE /api/schema/{schemaName}/{nodeId}/{attributeName}`
+### **Delete Schema Attribute** - `DELETE /api/schema/{schemaName}/{id}/{attribute}`
 
 This endpoint deletes an attribute from a node in a schema.
 
@@ -772,8 +772,8 @@ This endpoint deletes an attribute from a node in a schema.
 
 - `cookie` (header, required): Cookie header with session and auth tokens.
 - `schemaName` (path, required): The name of the schema.
-- `nodeId` (path, required): The ID of the node from which the attribute will be deleted.
-- `attributeName` (path, required): The name of the attribute to delete.
+- `id` (path, required): The ID of the node from which the attribute will be deleted.
+- `attribute` (path, required): The name of the attribute to delete.
 
 #### Request Body
 
@@ -798,7 +798,7 @@ This endpoint deletes an attribute from a node in a schema.
     }
     ```
 
-### **Add Schema Label** - `POST /api/schema/{schemaName}/{nodeId}/label`
+### **Add Schema Label** - `POST /api/schema/{schemaName}/{id}/label`
 
 This endpoint adds a label to a node in a schema.
 
@@ -806,7 +806,7 @@ This endpoint adds a label to a node in a schema.
 
 - `cookie` (header, required): Cookie header with session and auth tokens.
 - `schemaName` (path, required): The name of the schema.
-- `nodeId` (path, required): The ID of the node to which the label will be added.
+- `id` (path, required): The ID of the node to which the label will be added.
 
 #### Request Body
 
@@ -836,7 +836,7 @@ This endpoint adds a label to a node in a schema.
     }
     ```
 
-### **Delete Schema Label** - `DELETE /api/schema/{schemaName}/{nodeId}/label`
+### **Delete Schema Label** - `DELETE /api/schema/{schemaName}/{id}/label`
 
 This endpoint deletes a label from a node in a schema.
 
@@ -844,7 +844,7 @@ This endpoint deletes a label from a node in a schema.
 
 - `cookie` (header, required): Cookie header with session and auth tokens.
 - `schemaName` (path, required): The name of the schema.
-- `nodeId` (path, required): The ID of the node from which the label will be deleted.
+- `id` (path, required): The ID of the node from which the label will be deleted.
 
 #### Request Body
 
