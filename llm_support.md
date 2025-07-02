@@ -83,29 +83,7 @@ print(response["response"])
 > 📓  [Understanding Ontologies and Knowledge Graphs](https://www.falkordb.com/blog/understanding-ontologies-knowledge-graph-schemas/)
 
 
-## LLMs & integrations
-
-### LangChain
-LangChain now integrates with FalkorDB, enabling graph database capabilities for AI-driven applications. This combination facilitates the creation of AI agents with memory, enhancing their ability to retain state and context across interactions.
-
-
-[LangChain](https://www.langchain.com/) - [FalkorDBQAChain](https://python.langchain.com/docs/use_cases/more/graph/graph_falkordb_qa)
-
-> 📓 [Build AI Agents with Memory: LangChain + FalkorDB](https://www.falkordb.com/blog/building-ai-agents-with-memory-langchain/)
-
-### LangGraph
-LangGraph is an open-source framework for building stateful, multi-actor agentic applications using LLMs. It enables you to design complex agent and multi-agent workflows by representing application logic as directed graphs—where nodes define tasks or functions, and edges determine the flow of information.
-> 📓 [A Guide to Implementing a GraphRAG Workflow Using FalkorDB, LangChain and LangGraph](https://www.falkordb.com/blog/graphrag-workflow-falkordb-langchain/)
-
-### LlamaIndex
-LlamaIndex is an open-source framework that makes it easy for you to build LLM-powered applications. With its tools for ingesting different data structures, indexing, and querying, you can effortlessly create AI applications that tap into external knowledge.
-
-There are two parts to a RAG system: the retrieval module and the generation module. We will use LlamaIndex to orchestrate the two steps. To power our retrieval module, we will use FalkorDB. For the generation, you can use any LLM that has been trained on Cypher queries, which are needed for fetching data from modern graph databases like FalkorDB.
-
-[LlamaIndex](https://www.llamaindex.ai/) - [FalkorDB Graph Store](https://gpt-index.readthedocs.io/en/latest/examples/index_structs/knowledge_graph/FalkorDBGraphDemo.html)
-
-> 📓  [LlamaIndex RAG: Build Efficient GraphRAG Systems](https://www.falkordb.com/blog/llamaindex-rag-implementation-graphrag/)
-
+## Framework Integrations
 
 ### Graphiti
 
@@ -142,4 +120,30 @@ Graphiti is a Python framework for building temporally-aware, multi-tenant live 
 
 See the full quickstart example in the [Graphiti repository: examples/quickstart/quickstart_falkordb.py](https://github.com/getzep/graphiti/blob/main/examples/quickstart/quickstart_falkordb.py).
 
+
+### LangChain
+
+FalkorDB is now integrated with [LangChain](https://www.langchain.com/), bringing powerful graph database capabilities to AI-driven applications. This integration enables the creation of AI agents with memory, enhancing their ability to retain state and context across interactions.
+
+- 🔗 [FalkorDBQAChain Documentation](https://python.langchain.com/docs/use_cases/more/graph/graph_falkordb_qa)  
+- 📓 [Blog: Build AI Agents with Memory – LangChain + FalkorDB](https://www.falkordb.com/blog/building-ai-agents-with-memory-langchain/)
+
+---
+
+### LangGraph
+
+[LangGraph](https://www.langgraph.dev/) is an open-source framework for building **stateful, multi-actor agentic applications** using LLMs. It allows you to design complex single- and multi-agent workflows as directed graphs, where nodes represent tasks and edges define the information flow.
+
+- 📓 [Blog: Implementing GraphRAG with FalkorDB, LangChain & LangGraph](https://www.falkordb.com/blog/graphrag-workflow-falkordb-langchain/)
+
+---
+
+### LlamaIndex
+
+[LlamaIndex](https://www.llamaindex.ai/) is an open-source framework designed to simplify the development of LLM-powered applications. It provides tools for ingesting, indexing, and querying diverse data sources.
+
+In a typical RAG (Retrieval-Augmented Generation) setup, LlamaIndex orchestrates both the retrieval and generation phases. FalkorDB powers the retrieval module using Cypher queries, while any LLM trained on Cypher can handle the generation step—making it a natural fit for graph-native workflows.
+
+- 🔗 [FalkorDB Graph Store Demo](https://gpt-index.readthedocs.io/en/latest/examples/index_structs/knowledge_graph/FalkorDBGraphDemo.html)  
+- 📓 [Blog: LlamaIndex RAG – Build Efficient GraphRAG Systems](https://www.falkordb.com/blog/llamaindex-rag-implementation-graphrag/)
 
