@@ -107,7 +107,7 @@ Graphiti is a Python framework for building temporally-aware, multi-tenant live 
 #### Quickstart Usage
 
 1. **Install Graphiti**  
-   `pip install graphiti-core`
+   `pip install graphiti-core[falkord-db]`
 
 2. **Connect to your FalkorDB instance**  
    (Cloud or on-premises, see your FalkorDB dashboard for connection details.)
