@@ -390,6 +390,7 @@ ontologies
 Ontologies
 TXT
 Integrations
+integrations
 Graphiti
 datasets
 Quickstart

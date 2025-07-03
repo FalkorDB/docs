@@ -10,9 +10,9 @@ FalkorDB integrates with various LLM frameworks to enhance AI-powered applicatio
 
 ## Graphiti
 
-Graphiti is a Python framework for building temporally-aware, multi-tenant live knowledge graph designed for multi-agent AI systems with persistent memory. It enables real-time integration of structured and unstructured data, supporting advanced hybrid search, temporal reasoning, and collaborative agent memory.
+[Graphiti](https://help.getzep.com/graphiti/configuration/graph-db-configuration#falkordb) is a Python framework for building temporally-aware, multi-tenant live knowledge graph designed for multi-agent AI systems with persistent memory. It enables real-time integration of structured and unstructured data, supporting advanced hybrid search, temporal reasoning, and collaborative agent memory.
 
-### What does FalkorDB bring?
+### FalkorDB's Added Value
 
 - **Multi-tenant, multi-agent memory**: Isolated graph instances for different users or agents, each with their own persistent memory.
 - **High performance**: Fast graph operations and efficient memory usage.

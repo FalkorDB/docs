@@ -7,10 +7,10 @@ description: "Build intelligent GraphRAG applications with FalkorDB and LLMs."
 # GraphRAG-SDK
 ### Build intelligent GraphRAG applications with FalkorDB and LLMs
 
-- Convert natural language questions into Cypher queries automatically
-- Generate contextual answers from knowledge graph data
-- Support for streaming responses and conversational sessions
-- Compatible with multiple LLM providers (OpenAI, Gemini, Groq, etc.)
+- Automatically converts natural language questions into high-quality [Cypher](https://docs.falkordb.com/cypher/) queries.
+- Automatically generates contextually relevant answers from knowledge graph data.
+- Supports streaming responses and conversational sessions.
+- Integrates with multiple language model providers (OpenAI, Gemini, Groq, etc.).
 
 ## Quick Start
 
