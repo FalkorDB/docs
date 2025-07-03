@@ -7,10 +7,10 @@ description: "FalkorDB supports a number of LLM frameworks."
 # GraphRAG-SDK
 ### Build intelligent GraphRAG applications with FalkorDB and LLMs
 
-- Convert natural language questions into Cypher queries automatically
-- Generate contextual answers from knowledge graph data
-- Support for streaming responses and conversational sessions
-- Compatible with multiple LLM providers (OpenAI, Gemini, Groq, etc.)
+- Automatically converts natural language questions into high-quality [Cypher](https://docs.falkordb.com/cypher/) queries.
+- Automatically generates contextually relevant answers from knowledge graph data.
+- Supports streaming responses and conversational sessions.
+- Integrates with multiple language model providers (OpenAI, Gemini, Groq, etc.).
 
 ## Quick Start
 
@@ -87,9 +87,9 @@ print(response["response"])
 
 ### Graphiti
 
-Graphiti is a Python framework for building temporally-aware, multi-tenant live knowledge graph designed for multi-agent AI systems with persistent memory. It enables real-time integration of structured and unstructured data, supporting advanced hybrid search, temporal reasoning, and collaborative agent memory.
+[Graphiti](https://help.getzep.com/graphiti/configuration/graph-db-configuration#falkordb) is a Python framework for building temporally-aware, multi-tenant live knowledge graph designed for multi-agent AI systems with persistent memory. It enables real-time integration of structured and unstructured data, supporting advanced hybrid search, temporal reasoning, and collaborative agent memory.
 
-#### What does FalkorDB bring?
+#### FalkorDB's Added Value
 
 - **Multi-tenant, multi-agent memory**: Isolated graph instances for different users or agents, each with their own persistent memory.
 - **High performance**: Fast graph operations and efficient memory usage.
