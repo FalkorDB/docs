@@ -151,6 +151,7 @@ Congratulations! 🎉 You have successfully modeled, loaded, and queried a socia
 Next, dive deeper into FalkorDB's powerful features:
 - [Advanced Cypher](/cypher)
 - [Database Operations](/operations)
-- [Integration with ML Workflows](/llm_support)
+- [GraphRAG SDK](/graphrag_sdk)
+- [LLM Framework Integrations](/llm_integrations)
 
 For questions or support, visit our [community forums](https://www.falkordb.com/contact-us/)
