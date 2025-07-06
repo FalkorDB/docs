@@ -1,7 +1,6 @@
 ---
-title: "GRAPH.MEMORY USAGE"
-description: "Report memory consumption statistics for a specific graph"
-parent: "Commands"    
+title: "GRAPH.MEMORY USAGE - DEPRECATED"
+description: "Report memory consumption statistics for a specific graph"   
 ---
 
 # GRAPH.MEMORY USAGE
