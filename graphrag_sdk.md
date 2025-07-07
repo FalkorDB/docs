@@ -5,6 +5,7 @@ description: "Build intelligent GraphRAG applications with FalkorDB and LLMs."
 ---
 
 # GraphRAG-SDK
+
 ### Build intelligent GraphRAG applications with FalkorDB and LLMs
 
 - Automatically converts natural language questions into high-quality [Cypher](https://docs.falkordb.com/cypher/) queries.
@@ -22,6 +23,7 @@ docker run -p 6379:6379 -p 3000:3000 -it --rm falkordb/falkordb:edge
 Or sign up for [FalkorDB Cloud](https://app.falkordb.cloud)
 
 ### Install SDK & Environment Configuration
+
 ```bash
 pip install graphrag_sdk
 
@@ -36,6 +38,7 @@ export OPENAI_API_KEY="your-key"  # or GOOGLE_API_KEY, GROQ_API_KEY, etc.
 ```
 
 ### Basic Usage
+
 ```python
 import os
 from falkordb import FalkorDB
