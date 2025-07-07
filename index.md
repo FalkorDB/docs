@@ -11,7 +11,6 @@ permalink: /
 
 ![FalkorDB Docs Readme Banner](https://github.com/user-attachments/assets/201b07e1-ac6d-4593-98cf-e58946d7766c)
 
-
 # FalkorDB
 ### The Graph platform developers use to achieve accurate GraphRAG for enterprise GenAI
 
