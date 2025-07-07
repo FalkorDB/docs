@@ -2,14 +2,14 @@
 layout: default
 title: Home
 nav_order: 1
-description: "Ultra-fast, multi-tenant Graph Database powering Generative AI and Cloud Security"
+description: "The fastest way to your knowledge"
 permalink: /
 ---
 [![Docker Hub](https://img.shields.io/docker/pulls/falkordb/falkordb?label=Docker&style=flat-square)](https://hub.docker.com/r/falkordb/falkordb/)
 [![Discord](https://img.shields.io/discord/1146782921294884966?style=flat-square)](https://discord.gg/ErBEqN9E) 
 [![Try Free](https://img.shields.io/badge/Try%20Free-FalkorDB%20Cloud-FF8101?labelColor=FDE900&style=flat-square)](https://app.falkordb.cloud)
 
-![FalkorDB Readme Banner](https://github.com/user-attachments/assets/4f895499-b480-42f2-b9dc-ca40672b34f3)
+![FalkorDB Docs Readme Banner](https://github.com/user-attachments/assets/201b07e1-ac6d-4593-98cf-e58946d7766c)
 
 
 # FalkorDB
