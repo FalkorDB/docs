@@ -23,7 +23,7 @@ Or sign up for [FalkorDB Cloud](https://app.falkordb.cloud)
 
 ### Install SDK & Environment Configuration
 ```bash
-pip install graphrag-sdk
+pip install graphrag_sdk
 
 # FalkorDB Connection (defaults are for on-premises)
 export FALKORDB_HOST="localhost" 
