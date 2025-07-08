@@ -1,28 +1,30 @@
 ---
-title: "Minimum Spanning Forest (MSF)"
-description: "Minimum Spanning Forest (MSF)"
+title: "Minimum Spanning Tree (MST)"
+description: "Minimum Spanning Tree (MST)"
 parent: "Algorithms"
 ---
 
-# Minimum Spanning Forest (MSF)
+# Minimum Spanning Forest (MST)
 
 ## Overview
 
-The Minimum Spanning Forest (MSF) identifies the minimum weight acyclic graph (tree) spanning every node in each connected component in the graph, disregarding edge directions. Any nodes that shared a weakly connected component still share that component in the MSF subgraph.
+The Minimum Spanning Tree (MST) identifies the minimum weight acyclic graph (tree) spanning every node in each connected component in the graph, disregarding edge directions. Any nodes that shared a weakly connected component still share that component in the MST subgraph. 
 
-MSF serves as a common algorithm in scenarios such as:
+MST serves as a common algorithm in scenarios such as:
 - Designing a cost-effective road network connecting several cities.
 - Identifying core connections in a social network.
 - Optimizing the layout of power grids to minimize cable length.
 
 ## Algorithm Details
 
-MSF initializes by assigning each node to its own component. It iteratively scans for the minimum edges linking nodes across different components and merges them, ignoring the directionality of edges throughout the process. The algorithm terminates when no further merges occur, producing a collection of trees.
+MST first assigns each node to its own component. It iteratively scans for the minimum edges linking nodes across different components and merges them, ignoring the directionality of edges throughout the process. The algorithm terminates when no further merges occur, producing a collection of trees.
+
+Finds the minimum or maximum weight spanning tree uses the given attribute as the weight. If no attribute is given, returns any spanning tree. If an edge of the given types must be included in the minimum spanning tree.
 
 ## Syntax
 
 ```cypher
-CALL algo.msf([config])
+CALL algo.mst([config])
 ```
 
 ### Parameters
@@ -33,8 +35,8 @@ The procedure accepts an optional configuration `Map` with the following paramet
 |---------------------|--------|------------------------|----------------------------------------------------------------------------|
 | `nodeLabels`        | Array  | All labels             | Array of node labels to filter which nodes are included in the computation |
 | `relationshipTypes` | Array  | All relationship types | Array of relationship types to define which edges are traversed            |
-| `objective`         | string | 'minimum'              | 'minimum' or 'maximum' What to optimize in the spanning tree               |
-| `weightAttribute`   | string | Unweighted             | The atrribute to use as the tree weight.                                   |
+| `objective`         | string | 'minimize'             | 'minimize' or 'maximize' what to optimize in the spanning tree             |
+| `weightAttribute`   | string | Unweighted             | the atrribute to use as the tree weight.                                   |
 
 ### Return Values
 The procedure returns a stream of records with the following fields:
@@ -76,7 +78,7 @@ CREATE
 ```
 ### Example: Find cheapest road network:
 ```cypher
-CALL algo.MSF() YIELD edge, weight
+CALL algo.mst() YIELD edge, weight
 ```
 
 #### Expected Results
