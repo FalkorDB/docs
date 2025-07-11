@@ -5,6 +5,7 @@ description: "Build intelligent GraphRAG applications with FalkorDB and LLMs."
 ---
 
 # GraphRAG-SDK
+
 ### Build intelligent GraphRAG applications with FalkorDB and LLMs
 
 - Automatically converts natural language questions into high-quality [Cypher](https://docs.falkordb.com/cypher/) queries.
@@ -14,44 +15,78 @@ description: "Build intelligent GraphRAG applications with FalkorDB and LLMs."
 
 ## Quick Start
 
-### Install & Setup
+### Start FalkorDB Graph Instance
 ```bash
-# Start FalkorDB
 docker run -p 6379:6379 -p 3000:3000 -it --rm falkordb/falkordb:edge
+```
 
-# Install SDK
-pip install graphrag-sdk
+Or sign up for [FalkorDB Cloud](https://app.falkordb.cloud)
+
+### Install SDK & Environment Configuration
+
+```bash
+pip install graphrag_sdk
+
+# FalkorDB Connection (defaults are for on-premises)
+export FALKORDB_HOST="localhost" 
+export FALKORDB_PORT=6379 
+export FALKORDB_USERNAME="your-username"  # optional for on-premises
+export FALKORDB_PASSWORD="your-password"  # optional for on-premises
+
+# LLM Provider (choose one)
+export OPENAI_API_KEY="your-key"  # or GOOGLE_API_KEY, GROQ_API_KEY, etc.
 ```
 
 ### Basic Usage
+
 ```python
+import os
 from falkordb import FalkorDB
 from graphrag_sdk import KnowledgeGraph
 from graphrag_sdk.ontology import Ontology
 from graphrag_sdk.models.litellm import LiteModel
 from graphrag_sdk.model_config import KnowledgeGraphModelConfig
 
-# Connect to your knowledge graph
-db = FalkorDB()
-graph = db.select_graph("my_existing_graph")
+graph_name = "my_existing_graph"
+
+# Connect to FalkorDB using environment variables
+db = FalkorDB(
+    host=os.getenv("FALKORDB_HOST", "localhost"),
+    port=os.getenv("FALKORDB_PORT", 6379),
+    username=os.getenv("FALKORDB_USERNAME"),  # optional for on-premises
+    password=os.getenv("FALKORDB_PASSWORD")   # optional for on-premises
+)
+
+# Select graph
+graph = db.select_graph(graph_name)
 
 # Extract ontology from existing knowledge graph
-ontology = Ontology.from_kg_graph(graph, sample_size=100)
+ontology = Ontology.from_kg_graph(graph)
 
 # Configure model and create GraphRAG instance
-model = LiteModel()
+model = LiteModel()  # Default is OpenAI GPT-4.1, can specify different model
 model_config = KnowledgeGraphModelConfig.with_model(model)
-kg = KnowledgeGraph(graph, model_config, ontology)
+
+# Create KnowledgeGraph instance
+kg = KnowledgeGraph(
+    name=graph_name,
+    model_config=model_config,
+    ontology=ontology,
+    host=os.getenv("FALKORDB_HOST", "localhost"),
+    port=os.getenv("FALKORDB_PORT", 6379),
+    username=os.getenv("FALKORDB_USERNAME"),
+    password=os.getenv("FALKORDB_PASSWORD")
+)
 
 # Start chat session
-chat = kg.start_chat()
+chat = kg.chat_session()
 
 # Ask questions
 response = chat.send_message("What products are available?")
 print(response["response"])
 
 # Ask follow-up questions
-response = chat.send_message("Tell me about user relationships")
+response = chat.send_message("Tell me which one of them is the most expensive")
 print(response["response"])
 ```
 
