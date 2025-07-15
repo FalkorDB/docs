@@ -4,22 +4,22 @@ description: "Minimum Spanning Tree (MST)"
 parent: "Algorithms"
 ---
 
-# Minimum Spanning Forest (MST)
+# Minimum Spanning Tree (MST)
 
 ## Overview
 
-The Minimum Spanning Tree (MST) identifies the minimum weight acyclic graph (tree) spanning every node in each connected component in the graph, disregarding edge directions. Any nodes that shared a weakly connected component still share that component in the MST subgraph. 
+The Minimum Spanning Tree (MST) identifies the minimum weight acyclic graph (tree) spanning every node in each weakly connected component in the graph, disregarding edge directions. Any nodes that shared a weakly connected component still share that component in the MST subgraph. 
 
 MST serves as a common algorithm in scenarios such as:
 - Designing a cost-effective road network connecting several cities.
-- Identifying core connections in a social network.
-- Optimizing the layout of power grids to minimize cable length.
+- Power Grid / Utility cost optimization.
+- Identifying redundancies in networks.
 
 ## Algorithm Details
 
-MST first assigns each node to its own component. It iteratively scans for the minimum edges linking nodes across different components and merges them, ignoring the directionality of edges throughout the process. The algorithm terminates when no further merges occur, producing a collection of trees.
+MST first assigns each node to its own component. It iteratively scans for the minimum edges linking nodes across different components and merges them, ignoring the direction of edges throughout the process. The algorithm terminates when no further merges occur, producing a collection of trees.
 
-Finds the minimum or maximum weight spanning tree uses the given attribute as the weight. If no attribute is given, returns any spanning tree. If an edge of the given types must be included in the minimum spanning tree.
+The procedure finds a minimum or maximum weight spanning tree based on the specified attribute. If no attribute is given, returns any spanning tree. If any specified edges do not have the given weight attribute, or the value of the attribute is non-numeric, then they are treated as if they had infinite weight. Such an edge would only be included in the minimum spanning tree if no other edges with a valid weight attribute bridge the components it connects.
 
 ## Syntax
 
@@ -43,7 +43,7 @@ The procedure returns a stream of records with the following fields:
 
 | Name     | Type   | Description                                   |
 |----------|--------|-----------------------------------------------|
-| `edge`   | Edge   | An Edge entity which is part of the MSF graph |
+| `edge`   | Edge   | An edge entity which is part of the MSF graph |
 | `weight` | Double | The weight of the Edge                        |
 
 ## Examples:
@@ -78,7 +78,7 @@ CREATE
 ```
 ### Example: Find cheapest road network:
 ```cypher
-CALL algo.mst() YIELD edge, weight
+CALL algo.mst({weightAttribute: 'cost'}) YIELD edge, weight
 ```
 
 #### Expected Results
