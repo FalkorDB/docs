@@ -8,7 +8,7 @@ parent: "Algorithms"
 
 ## Overview
 
-The Minimum Spanning Tree (MST) identifies the minimum weight acyclic graph (tree) spanning every node in each weakly connected component in the graph, disregarding edge directions. Any nodes that shared a weakly connected component still share that component in the MST subgraph. 
+The Minimum Spanning Tree (MST) identifies the minimum weight acyclic graph (tree) spanning every node in each weakly connected component in the graph, disregarding edge directions. Any nodes that shared a weakly connected component still share that component in the MST sub-graph. 
 
 MST serves as a common algorithm in scenarios such as:
 - Designing a cost-effective road network connecting several cities.
@@ -36,14 +36,14 @@ The procedure accepts an optional configuration `Map` with the following paramet
 | `nodeLabels`        | Array  | All labels             | Array of node labels to filter which nodes are included in the computation |
 | `relationshipTypes` | Array  | All relationship types | Array of relationship types to define which edges are traversed            |
 | `objective`         | string | 'minimize'             | 'minimize' or 'maximize' what to optimize in the spanning tree             |
-| `weightAttribute`   | string | Unweighted             | the atrribute to use as the tree weight.                                   |
+| `weightAttribute`   | string | Unweighted             | the attribute to use as the tree weight.                                   |
 
 ### Return Values
 The procedure returns a stream of records with the following fields:
 
 | Name     | Type   | Description                                   |
 |----------|--------|-----------------------------------------------|
-| `edge`   | Edge   | An edge entity which is part of the MSF graph |
+| `edge`   | Edge   | An edge entity which is part of the MST graph |
 | `weight` | Double | The weight of the Edge                        |
 
 ## Examples:
