@@ -8,7 +8,7 @@ parent: "Algorithms"
 
 ## Overview
 
-The Minimum Spanning Tree (MST) identifies the minimum weight acyclic graph (tree) spanning every node in each weakly connected component in the graph, disregarding edge directions. Any nodes that shared a weakly connected component still share that component in the MST sub-graph. 
+The Minimum Spanning Tree (MST) finds the relationships with minimum weights such that any weakly connected component in the graph stays connected. It treats all edges as bi-directional and ensures that any pair of nodes that previously shared a path will still share a unique path in the MST subgraph. 
 
 MST serves as a common algorithm in scenarios such as:
 - Designing a cost-effective road network connecting several cities.
@@ -19,7 +19,7 @@ MST serves as a common algorithm in scenarios such as:
 
 MST first assigns each node to its own component. It iteratively scans for the minimum edges linking nodes across different components and merges them, ignoring the direction of edges throughout the process. The algorithm terminates when no further merges occur, producing a collection of trees.
 
-The procedure finds a minimum or maximum weight spanning tree based on the specified attribute. If no attribute is given, returns any spanning tree. If any specified edges do not have the given weight attribute, or the value of the attribute is non-numeric, then they are treated as if they had infinite weight. Such an edge would only be included in the minimum spanning tree if no other edges with a valid weight attribute bridge the components it connects.
+The procedure finds a minimum or maximum weight spanning tree based on the specified `objective` and optimizes for the given `weightAttribute`. If no attribute is given, MST returns any collection of spanning trees. If any specified edges do not have the given weight attribute, or the value of the attribute is non-numeric, then they are treated as if they had infinite weight. Such an edge would only be included in the minimum spanning tree if no other edges with a valid weight attribute bridge the components it connects.
 
 ## Syntax
 
@@ -29,7 +29,7 @@ CALL algo.mst([config])
 
 ### Parameters
 
-The procedure accepts an optional configuration `Map` with the following parameters:
+The procedure accepts an optional configuration `Map` with the following optional parameters:
 
 | Name                | Type   | Default                | Description                                                                |
 |---------------------|--------|------------------------|----------------------------------------------------------------------------|
@@ -46,11 +46,6 @@ The procedure returns a stream of records with the following fields:
 | `edge`   | Edge   | An edge entity which is part of the MST graph |
 | `weight` | Double | The weight of the Edge                        |
 
-## Examples:
-
-Lets take this City as an example:
-
-![City Graph](../images/city_plan.png)
 
 
 
@@ -75,18 +70,22 @@ CREATE
   (CityHall)-[tA:TRAM {cost: 1.5}]->(Building_A),
   (CourtHouse)-[tB:TRAM {cost: 7.3}]->(Building_B),
   (FireStation)-[tC:TRAM {cost: 1.2}]->(Electricity)
+RETURN *
 ```
-### Example: Find cheapest road network:
+
+## Examples:
+
+Suppose you are an urban planner tasked with designing a new transportation network for a town. There are several vital buildings that must be connected by this new network. A cost estimator has already provided you with the estimated cost for some of the potential routes between these buildings.
+
+Your goal is to connect every major building with the lowest total cost, even if travel between some buildings requires multiple stops and different modes of transport. The Minimum Spanning Tree algorithm helps you achieve this by identifying the most cost-effective network.
+
+![City Graph](../images/city_plan.png)
+
 ```cypher
 CALL algo.mst({weightAttribute: 'cost'}) YIELD edge, weight
 ```
 
 #### Expected Results
-| Edge      | weight |
-|-----------|--------|
-| `[:ROAD]` | 0.7    |
-| `[:TRAM]` | 1.2    |
-| `[:TRAM]` | 1.5    |
-| `[:ROAD]` | 2.2    |
-| `[:ROAD]` | 2.3    |
-| `[:ROAD]` | 3.0    |
+The algorithm would yeild the following edge objects and their weights:
+
+![City MST Graph](../images/city_mst.png)
