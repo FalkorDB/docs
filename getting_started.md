@@ -254,9 +254,10 @@ let query = r#"
 MATCH (alice:User {name: \"Alice\"})-[:FRIENDS_WITH]->(friend)
 RETURN friend.name AS Friend
 "#;
-let result = graph.ro_query(query)?;
+let result = graph.ro_query(query).execute().await?;
+
 println!("Alice's friends:");
-for record in result {
+for record in result.data.by_ref() {
     println!("{}", record["Friend"]);
 }
 {% endcapture %}
@@ -308,9 +309,9 @@ let query = r#"
 MATCH (bob:User {name: \"Bob\"})-[:CREATED]->(post:Post)
 RETURN post.content AS PostContent
 "#;
-let result = graph.ro_query(query)?;
+let result = graph.ro_query(query).execute().await?;
 println!("Posts created by Bob:");
-for record in result {
+for record in result.data.by_ref() {
     println!("{}", record["PostContent"]);
 }
 {% endcapture %}
