@@ -33,7 +33,7 @@ graph.query("CREATE INDEX FOR (p:Person) ON (p.age)");
 {% endcapture %}
 
 {% capture rust_0 %}
-graph.query("CREATE INDEX FOR (p:Person) ON (p.age)").await?;
+graph.query("CREATE INDEX FOR (p:Person) ON (p.age)").execute().await?;
 {% endcapture %}
 
 {% include code_tabs.html id="create_index_tabs" shell=shell_0 python=python_0 javascript=javascript_0 java=java_0 rust=rust_0 %}
@@ -57,7 +57,7 @@ graph.query("CREATE INDEX ON :Person(age)");
 {% endcapture %}
 
 {% capture rust_1 %}
-graph.query("CREATE INDEX ON :Person(age)").await?;
+graph.query("CREATE INDEX ON :Person(age)").execute().await?;
 {% endcapture %}
 
 {% include code_tabs.html id="old_syntax_tabs" shell=shell_1 python=python_1 javascript=javascript_1 java=java_1 rust=rust_1 %}
@@ -99,7 +99,7 @@ System.out.println(result);
 {% endcapture %}
 
 {% capture rust_2 %}
-let result = graph.explain("MATCH (p:Person) WHERE p.age > 80 RETURN p").await?;
+let result = graph.explain("MATCH (p:Person) WHERE p.age > 80 RETURN p").execute().await?;
 println!("{}", result);
 // Output:
 // Results
@@ -129,7 +129,7 @@ ResultSet result = graph.query("MATCH (:Employer {name: 'Dunder Mifflin'})-[:EMP
 {% endcapture %}
 
 {% capture rust_3 %}
-let result = graph.query("MATCH (:Employer {name: 'Dunder Mifflin'})-[:EMPLOYS]->(p:Person) RETURN p").await?;
+let result = graph.query("MATCH (:Employer {name: 'Dunder Mifflin'})-[:EMPLOYS]->(p:Person) RETURN p").execute().await?;
 {% endcapture %}
 
 {% include code_tabs.html id="employer_query_tabs" shell=shell_3 python=python_3 javascript=javascript_3 java=java_3 rust=rust_3 %}
@@ -154,7 +154,7 @@ ResultSet result = graph.query("WITH point({latitude:41.4045886, longitude:-75.6
 {% endcapture %}
 
 {% capture rust_4 %}
-let result = graph.query("WITH point({latitude:41.4045886, longitude:-75.6969532}) AS scranton MATCH (e:Employer) WHERE distance(e.location, scranton) < 5000 RETURN e").await?;
+let result = graph.query("WITH point({latitude:41.4045886, longitude:-75.6969532}) AS scranton MATCH (e:Employer) WHERE distance(e.location, scranton) < 5000 RETURN e").execute().await?;
 {% endcapture %}
 
 {% include code_tabs.html id="geospatial_tabs" shell=shell_4 python=python_4 javascript=javascript_4 java=java_4 rust=rust_4 %}
@@ -182,7 +182,7 @@ graph.query("CREATE INDEX FOR ()-[f:FOLLOW]-() ON (f.created_at)");
 {% endcapture %}
 
 {% capture rust_5 %}
-graph.query("CREATE INDEX FOR ()-[f:FOLLOW]-() ON (f.created_at)").await?;
+graph.query("CREATE INDEX FOR ()-[f:FOLLOW]-() ON (f.created_at)").execute().await?;
 {% endcapture %}
 
 {% include code_tabs.html id="relationship_index_tabs" shell=shell_5 python=python_5 javascript=javascript_5 java=java_5 rust=rust_5 %}
@@ -228,7 +228,7 @@ System.out.println(result);
 {% endcapture %}
 
 {% capture rust_6 %}
-let result = graph.explain("MATCH (p:Person {id: 0})-[f:FOLLOW]->(fp) WHERE 0 < f.created_at AND f.created_at < 1000 RETURN fp").await?;
+let result = graph.explain("MATCH (p:Person {id: 0})-[f:FOLLOW]->(fp) WHERE 0 < f.created_at AND f.created_at < 1000 RETURN fp").execute().await?;
 println!("{}", result);
 // Output:
 // Results
@@ -262,7 +262,7 @@ graph.query("DROP INDEX ON :Person(age)");
 {% endcapture %}
 
 {% capture rust_7 %}
-graph.query("DROP INDEX ON :Person(age)").await?;
+graph.query("DROP INDEX ON :Person(age)").execute().await?;
 {% endcapture %}
 
 {% include code_tabs.html id="drop_node_index_tabs" shell=shell_7 python=python_7 javascript=javascript_7 java=java_7 rust=rust_7 %}
@@ -288,7 +288,7 @@ graph.query("DROP INDEX ON :FOLLOW(created_at)");
 {% endcapture %}
 
 {% capture rust_8 %}
-graph.query("DROP INDEX ON :FOLLOW(created_at)").await?;
+graph.query("DROP INDEX ON :FOLLOW(created_at)").execute().await?;
 {% endcapture %}
 
 {% include code_tabs.html id="drop_relationship_index_tabs" shell=shell_8 python=python_8 javascript=javascript_8 java=java_8 rust=rust_8 %}
@@ -347,13 +347,13 @@ ResultSet result = graph.query("MATCH (p:Person) WHERE 90 IN p.samples RETURN p"
 
 {% capture rust_9 %}
 // Create a node with an array property
-graph.query("CREATE (:Person {samples: [-21, 30.5, 0, 90, 3.14]})").await?;
+graph.query("CREATE (:Person {samples: [-21, 30.5, 0, 90, 3.14]})").execute().await?;
 
 // Create an index on the array property
-graph.query("CREATE INDEX FOR (p:Person) ON (p.samples)").await?;
+graph.query("CREATE INDEX FOR (p:Person) ON (p.samples)").execute().await?;
 
 // Use the index to search for nodes containing a specific value in the array
-let result = graph.query("MATCH (p:Person) WHERE 90 IN p.samples RETURN p").await?;
+let result = graph.query("MATCH (p:Person) WHERE 90 IN p.samples RETURN p").execute().await?;
 {% endcapture %}
 
 {% include code_tabs.html id="array_index_tabs" shell=shell_9 python=python_9 javascript=javascript_9 java=java_9 rust=rust_9 %}
@@ -383,7 +383,7 @@ graph.query("CALL db.idx.fulltext.createNodeIndex('Movie', 'title')");
 {% endcapture %}
 
 {% capture rust_10 %}
-graph.query("CALL db.idx.fulltext.createNodeIndex('Movie', 'title')").await?;
+graph.query("CALL db.idx.fulltext.createNodeIndex('Movie', 'title')").execute().await?;
 {% endcapture %}
 
 {% include code_tabs.html id="fulltext_create_tabs" shell=shell_10 python=python_10 javascript=javascript_10 java=java_10 rust=rust_10 %}
@@ -407,7 +407,7 @@ graph.query("CALL db.idx.fulltext.createNodeIndex('Person', 'firstName', 'lastNa
 {% endcapture %}
 
 {% capture rust_11 %}
-graph.query("CALL db.idx.fulltext.createNodeIndex('Person', 'firstName', 'lastName')").await?;
+graph.query("CALL db.idx.fulltext.createNodeIndex('Person', 'firstName', 'lastName')").execute().await?;
 {% endcapture %}
 
 {% include code_tabs.html id="fulltext_multi_property_tabs" shell=shell_11 python=python_11 javascript=javascript_11 java=java_11 rust=rust_11 %}
@@ -436,7 +436,7 @@ graph.query("CALL db.idx.fulltext.createNodeIndex({ label: 'Movie', language: 'G
 {% endcapture %}
 
 {% capture rust_12 %}
-graph.query("CALL db.idx.fulltext.createNodeIndex({ label: 'Movie', language: 'German', stopwords: ['a', 'ab'] }, 'title')").await?;
+graph.query("CALL db.idx.fulltext.createNodeIndex({ label: 'Movie', language: 'German', stopwords: ['a', 'ab'] }, 'title')").execute().await?;
 {% endcapture %}
 
 {% include code_tabs.html id="fulltext_config_tabs" shell=shell_12 python=python_12 javascript=javascript_12 java=java_12 rust=rust_12 %}
@@ -466,7 +466,7 @@ graph.query("CALL db.idx.fulltext.createNodeIndex('Movie', {field: 'title', phon
 {% endcapture %}
 
 {% capture rust_13 %}
-graph.query("CALL db.idx.fulltext.createNodeIndex('Movie', {field: 'title', phonetic: 'dm:en'})").await?;
+graph.query("CALL db.idx.fulltext.createNodeIndex('Movie', {field: 'title', phonetic: 'dm:en'})").execute().await?;
 {% endcapture %}
 
 {% include code_tabs.html id="fulltext_phonetic_tabs" shell=shell_13 python=python_13 javascript=javascript_13 java=java_13 rust=rust_13 %}
@@ -514,7 +514,7 @@ for (Record record : result) {
 {% endcapture %}
 
 {% capture rust_14 %}
-let result = graph.query("CALL db.idx.fulltext.queryNodes('Movie', 'Book') YIELD node RETURN node.title").await?;
+let result = graph.query("CALL db.idx.fulltext.queryNodes('Movie', 'Book') YIELD node RETURN node.title").execute().await?;
 for record in result.data() {
     println!("{}", record["node.title"]);
 }
@@ -587,7 +587,7 @@ graph.query("CALL db.idx.fulltext.drop('Movie')");
 {% endcapture %}
 
 {% capture rust_15 %}
-graph.query("CALL db.idx.fulltext.drop('Movie')").await?;
+graph.query("CALL db.idx.fulltext.drop('Movie')").execute().await?;
 {% endcapture %}
 
 {% include code_tabs.html id="fulltext_drop_tabs" shell=shell_15 python=python_15 javascript=javascript_15 java=java_15 rust=rust_15 %}
@@ -612,7 +612,7 @@ graph.query("CREATE FULLTEXT INDEX FOR ()-[m:Manager]-() on (m.name)");
 {% endcapture %}
 
 {% capture rust_16 %}
-graph.query("CREATE FULLTEXT INDEX FOR ()-[m:Manager]-() on (m.name)").await?;
+graph.query("CREATE FULLTEXT INDEX FOR ()-[m:Manager]-() on (m.name)").execute().await?;
 {% endcapture %}
 
 {% include code_tabs.html id="fulltext_relation_create_tabs" shell=shell_16 python=python_16 javascript=javascript_16 java=java_16 rust=rust_16 %}
@@ -637,7 +637,7 @@ ResultSet result = graph.query("CALL db.idx.fulltext.queryRelationships('Manager
 {% endcapture %}
 
 {% capture rust_17 %}
-let result = graph.query("CALL db.idx.fulltext.queryRelationships('Manager', 'Charlie Munger') YIELD relationship RETURN relationship.name").await?;
+let result = graph.query("CALL db.idx.fulltext.queryRelationships('Manager', 'Charlie Munger') YIELD relationship RETURN relationship.name").execute().await?;
 {% endcapture %}
 
 {% include code_tabs.html id="fulltext_relation_query_tabs" shell=shell_17 python=python_17 javascript=javascript_17 java=java_17 rust=rust_17 %}
@@ -662,7 +662,7 @@ graph.query("CALL DROP FULLTEXT INDEX FOR ()-[m:Manager]-()  ON (m.name)");
 {% endcapture %}
 
 {% capture rust_18 %}
-graph.query("CALL DROP FULLTEXT INDEX FOR ()-[m:Manager]-()  ON (m.name)").await?;
+graph.query("CALL DROP FULLTEXT INDEX FOR ()-[m:Manager]-()  ON (m.name)").execute().await?;
 {% endcapture %}
 
 {% include code_tabs.html id="fulltext_relation_drop_tabs" shell=shell_18 python=python_18 javascript=javascript_18 java=java_18 rust=rust_18 %}
@@ -709,7 +709,7 @@ graph.query("CREATE VECTOR INDEX FOR (p:Product) ON (p.description) OPTIONS {dim
 {% endcapture %}
 
 {% capture rust_19 %}
-graph.query("CREATE VECTOR INDEX FOR (p:Product) ON (p.description) OPTIONS {dimension:128, similarityFunction:'euclidean'}").await?;
+graph.query("CREATE VECTOR INDEX FOR (p:Product) ON (p.description) OPTIONS {dimension:128, similarityFunction:'euclidean'}").execute().await?;
 {% endcapture %}
 
 {% include code_tabs.html id="vector_create_node_tabs" shell=shell_19 python=python_19 javascript=javascript_19 java=java_19 rust=rust_19 %}
@@ -734,7 +734,7 @@ graph.query("CREATE VECTOR INDEX FOR ()-[e:Call]->() ON (e.summary) OPTIONS {dim
 {% endcapture %}
 
 {% capture rust_20 %}
-graph.query("CREATE VECTOR INDEX FOR ()-[e:Call]->() ON (e.summary) OPTIONS {dimension:128, similarityFunction:'euclidean'}").await?;
+graph.query("CREATE VECTOR INDEX FOR ()-[e:Call]->() ON (e.summary) OPTIONS {dimension:128, similarityFunction:'euclidean'}").execute().await?;
 {% endcapture %}
 
 {% include code_tabs.html id="vector_create_relation_tabs" shell=shell_20 python=python_20 javascript=javascript_20 java=java_20 rust=rust_20 %}
@@ -764,7 +764,7 @@ graph.query("CREATE (p: Product {description: vecf32([2.1, 0.82, 1.3])})");
 {% endcapture %}
 
 {% capture rust_21 %}
-graph.query("CREATE (p: Product {description: vecf32([2.1, 0.82, 1.3])})").await?;
+graph.query("CREATE (p: Product {description: vecf32([2.1, 0.82, 1.3])})").execute().execute().await?;
 {% endcapture %}
 
 {% include code_tabs.html id="vector_insert_tabs" shell=shell_21 python=python_21 javascript=javascript_21 java=java_21 rust=rust_21 %}
@@ -822,7 +822,7 @@ ResultSet result = graph.query("CALL db.idx.vector.queryNodes('Product', 'descri
 {% endcapture %}
 
 {% capture rust_22 %}
-let result = graph.query("CALL db.idx.vector.queryNodes('Product', 'description', 10, vecf32(<array_of_vector_elements>)) YIELD node").await?;
+let result = graph.query("CALL db.idx.vector.queryNodes('Product', 'description', 10, vecf32(<array_of_vector_elements>)) YIELD node").execute().await?;
 {% endcapture %}
 
 {% include code_tabs.html id="vector_query_tabs" shell=shell_22 python=python_22 javascript=javascript_22 java=java_22 rust=rust_22 %}
@@ -857,7 +857,7 @@ graph.query("DROP VECTOR INDEX FOR (p:Product) ON (p.description)");
 {% endcapture %}
 
 {% capture rust_23 %}
-graph.query("DROP VECTOR INDEX FOR (p:Product) ON (p.description)").await?;
+graph.query("DROP VECTOR INDEX FOR (p:Product) ON (p.description)").execute().await?;
 {% endcapture %}
 
 {% include code_tabs.html id="vector_drop_tabs" shell=shell_23 python=python_23 javascript=javascript_23 java=java_23 rust=rust_23 %}
