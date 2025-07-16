@@ -420,3 +420,4 @@ HashMap
 copyGraph
 myproject
 mut
+readOnlyQuery
