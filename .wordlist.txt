@@ -404,6 +404,7 @@ cypher
 createQuery
 println
 ResultSet
+resultSet
 PostContent
 endcapture
 getConfig
