@@ -764,7 +764,7 @@ graph.query("CREATE (p: Product {description: vecf32([2.1, 0.82, 1.3])})");
 {% endcapture %}
 
 {% capture rust_21 %}
-graph.query("CREATE (p: Product {description: vecf32([2.1, 0.82, 1.3])})").execute().execute().await?;
+graph.query("CREATE (p: Product {description: vecf32([2.1, 0.82, 1.3])})").execute().await?;
 {% endcapture %}
 
 {% include code_tabs.html id="vector_insert_tabs" shell=shell_21 python=python_21 javascript=javascript_21 java=java_21 rust=rust_21 %}
