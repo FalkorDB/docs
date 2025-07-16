@@ -100,13 +100,28 @@ const graph = client.selectGraph('social');
 {% endcapture %}
 
 {% capture java_0 %}
-FalkorDB client = new FalkorDB("localhost", 6379, "your-password");
-Graph graph = client.selectGraph("social");
+package com.myproject;
+
+import com.falkordb.*;
+
+Driver driver = FalkorDB.driver("localhost", 6379);
+Graph graph = driver.graph("social");
 {% endcapture %}
 
 {% capture rust_0 %}
-let client = FalkorDB::connect("localhost", 6379, Some("your-password"));
-let graph = client.select_graph("social");
+use falkordb::{FalkorClientBuilder, FalkorConnectionInfo};
+
+// Connect to FalkorDB
+let connection_info: FalkorConnectionInfo = "falkor://127.0.0.1:6379".try_into()
+            .expect("Invalid connection info");
+
+let client = FalkorClientBuilder::new()
+           .with_connection_info(connection_info)
+           .build()
+           .expect("Failed to build client");
+
+// Select the social graph
+let mut graph = client.select_graph("social");
 {% endcapture %}
 
 {% include code_tabs.html id="connect_tabs" python=python_0 javascript=javascript_0 java=java_0 rust=rust_0 %}
@@ -148,25 +163,26 @@ CREATE (bob)-[:FRIENDS_WITH {since: 1684108800}]->(charlie)
 CREATE (alice)-[:CREATED {time: 1701388800}]->(post1)
 CREATE (bob)-[:CREATED {time: 1701475200}]->(post2)
 `;
-await graph.query(createQuery);
+
+let result = await graph.query(createQuery);
 console.log("Graph created successfully!");
 {% endcapture %}
 
 {% capture java_1 %}
-String createQuery = """
-CREATE (alice:User {id: 1, name: \"Alice\", email: \"alice@example.com\"})
-CREATE (bob:User {id: 2, name: \"Bob\", email: \"bob@example.com\"})
-CREATE (charlie:User {id: 3, name: \"Charlie\", email: \"charlie@example.com\"})
+String createQuery = 
+"CREATE (alice:User {id: 1, name: \"Alice\", email: \"alice@example.com\"}) " +
+"CREATE (bob:User {id: 2, name: \"Bob\", email: \"bob@example.com\"}) " +
+"CREATE (charlie:User {id: 3, name: \"Charlie\", email: \"charlie@example.com\"}) " +
 
-CREATE (post1:Post {id: 101, content: \"Hello World!\", date: 1701388800})
-CREATE (post2:Post {id: 102, content: \"Graph Databases are awesome!\", date: 1701475200})
+"CREATE (post1:Post {id: 101, content: \"Hello World!\", date: 1701388800}) " +
+"CREATE (post2:Post {id: 102, content: \"Graph Databases are awesome!\", date: 1701475200}) " +
 
-CREATE (alice)-[:FRIENDS_WITH {since: 1640995200}]->(bob)
-CREATE (bob)-[:FRIENDS_WITH {since: 1684108800}]->(charlie)
-CREATE (alice)-[:CREATED {time: 1701388800}]->(post1)
-CREATE (bob)-[:CREATED {time: 1701475200}]->(post2)
-""";
-graph.query(createQuery);
+"CREATE (alice)-[:FRIENDS_WITH {since: 1640995200}]->(bob) " +
+"CREATE (bob)-[:FRIENDS_WITH {since: 1684108800}]->(charlie) " +
+"CREATE (alice)-[:CREATED {time: 1701388800}]->(post1) " +
+"CREATE (bob)-[:CREATED {time: 1701475200}]->(post2)";
+
+ResultSet resultSet = graph.query(createQuery);
 System.out.println("Graph created successfully!");
 {% endcapture %}
 
@@ -184,7 +200,8 @@ CREATE (bob)-[:FRIENDS_WITH {since: 1684108800}]->(charlie)
 CREATE (alice)-[:CREATED {time: 1701388800}]->(post1)
 CREATE (bob)-[:CREATED {time: 1701475200}]->(post2)
 "#;
-graph.query(create_query)?;
+
+graph.query(create_query).execute().await?;
 println!("Graph created successfully!");
 {% endcapture %}
 
