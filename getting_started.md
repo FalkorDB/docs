@@ -242,7 +242,7 @@ String query = """
 MATCH (alice:User {name: \"Alice\"})-[:FRIENDS_WITH]->(friend)
 RETURN friend.name AS Friend
 """;
-ResultSet result = graph.ro_query(query);
+ResultSet result = graph.readOnlyQuery(query);
 System.out.println("Alice's friends:");
 for (Record record : result) {
     System.out.println(record.get("Friend"));
@@ -297,7 +297,7 @@ String query = """
 MATCH (bob:User {name: \"Bob\"})-[:CREATED]->(post:Post)
 RETURN post.content AS PostContent
 """;
-ResultSet result = graph.ro_query(query);
+ResultSet result = graph.readOnlyQuery(query);
 System.out.println("Posts created by Bob:");
 for (Record record : result) {
     System.out.println(record.get("PostContent"));
