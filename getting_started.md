@@ -100,13 +100,28 @@ const graph = client.selectGraph('social');
 {% endcapture %}
 
 {% capture java_0 %}
-FalkorDB client = new FalkorDB("localhost", 6379, "your-password");
-Graph graph = client.selectGraph("social");
+package com.myproject;
+
+import com.falkordb.*;
+
+Driver driver = FalkorDB.driver("localhost", 6379);
+Graph graph = driver.graph("social");
 {% endcapture %}
 
 {% capture rust_0 %}
-let client = FalkorDB::connect("localhost", 6379, Some("your-password"));
-let graph = client.select_graph("social");
+use falkordb::{FalkorClientBuilder, FalkorConnectionInfo};
+
+// Connect to FalkorDB
+let connection_info: FalkorConnectionInfo = "falkor://127.0.0.1:6379".try_into()
+            .expect("Invalid connection info");
+
+let client = FalkorClientBuilder::new()
+           .with_connection_info(connection_info)
+           .build()
+           .expect("Failed to build client");
+
+// Select the social graph
+let mut graph = client.select_graph("social");
 {% endcapture %}
 
 {% include code_tabs.html id="connect_tabs" python=python_0 javascript=javascript_0 java=java_0 rust=rust_0 %}
