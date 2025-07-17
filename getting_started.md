@@ -41,7 +41,7 @@ cargo add falkordb
   </dependencies>
 {% endcapture %}
 
-{% include code_tabs.html id="install_tabs" shell=pypi_0 shell=npm_0 shell=cargo_0 shell=maven_0 %}
+{% include code_tabs.html id="install_tabs" python=pypi_0 javascript=npm_0 java=maven_0 rust=cargo_0 %}
 
 ---
 
