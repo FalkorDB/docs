@@ -17,14 +17,31 @@ and accessing it using the [FalkorDB Python client](/clients) with [Cypher](/cyp
 1. **FalkorDB Instance**: Set up FalkorDB (on-prem or cloud). 
    - [Run FalkorDB Docker](https://hub.docker.com/r/falkordb/falkordb/)
    - [Create a FalkorDB Cloud Instance](https://app.falkordb.cloud/signup)
-2. **Python Installed**: Ensure you have Python 3.8+ installed.  
-3. **Install FalkorDB Python Client**:
+2. **Install FalkorDB Client**:
    
-   {% capture shell_0 %}
+{% capture pypi_0 %}
 pip install falkordb
 {% endcapture %}
-   
-   {% include code_tabs.html id="install_tabs" shell=shell_0 %}
+
+{% capture npm_0 %}
+npm install falkordb
+{% endcapture %}
+
+{% capture cargo_0 %}
+cargo add falkordb
+{% endcapture %}
+
+{% capture maven_0 %}
+  <dependencies>
+    <dependency>
+      <groupId>com.falkordb</groupId>
+      <artifactId>jfalkordb</artifactId>
+      <version>0.4.0</version>
+    </dependency>
+  </dependencies>
+{% endcapture %}
+
+{% include code_tabs.html id="install_tabs" shell=pypi_0 shell=npm_0 shell=cargo_0 shell=maven_0 %}
 
 ---
 
