@@ -37,11 +37,11 @@ image:
 
 master:
   extraFlags:
-  - "--loadmodule /var/lib/falkordb/bin/falkordb.so"
+    - "--loadmodule /var/lib/falkordb/bin/falkordb.so"
 
 replica:
   extraFlags:
-  - "--loadmodule /var/lib/falkordb/bin/falkordb.so"
+    - "--loadmodule /var/lib/falkordb/bin/falkordb.so"
 ```
 
 This file specify the FalkorDB image(you can choose different tags)
