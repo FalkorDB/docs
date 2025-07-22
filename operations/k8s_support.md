@@ -37,11 +37,11 @@ image:
 
 master:
   extraFlags:
-  - "--loadmodule /FalkorDB/bin/src/falkordb.so"
+  - "--loadmodule /var/lib/falkordb/bin/falkordb.so"
 
 replica:
   extraFlags:
-  - "--loadmodule /FalkorDB/bin/src/falkordb.so"
+  - "--loadmodule /var/lib/falkordb/bin/falkordb.so"
 ```
 
 This file specify the FalkorDB image(you can choose different tags)
@@ -63,7 +63,7 @@ After running this command, instructions on how to connect to the FalkorDB serve
 To connect to FalkorDB, you need the Redis password. Retrieve it using the following command:
 
 ```bash
-export REDIS_PASSWORD=$(kubectl get secret --namespace default my-release-redis -o jsonpath="{.data.redis-password}" | base64 -d)
+export REDIS_PASSWORD=$(kubectl get secret --namespace default my-falkordb-redis -o jsonpath="{.data.redis-password}" | base64 -d)
 ```
 
 ## Step 4: Enable External Connections
