@@ -1,30 +1,61 @@
 ---
 title: "GRAPH.MEMORY"
 description: >
-    The GRAPH.MEMORY command returns detailed memory usage statistics for the specified graph.
-    This command can be used to monitor memory consumption at the graph level,
-    providing insight into how much memory is used by various internal data structures such as
-    nodes, edges, schemas, and indices.
-
-    This information is useful for debugging, monitoring, and optimizing graph workloads in FalkorDB deployments.
+    The GRAPH.MEMORY USAGE command returns detailed memory usage statistics for the specified graph. This command provides insight into how much memory is used by various internal data structures such as nodes, edges, schemas, and indices. It enables users to analyze memory consumption at the graph level, reporting statistics in megabytes (MB). This is useful for debugging, monitoring, performance optimization, and capacity planning in FalkorDB deployments.
 parent: "Commands"
 ---
 
 # GRAPH.MEMORY
+The `GRAPH.MEMORY` command returns detailed memory consumption statistics for a specific graph in **megabytes (MB)**. It provides insight into how much memory is used by various internal data structures such as nodes, edges, schemas, indices, and matrix representations. This command can be used to monitor memory consumption at the graph level, making it especially useful for debugging, monitoring, performance optimization, and capacity planning in FalkorDB deployments.
 
-The GRAPH.MEMORY command returns detailed memory usage statistics for the specified graph.
-This command can be used to monitor memory consumption at the graph level,
-providing insight into how much memory is used by various internal data structures such as
-nodes, edges, schemas, and indices.
+## Syntax
 
-This information is useful for debugging, monitoring, and optimizing graph workloads in FalkorDB deployments.
-
-The optional `SAMPLES` option can be provided, where count is the number of sampled graph entities.
-The samples are averaged to estimate the total size. By default, this option is set to 100.
-
+```bash
+GRAPH.MEMORY USAGE <graph-name> [SAMPLES <count>]
+```
 
 Usage: `GRAPH.MEMORY USAGE <graph_id> [SAMPLES <count>]`
 
+## Arguments
+
+| Argument       | Description                                                                                                                              |
+|----------------|------------------------------------------------------------------------------------------------------------------------------------------|
+| `<graph-name>` | The name of the graph to inspect (also referred to as `<graph_id>`).                                                                     |
+| `SAMPLES <n>`  | *(Optional)* Number of samples to take when estimating memory usage. A higher number improves accuracy but increases computation time. The samples are averaged to estimate the total size. By default, this option is set to 100 if not specified. |
+
+## Return
+
+The command returns an array of key-value pairs, where each pair represents a specific memory metric and its value (in MB), corresponding to different components of the graph:
+
+| Metric Name / Field                           | Type    | Description                                                       |
+|-----------------------------------------------|---------|-------------------------------------------------------------------|
+| `total_graph_sz_mb`                           | integer | Total memory consumed by the graph.                               |
+| `label_matrices_sz_mb`                        | integer | Amount of memory used by label matrices (node labels tracking).   |
+| `relation_matrices_sz_mb`                     | integer | Amount of memory used by relationship type matrices (graph topology tracking). |
+| `amortized_node_block_sz_mb`                  | integer | Memory used by nodes (amortized node storage).                    |
+| `amortized_node_storage_sz_mb`                | integer | Amount of memory used for nodes storage (alternative naming).     |
+| `amortized_node_attributes_by_label_sz_mb`    | integer | Memory used by node attributes, split by node label.              |
+| `amortized_unlabeled_nodes_attributes_sz_mb`  | integer | Memory used by node attributes with no label.                     |
+| `amortized_edge_block_sz_mb`                  | integer | Memory used by edges (amortized edge storage).                    |
+| `amortized_edge_storage_sz_mb`                | integer | Amount of memory used for relationships storage (alternative naming). |
+| `amortized_edge_attributes_by_type_sz_mb`     | integer | Memory used by edge attributes, split by relationship type.       |
+| `indices_sz_mb`                               | integer | Amount of memory consumed by indices (if any).                    |
+
+*Note*: Metrics like `amortized_node_block_sz_mb` and `amortized_node_storage_sz_mb` are alternative names for the same data; both are included for clarity.
+
+## Examples
+
+### Basic Usage
+```bash
+GRAPH.MEMORY USAGE myGraph
+```
+
+### With Sampling
+```bash
+GRAPH.MEMORY USAGE myGraph SAMPLES 500
+```
+
+### Sample Output
 ```sh
 127.0.0.1:6379> GRAPH.MEMORY USAGE flights
  1) "total_graph_sz_mb"
@@ -40,17 +71,3 @@ Usage: `GRAPH.MEMORY USAGE <graph_id> [SAMPLES <count>]`
 11) "indices_sz_mb"
 12) (integer) 752
 ```
-
-## Output
-
-The command returns an array of key-value pairs, where each pair represents a specific memory metric and its value (in MB).
-
-| Metric Name                    | Type    | Description                                        |
-|:-------------------------------|:--------|:---------------------------------------------------|
-| `total_graph_sz_mb`            | integer | Total memory consumed by the graph.                |
-| `label_matrices_sz_mb`         | integer | Amount of memory used for node labels tracking.    |
-| `relation_matrices_sz_mb`      | integer | Amount of memory used for graph topology tracking. |
-| `amortized_node_storage_sz_mb` | integer | Amount of memory used for nodes storage.           |
-| `amortized_edge_storage_sz_mb` | integer | Amount of memory used for relationships storage.   |
-| `indices_sz_mb`                | integer | Amount of memory consumed by indices.              |
-
