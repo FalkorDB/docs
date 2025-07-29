@@ -22,7 +22,7 @@ docker run -p 6379:6379 -p 7687:7687 -p 3000:3000 -it -e REDIS_ARGS="--requirepa
 ### Ports 
 - 6379 - FalkorDB
 - 7687 - Bolt
-[- 3000 - Falkor-Browser](https://github.com/FalkorDB/falkordb-browser)
+- 3000 - [Falkor-Browser](https://github.com/FalkorDB/falkordb-browser)
 
 Additionally, install the necessary BOLT drivers:
 
