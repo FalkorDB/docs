@@ -38,7 +38,7 @@ See list of available [Procedures](/cypher/procedures)
 
 # Algorithms
 
-See list of available graph [Algorithms](/cypher/algorithms)
+See list of available graph [Algorithms](/algorithms)
 
 # Indexing
 
