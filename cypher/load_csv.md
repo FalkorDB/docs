@@ -21,6 +21,17 @@ appropriate type.
 
 Additional clauses can follow and accesses the `row` variable
 
+## FIELD DELIMITER
+
+If not specified ',' is used as the default field delimiter,
+to change delimiter use the following:
+
+```cypher
+LOAD CSV FROM 'file://actors.csv' AS row FIELDTERMINATOR ';'
+RETURN row
+LIMIT 10
+```
+
 ## IMPORTING DATA
 
 ### Importing local files
@@ -33,7 +44,7 @@ In the following example we'll load the `actors.csv` file into FalkorDB.
 
 ### actors.csv
 
-| ||
+|                |           |
 | ---------------|-----------|
 | Lee Pace       | 1979      | 
 | Vin Diesel     | 1967      |
