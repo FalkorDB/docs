@@ -13,18 +13,14 @@ LOAD CSV FROM 'file://actors.csv' AS row
 MERGE (a:Actor {name: row[0]})
 ```
 
-`LOAD CSV FROM` accepts a string path to a CSV file,
-the file is parsed line by line, the current line is accessible through the 
-variable specified by `AS`. Each parsed value is treated as a `string`, use
-the right conversion functions e.g. `toInteger` to cast a value to its
-appropriate type.
+`LOAD CSV FROM` accepts a string path to a CSV file. The file is parsed line by line, and the current line is accessible through the variable specified by AS. Each parsed value is treated as a `string`. Use appropriate conversion functions, for example, `toInteger`, to cast values to their correct types.
+Additional clauses can follow and access the row variable.
 
 Additional clauses can follow and accesses the `row` variable
 
 ## FIELD DELIMITER
 
-If not specified ',' is used as the default field delimiter,
-to change delimiter use the following:
+If not specified, ',' is used as the default field delimiter. To change the delimiter, use the following:
 
 ```cypher
 LOAD CSV FROM 'file://actors.csv' AS row FIELDTERMINATOR ';'
@@ -61,7 +57,7 @@ RETURN a.name, a.birth_year
 Note that we've used indices e.g. `row[0]` to access the value at the corresponding
 column.
 
-In case the CSV contains a header row e.g.
+If the CSV contains a header row, like this:
 
 ### actors.csv
 
@@ -72,7 +68,7 @@ In case the CSV contains a header row e.g.
 | Chris Pratt    | 1979      |
 | Zoe Saldana    | 1978      |
 
-Then we should use the `WITH HEADERS` variation of the `LOAD CSV` clause
+Use the `WITH HEADERS` variation of the `LOAD CSV` clause:
 
 ```cypher
 LOAD CSV WITH HEADERS FROM 'file://actors.csv'
@@ -81,15 +77,12 @@ MERGE (a:Actor {name: row[name], birth_year: toInteger(row[birthyear])})
 RETURN a.name, a.birth_year
 ```
 
-Note when a header row exists and `WITH HEADERS` is specified the `row` variable
-is no longer an `array` but rather a `map`, accessing the individual elements
-is done via their column name.
+When a header row exists and `WITH HEADERS` is specified, the `row` variable becomes a `map` instead of an `array`. Access individual elements via their column names.
 
 
 ### Importing data from multiple CSVs
 
-Building on our previous example we'll introduce a second csv file `acted_in.csv`
-which ties actors to movies they've acted in
+Building on the previous example, we’ll introduce a second CSV file, `acted_in.csv`, which connects actors to movies.
 
 
 ### acted_in.csv
@@ -125,8 +118,7 @@ MERGE (a)-[:ACTED_IN]->(m)
 
 ### Importing remote files
 
-FalkorDB supports importing remote CSVs via HTTPS.
-Here's an example loading the bigmac data-set from calmcode.io:
+FalkorDB supports importing remote CSVs via HTTPS. Here’s an example loading the Big Mac dataset from calmcode.io:
 
 ```cypher
 LOAD CSV WITH HEADERS FROM 'https://calmcode.io/static/data/bigmac.csv' AS row
@@ -141,11 +133,8 @@ RETURN row LIMIT 4
 
 ### Dealing with a large number of columns or missing entries
 
-Loading data from CSV files that miss entries may cause complications.
-We've solved this (and made it useful for cases involving loading a large number of columns)
-with the following approach:
-
-Assuming this is the CSV file we're loading:
+Loading CSV files with missing entries can cause complications. The following approach handles this and works well for files with many columns.
+Assuming we are loading the following CSV file:
 
 
 ### missing_entries.csv
@@ -157,7 +146,7 @@ Assuming this is the CSV file we're loading:
 | Chris Pratt    |           |
 | Zoe Saldana    | 1978      |
 
->Note: both Vin Diesel and Chris Pratt are missing their birthyear entry
+> Note: Vin Diesel and Chris Pratt are missing their `birth_year` entries.
 
 When creating Actor nodes, there is no need to explicitly define each column as done previously.
 The following query creates an empty Actor node and assigns the current CSV row to it.
