@@ -433,3 +433,7 @@ dm
 Munger
 queryRelationships
 similarityFunction
+
+llm
+graphrag
+sdk
