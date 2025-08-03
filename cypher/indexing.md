@@ -200,11 +200,11 @@ GRAPH.EXPLAIN DEMO_GRAPH "MATCH (p:Person {id: 0})-[f:FOLLOW]->(fp) WHERE 0 < f.
 {% capture python_6 %}
 result = graph.explain("MATCH (p:Person {id: 0})-[f:FOLLOW]->(fp) WHERE 0 < f.created_at AND f.created_at < 1000 RETURN fp")
 print(result)
-# Output:
-# Results
-#     Project
-#         Edge By Index Scan | [f:FOLLOW]
-#             Node By Index Scan | (p:Person)
+### Output:
+### Results
+####     Project
+#####         Edge By Index Scan | [f:FOLLOW]
+#####             Node By Index Scan | (p:Person)
 {% endcapture %}
 
 {% capture javascript_6 %}
@@ -305,21 +305,21 @@ The following example demonstrates how to index and search an array property:
 # Create a node with an array property
 GRAPH.QUERY DEMO_GRAPH "CREATE (:Person {samples: [-21, 30.5, 0, 90, 3.14]})"
 
-# Create an index on the array property
+## Create an index on the array property
 GRAPH.QUERY DEMO_GRAPH "CREATE INDEX FOR (p:Person) ON (p.samples)"
 
-# Use the index to search for nodes containing a specific value in the array
+## Use the index to search for nodes containing a specific value in the array
 GRAPH.QUERY DEMO_GRAPH "MATCH (p:Person) WHERE 90 IN p.samples RETURN p"
 {% endcapture %}
 
 {% capture python_9 %}
-# Create a node with an array property
+## Create a node with an array property
 graph.query("CREATE (:Person {samples: [-21, 30.5, 0, 90, 3.14]})")
 
-# Create an index on the array property
+## Create an index on the array property
 graph.query("CREATE INDEX FOR (p:Person) ON (p.samples)")
 
-# Use the index to search for nodes containing a specific value in the array
+## Use the index to search for nodes containing a specific value in the array
 result = graph.query("MATCH (p:Person) WHERE 90 IN p.samples RETURN p")
 {% endcapture %}
 
@@ -358,7 +358,7 @@ let result = graph.query("MATCH (p:Person) WHERE 90 IN p.samples RETURN p").exec
 
 {% include code_tabs.html id="array_index_tabs" shell=shell_9 python=python_9 javascript=javascript_9 java=java_9 rust=rust_9 %}
 
-# Full-text indexing
+## Full-text indexing
 
 FalkorDB leverages the indexing capabilities of [RediSearch](https://redis.io/docs/interact/search-and-query/) to provide full-text indices through procedure calls.
 
@@ -488,9 +488,9 @@ GRAPH.QUERY DEMO_GRAPH
 result = graph.query("CALL db.idx.fulltext.queryNodes('Movie', 'Book') YIELD node RETURN node.title")
 for record in result:
     print(record["node.title"])
-# Output:
-# The Jungle Book
-# The Book of Life
+### Output:
+#### The Jungle Book
+#### The Book of Life
 {% endcapture %}
 
 {% capture javascript_14 %}
@@ -667,7 +667,7 @@ graph.query("CALL DROP FULLTEXT INDEX FOR ()-[m:Manager]-()  ON (m.name)").execu
 
 {% include code_tabs.html id="fulltext_relation_drop_tabs" shell=shell_18 python=python_18 javascript=javascript_18 java=java_18 rust=rust_18 %}
 
-# Vector indexing
+## Vector indexing
 
 With the introduction of the `vector` data-type a new type of index was introduced.
 A vector index is a dedicated index for indexing and searching through vectors.
