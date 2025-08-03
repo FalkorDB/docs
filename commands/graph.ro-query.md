@@ -3,7 +3,10 @@ title: "GRAPH.RO_QUERY"
 nav_order: 2
 description: >
     Executes a given read only query against a specified graph
-parent: "Commands"    
+parent: "Commands"
+redirect_from:
+  - /commands/graph.ro_query.html
+  - /commands/graph.ro_query
 ---
 
 # GRAPH.RO_QUERY

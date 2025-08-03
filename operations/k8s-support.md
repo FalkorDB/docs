@@ -3,6 +3,9 @@ title: "Kubernetes support"
 nav_order: 4
 description: "Deploy FalkorDB to Kubernetes."
 parent: "Operations"
+redirect_from:
+  - /operations/k8s_support.html
+  - /operations/k8s_support
 ---
 
 # Kubernetes support for FalkorDB
@@ -37,11 +40,11 @@ image:
 
 master:
   extraFlags:
-  - "--loadmodule /var/lib/falkordb/bin/falkordb.so"
+  - "--loadmodule /FalkorDB/bin/src/falkordb.so"
 
 replica:
   extraFlags:
-  - "--loadmodule /var/lib/falkordb/bin/falkordb.so"
+  - "--loadmodule /FalkorDB/bin/src/falkordb.so"
 ```
 
 This file specify the FalkorDB image(you can choose different tags)
@@ -63,7 +66,7 @@ After running this command, instructions on how to connect to the FalkorDB serve
 To connect to FalkorDB, you need the Redis password. Retrieve it using the following command:
 
 ```bash
-export REDIS_PASSWORD=$(kubectl get secret --namespace default my-falkordb-redis -o jsonpath="{.data.redis-password}" | base64 -d)
+export REDIS_PASSWORD=$(kubectl get secret --namespace default my-release-redis -o jsonpath="{.data.redis-password}" | base64 -d)
 ```
 
 ## Step 4: Enable External Connections

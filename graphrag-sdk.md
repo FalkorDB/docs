@@ -2,6 +2,9 @@
 title: "GraphRAG-SDK"
 nav_order: 8
 description: "Build intelligent GraphRAG applications with FalkorDB and LLMs."
+redirect_from:
+  - /graphrag_sdk.html
+  - /graphrag_sdk
 ---
 
 # GraphRAG-SDK

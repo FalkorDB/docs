@@ -20,6 +20,7 @@ aux_links_new_tab: true
 
 plugins:
   - jekyll-sitemap
+  - jekyll-redirect-from
 
 # Footer last edited timestamp
 last_edit_timestamp: true 
