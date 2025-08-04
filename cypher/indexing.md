@@ -200,11 +200,11 @@ GRAPH.EXPLAIN DEMO_GRAPH "MATCH (p:Person {id: 0})-[f:FOLLOW]->(fp) WHERE 0 < f.
 {% capture python_6 %}
 result = graph.explain("MATCH (p:Person {id: 0})-[f:FOLLOW]->(fp) WHERE 0 < f.created_at AND f.created_at < 1000 RETURN fp")
 print(result)
-### Output:
-### Results
-####     Project
-#####         Edge By Index Scan | [f:FOLLOW]
-#####             Node By Index Scan | (p:Person)
+# Output:
+# Results
+#     Project
+#         Edge By Index Scan | [f:FOLLOW]
+#             Node By Index Scan | (p:Person)
 {% endcapture %}
 
 {% capture javascript_6 %}
