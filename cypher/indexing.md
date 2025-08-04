@@ -305,7 +305,7 @@ The following example demonstrates how to index and search an array property:
 # Create a node with an array property
 GRAPH.QUERY DEMO_GRAPH "CREATE (:Person {samples: [-21, 30.5, 0, 90, 3.14]})"
 
-## Create an index on the array property
+# Create an index on the array property
 GRAPH.QUERY DEMO_GRAPH "CREATE INDEX FOR (p:Person) ON (p.samples)"
 
 # Use the index to search for nodes containing a specific value in the array
