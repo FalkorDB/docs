@@ -319,7 +319,7 @@ graph.query("CREATE (:Person {samples: [-21, 30.5, 0, 90, 3.14]})")
 # Create an index on the array property
 graph.query("CREATE INDEX FOR (p:Person) ON (p.samples)")
 
-## Use the index to search for nodes containing a specific value in the array
+# Use the index to search for nodes containing a specific value in the array
 result = graph.query("MATCH (p:Person) WHERE 90 IN p.samples RETURN p")
 {% endcapture %}
 
