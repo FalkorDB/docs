@@ -316,7 +316,7 @@ GRAPH.QUERY DEMO_GRAPH "MATCH (p:Person) WHERE 90 IN p.samples RETURN p"
 # Create a node with an array property
 graph.query("CREATE (:Person {samples: [-21, 30.5, 0, 90, 3.14]})")
 
-## Create an index on the array property
+# Create an index on the array property
 graph.query("CREATE INDEX FOR (p:Person) ON (p.samples)")
 
 ## Use the index to search for nodes containing a specific value in the array
