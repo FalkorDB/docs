@@ -313,7 +313,7 @@ GRAPH.QUERY DEMO_GRAPH "MATCH (p:Person) WHERE 90 IN p.samples RETURN p"
 {% endcapture %}
 
 {% capture python_9 %}
-## Create a node with an array property
+# Create a node with an array property
 graph.query("CREATE (:Person {samples: [-21, 30.5, 0, 90, 3.14]})")
 
 ## Create an index on the array property
