@@ -488,9 +488,9 @@ GRAPH.QUERY DEMO_GRAPH
 result = graph.query("CALL db.idx.fulltext.queryNodes('Movie', 'Book') YIELD node RETURN node.title")
 for record in result:
     print(record["node.title"])
-### Output:
-#### The Jungle Book
-#### The Book of Life
+# Output:
+# The Jungle Book
+# The Book of Life
 {% endcapture %}
 
 {% capture javascript_14 %}
