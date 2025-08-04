@@ -28,18 +28,18 @@ A Cypher query consists of one or more clauses.
 - [FOREACH](/cypher/foreach)
 - [CALL {}](/cypher/call)
 
-# Functions
+## Functions
 
 See the list of available [functions](/cypher/functions).
 
-# Procedures
+## Procedures
 
 See the list of available [procedures](/cypher/procedures).
 
-# Algorithms
+## Algorithms
 
 See the list of available graph [algorithms](/algorithms).
 
-# Indexing
+## Indexing
 
 See how to use [indexing](/cypher/indexing).

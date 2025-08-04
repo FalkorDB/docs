@@ -358,7 +358,7 @@ let result = graph.query("MATCH (p:Person) WHERE 90 IN p.samples RETURN p").exec
 
 {% include code_tabs.html id="array_index_tabs" shell=shell_9 python=python_9 javascript=javascript_9 java=java_9 rust=rust_9 %}
 
-# Full-text indexing
+## Full-text indexing
 
 FalkorDB leverages the indexing capabilities of [RediSearch](https://redis.io/docs/interact/search-and-query/) to provide full-text indices through procedure calls.
 
@@ -667,7 +667,7 @@ graph.query("CALL DROP FULLTEXT INDEX FOR ()-[m:Manager]-()  ON (m.name)").execu
 
 {% include code_tabs.html id="fulltext_relation_drop_tabs" shell=shell_18 python=python_18 javascript=javascript_18 java=java_18 rust=rust_18 %}
 
-# Vector indexing
+## Vector indexing
 
 With the introduction of the `vector` data-type a new type of index was introduced.
 A vector index is a dedicated index for indexing and searching through vectors.
