@@ -12,7 +12,7 @@ Executes the given query against a specified graph.
 
 Arguments: `Graph name, Query, Timeout [optional]`
 
-Returns: [Result set](/design/result_structure)
+Returns: [Result set](/design/result-structure)
 
 ### Queries and Parameterized Queries
 
@@ -99,4 +99,4 @@ println!("{:?}", result);
 
 ### Query language
 
-The syntax is based on [Cypher](http://www.opencypher.org/). [Most](/cypher/cypher_support) of the language is supported. See [Cypher documentation](/cypher).
+The syntax is based on [Cypher](http://www.opencypher.org/). [Most](/cypher/cypher-support) of the language is supported. See [Cypher documentation](/cypher).

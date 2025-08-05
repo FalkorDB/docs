@@ -38,7 +38,7 @@ For path expressions like `shortestPath()` used directly in Cypher queries, refe
 - **[PageRank](./pagerank.md)**  
   Computes the PageRank score of each node in the graph, representing its influence based on the structure of incoming links.
 
-- **[Betweenness Centrality](./betweenness_centrality.md)**  
+- **[Betweenness Centrality](./betweenness-centrality.md)**  
   Calculates the number of shortest paths that pass through each node, indicating its importance as a connector in the graph.
 
 ## Community Detection

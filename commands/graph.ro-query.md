@@ -15,7 +15,7 @@ Executes a given read only query against a specified graph.
 
 Arguments: `Graph name, Query, Timeout [optional]`
 
-Returns: [Result set](/design/result_structure) for a read only query or an error if a write query was given.
+Returns: [Result set](/design/result-structure) for a read only query or an error if a write query was given.
 
 {% capture shell_0 %}
 GRAPH.RO_QUERY us_government "MATCH (p:president)-[:born]->(:state {name:'Hawaii'}) RETURN p"
