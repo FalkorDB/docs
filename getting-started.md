@@ -3,6 +3,9 @@ title: "Getting Started"
 nav_order: 2
 description: >
     Getting Started with FalkorDB Graph Database.
+redirect_from:
+  - /getting_started.html
+  - /getting_started
 ---
 
 # Getting Started with FalkorDB

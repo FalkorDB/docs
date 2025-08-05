@@ -4,6 +4,9 @@ nav_order: 5
 description: >
     Order by specifies that the output be sorted and how.
 parent: "Cypher Language"
+redirect_from:
+  - /cypher/order_by.html
+  - /cypher/order_by
 ---
 
 # ORDER BY
