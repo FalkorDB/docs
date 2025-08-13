@@ -8,7 +8,7 @@ parent: "Algorithms"
 
 ## Overview
 
-The Minimum Spanning Forest (MSF) finds the relationships with minimum weights such that any weakly connected component in the graph stays connected. It treats all edges as bi-directional and ensures that any pair of nodes that previously shared a path will still share a unique path in the MSF subgraph. 
+The Minimum Spanning Forest (MSF) finds the relationships with minimum weights such that any weakly connected component in the graph stays connected. It treats all edges as bi-directional and ensures that any pair of nodes that previously shared a path will still share a unique path in the MSF graph. 
 
 MSF serves as a common algorithm in scenarios such as:
 - Designing a cost-effective road network connecting several cities.
@@ -39,15 +39,12 @@ The procedure accepts an optional configuration `Map` with the following optiona
 | `weightAttribute`   | string | Unweighted             | the attribute to use as the tree weight.                                   |
 
 ### Return Values
-The procedure returns a stream of records with the following fields:
+The procedure returns a stream of records corresponding to each tree in the forest with the following fields:
 
-| Name     | Type   | Description                                   |
-|----------|--------|-----------------------------------------------|
-| `edge`   | Edge   | An edge entity which is part of the MSF graph |
-| `weight` | Double | The weight of the Edge                        |
-
-
-
+| Name    | Type | Description                      |
+|---------|------|----------------------------------|
+| `edges` | List | The edges that connect each tree |
+| `nodes` | List | The nodes in the tree            |
 
 ### Create the Graph
 
@@ -86,6 +83,6 @@ CALL algo.MSF({weightAttribute: 'cost'}) YIELD edge, weight
 ```
 
 #### Expected Results
-The algorithm would yeild the following edge objects and their weights:
+The algorithm would yield a single tree containing the following edge and node objects:
 
 ![City MSF Graph](../images/city_msf.png)
