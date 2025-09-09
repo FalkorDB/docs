@@ -72,6 +72,9 @@ NumItems
 OMP
 OpenAI
 OpenCypher
+OpenTelemetry
+OTel
+OTLP
 OpenMP
 Ouaknine
 Parametrized
@@ -165,6 +168,7 @@ indegree
 insertListElements
 ioredisgraph
 isEmpty
+Jaeger
 javadocs
 javascript
 jedis
@@ -193,6 +197,7 @@ npm
 nredisstack
 nuget
 numerics
+observability
 openCypher
 orderability
 outdegree
