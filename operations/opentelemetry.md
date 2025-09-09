@@ -41,6 +41,7 @@ poetry add opentelemetry-sdk
 ```python
 import falkordb
 from opentelemetry import trace
+from opentelemetry.trace import Status, StatusCode
 from opentelemetry.instrumentation.redis import RedisInstrumentor
 from opentelemetry.sdk.resources import Resource
 from opentelemetry.sdk.trace import TracerProvider
@@ -137,10 +138,10 @@ with tracer.start_as_current_span("falkordb.complex_query") as span:
     try:
         result = g.query(query).result_set
         span.set_attribute("db.result.count", len(result))
-        span.set_status(trace.Status(trace.StatusCode.OK))
+        span.set_status(Status(StatusCode.OK))
     except Exception as e:
         span.set_attribute("db.error", str(e))
-        span.set_status(trace.Status(trace.StatusCode.ERROR, str(e)))
+        span.set_status(Status(StatusCode.ERROR))
         raise
 ```
 
@@ -196,6 +197,7 @@ Here's a complete working example:
 ```python
 import falkordb
 from opentelemetry import trace
+from opentelemetry.trace import Status, StatusCode
 from opentelemetry.instrumentation.redis import RedisInstrumentor
 from opentelemetry.sdk.resources import Resource
 from opentelemetry.sdk.trace import TracerProvider
@@ -284,10 +286,10 @@ Always handle errors properly in your spans:
 with tracer.start_as_current_span("falkordb.query") as span:
     try:
         result = g.query(query).result_set
-        span.set_status(trace.Status(trace.StatusCode.OK))
+        span.set_status(Status(StatusCode.OK))
     except Exception as e:
         span.set_attribute("error.message", str(e))
-        span.set_status(trace.Status(trace.StatusCode.ERROR, str(e)))
+        span.set_status(Status(StatusCode.ERROR))
         raise
 ```
 
