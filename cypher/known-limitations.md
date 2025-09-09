@@ -3,6 +3,9 @@ title: "Known limitations"
 description: "FalkorDB Known limitations"
 nav_order: 1000
 parent: "Cypher Language"
+redirect_from:
+  - /cypher/known_limitations.html
+  - /cypher/known_limitations
 ---
 
 # Known limitations

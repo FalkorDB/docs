@@ -4,6 +4,9 @@ nav_order: 17
 description: >
     LOAD CSV allows a query to access data within a CSV file
 parent: "Cypher Language"
+redirect_from:
+  - /cypher/load_csv.html
+  - /cypher/load_csv
 ---
 
 # LOAD CSV
@@ -70,7 +73,7 @@ MERGE (a:Actor {name: row[name], birth_year: toInteger(row[birthyear])})
 RETURN a.name, a.birth_year
 ```
 
-Note when a header row exists and `WITH HEADER` is specified the `row` variable
+Note when a header row exists and `WITH HEADERS` is specified the `row` variable
 is no longer an `array` but rather a `map`, accessing the individual elements
 is done via their column name.
 
@@ -96,7 +99,7 @@ We'll create a new graph connecting actors to the movies they've acted in
 Load actors:
 
 ```cypher
-LOAD CSV WITH HEADER FROM 'file://actors.csv'
+LOAD CSV WITH HEADERS FROM 'file://actors.csv'
 AS row
 MERGE (a:Actor {name:row['name']})
 ```
@@ -104,7 +107,7 @@ MERGE (a:Actor {name:row['name']})
 Load movies and create `ACTED_IN` relations:
 
 ```cypher
-LOAD CSV WITH HEADER FROM 'file://acted_in.csv'
+LOAD CSV WITH HEADERS FROM 'file://acted_in.csv'
 AS row
 
 MATCH (a:Actor {name: row['actor']})

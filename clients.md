@@ -13,8 +13,8 @@ description: >
 | [falkordb-ts][falkordb-ts-url]    |  [JSDoc][falkordb-ts-docs] | Node.JS    | MIT        | [FalkorDB][falkordb-url]                    | [npm][falkordb-ts-package]               |
 | [jfalkordb][jfalkordb-url]        |  [javadocs][jfalkordb-docs] | Java       | BSD        | [FalkorDB][falkordb-url]                    | [maven][jfalkordb-package]               |
 | [falkordb-rs][falkordb-rs-url]    |  [docs.rs][falkordb-rs-docs]| Rust       | MIT        | [FalkorDB][falkordb-url]                    | [crates][falkordb-rs-package]             |
-| [falkordb-go][falkordb-go-url]    |  [godoc][falkordb-go-docs] | Go       | BSD        | [FalkorDB][falkordb-url]                    | [crates][falkordb-go-package]             |
-| [NFalkorDB][nfalkordb-url]        |  [readme][nfalkordb-docs]   | C#       | Apache-2.0        | [FalkorDB][falkordb-url]                    | [crates][nfalkordb-package]             |
+| [falkordb-go][falkordb-go-url]    |  [godoc][falkordb-go-docs] | Go       | BSD        | [FalkorDB][falkordb-url]                    | [Github][falkordb-go-package]             |
+| [NFalkorDB][nfalkordb-url]        |  [readme][nfalkordb-docs]   | C#       | Apache-2.0        | [FalkorDB][falkordb-url]                    | [nuget][nfalkordb-package]             |
 
 ## Additional Clients
 
@@ -117,4 +117,4 @@ description: >
 
 ## Implementing a client
 
-Information on some of the tasks involved in writing a FalkorDB client can be found in the [Client Specification](/design/client_spec).
+Information on some of the tasks involved in writing a FalkorDB client can be found in the [Client Specification](/design/client-spec).

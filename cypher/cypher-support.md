@@ -4,6 +4,9 @@ nav_order: 22
 description: >
     FalkorDB implements a subset of the Cypher language, which is growing as development continues.
 parent: "Cypher Language"
+redirect_from:
+  - /cypher/cypher_support.html
+  - /cypher/cypher_support
 ---
 
 # Cypher coverage

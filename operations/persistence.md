@@ -36,13 +36,13 @@ This volume will be used to store the database files.
 You can now run FalkorDB with the volume attached:
 
 ```bash
-docker run -d --name falkordb -v falkordb_data:/data -p 6379:6379 falkordb/falkordb
+docker run -d --name falkordb -v falkordb_data:/var/lib/falkordb/data -p 6379:6379 falkordb/falkordb
 ```
 
 In this configuration:
 
-The -v falkordb_data:/data flag mounts the volume to the /data directory inside the container.
-FalkorDB will use the /data directory by default.
+The -v falkordb_data:/var/lib/falkordb/data flag mounts the volume to the /var/lib/falkordb/data directory inside the container.
+FalkorDB will use the /var/lib/falkordb/data directory by default.
 
 ## Step 2: Verifying the Setup
 

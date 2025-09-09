@@ -2,6 +2,9 @@
 title: "BOLT protocol support"
 nav_order: 10
 description: "Connecting to FalkorDB using BOLT protocol."
+redirect_from:
+  - /bolt_support.html
+  - /bolt_support
 ---
 
 # [EXPERIMENTAL] BOLT protocol support for FalkorDB 
