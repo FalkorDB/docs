@@ -22,6 +22,7 @@ Costanza
 Cypher
 DateTime
 DELUSER
+distro
 Ducati
 FOF
 FOREACH
@@ -44,6 +45,7 @@ IPDPS
 ISC
 Implementers
 IndexError
+Instrumentor
 JS
 JSDoc
 JSON
