@@ -15,6 +15,59 @@ REST API for FalkorDB Browser - Graph Database Management Interface
 
 **Authentication:** Bearer Token (JWT)
 
+## Getting Started
+
+### Quick Start Guide
+
+To start using the FalkorDB Browser REST API, follow these simple steps:
+
+#### 1. Authentication
+First, you need to authenticate to get a JWT token:
+
+```bash
+curl -X POST "http://your-falkordb-browser-url/api/auth/login" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "username": "default",
+    "password": "password"
+  }'
+```
+
+This will return a JWT token that you'll use for all subsequent requests:
+```json
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "user": {
+    "username": "default",
+    "role": "Admin"
+  }
+}
+```
+
+#### 2. Check Connection Status
+Verify that FalkorDB is running and accessible:
+
+```bash
+curl -X GET "http://your-falkordb-browser-url/api/status" \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN"
+```
+
+#### 3. List Available Graphs
+See what graphs are available in your FalkorDB instance:
+
+```bash
+curl -X GET "http://your-falkordb-browser-url/api/graph" \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN"
+```
+
+#### 4. Execute Your First Query
+Run a simple Cypher query on a graph:
+
+```bash
+curl -X GET "http://your-falkordb-browser-url/api/graph/my_graph?query=MATCH (n) RETURN n LIMIT 5&timeout=30000" \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN"
+```
+
 ## Table of Contents
 
 ### Authentication
