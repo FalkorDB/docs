@@ -36,7 +36,7 @@ curl -X POST "http://your-falkordb-browser-url/api/auth/login" \
 This will return a JWT token that you'll use for all subsequent requests:
 ```json
 {
-  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "token": "<JWT_TOKEN>",
   "user": {
     "username": "default",
     "role": "Admin"
@@ -49,23 +49,26 @@ Verify that FalkorDB is running and accessible:
 
 ```bash
 curl -X GET "http://your-falkordb-browser-url/api/status" \
-  -H "Authorization: Bearer YOUR_JWT_TOKEN"
+  -H "Authorization: Bearer $JWT_TOKEN"
 ```
 
 #### 3. List Available Graphs
 See what graphs are available in your FalkorDB instance:
 
 ```bash
+AUTH_HEADER="Authorization: Bearer ${JWT_TOKEN}"
 curl -X GET "http://your-falkordb-browser-url/api/graph" \
-  -H "Authorization: Bearer YOUR_JWT_TOKEN"
+  -H "$AUTH_HEADER"
 ```
 
 #### 4. Execute Your First Query
 Run a simple Cypher query on a graph:
 
 ```bash
-curl -X GET "http://your-falkordb-browser-url/api/graph/my_graph?query=MATCH (n) RETURN n LIMIT 5&timeout=30000" \
-  -H "Authorization: Bearer YOUR_JWT_TOKEN"
+AUTH_HEADER="Authorization: Bearer ${JWT_TOKEN}"
+curl -N -X GET "http://your-falkordb-browser-url/api/graph/my_graph?query=MATCH%20(n)%20RETURN%20n%20LIMIT%205&timeout=30000" \
+  -H "$AUTH_HEADER" \
+  -H "Accept: text/event-stream"
 ```
 
 ## Table of Contents
@@ -107,14 +110,14 @@ curl -X GET "http://your-falkordb-browser-url/api/graph/my_graph?query=MATCH (n)
 - [Rename schema - PATCH /api/schema/{schema}](#rename-schema---patch-apischemaschema)
 - [Delete schema - DELETE /api/schema/{schema}](#delete-schema---delete-apischemaschema)
 - [Get schema element counts - GET /api/schema/{schema}/count](#get-schema-element-counts---get-apischemaschemacount)
-- [Duplicate schema - PATCH /api/schema/{schema}/duplicate](#duplicate-schema---patch-apischemaschemaduplicat)
+- [Duplicate schema - PATCH /api/schema/{schema}/duplicate](#duplicate-schema---patch-apischemaschemaduplicate)
 - [Create node or relationship in schema - POST /api/schema/{schema}/new](#create-node-or-relationship-in-schema---post-apischemaschemanew)
-- [Create node in schema - POST /api/schema/{schema}/nodes](#create-node-in-schema---post-apischemaschemanode)
+- [Create node in schema - POST /api/schema/{schema}/nodes](#create-node-in-schema---post-apischemaschemanodes)
 - [Create relationship in schema - POST /api/schema/{schema}/relationships](#create-relationship-in-schema---post-apischemaschemarelationships)
 - [Delete node from schema - DELETE /api/schema/{schema}/{nodeId}](#delete-node-from-schema---delete-apischemaschemanodeid)
 - [Delete relationship from schema - DELETE /api/schema/{schema}/{relationshipId}](#delete-relationship-from-schema---delete-apischemaschemarelationshipid)
-- [Add label to node - POST /api/schema/{schema}/{node}/label](#add-label-to-node---post-apischemaschemanode/label)
-- [Remove label from node - DELETE /api/schema/{schema}/{node}/label](#remove-label-from-node---delete-apischemaschemanode/label)
+- [Add label to node - POST /api/schema/{schema}/{node}/label](#add-label-to-node---post-apischemaschemanodelabel)
+- [Remove label from node - DELETE /api/schema/{schema}/{node}/label](#remove-label-from-node---delete-apischemaschemanodelabel)
 - [Add/Update attribute to node - PATCH /api/schema/{schema}/{nodeId}/{key}](#addupdate-attribute-to-node---patch-apischemaschemanodeidkey)
 - [Remove attribute from node - DELETE /api/schema/{schema}/{nodeId}/{key}](#remove-attribute-from-node---delete-apischemaschemanodeidkey)
 - [Add/Update attribute to relationship - PATCH /api/schema/{schema}/{relationshipId}/{key}](#addupdate-attribute-to-relationship---patch-apischemaschemarelationshipidkey)
@@ -160,7 +163,7 @@ Example request:
 
     ```json
     {
-      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+      "token": "<JWT_TOKEN>",
       "user": {
         "username": "default",
         "role": "Admin"
