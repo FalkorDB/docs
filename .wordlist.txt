@@ -22,6 +22,7 @@ Costanza
 Cypher
 DateTime
 DELUSER
+distro
 Ducati
 FOF
 FOREACH
@@ -44,6 +45,7 @@ IPDPS
 ISC
 Implementers
 IndexError
+Instrumentor
 JS
 JSDoc
 JSON
@@ -72,6 +74,9 @@ NumItems
 OMP
 OpenAI
 OpenCypher
+OpenTelemetry
+OTel
+OTLP
 OpenMP
 Ouaknine
 Parametrized
@@ -165,6 +170,7 @@ indegree
 insertListElements
 ioredisgraph
 isEmpty
+Jaeger
 javadocs
 javascript
 jedis
@@ -193,6 +199,7 @@ npm
 nredisstack
 nuget
 numerics
+observability
 openCypher
 orderability
 outdegree
