@@ -24,3 +24,7 @@ Discover how to configure a FalkorDB cluster for horizontal scalability and impr
 ## 4. [Deploy FalkorDB to Kubernetes](/operations/k8s_support)
 
 Learn how falkorDB can be deployed on Kubernetes using Helm charts and Docker images.
+
+## 5. [OpenTelemetry Integration with FalkorDB-py](/operations/opentelemetry)
+
+Comprehensive guide for setting up OpenTelemetry observability and tracing with FalkorDB Python applications.

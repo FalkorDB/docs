@@ -4,6 +4,9 @@ nav_order: 2
 description: >
     The OPTIONAL MATCH clause is a MATCH variant that produces null values for elements that do not match successfully, rather than the all-or-nothing logic for patterns in MATCH clauses.
 parent: "Cypher Language"
+redirect_from:
+  - /cypher/optional_match.html
+  - /cypher/optional_match
 ---
 
 # OPTIONAL MATCH

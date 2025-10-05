@@ -3,6 +3,9 @@ tile: "GRAPH.BULK endpoint specification"
 description: >
     Implementation details for the GRAPH.BULK endpoint
 parent: "The FalkorDB Design"
+redirect_from:
+  - /design/bulk_spec.html
+  - /design/bulk_spec
 ---
 
 # GRAPH.BULK endpoint specification
