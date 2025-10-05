@@ -416,6 +416,8 @@ TechCorp
 EpisodeType
 OpenAIClient
 ConversationBufferMemory
+falkor
+SearchType
 
 alice
 cypher

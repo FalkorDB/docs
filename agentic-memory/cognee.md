@@ -45,11 +45,11 @@ Cognee provides a comprehensive memory layer that:
 
 ### Installation
 
-Install Cognee with FalkorDB support:
+Install Cognee with the FalkorDB community adapter:
 
 ```bash
 pip install cognee
-pip install falkordb
+pip install cognee-community-hybrid-adapter-falkor
 ```
 
 ### Quick Start Example
@@ -58,21 +58,42 @@ Here's a complete example to get you started with Cognee and FalkorDB:
 
 ```python
 import asyncio
-import cognee
-from cognee.infrastructure.databases.graph import get_graph_engine
+import os
+import pathlib
+from os import path
+from cognee import config, prune, add, cognify, search, SearchType
+
+# Import the register module to enable FalkorDB support
+import cognee_community_hybrid_adapter_falkor.register
 
 async def main():
-    # Configure Cognee to use FalkorDB
-    await cognee.config.set_graph_database_config({
-        "graph_database_provider": "falkordb",
-        "graph_database_url": "falkor://localhost:6379",
-        # For FalkorDB Cloud:
-        # "graph_database_url": "falkor://your-instance.falkordb.cloud:6379",
-        # "graph_database_username": "default",
-        # "graph_database_password": "your-password"
+    # Set up local directories
+    system_path = pathlib.Path(__file__).parent
+    config.system_root_directory(path.join(system_path, ".cognee_system"))
+    config.data_root_directory(path.join(system_path, ".cognee_data"))
+    
+    # Configure relational database
+    config.set_relational_db_config({
+        "db_provider": "sqlite",
     })
     
-    # Add data to cognee
+    # Configure FalkorDB as both vector and graph database
+    config.set_vector_db_config({
+        "vector_db_provider": "falkordb",
+        "vector_db_url": os.getenv("GRAPH_DB_URL", "localhost"),
+        "vector_db_port": int(os.getenv("GRAPH_DB_PORT", "6379")),
+    })
+    config.set_graph_db_config({
+        "graph_database_provider": "falkordb",
+        "graph_database_url": os.getenv("GRAPH_DB_URL", "localhost"),
+        "graph_database_port": int(os.getenv("GRAPH_DB_PORT", "6379")),
+    })
+    
+    # Optional: Clean previous data
+    await prune.prune_data()
+    await prune.prune_system()
+    
+    # Add and process your content
     text_data = """
     Sarah is a software engineer at TechCorp. She specializes in machine learning
     and has been working on implementing graph-based recommendation systems.
@@ -80,33 +101,18 @@ async def main():
     Mike is the lead data scientist at TechCorp.
     """
     
-    # Process and store the data
-    await cognee.add(text_data)
-    await cognee.cognify()
+    await add(text_data)
+    await cognify()
     
-    # Search the knowledge graph
-    search_results = await cognee.search(
-        "SEARCH",
-        query="What does Sarah work on?"
+    # Search using graph completion
+    search_results = await search(
+        query_type=SearchType.GRAPH_COMPLETION,
+        query_text="What does Sarah work on?"
     )
     
     print("Search Results:")
-    print(search_results)
-    
-    # Query with graph traversal
-    graph_engine = await get_graph_engine()
-    
-    # Find all connections for Sarah
-    query = """
-    MATCH (sarah:Person {name: 'Sarah'})-[r]-(connected)
-    RETURN sarah, r, connected
-    """
-    
-    results = await graph_engine.query(query)
-    
-    print("\nGraph Traversal Results:")
-    for record in results:
-        print(record)
+    for result in search_results:
+        print("\n" + result)
 
 # Run the example
 asyncio.run(main())
@@ -114,103 +120,103 @@ asyncio.run(main())
 
 ### Understanding the Code
 
-1. **Configure Cognee**: Set up the connection to your FalkorDB instance
-2. **Add Data**: Provide text or structured data to be processed
-3. **Cognify**: Process the data to extract entities and relationships
-4. **Search**: Query the knowledge using natural language or Cypher queries
-5. **Graph Traversal**: Use direct graph queries for complex relationship exploration
+1. **Import the FalkorDB Adapter**: Import `cognee_community_hybrid_adapter_falkor.register` to enable FalkorDB support
+2. **Configure Directories**: Set up local directories for Cognee's system and data storage
+3. **Configure Databases**: Set FalkorDB as both the vector and graph database for hybrid capabilities
+4. **Add Data**: Provide text or structured data to be processed
+5. **Cognify**: Process the data to extract entities and relationships
+6. **Search**: Query the knowledge using different search types (graph completion, similarity, etc.)
 
 ## Advanced Features
 
-### Hybrid Search
+### Search Types
 
-Combine semantic search with graph relationships:
+Cognee supports different search types for various use cases:
 
 ```python
-# Semantic search
-semantic_results = await cognee.search(
-    "SEARCH",
-    query="machine learning projects",
-    search_type="SIMILARITY"
+from cognee import search, SearchType
+
+# Graph completion search - uses graph structure for context
+graph_results = await search(
+    query_type=SearchType.GRAPH_COMPLETION,
+    query_text="machine learning projects"
 )
 
-# Graph-based search
-graph_results = await cognee.search(
-    "SEARCH", 
-    query="machine learning projects",
-    search_type="GRAPH_TRAVERSAL"
+# Similarity search - semantic vector search
+similarity_results = await search(
+    query_type=SearchType.SIMILARITY,
+    query_text="machine learning projects"
 )
 
-# Hybrid search (default)
-hybrid_results = await cognee.search(
-    "SEARCH",
-    query="machine learning projects"
+# Insights search - combines multiple approaches
+insights_results = await search(
+    query_type=SearchType.INSIGHTS,
+    query_text="machine learning projects"
 )
 ```
 
-### Custom Entity Extraction
+### LLM Configuration
 
-Configure how Cognee extracts entities:
+Configure the LLM provider for entity extraction and processing:
 
 ```python
-await cognee.config.set_llm_config({
+import os
+from cognee import config
+
+# Set LLM API key
+os.environ["LLM_API_KEY"] = "your-openai-api-key"
+
+# Configure LLM provider
+config.set_llm_config({
     "llm_provider": "openai",
     "llm_model": "gpt-4",
     "llm_temperature": 0.7
 })
-
-# Define custom entity types
-entity_config = {
-    "entity_types": ["Person", "Organization", "Project", "Technology"],
-    "relationship_types": ["WORKS_AT", "COLLABORATES_WITH", "USES"]
-}
-
-await cognee.add(text_data, entity_config=entity_config)
-await cognee.cognify()
 ```
 
 ### Managing Knowledge
 
 ```python
+from cognee import add, cognify, prune
+
 # Add multiple documents
 documents = [
-    "Document 1 content...",
-    "Document 2 content...",
-    "Document 3 content..."
+    "Natural language processing is a subfield of AI.",
+    "Machine learning models require training data.",
+    "Graph databases excel at relationship queries."
 ]
 
 for doc in documents:
-    await cognee.add(doc)
+    await add(doc)
 
-await cognee.cognify()
+await cognify()
 
 # Reset memory (clear all data)
-await cognee.prune.prune_data()
-await cognee.prune.prune_system()
+await prune.prune_data()
+await prune.prune_system()
 ```
 
-### Direct Graph Access
+### Environment Variables
 
-For advanced use cases, access FalkorDB directly:
+You can use environment variables for configuration:
+
+```bash
+export GRAPH_DB_URL="localhost"
+export GRAPH_DB_PORT="6379"
+export LLM_API_KEY="your-openai-api-key"
+```
+
+Then access them in your code:
 
 ```python
-from cognee.infrastructure.databases.graph import get_graph_engine
+import os
+from cognee import config
 
-# Get the graph engine
-graph_engine = await get_graph_engine()
-
-# Run custom Cypher queries
-query = """
-MATCH (p:Person)-[:WORKS_AT]->(o:Organization)
-WHERE o.name = 'TechCorp'
-RETURN p.name AS employee, p.role AS role
-ORDER BY p.name
-"""
-
-results = await graph_engine.query(query)
-
-for record in results:
-    print(f"Employee: {record['employee']}, Role: {record['role']}")
+config.set_graph_db_config({
+    "graph_database_provider": "falkordb",
+    "graph_database_url": os.getenv("GRAPH_DB_URL", "localhost"),
+    "graph_database_port": int(os.getenv("GRAPH_DB_PORT", "6379")),
+})
 ```
 
 ## Configuration Options
@@ -218,104 +224,119 @@ for record in results:
 ### Database Configuration
 
 ```python
-# FalkorDB configuration
-await cognee.config.set_graph_database_config({
-    "graph_database_provider": "falkordb",
-    "graph_database_url": "falkor://localhost:6379",
-    "graph_database_username": "your-username",
-    "graph_database_password": "your-password",
-    "graph_name": "cognee_memory"  # Custom graph name
+from cognee import config
+
+# Relational database (for metadata)
+config.set_relational_db_config({
+    "db_provider": "sqlite",  # or "postgres"
 })
 
-# Vector store configuration (optional)
-await cognee.config.set_vector_database_config({
-    "vector_database_provider": "qdrant",
-    "vector_database_url": "http://localhost:6333"
+# FalkorDB as graph database
+config.set_graph_db_config({
+    "graph_database_provider": "falkordb",
+    "graph_database_url": "localhost",
+    "graph_database_port": 6379,
+})
+
+# FalkorDB as vector database (hybrid mode)
+config.set_vector_db_config({
+    "vector_db_provider": "falkordb",
+    "vector_db_url": "localhost",
+    "vector_db_port": 6379,
 })
 ```
 
-### LLM and Embedding Configuration
+### LLM Configuration
 
 ```python
-# LLM configuration for entity extraction
-await cognee.config.set_llm_config({
+import os
+from cognee import config
+
+# Set API key via environment variable
+os.environ["LLM_API_KEY"] = "your-openai-api-key"
+
+# Configure LLM
+config.set_llm_config({
     "llm_provider": "openai",
     "llm_model": "gpt-4",
-    "llm_api_key": "your-api-key",
     "llm_temperature": 0.7
-})
-
-# Embedding configuration for semantic search
-await cognee.config.set_embedding_config({
-    "embedding_provider": "openai",
-    "embedding_model": "text-embedding-3-small",
-    "embedding_api_key": "your-api-key"
 })
 ```
 
 ## Best Practices
 
-1. **Batch Processing**: Process multiple documents together for better performance
-2. **Schema Design**: Plan your entity and relationship types before ingestion
-3. **Incremental Updates**: Add new information incrementally without reprocessing everything
-4. **Query Optimization**: Use specific Cypher queries for complex graph traversals
-5. **Monitor Resources**: Track memory usage and query performance as your graph grows
+1. **Import Registration First**: Always import `cognee_community_hybrid_adapter_falkor.register` before configuring Cognee
+2. **Use Environment Variables**: Store connection details and API keys in environment variables
+3. **Batch Processing**: Add multiple documents before calling `cognify()` for better performance
+4. **Clean Up**: Use `prune.prune_data()` and `prune.prune_system()` to reset when needed
+5. **Hybrid Mode**: Configure FalkorDB as both vector and graph database for optimal search capabilities
+6. **Monitor Resources**: Track FalkorDB memory usage and query performance as your knowledge base grows
 
 ## Integration Patterns
 
 ### With LangChain
 
 ```python
-from langchain.memory import ConversationBufferMemory
-from cognee import cognee
+from cognee import add, cognify, search, SearchType
 
 # Use Cognee as a knowledge base for LangChain
 async def get_context(query):
-    results = await cognee.search("SEARCH", query=query)
+    results = await search(
+        query_type=SearchType.GRAPH_COMPLETION,
+        query_text=query
+    )
     return results
 
 # Integrate with your LangChain application
 context = await get_context("previous conversations about AI")
 ```
 
-### With LlamaIndex
+### Adding Multiple Documents
 
 ```python
-from llama_index import Document
-import cognee
+from cognee import add, cognify
 
 # Add documents to Cognee
 documents = [
-    Document(text="Your document content...")
+    "Your first document content...",
+    "Your second document content...",
+    "Your third document content..."
 ]
 
 for doc in documents:
-    await cognee.add(doc.text)
+    await add(doc)
 
-await cognee.cognify()
+await cognify()
 ```
 
 ## Troubleshooting
+
+### Installation Issues
+
+If you have trouble installing the community adapter:
+- Ensure you have the correct package name: `cognee-community-hybrid-adapter-falkor`
+- Check that you're using Python 3.10 or higher
+- Try installing in a fresh virtual environment
 
 ### Connection Issues
 
 If you experience connection problems:
 - Verify FalkorDB is running: `redis-cli -h localhost -p 6379 ping`
-- Check the connection URL format: `falkor://host:port`
-- Ensure authentication credentials are correct
+- Check the `GRAPH_DB_URL` and `GRAPH_DB_PORT` environment variables
+- Ensure FalkorDB is accessible on the specified host and port
 
 ### Data Not Appearing in Graph
 
-- Make sure to call `await cognee.cognify()` after adding data
-- Check that entity extraction is working with your LLM configuration
-- Verify the graph is being populated: use FalkorDB Browser or CLI
+- Make sure to import `cognee_community_hybrid_adapter_falkor.register` before using Cognee
+- Call `await cognify()` after adding data to process and extract entities
+- Check that your LLM API key is set correctly
+- Verify the graph is being populated using FalkorDB CLI or Browser
 
 ### Performance Issues
 
 - Consider batching operations for large datasets
 - Monitor graph size with `GRAPH.MEMORY USAGE` command
-- Use pagination for large result sets
-- Optimize Cypher queries with appropriate indices
+- Clean up old data periodically using `prune.prune_data()`
 
 ## Resources
 
