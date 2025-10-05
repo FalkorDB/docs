@@ -418,6 +418,10 @@ OpenAIClient
 ConversationBufferMemory
 falkor
 SearchType
+embeddings
+Colab
+chatbots
+Cognee's
 
 alice
 cypher
