@@ -22,6 +22,7 @@ Costanza
 Cypher
 DateTime
 DELUSER
+distro
 Ducati
 FOF
 FOREACH
@@ -38,12 +39,14 @@ GrAPL
 GraphBLAS
 GraphBlas
 GraphRAG
+graphrag
 IDF
 IDentifier
 IPDPS
 ISC
 Implementers
 IndexError
+Instrumentor
 JS
 JSDoc
 JSON
@@ -52,6 +55,7 @@ Kepner
 Keren
 Kubernetes
 LLM
+llm
 LRU
 LangChain
 Lex
@@ -72,6 +76,9 @@ NumItems
 OMP
 OpenAI
 OpenCypher
+OpenTelemetry
+OTel
+OTLP
 OpenMP
 Ouaknine
 Parametrized
@@ -88,6 +95,7 @@ Roi
 Rueian
 Saldana
 SETUSER
+sdk
 SDK
 SDKs
 SLOWLOG
@@ -165,6 +173,7 @@ indegree
 insertListElements
 ioredisgraph
 isEmpty
+Jaeger
 javadocs
 javascript
 jedis
@@ -193,6 +202,7 @@ npm
 nredisstack
 nuget
 numerics
+observability
 openCypher
 orderability
 outdegree
@@ -434,3 +444,4 @@ Munger
 queryRelationships
 similarityFunction
 FIELDTERMINATOR
+

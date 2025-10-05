@@ -2,6 +2,9 @@
 title: "BOLT protocol support"
 nav_order: 10
 description: "Connecting to FalkorDB using BOLT protocol."
+redirect_from:
+  - /bolt_support.html
+  - /bolt_support
 ---
 
 # [EXPERIMENTAL] BOLT protocol support for FalkorDB 
@@ -22,7 +25,7 @@ docker run -p 6379:6379 -p 7687:7687 -p 3000:3000 -it -e REDIS_ARGS="--requirepa
 ### Ports 
 - 6379 - FalkorDB
 - 7687 - Bolt
-- 3000 - [Falkor-Browser](https://github.com/FalkorDB/falkordb-browser)
+- 3000 - Falkor-Browser
 
 Additionally, install the necessary BOLT drivers:
 

@@ -18,8 +18,12 @@ aux_links:
 # Makes Aux links open in a new tab. Default is false
 aux_links_new_tab: true
 
+# Enable the side/mobile menu globally
+nav_enabled: true
+
 plugins:
   - jekyll-sitemap
+  - jekyll-redirect-from
 
 # Footer last edited timestamp
 last_edit_timestamp: true 

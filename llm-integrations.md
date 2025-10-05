@@ -2,6 +2,9 @@
 title: "LLM Framework Integrations"
 nav_order: 9
 description: "FalkorDB integrations with popular LLM frameworks and tools."
+redirect_from:
+  - /llm_integrations.html
+  - /llm_integrations
 ---
 
 # LLM Framework Integrations

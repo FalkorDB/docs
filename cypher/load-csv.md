@@ -4,6 +4,9 @@ nav_order: 17
 description: >
     LOAD CSV allows a query to access data within a CSV file
 parent: "Cypher Language"
+redirect_from:
+  - /cypher/load_csv.html
+  - /cypher/load_csv
 ---
 
 # LOAD CSV

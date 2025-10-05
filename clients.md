@@ -117,4 +117,4 @@ description: >
 
 ## Implementing a client
 
-Information on some of the tasks involved in writing a FalkorDB client can be found in the [Client Specification](/design/client_spec).
+Information on some of the tasks involved in writing a FalkorDB client can be found in the [Client Specification](/design/client-spec).

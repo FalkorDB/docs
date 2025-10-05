@@ -11,10 +11,10 @@ has_children: true
 A Cypher query consists of one or more clauses.
 
 - [MATCH](/cypher/match)
-- [OPTIONAL MATCH](/cypher/optional_match)
+- [OPTIONAL MATCH](/cypher/optional-match)
 - [WHERE](/cypher/where)
 - [RETURN](/cypher/return)
-- [ORDER BY](/cypher/order_by)
+- [ORDER BY](/cypher/order-by)
 - [SKIP](/cypher/skip)
 - [LIMIT](/cypher/limit)
 - [CREATE](/cypher/create)
