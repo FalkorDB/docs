@@ -455,3 +455,7 @@ DDTHH
 durations
 datetimes
 localdatetime
+Jena
+jena
+RDF
+SPARQL
