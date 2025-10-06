@@ -433,7 +433,6 @@ myproject
 mut
 readOnlyQuery
 
-
 Dunder
 Mifflin
 scranton
@@ -445,6 +444,9 @@ Munger
 queryRelationships
 similarityFunction
 FIELDTERMINATOR
+backend
+md
+Opire
 hh
 ss
 DT
@@ -453,3 +455,7 @@ DDTHH
 durations
 datetimes
 localdatetime
+Jena
+jena
+RDF
+SPARQL
