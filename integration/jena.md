@@ -40,27 +40,27 @@ import org.apache.jena.query.*;
 import org.apache.jena.rdf.model.Model;
 
 public class JenaFalkorExample {
-	public static void main(String[] args) {
-		// Create or obtain a Jena Model backed by FalkorDB.
-		// The exact factory method depends on the adapter; check the adapter README/Main.java for the
-		// connection options (hostname, port, credentials, etc.).
-		Model model = FalkorDBJenaFactory.createModel("http://localhost:7474");
+    public static void main(String[] args) {
+        // Create or obtain a Jena Model backed by FalkorDB.
+        // The exact factory method depends on the adapter; check the adapter README/Main.java for the
+        // connection options (hostname, port, credentials, etc.).
+        Model model = FalkorDBJenaFactory.createModel("http://localhost:7474");
 
-		// Example: add a triple
-		model.createResource("http://example.org/alice")
-			 .addProperty(model.createProperty("http://example.org/knows"),
-						  model.createResource("http://example.org/bob"));
+        // Example: add a triple
+        model.createResource("http://example.org/alice")
+             .addProperty(model.createProperty("http://example.org/knows"),
+                          model.createResource("http://example.org/bob"));
 
-		// Run a simple SPARQL SELECT
-		String sparql = "SELECT ?s ?p ?o WHERE { ?s ?p ?o } LIMIT 10";
-		try (QueryExecution qexec = QueryExecutionFactory.create(sparql, model)) {
-			ResultSet rs = qexec.execSelect();
-			ResultSetFormatter.out(System.out, rs);
-		}
+        // Run a simple SPARQL SELECT
+        String sparql = "SELECT ?s ?p ?o WHERE { ?s ?p ?o } LIMIT 10";
+        try (QueryExecution qexec = QueryExecutionFactory.create(sparql, model)) {
+            ResultSet rs = qexec.execSelect();
+            ResultSetFormatter.out(System.out, rs);
+        }
 
-		// Remember to close the model when finished
-		model.close();
-	}
+        // Remember to close the model when finished
+        model.close();
+    }
 }
 ```
 
