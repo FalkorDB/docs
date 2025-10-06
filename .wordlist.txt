@@ -447,3 +447,11 @@ FIELDTERMINATOR
 backend
 md
 Opire
+hh
+ss
+DT
+YYYY
+DDTHH
+durations
+datetimes
+localdatetime
