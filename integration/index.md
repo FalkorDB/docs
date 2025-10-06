@@ -11,9 +11,11 @@ The Integration section of the FalkorDB documentation provides all the necessary
 and integrating FalkorDB with your applications and workflows. 
 Learn how to leverage FalkorDB's flexible APIs and SDKs to build high-performance, low-latency graph applications.
 
+
 ## Topics in This Section
 
 - [REST API](./rest.md): Learn how to interact with FalkorDB using its REST API for seamless integration with your applications.
 - [Kafka Connect](./kafka-connect.md): Learn how to interact with FalkorDB using Kafka Connect sink to replicate data from third-party applications.
+- [Jena Integration](./jena.md): Learn how to use FalkorDB with Apache Jena via the jena-falkordb-adapter.
 
 
