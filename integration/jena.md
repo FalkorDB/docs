@@ -78,7 +78,3 @@ See the [Main.java](https://github.com/FalkorDB/jena-falkordb-adapter/blob/main/
 - [Adapter README](https://github.com/FalkorDB/jena-falkordb-adapter/blob/main/README.md)
 - [Getting Started](https://github.com/FalkorDB/jena-falkordb-adapter/blob/main/GETTING_STARTED.md)
 - [Sample Main.java](https://github.com/FalkorDB/jena-falkordb-adapter/blob/main/src/main/java/com/falkordb/jena/Main.java)
-
-## Opire
-
-This repository uses [Opire](https://github.com/apps/opirebot) for automated documentation and code review. Opire helps maintain high-quality documentation and code standards.
