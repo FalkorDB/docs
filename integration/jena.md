@@ -1,11 +1,11 @@
 ---
-title: "Jena Integration"
+title: "Apache Jena"
 nav_order: 3
 description: "How to use FalkorDB with Apache Jena via the jena-falkordb-adapter."
 parent: "Integration"
 ---
 
-# Jena Integration
+# Apache Jena Integration
 
 This page describes how to integrate FalkorDB with [Apache Jena](https://jena.apache.org/) using the [jena-falkordb-adapter](https://github.com/FalkorDB/jena-falkordb-adapter).
 
