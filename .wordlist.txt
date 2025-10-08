@@ -39,6 +39,7 @@ GrAPL
 GraphBLAS
 GraphBlas
 GraphRAG
+graphrag
 IDF
 IDentifier
 IPDPS
@@ -54,6 +55,7 @@ Kepner
 Keren
 Kubernetes
 LLM
+llm
 LRU
 LangChain
 Lex
@@ -93,6 +95,7 @@ Roi
 Rueian
 Saldana
 SETUSER
+sdk
 SDK
 SDKs
 SLOWLOG
@@ -400,6 +403,7 @@ Integrations
 integrations
 Graphiti
 datasets
+dataset
 Quickstart
 quickstart
 LangGraph
@@ -446,7 +450,6 @@ myproject
 mut
 readOnlyQuery
 
-
 Dunder
 Mifflin
 scranton
@@ -457,7 +460,19 @@ dm
 Munger
 queryRelationships
 similarityFunction
-
-llm
-graphrag
-sdk
+FIELDTERMINATOR
+backend
+md
+Opire
+hh
+ss
+DT
+YYYY
+DDTHH
+durations
+datetimes
+localdatetime
+Jena
+jena
+RDF
+SPARQL
