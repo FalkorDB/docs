@@ -348,6 +348,7 @@ Next, dive deeper into FalkorDB's powerful features:
 - [Advanced Cypher](/cypher)
 - [Database Operations](/operations)
 - [GraphRAG SDK](/graphrag-sdk)
+- [Agentic Memory](/agentic-memory)
 - [LLM Framework Integrations](/llm-integrations)
 
 For questions or support, visit our [community forums](https://www.falkordb.com/contact-us/)
