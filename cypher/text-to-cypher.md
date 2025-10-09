@@ -1,6 +1,6 @@
 ---
 title: "Text-to-Cypher"
-nav_order: 23
+nav_order: 24
 description: >
     Convert natural language questions into Cypher queries using LLMs for intuitive graph querying.
 parent: "Cypher Language"
