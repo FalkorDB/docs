@@ -7,6 +7,9 @@ description: "Configuring FalkorDB Docker"
 # Operations
 
 The Operations chapter provides essential guides for configuring and managing FalkorDB in production environments. These guides cover critical aspects like data persistence, replication for high availability, and setting up clusters for horizontal scalability.
+
+> **Production Tip:** For production deployments, consider using the `falkordb/falkordb-server` Docker image which is optimized for production use and doesn't include the FalkorDB Browser, making it lighter and more efficient.
+
 Table of Contents
 
 ## 1. [Configuring Persistence](/operations/persistence)
