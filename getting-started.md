@@ -20,6 +20,9 @@ and accessing it using the [FalkorDB Python client](/clients) with [Cypher](/cyp
 1. **FalkorDB Instance**: Set up FalkorDB (on-prem or cloud). 
    - [Run FalkorDB Docker](https://hub.docker.com/r/falkordb/falkordb/)
    - [Create a FalkorDB Cloud Instance](https://app.falkordb.cloud/signup)
+   
+   > **Production Tip:** For production deployments, use `falkordb/falkordb-server` which is a lighter image without the Browser UI.
+
 2. **Install FalkorDB Client**:
    
 {% capture pypi_0 %}

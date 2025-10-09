@@ -15,6 +15,11 @@ For the migration, execute the following steps:
    docker run -it -p 6379:6379 -v $(pwd):/data -e REDIS_ARGS="--dir /data --dbfilename dump.rdb" falkordb/falkordb
    ```
 
+   > **Production Tip:** For production deployments, use `falkordb/falkordb-server` for a lighter image without the Browser:
+   > ```bash
+   > docker run -it -p 6379:6379 -v $(pwd):/data -e REDIS_ARGS="--dir /data --dbfilename dump.rdb" falkordb/falkordb-server
+   > ```
+
    Make sure to place the RDB file in the directory mapped to the Docker volume.
    For FalkorDB Cloud, follow the cloud provider’s instructions for uploading and restoring from an RDB file.
 

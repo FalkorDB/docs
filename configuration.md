@@ -16,6 +16,11 @@ For example the following will run the server with global authentication passwor
 docker run -p 6379:6379 -p 3000:3000 -it -e REDIS_ARGS="--requirepass falkordb" -e FALKORDB_ARGS="THREAD_COUNT 4" --rm falkordb/falkordb:latest
 ```
 
+> **Production Tip:** For production environments, use the lighter `falkordb/falkordb-server` image which doesn't include the FalkorDB Browser:
+> ```sh
+> docker run -p 6379:6379 -it -e REDIS_ARGS="--requirepass falkordb" -e FALKORDB_ARGS="THREAD_COUNT 4" --rm falkordb/falkordb-server:latest
+> ```
+
 ## Setting configuration parameters on module load
 
 Setting configuration parameters at load-time is done by appending arguments after the `--loadmodule` argument when starting a server from the command line or after the `loadmodule` directive in a Redis config file. For example:
@@ -42,6 +47,12 @@ When running a docker container
 
 ```sh
 docker run -p 6379:6379 -p 3000:3000 -it -e FALKORDB_ARGS="[OPT VAL]" --rm falkordb/falkordb:latest
+```
+
+Or for production use:
+
+```sh
+docker run -p 6379:6379 -it -e FALKORDB_ARGS="[OPT VAL]" --rm falkordb/falkordb-server:latest
 ```
 
 ## Setting configuration parameters at run-time (for supported parameters)

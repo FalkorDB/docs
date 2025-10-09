@@ -23,6 +23,11 @@ redirect_from:
 docker run -p 6379:6379 -p 3000:3000 -it --rm falkordb/falkordb:edge
 ```
 
+> **Production Tip:** For production deployments, use the lighter `falkordb/falkordb-server:edge` image without the Browser:
+> ```bash
+> docker run -p 6379:6379 -it --rm falkordb/falkordb-server:edge
+> ```
+
 Or sign up for [FalkorDB Cloud](https://app.falkordb.cloud)
 
 ### Install SDK & Environment Configuration

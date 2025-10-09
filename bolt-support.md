@@ -22,6 +22,11 @@ You can use our Docker image for this purpose.
 docker run -p 6379:6379 -p 7687:7687 -p 3000:3000 -it -e REDIS_ARGS="--requirepass falkordb" -e FALKORDB_ARGS="BOLT_PORT 7687" --rm falkordb/falkordb:latest
 ```
 
+> **Production Tip:** For production deployments, use the lighter `falkordb/falkordb-server` image without the Browser (remove port 3000):
+> ```bash
+> docker run -p 6379:6379 -p 7687:7687 -it -e REDIS_ARGS="--requirepass falkordb" -e FALKORDB_ARGS="BOLT_PORT 7687" --rm falkordb/falkordb-server:latest
+> ```
+
 ### Ports 
 - 6379 - FalkorDB
 - 7687 - Bolt
