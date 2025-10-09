@@ -46,8 +46,6 @@ for i in {1..6}; do
 done
 ```
 
-> **Production Tip:** For production deployments, replace `falkordb/falkordb` with `falkordb/falkordb-server` in the command above for a lighter image without the Browser UI.
-
 ### 2.2 Edit the /etc/hosts file and add the node container hostnames
 
 For the host to be able to connect to the nodes using the container names, please update your `/etc/hosts` file using the following command.
@@ -106,8 +104,6 @@ docker run -d \
     -e "FALKORDB_ARGS=--port 6385 --cluster-enabled yes --cluster-announce-ip node7 --cluster-announce-port 6385" \
     falkordb/falkordb
 ```
-
-> **Note:** For production, use `falkordb/falkordb-server` instead of `falkordb/falkordb`.
 
 ### 4.2 Add the Node to the Cluster
 

@@ -39,11 +39,6 @@ You can now run FalkorDB with the volume attached:
 docker run -d --name falkordb -v falkordb_data:/var/lib/falkordb/data -p 6379:6379 falkordb/falkordb
 ```
 
-> **Production Tip:** For production deployments, use the lighter `falkordb/falkordb-server` image which doesn't include the FalkorDB Browser:
-> ```bash
-> docker run -d --name falkordb -v falkordb_data:/var/lib/falkordb/data -p 6379:6379 falkordb/falkordb-server
-> ```
-
 In this configuration:
 
 The -v falkordb_data:/var/lib/falkordb/data flag mounts the volume to the /var/lib/falkordb/data directory inside the container.

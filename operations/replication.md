@@ -43,8 +43,6 @@ docker run -d \
   falkordb/falkordb
 ```
 
-> **Production Tip:** For production deployments, use `falkordb/falkordb-server` instead of `falkordb/falkordb` for a lighter image without the Browser UI.
-
 This instance will be created in the Standalone mode, as master.
 
 ### 1.2 Setting up the Replica Instance
@@ -58,8 +56,6 @@ docker run -d \
   --network falkordb-network \
   falkordb/falkordb
 ```
-
-> **Note:** For production, use `falkordb/falkordb-server` for both master and replica instances.
 
 ### 1.3 Configuring Replication
 

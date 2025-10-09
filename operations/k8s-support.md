@@ -51,8 +51,6 @@ This file specify the FalkorDB image(you can choose different tags)
 and configure the master and slave to load the FalkorDB module.
 For additional configurations [see the official Helm chart documentation](https://github.com/bitnami/charts/blob/main/bitnami/redis/values.yaml)
 
-> **Production Tip:** For production deployments, use `falkordb/falkordb-server` instead of `falkordb/falkordb` in the `repository` field for a lighter image without the Browser UI.
-
 ## Step 2: Install FalkorDB Helm Charts
 Install the helm charts using the following command:
 
