@@ -476,3 +476,15 @@ Jena
 jena
 RDF
 SPARQL
+MCP
+mcp
+sse
+SSE
+mcpServers
+stdio
+Cursor
+IDE
+APPDATA
+macOS
+MyApp
+programmatically
