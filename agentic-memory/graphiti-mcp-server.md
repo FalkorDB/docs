@@ -58,6 +58,28 @@ docker run -d \
 
 **Note**: If you're running FalkorDB on your local machine, use `host.docker.internal` as the `FALKORDB_HOST` to allow the container to access your host's localhost.
 
+#### Alternative: Using a .env File
+
+For easier management of environment variables, create a `.env` file:
+
+```env
+OPENAI_API_KEY=your-openai-api-key
+FALKORDB_HOST=host.docker.internal
+FALKORDB_PORT=6379
+FALKORDB_USERNAME=
+FALKORDB_PASSWORD=
+```
+
+Then run the container with the `--env-file` option:
+
+```bash
+docker run -d \
+  --name graphiti-mcp \
+  --env-file .env \
+  -p 3000:3000 \
+  falkordb/graphiti-knowledge-graph-mcp:latest
+```
+
 ### Step 3: Run FalkorDB (if needed)
 
 If you don't have a FalkorDB instance running, start one:
