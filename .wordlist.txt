@@ -65,6 +65,7 @@ LocalDateTime
 LocalTime
 Lovitz
 MEM
+MSF
 Miesha
 MotoGP
 NRedisGraph
