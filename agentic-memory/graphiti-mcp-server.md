@@ -50,9 +50,10 @@ Run the server with required environment variables:
 docker run -d \
   --name graphiti-mcp \
   -e OPENAI_API_KEY="your-openai-api-key" \
+  -e DATABASE_TYPE="falkordb" \
   -e FALKORDB_HOST="host.docker.internal" \
   -e FALKORDB_PORT="6379" \
-  -p 3000:3000 \
+  -p 8000:8000 \
   falkordb/graphiti-knowledge-graph-mcp:latest
 ```
 
@@ -64,6 +65,7 @@ For easier management of environment variables, create a `.env` file:
 
 ```env
 OPENAI_API_KEY=your-openai-api-key
+DATABASE_TYPE=falkordb
 FALKORDB_HOST=host.docker.internal
 FALKORDB_PORT=6379
 FALKORDB_USERNAME=
@@ -76,7 +78,7 @@ Then run the container with the `--env-file` option:
 docker run -d \
   --name graphiti-mcp \
   --env-file .env \
-  -p 3000:3000 \
+  -p 8000:8000 \
   falkordb/graphiti-knowledge-graph-mcp:latest
 ```
 
@@ -103,8 +105,8 @@ services:
   falkordb:
     image: falkordb/falkordb:latest
     ports:
-      - "6379:6379"
-      - "3001:3000"  # FalkorDB Browser
+      - "6379:6379"      # Redis protocol port
+      - "3000:3000"      # FalkorDB Browser UI
     volumes:
       - falkordb-data:/data
 
@@ -113,9 +115,10 @@ services:
     depends_on:
       - falkordb
     ports:
-      - "3000:3000"
+      - "8000:8000"      # MCP Server HTTP/SSE port
     environment:
       - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - DATABASE_TYPE=falkordb
       - FALKORDB_HOST=falkordb
       - FALKORDB_PORT=6379
       - FALKORDB_USERNAME=${FALKORDB_USERNAME:-}
@@ -129,6 +132,7 @@ Create a `.env` file in the same directory:
 
 ```env
 OPENAI_API_KEY=your-openai-api-key
+DATABASE_TYPE=falkordb
 FALKORDB_USERNAME=
 FALKORDB_PASSWORD=
 ```
@@ -145,15 +149,16 @@ docker-compose up -d
 
 The MCP server accepts the following environment variables:
 
-| Variable | Description | Default | Required |
-|----------|-------------|---------|----------|
-| `OPENAI_API_KEY` | Your OpenAI API key for LLM operations | - | Yes |
-| `FALKORDB_HOST` | FalkorDB server hostname | `localhost` | No |
-| `FALKORDB_PORT` | FalkorDB server port | `6379` | No |
-| `FALKORDB_USERNAME` | FalkorDB username (if authentication enabled) | - | No |
-| `FALKORDB_PASSWORD` | FalkorDB password (if authentication enabled) | - | No |
-| `PORT` | MCP server port | `3000` | No |
-| `MODEL_NAME` | OpenAI model to use | `gpt-4o-mini` | No |
+| Variable | Description | Default | Required | Example |
+|----------|-------------|---------|----------|---------|
+| `OPENAI_API_KEY` | Your OpenAI API key for LLM operations | - | Yes | `sk-proj-...` |
+| `DATABASE_TYPE` | Database backend type (must be "falkordb") | - | Yes | `falkordb` |
+| `FALKORDB_HOST` | FalkorDB server hostname | `localhost` | No | `host.docker.internal` |
+| `FALKORDB_PORT` | FalkorDB server port | `6379` | No | `6379` |
+| `FALKORDB_USERNAME` | FalkorDB username (if authentication enabled) | - | No | `default` |
+| `FALKORDB_PASSWORD` | FalkorDB password (if authentication enabled) | - | No | `your-password` |
+| `PORT` | MCP server port | `8000` | No | `8000` |
+| `MODEL_NAME` | OpenAI model to use | `gpt-4o-mini` | No | `gpt-5` |
 
 ### FalkorDB Cloud Configuration
 
@@ -163,11 +168,12 @@ To use FalkorDB Cloud with the MCP server:
 docker run -d \
   --name graphiti-mcp \
   -e OPENAI_API_KEY="your-openai-api-key" \
+  -e DATABASE_TYPE="falkordb" \
   -e FALKORDB_HOST="your-instance.falkordb.cloud" \
   -e FALKORDB_PORT="6379" \
   -e FALKORDB_USERNAME="default" \
   -e FALKORDB_PASSWORD="your-cloud-password" \
-  -p 3000:3000 \
+  -p 8000:8000 \
   falkordb/graphiti-knowledge-graph-mcp:latest
 ```
 
@@ -188,16 +194,18 @@ Add the following configuration:
   "mcpServers": {
     "graphiti-memory": {
       "transport": "sse",
-      "url": "http://localhost:3000/sse",
-      "env": {
-        "OPENAI_API_KEY": "your-openai-api-key"
-      }
+      "url": "http://localhost:8000/sse"
     }
   }
 }
 ```
 
-Restart Claude Desktop to apply the changes. Claude will now have access to persistent memory through the knowledge graph.
+**Note**: The MCP server uses Server-Sent Events (SSE) for real-time communication between the AI client and the knowledge graph. The `OPENAI_API_KEY` is already configured in the MCP server's Docker environment, so you don't need to specify it again here.
+
+**After configuration**:
+1. Restart Claude Desktop to apply the changes
+2. Look for the MCP server indicator in Claude's interface
+3. Claude will now have access to persistent memory through the knowledge graph
 
 ### Cursor IDE
 
@@ -212,7 +220,7 @@ For Cursor IDE, add the MCP server configuration to your Cursor settings:
   "mcp": {
     "servers": {
       "graphiti-memory": {
-        "url": "http://localhost:3000",
+        "url": "http://localhost:8000",
         "transport": "sse"
       }
     }
@@ -222,12 +230,36 @@ For Cursor IDE, add the MCP server configuration to your Cursor settings:
 
 ### Testing the Connection
 
-Once configured, you can test the connection by asking Claude or Cursor to remember information:
+Once configured, test the connection with these steps:
 
-**Example prompts**:
-- "Remember that my favorite programming language is Python"
-- "What do you remember about my preferences?"
+1. **Restart your AI client** (Claude Desktop or Cursor)
+2. **Look for the MCP indicator** in your client's interface
+3. **Test with a simple prompt**:
+
+   ```
+   "Remember that my favorite programming language is Python"
+   ```
+   
+   The AI should confirm it has stored this information.
+
+4. **Verify the memory**:
+
+   ```
+   "What do you remember about my programming language preferences?"
+   ```
+   
+   The AI should respond with "Python" or reference your previous statement.
+
+5. **Check the graph** (optional):
+   - Open [http://localhost:3000](http://localhost:3000) in your browser
+   - Connect to the database
+   - Run: `MATCH (n) RETURN n LIMIT 10`
+   - You should see nodes representing the stored information
+
+**More example prompts**:
 - "Store this fact: I'm working on a project called MyApp"
+- "What projects am I working on?"
+- "Remember that I prefer dark mode in my IDE"
 
 The AI will use the Graphiti MCP server to store and retrieve this information from the FalkorDB knowledge graph.
 
@@ -251,52 +283,42 @@ The Graphiti MCP server exposes the following capabilities to AI clients:
   - Builds relevant context from the graph
   - Returns connected entities and relationships
 
+### Graph Schema
+
+The Graphiti MCP server stores information in FalkorDB using the following schema:
+
+**Node Types**:
+- **`Entity`**: Represents people, places, things, or concepts
+  - Properties: `name`, `entity_type`, `summary`
+- **`Episode`**: Represents events or pieces of information
+  - Properties: `name`, `content`, `timestamp`, `source`
+
+**Relationship Types**:
+- **`RELATES_TO`**: Connects entities that are related
+- **`MENTIONED_IN`**: Links entities to episodes where they appear
+- **`OCCURRED_AFTER`**: Creates temporal ordering between episodes
+
+**Graph Name**: All data is stored in a graph named `graphiti_memory`
+
 ## Advanced Usage
 
-### Using with Python SDK
+### Programmatic Access
 
-You can also interact with the MCP server programmatically:
+{: .warning }
+> **Important**: The Graphiti MCP server is designed to be used by MCP clients (like Claude Desktop or Cursor) via the Server-Sent Events (SSE) transport protocol. It does **not** expose HTTP REST API endpoints for direct programmatic access.
 
-```python
-import asyncio
-from mcp import ClientSession, StdioServerParameters
-from mcp.client.stdio import stdio_client
+The server only exposes:
+- `/sse` - Server-Sent Events endpoint for MCP protocol communication
 
-async def main():
-    server_params = StdioServerParameters(
-        command="docker",
-        args=["run", "-i", "--rm", 
-              "-e", "OPENAI_API_KEY=your-key",
-              "-e", "FALKORDB_HOST=host.docker.internal",
-              "falkordb/graphiti-knowledge-graph-mcp:latest"],
-    )
-    
-    async with stdio_client(server_params) as (read, write):
-        async with ClientSession(read, write) as session:
-            # Initialize the connection
-            await session.initialize()
-            
-            # Add an episode
-            result = await session.call_tool(
-                "add_episode",
-                arguments={
-                    "episode_body": "John is a software engineer at TechCorp",
-                    "name": "Work Info"
-                }
-            )
-            print(f"Added episode: {result}")
-            
-            # Search for information
-            search_result = await session.call_tool(
-                "search",
-                arguments={
-                    "query": "Where does John work?"
-                }
-            )
-            print(f"Search results: {search_result}")
+To interact with the Graphiti knowledge graph programmatically, you have two options:
 
-asyncio.run(main())
-```
+**Option 1: Use an MCP Client Library**
+
+Use an MCP client library that implements the MCP protocol to communicate with the server via SSE. This is the intended way to interact with the server programmatically.
+
+**Option 2: Access FalkorDB Directly**
+
+Connect directly to FalkorDB to query the knowledge graph. See the "Custom Graph Queries" section below for details.
 
 ### Custom Graph Queries
 
@@ -307,18 +329,44 @@ from falkordb import FalkorDB
 
 # Connect to FalkorDB
 db = FalkorDB(host='localhost', port=6379)
+
+# Select the Graphiti memory graph
 graph = db.select_graph('graphiti_memory')
 
-# Query the knowledge graph
+# Example 1: Find all entities related to a specific entity
 query = """
 MATCH (e:Entity)-[r:RELATES_TO]->(e2:Entity)
 WHERE e.name CONTAINS 'John'
-RETURN e, r, e2
+RETURN e.name AS entity, type(r) AS relationship, e2.name AS related_entity
+LIMIT 10
 """
 
 result = graph.query(query)
 for record in result.result_set:
-    print(record)
+    print(f"{record[0]} -> {record[1]} -> {record[2]}")
+
+# Example 2: Find recent episodes
+recent_episodes = """
+MATCH (ep:Episode)
+RETURN ep.name, ep.content, ep.timestamp
+ORDER BY ep.timestamp DESC
+LIMIT 5
+"""
+
+result = graph.query(recent_episodes)
+for record in result.result_set:
+    print(f"Episode: {record[0]} - {record[1]}")
+
+# Example 3: Find entities mentioned in episodes
+entity_episodes = """
+MATCH (e:Entity)-[:MENTIONED_IN]->(ep:Episode)
+WHERE e.name = 'John'
+RETURN ep.name, ep.content
+"""
+
+result = graph.query(entity_episodes)
+for record in result.result_set:
+    print(f"Mentioned in: {record[0]}")
 ```
 
 ## Monitoring and Debugging
@@ -333,17 +381,23 @@ docker logs -f graphiti-mcp
 
 ### Check FalkorDB Connection
 
-Verify the connection to FalkorDB:
+Verify the connection to FalkorDB using the Redis CLI:
 
 ```bash
-docker exec -it graphiti-mcp curl http://falkordb:6379/ping
+# Test from the FalkorDB container
+docker exec -it falkordb redis-cli PING
+
+# Test from the MCP container to FalkorDB
+docker exec -it graphiti-mcp redis-cli -h falkordb -p 6379 PING
 ```
+
+Both commands should return `PONG` if the connection is successful.
 
 ### Inspect the Knowledge Graph
 
 Use the FalkorDB Browser to visualize the knowledge graph:
 
-1. Open `http://localhost:3001` in your browser
+1. Open `http://localhost:3000` in your browser
 2. Connect to the `graphiti_memory` graph
 3. Run queries to explore stored knowledge:
 
@@ -359,9 +413,11 @@ MATCH (n) RETURN n LIMIT 25
 
 **Solutions**:
 - Verify FalkorDB is running: `docker ps | grep falkordb`
-- Check network connectivity: Use `host.docker.internal` for local FalkorDB
+- Test FalkorDB connection: `docker exec -it <falkordb-container-name> redis-cli PING` (should return `PONG`)
+- Check network connectivity: Use `host.docker.internal` for local FalkorDB when running MCP server in Docker
 - Verify port 6379 is accessible
 - Check firewall settings
+- Verify `DATABASE_TYPE=falkordb` environment variable is set (server won't start without it)
 
 ### Authentication Errors
 
@@ -388,10 +444,12 @@ MATCH (n) RETURN n LIMIT 25
 
 **Solutions**:
 - Verify the MCP server is running: `docker ps | grep graphiti-mcp`
-- Check the server is accessible: `curl http://localhost:3000/health`
-- Ensure the configuration file path is correct
+- Check the server logs: `docker logs graphiti-mcp`
+- Test the SSE endpoint: `curl http://localhost:8000/sse`
+- Ensure the configuration file path is correct for your OS
 - Restart the client application after changing configuration
-- Check for port conflicts on port 3000
+- Check for port conflicts on port 8000: `lsof -i :8000` (macOS/Linux) or `netstat -ano | findstr :8000` (Windows)
+- Verify JSON syntax in the configuration file
 
 ### Memory Not Persisting
 
@@ -412,6 +470,17 @@ MATCH (n) RETURN n LIMIT 25
 5. **Use FalkorDB Cloud**: For production deployments, consider using FalkorDB Cloud for managed hosting
 6. **Separate Graphs**: Use different graph names for different projects or users
 7. **Clean Up**: Periodically review and clean up old or irrelevant data
+
+## Performance Tips
+
+- **Indexing**: FalkorDB automatically creates indexes for optimal query performance
+- **Batch Operations**: For large data loads, consider batching multiple episodes
+- **Graph Size**: Monitor graph size and consider archiving old episodes to separate graphs
+- **Model Selection**: 
+  - Use `gpt-4o-mini` for cost-effective operations
+  - Use `gpt-5` for better accuracy with complex relationships
+- **Connection Pooling**: The MCP server handles connection pooling automatically
+- **Query Optimization**: Use specific entity names and filters in search queries for faster results
 
 ## Resources
 
