@@ -31,15 +31,17 @@ FalkorDB's graph database architecture makes it uniquely suited for agentic memo
 
 ## Agentic Memory Frameworks
 
-This section covers popular frameworks that implement agentic memory with FalkorDB:
+This section covers popular frameworks and tools that implement agentic memory with FalkorDB:
 
 - [**Graphiti**](./graphiti.md): A temporally-aware knowledge graph framework designed for multi-agent AI systems with persistent memory
+- [**Graphiti MCP Server**](./graphiti-mcp-server.md): Run Graphiti as an MCP server for Claude Desktop, Cursor IDE, and other AI clients *(Experimental)*
 - [**Cognee**](./cognee.md): A memory management framework for AI agents that combines graph and vector storage
 
 ## Getting Started
 
 Choose a framework based on your needs:
 - If you need **temporal reasoning** and **multi-agent memory**, start with [Graphiti](./graphiti.md)
+- If you want to add **persistent memory to Claude Desktop or Cursor IDE**, try the [Graphiti MCP Server](./graphiti-mcp-server.md)
 - If you need **flexible memory structures** with **hybrid storage**, explore [Cognee](./cognee.md)
 
-Both frameworks integrate seamlessly with FalkorDB and can be used together in complex systems.
+All frameworks integrate seamlessly with FalkorDB and can be used together in complex systems.
