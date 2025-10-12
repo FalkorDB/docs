@@ -2,6 +2,9 @@
 title: "RedisGraph to FalkorDB"
 description: "Migrate from RedisGraph to FalkorDB."
 parent: "Migration"
+redirect_from:
+  - /redisgraph-to-falkordb.html
+  - /redisgraph-to-falkordb
 ---
 
 # FalkorDB is compatible with RedisGraph RDB files.
