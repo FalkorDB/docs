@@ -152,9 +152,73 @@ python3 falkordb_csv_loader.py MOVIES --port 6379 --stats
 - `--csv-dir CSV_DIR`: Directory containing CSV files (default: csv_output)
 - `--merge-mode`: Use MERGE instead of CREATE for upsert behavior
 
-### Alternative: Rust-Based Loader
+### Using FalkorDB-Loader-RS (Recommended for Large Datasets)
 
-For improved loading speed, you can use the Rust-based data loader available in the [FalkorDB-Loader-RS repository](https://github.com/FalkorDB/FalkorDB-Loader-RS).
+For significantly improved loading speed and performance, especially with large datasets, we recommend using the Rust-based FalkorDB CSV Loader.
+
+#### Features
+
+- **High Performance**: Built with Rust and async/await for optimal speed
+- **Batch Processing**: Configurable batch sizes (default: 5000 records)
+- **Memory Efficient**: Streams data without loading everything into memory
+- **Automatic Schema Management**: Creates indexes and constraints automatically
+- **Merge Mode**: Support for upsert operations using MERGE instead of CREATE
+- **Progress Reporting**: Real-time progress tracking during loading
+
+#### Installation
+
+```bash
+git clone https://github.com/FalkorDB/FalkorDB-Loader-RS
+cd FalkorDB-Loader-RS
+cargo build --release
+```
+
+The binary will be available at `target/release/falkordb-loader`.
+
+#### Basic Usage
+
+```bash
+./target/release/falkordb-loader MOVIES
+```
+
+#### Advanced Usage
+
+```bash
+./target/release/falkordb-loader MOVIES \
+  --host localhost \
+  --port 6379 \
+  --username myuser \
+  --password mypass \
+  --csv-dir ./csv_output \
+  --batch-size 1000 \
+  --merge-mode \
+  --stats \
+  --progress-interval 500
+```
+
+#### Command-Line Options
+
+| Option | Description | Default |
+|--------|-------------|---------|
+| `graph_name` | Target graph name in FalkorDB (required) | - |
+| `--host` | FalkorDB host | localhost |
+| `--port` | FalkorDB port | 6379 |
+| `--username` | FalkorDB username (optional) | - |
+| `--password` | FalkorDB password (optional) | - |
+| `--csv-dir` | Directory containing CSV files | csv_output |
+| `--batch-size` | Batch size for loading | 5000 |
+| `--merge-mode` | Use MERGE instead of CREATE for upsert | false |
+| `--stats` | Show graph statistics after loading | false |
+| `--progress-interval` | Report progress every N records (0 to disable) | 1000 |
+
+#### Performance Tips
+
+1. **Adjust batch size** based on your data and available memory
+2. **Enable progress reporting** for long-running imports: `--progress-interval 1000`
+3. **Use merge mode** if you need to update existing data: `--merge-mode`
+4. **Set log level** for debugging: `RUST_LOG=info ./target/release/falkordb-loader MOVIES`
+
+For more details, see the [FalkorDB-Loader-RS repository](https://github.com/FalkorDB/FalkorDB-Loader-RS).
 
 ### Example Output
 

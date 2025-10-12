@@ -129,9 +129,105 @@ Schema: schema.json
 
 ## Step 2: Loading into FalkorDB
 
-Use the [FalkorDB Rust Loader](https://github.com/FalkorDB/FalkorDB-Loader-RS) to load the exported CSV files directly into FalkorDB.
+Use the high-performance [FalkorDB Rust Loader](https://github.com/FalkorDB/FalkorDB-Loader-RS) to load the exported CSV files directly into FalkorDB.
 
-Follow the loader documentation for installation and usage instructions. The loader provides high-performance bulk loading of graph data from CSV files.
+### Installation
+
+```bash
+git clone https://github.com/FalkorDB/FalkorDB-Loader-RS
+cd FalkorDB-Loader-RS
+cargo build --release
+```
+
+The binary will be available at `target/release/falkordb-loader`.
+
+### Basic Usage
+
+After exporting your Kuzu database to CSV files, load them into FalkorDB:
+
+```bash
+./target/release/falkordb-loader my_graph
+```
+
+This command will:
+1. Connect to FalkorDB (localhost:6379 by default)
+2. Create the graph `my_graph`
+3. Load all CSV files from the `csv_output` directory
+4. Create indexes and constraints automatically
+
+### Advanced Usage
+
+For more control over the loading process:
+
+```bash
+./target/release/falkordb-loader my_graph \
+  --host localhost \
+  --port 6379 \
+  --username myuser \
+  --password mypass \
+  --csv-dir ./_csv_ \
+  --batch-size 1000 \
+  --merge-mode \
+  --stats \
+  --progress-interval 500
+```
+
+### Command-Line Options
+
+| Option | Description | Default |
+|--------|-------------|---------|
+| `graph_name` | Target graph name in FalkorDB (required) | - |
+| `--host` | FalkorDB host | localhost |
+| `--port` | FalkorDB port | 6379 |
+| `--username` | FalkorDB username (optional) | - |
+| `--password` | FalkorDB password (optional) | - |
+| `--csv-dir` | Directory containing CSV files | csv_output |
+| `--batch-size` | Batch size for loading | 5000 |
+| `--merge-mode` | Use MERGE instead of CREATE for upsert | false |
+| `--stats` | Show graph statistics after loading | false |
+| `--progress-interval` | Report progress every N records (0 to disable) | 1000 |
+
+### Performance Features
+
+The Rust loader provides significant advantages for loading Kuzu exports:
+
+- **Async Operations**: All database operations use async/await for better concurrency
+- **Batch Processing**: Processes multiple records per query (default: 5000)
+- **Memory Efficient**: Streams data from CSV files without loading everything into memory
+- **Progress Tracking**: Real-time progress updates during loading
+- **Error Handling**: Comprehensive error handling with detailed logging
+
+### Example Output
+
+```
+[INFO] Loading graph: my_graph
+[INFO] CSV directory: _csv_
+[INFO] Batch size: 5000
+[INFO] Found 8 node files and 15 edge files
+
+[INFO] Creating indexes...
+[INFO] Creating constraints...
+
+[INFO] Loading nodes...
+[INFO] Loading nodes from nodes_Application.csv...
+[INFO] Progress: 1000/1234 nodes loaded
+[INFO] ✓ Loaded 1234 Application nodes
+
+[INFO] Loading edges...
+[INFO] Loading edges from edges_CONNECTS.csv...
+[INFO] Progress: 5000/5678 edges loaded
+[INFO] ✓ Loaded 5678 CONNECTS relationships
+
+[INFO] Loading complete!
+```
+
+### Performance Tips
+
+1. **Match export and loader directories**: If you used `--output my_csv_export` during export, use `--csv-dir my_csv_export` when loading
+2. **Adjust batch size**: For very large datasets, you might want to increase batch size: `--batch-size 10000`
+3. **Monitor progress**: Use `--progress-interval` to get regular updates
+4. **Enable verbose logging**: Set `RUST_LOG=debug` for detailed information
+5. **Use stats**: Add `--stats` to see a summary of loaded data after completion
 
 ## Data Mapping Features
 
