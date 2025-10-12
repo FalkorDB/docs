@@ -489,3 +489,7 @@ macOS
 MyApp
 programmatically
 env
+Kuzu
+neo
+subfolder
+upsert
