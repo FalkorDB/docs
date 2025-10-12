@@ -8,6 +8,7 @@ BFS
 BLAS
 Benchmarking
 Booleans
+booleans
 CLI
 CMD
 CSC
@@ -493,3 +494,9 @@ Kuzu
 neo
 subfolder
 upsert
+TTL
+ttl
+txt
+VGF
+rdf
+ontology
