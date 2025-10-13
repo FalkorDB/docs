@@ -40,7 +40,7 @@ The process ensures complete data migration including all entities, relationship
 1. Clone the migration repository:
 
 ```bash
-git clone https://github.com/FalkorDB-POCs/rdf-to-falkordb.git
+git clone https://github.com/FalkorDB/rdf-to-falkordb.git
 cd rdf-to-falkordb
 ```
 
