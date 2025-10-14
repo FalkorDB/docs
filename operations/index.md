@@ -35,3 +35,7 @@ Comprehensive guide for setting up OpenTelemetry observability and tracing with 
 ## 6. [FalkorDBLite](/operations/falkordblite)
 
 Self-contained Python interface to FalkorDB with embedded Redis server, ideal for development and testing.
+
+## 7. [Building Docker](/operations/building-docker)
+
+Build custom FalkorDB Docker containers from source with platform-specific examples.
