@@ -1,6 +1,7 @@
 ---
-title: Building Docker
-nav_order: 6
+title: "Building Docker"
+nav_order: 7
+parent: Operations
 description: "Building docker container examples"
 ---
 
