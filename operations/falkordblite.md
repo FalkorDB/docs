@@ -222,14 +222,7 @@ FalkorDBLite is ideal for:
 - **Small-Scale Applications** - Lightweight applications that need graph database capabilities
 - **CI/CD Pipelines** - Automated testing environments that require an embedded database
 
-## Limitations
-
-While FalkorDBLite is powerful for development and testing, be aware of these limitations:
-
-- **Performance** - Not optimized for production-scale workloads
-- **Concurrency** - Limited multi-process capabilities compared to a full FalkorDB server
-- **Memory** - Runs in-process, so memory is limited to the Python process
-- **Features** - May not include all advanced features available in full FalkorDB deployments
+## Production
 
 For production environments, consider using:
 - [FalkorDB Cloud](https://app.falkordb.cloud) - Managed cloud service
@@ -250,4 +243,3 @@ If you encounter issues with FalkorDBLite:
 
 1. Check the [FalkorDBLite GitHub Issues](https://github.com/FalkorDB/falkordblite/issues)
 2. Review the [troubleshooting guide](https://github.com/FalkorDB/falkordblite/blob/master/TROUBLESHOOTING.md)
-3. Join the [FalkorDB community](https://github.com/FalkorDB/FalkorDB/discussions)
