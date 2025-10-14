@@ -79,6 +79,7 @@ OMP
 OpenAI
 OpenCypher
 OpenTelemetry
+opentelemetry
 OTel
 OTLP
 OpenMP
