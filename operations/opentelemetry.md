@@ -1,3 +1,10 @@
+---
+title: "OpenTelemetry Integration with FalkorDB-py"
+nav_order: 5
+parent: Operations
+description: "Comprehensive guide for setting up OpenTelemetry observability and tracing with FalkorDB Python applications"
+---
+
 # OpenTelemetry with FalkorDB-py Guide
 
 This guide explains how to set up and use OpenTelemetry (OTel) to monitor and trace your FalkorDB Python applications.
