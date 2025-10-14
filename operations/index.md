@@ -31,3 +31,7 @@ Learn how falkorDB can be deployed on Kubernetes using Helm charts and Docker im
 ## 5. [OpenTelemetry Integration with FalkorDB-py](/operations/opentelemetry)
 
 Comprehensive guide for setting up OpenTelemetry observability and tracing with FalkorDB Python applications.
+
+## 6. [FalkorDBLite](/operations/falkordblite)
+
+Self-contained Python interface to FalkorDB with embedded Redis server, ideal for development and testing.

@@ -31,6 +31,7 @@ Falkor
 FalkorDB
 FalkorDB's
 FalkorDBExample
+FalkorDBLite
 FalkorDBQAChain
 Gadepally
 Geospatial
@@ -86,12 +87,15 @@ Parametrized
 Pieter
 Pinterest
 Pydoc
+PyPI
+Redhat
 RESULTSET
 RO
 RediSearch
 Redis
 RedisGraph
 RedisInsight
+redislite
 Roi
 Rueian
 Saldana
@@ -143,6 +147,7 @@ createNodeIndex
 crflynn
 csv
 dbms
+dev
 dedup
 deduplicated
 deduplicates
@@ -160,6 +165,7 @@ expr
 exprList
 failover
 falkordb
+falkordblite
 fulltext
 geospatial
 godoc
@@ -215,6 +221,7 @@ pathCost
 pathCount
 pathNodes
 pathWeight
+psutil
 pzac
 pdf
 percentileCont
@@ -377,6 +384,7 @@ ro
 GenAI
 
 WCC
+WSL
 SPpath
 SSpath
 
@@ -468,6 +476,7 @@ Opire
 hh
 ss
 DT
+XCode
 YYYY
 DDTHH
 durations
