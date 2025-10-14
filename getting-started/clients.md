@@ -1,8 +1,12 @@
 ---
 title: "Client Libraries"
-nav_order: 4
+parent: "Getting Started"
+nav_order: 3
 description: >
     FalkorDB Clients
+redirect_from:
+  - /clients.html
+  - /clients
 ---
 
 # Official Clients

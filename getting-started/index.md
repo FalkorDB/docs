@@ -3,15 +3,17 @@ title: "Getting Started"
 nav_order: 2
 description: >
     Getting Started with FalkorDB Graph Database.
+has_children: true
 redirect_from:
   - /getting_started.html
   - /getting_started
+  - /getting-started.html
 ---
 
 # Getting Started with FalkorDB
 
 This guide will walk you through setting up FalkorDB, modeling a social network as a graph, 
-and accessing it using the [FalkorDB Python client](/clients) with [Cypher](/cypher).
+and accessing it using the [FalkorDB Python client](/getting-started/clients) with [Cypher](/cypher).
 
 ---
 
@@ -72,7 +74,7 @@ Let's create a simple graph for a social network where:
 
 ## Step 2: Load Data into FalkorDB
 
-Here’s how you can model and load the data.
+Here's how you can model and load the data.
 
 ### Cypher Query to Create the Data
 

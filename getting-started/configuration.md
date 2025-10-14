@@ -1,8 +1,12 @@
 ---
-title: "Configuration Parameters"
+title: "Configuration"
+parent: "Getting Started"
 nav_order: 2
 description: >
     FalkorDB supports multiple module configuration parameters. 
+redirect_from:
+  - /configuration.html
+  - /configuration
 ---
 
 # Configuration
