@@ -1,0 +1,88 @@
+---
+title: "Minimum Spanning Forest (MSF)"
+description: "Minimum Spanning Forest (MSF)"
+parent: "Algorithms"
+---
+
+# Minimum Spanning Forest (MSF)
+
+## Overview
+
+The Minimum Spanning Forest (MSF) finds the relationships with minimum weights such that any weakly connected component in the graph stays connected. It treats all edges as bi-directional and ensures that any pair of nodes that previously shared a path will still share a unique path in the MSF graph. 
+
+MSF serves as a common algorithm in scenarios such as:
+- Designing a cost-effective road network connecting several cities.
+- Power Grid / Utility cost optimization.
+- Identifying redundancies in networks.
+
+## Algorithm Details
+
+MSF first assigns each node to its own component. It iteratively scans for the minimum edges linking nodes across different components and merges them, ignoring the direction of edges throughout the process. The algorithm terminates when no further merges occur, producing a collection of trees.
+
+The procedure finds a minimum or maximum weight spanning forest based on the specified `objective` and optimizes for the given `weightAttribute`. If no attribute is given, MSF returns any collection of spanning trees. If any specified edges do not have the given weight attribute, or the value of the attribute is non-numeric, then they are treated as if they had infinite weight. Such an edge would only be included in the minimum spanning tree if no other edges with a valid weight attribute bridge the components it connects.
+
+## Syntax
+
+```cypher
+CALL algo.MSF([config])
+```
+
+### Parameters
+
+The procedure accepts an optional configuration `Map` with the following optional parameters:
+
+| Name                | Type   | Default                | Description                                                                |
+|---------------------|--------|------------------------|----------------------------------------------------------------------------|
+| `nodeLabels`        | Array  | All labels             | Array of node labels to filter which nodes are included in the computation |
+| `relationshipTypes` | Array  | All relationship types | Array of relationship types to define which edges are traversed            |
+| `objective`         | string | 'minimize'             | 'minimize' or 'maximize' what to optimize in the spanning tree             |
+| `weightAttribute`   | string | Unweighted             | the attribute to use as the tree weight.                                   |
+
+### Return Values
+The procedure returns a stream of records corresponding to each tree in the forest with the following fields:
+
+| Name    | Type | Description                      |
+|---------|------|----------------------------------|
+| `edges` | List | The edges that connect each tree |
+| `nodes` | List | The nodes in the tree            |
+
+### Create the Graph
+
+```cypher
+CREATE 
+  (CityHall:GOV),
+  (CourtHouse:GOV),
+  (FireStation:GOV),
+  (Electricity:UTIL),
+  (Water:UTIL),
+  (Building_A:RES),
+  (Building_B:RES),
+  (CityHall)-[rA:ROAD {cost: 2.2}]->(CourtHouse),
+  (CityHall)-[rB:ROAD {cost: 8.0}]->(FireStation),
+  (CourtHouse)-[rC:ROAD {cost: 3.4}]->(Building_A),
+  (FireStation)-[rD:ROAD {cost: 3.0}]->(Building_B),
+  (Building_A)-[rF:ROAD {cost: 5.2}]->(Building_B),
+  (Electricity)-[rG:ROAD {cost: 0.7}]->(Building_A),
+  (Water)-[rH:ROAD {cost: 2.3}]->(Building_B),
+  (CityHall)-[tA:TRAM {cost: 1.5}]->(Building_A),
+  (CourtHouse)-[tB:TRAM {cost: 7.3}]->(Building_B),
+  (FireStation)-[tC:TRAM {cost: 1.2}]->(Electricity)
+RETURN *
+```
+
+## Examples:
+
+Suppose you are an urban planner tasked with designing a new transportation network for a town. There are several vital buildings that must be connected by this new network. A cost estimator has already provided you with the estimated cost for some of the potential routes between these buildings.
+
+Your goal is to connect every major building with the lowest total cost, even if travel between some buildings requires multiple stops and different modes of transport. The Minimum Spanning Forest algorithm helps you achieve this by identifying the most cost-effective network.
+
+![City Graph](../images/city_plan.png)
+
+```cypher
+CALL algo.MSF({weightAttribute: 'cost'}) YIELD edge, weight
+```
+
+#### Expected Results
+The algorithm would yield a single tree containing the following edge and node objects:
+
+![City MSF Graph](../images/city_msf.png)
