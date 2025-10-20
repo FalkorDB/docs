@@ -1,5 +1,5 @@
 ---
-title: "OpenTelemetry Integration with FalkorDB-py"
+title: "OpenTelemetry Integration"
 nav_order: 5
 parent: Operations
 description: "Comprehensive guide for setting up OpenTelemetry observability and tracing with FalkorDB Python applications"
