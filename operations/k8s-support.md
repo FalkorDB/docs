@@ -52,14 +52,58 @@ and configure the master and slave to load the FalkorDB module.
 For additional configurations [see the official Helm chart documentation](https://github.com/bitnami/charts/blob/main/bitnami/redis/values.yaml)
 
 ## Step 2: Install FalkorDB Helm Charts
+
+You can deploy FalkorDB using one of two Redis deployment architectures:
+
+### Option A: Sentinel-based Deployment (Recommended for High Availability)
+
+This deployment uses Redis Sentinel for automatic failover and high availability.
+
 Install the helm charts using the following command:
 
 ```bash
 helm install -f values.yaml my-falkordb oci://registry-1.docker.io/bitnamicharts/redis
 ```
 
-This command deploys FalkorDB with the configuration from values.yaml.
+This command deploys FalkorDB with Redis Sentinel and the configuration from values.yaml.
 After running this command, instructions on how to connect to the FalkorDB server will be displayed.
+
+### Option B: Redis Cluster Deployment
+
+This deployment uses Redis Cluster for horizontal scalability and sharding.
+
+**Create a cluster-specific `values.yaml` file:**
+
+```yaml
+global:
+  security:
+    # Required to be able to run the FalkorDB image
+    allowInsecureImages: true
+
+image:
+  registry: docker.io
+  repository: falkordb/falkordb
+  tag: "latest"
+
+redis:
+  extraFlags:
+  - "--loadmodule /var/lib/falkordb/bin/falkordb.so"
+
+cluster:
+  nodes: 6
+  replicas: 1
+```
+
+**Install the Redis Cluster Helm chart:**
+
+```bash
+helm install -f values.yaml my-falkordb oci://registry-1.docker.io/bitnamicharts/redis-cluster
+```
+
+This command deploys FalkorDB in a Redis Cluster configuration with 6 nodes (3 masters and 3 replicas by default).
+For additional cluster configurations, see the [official Redis Cluster Helm chart documentation](https://artifacthub.io/packages/helm/bitnami/redis-cluster).
+
+**Note:** The remaining steps in this guide assume you're using Option A (Sentinel-based deployment). If you chose Option B (Redis Cluster), adjust the service names and connection commands accordingly (e.g., use `my-falkordb-redis-cluster` instead of `my-falkordb-redis-master`).
 
 ## Step 3: Retrieve the FalkorDB Password
 
