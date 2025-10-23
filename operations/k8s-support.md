@@ -102,7 +102,7 @@ redis:
 **Install the Redis Cluster Helm chart:**
 
 ```bash
-helm upgrade falkordb oci://registry-1.docker.io/bitnamicharts/redis-cluster --values values.yml --install
+helm upgrade falkordb oci://registry-1.docker.io/bitnamicharts/redis-cluster --values values.yaml --install
 ```
 
 This command deploys FalkorDB in a Redis Cluster configuration with 6 nodes (3 masters and 3 replicas by default).
