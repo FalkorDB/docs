@@ -75,29 +75,34 @@ This deployment uses Redis Cluster for horizontal scalability and sharding.
 **Create a cluster-specific `values.yaml` file:**
 
 ```yaml
-global:
+image:
+  repository: bitnamilegacy/redis-cluster
+  tag: 8.2.1-debian-12-r0
   security:
-    # Required to be able to run the FalkorDB image
     allowInsecureImages: true
 
-image:
-  registry: docker.io
-  repository: falkordb/falkordb
-  tag: "latest"
-
 redis:
-  extraFlags:
-  - "--loadmodule /var/lib/falkordb/bin/falkordb.so"
-
-cluster:
-  nodes: 6
-  replicas: 1
+  extraVolumes:
+    - name: falkordbmodule
+      emptyDir: {}
+  extraVolumeMounts:
+    - name: falkordbmodule
+      mountPath: /falkordbmodule/
+  initContainers:
+    - name: falkordb-module-preload
+      image: falkordb/falkordb-server:latest
+      command: ['/bin/sh', '-c', 'cp /var/lib/falkordb/bin/falkordb.so /falkordbmodule/']
+      volumeMounts:
+        - name: falkordbmodule
+          mountPath: /falkordbmodule/
+  configmap: |-
+    loadmodule /falkordbmodule/falkordb.so
 ```
 
 **Install the Redis Cluster Helm chart:**
 
 ```bash
-helm install -f values.yaml my-falkordb oci://registry-1.docker.io/bitnamicharts/redis-cluster
+helm upgrade falkordb oci://registry-1.docker.io/bitnamicharts/redis-cluster --values values.yml --install
 ```
 
 This command deploys FalkorDB in a Redis Cluster configuration with 6 nodes (3 masters and 3 replicas by default).
