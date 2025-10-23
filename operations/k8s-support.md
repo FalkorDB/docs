@@ -75,11 +75,13 @@ This deployment uses Redis Cluster for horizontal scalability and sharding.
 **Create a cluster-specific `values.yaml` file:**
 
 ```yaml
+global:
+  security:
+    allowInsecureImages: true
+
 image:
   repository: bitnamilegacy/redis-cluster
   tag: 8.2.1-debian-12-r0
-  security:
-    allowInsecureImages: true
 
 redis:
   extraVolumes:
