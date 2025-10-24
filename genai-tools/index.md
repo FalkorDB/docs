@@ -1,0 +1,18 @@
+---
+title: "GenAI Tools"
+description: "FalkorDB tools and integrations for building GenAI applications"
+has_children: true
+nav_order: 8
+---
+
+# GenAI Tools
+
+FalkorDB provides powerful tools and integrations for building intelligent GenAI applications with graph databases and Large Language Models (LLMs).
+
+## Topics in This Section
+
+- [GraphRAG-SDK](./graphrag-sdk.md): Build intelligent GraphRAG applications with FalkorDB and LLMs.
+- [Graphiti](./graphiti.md): Temporally-aware, multi-tenant live knowledge graph for multi-agent AI systems.
+- [LangChain](./langchain.md): Integration with LangChain for AI agents with memory.
+- [LangGraph](./langgraph.md): Build stateful, multi-actor agentic applications with LangGraph.
+- [LlamaIndex](./llamaindex.md): Simplify development of LLM-powered applications with LlamaIndex.
