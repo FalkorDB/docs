@@ -46,7 +46,7 @@ After deployment, you can access your FalkorDB instance:
 
 1. Navigate to your Railway project dashboard
 2. Click on the FalkorDB service
-3. Then click on teh public domain to open the browser
+3. Then click on the public domain to open the browser
 <img width="2358" height="628" alt="image" src="https://github.com/user-attachments/assets/895a0039-2b23-4fb3-b9dc-273e94387a1d" />
    
 4. Find the FALKORDB_PASSWORD in the service variables settings
