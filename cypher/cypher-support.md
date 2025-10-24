@@ -30,10 +30,7 @@ Patterns are fully supported.
 
 + Lists
 + Maps
-
-  **Unsupported:**
-
-- Temporal types (Date, DateTime, LocalDateTime, Time, LocalTime, Duration)
++ Temporal types (Date, DateTime, LocalDateTime, Time, LocalTime, Duration)
 
 ### Literal types
 
