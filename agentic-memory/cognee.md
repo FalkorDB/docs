@@ -348,6 +348,5 @@ If you experience connection problems:
 ## Next Steps
 
 - Explore [Graphiti](./graphiti.md) for temporal knowledge graph capabilities
-- Learn about [GraphRAG SDK](/graphrag-sdk) for advanced reasoning
-- Check out [LLM Framework Integrations](/llm-integrations) for other tools
+- Learn about [GenAI Tools](/genai-tools) for graph reasoning and LLM integrations
 - Review [Cypher Query Language](/cypher) for custom graph queries
