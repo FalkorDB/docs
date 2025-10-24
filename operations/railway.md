@@ -35,7 +35,8 @@ The single instance template deploys a standalone FalkorDB server with the brows
 4. Railway will automatically provision and deploy your FalkorDB instance
 5. Once deployment completes, you'll receive connection details
 
-<!-- TODO: Add screenshot of Railway template deployment page -->
+<img width="722" height="502" alt="image" src="https://github.com/user-attachments/assets/573fbe4a-19a5-42c9-92fb-6c05b60f4d82" />
+<img width="603" height="740" alt="image" src="https://github.com/user-attachments/assets/6b0ea2f6-7b85-44b7-80b6-345e811391f2" />
 
 ### Accessing Your Instance
 
@@ -45,53 +46,32 @@ After deployment, you can access your FalkorDB instance:
 
 1. Navigate to your Railway project dashboard
 2. Click on the FalkorDB service
-3. Find the public URL in the service settings
-4. Open the URL in your browser to access the FalkorDB Browser interface
+3. Then click on teh public domain to open the browser
+<img width="2358" height="628" alt="image" src="https://github.com/user-attachments/assets/895a0039-2b23-4fb3-b9dc-273e94387a1d" />
+   
+4. Find the FALKORDB_PASSWORD in the service variables settings
+5. Use the FALKORDB_PASSWORD in your browser to login to your database
+   
+Defaults are:
+* Host: falkordb.railway.internal
+* Port: 16379
+* Username: default
 
-<!-- TODO: Add screenshot of Railway project dashboard -->
-
-<!-- TODO: Add screenshot of FalkorDB Browser interface -->
+<img width="560" height="655" alt="image" src="https://github.com/user-attachments/assets/30237fcc-64c3-45f0-a92e-6f6f6af22ec9" />
 
 #### Connecting via Client
 
 To connect from your application or command line:
 
-1. Get your connection details from Railway:
-   - **Host**: Available in the service's public domain
-   - **Port**: Default is `6379`
-   - **Password**: Set via the `REDIS_PASSWORD` environment variable
+Locate the FALKORDB_PRIVATE_URL or the FALKORDB_PUBLIC_URL: 
 
-2. Connect using `redis-cli`:
+<img width="2411" height="1208" alt="image" src="https://github.com/user-attachments/assets/e355e2a7-d290-4cdc-b7e5-a3f593f72ecb" />
+
+Connect using `redis-cli`:
 
 ```bash
-export REDISCLI_AUTH="<your-password>"
-redis-cli -h <your-railway-host> -p 6379
+redis-cli -u <FALKORDB_PUBLIC_URL>
 ```
-
-> **Security Note:** Using the `REDISCLI_AUTH` environment variable is more secure than passing the password with `-a` flag, which would expose it in command history.
-
-3. Test with a simple Cypher query:
-
-```
-GRAPH.QUERY mygraph "CREATE (n:Person {name: 'Alice', age: 30})"
-GRAPH.QUERY mygraph "MATCH (n:Person) RETURN n"
-```
-
-### Configuration
-
-You can customize your deployment through Railway environment variables:
-
-* `REDIS_PASSWORD` - Set a custom password for your instance
-* `BROWSER` - Enable/disable the browser interface (default: `1` for enabled)
-* `FALKORDB_ARGS` - Pass additional FalkorDB configuration arguments
-
-To modify environment variables:
-1. Go to your Railway project dashboard
-2. Click on the FalkorDB service
-3. Navigate to the **Variables** tab
-4. Add or modify variables as needed
-
-<!-- TODO: Add screenshot of Railway environment variables configuration -->
 
 ## Option 2: Cluster Deployment
 
@@ -105,7 +85,7 @@ The cluster template deploys a multi-node FalkorDB cluster for production worklo
 4. Railway will provision multiple FalkorDB nodes and configure them as a cluster
 5. Wait for all nodes to be deployed and the cluster to be initialized
 
-<!-- TODO: Add screenshot of Railway cluster deployment -->
+<img width="1958" height="707" alt="image" src="https://github.com/user-attachments/assets/ca2ab461-4312-4cec-b3b1-b6aeb2e4534f" />
 
 ### Cluster Architecture
 
@@ -113,7 +93,6 @@ The FalkorDB cluster template typically includes:
 
 * **Multiple master nodes** - Distribute data across shards
 * **Replica nodes** - Provide redundancy and failover capabilities
-* **Automatic sharding** - Data is automatically distributed across nodes
 * **High availability** - Continues operating even if individual nodes fail
 
 ### Connecting to the Cluster
@@ -121,7 +100,7 @@ The FalkorDB cluster template typically includes:
 To connect to your FalkorDB cluster:
 
 1. Get the cluster endpoint from your Railway project dashboard
-2. Use Redis cluster-aware clients for optimal performance
+2. Use FalkorDB cluster-aware clients for optimal performance
 
 Example with Python:
 
@@ -150,37 +129,11 @@ export REDISCLI_AUTH="<your-password>"
 redis-cli -c -h <your-railway-cluster-host> -p 6379
 ```
 
-> **Security Note:** The `REDISCLI_AUTH` environment variable keeps your password out of command history.
-
-The `-c` flag enables cluster mode, allowing the client to follow redirections between nodes.
-
-### Cluster Configuration
-
-Configure your cluster through Railway environment variables:
-
-* `REDIS_PASSWORD` - Cluster-wide authentication password
-* `FALKORDB_ARGS` - Additional configuration for cluster nodes
-* Node-specific settings available in the template configuration
-
 ## Best Practices
-
-### Security
-
-* **Set a strong password** - Always configure `REDIS_PASSWORD` with a secure value
-* **Use private networking** - When possible, keep your database on Railway's private network
-* **Enable TLS** - Use encrypted connections for production workloads
-* **Restrict access** - Configure Railway's networking rules to limit access to trusted sources
-
-### Performance
-
-* **Choose the right plan** - Select a Railway plan that matches your workload requirements
-* **Monitor resources** - Use Railway's monitoring tools to track CPU, memory, and network usage
-* **Scale appropriately** - Start with a single instance for development, use clusters for production
-* **Connection pooling** - Implement connection pooling in your application for better performance
 
 ### Data Persistence
 
-Railway provides persistent volumes for data storage:
+The template provides persistent volumes for data storage:
 
 * Data persists across deployments and restarts
 * Regular backups are recommended for production workloads
@@ -194,90 +147,3 @@ Railway provides built-in monitoring and logging:
 2. View real-time logs in the **Logs** tab
 3. Monitor metrics in the **Metrics** tab
 4. Set up alerts for service health and resource usage
-
-<!-- TODO: Add screenshot of Railway monitoring dashboard with logs and metrics -->
-
-## Scaling
-
-### Vertical Scaling (Single Instance)
-
-To scale a single instance vertically:
-
-1. Go to your Railway project
-2. Select your FalkorDB service
-3. Navigate to **Settings**
-4. Upgrade your Railway plan for more resources
-
-### Horizontal Scaling (Cluster)
-
-The cluster template provides built-in horizontal scaling:
-
-* Data is automatically sharded across nodes
-* Add more replicas for read scalability
-* Modify the cluster configuration to add nodes
-
-## Troubleshooting
-
-### Connection Issues
-
-If you can't connect to your FalkorDB instance:
-
-1. Verify the service is running in the Railway dashboard
-2. Check that you're using the correct host, port, and password
-3. Ensure your network/firewall allows outbound connections to Railway
-4. Review service logs for error messages
-
-### Performance Issues
-
-If experiencing slow performance:
-
-1. Check resource usage in Railway metrics
-2. Consider upgrading to a higher-tier plan
-3. For clusters, ensure your client is cluster-aware
-4. Review query performance using `GRAPH.PROFILE`
-
-### Data Loss
-
-If data appears to be lost:
-
-1. Check that persistent volumes are properly configured
-2. Review service logs for errors during startup
-3. Verify the service didn't restart with a fresh volume
-4. Contact Railway support for assistance with volume recovery
-
-## Cost Optimization
-
-* **Start small** - Begin with the free tier or basic plan for development
-* **Scale as needed** - Upgrade only when your workload requires it
-* **Use clusters wisely** - Reserve cluster deployments for production needs
-* **Monitor usage** - Keep track of resource consumption to avoid unexpected costs
-
-## Migration from Railway
-
-If you need to migrate your data from Railway to another environment:
-
-1. **Export your data** - Use `GRAPH.DUMP` or backup commands
-2. **Set up destination** - Prepare your new FalkorDB instance
-3. **Transfer data** - Use FalkorDB import tools or restore from backup
-4. **Verify** - Test your application with the new instance
-5. **Switch** - Update connection strings and decommission Railway instance
-
-## Additional Resources
-
-* [Railway Documentation](https://docs.railway.app)
-* [FalkorDB Documentation](/index)
-* [FalkorDB Docker Setup](/getting-started)
-* [FalkorDB Kubernetes Deployment](/operations/k8s_support)
-* [FalkorDB Cluster Setup](/operations/cluster)
-* [FalkorDB Cloud](https://app.falkordb.cloud) - Managed alternative
-
-## Getting Help
-
-If you encounter issues deploying FalkorDB on Railway:
-
-1. Check the [Railway Community Forum](https://help.railway.app)
-2. Review the [FalkorDB GitHub Issues](https://github.com/FalkorDB/FalkorDB/issues)
-3. Join the [FalkorDB Discord](https://discord.gg/ErBEqN9E) for community support
-4. Contact Railway support for platform-specific issues
-
-Railway makes it simple to deploy FalkorDB for development and production use cases. Choose the template that matches your needs and get started with graph databases in minutes!
