@@ -35,6 +35,8 @@ The single instance template deploys a standalone FalkorDB server with the brows
 4. Railway will automatically provision and deploy your FalkorDB instance
 5. Once deployment completes, you'll receive connection details
 
+<!-- TODO: Add screenshot of Railway template deployment page -->
+
 ### Accessing Your Instance
 
 After deployment, you can access your FalkorDB instance:
@@ -45,6 +47,10 @@ After deployment, you can access your FalkorDB instance:
 2. Click on the FalkorDB service
 3. Find the public URL in the service settings
 4. Open the URL in your browser to access the FalkorDB Browser interface
+
+<!-- TODO: Add screenshot of Railway project dashboard -->
+
+<!-- TODO: Add screenshot of FalkorDB Browser interface -->
 
 #### Connecting via Client
 
@@ -85,6 +91,8 @@ To modify environment variables:
 3. Navigate to the **Variables** tab
 4. Add or modify variables as needed
 
+<!-- TODO: Add screenshot of Railway environment variables configuration -->
+
 ## Option 2: Cluster Deployment
 
 The cluster template deploys a multi-node FalkorDB cluster for production workloads requiring high availability and horizontal scalability.
@@ -96,6 +104,8 @@ The cluster template deploys a multi-node FalkorDB cluster for production worklo
 3. Sign in to your Railway account
 4. Railway will provision multiple FalkorDB nodes and configure them as a cluster
 5. Wait for all nodes to be deployed and the cluster to be initialized
+
+<!-- TODO: Add screenshot of Railway cluster deployment -->
 
 ### Cluster Architecture
 
@@ -184,6 +194,8 @@ Railway provides built-in monitoring and logging:
 2. View real-time logs in the **Logs** tab
 3. Monitor metrics in the **Metrics** tab
 4. Set up alerts for service health and resource usage
+
+<!-- TODO: Add screenshot of Railway monitoring dashboard with logs and metrics -->
 
 ## Scaling
 
