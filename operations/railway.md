@@ -58,8 +58,11 @@ To connect from your application or command line:
 2. Connect using `redis-cli`:
 
 ```bash
-redis-cli -h <your-railway-host> -p 6379 -a <your-password>
+export REDISCLI_AUTH="<your-password>"
+redis-cli -h <your-railway-host> -p 6379
 ```
+
+> **Security Note:** Using the `REDISCLI_AUTH` environment variable is more secure than passing the password with `-a` flag, which would expose it in command history.
 
 3. Test with a simple Cypher query:
 
@@ -133,8 +136,11 @@ result = g.query("MATCH (n:Person) RETURN n.name, n.age")
 Using `redis-cli` with cluster mode:
 
 ```bash
-redis-cli -c -h <your-railway-cluster-host> -p 6379 -a <your-password>
+export REDISCLI_AUTH="<your-password>"
+redis-cli -c -h <your-railway-cluster-host> -p 6379
 ```
+
+> **Security Note:** The `REDISCLI_AUTH` environment variable keeps your password out of command history.
 
 The `-c` flag enables cluster mode, allowing the client to follow redirections between nodes.
 
