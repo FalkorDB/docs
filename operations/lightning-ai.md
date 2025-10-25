@@ -1,6 +1,6 @@
 ---
 title: "Lightning.AI"
-nav_order: 9
+nav_order: 8
 description: "Deploy FalkorDB on Lightning.AI"
 parent: "Operations"
 ---
@@ -87,7 +87,7 @@ graph.query("""
            (t:Topic {name: $topic}),
            (d)-[:WRITTEN_BY]->(a),
            (d)-[:ABOUT]->(t)
-""", params={'doc_id': 'doc1', 'content': '...', 'embedding': [...], 
+""", params={'doc_id': 'doc1', 'content': '...', 'embedding': [0.1, 0.2, 0.3],  # Example embedding vector
              'author': 'John Doe', 'topic': 'AI'})
 
 # Retrieve with graph context
