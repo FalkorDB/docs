@@ -547,6 +547,7 @@ findByEmail
 findAllByOrderByNameAsc
 gradle
 jfalkordb
+JFalkorDB
 pom
 xml
 Autowired
