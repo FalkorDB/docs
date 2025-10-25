@@ -1,6 +1,27 @@
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.10.0/styles/atom-one-dark.min.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.10.0/highlight.min.js"></script>
-<script>hljs.highlightAll();</script>
+<!-- Preconnect to external domains for faster resource loading -->
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+<link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
+{% if site.gtm_tracking != nil %}
+<link rel="preconnect" href="https://www.googletagmanager.com" crossorigin>
+<link rel="dns-prefetch" href="https://www.googletagmanager.com">
+{% endif %}
+
+<!-- Load Highlight.js CSS asynchronously to avoid render blocking -->
+<link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.10.0/styles/atom-one-dark.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.10.0/styles/atom-one-dark.min.css"></noscript>
+
+<!-- Load Highlight.js script asynchronously and defer execution -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.10.0/highlight.min.js" defer></script>
+<script defer>
+  // Initialize highlight.js after DOM is loaded
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function() {
+      if (typeof hljs !== 'undefined') hljs.highlightAll();
+    });
+  } else {
+    if (typeof hljs !== 'undefined') hljs.highlightAll();
+  }
+</script>
 
 {% if site.gtm_tracking != nil %}
 <!-- Google Tag Manager -->
