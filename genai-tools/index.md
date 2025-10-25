@@ -17,7 +17,6 @@ FalkorDB provides powerful tools and integrations for building intelligent GenAI
 ## Topics in This Section
 
 - [GraphRAG-SDK](./graphrag-sdk.md): Build intelligent GraphRAG applications with FalkorDB and LLMs.
-- [Graphiti](./graphiti.md): Temporally-aware, multi-tenant live knowledge graph for multi-agent AI systems.
 - [LangChain](./langchain.md): Integration with LangChain for AI agents with memory.
 - [LangGraph](./langgraph.md): Build stateful, multi-actor agentic applications with LangGraph.
 - [LlamaIndex](./llamaindex.md): Simplify development of LLM-powered applications with LlamaIndex.
