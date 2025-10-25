@@ -239,5 +239,4 @@ If you can't connect to FalkorDB:
 ## Next Steps
 
 - Explore [Cognee](./cognee.md) for alternative memory management approaches
-- Learn about [GraphRAG SDK](/graphrag-sdk) for advanced graph reasoning
-- Check out [LLM Framework Integrations](/llm-integrations) for other AI tools
+- Learn about [GenAI Tools](/genai-tools) for graph reasoning and LLM integrations
