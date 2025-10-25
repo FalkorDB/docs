@@ -6,6 +6,10 @@
 <link rel="dns-prefetch" href="https://www.googletagmanager.com">
 {% endif %}
 
+<!-- Custom CSS for code tabs - loaded asynchronously -->
+<link rel="preload" href="{{ '/assets/css/code-tabs.css' | relative_url }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="{{ '/assets/css/code-tabs.css' | relative_url }}"></noscript>
+
 <!-- Load Highlight.js CSS asynchronously to avoid render blocking -->
 <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.10.0/styles/atom-one-dark.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
 <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.10.0/styles/atom-one-dark.min.css"></noscript>
