@@ -2,6 +2,12 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.10.0/highlight.min.js"></script>
 <script>hljs.highlightAll();</script>
 
+<!-- Custom styles for enhanced look and feel -->
+<link rel="stylesheet" href="{{ '/assets/css/custom.css' | relative_url }}">
+
+<!-- Custom JavaScript for enhanced UX -->
+<script src="{{ '/assets/js/custom.js' | relative_url }}" defer></script>
+
 {% if site.gtm_tracking != nil %}
 <!-- Google Tag Manager -->
 <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
