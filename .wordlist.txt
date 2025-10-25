@@ -517,6 +517,16 @@ Checkpointing
 Railway
 PaaS
 GitHub
+AG2
+ag2
+AutoGen
+autogen
+AgentOS
+GroupChat
+GroupChatManager
+ConversableAgent
+Anthropic
+ai
 awslabs
 GraphStoreFactory
 FalkorDBGraphStoreFactory
