@@ -2,6 +2,7 @@ remote_theme: just-the-docs/just-the-docs
 title: FalkorDB Docs
 description: The FalkorDB documentation
 logo: "/images/falkor-logo.png"
+logo_link: "https://www.falkordb.com"
 favicon_ico: "/images/favicon.ico"
 gtm_tracking: GTM-MBWB627H
 
