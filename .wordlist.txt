@@ -532,3 +532,5 @@ GraphStoreFactory
 FalkorDBGraphStoreFactory
 subdirectory
 SSL
+blarify
+blarApp

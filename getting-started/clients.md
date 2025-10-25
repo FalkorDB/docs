@@ -40,6 +40,7 @@ redirect_from:
 | [rustis][rustis-url]                                      | Rust       | MIT        | [Dahomey Technologies][rustis-author]       | [Crate](https://crates.io/crates/rustis) |
 | [NRedisGraph][NRedisGraph-url]                            | C#         | BSD        | [tombatron][NRedisGraph-author]             | [GitHub][NRedisGraph-url]                |
 | [RedisGraph.jl][RedisGraph.jl-url]                        | Julia      | MIT        | [xyxel][RedisGraph.jl-author]               | [GitHub][RedisGraph.jl-url]              |
+| [blarify][blarify-url]                                    | Python     | MIT        | [blarApp][blarify-author]                   | [PyPI][blarify-package]                  |
 
 [redis-url]: https://redis.com
 [falkordb-url]: https://www.falkordb.com
@@ -118,6 +119,10 @@ redirect_from:
 
 [rustis-url]: https://github.com/dahomey-technologies/rustis
 [rustis-author]: https://github.com/dahomey-technologies
+
+[blarify-url]: https://github.com/blarApp/blarify
+[blarify-author]: https://github.com/blarApp
+[blarify-package]: https://pypi.org/project/blarify/
 
 ## Implementing a client
 
