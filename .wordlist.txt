@@ -511,6 +511,9 @@ VGF
 rdf
 ontology
 sharding
+recomputation
+fallbacks
+Checkpointing
 Railway
 PaaS
 GitHub
