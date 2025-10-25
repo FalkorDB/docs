@@ -21,3 +21,4 @@ FalkorDB provides powerful tools and integrations for building intelligent GenAI
 - [LangChain](./langchain.md): Integration with LangChain for AI agents with memory.
 - [LangGraph](./langgraph.md): Build stateful, multi-actor agentic applications with LangGraph.
 - [LlamaIndex](./llamaindex.md): Simplify development of LLM-powered applications with LlamaIndex.
+- [GraphRAG Toolkit](./graphrag-toolkit.md): AWS GraphRAG Toolkit integration for building knowledge graph applications.

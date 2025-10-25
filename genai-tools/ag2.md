@@ -11,14 +11,6 @@ parent: "GenAI Tools"
 
 The integration of AG2 with FalkorDB brings powerful GraphRAG capabilities to multi-agent systems, enabling agents to leverage structured knowledge graphs for more accurate, explainable, and contextually-aware responses.
 
-## Resources
-
-- 🔗 [AG2 Documentation](https://docs.ag2.ai/)
-- 📓 [AG2 GraphRAG with FalkorDB Notebook](https://docs.ag2.ai/latest/docs/use-cases/notebooks/notebooks/agentchat_graph_rag_falkordb/)
-- 📝 [Blog: FalkorDB-AG2.ai Integration for Multi-Agent Systems](https://www.falkordb.com/news-updates/ag2-integration-multi-agent-systems/)
-- 📝 [Blog: Structured Knowledge with FalkorDB Graph RAG](https://docs.ag2.ai/latest/docs/blog/2024/12/06/FalkorDB-Structured/)
-- 🔗 [AG2 GitHub Repository](https://github.com/ag2ai/ag2)
-
 ## Installation
 
 Install AG2 with FalkorDB GraphRAG support:
@@ -341,9 +333,12 @@ register_function(
 
 ## Resources
 
-- [AG2 Documentation](https://docs.ag2.ai/)
-- [AG2 API Reference](https://docs.ag2.ai/latest/docs/reference/)
-- [FalkorDB GraphRAG-SDK](https://docs.falkordb.com/graphrag-sdk.html)
-- [AG2 GitHub Examples](https://github.com/ag2ai/ag2/tree/main/notebook)
-- [Blog: Knowledgeable Agents with FalkorDB Graph RAG](https://dev.to/ag2ai/knowledgeable-agents-with-falkordb-graph-rag-9d)
-- [Blog: FalkorDB-AG2.ai Integration](https://www.falkordb.com/news-updates/ag2-integration-multi-agent-systems/)
+- 🔗 [AG2 Documentation](https://docs.ag2.ai/)
+- 🔗 [AG2 API Reference](https://docs.ag2.ai/latest/docs/reference/)
+- 🔗 [AG2 GitHub Repository](https://github.com/ag2ai/ag2)
+- 📓 [AG2 GitHub Examples](https://github.com/ag2ai/ag2/tree/main/notebook)
+- 📓 [AG2 GraphRAG with FalkorDB Notebook](https://docs.ag2.ai/latest/docs/use-cases/notebooks/notebooks/agentchat_graph_rag_falkordb/)
+- 🔗 [FalkorDB GraphRAG-SDK](https://docs.falkordb.com/graphrag-sdk.html)
+- 📝 [Blog: FalkorDB-AG2.ai Integration for Multi-Agent Systems](https://www.falkordb.com/news-updates/ag2-integration-multi-agent-systems/)
+- 📝 [Blog: Structured Knowledge with FalkorDB Graph RAG](https://docs.ag2.ai/latest/docs/blog/2024/12/06/FalkorDB-Structured/)
+- 📝 [Blog: Knowledgeable Agents with FalkorDB Graph RAG](https://dev.to/ag2ai/knowledgeable-agents-with-falkordb-graph-rag-9d)
