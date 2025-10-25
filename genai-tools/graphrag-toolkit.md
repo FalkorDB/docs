@@ -1,6 +1,6 @@
 ---
 title: "GraphRAG Toolkit"
-nav_order: 5
+nav_order: 6
 description: "AWS GraphRAG Toolkit integration with FalkorDB for building knowledge graph applications."
 parent: "GenAI Tools"
 ---
@@ -64,8 +64,11 @@ You may need to pass credentials and SSL configuration:
 
 ```python
 from graphrag_toolkit.lexical_graph.storage import GraphStoreFactory
+from graphrag_toolkit_contrib.lexical_graph.storage.graph.falkordb import FalkorDBGraphStoreFactory
 
 falkordb_connection_info = 'falkordb://<your-falkordb-endpoint>'
+
+GraphStoreFactory.register(FalkorDBGraphStoreFactory)
 
 with GraphStoreFactory.for_graph_store(
     falkordb_connection_info,
@@ -83,8 +86,11 @@ To create a local FalkorDB graph store, supply a connection string with only `fa
 
 ```python
 from graphrag_toolkit.lexical_graph.storage import GraphStoreFactory
+from graphrag_toolkit_contrib.lexical_graph.storage.graph.falkordb import FalkorDBGraphStoreFactory
 
 falkordb_connection_info = 'falkordb://'
+
+GraphStoreFactory.register(FalkorDBGraphStoreFactory)
 
 with GraphStoreFactory.for_graph_store(falkordb_connection_info) as graph_store:
     # Your code here
