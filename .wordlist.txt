@@ -551,7 +551,6 @@ pom
 xml
 Autowired
 countByAge
-countByNameAndAge
 existsByEmail
 LocalDateTimeToStringConverter
 StringToLocalDateTimeConverter
