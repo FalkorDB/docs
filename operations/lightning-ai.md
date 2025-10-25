@@ -141,15 +141,7 @@ result = graph.query("""
 
 ### Documentation and Guides
 
-* [FalkorDB Documentation](/)
-* [FalkorDB Cypher Language](/cypher)
 * [GraphRAG Blog Post](https://www.falkordb.com/news-updates/falkordb-lightning-ai-integration-graphrag/)
-
-### Community and Support
-
-* [FalkorDB Discord Community](https://discord.gg/ErBEqN9E)
-* [FalkorDB GitHub](https://github.com/FalkorDB/FalkorDB)
-* [Lightning.AI Documentation](https://lightning.ai/docs)
 
 ## Next Steps
 
