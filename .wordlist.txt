@@ -113,6 +113,7 @@ Stopwords
 Subcommands
 TF
 TTY
+TypeScript
 UNIQIE
 URIs
 UUID
@@ -153,6 +154,7 @@ dedup
 deduplicated
 deduplicates
 dockerfile
+drivine
 duplications
 dups
 endNode

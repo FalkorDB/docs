@@ -32,6 +32,7 @@ redirect_from:
 | [rueidis][rueidis-url]                                    | Go         | Apache 2.0 | [Rueian][rueidis-author]                    | [GitHub][rueidis-url]                    |
 | [ioredisgraph][ioredisgraph-url]                          | JavaScript | ISC        | [Jonah][ioredisgraph-author]                | [GitHub][ioredisgraph-url]               |
 | [@hydre/rgraph][rgraph-url]                               | JavaScript | MIT        | [Sceat][rgraph-author]                      | [GitHub][rgraph-url]                     |
+| [drivine][drivine-url]                                    | TypeScript | Apache 2.0 | [liberation-data][drivine-author]           | [npm][drivine-package]                   |
 | [php-redis-graph][php-redis-graph-url]                    | PHP        | MIT        | [KJDev][php-redis-graph-author]             | [GitHub][php-redis-graph-url]            |
 | [redisgraph_php][redisgraph_php-url]                      | PHP        | MIT        | [jpbourbon][redisgraph_php-author]          | [GitHub][redisgraph_php-url]             |
 | [redisgraph-ex][redisgraph-ex-url]                        | Elixir     | MIT        | [crflynn][redisgraph-ex-author]             | [GitHub][redisgraph-ex-url]              |
@@ -118,6 +119,10 @@ redirect_from:
 
 [rustis-url]: https://github.com/dahomey-technologies/rustis
 [rustis-author]: https://github.com/dahomey-technologies
+
+[drivine-url]: https://github.com/liberation-data/drivine
+[drivine-author]: https://github.com/liberation-data
+[drivine-package]: https://www.npmjs.com/package/@liberation-data/drivine
 
 ## Implementing a client
 
