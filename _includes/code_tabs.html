@@ -19,4 +19,81 @@
   </div>
   {% endif %}
   {% endfor %}
+
+  <style scoped>
+    input[type="radio"] {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    label {
+      display: inline-block;
+      padding: 10px;
+      cursor: pointer;
+    }
+
+    label:hover {
+      background: #31343f;
+    }
+
+    input[type="radio"]:checked+label {
+      background: #31343f;
+      border-bottom: 1px solid transparent;
+    }
+
+    .tab-content {
+      background: #31343f;
+      padding: 10px;
+    }
+
+    .tab-content pre {
+      margin: 0;
+      overflow-x: auto;
+    }
+
+    .tab-content code {
+      display: block;
+      white-space: pre;
+    }
+
+    input[type="radio"]:nth-of-type(1):checked~.tab-content:nth-of-type(1),
+    input[type="radio"]:nth-of-type(2):checked~.tab-content:nth-of-type(2),
+    input[type="radio"]:nth-of-type(3):checked~.tab-content:nth-of-type(3),
+    input[type="radio"]:nth-of-type(4):checked~.tab-content:nth-of-type(4),
+    input[type="radio"]:nth-of-type(5):checked~.tab-content:nth-of-type(5),
+    input[type="radio"]:nth-of-type(6):checked~.tab-content:nth-of-type(6) {
+      display: block;
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .code-container {
+      position: relative;
+    }
+
+    .copy-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      padding: 5px 10px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 3px;
+      cursor: pointer;
+      display: none;
+    }
+
+    .code-container:hover .copy-btn {
+      display: inline-block;
+    }
+
+    .copy-btn:hover {
+      background-color: #0056b3;
+    }
+  </style>
+
 </div>
