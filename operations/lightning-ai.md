@@ -117,26 +117,6 @@ result = graph.query("""
 """, {'entity': 'FalkorDB'})
 ```
 
-## Best Practices
-
-### Data Modeling
-
-* **Design Clear Schema** - Define entity types and relationship types that match your domain
-* **Use Indexes** - Create indexes on frequently queried properties for better performance
-* **Normalize Data** - Avoid duplicating information across nodes
-
-### Performance Optimization
-
-* **Batch Operations** - Use batch queries for bulk data insertion
-* **Connection Pooling** - Reuse database connections for better performance
-* **Query Optimization** - Use EXPLAIN to understand query execution plans
-
-### Security
-
-* **Use Authentication** - Enable password protection for production deployments
-* **Network Security** - Use private networks or VPNs when possible
-* **Data Encryption** - Consider encryption for sensitive data
-
 ## Resources
 
 ### Documentation and Guides
