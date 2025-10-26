@@ -113,6 +113,7 @@ Stopwords
 Subcommands
 TF
 TTY
+TypeScript
 UNIQIE
 URIs
 UUID
@@ -153,6 +154,7 @@ dedup
 deduplicated
 deduplicates
 dockerfile
+drivine
 duplications
 dups
 endNode
@@ -182,6 +184,7 @@ insertListElements
 ioredisgraph
 isEmpty
 Jaeger
+Jupyter
 javadocs
 javascript
 jedis
@@ -417,6 +420,7 @@ dataset
 Quickstart
 quickstart
 LangGraph
+Lightning
 agentic
 stateful
 Cognee
@@ -508,6 +512,7 @@ TTL
 ttl
 txt
 VGF
+VPNs
 rdf
 ontology
 sharding
