@@ -9,7 +9,7 @@ permalink: /
 [![Discord](https://img.shields.io/discord/1146782921294884966?style=flat-square)](https://discord.gg/ErBEqN9E) 
 [![Try Free](https://img.shields.io/badge/Try%20Free-FalkorDB%20Cloud-FF8101?labelColor=FDE900&style=flat-square)](https://app.falkordb.cloud)
 
-<img src="https://github.com/user-attachments/assets/201b07e1-ac6d-4593-98cf-e58946d7766c" alt="FalkorDB Docs Readme Banner" fetchpriority="high" loading="eager">
+![FalkorDB Docs Readme Banner](https://github.com/user-attachments/assets/201b07e1-ac6d-4593-98cf-e58946d7766c)
 
 # FalkorDB
 ### The Graph platform developers use to achieve accurate GraphRAG for enterprise GenAI
