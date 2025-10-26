@@ -40,6 +40,10 @@ Comprehensive guide for setting up OpenTelemetry observability and tracing with 
 
 Self-contained Python interface to FalkorDB with embedded Redis server, ideal for development and testing.
 
-## 8. [Building Docker](/operations/building-docker)
+## 8. [Deploy FalkorDB on Lightning.AI](/operations/lightning-ai)
+
+Deploy FalkorDB on Lightning.AI to build fast, accurate GenAI applications using advanced RAG with graph databases.
+
+## 9. [Building Docker](/operations/building-docker)
 
 Build custom FalkorDB Docker containers from source with platform-specific examples.
