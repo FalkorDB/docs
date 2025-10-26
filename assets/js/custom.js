@@ -233,31 +233,25 @@
   }
 
   // ===== Initialize All Enhancements =====
+  function runAllInits() {
+    initBackToTop();
+    initCopyFeedback();
+    initSmoothAnchors();
+    initExternalLinks();
+    initCodeEnhancements();
+    initTocHighlighting();
+    initKeyboardNav();
+    initSearchEnhancement();
+    initLoadingEffects();
+  }
+
   function init() {
     // Wait for DOM to be ready
     if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', function() {
-        initBackToTop();
-        initCopyFeedback();
-        initSmoothAnchors();
-        initExternalLinks();
-        initCodeEnhancements();
-        initTocHighlighting();
-        initKeyboardNav();
-        initSearchEnhancement();
-        initLoadingEffects();
-      });
+      document.addEventListener('DOMContentLoaded', runAllInits);
     } else {
       // DOM already loaded
-      initBackToTop();
-      initCopyFeedback();
-      initSmoothAnchors();
-      initExternalLinks();
-      initCodeEnhancements();
-      initTocHighlighting();
-      initKeyboardNav();
-      initSearchEnhancement();
-      initLoadingEffects();
+      runAllInits();
     }
   }
 

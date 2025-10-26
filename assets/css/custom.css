@@ -169,7 +169,6 @@ tbody td {
 /* ===== Enhanced Blockquotes ===== */
 blockquote {
   border-left: 4px solid var(--falkor-yellow);
-  padding-left: var(--spacing-lg);
   margin: var(--spacing-lg) 0;
   background: rgba(253, 233, 0, 0.05);
   border-radius: 0 var(--radius-md) var(--radius-md) 0;
@@ -383,7 +382,12 @@ hr {
 }
 
 /* ===== Focus Styles for Accessibility ===== */
-*:focus {
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible,
+[tabindex]:focus-visible {
   outline: 2px solid var(--falkor-yellow);
   outline-offset: 2px;
 }
