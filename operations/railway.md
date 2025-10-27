@@ -7,7 +7,7 @@ parent: "Operations"
 
 # Deploy FalkorDB on Railway
 
-[Railway](https://railway.com?referralCode=skt6b0) is a modern platform-as-a-service (PaaS) that makes it easy to deploy and manage applications. FalkorDB provides verified templates on Railway for quick deployment, enabling you to get started with a graph database in minutes without managing infrastructure.
+[Railway](https://railway.com?referralCode=skt6b0&utm_medium=integration&utm_source=button&utm_campaign=generic) is a modern platform-as-a-service (PaaS) that makes it easy to deploy and manage applications. FalkorDB provides verified templates on Railway for quick deployment, enabling you to get started with a graph database in minutes without managing infrastructure.
 
 ## Available Templates
 
@@ -20,7 +20,7 @@ FalkorDB offers two verified deployment templates on Railway:
 
 Before deploying FalkorDB on Railway, ensure you have:
 
-* A [Railway account](https://railway.com?referralCode=skt6b0) (free tier available)
+* A [Railway account](https://railway.com?referralCode=skt6b0&utm_medium=integration&utm_source=button&utm_campaign=generic) (free tier available)
 * Basic understanding of FalkorDB and graph databases
 
 ## Option 1: Single Instance Deployment
@@ -31,7 +31,7 @@ The single instance template deploys a standalone FalkorDB server with the brows
 
 ### Deploy the Template
 
-1. Visit the [FalkorDB Single Instance template](https://railway.com/deploy/falkordb-1?referralCode=skt6b0)
+1. Visit the [FalkorDB Single Instance template](https://railway.com/deploy/falkordb-1?referralCode=skt6b0&utm_medium=integration&utm_source=button&utm_campaign=generic)
 2. Click the **Deploy** button
 3. Sign in to your Railway account or create one if needed
 4. Railway will automatically provision and deploy your FalkorDB instance
@@ -83,7 +83,7 @@ The cluster template deploys a multi-node FalkorDB cluster for production worklo
 
 ### Deploy the Template
 
-1. Visit the [FalkorDB Cluster template](https://railway.com/deploy/falkordb-cluster?referralCode=skt6b0)
+1. Visit the [FalkorDB Cluster template](https://railway.com/deploy/falkordb-cluster?referralCode=skt6b0&utm_medium=integration&utm_source=button&utm_campaign=generic)
 2. Click the **Deploy** button
 3. Sign in to your Railway account
 4. Railway will provision multiple FalkorDB nodes and configure them as a cluster
