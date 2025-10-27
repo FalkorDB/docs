@@ -102,6 +102,131 @@ Since we cannot reason broadly about unknown values, `null` is an important part
 
 Unlike all other scalars, `null` cannot be stored as a property value.
 
+## Temporal Types
+FalkorDB supports the following temporal types that allow modeling and querying time-related data:
+
+## 1. [Date](#Date)
+
+## 2. [Time](#Time)
+
+## 3. [DateTime](#DateTime)
+
+## 4. [Duration](#Duration)
+
+These types follow the ISO 8601 standard and can be used in properties, parameters, and expressions.
+
+### Date
+
+Represents a calendar date in the format YYYY-MM-DD.
+
+Purpose
+Use Date to store and compare dates without time information, e.g. birth dates, due dates, or deadlines.
+
+```cypher
+CREATE (:Event { name: "Conference", date: date("2025-09-15") })
+```
+
+#### Interactions
+* Compare using operators (=, <, >, etc.)
+
+* Extract components using functions:
+
+```cypher
+RETURN date("2025-09-15").year      // 2025
+RETURN date("2025-09-15").month     // 9
+RETURN date("2025-09-15").day       // 15
+```
+
+### Time
+
+Represents a time of day, in the format hh:mm:ss.
+
+Purpose
+Use Time to store specific times (e.g. store hours, alarm times) without date context.
+
+```cypher
+CREATE (:Reminder { msg: "Wake up!", at: localtime("07:00:00") })
+```
+
+#### Interactions
+
+* Compare time values:
+
+```cypher
+RETURN localtime("07:00:00") < localtime("09:30:00")  // true
+```
+
+* Extract parts:
+
+```cypher
+RETURN localtime("15:45:20").hour      // 15
+RETURN localtime("15:45:20").minute    // 45
+RETURN localtime("15:45:20").second    // 20
+```
+
+### DateTime
+
+Represents a point in time, combining both date and time. Format: YYYY-MM-DDTHH:MM:SS.
+
+Purpose
+Use DateTime when both date and time are relevant, e.g. logging events, scheduling, timestamps.
+
+Example
+```cypher
+CREATE (:Log { message: "System rebooted", at: localdatetime("2025-06-29T13:45:00") })
+```
+
+#### Interactions
+
+* Compare with other DateTime values
+
+* Extract parts:
+
+```cypher
+RETURN localdatetime("2025-06-29T13:45:00").year     // 2025
+RETURN localdatetime("2025-06-29T13:45:00").hour     // 13
+```
+
+* Use localdatetime() with no arguments to get the current system time:
+
+```cypher
+RETURN localdatetime()
+```
+
+### Duration
+
+Represents a span of time. Format: P[n]Y[n]M[n]DT[n]H[n]M[n]S (ISO 8601 Duration).
+
+Purpose
+Use Duration to represent intervals, e.g. "3 days", "2 hours", or "1 year and 6 months".
+
+Example
+```cypher
+CREATE (:Cooldown { period: duration("P3DT12H") })
+```
+
+#### Interactions
+
+* Add/subtract durations with dates or datetimes:
+
+```cypher
+RETURN date("2025-01-01") + duration("P1M")  // 2025-02-01
+RETURN datetime("2025-06-29T13:00:00") - duration("PT30M") // 2025-06-29T12:30:00
+```
+
+* Add durations together:
+
+```cypher
+RETURN duration("P1D") + duration("PT12H")   // P1DT12H
+```
+
+* Extract fields:
+
+```cypher
+RETURN duration("P1Y2M3DT4H5M6S").years      // 1
+RETURN duration("P1Y2M3DT4H5M6S").hours      // 4
+```
+
 ## Collection types
 
 ### Arrays

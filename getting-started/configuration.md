@@ -1,8 +1,12 @@
 ---
-title: "Configuration Parameters"
+title: "Configuration"
+parent: "Getting Started"
 nav_order: 2
 description: >
     FalkorDB supports multiple module configuration parameters. 
+redirect_from:
+  - /configuration.html
+  - /configuration
 ---
 
 # Configuration
@@ -15,6 +19,11 @@ For example the following will run the server with global authentication passwor
 ```sh
 docker run -p 6379:6379 -p 3000:3000 -it -e REDIS_ARGS="--requirepass falkordb" -e FALKORDB_ARGS="THREAD_COUNT 4" --rm falkordb/falkordb:latest
 ```
+
+> **Production Tip:** For production environments, use the lighter `falkordb/falkordb-server` image which doesn't include the FalkorDB Browser:
+> ```sh
+> docker run -p 6379:6379 -it -e REDIS_ARGS="--requirepass falkordb" -e FALKORDB_ARGS="THREAD_COUNT 4" --rm falkordb/falkordb-server:latest
+> ```
 
 ## Setting configuration parameters on module load
 
@@ -42,6 +51,12 @@ When running a docker container
 
 ```sh
 docker run -p 6379:6379 -p 3000:3000 -it -e FALKORDB_ARGS="[OPT VAL]" --rm falkordb/falkordb:latest
+```
+
+Or for production use:
+
+```sh
+docker run -p 6379:6379 -it -e FALKORDB_ARGS="[OPT VAL]" --rm falkordb/falkordb-server:latest
 ```
 
 ## Setting configuration parameters at run-time (for supported parameters)
