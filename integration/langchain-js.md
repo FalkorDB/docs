@@ -5,25 +5,32 @@ description: "LangChain JavaScript/TypeScript integration for FalkorDB"
 parent: "Integration"
 ---
 
-# LangChain JS/TS Integration
+![falkordb-langchain](https://github.com/user-attachments/assets/b5ebbef1-6943-4493-a33a-af5bcac87a60)
 
-The [@falkordb/langchain-ts](https://www.npmjs.com/package/@falkordb/langchain-ts) package enables developers to use FalkorDB with LangChain applications. This integration allows your application to take natural language questions, automatically generate Cypher queries, retrieve relevant context from your graph database, and return responses in plain language.
+# LangChain JS/TS Integration with FalkorDB
+
+The [@falkordb/langchain-ts](https://www.npmjs.com/package/@falkordb/langchain-ts) package enables developers to integrate FalkorDB with LangChain applications. The integration allows applications to accept natural language questions, generate Cypher queries automatically, retrieve relevant context from the graph database, and return responses in natural language.
 
 ## Installation
+
+### Step 1
 
 ```bash
 npm install @falkordb/langchain-ts falkordb
 ```
 
-You'll also need LangChain and a language model:
+### Step 2
+> Ensure LangChain and a language model are installed
 
 ```bash
 npm install langchain @langchain/openai
 ```
 
-## Quick Start
+## Getting Started
 
-### Basic Usage
+### Movie data example
+In this example, we'll initialize the connection to FalkorDB, define a language model (E.g, OpenAI), and both create and populate the graph with movie-related data. **We'll then query the graph in natural language to see the integration at work.**
+> Note: You can change the LLM's temperature
 
 ```typescript
 import { FalkorDBGraph } from "@falkordb/langchain-ts";
@@ -67,10 +74,9 @@ await graph.close();
 ## API Reference
 
 ### FalkorDBGraph
+> The following command creates and initializes a new FalkorDB connection.
 
 #### `initialize(config: FalkorDBGraphConfig): Promise<FalkorDBGraph>`
-
-Creates and initializes a new FalkorDB connection.
 
 **Config Options:**
 
@@ -173,12 +179,12 @@ console.log(structuredSchema.nodeProps);
 console.log(structuredSchema.relationships);
 ```
 
-## Requirements
+## Prerequisites
 
 - Node.js >= 18
 - FalkorDB server running
 - LangChain >= 0.1.0
 
-## Examples
+## Additional Examples
 
 For more examples and source code, see the [@falkordb/langchain-ts repository](https://github.com/FalkorDB/FalkorDB-Langchain-js) on GitHub.
