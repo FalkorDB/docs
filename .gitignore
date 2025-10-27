@@ -1,2 +1,6 @@
 _site/
 *.dic
+Gemfile
+Gemfile.lock
+vendor/
+.bundle/
