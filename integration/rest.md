@@ -29,7 +29,7 @@ curl -X POST "http://your-falkordb-browser-url/api/auth/login" \
   -H "Content-Type: application/json" \
   -d '{
     "username": "default",
-    "password": "password"
+    "password": ""
   }'
 ```
 
@@ -75,6 +75,9 @@ curl -N -X GET "http://your-falkordb-browser-url/api/graph/my_graph?query=MATCH%
 
 ### Authentication
 - [User login - POST /api/auth/login](#user-login---post-apiauthlogin)
+- [Revoke JWT token - POST /api/auth/revoke](#revoke-jwt-token---post-apiauthrevoke)
+- [List JWT tokens - GET /api/auth/tokens](#list-jwt-tokens---get-apiauthtokens)
+- [Get token metadata - GET /api/auth/token/{tokenId}](#get-token-metadata---get-apiauthtokentokenid)
 
 ### Status
 - [Check FalkorDB connection status - GET /api/status](#check-falkordb-connection-status---get-apistatus)
@@ -151,7 +154,7 @@ Example request:
 ```json
 {
   "username": "default",
-  "password": "password"
+  "password": ""
 }
 ```
 
@@ -173,6 +176,167 @@ Example request:
 
 - **400**: Bad request - missing username or password
 - **401**: Invalid credentials
+- **500**: Internal server error
+
+### **Revoke JWT token** - `POST /api/auth/revoke`
+
+Revoke a JWT token by removing it from the active tokens list in Redis. Once revoked, the token cannot be used for authentication. Admins can revoke any token, while regular users can only revoke their own tokens.
+
+#### Headers
+- `Authorization: Bearer <token>` (required)
+
+#### Request Body
+
+- Content-Type: `application/json`
+- Required field: `token`
+
+Example request:
+```json
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+}
+```
+
+#### Responses
+
+- **200**: Token revoked successfully
+  - Content-Type: `application/json`
+  - Example response:
+
+    ```json
+    {
+      "message": "Token revoked successfully",
+      "tokenId": "user-123-1640995200"
+    }
+    ```
+
+- **400**: Bad request - missing token in request body
+  - Content-Type: `application/json`
+  - Example response:
+
+    ```json
+    {
+      "message": "Token to revoke is required in request body"
+    }
+    ```
+
+- **401**: Authentication failed - invalid or missing token
+  - Content-Type: `application/json`
+  - Example response:
+
+    ```json
+    {
+      "message": "Authorization header with Bearer token required"
+    }
+    ```
+
+- **403**: Forbidden - You can only revoke your own tokens (unless you are an Admin)
+  - Content-Type: `application/json`
+  - Example response:
+
+    ```json
+    {
+      "message": "Forbidden: You can only revoke your own tokens"
+    }
+    ```
+
+- **500**: Server configuration error
+  - Content-Type: `application/json`
+  - Example response:
+
+    ```json
+    {
+      "message": "Server configuration error"
+    }
+    ```
+
+### **List JWT tokens** - `GET /api/auth/tokens`
+
+Get a list of active JWT tokens. Admins can see all tokens from all users, while regular users can only see their own tokens.
+
+#### Headers
+- `Authorization: Bearer <token>` (required)
+
+#### Responses
+
+- **200**: List of tokens retrieved successfully
+  - Content-Type: `application/json`
+  - Example response:
+
+    ```json
+    {
+      "tokens": [
+        {
+          "user_id": "7262bcaecc2b06ff66e28ede90e6dce39c218685af9272d7a3fbd63ae08d17c2",
+          "token_id": "1761055513181-215c579b-c6e1-4f10-9b07-aacbf89cda21",
+          "created_at": "2025-10-21T14:05:13.182Z",
+          "expires_at": "2026-10-21T14:05:13.182Z",
+          "last_used": null,
+          "name": "API Token",
+          "permissions": ["Admin"],
+          "username": "adminuser"
+        }
+      ],
+      "count": 8
+    }
+    ```
+
+- **401**: Authentication failed - invalid or missing token
+- **500**: Internal server error
+
+### **Get token metadata** - `GET /api/auth/token/{tokenId}`
+
+Get detailed metadata for a specific JWT token by its token ID. Admins can view any token, while regular users can only view their own tokens.
+
+#### Headers
+- `Authorization: Bearer <token>` (required)
+
+#### Parameters
+- `tokenId` (path, required): Token ID to retrieve
+  - Example: `1761053108078-554350d7-c965-4ed7-8d32-679b7f705e81`
+
+#### Responses
+
+- **200**: Token metadata retrieved successfully
+  - Content-Type: `application/json`
+  - Example response:
+
+    ```json
+    {
+      "token": {
+        "user_id": "e5d09e7d2141f77f80008ff73f04104b9484f59baa8e19a4ea758495d289fd0f",
+        "token_id": "1761053108078-554350d7-c965-4ed7-8d32-679b7f705e81",
+        "created_at": "2025-10-21T13:25:08.085Z",
+        "expires_at": "2026-10-21T13:25:08.085Z",
+        "last_used": null,
+        "name": "API Token",
+        "permissions": ["Read-Only"],
+        "username": "readonlyuser"
+      }
+    }
+    ```
+
+- **401**: Authentication failed - invalid or missing token
+- **403**: Forbidden - You can only view your own tokens (unless you are an Admin)
+  - Content-Type: `application/json`
+  - Example response:
+
+    ```json
+    {
+      "message": "Forbidden: You can only view your own tokens"
+    }
+    ```
+
+- **404**: Token not found
+  - Content-Type: `application/json`
+  - Example response:
+
+    ```json
+    {
+      "message": "Token not found"
+    }
+    ```
+
 - **500**: Internal server error
 
 ---
