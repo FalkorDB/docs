@@ -127,7 +127,7 @@ python3 neo4j_to_csv_extractor.py --password <your-neo4j-password> \
 
 This will:
 - Discover all distinct values of the `tenantId` property
-- Create a subdirectory for each tenant (e.g., `csv_output/tenant_shopfast/`, `csv_output/tenant_cloudserve/`)
+- Create a subdirectory for each tenant (e.g., `csv_output/tenant_cloudserve/`, `csv_output/tenant_learnhub/`, `csv_output/tenant_shopfast/`)
 - Export each tenant's nodes and relationships to their respective subdirectories
 - Automatically omit the `tenantId` property from CSV exports (since it's encoded in the folder name)
 
@@ -169,7 +169,7 @@ python3 falkordb_csv_loader.py MOVIES --port 6379 --stats
 ```
 
 **Options:**
-- `graph_name`: Target graph name in FalkorDB (required, used as prefix in multi-graph mode)
+- `graph_name`: Target graph name in FalkorDB (required). When using `--multi-graph` mode, this serves as the prefix for tenant-specific graphs
 - `--host HOST`: FalkorDB host (default: localhost)
 - `--port PORT`: FalkorDB port (default: 6379)
 - `--username USERNAME`: FalkorDB username (optional)
