@@ -539,4 +539,14 @@ awslabs
 GraphStoreFactory
 FalkorDBGraphStoreFactory
 subdirectory
+subdirectories
 SSL
+multi
+tenant
+tenantId
+segregation
+MYAPP
+cloudserve
+shopfast
+learnhub
+TenantLabel
