@@ -31,6 +31,7 @@ Falkor
 FalkorDB
 FalkorDB's
 FalkorDBExample
+FalkorDBGraph
 FalkorDBLite
 FalkorDBQAChain
 Gadepally
@@ -50,6 +51,7 @@ Implementers
 IndexError
 Instrumentor
 JS
+js
 JSDoc
 JSON
 KJDev
@@ -60,6 +62,7 @@ LLM
 llm
 LRU
 LangChain
+langchain
 Lex
 Lipman
 LlamaIndex
@@ -113,6 +116,7 @@ Stopwords
 Subcommands
 TF
 TTY
+TypeScript
 UNIQIE
 URIs
 UUID
@@ -153,6 +157,7 @@ dedup
 deduplicated
 deduplicates
 dockerfile
+drivine
 duplications
 dups
 endNode
@@ -182,6 +187,7 @@ insertListElements
 ioredisgraph
 isEmpty
 Jaeger
+Jupyter
 javadocs
 javascript
 jedis
@@ -417,6 +423,7 @@ dataset
 Quickstart
 quickstart
 LangGraph
+Lightning
 agentic
 stateful
 Cognee
@@ -508,6 +515,7 @@ TTL
 ttl
 txt
 VGF
+VPNs
 rdf
 ontology
 sharding
@@ -517,6 +525,31 @@ Checkpointing
 Railway
 PaaS
 GitHub
+AG2
+ag2
+AutoGen
+autogen
+AgentOS
+GroupChat
+GroupChatManager
+ConversableAgent
+Anthropic
+ai
+awslabs
+GraphStoreFactory
+FalkorDBGraphStoreFactory
+subdirectory
+subdirectories
+SSL
+multi
+tenant
+tenantId
+segregation
+MYAPP
+cloudserve
+shopfast
+learnhub
+TenantLabel
 Spring
 JPA
 CRUD
