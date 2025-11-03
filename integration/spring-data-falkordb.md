@@ -17,7 +17,9 @@ Spring Data FalkorDB provides JPA-style object-graph mapping for [FalkorDB](http
 
 - **JPA-style Annotations**: Use familiar `@Node`, `@Relationship`, `@Id`, `@Property` annotations
 - **Repository Abstractions**: Implement `FalkorDBRepository<T, ID>` for automatic CRUD operations
-- **Query Method Generation**: Support for `findByName`, `findByAgeGreaterThan`, etc.
+- **Derived Query Methods**: Full support for Spring Data query methods like `findByName`, `findByAgeGreaterThan`, etc.
+- **Custom Queries**: Write Cypher queries with `@Query` annotation and named parameters
+- **Auto-Configuration**: Enable repositories with `@EnableFalkorDBRepositories`
 - **Object-Graph Mapping**: Automatic conversion between Java objects and FalkorDB graph structures
 - **Transaction Support**: Built on Spring's robust transaction management
 - **High Performance**: Leverages FalkorDB's speed with the official JFalkorDB Java client
@@ -107,17 +109,24 @@ Create repository interfaces extending `FalkorDBRepository`:
 ```java
 public interface PersonRepository extends FalkorDBRepository<Person, Long> {
     
+    // Derived query methods (automatically implemented)
     Optional<Person> findByName(String name);
-    
     List<Person> findByAgeGreaterThan(int age);
-    
     List<Person> findByEmail(String email);
-    
+    List<Person> findByNameAndAgeGreaterThan(String name, int age);
+    List<Person> findByNameOrEmail(String name, String email);
     Page<Person> findByAgeGreaterThan(int age, Pageable pageable);
     
+    // Count and existence queries
     long countByAge(int age);
-    
     boolean existsByEmail(String email);
+    
+    // Custom Cypher queries with named parameters
+    @Query("MATCH (p:Person)-[:KNOWS]->(f:Person) WHERE p.name = $name RETURN f")
+    List<Person> findFriends(@Param("name") String name);
+    
+    @Query("MATCH (p:Person) WHERE p.age > $minAge AND p.age < $maxAge RETURN p")
+    List<Person> findByAgeRange(@Param("minAge") int minAge, @Param("maxAge") int maxAge);
 }
 ```
 
@@ -221,6 +230,30 @@ private String name;  // Maps to "full_name" property
 private String email;  // Maps to "email" property (default)
 ```
 
+### @Interned
+
+Marks string properties as low-cardinality, applying FalkorDB's `intern()` function to optimize storage:
+
+```java
+@Interned
+private String status;  // Uses intern() - ideal for limited values like "ACTIVE", "INACTIVE"
+
+@Interned
+private String country;  // Uses intern() - ideal for country codes "US", "UK", "CA"
+
+@Interned
+private String category;  // Uses intern() - ideal for categories like "SPORTS", "NEWS"
+```
+
+The `@Interned` annotation is useful for string properties that have a limited set of possible values (low cardinality). When a property is marked with `@Interned`, FalkorDB's `intern()` function is automatically applied when writing to the database, which keeps only a single copy of frequently repeated string values, optimizing storage and query performance.
+
+**Use cases:**
+- Status codes (ACTIVE, INACTIVE, PENDING)
+- Country/region codes
+- Categories and types
+- Enum-like string values
+- Any string with a limited vocabulary
+
 ### @Relationship
 
 Maps relationships between entities:
@@ -238,41 +271,138 @@ private List<Person> employees;
 
 ## Repository Query Methods
 
-Spring Data FalkorDB supports JPA-style query methods with these patterns:
+Spring Data FalkorDB supports two types of queries:
 
-### Query Keywords
+### 1. Derived Query Methods (Automatically Implemented)
+
+Define methods following Spring Data naming conventions, and the implementation is generated automatically:
+
+#### Query Keywords
 
 - **`findBy...`**: Find entities matching criteria
 - **`countBy...`**: Count entities matching criteria  
 - **`existsBy...`**: Check if entities exist matching criteria
 - **`deleteBy...`**: Delete entities matching criteria
+- **`findFirstBy...`** / **`findTopNBy...`**: Limit results
 
-### Supported Operations
+#### Supported Comparison Operations
 
 ```java
-// Exact match
+// Equality
 findByName(String name)
+findByNameNot(String name)
 
-// Comparison operations  
+// Comparison
 findByAgeGreaterThan(int age)
 findByAgeGreaterThanEqual(int age)
 findByAgeLessThan(int age)
-
-// Range queries
-findByAgeBetween(int start, int end)
+findByAgeLessThanEqual(int age)
 
 // String operations
-findByNameContaining(String substring)
-findByNameStartingWith(String prefix)
-findByNameIgnoreCase(String name)
+findByNameContaining(String substring)      // *substring*
+findByNameStartingWith(String prefix)       // prefix*
+findByNameEndingWith(String suffix)         // *suffix
+findByNameLike(String pattern)              // Custom pattern
+findByNameNotContaining(String substring)
 
-// Sorting and pagination
-findAllByOrderByNameAsc()
-findByAgeGreaterThan(int age, Pageable pageable)
+// Null checks
+findByEmailIsNull()
+findByEmailIsNotNull()
+
+// Boolean
+findByActiveTrue()
+findByActiveFalse()
+
+// Collections
+findByAgeIn(Collection<Integer> ages)
+findByAgeNotIn(Collection<Integer> ages)
 
 // Logical operations
-findByNameAndAge(String name, int age)
-findByNameOrEmail(String name, String email)
+findByNameAndAge(String name, int age)      // AND condition
+findByNameOrEmail(String name, String email) // OR condition
+
+// Sorting and pagination
+findByAgeGreaterThan(int age, Sort sort)
+findByAgeGreaterThan(int age, Pageable pageable)
+
+// Limiting results
+findFirstByOrderByCreatedAtDesc()
+findTop10ByOrderByAgeDesc()
+```
+
+### 2. Custom Cypher Queries with @Query
+
+Write custom Cypher queries for complex operations:
+
+```java
+public interface PersonRepository extends FalkorDBRepository<Person, Long> {
+    
+    // Using named parameters
+    @Query("MATCH (p:Person)-[:KNOWS]->(f:Person) "
+         + "WHERE p.name = $name RETURN f")
+    List<Person> findFriends(@Param("name") String name);
+    
+    // Using indexed parameters
+    @Query("MATCH (p:Person) WHERE p.age > $0 RETURN p")
+    List<Person> findOlderThan(int age);
+    
+    // Count query
+    @Query(value = "MATCH (p:Person)-[:WORKS_FOR]->(c:Company) "
+                 + "WHERE c.name = $company RETURN count(p)",
+           count = true)
+    long countEmployees(@Param("company") String company);
+    
+    // Exists query
+    @Query(value = "MATCH (p:Person {email: $email}) RETURN count(p) > 0",
+           exists = true)
+    boolean emailExists(@Param("email") String email);
+    
+    // Write query (creates/updates data)
+    @Query(value = "MATCH (p:Person {id: $id}) "
+                 + "SET p.lastLogin = $time",
+           write = true)
+    void updateLastLogin(@Param("id") Long id, @Param("time") LocalDateTime time);
+}
+```
+
+### Query Method Examples
+
+```java
+// Simple equality
+List<Person> people = repository.findByName("John");
+
+// Comparison
+List<Person> adults = repository.findByAgeGreaterThanEqual(18);
+
+// String matching
+List<Person> smiths = repository.findByNameEndingWith("Smith");
+
+// Logical AND/OR
+List<Person> results = repository.findByNameAndAgeGreaterThan("John", 25);
+List<Person> results = repository.findByNameOrEmail("John", "john@example.com");
+
+// Null checks
+List<Person> noEmail = repository.findByEmailIsNull();
+
+// Collections
+List<Person> youngPeople = repository.findByAgeIn(Arrays.asList(18, 19, 20));
+
+// Counting and existence
+long count = repository.countByAge(25);
+boolean exists = repository.existsByEmail("test@example.com");
+
+// Sorting
+List<Person> sorted = repository.findByAgeGreaterThan(20, Sort.by("name").ascending());
+
+// Pagination
+Page<Person> page = repository.findByAgeGreaterThan(18, PageRequest.of(0, 10));
+
+// Limiting
+Optional<Person> youngest = repository.findFirstByOrderByAgeAsc();
+List<Person> oldest = repository.findTop5ByOrderByAgeDesc();
+
+// Delete
+repository.deleteByAge(0); // Delete all with age = 0
 ```
 
 ## Twitter Integration Example
