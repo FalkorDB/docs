@@ -50,7 +50,21 @@ kubectl get pods -n kb-system
 
 ### Step 2: Install FalkorDB Addon
 
-Enable the FalkorDB addon for KubeBlocks:
+Enable the FalkorDB addon for KubeBlocks. You can use either the kbcli command-line tool or Helm.
+
+#### Option A: Using kbcli (Recommended)
+
+First, install kbcli:
+
+```bash
+# Install kbcli
+curl -fsSL https://kubeblocks.io/installer/install_cli.sh | bash
+
+# Verify installation
+kbcli version
+```
+
+Then install the FalkorDB addon:
 
 ```bash
 # Install the FalkorDB addon
@@ -60,11 +74,18 @@ kbcli addon install falkordb
 kbcli addon list | grep falkordb
 ```
 
-Alternatively, you can install addons using Helm:
+#### Option B: Using Helm
 
 ```bash
+# Add the KubeBlocks addons Helm repository
 helm repo add kubeblocks-addons https://apecloud.github.io/helm-charts
+helm repo update
+
+# Install the FalkorDB addon
 helm install falkordb-addon kubeblocks-addons/falkordb
+
+# Verify the addon is installed
+helm list -A | grep falkordb
 ```
 
 ### Step 3: Create a Namespace
