@@ -8,8 +8,8 @@ parent: "Commands"
 
 # ACL
 
-The ACL command in FalkorDB provides tools for managing Access Control Lists, 
-enabling administrators to control user permissions at a granular level. 
+The ACL command in FalkorDB provides tools for managing Access Control Lists,
+enabling administrators to control user permissions at a granular level.
 This command is crucial for maintaining secure access to your FalkorDB instances.
 
 Usage: `ACL [SUBCOMMAND] [arg1] [arg2] ...`

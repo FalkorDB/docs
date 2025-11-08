@@ -18,15 +18,16 @@ OpenTelemetry is an observability framework that allows you to collect, process,
 
 ## Prerequisites
 
-- Python 3.8 or higher
-- FalkorDB server running (locally or remotely)
-- Basic understanding of Python and FalkorDB
+* Python 3.8 or higher
+* FalkorDB server running (locally or remotely)
+* Basic understanding of Python and FalkorDB
 
 ## Installation
 
 Install the required packages using pip or poetry:
 
 ### Using pip
+
 ```bash
 pip install falkordb
 pip install opentelemetry-distro
@@ -36,6 +37,7 @@ pip install opentelemetry-sdk
 ```
 
 ### Using poetry
+
 ```bash
 poetry add falkordb
 poetry add opentelemetry-distro
@@ -269,7 +271,9 @@ if __name__ == "__main__":
 ## Best Practices
 
 ### 1. Service Naming
+
 Use descriptive service names that identify your application:
+
 ```python
 resource = Resource.create({
     "service.name": "my-falkordb-app",
@@ -279,7 +283,9 @@ resource = Resource.create({
 ```
 
 ### 2. Meaningful Span Names
+
 Use descriptive span names that indicate the operation:
+
 ```python
 with tracer.start_as_current_span("user.create") as span:
     # Create user logic
@@ -291,7 +297,9 @@ with tracer.start_as_current_span("user.find_by_email") as span:
 ```
 
 ### 3. Error Handling
+
 Always handle errors properly in your spans:
+
 ```python
 with tracer.start_as_current_span("falkordb.query") as span:
     try:
@@ -304,7 +312,9 @@ with tracer.start_as_current_span("falkordb.query") as span:
 ```
 
 ### 4. Sensitive Data
+
 Avoid logging sensitive information in span attributes:
+
 ```python
 # Good - log query structure, not sensitive data
 span.set_attribute("db.statement", "MATCH (u:User {email: ?}) RETURN u")
@@ -324,6 +334,7 @@ span.set_attribute("db.statement", "MATCH (u:User {email: ?}) RETURN u")
 ### Debug Mode
 
 Enable debug logging to troubleshoot issues:
+
 ```python
 import logging
 logging.basicConfig(level=logging.DEBUG)
@@ -331,9 +342,9 @@ logging.basicConfig(level=logging.DEBUG)
 
 ## Additional Resources
 
-- [OpenTelemetry Python Documentation](https://opentelemetry.io/docs/languages/python/)
-- [FalkorDB Python Client Documentation](https://github.com/FalkorDB/falkordb-py)
-- [OpenTelemetry Semantic Conventions](https://opentelemetry.io/docs/specs/semconv/)
+* [OpenTelemetry Python Documentation](https://opentelemetry.io/docs/languages/python/)
+* [FalkorDB Python Client Documentation](https://github.com/FalkorDB/falkordb-py)
+* [OpenTelemetry Semantic Conventions](https://opentelemetry.io/docs/specs/semconv/)
 
 ## Conclusion
 

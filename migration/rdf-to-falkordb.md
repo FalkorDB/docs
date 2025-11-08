@@ -21,19 +21,19 @@ The process ensures complete data migration including all entities, relationship
 
 ## Features
 
-- **Schema Extraction**: Automatically extracts ontology from RDF/TTL files
-- **Configurable Mapping**: JSON-based configuration for customizing data mapping
-- **URI Shortening**: Optional conversion of long URIs to shorter representations
-- **CSV Export**: Generates properly formatted CSV files for nodes and edges
-- **Flexible Loading**: Multiple loading options with batch processing support
-- **Data Preview**: Optional CSV output preview during export
+* **Schema Extraction**: Automatically extracts ontology from RDF/TTL files
+* **Configurable Mapping**: JSON-based configuration for customizing data mapping
+* **URI Shortening**: Optional conversion of long URIs to shorter representations
+* **CSV Export**: Generates properly formatted CSV files for nodes and edges
+* **Flexible Loading**: Multiple loading options with batch processing support
+* **Data Preview**: Optional CSV output preview during export
 
 ## Prerequisites
 
-- Python 3.6+
-- Required Python packages (see requirements.txt in the repository)
-- FalkorDB instance (local, Docker, or Cloud)
-- RDF/TTL data files
+* Python 3.6+
+* Required Python packages (see requirements.txt in the repository)
+* FalkorDB instance (local, Docker, or Cloud)
+* RDF/TTL data files
 
 ## Installation
 
@@ -105,14 +105,14 @@ python3 rdf_to_csv_extractor.py import/<rdf-ttl-file.ttl> \
 The export script generates the following files:
 
 **Node CSV Files:**
-- Format: `nodes_<NodeType>.csv`
-- Contains: Entity IDs, labels, and properties
-- Example: `nodes_InChIkey.csv`, `nodes_LCMSFeature.csv`
+* Format: `nodes_<NodeType>.csv`
+* Contains: Entity IDs, labels, and properties
+* Example: `nodes_InChIkey.csv`, `nodes_LCMSFeature.csv`
 
 **Edge CSV Files:**
-- Format: `edges_<EdgeType>.csv`
-- Contains: Source ID, source label, target ID, target label, relationship type
-- Example: `edges_HAS_CANOPUS_ANNOTATION.csv`
+* Format: `edges_<EdgeType>.csv`
+* Contains: Source ID, source label, target ID, target label, relationship type
+* Example: `edges_HAS_CANOPUS_ANNOTATION.csv`
 
 ## Step 4: Loading Data into FalkorDB
 
@@ -209,11 +209,11 @@ cargo build --release
 
 The Rust loader provides significant advantages:
 
-- **Async Operations**: All database operations use async/await for better concurrency
-- **Batch Processing**: Processes multiple records per query (configurable batch size)
-- **Memory Efficient**: Streams data from CSV files without loading everything into memory
-- **Progress Tracking**: Real-time progress updates during loading
-- **Error Handling**: Comprehensive error handling with detailed logging
+* **Async Operations**: All database operations use async/await for better concurrency
+* **Batch Processing**: Processes multiple records per query (configurable batch size)
+* **Memory Efficient**: Streams data from CSV files without loading everything into memory
+* **Progress Tracking**: Real-time progress updates during loading
+* **Error Handling**: Comprehensive error handling with detailed logging
 
 ## Example Migration Flow
 
@@ -247,19 +247,19 @@ python3 falkordb_csv_loader.py VGF141 --csv-dir vgf --merge-mode --stats
 
 The tool supports converting long URIs to shorter, more manageable representations. This is particularly useful for:
 
-- Reducing storage requirements
-- Improving readability
-- Simplifying queries
-- Custom prefix mappings via JSON configuration
+* Reducing storage requirements
+* Improving readability
+* Simplifying queries
+* Custom prefix mappings via JSON configuration
 
 ### Property Handling
 
 The migration process preserves:
 
-- Simple scalar properties (strings, numbers, booleans)
-- Complex nested values
-- Lists and arrays
-- Metadata and annotations
+* Simple scalar properties (strings, numbers, booleans)
+* Complex nested values
+* Lists and arrays
+* Metadata and annotations
 
 ## Troubleshooting
 
@@ -272,19 +272,19 @@ The migration process preserves:
 
 ### Debug Tips
 
-- Use `--csv-output-peek` to preview generated CSV files during export
-- Enable verbose logging by modifying the script
-- Test with smaller sample datasets first
-- Verify the ontology configuration matches your data structure
+* Use `--csv-output-peek` to preview generated CSV files during export
+* Enable verbose logging by modifying the script
+* Test with smaller sample datasets first
+* Verify the ontology configuration matches your data structure
 
 ## Additional Resources
 
-- [rdf-to-falkordb GitHub Repository](https://github.com/FalkorDB-POCs/rdf-to-falkordb)
-- [FalkorDB Rust Loader](https://github.com/FalkorDB/FalkorDB-Loader-RS)
-- [FalkorDB Bulk Loader](https://github.com/falkordb/falkordb-bulk-loader)
+* [rdf-to-falkordb GitHub Repository](https://github.com/FalkorDB-POCs/rdf-to-falkordb)
+* [FalkorDB Rust Loader](https://github.com/FalkorDB/FalkorDB-Loader-RS)
+* [FalkorDB Bulk Loader](https://github.com/falkordb/falkordb-bulk-loader)
 
 ## Next Steps
 
-- Explore [FalkorDB Cypher Language](/cypher) for querying your graph
-- Learn about [FalkorDB Operations](/operations) for production deployments
-- Check out [FalkorDB Integration](/integration) options
+* Explore [FalkorDB Cypher Language](/cypher) for querying your graph
+* Learn about [FalkorDB Operations](/operations) for production deployments
+* Check out [FalkorDB Integration](/integration) options

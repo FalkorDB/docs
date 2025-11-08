@@ -11,9 +11,9 @@ parent: "Integration"
 
 ## Get Started
 
-- [Obtaining the connector](#obtaining-the-connector)
-- [Configuring the connector](#configuring-the-connector)
-- [Kafka message format](#kafka-message-format)
+* [Obtaining the connector](#obtaining-the-connector)
+* [Configuring the connector](#configuring-the-connector)
+* [Kafka message format](#kafka-message-format)
 
 ---
 
@@ -23,8 +23,8 @@ You can build the connector from [source](https://github.com/FalkorDB/falkordb-k
 
 ### **2️⃣ Configuring the Connector**
 
-Kafka Connector Properties Overview: 
-This document explains the properties required to configure the FalkorDB Sink Connector for Apache Kafka. 
+Kafka Connector Properties Overview:
+This document explains the properties required to configure the FalkorDB Sink Connector for Apache Kafka.
 >Configurations should be specified in a properties file format.
 
 #### Properties Overview
@@ -40,12 +40,9 @@ This document explains the properties required to configure the FalkorDB Sink Co
 | `value.converter.schemas.enable` | Indicates whether schemas should be included with message values. Setting to `false` excludes schema information.                                |
 | `falkor.url`                  | Specifies the connection URL for FalkorDB. Example: `redis://localhost:6379`. Essential for connecting Kafka to FalkorDB.                         |
 
-
-
 >The above properties configure a Kafka Sink Connector that reads messages from a specified topic and writes them into
 FalkorDB using string conversion for both keys and values. Adjusting these properties allows you to tailor the
 connector's behavior according to your application's requirements.
-
 
 ## Configuration Example
 
@@ -103,6 +100,5 @@ The table below explains essential properties for executing commands in FalkorDB
 |-------------------|-----------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------|
 | `graphName`       | Specifies the name of the graph database where the command will be executed.                                              | `"falkordb"`. Kafka messages can update multiple graphs.                                                |                                                    |
 | `command`         | Indicates the type of operation being performed. `"GRAPH_QUERY"` means a query will be executed against the graph database. | `"GRAPH_QUERY"`                                                                                          |                                                   |
-| `cypherCommand`   | Contains the actual Cypher query to be executed. Cypher is a query language for graph databases.                           | ```cypher CREATE (p:Person {name: $name_param, age: $age_param, location: $location_param}) RETURN p ``` | Creates a `Person` node with `name`, `age`, and `location` properties.                                |
-| `parameters`      | Holds key-value pairs for placeholders in the `cypherCommand`.                                                             | ```json {"name_param": "Person 0", "age_param": 20, "location_param": "Location 0"} ```                  | Used to define properties for the new node.                                                           |
-
+| `cypherCommand`   | Contains the actual Cypher query to be executed. Cypher is a query language for graph databases.                           | ```cypher CREATE (p:Person {name: $name_param, age: $age_param, location: $location_param}) RETURN p``` | Creates a `Person` node with `name`, `age`, and `location` properties.                                |
+| `parameters`      | Holds key-value pairs for placeholders in the `cypherCommand`.                                                             | ```json {"name_param": "Person 0", "age_param": 20, "location_param": "Location 0"}```                  | Used to define properties for the new node.                                                           |

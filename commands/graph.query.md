@@ -51,8 +51,7 @@ println!("{:?}", result);
 
 {% include code_tabs.html id="tabs_0" shell=shell_0 python=python_0 javascript=javascript_0 java=java_0 rust=rust_0 %}
 
-
-#### Parametrized query structure:
+#### Parametrized query structure
 
 `GRAPH.QUERY graph_name "CYPHER param=val [param=val ...] query"`
 

@@ -8,8 +8,9 @@ parent: "Commands"
 # GRAPH.CONSTRAINT DROP
 
 ---
+
 syntax: |
-  GRAPH.CONSTRAINT DROP key 
+  GRAPH.CONSTRAINT DROP key
     MANDATORY|UNIQUE
     NODE label | RELATIONSHIP reltype
     PROPERTIES propCount prop [prop...]  
@@ -62,7 +63,9 @@ To delete a unique constraint for all nodes with label `Person` enforcing unique
 
 {% capture shell_0 %}
 redis> GRAPH.CONSTRAINT DROP g UNIQUE NODE Person PROPERTIES 2 first_name last_name
+
 # Output: OK
+
 {% endcapture %}
 
 {% capture python_0 %}

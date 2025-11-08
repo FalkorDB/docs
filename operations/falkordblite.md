@@ -13,17 +13,17 @@ FalkorDBLite is a self-contained Python interface to the FalkorDB graph database
 
 ## Key Features
 
-- **Easy to Use** - Built-in Redis server with FalkorDB module that is automatically installed, configured, and managed
-- **Graph Database** - Full support for FalkorDB graph operations using Cypher queries through a simple Python API
-- **Flexible** - Create a single server shared by multiple programs or multiple independent servers with graph capabilities
-- **Compatible** - Provides both Redis key-value operations and FalkorDB graph operations in a unified interface
-- **Secure** - Uses a secure default Redis configuration that is only accessible by the creating user on the local system
-- **Persistent** - Data persists between sessions when using the same database file
+* **Easy to Use** - Built-in Redis server with FalkorDB module that is automatically installed, configured, and managed
+* **Graph Database** - Full support for FalkorDB graph operations using Cypher queries through a simple Python API
+* **Flexible** - Create a single server shared by multiple programs or multiple independent servers with graph capabilities
+* **Compatible** - Provides both Redis key-value operations and FalkorDB graph operations in a unified interface
+* **Secure** - Uses a secure default Redis configuration that is only accessible by the creating user on the local system
+* **Persistent** - Data persists between sessions when using the same database file
 
 ## Requirements
 
-- Python 3.12 or higher
-- System build tools (automatically handled during installation on most systems)
+* Python 3.12 or higher
+* System build tools (automatically handled during installation on most systems)
 
 ## Installation
 
@@ -34,9 +34,9 @@ pip install falkordblite
 ```
 
 The package will automatically install its dependencies, including:
-- `redis>=4.5` - Redis Python client
-- `psutil` - Process and system utilities
-- `setuptools>38.0` - Build system
+* `redis>=4.5` - Redis Python client
+* `psutil` - Process and system utilities
+* `setuptools>38.0` - Build system
 
 ### System Prerequisites
 
@@ -216,26 +216,26 @@ for row in result.result_set:
 
 FalkorDBLite is ideal for:
 
-- **Development and Testing** - Quickly test graph database functionality without setting up a full server
-- **Prototyping** - Rapidly prototype graph-based applications
-- **Educational Purposes** - Learn graph databases and Cypher queries without infrastructure setup
-- **Small-Scale Applications** - Lightweight applications that need graph database capabilities
-- **CI/CD Pipelines** - Automated testing environments that require an embedded database
+* **Development and Testing** - Quickly test graph database functionality without setting up a full server
+* **Prototyping** - Rapidly prototype graph-based applications
+* **Educational Purposes** - Learn graph databases and Cypher queries without infrastructure setup
+* **Small-Scale Applications** - Lightweight applications that need graph database capabilities
+* **CI/CD Pipelines** - Automated testing environments that require an embedded database
 
 ## Production
 
 For production environments, consider using:
-- [FalkorDB Cloud](https://app.falkordb.cloud) - Managed cloud service
-- [FalkorDB Docker](/getting-started) - Self-hosted server deployment
-- [FalkorDB Kubernetes](/operations/k8s_support) - Kubernetes deployment
+* [FalkorDB Cloud](https://app.falkordb.cloud) - Managed cloud service
+* [FalkorDB Docker](/getting-started) - Self-hosted server deployment
+* [FalkorDB Kubernetes](/operations/k8s_support) - Kubernetes deployment
 
 ## Additional Resources
 
-- [FalkorDBLite GitHub Repository](https://github.com/FalkorDB/falkordblite)
-- [FalkorDBLite on PyPI](https://pypi.org/project/falkordblite/)
-- [FalkorDB Documentation](/index)
-- [FalkorDB Cypher Language](/cypher)
-- [FalkorDB Python Client](https://github.com/FalkorDB/falkordb-py)
+* [FalkorDBLite GitHub Repository](https://github.com/FalkorDB/falkordblite)
+* [FalkorDBLite on PyPI](https://pypi.org/project/falkordblite/)
+* [FalkorDB Documentation](/index)
+* [FalkorDB Cypher Language](/cypher)
+* [FalkorDB Python Client](https://github.com/FalkorDB/falkordb-py)
 
 ## Getting Help
 

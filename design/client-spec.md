@@ -14,7 +14,6 @@ By design, there is not a full standard for FalkorDB clients to adhere to. Areas
 
 FalkorDB does, however, provide a compact result set format for clients that minimizes the amount of redundant data transmitted from the server. Implementers are encouraged to take advantage of this format, as it provides better performance and removes ambiguity from decoding certain data. This approach requires clients to be capable of issuing procedure calls to the server and performing a small amount of client-side caching.
 
-
 ## Retrieving the compact result set
 
 Appending the flag `--compact` to any query issued to the GRAPH.QUERY endpoint will cause the server to issue results in the compact format. Because we don't store connection-specific configurations, all queries should be issued with this flag.
@@ -192,7 +191,7 @@ The `ValueType` for the first entry is `VALUE_NODE`. The node representation con
 3. An array of all properties the node contains. Properties are represented as 3-arrays - [property key ID, `ValueType`, value].
 
 ```sh
-[	
+[ 
     Node ID (integer),
     [label ID (integer) X label count]
     [[property key ID (integer), ValueType (enum), value (scalar)] X property count]
@@ -201,8 +200,8 @@ The `ValueType` for the first entry is `VALUE_NODE`. The node representation con
 
 The `ValueType` for the first entry is `VALUE_EDGE`. The edge representation differs from the node representation in two respects:
 
-- Each relation has exactly one type, rather than the 0+ labels a node may have.
-- A relation is emitted with the IDs of its source and destination nodes.
+* Each relation has exactly one type, rather than the 0+ labels a node may have.
+* A relation is emitted with the IDs of its source and destination nodes.
 
 As such, the complete representation is as follows:
 
@@ -213,7 +212,7 @@ As such, the complete representation is as follows:
 5. The key-value pairs of all properties the relation possesses.
 
 ```sh
-[	
+[ 
     Relation ID (integer),
     type ID (integer),
     source node ID (integer),

@@ -75,7 +75,7 @@ This section contains information on all supported functions from the Cypher que
 | ------------------------------------ | :----------|
 | head(_expr_)                         | Returns the first element of a list <br> Returns null when _expr_ evaluates to null or an empty list                                                                                                    |
 | keys(_expr_)                         | Returns a list of strings: all key names for given map or all property names for a given node or edge <br> Returns null when _expr_ evaluates to null                                                |
-| last(_expr_)                         | Returns the last element of a list <br> Returns null when _expr_ evaluates to null or an empty list                                     
+| last(_expr_)                         | Returns the last element of a list <br> Returns null when _expr_ evaluates to null or an empty list
 | list.dedup(_list_) *                                               | Given a list, returns a similar list after removing duplicate elements <br> Order is preserved, duplicates are removed from the end of the list <br> Returns null when _list_ evaluates to null <br> Emit an error when _list_ does not evaluate to a list or to null |
 | list.insert(_list_, _idx_, _val_[, _dups_ = TRUE]) *               | Given a list, returns a list after inserting a given value at a given index <br> _idx_ is 0-based when non-negative, or from the end of the list when negative <br> Returns null when _list_ evaluates to null <br> Returns _list_ when _val_ evaluates to null <br> Returns _list_ when _idx_ evaluates to an integer not in [-NumItems-1 .. NumItems] <br> When _dups_ evaluates to FALSE: returns _list_ when _val_ evaluates to a value that is already an element of _list_  <br> Emit an error when _list_ does not evaluate to a list or to null <br> Emit an error when _idx_ does not evaluate to an integer <br> Emit an error when _dups_, if specified, does not evaluate to a Boolean |
 | list.insertListElements(_list_, _list2_, _idx_[, _dups_ = TRUE]) * | Given a list, returns a list after inserting the elements of a second list at a given index <br> _idx_ is 0-based when non-negative, or from the end of the list when negative <br> Returns null when _list_ evaluates to null <br> Returns _list_ when _list2_ evaluates to null <br> Returns _list_ when _idx_ evaluates to an integer not in [-NumItems-1 .. NumItems] <br> When _dups_ evaluates to FALSE: If an element of _list2_ evaluates to an element of _list_ it would be skipped; If multiple elements of _list2_ evaluate to the same value - this value would be inserted at most once to _list_ <br> Emit an error when _list_ does not evaluate to a list or to null <br> Emit an error when _list2_ does not evaluate to a list or to null <br> Emit an error when _idx_ does not evaluate to an integer <br> Emit an error when _dups_, if specified, does not evaluate to a Boolean |
@@ -182,7 +182,7 @@ This section contains information on all supported functions from the Cypher que
 | toIntegerList(_exprList_) * | Converts a list to a list of integer values. Each element in the list is converted using toIntegerOrNull() |
 | toIntegerOrNull(_expr_) *   | Returns an integer when _expr_ evaluates to an integer <br> Converts a floating point to integer <br> Converts a string to an integer or null <br> Converts a Boolean to an integer (false to 0, true to 1) Returns null when _expr_ evaluates to null <br> Returns null for other types |
 | toString(_expr_)            | Returns a string when _expr_ evaluates to a string <br> Converts an integer, float, Boolean, string, or point to a string representation <br> Returns null when _expr_ evaluates to null <br> Emit an error on other types |
-| toStringList(_exprList_)    | Converts a list to a list of strings. Each element in the list is converted using toStringOrNull() | 
+| toStringList(_exprList_)    | Converts a list to a list of strings. Each element in the list is converted using toStringOrNull() |
 | toStringOrNull(_expr_)      | Returns a string when _expr_ evaluates to a string <br> Converts an integer, float, Boolean, string, or point to a string representation <br> Returns null when _expr_ evaluates to null <br> Returns null for other types |
 
 &#42; FalkorDB-specific behavior: rounding method when converting a floating point to an integer is "toward negative infinity (floor)"
@@ -191,8 +191,8 @@ This section contains information on all supported functions from the Cypher que
 
 |Function      | Description|
 | ------------ |:-----------|
-|indegree(_node_ [, _reltype_ ...]) * <br> indegree(_node_ [, _reltypeList_]) *   | When no relationship types are specified: Returns the number of _node_'s incoming edges <br> When one or more relationship types are specified: Returns the number of _node's_ incoming edges with one of the given relationship types <br> Return null when _node_ evaluates to null |
-|outdegree(_node_ [, _reltype_ ...]) * <br> outdegree(_node_ [, _reltypeList_]) * | When no relationship types are specified: Returns the number of _node_'s outgoing edges <br> When one or more relationship types are specified: Returns the number of _node's_ outgoing edges with one of the given relationship types <br> Return null when _node_ evaluates to null |
+|indegree(_node_ [, _reltype_ ...]) *<br> indegree(_node_ [, _reltypeList_])*   | When no relationship types are specified: Returns the number of _node_'s incoming edges <br> When one or more relationship types are specified: Returns the number of _node's_ incoming edges with one of the given relationship types <br> Return null when _node_ evaluates to null |
+|outdegree(_node_ [, _reltype_ ...]) *<br> outdegree(_node_ [, _reltypeList_])* | When no relationship types are specified: Returns the number of _node_'s outgoing edges <br> When one or more relationship types are specified: Returns the number of _node's_ outgoing edges with one of the given relationship types <br> Return null when _node_ evaluates to null |
 
 &#42; FalkorDB-specific extensions to Cypher
 
@@ -207,7 +207,6 @@ This section contains information on all supported functions from the Cypher que
 | [allShortestPaths(...)](#about-path-functions) *  | Returns all the shortest paths between a pair of entities
 
 &#42; FalkorDB-specific extensions to Cypher
-
 
 ## Vector functions
 
@@ -321,9 +320,9 @@ The `intern()` function expects a single string argument:
 "CREATE (:A {v:intern('VERY LONG STRING')})"
 ```
 
-This function deduplicates the input string by storing a single internal copy across the database. 
+This function deduplicates the input string by storing a single internal copy across the database.
 It is especially useful for repeated string values—like country names, email domains, or tags—in large graphs.
-Interned strings can be stored as node or relationship properties, and behave identically to regular strings in queries, 
+Interned strings can be stored as node or relationship properties, and behave identically to regular strings in queries,
 with the added benefit of reduced memory usage.
 
 ### Point
@@ -345,7 +344,6 @@ The following graph:
 ![Road network](../images/road_network.png)
 
 represents a road network with 7 cities (A, B, C, and so on) and 11 one-way roads. Each road has a distance (say, in kilometers) and trip time (say, in minutes).
-
 
 #### shortestPath
 
@@ -385,7 +383,7 @@ $ GRAPH.QUERY g "MATCH (a:City{name:'A'}),(g:City{name:'G'}) WITH a,g MATCH p=al
       2) "[A, B, E, G]"
 ```
 
-Using the unbounded traversal pattern `(a:City{name:'A'})-[*]->(g:City{name:'G'})`, FalkorDB traverses all possible paths from A to G. `ORDER BY length(p) LIMIT 5` ensures that you collect only [up to 5 shortest paths (minimal number of relationships). This approach is very inefficient because all possible paths would have to be traversed. Ideally, you would want to abort some traversals as soon as you are sure they would not result in the discovery of shorter paths. 
+Using the unbounded traversal pattern `(a:City{name:'A'})-[*]->(g:City{name:'G'})`, FalkorDB traverses all possible paths from A to G. `ORDER BY length(p) LIMIT 5` ensures that you collect only [up to 5 shortest paths (minimal number of relationships). This approach is very inefficient because all possible paths would have to be traversed. Ideally, you would want to abort some traversals as soon as you are sure they would not result in the discovery of shorter paths.
 
 ### JSON format
 

@@ -17,6 +17,7 @@ Example:
 127.0.0.1:6379> GRAPH.LIST
 (empty array)
 127.0.0.1:6379> GRAPH.QUERY A "CREATE (:Account {number: 516637})"
+
 1) 1) "Labels added: 1"
    2) "Nodes created: 1"
    3) "Properties set: 1"
@@ -36,20 +37,26 @@ Example:
 {% endcapture %}
 
 {% capture python_0 %}
+
 # Graphs list is empty
+
 graph_list = db.list()
 
 # Create Graph 'A'
+
 graph_a = db.select_graph('A')
 result = graph_a.query('CREATE (:Account {number: 516637})')
 
 # Copy Graph 'A' to 'Z'
+
 graph_z = graph_a.copy('Z')
 
 # Graphs list including 'A' and 'Z'
+
 graph_list = db.list()
 
 # Query Graph 'Z'
+
 result = graph_z.query('MATCH (a:Account) RETURN a.number')Query Graph 'Z'
 {% endcapture %}
 

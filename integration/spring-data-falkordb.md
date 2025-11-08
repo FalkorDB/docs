@@ -15,14 +15,14 @@ Spring Data FalkorDB provides JPA-style object-graph mapping for [FalkorDB](http
 
 ## Key Features
 
-- **JPA-style Annotations**: Use familiar `@Node`, `@Relationship`, `@Id`, `@Property` annotations
-- **Repository Abstractions**: Implement `FalkorDBRepository<T, ID>` for automatic CRUD operations
-- **Derived Query Methods**: Full support for Spring Data query methods like `findByName`, `findByAgeGreaterThan`, etc.
-- **Custom Queries**: Write Cypher queries with `@Query` annotation and named parameters
-- **Auto-Configuration**: Enable repositories with `@EnableFalkorDBRepositories`
-- **Object-Graph Mapping**: Automatic conversion between Java objects and FalkorDB graph structures
-- **Transaction Support**: Built on Spring's robust transaction management
-- **High Performance**: Leverages FalkorDB's speed with the official JFalkorDB Java client
+* **JPA-style Annotations**: Use familiar `@Node`, `@Relationship`, `@Id`, `@Property` annotations
+* **Repository Abstractions**: Implement `FalkorDBRepository<T, ID>` for automatic CRUD operations
+* **Derived Query Methods**: Full support for Spring Data query methods like `findByName`, `findByAgeGreaterThan`, etc.
+* **Custom Queries**: Write Cypher queries with `@Query` annotation and named parameters
+* **Auto-Configuration**: Enable repositories with `@EnableFalkorDBRepositories`
+* **Object-Graph Mapping**: Automatic conversion between Java objects and FalkorDB graph structures
+* **Transaction Support**: Built on Spring's robust transaction management
+* **High Performance**: Leverages FalkorDB's speed with the official JFalkorDB Java client
 
 ## Getting Started
 
@@ -248,11 +248,11 @@ private String category;  // Uses intern() - ideal for categories like "SPORTS",
 The `@Interned` annotation is useful for string properties that have a limited set of possible values (low cardinality). When a property is marked with `@Interned`, FalkorDB's `intern()` function is automatically applied when writing to the database, which keeps only a single copy of frequently repeated string values, optimizing storage and query performance.
 
 **Use cases:**
-- Status codes (ACTIVE, INACTIVE, PENDING)
-- Country/region codes
-- Categories and types
-- Enum-like string values
-- Any string with a limited vocabulary
+* Status codes (ACTIVE, INACTIVE, PENDING)
+* Country/region codes
+* Categories and types
+* Enum-like string values
+* Any string with a limited vocabulary
 
 ### @Relationship
 
@@ -279,11 +279,11 @@ Define methods following Spring Data naming conventions, and the implementation 
 
 #### Query Keywords
 
-- **`findBy...`**: Find entities matching criteria
-- **`countBy...`**: Count entities matching criteria  
-- **`existsBy...`**: Check if entities exist matching criteria
-- **`deleteBy...`**: Delete entities matching criteria
-- **`findFirstBy...`** / **`findTopNBy...`**: Limit results
+* **`findBy...`**: Find entities matching criteria
+* **`countBy...`**: Count entities matching criteria  
+* **`existsBy...`**: Check if entities exist matching criteria
+* **`deleteBy...`**: Delete entities matching criteria
+* **`findFirstBy...`** / **`findTopNBy...`**: Limit results
 
 #### Supported Comparison Operations
 
@@ -501,6 +501,6 @@ public class FalkorDBTransactionConfig {
 
 ## Reference
 
-- [GitHub Repository](https://github.com/FalkorDB/spring-data-falkordb)
-- [Spring Data Documentation](https://spring.io/projects/spring-data)
-- [JFalkorDB Java Client](https://github.com/falkordb/jfalkordb)
+* [GitHub Repository](https://github.com/FalkorDB/spring-data-falkordb)
+* [Spring Data Documentation](https://spring.io/projects/spring-data)
+* [JFalkorDB Java Client](https://github.com/falkordb/jfalkordb)

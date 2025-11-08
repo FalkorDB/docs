@@ -45,7 +45,7 @@ In the following example we'll load the `actors.csv` file into FalkorDB.
 
 |                |           |
 | ---------------|-----------|
-| Lee Pace       | 1979      | 
+| Lee Pace       | 1979      |
 | Vin Diesel     | 1967      |
 | Chris Pratt    | 1979      |
 | Zoe Saldana    | 1978      |
@@ -66,7 +66,7 @@ If the CSV contains a header row, like this:
 
 | name           | birthyear |
 | :--------------| :---------|
-| Lee Pace       | 1979      | 
+| Lee Pace       | 1979      |
 | Vin Diesel     | 1967      |
 | Chris Pratt    | 1979      |
 | Zoe Saldana    | 1978      |
@@ -82,21 +82,18 @@ RETURN a.name, a.birth_year
 
 When a header row exists and `WITH HEADERS` is specified, the `row` variable becomes a `map` instead of an `array`. Access individual elements via their column names.
 
-
 ### Importing data from multiple CSVs
 
 Building on the previous example, we’ll introduce a second CSV file, `acted_in.csv`, which connects actors to movies.
-
 
 ### acted_in.csv
 
 | actor          | movie          |
 | :--------------| :--------------|
-| Lee Pace       | The Fall       | 
+| Lee Pace       | The Fall       |
 | Vin Diesel     | Fast & Furious |
 | Chris Pratt    | Passengers     |
 | Zoe Saldana    | Avatar         |
-
 
 We'll create a new graph connecting actors to the movies they've acted in
 
@@ -138,7 +135,6 @@ RETURN row LIMIT 4
 
 Loading CSV files with missing entries can cause complications. The following approach handles this and works well for files with many columns.
 Assuming we are loading the following CSV file:
-
 
 ### missing_entries.csv
 

@@ -8,7 +8,7 @@ redirect_from:
   - /bolt-support
 ---
 
-# [EXPERIMENTAL] BOLT protocol support for FalkorDB 
+# [EXPERIMENTAL] BOLT protocol support for FalkorDB
 
 FalkorDB provides an experimental support for querying using BOLT drivers.
 We intend to extend the support in the future versions, the current version is not meant to be used in production.
@@ -23,10 +23,10 @@ You can use our Docker image for this purpose.
 docker run -p 6379:6379 -p 7687:7687 -p 3000:3000 -it -e REDIS_ARGS="--requirepass falkordb" -e FALKORDB_ARGS="BOLT_PORT 7687" --rm falkordb/falkordb:latest
 ```
 
-### Ports 
-- 6379 - FalkorDB
-- 7687 - Bolt
-- 3000 - Falkor-Browser
+### Ports
+* 6379 - FalkorDB
+* 7687 - Bolt
+* 3000 - Falkor-Browser
 
 Additionally, install the necessary BOLT drivers:
 
@@ -57,6 +57,7 @@ for record in records:
 Execute the script by running the following command in your terminal:
 
 bash
+
 ```bash
 python main.py
 ```

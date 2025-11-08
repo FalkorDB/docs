@@ -8,7 +8,7 @@ parent: "Algorithms"
 
 The `algo.SPpaths` procedure finds the shortest paths between a **source** and a **target** node, optionally constrained by cost, path length, and the number of paths to return.
 
-It is designed for efficient and scalable computation of paths in large graphs, using properties like distance, time, or price as weights. 
+It is designed for efficient and scalable computation of paths in large graphs, using properties like distance, time, or price as weights.
 For example, it can be used to find the fastest driving route between two cities, the cheapest shipping option in a logistics network, or the shortest communication path in a computer network.
 
 ## Syntax
@@ -50,13 +50,13 @@ YIELD path, pathWeight, pathCost
 | `pathWeight` | Integer | Sum of the weightProp across the path          |
 | `pathCost`   | Integer | Sum of the costProp across the path (if used)  |
 
+## Examples
 
-## Examples:
 Lets take this Road Network Graph as an example:
 
 ![Road network](../images/road_network.png)
 
-### Example: Shortest Path by Distance from City A to City G:
+### Example: Shortest Path by Distance from City A to City G
 
 ```cypher
 MATCH (a:City{name:'A'}), (g:City{name:'G'})
@@ -70,13 +70,13 @@ YIELD path, pathWeight
 RETURN pathWeight, [n in nodes(path) | n.name] AS pathNodes
 ```
 
-#### Expected Result:
+#### Expected Result
+
 | pathWeight | pathNodes     |
 |------------|---------------|
-| `12`       | [A, D, E G]   | 
+| `12`       | [A, D, E G]   |
 
-
-### Example: Bounded Cost Path from City A to City G:
+### Example: Bounded Cost Path from City A to City G
 
 ```cypher
 MATCH (a:City{name:'A'}), (g:City{name:'G'})
@@ -93,10 +93,11 @@ YIELD path, pathWeight, pathCost
 RETURN pathWeight, pathCost, [n in nodes(path) | n.name] AS pathNodes
 ```
 
-#### Expected Result:
-| pathWeight | pathCost | pathNodes       |   
+#### Expected Result
+
+| pathWeight | pathCost | pathNodes       |
 |------------|----------| --------------- |
-| `16`       |  `10`    | [A, D, F G]     | 
-| `14`       |  `12`    | [A, D, C F, G]  | 
+| `16`       |  `10`    | [A, D, F G]     |
+| `14`       |  `12`    | [A, D, C F, G]  |
 
 ---

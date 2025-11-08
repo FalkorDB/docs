@@ -20,6 +20,7 @@ npm install @falkordb/langchain-ts falkordb
 ```
 
 ### Step 2
+>
 > Ensure LangChain and a language model are installed
 
 ```bash
@@ -29,6 +30,7 @@ npm install langchain @langchain/openai
 ## Getting Started
 
 ### Movie data example
+
 In this example, we'll initialize the connection to FalkorDB, define a language model (E.g, OpenAI), and both create and populate the graph with movie-related data. **We'll then query the graph in natural language to see the integration at work.**
 > Note: You can change the LLM's temperature
 
@@ -74,19 +76,21 @@ await graph.close();
 ## API Reference
 
 ### FalkorDBGraph
+>
 > The following command creates and initializes a new FalkorDB connection.
 
 #### `initialize(config: FalkorDBGraphConfig): Promise<FalkorDBGraph>`
 
 **Config Options:**
 
-- `host` (string, optional): Database host. Default: `"localhost"`
-- `port` (number, optional): Database port. Default: `6379`
-- `graph` (string, optional): Graph name to use
-- `url` (string, optional): Alternative connection URL format
-- `enhancedSchema` (boolean, optional): Enable enhanced schema details. Default: `false`
+* `host` (string, optional): Database host. Default: `"localhost"`
+* `port` (number, optional): Database port. Default: `6379`
+* `graph` (string, optional): Graph name to use
+* `url` (string, optional): Alternative connection URL format
+* `enhancedSchema` (boolean, optional): Enable enhanced schema details. Default: `false`
 
 **Example:**
+
 ```typescript
 const graph = await FalkorDBGraph.initialize({
   host: "localhost",
@@ -181,9 +185,9 @@ console.log(structuredSchema.relationships);
 
 ## Prerequisites
 
-- Node.js >= 18
-- FalkorDB server running
-- LangChain >= 0.1.0
+* Node.js >= 18
+* FalkorDB server running
+* LangChain >= 0.1.0
 
 ## Additional Examples
 

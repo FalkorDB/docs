@@ -65,9 +65,8 @@ public class JenaFalkorExample {
 ```
 
 Notes:
-- Replace `FalkorDBJenaFactory.createModel(...)` with the actual adapter factory call used in the adapter (see `Main.java`).
-- Use the adapter's configuration options (connection URL, authentication) when creating the model.
-
+* Replace `FalkorDBJenaFactory.createModel(...)` with the actual adapter factory call used in the adapter (see `Main.java`).
+* Use the adapter's configuration options (connection URL, authentication) when creating the model.
 
 ## Usage Example
 
@@ -75,6 +74,6 @@ See the [Main.java](https://github.com/FalkorDB/jena-falkordb-adapter/blob/main/
 
 ## Reference
 
-- [Adapter README](https://github.com/FalkorDB/jena-falkordb-adapter/blob/main/README.md)
-- [Getting Started](https://github.com/FalkorDB/jena-falkordb-adapter/blob/main/GETTING_STARTED.md)
-- [Sample Main.java](https://github.com/FalkorDB/jena-falkordb-adapter/blob/main/src/main/java/com/falkordb/jena/Main.java)
+* [Adapter README](https://github.com/FalkorDB/jena-falkordb-adapter/blob/main/README.md)
+* [Getting Started](https://github.com/FalkorDB/jena-falkordb-adapter/blob/main/GETTING_STARTED.md)
+* [Sample Main.java](https://github.com/FalkorDB/jena-falkordb-adapter/blob/main/src/main/java/com/falkordb/jena/Main.java)

@@ -11,6 +11,7 @@ A streamlined 2-step process to migrate data from Kuzu graph database into Falko
 ## Overview
 
 This migration tool bridges the gap between Kuzu and FalkorDB by:
+
 1. Automatically discovering your Kuzu database schema
 2. Exporting all nodes and relationships to properly formatted CSV files
 3. Loading these CSV files into FalkorDB using the FalkorDB Rust loader
@@ -19,19 +20,19 @@ The process ensures complete data migration including nodes, relationships, prop
 
 ## Features
 
-- **Automatic Schema Discovery**: Dynamically discovers all node types and relationship types in your Kuzu database
-- **FalkorDB Compatibility**: Generates CSV files in the exact format expected by FalkorDB
-- **Intelligent Label Mapping**: Maps Kuzu relationship names to standardized FalkorDB edge types
-- **Complex Property Handling**: Properly handles lists, nested values, and various data types
-- **Comprehensive Export**: Exports both nodes and relationships with full metadata
-- **Schema Documentation**: Optional JSON schema file generation for documentation purposes
+* **Automatic Schema Discovery**: Dynamically discovers all node types and relationship types in your Kuzu database
+* **FalkorDB Compatibility**: Generates CSV files in the exact format expected by FalkorDB
+* **Intelligent Label Mapping**: Maps Kuzu relationship names to standardized FalkorDB edge types
+* **Complex Property Handling**: Properly handles lists, nested values, and various data types
+* **Comprehensive Export**: Exports both nodes and relationships with full metadata
+* **Schema Documentation**: Optional JSON schema file generation for documentation purposes
 
 ## Prerequisites
 
-- Python 3.6+
-- `kuzu` Python package
-- FalkorDB instance (local, Docker, or Cloud)
-- [FalkorDB Rust Loader](https://github.com/FalkorDB/FalkorDB-Loader-RS)
+* Python 3.6+
+* `kuzu` Python package
+* FalkorDB instance (local, Docker, or Cloud)
+* [FalkorDB Rust Loader](https://github.com/FalkorDB/FalkorDB-Loader-RS)
 
 ## Installation
 
@@ -84,18 +85,18 @@ python3 kuzu_to_falkordb_export.py --db network_it_smart_db --schema schema.json
 The export script generates the following files:
 
 **Node CSV Files:**
-- Format: `nodes_<NodeType>.csv`
-- Structure: `id,labels,property1,property2,...`
-- Example: `nodes_Application.csv`, `nodes_Machine.csv`
+* Format: `nodes_<NodeType>.csv`
+* Structure: `id,labels,property1,property2,...`
+* Example: `nodes_Application.csv`, `nodes_Machine.csv`
 
 **Edge CSV Files:**
-- Format: `edges_<EdgeType>.csv`
-- Structure: `source,source_label,target,target_label,type`
-- Example: `edges_CONNECTS.csv`, `edges_CONTAINS.csv`
+* Format: `edges_<EdgeType>.csv`
+* Structure: `source,source_label,target,target_label,type`
+* Example: `edges_CONNECTS.csv`, `edges_CONTAINS.csv`
 
 **Schema File (Optional):**
-- File: `schema.json`
-- Contains: Export metadata, node types, relationship types, and file mappings
+* File: `schema.json`
+* Contains: Export metadata, node types, relationship types, and file mappings
 
 ### Example Export Output
 
@@ -150,6 +151,7 @@ After exporting your Kuzu database to CSV files, load them into FalkorDB:
 ```
 
 This command will:
+
 1. Connect to FalkorDB (localhost:6379 by default)
 2. Create the graph `my_graph`
 3. Load all CSV files from the `csv_output` directory
@@ -191,11 +193,11 @@ For more control over the loading process:
 
 The Rust loader provides significant advantages for loading Kuzu exports:
 
-- **Async Operations**: All database operations use async/await for better concurrency
-- **Batch Processing**: Processes multiple records per query (default: 5000)
-- **Memory Efficient**: Streams data from CSV files without loading everything into memory
-- **Progress Tracking**: Real-time progress updates during loading
-- **Error Handling**: Comprehensive error handling with detailed logging
+* **Async Operations**: All database operations use async/await for better concurrency
+* **Batch Processing**: Processes multiple records per query (default: 5000)
+* **Memory Efficient**: Streams data from CSV files without loading everything into memory
+* **Progress Tracking**: Real-time progress updates during loading
+* **Error Handling**: Comprehensive error handling with detailed logging
 
 ### Example Output
 
@@ -239,18 +241,18 @@ The script intelligently maps Kuzu relationship names to standardized FalkorDB e
 
 The script enhances node labels with context for better FalkorDB compatibility:
 
-- Process nodes in different contexts: `Application:Process`, `Service:Process`, or `OS:Process`
-- Network zones: `Network:Zone`
-- Service software: `Software:Service`
+* Process nodes in different contexts: `Application:Process`, `Service:Process`, or `OS:Process`
+* Network zones: `Network:Zone`
+* Service software: `Software:Service`
 
 ## Error Handling
 
 The migration script includes robust error handling:
 
-- Validates database path exists
-- Handles missing relationship types gracefully
-- Continues export even if individual tables fail
-- Provides detailed progress and error messages
+* Validates database path exists
+* Handles missing relationship types gracefully
+* Continues export even if individual tables fail
+* Provides detailed progress and error messages
 
 ## Troubleshooting
 
@@ -266,13 +268,12 @@ For additional debugging information, you can modify the script to include more 
 
 ## Additional Resources
 
-- [Kuzu-to-FalkorDB GitHub Repository](https://github.com/FalkorDB-POCs/Kuzu-to-FalkorDB)
-- [FalkorDB Rust Loader](https://github.com/FalkorDB/FalkorDB-Loader-RS)
-- [FalkorDB Bulk Loader](https://github.com/falkordb/falkordb-bulk-loader)
+* [Kuzu-to-FalkorDB GitHub Repository](https://github.com/FalkorDB-POCs/Kuzu-to-FalkorDB)
+* [FalkorDB Rust Loader](https://github.com/FalkorDB/FalkorDB-Loader-RS)
+* [FalkorDB Bulk Loader](https://github.com/falkordb/falkordb-bulk-loader)
 
 ## Next Steps
 
-- Explore [FalkorDB Cypher Language](/cypher) for querying your graph
-- Learn about [FalkorDB Operations](/operations) for production deployments
-- Check out [FalkorDB Integration](/integration) options
-
+* Explore [FalkorDB Cypher Language](/cypher) for querying your graph
+* Learn about [FalkorDB Operations](/operations) for production deployments
+* Check out [FalkorDB Integration](/integration) options

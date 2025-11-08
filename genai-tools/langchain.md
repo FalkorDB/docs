@@ -11,8 +11,8 @@ FalkorDB is integrated with [LangChain](https://www.langchain.com/), bringing po
 
 ## Resources
 
-- 🔗 [FalkorDBQAChain Documentation](https://python.langchain.com/docs/use_cases/more/graph/graph_falkordb_qa)  
-- 📓 [Blog: Build AI Agents with Memory – LangChain + FalkorDB](https://www.falkordb.com/blog/building-ai-agents-with-memory-langchain/)
+* 🔗 [FalkorDBQAChain Documentation](https://python.langchain.com/docs/use_cases/more/graph/graph_falkordb_qa)  
+* 📓 [Blog: Build AI Agents with Memory – LangChain + FalkorDB](https://www.falkordb.com/blog/building-ai-agents-with-memory-langchain/)
 
 ## Installation
 
@@ -185,11 +185,11 @@ print(response)
 
 ## Use Cases
 
-- **Conversational AI with Memory**: Build chatbots that remember user context across sessions
-- **Question Answering over Knowledge Graphs**: Convert natural language to Cypher queries automatically
-- **Document Q&A with Graph Context**: Combine vector search with graph relationships
-- **Multi-hop Reasoning**: Leverage graph traversal for complex queries
-- **Entity Extraction and Linking**: Build knowledge graphs from unstructured text
+* **Conversational AI with Memory**: Build chatbots that remember user context across sessions
+* **Question Answering over Knowledge Graphs**: Convert natural language to Cypher queries automatically
+* **Document Q&A with Graph Context**: Combine vector search with graph relationships
+* **Multi-hop Reasoning**: Leverage graph traversal for complex queries
+* **Entity Extraction and Linking**: Build knowledge graphs from unstructured text
 
 ## Best Practices
 
@@ -201,6 +201,6 @@ print(response)
 
 ## Resources
 
-- [LangChain Documentation](https://python.langchain.com/)
-- [FalkorDBQAChain API Reference](https://python.langchain.com/docs/integrations/graphs/falkordb)
-- [Blog: Build AI Agents with Memory](https://www.falkordb.com/blog/building-ai-agents-with-memory-langchain/)
+* [LangChain Documentation](https://python.langchain.com/)
+* [FalkorDBQAChain API Reference](https://python.langchain.com/docs/integrations/graphs/falkordb)
+* [Blog: Build AI Agents with Memory](https://www.falkordb.com/blog/building-ai-agents-with-memory-langchain/)

@@ -25,6 +25,7 @@ GRAPH.PROFILE imdb \
 "MATCH (actor_a:Actor)-[:ACT]->(:Movie)<-[:ACT]-(actor_b:Actor)
 WHERE actor_a <> actor_b
 CREATE (actor_a)-[:COSTARRED_WITH]->(actor_b)"
+
 1) "Create | Records produced: 11208, Execution time: 168.208661 ms"
 2) "    Filter | Records produced: 11208, Execution time: 1.250565 ms"
 3) "        Conditional Traverse | Records produced: 12506, Execution time: 7.705860 ms"
@@ -87,4 +88,3 @@ for line in result {
 {% endcapture %}
 
 {% include code_tabs.html id="profile_tabs" shell=shell_0 python=python_0 javascript=javascript_0 java=java_0 rust=rust_0 %}
-

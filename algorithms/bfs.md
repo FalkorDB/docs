@@ -79,19 +79,18 @@ RETURN potential_friend
 
 In this social network example, the BFS algorithm helps find potential friend recommendations by identifying people who are connected to Alice's existing friends but not directly connected to Alice yet.
 
-
 ## Performance Considerations
 
-- **Indexing:** Ensure properties used for finding your starting node are indexed for optimal performance
-- **Maximum Depth:** Choose an appropriate max_depth value based on your graph's connectivity; large depths in highly connected graphs can result in exponential growth of traversed nodes
-- **Relationship Filtering:** When applicable, specify the relationship type to limit the traversal scope
-- **Memory Management:** Be aware that the procedure stores visited nodes in memory to avoid cycles, which may require significant resources in large, densely connected graphs
+* **Indexing:** Ensure properties used for finding your starting node are indexed for optimal performance
+* **Maximum Depth:** Choose an appropriate max_depth value based on your graph's connectivity; large depths in highly connected graphs can result in exponential growth of traversed nodes
+* **Relationship Filtering:** When applicable, specify the relationship type to limit the traversal scope
+* **Memory Management:** Be aware that the procedure stores visited nodes in memory to avoid cycles, which may require significant resources in large, densely connected graphs
 
 ## Error Handling
 
 Common errors that may occur:
 
-- **Null Starting Node:** If the start_node parameter is null, the procedure will raise an error; ensure your MATCH clause successfully finds the starting node
-- **Invalid Relationship Type:** If you specify a relationship type that doesn't exist in your graph, the traversal will only include the starting node
-- **Memory Limitations:** For large graphs with high connectivity, an out-of-memory error may occur if too many nodes are visited
-- **Result Size:** If the BFS traversal returns too many nodes, query execution may be slow or time out; in such cases, try reducing the max_depth or filtering by relationship types
+* **Null Starting Node:** If the start_node parameter is null, the procedure will raise an error; ensure your MATCH clause successfully finds the starting node
+* **Invalid Relationship Type:** If you specify a relationship type that doesn't exist in your graph, the traversal will only include the starting node
+* **Memory Limitations:** For large graphs with high connectivity, an out-of-memory error may occur if too many nodes are visited
+* **Result Size:** If the BFS traversal returns too many nodes, query execution may be slow or time out; in such cases, try reducing the max_depth or filtering by relationship types

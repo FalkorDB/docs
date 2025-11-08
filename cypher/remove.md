@@ -35,7 +35,6 @@ Result:
 |------|-------|
 |"Andy"| Null  |
 
-
 ## Remove a label from a node
 
 To remove a label from a node use the REMOVE clause as follows:
@@ -51,7 +50,6 @@ Result:
 |n.name|labels(n)|
 |------|--------|
 |"Lori"|[Player]|
-
 
 ## Removing multiple labels from a node
 

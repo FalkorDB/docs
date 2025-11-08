@@ -12,18 +12,18 @@ redirect_from:
 
 # Getting Started with FalkorDB
 
-This guide will walk you through setting up FalkorDB, modeling a social network as a graph, 
+This guide will walk you through setting up FalkorDB, modeling a social network as a graph,
 and accessing it using the [FalkorDB Python client](/getting-started/clients) with [Cypher](/cypher).
 
 ---
 
 ## Prerequisites
 
-1. **FalkorDB Instance**: Set up FalkorDB (on-prem or cloud). 
-   - [Run FalkorDB Docker](https://hub.docker.com/r/falkordb/falkordb/)
-   - [Create a FalkorDB Cloud Instance](https://app.falkordb.cloud/signup)
+1. **FalkorDB Instance**: Set up FalkorDB (on-prem or cloud).
+   * [Run FalkorDB Docker](https://hub.docker.com/r/falkordb/falkordb/)
+   * [Create a FalkorDB Cloud Instance](https://app.falkordb.cloud/signup)
 2. **Install FalkorDB Client**:
-   
+
 {% capture pypi_0 %}
 pip install falkordb
 {% endcapture %}
@@ -53,8 +53,8 @@ cargo add falkordb
 ## Step 1: Model a Social Network as a Graph
 
 Let's create a simple graph for a social network where:  
-- **Nodes** represent `User` and `Post`.
-- **Relationships** connect `User`s with a `FRIENDS_WITH` relationship, and `User`s are connected via a `CREATED` relationship to `Post`s
+* **Nodes** represent `User` and `Post`.
+* **Relationships** connect `User`s with a `FRIENDS_WITH` relationship, and `User`s are connected via a `CREATED` relationship to `Post`s
 
 ### Graph Schema
 
@@ -79,9 +79,9 @@ Here's how you can model and load the data.
 ### Cypher Query to Create the Data
 
 {% capture cypher_0 %}
-CREATE (alice:User {id: 1, name: "Alice", email: "alice@example.com"})
-CREATE (bob:User {id: 2, name: "Bob", email: "bob@example.com"})
-CREATE (charlie:User {id: 3, name: "Charlie", email: "charlie@example.com"})
+CREATE (alice:User {id: 1, name: "Alice", email: "<alice@example.com>"})
+CREATE (bob:User {id: 2, name: "Bob", email: "<bob@example.com>"})
+CREATE (charlie:User {id: 3, name: "Charlie", email: "<charlie@example.com>"})
 
 CREATE (post1:Post {id: 101, content: "Hello World!", date: 1701388800})
 CREATE (post2:Post {id: 102, content: "Graph Databases are awesome!", date: 1701475200})
@@ -106,6 +106,7 @@ You can execute these commands using the FalkorDB Python client or any supported
 from falkordb import FalkorDB
 
 # Connect to FalkorDB
+
 client = FalkorDB(host="localhost", port=6379, password="your-password")
 graph = client.select_graph('social')
 {% endcapture %}
@@ -154,9 +155,9 @@ let mut graph = client.select_graph("social");
 
 {% capture python_1 %}
 create_query = """
-CREATE (alice:User {id: 1, name: "Alice", email: "alice@example.com"})
-CREATE (bob:User {id: 2, name: "Bob", email: "bob@example.com"})
-CREATE (charlie:User {id: 3, name: "Charlie", email: "charlie@example.com"})
+CREATE (alice:User {id: 1, name: "Alice", email: "<alice@example.com>"})
+CREATE (bob:User {id: 2, name: "Bob", email: "<bob@example.com>"})
+CREATE (charlie:User {id: 3, name: "Charlie", email: "<charlie@example.com>"})
 
 CREATE (post1:Post {id: 101, content: "Hello World!", date: 1701388800})
 CREATE (post2:Post {id: 102, content: "Graph Databases are awesome!", date: 1701475200})
@@ -173,9 +174,9 @@ print("Graph created successfully!")
 
 {% capture javascript_1 %}
 const createQuery = `
-CREATE (alice:User {id: 1, name: "Alice", email: "alice@example.com"})
-CREATE (bob:User {id: 2, name: "Bob", email: "bob@example.com"})
-CREATE (charlie:User {id: 3, name: "Charlie", email: "charlie@example.com"})
+CREATE (alice:User {id: 1, name: "Alice", email: "<alice@example.com>"})
+CREATE (bob:User {id: 2, name: "Bob", email: "<bob@example.com>"})
+CREATE (charlie:User {id: 3, name: "Charlie", email: "<charlie@example.com>"})
 
 CREATE (post1:Post {id: 101, content: "Hello World!", date: 1701388800})
 CREATE (post2:Post {id: 102, content: "Graph Databases are awesome!", date: 1701475200})
@@ -191,10 +192,10 @@ console.log("Graph created successfully!");
 {% endcapture %}
 
 {% capture java_1 %}
-String createQuery = 
-"CREATE (alice:User {id: 1, name: \"Alice\", email: \"alice@example.com\"}) " +
-"CREATE (bob:User {id: 2, name: \"Bob\", email: \"bob@example.com\"}) " +
-"CREATE (charlie:User {id: 3, name: \"Charlie\", email: \"charlie@example.com\"}) " +
+String createQuery =
+"CREATE (alice:User {id: 1, name: \"Alice\", email: \"<alice@example.com>\"}) " +
+"CREATE (bob:User {id: 2, name: \"Bob\", email: \"<bob@example.com>\"}) " +
+"CREATE (charlie:User {id: 3, name: \"Charlie\", email: \"<charlie@example.com>\"}) " +
 
 "CREATE (post1:Post {id: 101, content: \"Hello World!\", date: 1701388800}) " +
 "CREATE (post2:Post {id: 102, content: \"Graph Databases are awesome!\", date: 1701475200}) " +
@@ -210,9 +211,9 @@ System.out.println("Graph created successfully!");
 
 {% capture rust_1 %}
 let create_query = r#"
-CREATE (alice:User {id: 1, name: \"Alice\", email: \"alice@example.com\"})
-CREATE (bob:User {id: 2, name: \"Bob\", email: \"bob@example.com\"})
-CREATE (charlie:User {id: 3, name: \"Charlie\", email: \"charlie@example.com\"})
+CREATE (alice:User {id: 1, name: \"Alice\", email: \"<alice@example.com>\"})
+CREATE (bob:User {id: 2, name: \"Bob\", email: \"<bob@example.com>\"})
+CREATE (charlie:User {id: 3, name: \"Charlie\", email: \"<charlie@example.com>\"})
 
 CREATE (post1:Post {id: 101, content: \"Hello World!\", date: 1701388800})
 CREATE (post2:Post {id: 102, content: \"Graph Databases are awesome!\", date: 1701475200})
@@ -234,7 +235,9 @@ println!("Graph created successfully!");
 #### Query the Graph
 
 {% capture python_2 %}
+
 # Find all friends of Alice
+
 query = """
 MATCH (alice:User {name: 'Alice'})-[:FRIENDS_WITH]->(friend)
 RETURN friend.name AS Friend
@@ -289,7 +292,9 @@ for record in result.data.by_ref() {
 #### Query Relationships
 
 {% capture python_3 %}
+
 # Find posts created by Bob
+
 query = """
 MATCH (bob:User {name: 'Bob'})-[:CREATED]->(post:Post)
 RETURN post.content AS PostContent
@@ -347,9 +352,9 @@ for record in result.data.by_ref() {
 Congratulations! 🎉 You have successfully modeled, loaded, and queried a social network graph with FalkorDB.
 
 Next, dive deeper into FalkorDB's powerful features:
-- [Advanced Cypher](/cypher)
-- [Database Operations](/operations)
-- [GenAI Tools](/genai-tools)
-- [Agentic Memory](/agentic-memory)
+* [Advanced Cypher](/cypher)
+* [Database Operations](/operations)
+* [GenAI Tools](/genai-tools)
+* [Agentic Memory](/agentic-memory)
 
 For questions or support, visit our [community forums](https://www.falkordb.com/contact-us/)

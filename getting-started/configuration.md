@@ -11,7 +11,7 @@ redirect_from:
 
 # Configuration
 
-FalkorDB supports [Redis configuration](https://redis.io/docs/management/config/) and multiple module configuration parameters. 
+FalkorDB supports [Redis configuration](https://redis.io/docs/management/config/) and multiple module configuration parameters.
 Some of these parameters can only be set at load-time, while other parameters can be set either on load-time or on run-time.
 
 For example the following will run the server with global authentication password and 4 threads.
@@ -21,6 +21,7 @@ docker run -p 6379:6379 -p 3000:3000 -it -e REDIS_ARGS="--requirepass falkordb" 
 ```
 
 > **Production Tip:** For production environments, use the lighter `falkordb/falkordb-server` image which doesn't include the FalkorDB Browser:
+>
 > ```sh
 > docker run -p 6379:6379 -it -e REDIS_ARGS="--requirepass falkordb" -e FALKORDB_ARGS="THREAD_COUNT 4" --rm falkordb/falkordb-server:latest
 > ```
@@ -44,7 +45,7 @@ From the [Redis CLI](https://redis.io/docs/manual/cli/), using the [MODULE LOAD]
 From the command line:
 
 ```sh
-$ redis-server --loadmodule ./falkordb.so [OPT VAL]...
+redis-server --loadmodule ./falkordb.so [OPT VAL]...
 ```
 
 When running a docker container
@@ -114,7 +115,7 @@ The number of threads in FalkorDB's thread pool. This is equivalent to the maxim
 #### Example
 
 ```sh
-$ redis-server --loadmodule ./falkordb.so THREAD_COUNT 4
+redis-server --loadmodule ./falkordb.so THREAD_COUNT 4
 ```
 
 ---
@@ -130,7 +131,7 @@ The max number of queries for FalkorDB to cache. When a new query is encountered
 #### Example
 
 ```sh
-$ redis-server --loadmodule ./falkordb.so CACHE_SIZE 10
+redis-server --loadmodule ./falkordb.so CACHE_SIZE 10
 ```
 
 ---
@@ -146,7 +147,7 @@ The maximum number of threads that OpenMP may use for computation per query. The
 #### Example
 
 ```sh
-$ redis-server --loadmodule ./falkordb.so OMP_THREAD_COUNT 1
+redis-server --loadmodule ./falkordb.so OMP_THREAD_COUNT 1
 ```
 
 ---
@@ -172,25 +173,26 @@ The minimum value for `NODE_CREATION_BUFFER` is 128. Values lower than this will
 #### Example
 
 ```sh
-$ redis-server --loadmodule ./falkordb.so NODE_CREATION_BUFFER 200
+redis-server --loadmodule ./falkordb.so NODE_CREATION_BUFFER 200
 ```
 
 ---
 
-
 ### BOLT_PORT
+
 The Bolt port configuration determines the port number on which FalkorDB handles the [bolt protocol](https://en.wikipedia.org/wiki/Bolt_(network_protocol))
 
 #### Default
+
 `BOLT_PORT` -1 (disabled).
 
 #### Example
+
 ```sh
-$ redis-server --loadmodule ./falkordb.so BOLT_PORT 7687
+redis-server --loadmodule ./falkordb.so BOLT_PORT 7687
 ```
 
 ---
-
 
 ### MAX_QUEUED_QUERIES
 
@@ -203,9 +205,9 @@ Setting the maximum number of queued queries allows the server to reject incomin
 #### Example
 
 ```sh
-$ redis-server --loadmodule ./falkordb.so MAX_QUEUED_QUERIES 500
+redis-server --loadmodule ./falkordb.so MAX_QUEUED_QUERIES 500
 
-$ redis-cli GRAPH.CONFIG SET MAX_QUEUED_QUERIES 500
+redis-cli GRAPH.CONFIG SET MAX_QUEUED_QUERIES 500
 ```
 
 ---
@@ -222,13 +224,13 @@ The `TIMEOUT` query parameter of the `GRAPH.QUERY`, `GRAPH.RO_QUERY`, and `GRAPH
 
 #### Default
 
-- Before v2.10: `TIMEOUT` is off (set to `0`).
-- Since v2.10: `TIMEOUT` is not specified; `TIMEOUT_MAX` and `TIMEOUT_DEFAULT` are specified instead.
+* Before v2.10: `TIMEOUT` is off (set to `0`).
+* Since v2.10: `TIMEOUT` is not specified; `TIMEOUT_MAX` and `TIMEOUT_DEFAULT` are specified instead.
 
 #### Example
 
 ```sh
-$ redis-server --loadmodule ./falkordb.so TIMEOUT 1000
+redis-server --loadmodule ./falkordb.so TIMEOUT 1000
 ```
 
 ---
@@ -245,13 +247,13 @@ When a query execution time exceeds the maximal execution time, the query is abo
 
 #### Default
 
-- Before v2.10: unspecified and unsupported.
-- Since v2.10: `TIMEOUT_MAX` is off (set to `0`).
+* Before v2.10: unspecified and unsupported.
+* Since v2.10: `TIMEOUT_MAX` is off (set to `0`).
 
 #### Example
 
 ```sh
-$ redis-server --loadmodule ./falkordb.so TIMEOUT_MAX 1000
+redis-server --loadmodule ./falkordb.so TIMEOUT_MAX 1000
 ```
 
 ---
@@ -266,13 +268,13 @@ For a given query, this default maximal execution time can be overridden by the 
 
 #### Default
 
-- Before v2.10: unspecified and unsupported.
-- Since v2.10: `TIMEOUT_DEFAULT` is equal to `TIMEOUT_MAX` (set to `0`).
+* Before v2.10: unspecified and unsupported.
+* Since v2.10: `TIMEOUT_DEFAULT` is equal to `TIMEOUT_MAX` (set to `0`).
 
 #### Example
 
 ```sh
-$ redis-server --loadmodule ./falkordb.so TIMEOUT_MAX 2000 TIMEOUT_DEFAULT 1000
+redis-server --loadmodule ./falkordb.so TIMEOUT_MAX 2000 TIMEOUT_DEFAULT 1000
 ```
 
 ---
@@ -314,9 +316,9 @@ The configuration argument is the maximum number of bytes that can be allocated 
 #### Example
 
 ```sh
-$ redis-server --loadmodule ./falkordb.so QUERY_MEM_CAPACITY 1048576 // 1 megabyte limit
+redis-server --loadmodule ./falkordb.so QUERY_MEM_CAPACITY 1048576 // 1 megabyte limit
 
-$ redis-cli GRAPH.CONFIG SET QUERY_MEM_CAPACITY 1048576
+redis-cli GRAPH.CONFIG SET QUERY_MEM_CAPACITY 1048576
 ```
 
 ---
@@ -361,11 +363,11 @@ A number within the range [0, 1000]
 
 ### Query Timeout
 
-- Before v2.10, or if `TIMEOUT_DEFAULT` and `TIMEOUT_MAX` are not specified:
+* Before v2.10, or if `TIMEOUT_DEFAULT` and `TIMEOUT_MAX` are not specified:
 
   `TIMEOUT` allows overriding the `TIMEOUT` configuration parameter for a single read query. Write queries do not timeout.
 
-- Since v2.10, if either `TIMEOUT_DEFAULT` or `TIMEOUT_MAX` are specified:
+* Since v2.10, if either `TIMEOUT_DEFAULT` or `TIMEOUT_MAX` are specified:
 
   `TIMEOUT` allows overriding the `TIMEOUT_DEFAULT` configuration parameter value for a single `GRAPH.QUERY`, `GRAPH.RO_QUERY`, or `GRAPH.PROFILE` command. The `TIMEOUT` value cannot exceed the `TIMEOUT_MAX` value (the command would abort with a `(error) The query TIMEOUT parameter value cannot exceed the TIMEOUT_MAX configuration parameter value` reply).
 
@@ -397,7 +399,6 @@ will be replicated to both replicas and AOF as a graph effect otherwise the orig
 query will be replicated.
 
 ---
-
 
 ### IMPORT_FOLDER
 

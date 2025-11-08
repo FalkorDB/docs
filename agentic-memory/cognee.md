@@ -12,36 +12,36 @@ description: "Build flexible agentic memory with Cognee and FalkorDB"
 ## Overview
 
 Cognee provides a comprehensive memory layer that:
-- **Manages complex knowledge structures**: Store entities, relationships, and contextual information
-- **Supports hybrid storage**: Combine graph databases with vector stores for optimal retrieval
-- **Enables flexible querying**: Search by semantic similarity, graph relationships, or both
-- **Scales with your needs**: From simple chatbots to complex multi-agent systems
+* **Manages complex knowledge structures**: Store entities, relationships, and contextual information
+* **Supports hybrid storage**: Combine graph databases with vector stores for optimal retrieval
+* **Enables flexible querying**: Search by semantic similarity, graph relationships, or both
+* **Scales with your needs**: From simple chatbots to complex multi-agent systems
 
 ## Why Cognee + FalkorDB?
 
 ### FalkorDB's Added Value
 
-- **Native Graph Storage**: Efficient storage and traversal of entity relationships
-- **Fast Queries**: Quick retrieval of connected information for context building
-- **Flexible Schema**: Adapt to evolving knowledge structures without rigid schemas
-- **Production Ready**: Scale from development to production seamlessly
-- **Hybrid Capabilities**: Combine graph traversal with vector similarity search
+* **Native Graph Storage**: Efficient storage and traversal of entity relationships
+* **Fast Queries**: Quick retrieval of connected information for context building
+* **Flexible Schema**: Adapt to evolving knowledge structures without rigid schemas
+* **Production Ready**: Scale from development to production seamlessly
+* **Hybrid Capabilities**: Combine graph traversal with vector similarity search
 
 ### Use Cases
 
-- **Conversational AI**: Build chatbots that remember and learn from past conversations
-- **Knowledge Management**: Create organizational memory that captures relationships and context
-- **Recommendation Systems**: Leverage connection patterns for personalized recommendations
-- **Research Assistants**: Help AI agents navigate and understand complex information networks
-- **Customer Support**: Provide context-aware responses based on customer history and relationships
+* **Conversational AI**: Build chatbots that remember and learn from past conversations
+* **Knowledge Management**: Create organizational memory that captures relationships and context
+* **Recommendation Systems**: Leverage connection patterns for personalized recommendations
+* **Research Assistants**: Help AI agents navigate and understand complex information networks
+* **Customer Support**: Provide context-aware responses based on customer history and relationships
 
 ## Getting Started
 
 ### Prerequisites
 
-- Python 3.10 or higher
-- FalkorDB instance (Cloud or self-hosted)
-- API keys for LLM and embedding providers (if using those features)
+* Python 3.10 or higher
+* FalkorDB instance (Cloud or self-hosted)
+* API keys for LLM and embedding providers (if using those features)
 
 ### Installation
 
@@ -314,39 +314,39 @@ await cognify()
 ### Installation Issues
 
 If you have trouble installing the community adapter:
-- Ensure you have the correct package name: `cognee-community-hybrid-adapter-falkor`
-- Check that you're using Python 3.10 or higher
-- Try installing in a fresh virtual environment
+* Ensure you have the correct package name: `cognee-community-hybrid-adapter-falkor`
+* Check that you're using Python 3.10 or higher
+* Try installing in a fresh virtual environment
 
 ### Connection Issues
 
 If you experience connection problems:
-- Verify FalkorDB is running: `redis-cli -h localhost -p 6379 ping`
-- Check the `GRAPH_DB_URL` and `GRAPH_DB_PORT` environment variables
-- Ensure FalkorDB is accessible on the specified host and port
+* Verify FalkorDB is running: `redis-cli -h localhost -p 6379 ping`
+* Check the `GRAPH_DB_URL` and `GRAPH_DB_PORT` environment variables
+* Ensure FalkorDB is accessible on the specified host and port
 
 ### Data Not Appearing in Graph
 
-- Make sure to import `cognee_community_hybrid_adapter_falkor.register` before using Cognee
-- Call `await cognify()` after adding data to process and extract entities
-- Check that your LLM API key is set correctly
-- Verify the graph is being populated using FalkorDB CLI or Browser
+* Make sure to import `cognee_community_hybrid_adapter_falkor.register` before using Cognee
+* Call `await cognify()` after adding data to process and extract entities
+* Check that your LLM API key is set correctly
+* Verify the graph is being populated using FalkorDB CLI or Browser
 
 ### Performance Issues
 
-- Consider batching operations for large datasets
-- Monitor graph size with `GRAPH.MEMORY USAGE` command
-- Clean up old data periodically using `prune.prune_data()`
+* Consider batching operations for large datasets
+* Monitor graph size with `GRAPH.MEMORY USAGE` command
+* Clean up old data periodically using `prune.prune_data()`
 
 ## Resources
 
-- 📚 [Cognee Documentation](https://github.com/topoteretes/cognee-community)
-- 💻 [Cognee GitHub Repository](https://github.com/topoteretes/cognee)
-- 🔗 [FalkorDB Integration Guide](https://github.com/topoteretes/cognee-community/blob/main/packages/hybrid/falkordb/README.md)
-- 📖 [Cognee Examples](https://github.com/topoteretes/cognee/tree/main/examples)
+* 📚 [Cognee Documentation](https://github.com/topoteretes/cognee-community)
+* 💻 [Cognee GitHub Repository](https://github.com/topoteretes/cognee)
+* 🔗 [FalkorDB Integration Guide](https://github.com/topoteretes/cognee-community/blob/main/packages/hybrid/falkordb/README.md)
+* 📖 [Cognee Examples](https://github.com/topoteretes/cognee/tree/main/examples)
 
 ## Next Steps
 
-- Explore [Graphiti](./graphiti.md) for temporal knowledge graph capabilities
-- Learn about [GenAI Tools](/genai-tools) for graph reasoning and LLM integrations
-- Review [Cypher Query Language](/cypher) for custom graph queries
+* Explore [Graphiti](./graphiti.md) for temporal knowledge graph capabilities
+* Learn about [GenAI Tools](/genai-tools) for graph reasoning and LLM integrations
+* Review [Cypher Query Language](/cypher) for custom graph queries

@@ -19,7 +19,7 @@ Nodes have sets of properties to describe all of their salient characteristics. 
 When querying nodes, multiple labels can be specified. Only nodes that hold all specified labels will be matched:
 
 ```sh
-$ redis-cli GRAPH.QUERY G "MATCH (n:Place:Continent) RETURN n"
+redis-cli GRAPH.QUERY G "MATCH (n:Place:Continent) RETURN n"
 ```
 
 ## Relationships
@@ -35,7 +35,7 @@ Like nodes, relationships have sets of properties to describe all of their salie
 When querying relationships, multiple types can be specified when separated by types. Relationships that hold any of the specified types will be matched:
 
 ```sh
-$ redis-cli GRAPH.QUERY G "MATCH (:Person)-[r:RESIDENT_OF|:VISITOR_TO]->(:Place {name: 'London'}) RETURN r"
+redis-cli GRAPH.QUERY G "MATCH (:Person)-[r:RESIDENT_OF|:VISITOR_TO]->(:Place {name: 'London'}) RETURN r"
 ```
 
 ## Paths
@@ -47,7 +47,7 @@ They are not structural elements in the graph, but can be created and returned b
 For example, the following query returns all paths of any length connecting the node London to the node New York:
 
 ```sh
-$ redis-cli GRAPH.QUERY G "MATCH p=(:City {name: 'London'})-[*]->(:City {name: 'New York'}) RETURN p"
+redis-cli GRAPH.QUERY G "MATCH p=(:City {name: 'London'})-[*]->(:City {name: 'New York'}) RETURN p"
 ```
 
 ## Scalar types
@@ -103,15 +103,16 @@ Since we cannot reason broadly about unknown values, `null` is an important part
 Unlike all other scalars, `null` cannot be stored as a property value.
 
 ## Temporal Types
+
 FalkorDB supports the following temporal types that allow modeling and querying time-related data:
 
-## 1. [Date](#Date)
+## 1. [Date](#date)
 
-## 2. [Time](#Time)
+## 2. [Time](#time)
 
-## 3. [DateTime](#DateTime)
+## 3. [DateTime](#datetime)
 
-## 4. [Duration](#Duration)
+## 4. [Duration](#duration)
 
 These types follow the ISO 8601 standard and can be used in properties, parameters, and expressions.
 
@@ -127,6 +128,7 @@ CREATE (:Event { name: "Conference", date: date("2025-09-15") })
 ```
 
 #### Interactions
+
 * Compare using operators (=, <, >, etc.)
 
 * Extract components using functions:
@@ -172,6 +174,7 @@ Purpose
 Use DateTime when both date and time are relevant, e.g. logging events, scheduling, timestamps.
 
 Example
+
 ```cypher
 CREATE (:Log { message: "System rebooted", at: localdatetime("2025-06-29T13:45:00") })
 ```
@@ -201,6 +204,7 @@ Purpose
 Use Duration to represent intervals, e.g. "3 days", "2 hours", or "1 year and 6 months".
 
 Example
+
 ```cypher
 CREATE (:Cooldown { period: duration("P3DT12H") })
 ```

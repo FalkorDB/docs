@@ -15,10 +15,15 @@ FalkorDB configuration parameters are detailed [here](/configuration).
 
 {% capture shell_0 %}
 graph.config get *
-# Output:
+
+# Output
+
 # 1) 1) "TIMEOUT"
-#    2) (integer) 0
-# ...
+
+# 2) (integer) 0
+
+# 
+
 {% endcapture %}
 
 {% capture python_0 %}
@@ -51,9 +56,13 @@ println!("{:?}", config);
 
 {% capture shell_1 %}
 graph.config get TIMEOUT
-# Output:
+
+# Output
+
 # 1) "TIMEOUT"
+
 # 2) (integer) 0
+
 {% endcapture %}
 
 {% capture python_1 %}

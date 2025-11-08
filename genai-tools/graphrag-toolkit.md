@@ -13,10 +13,10 @@ AWS GraphRAG Toolkit is an open-source framework for building knowledge graph ap
 
 The GraphRAG Toolkit provides tools and patterns for building retrieval-augmented generation (RAG) applications that use knowledge graphs. With FalkorDB as the graph store, you can:
 
-- Build and query knowledge graphs efficiently
-- Use semantic-guided search for intelligent retrieval
-- Connect to FalkorDB Cloud or local instances
-- Integrate with LLM-powered applications
+* Build and query knowledge graphs efficiently
+* Use semantic-guided search for intelligent retrieval
+* Connect to FalkorDB Cloud or local instances
+* Integrate with LLM-powered applications
 
 ## Installation
 
@@ -117,20 +117,20 @@ The FalkorDB graph store supports semantic-guided search, enabling intelligent r
 
 ## Resources
 
-- 🔗 [AWS GraphRAG Toolkit GitHub Repository](https://github.com/awslabs/graphrag-toolkit)
-- 📖 [GraphRAG Toolkit Documentation](https://github.com/awslabs/graphrag-toolkit/tree/main/docs)
-- 📓 [FalkorDB Graph Store Documentation](https://github.com/awslabs/graphrag-toolkit/blob/main/docs/lexical-graph/graph-store-falkor-db.md)
-- ☁️ [FalkorDB Cloud](https://app.falkordb.cloud)
+* 🔗 [AWS GraphRAG Toolkit GitHub Repository](https://github.com/awslabs/graphrag-toolkit)
+* 📖 [GraphRAG Toolkit Documentation](https://github.com/awslabs/graphrag-toolkit/tree/main/docs)
+* 📓 [FalkorDB Graph Store Documentation](https://github.com/awslabs/graphrag-toolkit/blob/main/docs/lexical-graph/graph-store-falkor-db.md)
+* ☁️ [FalkorDB Cloud](https://app.falkordb.cloud)
 
 ## Use Cases
 
-- **Knowledge Graph Construction**: Build structured knowledge graphs from unstructured data
-- **Semantic Search**: Implement context-aware search using graph-based retrieval
-- **Question Answering**: Combine LLMs with graph data for accurate responses
-- **Document Understanding**: Extract and organize information in a knowledge graph
+* **Knowledge Graph Construction**: Build structured knowledge graphs from unstructured data
+* **Semantic Search**: Implement context-aware search using graph-based retrieval
+* **Question Answering**: Combine LLMs with graph data for accurate responses
+* **Document Understanding**: Extract and organize information in a knowledge graph
 
 ## Related Tools
 
-- [GraphRAG-SDK](./graphrag-sdk.md): FalkorDB's native GraphRAG solution
-- [LangChain](./langchain.md): Build AI agents with graph memory
-- [LlamaIndex](./llamaindex.md): LLM application framework with FalkorDB support
+* [GraphRAG-SDK](./graphrag-sdk.md): FalkorDB's native GraphRAG solution
+* [LangChain](./langchain.md): Build AI agents with graph memory
+* [LlamaIndex](./llamaindex.md): LLM application framework with FalkorDB support

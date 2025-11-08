@@ -13,9 +13,9 @@ In a typical RAG (Retrieval-Augmented Generation) setup, LlamaIndex orchestrates
 
 ## Resources
 
-- 🔗 [FalkorDB Graph Store Demo](https://gpt-index.readthedocs.io/en/latest/examples/index_structs/knowledge_graph/FalkorDBGraphDemo.html)  
-- 📓 [Blog: LlamaIndex RAG – Build Efficient GraphRAG Systems](https://www.falkordb.com/blog/llamaindex-rag-implementation-graphrag/)
-- 🔗 [LlamaIndex Documentation](https://docs.llamaindex.ai/)
+* 🔗 [FalkorDB Graph Store Demo](https://gpt-index.readthedocs.io/en/latest/examples/index_structs/knowledge_graph/FalkorDBGraphDemo.html)  
+* 📓 [Blog: LlamaIndex RAG – Build Efficient GraphRAG Systems](https://www.falkordb.com/blog/llamaindex-rag-implementation-graphrag/)
+* 🔗 [LlamaIndex Documentation](https://docs.llamaindex.ai/)
 
 ## Installation
 
@@ -261,11 +261,11 @@ index = KnowledgeGraphIndex.from_documents(
 
 ## Use Cases
 
-- **Document Q&A**: Extract entities and relationships from unstructured documents
-- **Enterprise Knowledge Management**: Build searchable knowledge graphs from company data
-- **Research and Discovery**: Link concepts across large document collections
-- **Recommendation Systems**: Leverage graph relationships for personalized recommendations
-- **Data Integration**: Unify data from multiple sources into a coherent knowledge graph
+* **Document Q&A**: Extract entities and relationships from unstructured documents
+* **Enterprise Knowledge Management**: Build searchable knowledge graphs from company data
+* **Research and Discovery**: Link concepts across large document collections
+* **Recommendation Systems**: Leverage graph relationships for personalized recommendations
+* **Data Integration**: Unify data from multiple sources into a coherent knowledge graph
 
 ## Best Practices
 
@@ -278,10 +278,10 @@ index = KnowledgeGraphIndex.from_documents(
 
 ## Performance Tips
 
-- **Batch Processing**: Process documents in batches for large datasets
-- **Parallel Indexing**: Enable parallel processing for faster indexing
-- **Caching**: Cache embeddings to avoid recomputation
-- **Index Persistence**: Save and load indexes to avoid rebuilding
+* **Batch Processing**: Process documents in batches for large datasets
+* **Parallel Indexing**: Enable parallel processing for faster indexing
+* **Caching**: Cache embeddings to avoid recomputation
+* **Index Persistence**: Save and load indexes to avoid rebuilding
 
 ```python
 # Save index
@@ -299,7 +299,7 @@ index = load_index_from_storage(storage_context)
 
 ## Resources
 
-- [LlamaIndex Documentation](https://docs.llamaindex.ai/)
-- [FalkorDB Graph Store Documentation](https://docs.llamaindex.ai/en/stable/examples/index_structs/knowledge_graph/FalkorDBGraphDemo/)
-- [Blog: LlamaIndex RAG Implementation](https://www.falkordb.com/blog/llamaindex-rag-implementation-graphrag/)
-- [LlamaIndex GitHub Repository](https://github.com/run-llama/llama_index)
+* [LlamaIndex Documentation](https://docs.llamaindex.ai/)
+* [FalkorDB Graph Store Documentation](https://docs.llamaindex.ai/en/stable/examples/index_structs/knowledge_graph/FalkorDBGraphDemo/)
+* [Blog: LlamaIndex RAG Implementation](https://www.falkordb.com/blog/llamaindex-rag-implementation-graphrag/)
+* [LlamaIndex GitHub Repository](https://github.com/run-llama/llama_index)

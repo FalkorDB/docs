@@ -6,6 +6,7 @@ parent: "Commands"
 ---
 
 # GRAPH.MEMORY
+
 The `GRAPH.MEMORY` command returns detailed memory consumption statistics for a specific graph in **megabytes (MB)**. It provides insight into how much memory is used by various internal data structures such as nodes, edges, schemas, indices, and matrix representations. This command can be used to monitor memory consumption at the graph level, making it especially useful for debugging, monitoring, performance optimization, and capacity planning in FalkorDB deployments.
 
 ## Syntax
@@ -46,16 +47,19 @@ The command returns an array of key-value pairs, where each pair represents a sp
 ## Examples
 
 ### Basic Usage
+
 ```bash
 GRAPH.MEMORY USAGE myGraph
 ```
 
 ### With Sampling
+
 ```bash
 GRAPH.MEMORY USAGE myGraph SAMPLES 500
 ```
 
 ### Sample Output
+
 ```sh
 127.0.0.1:6379> GRAPH.MEMORY USAGE flights
  1) "total_graph_sz_mb"
