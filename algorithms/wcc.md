@@ -112,5 +112,3 @@ CALL algo.WCC(null) yield node, componentId return collect(node.name), component
 | `[David, Emma]`            | 3           |
 | `[Frank]`                  | 5           |
 | `[Alice, Bob, Charlie]`    | 0           |
-
-```

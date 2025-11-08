@@ -237,7 +237,7 @@ Once configured, test the connection with these steps:
 2. **Look for the MCP indicator** in your client's interface
 3. **Test with a simple prompt**:
 
-   ```
+   ```text
    "Remember that my favorite programming language is Python"
    ```
 
@@ -245,7 +245,7 @@ Once configured, test the connection with these steps:
 
 4. **Verify the memory**:
 
-   ```
+   ```text
    "What do you remember about my programming language preferences?"
    ```
 
@@ -505,7 +505,7 @@ MATCH (n) RETURN n LIMIT 25
 
 Store personal preferences, tasks, and information:
 
-```
+```text
 You: "Remember that I prefer Python over JavaScript"
 AI: "I'll remember that you prefer Python over JavaScript."
 
@@ -517,7 +517,7 @@ AI: "You prefer Python over JavaScript."
 
 Build a knowledge base about your projects:
 
-```
+```text
 You: "Store this: MyApp is a web application built with React and FastAPI"
 AI: "I've stored that MyApp is a web application built with React and FastAPI."
 
@@ -529,7 +529,7 @@ AI: "MyApp uses React and FastAPI."
 
 Remember meeting discussions and action items:
 
-```
+```text
 You: "In today's meeting, we decided to migrate to FalkorDB for the knowledge graph backend"
 AI: "I'll remember that decision from today's meeting."
 

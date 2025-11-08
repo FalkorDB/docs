@@ -42,13 +42,13 @@ The process ensures complete data migration including all entities, relationship
 ```bash
 git clone https://github.com/FalkorDB/rdf-to-falkordb.git
 cd rdf-to-falkordb
-```
+```text
 
 2. Install required dependencies:
 
 ```bash
 pip3 install -r requirements.txt
-```
+```text
 
 ## Step 1: Locating Your RDF (TTL) Data File
 
@@ -62,7 +62,7 @@ In this step, you will extract the ontology (schema) from the TTL file. The `rdf
 
 ```bash
 python3 rdf_to_csv_extractor.py import/<rdf-ttl-file.ttl> --extract-ontology config/<your-config.json>
-```
+```text
 
 ### Command Line Options
 
@@ -88,7 +88,7 @@ Once you have reviewed and optionally customized the ontology configuration, exp
 
 ```bash
 python3 rdf_to_csv_extractor.py import/<rdf-ttl-file.ttl> --config config/<your-config.json> --output-dir <your-project-subfolder>
-```
+```text
 
 ### Advanced Export with URI Shortening
 
@@ -98,7 +98,7 @@ python3 rdf_to_csv_extractor.py import/<rdf-ttl-file.ttl> \
   --shorten-uris \
   --output-dir <your-project-subfolder> \
   --csv-output-peek
-```
+```text
 
 ### Output Structure
 
@@ -126,7 +126,7 @@ The Python loader (`falkordb_csv_loader.py`) provides a straightforward way to l
 
 ```bash
 python3 falkordb_csv_loader.py <graph-name> --csv-dir <your-project-subfolder>
-```
+```text
 
 #### Advanced Usage
 
@@ -140,7 +140,7 @@ python3 falkordb_csv_loader.py <graph-name> \
   --batch-size 5000 \
   --merge-mode \
   --stats
-```
+```text
 
 #### Command-Line Options
 
@@ -158,7 +158,7 @@ python3 falkordb_csv_loader.py <graph-name> \
 
 #### Example Output
 
-```
+```text
 Loading nodes from vgf/nodes_Material.csv...
   Read 1 rows from vgf/nodes_Material.csv
 [2025-08-03 13:50:21] Batch complete: Loaded 1 nodes (Duration: 0:00:00.000857)
@@ -170,7 +170,7 @@ Loading edges from vgf/edges_HAS_CANOPUS_ANNOTATION.csv...
 [2025-08-03 13:51:55] ✅ Loaded 233 HAS_CANOPUS_ANNOTATION relationships (Duration: 0:00:00.102690)
 
 ✅ Successfully loaded data into graph 'VGF141'
-```
+```text
 
 ### Option 2: Using FalkorDB Rust Loader (Recommended for Large Datasets)
 
@@ -182,13 +182,13 @@ For better performance with large datasets, use the [FalkorDB Rust Loader](https
 git clone https://github.com/FalkorDB/FalkorDB-Loader-RS
 cd FalkorDB-Loader-RS
 cargo build --release
-```
+```text
 
 #### Basic Usage
 
 ```bash
 ./target/release/falkordb-loader my_graph --csv-dir <your-project-subfolder>
-```
+```text
 
 #### Advanced Usage
 
@@ -203,7 +203,7 @@ cargo build --release
   --merge-mode \
   --stats \
   --progress-interval 1000
-```
+```text
 
 #### Performance Features
 
@@ -223,7 +223,7 @@ Here's a complete example migrating a VGF141 dataset:
 
 ```bash
 python3 rdf_to_csv_extractor.py import/VGF141.ttl --extract-ontology config/vgf141_config.json
-```
+```text
 
 ### 2. Review and Export Data
 
@@ -233,13 +233,13 @@ python3 rdf_to_csv_extractor.py import/VGF141.ttl \
   --shorten-uris \
   --output-dir vgf \
   --csv-output-peek
-```
+```text
 
 ### 3. Load into FalkorDB
 
 ```bash
 python3 falkordb_csv_loader.py VGF141 --csv-dir vgf --merge-mode --stats
-```
+```text
 
 ## Data Mapping
 

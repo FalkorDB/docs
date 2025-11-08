@@ -24,19 +24,19 @@ Usage: `ACL HELP`
 
 #### Example
 
-```
+```text
 > ACL HELP
-```
+```text
 
 #### Output
 
-```
+```text
 1) "GETUSER"
 2) "SETUSER"
 3) "DELUSER"
 4) "LIST"
 ...
-```
+```text
 
 ### ACL SETUSER
 
@@ -55,9 +55,9 @@ Usage: `ACL SETUSER <username> [rule1] [rule2] ...`
 
 #### Example
 
-```
+```text
 > ACL SETUSER john on >password123 +GRAPH.LIST +GRAPH.RO_QUERY ~*
-```
+```text
 
 ### ACL GETUSER
 
@@ -68,19 +68,19 @@ Usage: `ACL GETUSER <username>`
 
 #### Example
 
-```
+```text
 > ACL GETUSER john
-```
+```text
 
 #### Output
 
-```
+```text
 1) "on"
 2) ">password123"
 3) "+GRAPH.LIST"
 4) "+GRAPH.RO_QUERY"
 5) "~*"
-```
+```text
 
 ### ACL DELUSER
 
@@ -90,9 +90,9 @@ Usage: `ACL DELUSER <username>`
 
 #### Example
 
-```
+```text
 > ACL DELUSER john
-```
+```text
 
 ### ACL LIST
 
@@ -102,17 +102,17 @@ Usage: `ACL LIST`
 
 #### Example
 
-```
+```text
 > ACL LIST
-```
+```text
 
 #### Output
 
-```
+```text
 1) "admin"
 2) "john"
 3) "guest"
-```
+```text
 
 ### ACL LOG
 
@@ -124,9 +124,9 @@ Usage: `ACL LOG [count]`
 
 #### Example
 
-```
+```text
 > ACL LOG 10
-```
+```text
 
 ## Notes
 

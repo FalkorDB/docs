@@ -66,7 +66,7 @@ The procedure returns a stream of records with the following fields:
 
 Let's take this Social Network as an example:
 
-```
+```text
     (Alice)---(Bob)---(Charlie)  (Kate)
        |       |         |
     (Diana)    |      (Eve)---(Frank)

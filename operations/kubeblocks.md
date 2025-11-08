@@ -348,7 +348,7 @@ redis-cli -h 127.0.0.1 -p 6379 -a <your-password>
 
 Execute a simple Cypher query to verify the connection:
 
-```
+```bash
 GRAPH.QUERY social "CREATE (:Person {name: 'Alice', age: 30})-[:KNOWS]->(:Person {name: 'Bob', age: 25})"
 GRAPH.QUERY social "MATCH (p:Person) RETURN p.name, p.age"
 ```

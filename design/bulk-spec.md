@@ -22,9 +22,9 @@ The FalkorDB team will do their best to ensure that future updates to this logic
 
 ## Query Format
 
-```
+```text
 GRAPH.BULK [graph name] ["BEGIN"] [node count] [edge count] ([binary blob] * N)
-```
+```text
 
 ### Arguments
 
@@ -100,7 +100,7 @@ BI_DOUBLE = 2,
 BI_STRING = 3,
 BI_LONG = 4,
 BI_ARRAY = 5,
-```
+```text
 
 2. `property`:
     * 1-byte true/false if type is boolean
@@ -113,6 +113,6 @@ BI_ARRAY = 5,
 
 Redis will reply with a string of the format:
 
-```
+```text
 [N] nodes created, [M] edges created
-```
+```text
