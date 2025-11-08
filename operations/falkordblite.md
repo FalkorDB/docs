@@ -34,6 +34,7 @@ pip install falkordblite
 ```
 
 The package will automatically install its dependencies, including:
+
 * `redis>=4.5` - Redis Python client
 * `psutil` - Process and system utilities
 * `setuptools>38.0` - Build system
@@ -225,6 +226,7 @@ FalkorDBLite is ideal for:
 ## Production
 
 For production environments, consider using:
+
 * [FalkorDB Cloud](https://app.falkordb.cloud) - Managed cloud service
 * [FalkorDB Docker](/getting-started) - Self-hosted server deployment
 * [FalkorDB Kubernetes](/operations/k8s_support) - Kubernetes deployment

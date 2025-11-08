@@ -19,6 +19,7 @@ The [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) is an open 
 ## Overview
 
 The Graphiti MCP Server provides:
+
 * **Persistent Memory**: Store conversation history, facts, and relationships in a knowledge graph
 * **Contextual Retrieval**: Query the graph to retrieve relevant information for AI responses
 * **Cross-Session Memory**: Maintain knowledge across multiple conversations and sessions
@@ -28,6 +29,7 @@ The Graphiti MCP Server provides:
 ## Prerequisites
 
 Before you begin, ensure you have:
+
 * Docker installed on your system
 * An OpenAI API key (for LLM operations)
 * A FalkorDB instance running (or use the bundled Docker setup)
@@ -258,6 +260,7 @@ Once configured, test the connection with these steps:
    * You should see nodes representing the stored information
 
 **More example prompts**:
+
 * "Store this fact: I'm working on a project called MyApp"
 * "What projects am I working on?"
 * "Remember that I prefer dark mode in my IDE"
@@ -289,12 +292,14 @@ The Graphiti MCP server exposes the following capabilities to AI clients:
 The Graphiti MCP server stores information in FalkorDB using the following schema:
 
 **Node Types**:
+
 * **`Entity`**: Represents people, places, things, or concepts
     * Properties: `name`, `entity_type`, `summary`
 * **`Episode`**: Represents events or pieces of information
     * Properties: `name`, `content`, `timestamp`, `source`
 
 **Relationship Types**:
+
 * **`RELATES_TO`**: Connects entities that are related
 * **`MENTIONED_IN`**: Links entities to episodes where they appear
 * **`OCCURRED_AFTER`**: Creates temporal ordering between episodes
@@ -309,6 +314,7 @@ The Graphiti MCP server stores information in FalkorDB using the following schem
 > **Important**: The Graphiti MCP server is designed to be used by MCP clients (like Claude Desktop or Cursor) via the Server-Sent Events (SSE) transport protocol. It does **not** expose HTTP REST API endpoints for direct programmatic access.
 
 The server only exposes:
+
 * `/sse` - Server-Sent Events endpoint for MCP protocol communication
 
 To interact with the Graphiti knowledge graph programmatically, you have two options:
@@ -413,6 +419,7 @@ MATCH (n) RETURN n LIMIT 25
 **Problem**: MCP server cannot connect to FalkorDB
 
 **Solutions**:
+
 * Verify FalkorDB is running: `docker ps | grep falkordb`
 * Test FalkorDB connection: `docker exec -it <falkordb-container-name> redis-cli PING` (should return `PONG`)
 * Check network connectivity: Use `host.docker.internal` for local FalkorDB when running MCP server in Docker
@@ -425,6 +432,7 @@ MATCH (n) RETURN n LIMIT 25
 **Problem**: FalkorDB authentication failed
 
 **Solutions**:
+
 * Ensure `FALKORDB_USERNAME` and `FALKORDB_PASSWORD` are set correctly
 * For FalkorDB Cloud, use your cloud credentials
 * For local instances without auth, leave username/password empty
@@ -434,6 +442,7 @@ MATCH (n) RETURN n LIMIT 25
 **Problem**: LLM operations fail
 
 **Solutions**:
+
 * Verify your `OPENAI_API_KEY` is valid
 * Check you have sufficient API credits
 * Ensure you have access to the specified model (default: `gpt-4o-mini`)
@@ -444,6 +453,7 @@ MATCH (n) RETURN n LIMIT 25
 **Problem**: Claude Desktop or Cursor cannot connect to MCP server
 
 **Solutions**:
+
 * Verify the MCP server is running: `docker ps | grep graphiti-mcp`
 * Check the server logs: `docker logs graphiti-mcp`
 * Test the SSE endpoint: `curl http://localhost:8000/sse`
@@ -457,6 +467,7 @@ MATCH (n) RETURN n LIMIT 25
 **Problem**: Knowledge is lost between sessions
 
 **Solutions**:
+
 * Ensure FalkorDB has persistent storage configured
 * Check that the Docker volume is mounted correctly
 * Verify the graph name is consistent across sessions

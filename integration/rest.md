@@ -10,10 +10,12 @@ parent: "Integration"
 ## Table of Contents
 
 ### Authentication
+
 * [Login - GET /api/auth/providers](#login---get-apiauthproviders)
 * [Logout - POST /api/auth/signout](#logout---post-apiauthsignout)
 
 ### Settings
+
 * [Set Configuration Value - POST /api/config](#set-configuration-value---post-apiconfig)
 * [Get Configuration Value - GET /api/config](#get-configuration-value---get-apiconfig)
 * [Create New User - POST /api/user](#create-new-user---post-apiuser)
@@ -22,6 +24,7 @@ parent: "Integration"
 * [Modify a User - PATCH /api/user/{userName}](#modify-a-user---patch-apiuserusername)
 
 ### Graph
+
 * [Create a Graph & Run A Query - GET /api/graph/{graphName}](#create-a-graph--run-a-query---get-apigraphgraphname)
 * [Delete a Graph - DELETE /api/graph/{graphName}](#delete-a-graph---delete-apigraphgraphname)
 * [Get All Graphs - GET /api/graph](#get-all-graphs---get-apigraph)
@@ -34,6 +37,7 @@ parent: "Integration"
 * [Delete Node - DELETE /api/graph/{graphName}/{id}](#delete-node---delete-apigraphgraphnameid)
 
 ### Schema
+
 * [Create New Schema & Run A Query - GET /api/graph/{schemaName}](#create-new-schema--run-a-query---get-apigraphschemaname)
 * [Delete a Schema - DELETE /api/graph/{schemaName}](#delete-a-schema---delete-apigraphschemaname)
 * [Get Schema Count - GET /api/schema/{schemaName}/count](#get-schema-count---get-apischemaschemaname-count)

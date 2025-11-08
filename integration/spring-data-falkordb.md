@@ -248,6 +248,7 @@ private String category;  // Uses intern() - ideal for categories like "SPORTS",
 The `@Interned` annotation is useful for string properties that have a limited set of possible values (low cardinality). When a property is marked with `@Interned`, FalkorDB's `intern()` function is automatically applied when writing to the database, which keeps only a single copy of frequently repeated string values, optimizing storage and query performance.
 
 **Use cases:**
+
 * Status codes (ACTIVE, INACTIVE, PENDING)
 * Country/region codes
 * Categories and types

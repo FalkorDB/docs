@@ -12,6 +12,7 @@ description: "Build temporally-aware knowledge graphs with Graphiti and FalkorDB
 ## Overview
 
 Graphiti provides a powerful abstraction layer for building knowledge graphs that:
+
 * **Track temporal changes**: Understand how entities and relationships evolve over time
 * **Support multi-tenancy**: Isolated memory spaces for different users or agents
 * **Enable hybrid search**: Combine semantic search with graph traversal
@@ -217,6 +218,7 @@ graphiti = Graphiti(
 ### Connection Issues
 
 If you can't connect to FalkorDB:
+
 * Verify your connection string format: `falkor://host:port`
 * Check if FalkorDB is running: `redis-cli ping`
 * Ensure credentials are correct for authenticated instances

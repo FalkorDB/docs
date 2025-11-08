@@ -59,7 +59,7 @@ falkor.url=redis://localhost:6379
 
 ## Kafka Message Format
 
-#### JSON Structure Overview
+### JSON Structure Overview
 
 The message is an array containing multiple objects, each representing a command to be executed on the graph database.
 Below is a breakdown of the key components of each message object.

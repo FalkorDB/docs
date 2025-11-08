@@ -167,6 +167,8 @@ let result = graph.query("WITH point({latitude:41.4045886, longitude:-75.6969532
 
 Geospatial indexes can currently only be leveraged with `<` and `<=` filters; matching nodes outside of the given radius is performed using conventional matching.
 
+## Relationship Indexes
+
 ### Creating an index for a relationship type
 
 For a relationship type, the index creation syntax is:
@@ -253,6 +255,8 @@ println!("{}", result);
 {% include code_tabs.html id="relationship_explain_tabs" shell=shell_6 python=python_6 javascript=javascript_6 java=java_6 rust=rust_6 %}
 
 This can significantly improve the runtime of queries that traverse super nodes or when we want to start traverse from relationships.
+
+## Deleting Indexes
 
 ### Deleting an index for a node label
 

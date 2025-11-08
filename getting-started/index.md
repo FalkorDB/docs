@@ -53,6 +53,7 @@ cargo add falkordb
 ## Step 1: Model a Social Network as a Graph
 
 Let's create a simple graph for a social network where:  
+
 * **Nodes** represent `User` and `Post`.
 * **Relationships** connect `User`s with a `FRIENDS_WITH` relationship, and `User`s are connected via a `CREATED` relationship to `Post`s
 
@@ -352,6 +353,7 @@ for record in result.data.by_ref() {
 Congratulations! 🎉 You have successfully modeled, loaded, and queried a social network graph with FalkorDB.
 
 Next, dive deeper into FalkorDB's powerful features:
+
 * [Advanced Cypher](/cypher)
 * [Database Operations](/operations)
 * [GenAI Tools](/genai-tools)

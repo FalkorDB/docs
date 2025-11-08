@@ -210,7 +210,7 @@ To list all constraints enforced on a given graph, use the `db.constraints` proc
 {% capture shell_2 %}
 redis> GRAPH.RO_QUERY g "call db.constraints()"
 
-# Output:
+# Output
 
 {% endcapture %}
 

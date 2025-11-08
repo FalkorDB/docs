@@ -65,6 +65,7 @@ public class JenaFalkorExample {
 ```
 
 Notes:
+
 * Replace `FalkorDBJenaFactory.createModel(...)` with the actual adapter factory call used in the adapter (see `Main.java`).
 * Use the adapter's configuration options (connection URL, authentication) when creating the model.
 

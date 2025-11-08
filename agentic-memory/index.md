@@ -12,6 +12,7 @@ Agentic memory enables AI agents to maintain persistent, contextual memory acros
 ## What is Agentic Memory?
 
 Agentic memory refers to the ability of AI agents to:
+
 * **Remember past interactions** and learn from them
 * **Build contextual understanding** through connected knowledge
 * **Reason over temporal information** to understand how relationships evolve
@@ -40,6 +41,7 @@ This section covers popular frameworks and tools that implement agentic memory w
 ## Getting Started
 
 Choose a framework based on your needs:
+
 * If you need **temporal reasoning** and **multi-agent memory**, start with [Graphiti](./graphiti.md)
 * If you want to add **persistent memory to Claude Desktop or Cursor IDE**, try the [Graphiti MCP Server](./graphiti-mcp-server.md)
 * If you need **flexible memory structures** with **hybrid storage**, explore [Cognee](./cognee.md)

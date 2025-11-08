@@ -12,7 +12,7 @@ redirect_from:
 
 # GraphRAG-SDK
 
-### Build intelligent GraphRAG applications with FalkorDB and LLMs
+## Build intelligent GraphRAG applications with FalkorDB and LLMs
 
 * Automatically converts natural language questions into high-quality [Cypher](https://docs.falkordb.com/cypher/) queries.
 * Automatically generates contextually relevant answers from knowledge graph data.
@@ -109,17 +109,20 @@ print(response["response"])
 ## How it works
 
 ### 1️⃣ Extract and Build Ontologies from Multiple Sources
+
 * **From Existing Graphs**: Automatically extract schema and attributes from knowledge graphs using `Ontology.from_kg_graph()`
 * **From Data Sources**: Generate ontologies from diverse formats (PDF, CSV, HTML, TXT, JSON, URLs) using AI
 * **From Schema Graphs**: Import ontologies directly from graph schemas with `Ontology.from_schema_graph()`
 * **From JSON**: Load pre-defined ontologies from JSON configurations
 
 ### 2️⃣ Intelligent Query Generation and Execution
+
 * **Natural Language Processing**: Convert user questions into optimized Cypher queries using LLMs
 * **Context-Aware Generation**: Leverage ontology schema to ensure accurate and relevant queries
 * **Multi-Step Pipeline**: Execute graph queries and synthesize natural language responses
 
 ### 3️⃣ Interactive Chat Sessions with Graph Context
+
 * **Conversational Interface**: Maintain chat history for contextual follow-up questions
 * **Streaming Responses**: Real-time response chunks for better user experience
 * **Flexible Model Support**: Compatible with multiple LLM providers (OpenAI, Gemini, Groq)

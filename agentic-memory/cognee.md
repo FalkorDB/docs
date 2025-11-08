@@ -12,6 +12,7 @@ description: "Build flexible agentic memory with Cognee and FalkorDB"
 ## Overview
 
 Cognee provides a comprehensive memory layer that:
+
 * **Manages complex knowledge structures**: Store entities, relationships, and contextual information
 * **Supports hybrid storage**: Combine graph databases with vector stores for optimal retrieval
 * **Enables flexible querying**: Search by semantic similarity, graph relationships, or both
@@ -314,6 +315,7 @@ await cognify()
 ### Installation Issues
 
 If you have trouble installing the community adapter:
+
 * Ensure you have the correct package name: `cognee-community-hybrid-adapter-falkor`
 * Check that you're using Python 3.10 or higher
 * Try installing in a fresh virtual environment
@@ -321,6 +323,7 @@ If you have trouble installing the community adapter:
 ### Connection Issues
 
 If you experience connection problems:
+
 * Verify FalkorDB is running: `redis-cli -h localhost -p 6379 ping`
 * Check the `GRAPH_DB_URL` and `GRAPH_DB_PORT` environment variables
 * Ensure FalkorDB is accessible on the specified host and port

@@ -14,7 +14,7 @@ Arguments: `Graph name, Query, Timeout [optional]`
 
 Returns: [Result set](/design/result-structure)
 
-### Queries and Parameterized Queries
+## Queries and Parameterized Queries
 
 The execution plans of queries, both regular and parameterized, are cached (up to [CACHE_SIZE](/configuration#cache_size) unique queries are cached). Therefore, it is recommended to use parameterized queries when executing many queries with the same pattern but different constants.
 
