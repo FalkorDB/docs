@@ -1,9 +1,9 @@
 ---
 title: "Text-to-Cypher"
-nav_order: 24
+nav_order: 7
 description: >
     Convert natural language questions into Cypher queries using LLMs for intuitive graph querying.
-parent: "Cypher Language"
+parent: "GenAI Tools"
 ---
 
 # Text-to-Cypher

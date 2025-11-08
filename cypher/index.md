@@ -43,7 +43,3 @@ See the list of available graph [algorithms](/algorithms).
 ## Indexing
 
 See how to use [indexing](/cypher/indexing).
-
-## Text-to-Cypher
-
-Learn how to convert natural language to Cypher queries using [Text-to-Cypher](/cypher/text-to-cypher).
