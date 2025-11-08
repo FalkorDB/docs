@@ -28,22 +28,26 @@ Discover how to configure a FalkorDB cluster for horizontal scalability and impr
 
 Learn how falkorDB can be deployed on Kubernetes using Helm charts and Docker images.
 
-## 5. [Deploy FalkorDB on Railway](/operations/railway)
+## 5. [Deploy FalkorDB with KubeBlocks](/operations/kubeblocks)
+
+Deploy and manage FalkorDB on Kubernetes using the KubeBlocks operator with automated Day-2 operations, high availability, and comprehensive backup solutions.
+
+## 6. [Deploy FalkorDB on Railway](/operations/railway)
 
 Deploy FalkorDB quickly using verified templates on Railway, a modern platform-as-a-service. Choose between single instance or cluster deployments.
 
-## 6. [OpenTelemetry Integration with FalkorDB-py](/operations/opentelemetry)
+## 7. [OpenTelemetry Integration with FalkorDB-py](/operations/opentelemetry)
 
 Comprehensive guide for setting up OpenTelemetry observability and tracing with FalkorDB Python applications.
 
-## 7. [FalkorDBLite](/operations/falkordblite)
+## 8. [FalkorDBLite](/operations/falkordblite)
 
 Self-contained Python interface to FalkorDB with embedded Redis server, ideal for development and testing.
 
-## 8. [Deploy FalkorDB on Lightning.AI](/operations/lightning-ai)
+## 9. [Deploy FalkorDB on Lightning.AI](/operations/lightning-ai)
 
 Deploy FalkorDB on Lightning.AI to build fast, accurate GenAI applications using advanced RAG with graph databases.
 
-## 9. [Building Docker](/operations/building-docker)
+## 10. [Building Docker](/operations/building-docker)
 
 Build custom FalkorDB Docker containers from source with platform-specific examples.
