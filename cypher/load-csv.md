@@ -62,7 +62,7 @@ column.
 
 If the CSV contains a header row, like this:
 
-### actors.csv
+### actors.csv (with headers)
 
 | name           | birthyear |
 | :--------------| :---------|

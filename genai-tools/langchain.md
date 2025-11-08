@@ -199,7 +199,7 @@ print(response)
 4. **Context Management**: Use graph memory to maintain conversation context efficiently
 5. **Prompt Engineering**: Customize prompts to improve Cypher query generation quality
 
-## Resources
+## Additional Resources
 
 * [LangChain Documentation](https://python.langchain.com/)
 * [FalkorDBQAChain API Reference](https://python.langchain.com/docs/integrations/graphs/falkordb)

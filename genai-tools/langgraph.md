@@ -304,7 +304,7 @@ result2 = app.invoke({
 4. **Checkpointing**: Enable persistence for long-running workflows
 5. **Observability**: Add logging at each node for debugging
 
-## Resources
+## Additional Resources
 
 * [LangGraph Documentation](https://langchain-ai.github.io/langgraph/)
 * [Blog: Implementing GraphRAG with FalkorDB, LangChain & LangGraph](https://www.falkordb.com/blog/graphrag-workflow-falkordb-langchain/)

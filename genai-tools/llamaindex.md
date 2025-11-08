@@ -297,7 +297,7 @@ storage_context = StorageContext.from_defaults(
 index = load_index_from_storage(storage_context)
 ```
 
-## Resources
+## Additional Resources
 
 * [LlamaIndex Documentation](https://docs.llamaindex.ai/)
 * [FalkorDB Graph Store Documentation](https://docs.llamaindex.ai/en/stable/examples/index_structs/knowledge_graph/FalkorDBGraphDemo/)
