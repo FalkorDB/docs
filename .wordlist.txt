@@ -388,6 +388,7 @@ WCC
 WSL
 SPpath
 SSpath
+MSF
 MST
 MSTs
 Kruskal's
