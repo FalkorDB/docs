@@ -388,6 +388,9 @@ WCC
 WSL
 SPpath
 SSpath
+MST
+Kruskal
+Prim
 
 undirected
 preprocessing

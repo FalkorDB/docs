@@ -89,7 +89,7 @@ ORDER BY weight
 ```
 
 **Result:**
-```
+```text
 from | to | distance
 -----|----|---------
 B    | C  | 1.0
@@ -162,7 +162,7 @@ FalkorDB's MSF implementation uses an efficient matrix-based approach optimized 
 
 1. **Weight Properties**: Ensure weight properties are numeric (integers or floats)
 2. **Missing Weights**: Use `defaultValue` to handle edges without weight properties
-3. **Large Graphs**: For very large graphs, consider filtering by `sourceNodes` or `relationshipTypes`
+3. **Large Graphs**: For large graphs (100K+ nodes), consider filtering by `sourceNodes` or `relationshipTypes`
 4. **Directed vs Undirected**: The algorithm treats relationships as undirected for spanning forest purposes
 
 ## Related Algorithms
