@@ -652,3 +652,13 @@ Addon
 addon
 LoadBalancer
 NodePort
+Rust
+genai
+supervisord
+entrypoint
+cargo
+gpt
+mini
+RESTful
+OpenAPI
+Swagger
