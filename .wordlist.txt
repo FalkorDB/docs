@@ -389,8 +389,9 @@ WSL
 SPpath
 SSpath
 MST
-Kruskal
-Prim
+MSTs
+Kruskal's
+Prim's
 
 undirected
 preprocessing
