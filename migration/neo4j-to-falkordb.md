@@ -20,10 +20,10 @@ The migration process consists of the following steps:
 
 ## Prerequisites
 
-* Neo4j instance (local or remote)
-* FalkorDB instance (local, Docker, or Cloud)
-* Python 3.6+
-* Migration tools from the [Neo4j-to-FalkorDB repository](https://github.com/FalkorDB/Neo4j-to-FalkorDB)
+- Neo4j instance (local or remote)
+- FalkorDB instance (local, Docker, or Cloud)
+- Python 3.6+
+- Migration tools from the [Neo4j-to-FalkorDB repository](https://github.com/FalkorDB/Neo4j-to-FalkorDB)
 
 ## Step 1: Setting Up Neo4j
 
@@ -55,19 +55,20 @@ python3 neo4j_to_csv_extractor.py [-h] [--uri URI] [--username USERNAME] --passw
 ```text
 
 **Options:**
-* `--uri URI`: Neo4j URI (default: bolt://localhost:7687)
-* `--username USERNAME`: Neo4j username (default: neo4j)
-* `--password PASSWORD`: Neo4j password (required)
-* `--database DATABASE`: Neo4j database name
-* `--batch-size BATCH_SIZE`: Batch size for extraction
-* `--nodes-only`: Extract only nodes
-* `--edges-only`: Extract only relationships
-* `--indexes-only`: Extract only indexes and constraints
-* `--config CONFIG`: Path to migration configuration JSON file
-* `--generate-template GENERATE_TEMPLATE`: Generate template migration config file
-* `--analyze-only`: Only analyze topology, do not extract data
-* `--tenant-mode {label,property}`: Enable multi-tenant mode - "label" (filter by node label) or "property" (filter by property value)
-* `--tenant-filter TENANT_FILTER`: The label name or property name to use for tenant segregation (required with --tenant-mode)
+
+- `--uri URI`: Neo4j URI (default: bolt://localhost:7687)
+- `--username USERNAME`: Neo4j username (default: neo4j)
+- `--password PASSWORD`: Neo4j password (required)
+- `--database DATABASE`: Neo4j database name
+- `--batch-size BATCH_SIZE`: Batch size for extraction
+- `--nodes-only`: Extract only nodes
+- `--edges-only`: Extract only relationships
+- `--indexes-only`: Extract only indexes and constraints
+- `--config CONFIG`: Path to migration configuration JSON file
+- `--generate-template GENERATE_TEMPLATE`: Generate template migration config file
+- `--analyze-only`: Only analyze topology, do not extract data
+- `--tenant-mode {label,property}`: Enable multi-tenant mode - "label" (filter by node label) or "property" (filter by property value)
+- `--tenant-filter TENANT_FILTER`: The label name or property name to use for tenant segregation (required with --tenant-mode)
 
 ### Example Output
 
@@ -108,12 +109,13 @@ python3 neo4j_to_csv_extractor.py --password <your-neo4j-password> --config migr
 ```text
 
 The script will:
-* Read data from Neo4j
-* Create CSV files in the `csv_output` subfolder
-* Generate headers and content based on the configuration
-* Create both nodes and edges CSV files
-* Export indexes and constraints
-* Generate FalkorDB load scripts
+
+- Read data from Neo4j
+- Create CSV files in the `csv_output` subfolder
+- Generate headers and content based on the configuration
+- Create both nodes and edges CSV files
+- Export indexes and constraints
+- Generate FalkorDB load scripts
 
 ### Multi-Tenant Data Extraction
 
@@ -127,10 +129,11 @@ python3 neo4j_to_csv_extractor.py --password <your-neo4j-password> \
 ```text
 
 This will:
-* Discover all distinct values of the `tenantId` property
-* Create a subdirectory for each tenant (e.g., `csv_output/tenant_cloudserve/`, `csv_output/tenant_learnhub/`, `csv_output/tenant_shopfast/`)
-* Export each tenant's nodes and relationships to their respective subdirectories
-* Automatically omit the `tenantId` property from CSV exports (since it's encoded in the folder name)
+
+- Discover all distinct values of the `tenantId` property
+- Create a subdirectory for each tenant (e.g., `csv_output/tenant_cloudserve/`, `csv_output/tenant_learnhub/`, `csv_output/tenant_shopfast/`)
+- Export each tenant's nodes and relationships to their respective subdirectories
+- Automatically omit the `tenantId` property from CSV exports (since it's encoded in the folder name)
 
 **Using label-based tenant segregation:**
 
@@ -145,12 +148,12 @@ This filters nodes that have the specified label, allowing you to extract data f
 
 The extraction creates the following files in the `csv_output` directory:
 
-* `nodes_<label>.csv`: One file per node label
-* `edges_<type>.csv`: One file per relationship type
-* `indexes.csv`: Database indexes
-* `constraints.csv`: Database constraints
-* `load_to_falkordb.cypher`: FalkorDB load script
-* `create_indexes_falkordb.cypher`: Index creation script
+- `nodes_<label>.csv`: One file per node label
+- `edges_<type>.csv`: One file per relationship type
+- `indexes.csv`: Database indexes
+- `constraints.csv`: Database constraints
+- `load_to_falkordb.cypher`: FalkorDB load script
+- `create_indexes_falkordb.cypher`: Index creation script
 
 ## Step 4: Loading CSV Data into FalkorDB
 
@@ -159,8 +162,9 @@ The extraction creates the following files in the `csv_output` directory:
 Set up FalkorDB on your local machine following the [Getting Started guide](https://docs.falkordb.com/getting_started.html).
 
 You can use either:
-* The full deployment with browser (port 3000)
-* The server-only option (port 6379)
+
+- The full deployment with browser (port 3000)
+- The server-only option (port 6379)
 
 ### Loading Data
 
@@ -171,16 +175,17 @@ python3 falkordb_csv_loader.py MOVIES --port 6379 --stats
 ```text
 
 **Options:**
-* `graph_name`: Target graph name in FalkorDB (required). When using `--multi-graph` mode, this serves as the prefix for tenant-specific graphs
-* `--host HOST`: FalkorDB host (default: localhost)
-* `--port PORT`: FalkorDB port (default: 6379)
-* `--username USERNAME`: FalkorDB username (optional)
-* `--password PASSWORD`: FalkorDB password (optional)
-* `--batch-size BATCH_SIZE`: Batch size for loading (default: 5000)
-* `--stats`: Show graph statistics after loading
-* `--csv-dir CSV_DIR`: Directory containing CSV files (default: csv_output)
-* `--merge-mode`: Use MERGE instead of CREATE for upsert behavior
-* `--multi-graph`: Enable multi-graph mode - load each tenant_* subfolder into a separate graph
+
+- `graph_name`: Target graph name in FalkorDB (required). When using `--multi-graph` mode, this serves as the prefix for tenant-specific graphs
+- `--host HOST`: FalkorDB host (default: localhost)
+- `--port PORT`: FalkorDB port (default: 6379)
+- `--username USERNAME`: FalkorDB username (optional)
+- `--password PASSWORD`: FalkorDB password (optional)
+- `--batch-size BATCH_SIZE`: Batch size for loading (default: 5000)
+- `--stats`: Show graph statistics after loading
+- `--csv-dir CSV_DIR`: Directory containing CSV files (default: csv_output)
+- `--merge-mode`: Use MERGE instead of CREATE for upsert behavior
+- `--multi-graph`: Enable multi-graph mode - load each tenant_* subfolder into a separate graph
 
 ### Multi-Tenant Data Loading
 
@@ -191,10 +196,11 @@ python3 falkordb_csv_loader.py MYAPP --multi-graph --port 6379
 ```text
 
 This will:
-* Scan for `tenant_*` subdirectories in `csv_output/`
-* Create a separate graph for each tenant (e.g., `MYAPP_shopfast`, `MYAPP_cloudserve`, `MYAPP_learnhub`)
-* Load each tenant's data into its own isolated graph
-* Provide detailed progress reporting per tenant
+
+- Scan for `tenant_*` subdirectories in `csv_output/`
+- Create a separate graph for each tenant (e.g., `MYAPP_shopfast`, `MYAPP_cloudserve`, `MYAPP_learnhub`)
+- Load each tenant's data into its own isolated graph
+- Provide detailed progress reporting per tenant
 
 Example output:
 
@@ -223,12 +229,12 @@ For significantly improved loading speed and performance, especially with large 
 
 #### Features
 
-* **High Performance**: Built with Rust and async/await for optimal speed
-* **Batch Processing**: Configurable batch sizes (default: 5000 records)
-* **Memory Efficient**: Streams data without loading everything into memory
-* **Automatic Schema Management**: Creates indexes and constraints automatically
-* **Merge Mode**: Support for upsert operations using MERGE instead of CREATE
-* **Progress Reporting**: Real-time progress tracking during loading
+- **High Performance**: Built with Rust and async/await for optimal speed
+- **Batch Processing**: Configurable batch sizes (default: 5000 records)
+- **Memory Efficient**: Streams data without loading everything into memory
+- **Automatic Schema Management**: Creates indexes and constraints automatically
+- **Merge Mode**: Support for upsert operations using MERGE instead of CREATE
+- **Progress Reporting**: Real-time progress tracking during loading
 
 #### Installation
 
@@ -340,12 +346,12 @@ You can visualize and compare the results in both the Neo4j Browser and FalkorDB
 
 ## Additional Resources
 
-* [Neo4j-to-FalkorDB GitHub Repository](https://github.com/FalkorDB/Neo4j-to-FalkorDB)
-* [FalkorDB Bulk Loader](https://github.com/falkordb/falkordb-bulk-loader)
-* [FalkorDB Rust Loader](https://github.com/FalkorDB/FalkorDB-Loader-RS)
+- [Neo4j-to-FalkorDB GitHub Repository](https://github.com/FalkorDB/Neo4j-to-FalkorDB)
+- [FalkorDB Bulk Loader](https://github.com/falkordb/falkordb-bulk-loader)
+- [FalkorDB Rust Loader](https://github.com/FalkorDB/FalkorDB-Loader-RS)
 
 ## Next Steps
 
-* Explore [FalkorDB Cypher Language](/cypher) for querying your graph
-* Learn about [FalkorDB Operations](/operations) for production deployments
-* Check out [FalkorDB Integration](/integration) options
+- Explore [FalkorDB Cypher Language](/cypher) for querying your graph
+- Learn about [FalkorDB Operations](/operations) for production deployments
+- Check out [FalkorDB Integration](/integration) options

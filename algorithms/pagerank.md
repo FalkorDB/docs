@@ -94,6 +94,6 @@ Expected results:
 
 **Interpreting scores**:
 
-* PageRank scores are relative, not absolute measures
-* The sum of all scores in a graph equals 1.0
-* Scores typically follow a power-law distribution
+- PageRank scores are relative, not absolute measures
+- The sum of all scores in a graph equals 1.0
+- Scores typically follow a power-law distribution

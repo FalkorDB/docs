@@ -13,11 +13,11 @@ Each node starts with a unique label, and through iterative propagation, nodes a
 
 CDLP serves as a powerful algorithm in scenarios such as:
 
-* Social network community detection
-* Biological network module identification
-* Web page clustering and topic detection
-* Market segmentation analysis
-* Fraud detection networks
+- Social network community detection
+- Biological network module identification
+- Web page clustering and topic detection
+- Market segmentation analysis
+- Fraud detection networks
 
 ## Algorithm Details
 
@@ -34,8 +34,8 @@ It runs in near-linear time and mimics epidemic contagion by spreading labels th
 
 CDLP operates with a time complexity of **O(m + n)** per iteration, where:
 
-* **n** represents the total number of nodes
-* **m** represents the total number of edges
+- **n** represents the total number of nodes
+- **m** represents the total number of edges
 
 The algorithm typically converges within a few iterations, making it highly efficient for large-scale networks.
 
@@ -78,9 +78,9 @@ Let's take this Social Network as an example:
 
 There are 3 different communities that should emerge from this network:
 
-* Alice, Bob, Charlie, Diana, Grace, Henry
-* Eve, Frank, Iris, Jack
-* Any isolated nodes
+- Alice, Bob, Charlie, Diana, Grace, Henry
+- Eve, Frank, Iris, Jack
+- Any isolated nodes
 
 ### Create the Graph
 

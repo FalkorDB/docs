@@ -14,10 +14,10 @@ redirect_from:
 
 ## Build intelligent GraphRAG applications with FalkorDB and LLMs
 
-* Automatically converts natural language questions into high-quality [Cypher](https://docs.falkordb.com/cypher/) queries.
-* Automatically generates contextually relevant answers from knowledge graph data.
-* Supports streaming responses and conversational sessions.
-* Integrates with multiple language model providers (OpenAI, Gemini, Groq, etc.).
+- Automatically converts natural language questions into high-quality [Cypher](https://docs.falkordb.com/cypher/) queries.
+- Automatically generates contextually relevant answers from knowledge graph data.
+- Supports streaming responses and conversational sessions.
+- Integrates with multiple language model providers (OpenAI, Gemini, Groq, etc.).
 
 ## Quick Start
 
@@ -99,32 +99,32 @@ print(response["response"])
 
 ## Key Features
 
-* **Ontology Extraction**: Automatically extract schema and attributes from existing knowledge graphs
-* **Smart Query Generation**: Convert natural language questions to optimized Cypher queries
-* **Conversational Context**: Maintain chat history for contextual follow-up questions  
-* **Streaming Support**: Real-time response chunks for better user experience
-* **Flexible Sources**: Create ontologies from JSON, existing graphs, or data sources
-* **Schema Management**: Build ontologies from graph schemas or knowledge graphs with sampling
+- **Ontology Extraction**: Automatically extract schema and attributes from existing knowledge graphs
+- **Smart Query Generation**: Convert natural language questions to optimized Cypher queries
+- **Conversational Context**: Maintain chat history for contextual follow-up questions  
+- **Streaming Support**: Real-time response chunks for better user experience
+- **Flexible Sources**: Create ontologies from JSON, existing graphs, or data sources
+- **Schema Management**: Build ontologies from graph schemas or knowledge graphs with sampling
 
 ## How it works
 
 ### 1️⃣ Extract and Build Ontologies from Multiple Sources
 
-* **From Existing Graphs**: Automatically extract schema and attributes from knowledge graphs using `Ontology.from_kg_graph()`
-* **From Data Sources**: Generate ontologies from diverse formats (PDF, CSV, HTML, TXT, JSON, URLs) using AI
-* **From Schema Graphs**: Import ontologies directly from graph schemas with `Ontology.from_schema_graph()`
-* **From JSON**: Load pre-defined ontologies from JSON configurations
+- **From Existing Graphs**: Automatically extract schema and attributes from knowledge graphs using `Ontology.from_kg_graph()`
+- **From Data Sources**: Generate ontologies from diverse formats (PDF, CSV, HTML, TXT, JSON, URLs) using AI
+- **From Schema Graphs**: Import ontologies directly from graph schemas with `Ontology.from_schema_graph()`
+- **From JSON**: Load pre-defined ontologies from JSON configurations
 
 ### 2️⃣ Intelligent Query Generation and Execution
 
-* **Natural Language Processing**: Convert user questions into optimized Cypher queries using LLMs
-* **Context-Aware Generation**: Leverage ontology schema to ensure accurate and relevant queries
-* **Multi-Step Pipeline**: Execute graph queries and synthesize natural language responses
+- **Natural Language Processing**: Convert user questions into optimized Cypher queries using LLMs
+- **Context-Aware Generation**: Leverage ontology schema to ensure accurate and relevant queries
+- **Multi-Step Pipeline**: Execute graph queries and synthesize natural language responses
 
 ### 3️⃣ Interactive Chat Sessions with Graph Context
 
-* **Conversational Interface**: Maintain chat history for contextual follow-up questions
-* **Streaming Responses**: Real-time response chunks for better user experience
-* **Flexible Model Support**: Compatible with multiple LLM providers (OpenAI, Gemini, Groq)
+- **Conversational Interface**: Maintain chat history for contextual follow-up questions
+- **Streaming Responses**: Real-time response chunks for better user experience
+- **Flexible Model Support**: Compatible with multiple LLM providers (OpenAI, Gemini, Groq)
 
 > 📓  [Understanding Ontologies and Knowledge Graphs](https://www.falkordb.com/blog/understanding-ontologies-knowledge-graph-schemas/)

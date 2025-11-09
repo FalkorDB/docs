@@ -282,33 +282,33 @@ register_function(
 
 ## Use Cases
 
-* **Multi-Agent Research Systems**: Teams of agents collaborating to research complex topics using knowledge graphs
-* **Customer Support Automation**: Intelligent agents answering queries with contextual knowledge from company databases
-* **Business Intelligence**: Agents analyzing business data and providing strategic insights
-* **Content Generation**: Creating factually accurate content grounded in knowledge graphs
-* **Decision Support Systems**: Multi-agent systems helping humans make informed decisions
-* **Knowledge Management**: Automated extraction and organization of information from documents
-* **Trip Planning**: Collaborative agents using graph data for personalized travel recommendations
+- **Multi-Agent Research Systems**: Teams of agents collaborating to research complex topics using knowledge graphs
+- **Customer Support Automation**: Intelligent agents answering queries with contextual knowledge from company databases
+- **Business Intelligence**: Agents analyzing business data and providing strategic insights
+- **Content Generation**: Creating factually accurate content grounded in knowledge graphs
+- **Decision Support Systems**: Multi-agent systems helping humans make informed decisions
+- **Knowledge Management**: Automated extraction and organization of information from documents
+- **Trip Planning**: Collaborative agents using graph data for personalized travel recommendations
 
 ## Key Features
 
 ### GraphRAG Advantages
 
-* **Structured Knowledge**: Query relationships and entities in a graph database
-* **Reduced Hallucinations**: Ground agent responses in factual graph data
-* **Explainable AI**: Trace reasoning paths through graph queries
-* **Real-Time Updates**: Knowledge graphs can be updated dynamically
-* **Multi-Tenancy**: Isolate knowledge graphs for different projects or users
-* **High Performance**: FalkorDB's speed enables real-time agent interactions
+- **Structured Knowledge**: Query relationships and entities in a graph database
+- **Reduced Hallucinations**: Ground agent responses in factual graph data
+- **Explainable AI**: Trace reasoning paths through graph queries
+- **Real-Time Updates**: Knowledge graphs can be updated dynamically
+- **Multi-Tenancy**: Isolate knowledge graphs for different projects or users
+- **High Performance**: FalkorDB's speed enables real-time agent interactions
 
 ### AG2 Core Capabilities
 
-* **Multi-Agent Orchestration**: Coordinate multiple AI agents with different roles
-* **LLM Agnostic**: Works with OpenAI, Google, Anthropic, Azure, and more
-* **Tool Integration**: Agents can use external APIs, databases, and functions
-* **Human-in-the-Loop**: Seamlessly integrate human oversight and feedback
-* **State Management**: Maintain conversation context and agent state
-* **Flexible Workflows**: Define custom agent behaviors and interaction patterns
+- **Multi-Agent Orchestration**: Coordinate multiple AI agents with different roles
+- **LLM Agnostic**: Works with OpenAI, Google, Anthropic, Azure, and more
+- **Tool Integration**: Agents can use external APIs, databases, and functions
+- **Human-in-the-Loop**: Seamlessly integrate human oversight and feedback
+- **State Management**: Maintain conversation context and agent state
+- **Flexible Workflows**: Define custom agent behaviors and interaction patterns
 
 ## Best Practices
 
@@ -325,20 +325,20 @@ register_function(
 
 ## Performance Considerations
 
-* **Batch Processing**: Process multiple documents in batches for efficient graph building
-* **Caching**: Cache frequently accessed graph patterns and results
-* **Connection Pooling**: Reuse FalkorDB connections across agents
-* **Parallel Queries**: Execute independent queries in parallel when possible
-* **Graph Optimization**: Regularly optimize graph structure for query performance
+- **Batch Processing**: Process multiple documents in batches for efficient graph building
+- **Caching**: Cache frequently accessed graph patterns and results
+- **Connection Pooling**: Reuse FalkorDB connections across agents
+- **Parallel Queries**: Execute independent queries in parallel when possible
+- **Graph Optimization**: Regularly optimize graph structure for query performance
 
 ## Resources
 
-* 🔗 [AG2 Documentation](https://docs.ag2.ai/)
-* 🔗 [AG2 API Reference](https://docs.ag2.ai/latest/docs/reference/)
-* 🔗 [AG2 GitHub Repository](https://github.com/ag2ai/ag2)
-* 📓 [AG2 GitHub Examples](https://github.com/ag2ai/ag2/tree/main/notebook)
-* 📓 [AG2 GraphRAG with FalkorDB Notebook](https://docs.ag2.ai/latest/docs/use-cases/notebooks/notebooks/agentchat_graph_rag_falkordb/)
-* 🔗 [FalkorDB GraphRAG-SDK](https://docs.falkordb.com/graphrag-sdk.html)
-* 📝 [Blog: FalkorDB-AG2.ai Integration for Multi-Agent Systems](https://www.falkordb.com/news-updates/ag2-integration-multi-agent-systems/)
-* 📝 [Blog: Structured Knowledge with FalkorDB Graph RAG](https://docs.ag2.ai/latest/docs/blog/2024/12/06/FalkorDB-Structured/)
-* 📝 [Blog: Knowledgeable Agents with FalkorDB Graph RAG](https://dev.to/ag2ai/knowledgeable-agents-with-falkordb-graph-rag-9d)
+- 🔗 [AG2 Documentation](https://docs.ag2.ai/)
+- 🔗 [AG2 API Reference](https://docs.ag2.ai/latest/docs/reference/)
+- 🔗 [AG2 GitHub Repository](https://github.com/ag2ai/ag2)
+- 📓 [AG2 GitHub Examples](https://github.com/ag2ai/ag2/tree/main/notebook)
+- 📓 [AG2 GraphRAG with FalkorDB Notebook](https://docs.ag2.ai/latest/docs/use-cases/notebooks/notebooks/agentchat_graph_rag_falkordb/)
+- 🔗 [FalkorDB GraphRAG-SDK](https://docs.falkordb.com/graphrag-sdk.html)
+- 📝 [Blog: FalkorDB-AG2.ai Integration for Multi-Agent Systems](https://www.falkordb.com/news-updates/ag2-integration-multi-agent-systems/)
+- 📝 [Blog: Structured Knowledge with FalkorDB Graph RAG](https://docs.ag2.ai/latest/docs/blog/2024/12/06/FalkorDB-Structured/)
+- 📝 [Blog: Knowledgeable Agents with FalkorDB Graph RAG](https://dev.to/ag2ai/knowledgeable-agents-with-falkordb-graph-rag-9d)

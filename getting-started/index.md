@@ -20,8 +20,8 @@ and accessing it using the [FalkorDB Python client](/getting-started/clients) wi
 ## Prerequisites
 
 1. **FalkorDB Instance**: Set up FalkorDB (on-prem or cloud).
-   * [Run FalkorDB Docker](https://hub.docker.com/r/falkordb/falkordb/)
-   * [Create a FalkorDB Cloud Instance](https://app.falkordb.cloud/signup)
+   - [Run FalkorDB Docker](https://hub.docker.com/r/falkordb/falkordb/)
+   - [Create a FalkorDB Cloud Instance](https://app.falkordb.cloud/signup)
 2. **Install FalkorDB Client**:
 
 {% capture pypi_0 %}
@@ -54,8 +54,8 @@ cargo add falkordb
 
 Let's create a simple graph for a social network where:  
 
-* **Nodes** represent `User` and `Post`.
-* **Relationships** connect `User`s with a `FRIENDS_WITH` relationship, and `User`s are connected via a `CREATED` relationship to `Post`s
+- **Nodes** represent `User` and `Post`.
+- **Relationships** connect `User`s with a `FRIENDS_WITH` relationship, and `User`s are connected via a `CREATED` relationship to `Post`s
 
 ### Graph Schema
 
@@ -354,9 +354,9 @@ Congratulations! 🎉 You have successfully modeled, loaded, and queried a socia
 
 Next, dive deeper into FalkorDB's powerful features:
 
-* [Advanced Cypher](/cypher)
-* [Database Operations](/operations)
-* [GenAI Tools](/genai-tools)
-* [Agentic Memory](/agentic-memory)
+- [Advanced Cypher](/cypher)
+- [Database Operations](/operations)
+- [GenAI Tools](/genai-tools)
+- [Agentic Memory](/agentic-memory)
 
 For questions or support, visit our [community forums](https://www.falkordb.com/contact-us/)

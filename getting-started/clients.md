@@ -75,6 +75,7 @@ redirect_from:
 [NFalkorDB-package]: https://www.nuget.org/packages/NFalkorDB
 [NFalkorDB-docs]: https://github.com/FalkorDB/NFalkorDB/blob/master/README.md
 
+
 [redisgraph-rb-author]: https://redislabs.com
 [redisgraph-rb-url]: https://github.com/RedisGraph/redisgraph-rb
 

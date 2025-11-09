@@ -83,11 +83,11 @@ await graph.close();
 
 **Config Options:**
 
-* `host` (string, optional): Database host. Default: `"localhost"`
-* `port` (number, optional): Database port. Default: `6379`
-* `graph` (string, optional): Graph name to use
-* `url` (string, optional): Alternative connection URL format
-* `enhancedSchema` (boolean, optional): Enable enhanced schema details. Default: `false`
+- `host` (string, optional): Database host. Default: `"localhost"`
+- `port` (number, optional): Database port. Default: `6379`
+- `graph` (string, optional): Graph name to use
+- `url` (string, optional): Alternative connection URL format
+- `enhancedSchema` (boolean, optional): Enable enhanced schema details. Default: `false`
 
 **Example:**
 
@@ -185,9 +185,9 @@ console.log(structuredSchema.relationships);
 
 ## Prerequisites
 
-* Node.js >= 18
-* FalkorDB server running
-* LangChain >= 0.1.0
+- Node.js >= 18
+- FalkorDB server running
+- LangChain >= 0.1.0
 
 ## Additional Examples
 

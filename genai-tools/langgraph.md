@@ -11,8 +11,8 @@ parent: "GenAI Tools"
 
 ## Resources
 
-* 📓 [Blog: Implementing GraphRAG with FalkorDB, LangChain & LangGraph](https://www.falkordb.com/blog/graphrag-workflow-falkordb-langchain/)
-* 🔗 [LangGraph Documentation](https://www.langgraph.dev/)
+- 📓 [Blog: Implementing GraphRAG with FalkorDB, LangChain & LangGraph](https://www.falkordb.com/blog/graphrag-workflow-falkordb-langchain/)
+- 🔗 [LangGraph Documentation](https://www.langgraph.dev/)
 
 ## Installation
 
@@ -290,11 +290,11 @@ result2 = app.invoke({
 
 ## Use Cases
 
-* **Complex Query Decomposition**: Break down complex questions into multiple graph queries
-* **Multi-Step Reasoning**: Chain multiple graph operations for advanced analytics
-* **Agentic RAG**: Combine retrieval, reasoning, and generation in a graph-based workflow
-* **Error Recovery**: Implement retry logic and fallback mechanisms in graph queries
-* **Conversational GraphRAG**: Maintain context across multiple turns of conversation
+- **Complex Query Decomposition**: Break down complex questions into multiple graph queries
+- **Multi-Step Reasoning**: Chain multiple graph operations for advanced analytics
+- **Agentic RAG**: Combine retrieval, reasoning, and generation in a graph-based workflow
+- **Error Recovery**: Implement retry logic and fallback mechanisms in graph queries
+- **Conversational GraphRAG**: Maintain context across multiple turns of conversation
 
 ## Best Practices
 
@@ -306,6 +306,6 @@ result2 = app.invoke({
 
 ## Additional Resources
 
-* [LangGraph Documentation](https://langchain-ai.github.io/langgraph/)
-* [Blog: Implementing GraphRAG with FalkorDB, LangChain & LangGraph](https://www.falkordb.com/blog/graphrag-workflow-falkordb-langchain/)
-* [LangGraph GitHub Repository](https://github.com/langchain-ai/langgraph)
+- [LangGraph Documentation](https://langchain-ai.github.io/langgraph/)
+- [Blog: Implementing GraphRAG with FalkorDB, LangChain & LangGraph](https://www.falkordb.com/blog/graphrag-workflow-falkordb-langchain/)
+- [LangGraph GitHub Repository](https://github.com/langchain-ai/langgraph)

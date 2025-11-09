@@ -13,19 +13,19 @@ parent: "Operations"
 
 KubeBlocks is an open-source Kubernetes operator designed to manage stateful workloads, particularly databases. It provides:
 
-* **Unified Management**: Manage multiple database engines through a consistent API
-* **Day-2 Operations**: Automated scaling, backup, restore, monitoring, and failover
-* **Production-Ready**: Built for production environments with high availability
-* **Multi-Topology Support**: Standalone, replication, and sharding configurations
+- **Unified Management**: Manage multiple database engines through a consistent API
+- **Day-2 Operations**: Automated scaling, backup, restore, monitoring, and failover
+- **Production-Ready**: Built for production environments with high availability
+- **Multi-Topology Support**: Standalone, replication, and sharding configurations
 
 ## Prerequisites
 
 Before you begin, ensure you have:
 
-* Kubernetes cluster >= v1.21
-* `kubectl` installed - [Installation Guide](https://kubernetes.io/docs/tasks/tools/)
-* `helm` installed - [Installation Guide](https://helm.sh/docs/intro/install/)
-* KubeBlocks installed and running
+- Kubernetes cluster >= v1.21
+- `kubectl` installed - [Installation Guide](https://kubernetes.io/docs/tasks/tools/)
+- `helm` installed - [Installation Guide](https://helm.sh/docs/intro/install/)
+- KubeBlocks installed and running
 
 ## Installing KubeBlocks
 
@@ -166,9 +166,9 @@ A replication deployment provides high availability with automatic failover usin
 
 The replication topology includes:
 
-* **FalkorDB Component**: Primary and secondary nodes for data storage and queries
-* **Sentinel Component**: Monitors FalkorDB nodes and manages automatic failover
-* **Minimum of 3 Sentinel Replicas**: Required for quorum-based failover decisions
+- **FalkorDB Component**: Primary and secondary nodes for data storage and queries
+- **Sentinel Component**: Monitors FalkorDB nodes and manages automatic failover
+- **Minimum of 3 Sentinel Replicas**: Required for quorum-based failover decisions
 
 ### Create a Replication Cluster
 
@@ -348,7 +348,7 @@ redis-cli -h 127.0.0.1 -p 6379 -a <your-password>
 
 Execute a simple Cypher query to verify the connection:
 
-```bash
+```sh
 GRAPH.QUERY social "CREATE (:Person {name: 'Alice', age: 30})-[:KNOWS]->(:Person {name: 'Bob', age: 25})"
 GRAPH.QUERY social "MATCH (p:Person) RETURN p.name, p.age"
 ```
@@ -750,31 +750,31 @@ kubectl apply -f pod-monitor.yaml
 
 ### High Availability
 
-* Use the **replication** topology with at least 3 Sentinel replicas
-* Distribute pods across availability zones using pod anti-affinity
-* Configure appropriate resource requests and limits
-* Enable automated backups with appropriate retention policies
+- Use the **replication** topology with at least 3 Sentinel replicas
+- Distribute pods across availability zones using pod anti-affinity
+- Configure appropriate resource requests and limits
+- Enable automated backups with appropriate retention policies
 
 ### Security
 
-* Use Kubernetes secrets for storing passwords
-* Enable TLS for client connections (if required)
-* Use Network Policies to restrict access to FalkorDB pods
-* Regularly rotate credentials
+- Use Kubernetes secrets for storing passwords
+- Enable TLS for client connections (if required)
+- Use Network Policies to restrict access to FalkorDB pods
+- Regularly rotate credentials
 
 ### Performance
 
-* Choose appropriate storage class with good I/O performance
-* Monitor resource usage and scale vertically/horizontally as needed
-* For write-heavy workloads, consider disabling AOF timestamps
-* Use sharding topology for large datasets
+- Choose appropriate storage class with good I/O performance
+- Monitor resource usage and scale vertically/horizontally as needed
+- For write-heavy workloads, consider disabling AOF timestamps
+- Use sharding topology for large datasets
 
 ### Storage
 
-* Ensure storage class supports volume expansion
-* Configure appropriate storage size based on expected data growth
-* Use persistent volumes with replication for data durability
-* Test backup and restore procedures regularly
+- Ensure storage class supports volume expansion
+- Configure appropriate storage size based on expected data growth
+- Use persistent volumes with replication for data durability
+- Test backup and restore procedures regularly
 
 ## Troubleshooting
 
@@ -839,11 +839,11 @@ kubectl delete cluster -n demo falkordb-replication
 
 ## Additional Resources
 
-* [KubeBlocks Official Documentation](https://kubeblocks.io/docs/preview/user_docs/overview/introduction)
-* [KubeBlocks FalkorDB Examples](https://github.com/apecloud/kubeblocks-addons/tree/main/examples/falkordb)
-* [FalkorDB Documentation](https://docs.falkordb.com)
-* [Redis Sentinel Documentation](https://redis.io/docs/latest/operate/oss_and_stack/management/sentinel/)
-* [Kubernetes Operators](https://kubernetes.io/docs/concepts/extend-kubernetes/operator/)
+- [KubeBlocks Official Documentation](https://kubeblocks.io/docs/preview/user_docs/overview/introduction)
+- [KubeBlocks FalkorDB Examples](https://github.com/apecloud/kubeblocks-addons/tree/main/examples/falkordb)
+- [FalkorDB Documentation](https://docs.falkordb.com)
+- [Redis Sentinel Documentation](https://redis.io/docs/latest/operate/oss_and_stack/management/sentinel/)
+- [Kubernetes Operators](https://kubernetes.io/docs/concepts/extend-kubernetes/operator/)
 
 ## Summary
 

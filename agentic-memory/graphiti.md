@@ -13,35 +13,35 @@ description: "Build temporally-aware knowledge graphs with Graphiti and FalkorDB
 
 Graphiti provides a powerful abstraction layer for building knowledge graphs that:
 
-* **Track temporal changes**: Understand how entities and relationships evolve over time
-* **Support multi-tenancy**: Isolated memory spaces for different users or agents
-* **Enable hybrid search**: Combine semantic search with graph traversal
-* **Scale efficiently**: Built on top of FalkorDB's high-performance graph engine
+- **Track temporal changes**: Understand how entities and relationships evolve over time
+- **Support multi-tenancy**: Isolated memory spaces for different users or agents
+- **Enable hybrid search**: Combine semantic search with graph traversal
+- **Scale efficiently**: Built on top of FalkorDB's high-performance graph engine
 
 ## Why Graphiti + FalkorDB?
 
 ### FalkorDB's Added Value
 
-* **Multi-tenant, multi-agent memory**: Isolated graph instances for different users or agents, each with their own persistent memory
-* **High performance**: Fast graph operations and efficient memory usage
-* **Cloud and on-premises ready**: Works with FalkorDB Cloud or your own deployment
-* **Easy integration**: Seamless connection with Graphiti for scalable, production-ready knowledge graphs
+- **Multi-tenant, multi-agent memory**: Isolated graph instances for different users or agents, each with their own persistent memory
+- **High performance**: Fast graph operations and efficient memory usage
+- **Cloud and on-premises ready**: Works with FalkorDB Cloud or your own deployment
+- **Easy integration**: Seamless connection with Graphiti for scalable, production-ready knowledge graphs
 
 ### Use Cases
 
-* **AI memory for multi-agent systems**: Provide persistent, context-rich memory for each agent
-* **Enterprise knowledge management**: Aggregate and search across documents, conversations, and structured data
-* **Conversational AI**: Track facts, entities, and relationships over time for more accurate responses
-* **E-commerce**: Manage inventory, personalize recommendations, and track customer interactions over time
-* **Research and analytics**: Temporal and semantic search across large, heterogeneous datasets
+- **AI memory for multi-agent systems**: Provide persistent, context-rich memory for each agent
+- **Enterprise knowledge management**: Aggregate and search across documents, conversations, and structured data
+- **Conversational AI**: Track facts, entities, and relationships over time for more accurate responses
+- **E-commerce**: Manage inventory, personalize recommendations, and track customer interactions over time
+- **Research and analytics**: Temporal and semantic search across large, heterogeneous datasets
 
 ## Getting Started
 
 ### Prerequisites
 
-* Python 3.10 or higher
-* FalkorDB instance (Cloud or self-hosted)
-* OpenAI API key (for embeddings and LLM features)
+- Python 3.10 or higher
+- FalkorDB instance (Cloud or self-hosted)
+- OpenAI API key (for embeddings and LLM features)
 
 ### Installation
 
@@ -219,26 +219,26 @@ graphiti = Graphiti(
 
 If you can't connect to FalkorDB:
 
-* Verify your connection string format: `falkor://host:port`
-* Check if FalkorDB is running: `redis-cli ping`
-* Ensure credentials are correct for authenticated instances
+- Verify your connection string format: `falkor://host:port`
+- Check if FalkorDB is running: `redis-cli ping`
+- Ensure credentials are correct for authenticated instances
 
 ### Performance Optimization
 
-* Use batching for bulk operations
-* Monitor memory usage with `GRAPH.MEMORY USAGE` command
-* Consider graph partitioning for very large knowledge bases
+- Use batching for bulk operations
+- Monitor memory usage with `GRAPH.MEMORY USAGE` command
+- Consider graph partitioning for very large knowledge bases
 
 ## Resources
 
-* 📚 [Graphiti Documentation](https://help.getzep.com/graphiti/)
-* 🎥 [Workshop: How to Build a Knowledge Graph ft. Graphiti](https://www.youtube.com/watch?v=F4hwuLlISP4&lc=UgwPSaR6GAM_86g9AxJ4AaABAg)
-* 📓 [Blog: Get Started with Graphiti](https://www.falkordb.com/blog/graphiti-get-started/)
-* 💻 [Graphiti GitHub Repository](https://github.com/getzep/graphiti)
-* 📝 [Google Colab Example](https://colab.research.google.com/drive/1HbDPKlsz9tYfRGeWHn60vsWeGhFIsqyF?usp=sharing)
-* 🔗 [FalkorDB Configuration Guide](https://help.getzep.com/graphiti/configuration/graph-db-configuration#falkordb)
+- 📚 [Graphiti Documentation](https://help.getzep.com/graphiti/)
+- 🎥 [Workshop: How to Build a Knowledge Graph ft. Graphiti](https://www.youtube.com/watch?v=F4hwuLlISP4&lc=UgwPSaR6GAM_86g9AxJ4AaABAg)
+- 📓 [Blog: Get Started with Graphiti](https://www.falkordb.com/blog/graphiti-get-started/)
+- 💻 [Graphiti GitHub Repository](https://github.com/getzep/graphiti)
+- 📝 [Google Colab Example](https://colab.research.google.com/drive/1HbDPKlsz9tYfRGeWHn60vsWeGhFIsqyF?usp=sharing)
+- 🔗 [FalkorDB Configuration Guide](https://help.getzep.com/graphiti/configuration/graph-db-configuration#falkordb)
 
 ## Next Steps
 
-* Explore [Cognee](./cognee.md) for alternative memory management approaches
-* Learn about [GenAI Tools](/genai-tools) for graph reasoning and LLM integrations
+- Explore [Cognee](./cognee.md) for alternative memory management approaches
+- Learn about [GenAI Tools](/genai-tools) for graph reasoning and LLM integrations

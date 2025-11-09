@@ -22,7 +22,7 @@ graph.config get *
 
 # 2) (integer) 0
 
-#
+# 
 
 {% endcapture %}
 

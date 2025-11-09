@@ -18,9 +18,9 @@ OpenTelemetry is an observability framework that allows you to collect, process,
 
 ## Prerequisites
 
-* Python 3.8 or higher
-* FalkorDB server running (locally or remotely)
-* Basic understanding of Python and FalkorDB
+- Python 3.8 or higher
+- FalkorDB server running (locally or remotely)
+- Basic understanding of Python and FalkorDB
 
 ## Installation
 
@@ -342,9 +342,9 @@ logging.basicConfig(level=logging.DEBUG)
 
 ## Additional Resources
 
-* [OpenTelemetry Python Documentation](https://opentelemetry.io/docs/languages/python/)
-* [FalkorDB Python Client Documentation](https://github.com/FalkorDB/falkordb-py)
-* [OpenTelemetry Semantic Conventions](https://opentelemetry.io/docs/specs/semconv/)
+- [OpenTelemetry Python Documentation](https://opentelemetry.io/docs/languages/python/)
+- [FalkorDB Python Client Documentation](https://github.com/FalkorDB/falkordb-py)
+- [OpenTelemetry Semantic Conventions](https://opentelemetry.io/docs/specs/semconv/)
 
 ## Conclusion
 

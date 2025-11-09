@@ -21,25 +21,25 @@ Patterns are fully supported.
 
 ### Structural types
 
-* Nodes
-* Relationships
-* Path variables (alternating sequence of nodes and relationships).
++ Nodes
++ Relationships
++ Path variables (alternating sequence of nodes and relationships).
 
 ### Composite types
 
-* Lists
-* Maps
-* Temporal types (Date, DateTime, LocalDateTime, Time, LocalTime, Duration)
++ Lists
++ Maps
++ Temporal types (Date, DateTime, LocalDateTime, Time, LocalTime, Duration)
 
 ### Literal types
 
-* Numeric types (64-bit doubles and 64-bit signed integer representations)
-* String literals
-* Booleans
++ Numeric types (64-bit doubles and 64-bit signed integer representations)
++ String literals
++ Booleans
 
   **Unsupported:**
 
-* Hexadecimal and octal numerics
+- Hexadecimal and octal numerics
 
 ### Other
 
@@ -56,49 +56,49 @@ We do not support any of these properties at the type level, meaning nodes and r
 
 ### Reading Clauses
 
-* MATCH
-* OPTIONAL MATCH
++ MATCH
++ OPTIONAL MATCH
 
   **Unsupported:**
   
-* Label expressions
+- Label expressions
 
 ### Projecting Clauses
 
-* RETURN
-* AS
-* WITH
-* UNWIND
++ RETURN
++ AS
++ WITH
++ UNWIND
 
 ### Reading sub-clauses
 
-* WHERE
-* ORDER BY
-* SKIP
-* LIMIT
++ WHERE
++ ORDER BY
++ SKIP
++ LIMIT
 
 ### Writing Clauses
 
-* CREATE
-* DELETE
-    * We actually implement DETACH DELETE, the distinction being that relationships invalidated by node deletions are automatically deleted.
-* SET
++ CREATE
++ DELETE
+    + We actually implement DETACH DELETE, the distinction being that relationships invalidated by node deletions are automatically deleted.
++ SET
 
   **Unsupported:**
 
-* REMOVE (to modify properties)
-    * Properties can be deleted with SET [prop] = NULL.
+- REMOVE (to modify properties)
+    + Properties can be deleted with SET [prop] = NULL.
 
 ### Reading/Writing Clauses
 
-* MERGE
-* CALL (procedures)
-    * The currently-supported procedures are listed in [the Procedures documentation](/commands/graph.query#procedures).
++ MERGE
++ CALL (procedures)
+    - The currently-supported procedures are listed in [the Procedures documentation](/commands/graph.query#procedures).
 
 ### Set Operations
 
-* UNION
-* UNION ALL
++ UNION
++ UNION ALL
 
 ## Functions
 
@@ -106,8 +106,8 @@ The currently-supported functions are listed in [the Functions documentation](/c
 
   **Unsupported:**
 
-* Temporal arithmetic functions
-* User-defined functions
+- Temporal arithmetic functions
+- User-defined functions
 
 ## Operators
 
@@ -117,18 +117,18 @@ The currently-supported functions are listed in [the mathematical operators docu
 
 ### String operators
 
-* String operators (STARTS WITH, ENDS WITH, CONTAINS) are supported.
++ String operators (STARTS WITH, ENDS WITH, CONTAINS) are supported.
 
   **Unsupported:**
 
-* Regex operator
+- Regex operator
 
 ### Boolean operators
 
-* AND
-* OR
-* NOT
-* XOR
++ AND
++ OR
++ NOT
++ XOR
 
 ## Parameters
 
@@ -144,6 +144,7 @@ and is described in their documentation.
 
 ## Non-Cypher queries
 
-* FalkorDB provides the `GRAPH.EXPLAIN` command to print the execution plan of a provided query.
-* `GRAPH.DELETE` will remove a graph and all Redis keys associated with it.
-* We do not currently provide support for queries that retrieve schemas, though the LABELS and TYPE scalar functions may be used to get a graph overview.
++ FalkorDB provides the `GRAPH.EXPLAIN` command to print the execution plan of a provided query.
++ `GRAPH.DELETE` will remove a graph and all Redis keys associated with it.
+
+- We do not currently provide support for queries that retrieve schemas, though the LABELS and TYPE scalar functions may be used to get a graph overview.

@@ -12,10 +12,10 @@ The Weakly Connected Components (WCC) algorithm identifies groups of nodes conne
 
 WCC serves as a common algorithm in scenarios such as:
 
-* Community detection
-* Data cleaning and preprocessing
-* Large-scale network analysis
-* Detecting isolated or loosely connected subgraphs
+- Community detection
+- Data cleaning and preprocessing
+- Large-scale network analysis
+- Detecting isolated or loosely connected subgraphs
 
 ## Algorithm Details
 
@@ -25,8 +25,8 @@ WCC initializes by assigning each node to its own component. It iteratively scan
 
 WCC operates with a time complexity of **O(\|V\| + \|E\|)**, where:
 
-* **\|V\|** represents the total number of nodes
-* **\|E\|** represents the total number of edges
+- **\|V\|** represents the total number of nodes
+- **\|E\|** represents the total number of edges
 This linear complexity makes WCC efficient for large graphs.
 
 ## Syntax
@@ -61,9 +61,9 @@ Lets take this Social Graph as an example:
 
 There are 3 different communities in this graph:
 
-* Alice, Bob, Charlie
-* David, Emma
-* Frank
+- Alice, Bob, Charlie
+- David, Emma
+- Frank
 
 ### Create the Graph
 
@@ -115,3 +115,5 @@ CALL algo.WCC(null) yield node, componentId return collect(node.name), component
 | `[David, Emma]`            | 3           |
 | `[Frank]`                  | 5           |
 | `[Alice, Bob, Charlie]`    | 0           |
+
+```

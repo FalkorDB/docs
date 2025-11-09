@@ -25,11 +25,11 @@ In this documentation, we'll discuss the internal design and features of FalkorD
 FalkorDB is a graph database developed from scratch on top of Redis, using the new Redis Modules API to extend Redis
 with new commands and capabilities. Its main features include:
 
-* Simple, fast indexing and querying
-* Data stored in RAM using memory-efficient custom data structures
-* On-disk persistence
-* Tabular result sets
-* Uses the popular graph query language [openCypher](https://opencypher.org/)
+- Simple, fast indexing and querying
+- Data stored in RAM using memory-efficient custom data structures
+- On-disk persistence
+- Tabular result sets
+- Uses the popular graph query language [openCypher](https://opencypher.org/)
 
 ## A Little Taste: FalkorDB in Action
 
@@ -142,10 +142,10 @@ To accommodate typed nodes, one additional matrix is allocated per label, and a 
 
 This design lets FalkorDB modify its graph easily, including:
 
-* Adding new nodes simply extends matrices, adding additional rows and columns
-* Adding new relationships by setting the relevant entries at the relevant matrices
-* Removing relationships clears relevant entries
-* Deleting nodes by deleting matrix row/column.
+- Adding new nodes simply extends matrices, adding additional rows and columns
+- Adding new relationships by setting the relevant entries at the relevant matrices
+- Removing relationships clears relevant entries
+- Deleting nodes by deleting matrix row/column.
 
 One of the main reasons we chose to represent our graphs as sparse matrices is graph traversal.
 
@@ -185,16 +185,16 @@ MATCH (aldis::actor {name:"Aldis Hodge"})-[:act]->(m:movie)<-[:act]-(a:actor) WH
 
 FalkorDB will:
 
-* Parse the query, and build an abstract syntax tree (AST)
-* Compose traversal algebraic expressions
-* Build filter trees
-* Construct an optimized query execution plan composed of:
-    * Filtered traverse
-    * Conditional traverse
-    * Filter
-    * Project
-* Execute the plan
-* Populate a result set with matching entity attributes
+- Parse the query, and build an abstract syntax tree (AST)
+- Compose traversal algebraic expressions
+- Build filter trees
+- Construct an optimized query execution plan composed of:
+    - Filtered traverse
+    - Conditional traverse
+    - Filter
+    - Project
+- Execute the plan
+- Populate a result set with matching entity attributes
 
 ### Filter tree
 

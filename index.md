@@ -159,7 +159,6 @@ public class FalkorDBExample {
 use falkordb::{FalkorClientBuilder, FalkorConnectionInfo};
 
 # [tokio::main]
-
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // Connect to FalkorDB
     let connection_info: FalkorConnectionInfo = "falkor://127.0.0.1:6379"

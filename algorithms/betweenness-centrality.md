@@ -90,6 +90,6 @@ Expected result:
 
 ## Usage Notes
 
-* Scores are based on **all shortest paths** between node pairs.
-* Nodes that serve as bridges between clusters tend to score higher.
-* Can be computationally expensive on large, dense graphs.
+- Scores are based on **all shortest paths** between node pairs.
+- Nodes that serve as bridges between clusters tend to score higher.
+- Can be computationally expensive on large, dense graphs.

@@ -11,9 +11,9 @@ parent: "Integration"
 
 ## Get Started
 
-* [Obtaining the connector](#obtaining-the-connector)
-* [Configuring the connector](#configuring-the-connector)
-* [Kafka message format](#kafka-message-format)
+- [Obtaining the connector](#obtaining-the-connector)
+- [Configuring the connector](#configuring-the-connector)
+- [Kafka message format](#kafka-message-format)
 
 ---
 

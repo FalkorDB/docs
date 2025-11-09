@@ -224,8 +224,8 @@ The `TIMEOUT` query parameter of the `GRAPH.QUERY`, `GRAPH.RO_QUERY`, and `GRAPH
 
 #### Default
 
-* Before v2.10: `TIMEOUT` is off (set to `0`).
-* Since v2.10: `TIMEOUT` is not specified; `TIMEOUT_MAX` and `TIMEOUT_DEFAULT` are specified instead.
+- Before v2.10: `TIMEOUT` is off (set to `0`).
+- Since v2.10: `TIMEOUT` is not specified; `TIMEOUT_MAX` and `TIMEOUT_DEFAULT` are specified instead.
 
 #### Example
 
@@ -247,8 +247,8 @@ When a query execution time exceeds the maximal execution time, the query is abo
 
 #### Default
 
-* Before v2.10: unspecified and unsupported.
-* Since v2.10: `TIMEOUT_MAX` is off (set to `0`).
+- Before v2.10: unspecified and unsupported.
+- Since v2.10: `TIMEOUT_MAX` is off (set to `0`).
 
 #### Example
 
@@ -268,8 +268,8 @@ For a given query, this default maximal execution time can be overridden by the 
 
 #### Default
 
-* Before v2.10: unspecified and unsupported.
-* Since v2.10: `TIMEOUT_DEFAULT` is equal to `TIMEOUT_MAX` (set to `0`).
+- Before v2.10: unspecified and unsupported.
+- Since v2.10: `TIMEOUT_DEFAULT` is equal to `TIMEOUT_MAX` (set to `0`).
 
 #### Example
 
@@ -363,11 +363,11 @@ A number within the range [0, 1000]
 
 ### Query Timeout
 
-* Before v2.10, or if `TIMEOUT_DEFAULT` and `TIMEOUT_MAX` are not specified:
+- Before v2.10, or if `TIMEOUT_DEFAULT` and `TIMEOUT_MAX` are not specified:
 
   `TIMEOUT` allows overriding the `TIMEOUT` configuration parameter for a single read query. Write queries do not timeout.
 
-* Since v2.10, if either `TIMEOUT_DEFAULT` or `TIMEOUT_MAX` are specified:
+- Since v2.10, if either `TIMEOUT_DEFAULT` or `TIMEOUT_MAX` are specified:
 
   `TIMEOUT` allows overriding the `TIMEOUT_DEFAULT` configuration parameter value for a single `GRAPH.QUERY`, `GRAPH.RO_QUERY`, or `GRAPH.PROFILE` command. The `TIMEOUT` value cannot exceed the `TIMEOUT_MAX` value (the command would abort with a `(error) The query TIMEOUT parameter value cannot exceed the TIMEOUT_MAX configuration parameter value` reply).
 

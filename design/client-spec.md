@@ -200,8 +200,8 @@ The `ValueType` for the first entry is `VALUE_NODE`. The node representation con
 
 The `ValueType` for the first entry is `VALUE_EDGE`. The edge representation differs from the node representation in two respects:
 
-* Each relation has exactly one type, rather than the 0+ labels a node may have.
-* A relation is emitted with the IDs of its source and destination nodes.
+- Each relation has exactly one type, rather than the 0+ labels a node may have.
+- A relation is emitted with the IDs of its source and destination nodes.
 
 As such, the complete representation is as follows:
 
