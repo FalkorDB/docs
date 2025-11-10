@@ -652,3 +652,5 @@ Addon
 addon
 LoadBalancer
 NodePort
+orphaned
+replicas
