@@ -2,6 +2,9 @@
 title: "Operations"
 nav_order: 10
 description: "Configuring FalkorDB Docker"
+redirect_from:
+  - /operation
+  - /operation.html
 ---
 
 # Operations
