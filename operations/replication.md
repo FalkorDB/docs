@@ -3,6 +3,9 @@ title: "Replication"
 nav_order: 2
 description: "Configuring FalkorDB Docker for Replication"
 parent: "Operations"
+redirect_from:
+  - /operation/replication
+  - /operation/replication.html
 ---
 
 # Configuring FalkorDB Docker for Replication
