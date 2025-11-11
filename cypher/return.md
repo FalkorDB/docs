@@ -31,7 +31,6 @@ and both know Dominick.
 DISTINCT will make sure Dominick will only appear once
 in the final result set.
 
-
 Return can also be used to aggregate data, similar to group by in SQL.
 
 Once an aggregation function is added to the return

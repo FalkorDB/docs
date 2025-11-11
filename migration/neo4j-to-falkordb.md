@@ -41,7 +41,7 @@ To extract the ontology from your Neo4j database and generate a template config 
 
 ```bash
 python3 neo4j_to_csv_extractor.py --password <your-neo4j-password> --generate-template <your-template>.json --analyze-only
-```
+```text
 
 ### Extractor Usage
 
@@ -52,9 +52,10 @@ python3 neo4j_to_csv_extractor.py [-h] [--uri URI] [--username USERNAME] --passw
                                   [--config CONFIG] [--generate-template GENERATE_TEMPLATE]
                                   [--analyze-only] [--tenant-mode {label,property}]
                                   [--tenant-filter TENANT_FILTER]
-```
+```text
 
 **Options:**
+
 - `--uri URI`: Neo4j URI (default: bolt://localhost:7687)
 - `--username USERNAME`: Neo4j username (default: neo4j)
 - `--password PASSWORD`: Neo4j password (required)
@@ -73,7 +74,7 @@ python3 neo4j_to_csv_extractor.py [-h] [--uri URI] [--username USERNAME] --passw
 
 When analyzing a database, you'll see output similar to:
 
-```
+```text
 Connecting to Neo4j at bolt://localhost:7687 with username 'neo4j'...
 ✅ Loaded configuration from migrate_config.json
 ✅ Successfully connected to Neo4j!
@@ -97,7 +98,7 @@ Connecting to Neo4j at bolt://localhost:7687 with username 'neo4j'...
   Person: 133 nodes
   ACTED_IN: 172 relationships
   ...
-```
+```text
 
 ## Step 3: Extracting Data from Neo4j
 
@@ -105,9 +106,10 @@ To extract data from Neo4j and generate CSV files:
 
 ```bash
 python3 neo4j_to_csv_extractor.py --password <your-neo4j-password> --config migrate_config.json
-```
+```text
 
 The script will:
+
 - Read data from Neo4j
 - Create CSV files in the `csv_output` subfolder
 - Generate headers and content based on the configuration
@@ -120,22 +122,25 @@ The script will:
 If your Neo4j database contains multi-tenant data, you can extract each tenant's data into separate subdirectories:
 
 **Using property-based tenant segregation:**
+
 ```bash
 python3 neo4j_to_csv_extractor.py --password <your-neo4j-password> \
   --tenant-mode property --tenant-filter tenantId
-```
+```text
 
 This will:
+
 - Discover all distinct values of the `tenantId` property
 - Create a subdirectory for each tenant (e.g., `csv_output/tenant_cloudserve/`, `csv_output/tenant_learnhub/`, `csv_output/tenant_shopfast/`)
 - Export each tenant's nodes and relationships to their respective subdirectories
 - Automatically omit the `tenantId` property from CSV exports (since it's encoded in the folder name)
 
 **Using label-based tenant segregation:**
+
 ```bash
 python3 neo4j_to_csv_extractor.py --password <your-neo4j-password> \
   --tenant-mode label --tenant-filter TenantLabel
-```
+```text
 
 This filters nodes that have the specified label, allowing you to extract data for tenants organized by labels.
 
@@ -157,6 +162,7 @@ The extraction creates the following files in the `csv_output` directory:
 Set up FalkorDB on your local machine following the [Getting Started guide](https://docs.falkordb.com/getting_started.html).
 
 You can use either:
+
 - The full deployment with browser (port 3000)
 - The server-only option (port 6379)
 
@@ -166,9 +172,10 @@ Load the CSV data into FalkorDB using the Python loader:
 
 ```bash
 python3 falkordb_csv_loader.py MOVIES --port 6379 --stats
-```
+```text
 
 **Options:**
+
 - `graph_name`: Target graph name in FalkorDB (required). When using `--multi-graph` mode, this serves as the prefix for tenant-specific graphs
 - `--host HOST`: FalkorDB host (default: localhost)
 - `--port PORT`: FalkorDB port (default: 6379)
@@ -186,16 +193,18 @@ If you extracted multi-tenant data using the `--tenant-mode` option, you can loa
 
 ```bash
 python3 falkordb_csv_loader.py MYAPP --multi-graph --port 6379
-```
+```text
 
 This will:
+
 - Scan for `tenant_*` subdirectories in `csv_output/`
 - Create a separate graph for each tenant (e.g., `MYAPP_shopfast`, `MYAPP_cloudserve`, `MYAPP_learnhub`)
 - Load each tenant's data into its own isolated graph
 - Provide detailed progress reporting per tenant
 
 Example output:
-```
+
+```text
 🗂️  Found 3 tenant directories: ['tenant_cloudserve', 'tenant_learnhub', 'tenant_shopfast']
    Each will be loaded into a separate graph
 
@@ -212,7 +221,7 @@ Example output:
    Loaded 3 tenants into separate graphs
    Total time: 0:00:07.891
 ================================================================================
-```
+```text
 
 ### Using FalkorDB-Loader-RS (Recommended for Large Datasets)
 
@@ -233,7 +242,7 @@ For significantly improved loading speed and performance, especially with large 
 git clone https://github.com/FalkorDB/FalkorDB-Loader-RS
 cd FalkorDB-Loader-RS
 cargo build --release
-```
+```text
 
 The binary will be available at `target/release/falkordb-loader`.
 
@@ -241,7 +250,7 @@ The binary will be available at `target/release/falkordb-loader`.
 
 ```bash
 ./target/release/falkordb-loader MOVIES
-```
+```text
 
 #### Advanced Usage
 
@@ -256,7 +265,7 @@ The binary will be available at `target/release/falkordb-loader`.
   --merge-mode \
   --stats \
   --progress-interval 500
-```
+```text
 
 #### Command-Line Options
 
@@ -284,7 +293,7 @@ For more details, see the [FalkorDB-Loader-RS repository](https://github.com/Fal
 
 ### Example Output
 
-```
+```text
 Connecting to FalkorDB at localhost:6379...
 ✅ Connected to FalkorDB graph 'MOVIES'
 Found 2 node files and 6 edge files
@@ -321,7 +330,7 @@ Relationships:
   ACTED_IN: 172
   DIRECTED: 44
   ...
-```
+```text
 
 ## Step 5: Validating Content
 
@@ -331,7 +340,7 @@ Example query:
 
 ```cypher
 MATCH p=()-[:REVIEWED]->() RETURN p LIMIT 25;
-```
+```text
 
 You can visualize and compare the results in both the Neo4j Browser and FalkorDB Browser to ensure the migration was successful.
 
@@ -346,4 +355,3 @@ You can visualize and compare the results in both the Neo4j Browser and FalkorDB
 - Explore [FalkorDB Cypher Language](/cypher) for querying your graph
 - Learn about [FalkorDB Operations](/operations) for production deployments
 - Check out [FalkorDB Integration](/integration) options
-

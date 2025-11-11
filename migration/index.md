@@ -15,4 +15,3 @@ The Migration section provides comprehensive guides for migrating your graph dat
 - [Neo4j to FalkorDB](./neo4j-to-falkordb.md): Export data from Neo4j and import it into FalkorDB using CSV files.
 - [Kuzu to FalkorDB](./kuzu-to-falkordb.md): Transfer your Kuzu database to FalkorDB with automated schema discovery.
 - [RDF to FalkorDB](./rdf-to-falkordb.md): Migrate RDF (TTL) data to FalkorDB with schema extraction and CSV export.
-

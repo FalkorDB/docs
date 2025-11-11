@@ -66,6 +66,7 @@ After an index is explicitly created, it will automatically be used by queries t
 
 {% capture shell_2 %}
 GRAPH.EXPLAIN DEMO_GRAPH "MATCH (p:Person) WHERE p.age > 80 RETURN p"
+
 1) "Results"
 2) "    Project"
 3) "        Index Scan | (p:Person)"
@@ -74,10 +75,15 @@ GRAPH.EXPLAIN DEMO_GRAPH "MATCH (p:Person) WHERE p.age > 80 RETURN p"
 {% capture python_2 %}
 result = graph.explain("MATCH (p:Person) WHERE p.age > 80 RETURN p")
 print(result)
-# Output:
+
+# Output
+
 # Results
-#     Project
-#         Index Scan | (p:Person)
+
+# Project
+
+# Index Scan | (p:Person)
+
 {% endcapture %}
 
 {% capture javascript_2 %}
@@ -161,6 +167,8 @@ let result = graph.query("WITH point({latitude:41.4045886, longitude:-75.6969532
 
 Geospatial indexes can currently only be leveraged with `<` and `<=` filters; matching nodes outside of the given radius is performed using conventional matching.
 
+## Relationship Indexes
+
 ### Creating an index for a relationship type
 
 For a relationship type, the index creation syntax is:
@@ -191,6 +199,7 @@ Then the execution plan for using the index:
 
 {% capture shell_6 %}
 GRAPH.EXPLAIN DEMO_GRAPH "MATCH (p:Person {id: 0})-[f:FOLLOW]->(fp) WHERE 0 < f.created_at AND f.created_at < 1000 RETURN fp"
+
 1) "Results"
 2) "    Project"
 3) "        Edge By Index Scan | [f:FOLLOW]"
@@ -200,11 +209,17 @@ GRAPH.EXPLAIN DEMO_GRAPH "MATCH (p:Person {id: 0})-[f:FOLLOW]->(fp) WHERE 0 < f.
 {% capture python_6 %}
 result = graph.explain("MATCH (p:Person {id: 0})-[f:FOLLOW]->(fp) WHERE 0 < f.created_at AND f.created_at < 1000 RETURN fp")
 print(result)
-# Output:
+
+# Output
+
 # Results
-#     Project
-#         Edge By Index Scan | [f:FOLLOW]
-#             Node By Index Scan | (p:Person)
+
+# Project
+
+# Edge By Index Scan | [f:FOLLOW]
+
+# Node By Index Scan | (p:Person)
+
 {% endcapture %}
 
 {% capture javascript_6 %}
@@ -240,6 +255,8 @@ println!("{}", result);
 {% include code_tabs.html id="relationship_explain_tabs" shell=shell_6 python=python_6 javascript=javascript_6 java=java_6 rust=rust_6 %}
 
 This can significantly improve the runtime of queries that traverse super nodes or when we want to start traverse from relationships.
+
+## Deleting Indexes
 
 ### Deleting an index for a node label
 
@@ -302,24 +319,32 @@ Note: Complex types like nested arrays, maps, or vectors are not supported for i
 The following example demonstrates how to index and search an array property:
 
 {% capture shell_9 %}
+
 # Create a node with an array property
+
 GRAPH.QUERY DEMO_GRAPH "CREATE (:Person {samples: [-21, 30.5, 0, 90, 3.14]})"
 
 # Create an index on the array property
+
 GRAPH.QUERY DEMO_GRAPH "CREATE INDEX FOR (p:Person) ON (p.samples)"
 
 # Use the index to search for nodes containing a specific value in the array
+
 GRAPH.QUERY DEMO_GRAPH "MATCH (p:Person) WHERE 90 IN p.samples RETURN p"
 {% endcapture %}
 
 {% capture python_9 %}
+
 # Create a node with an array property
+
 graph.query("CREATE (:Person {samples: [-21, 30.5, 0, 90, 3.14]})")
 
 # Create an index on the array property
+
 graph.query("CREATE INDEX FOR (p:Person) ON (p.samples)")
 
 # Use the index to search for nodes containing a specific value in the array
+
 result = graph.query("MATCH (p:Person) WHERE 90 IN p.samples RETURN p")
 {% endcapture %}
 
@@ -478,6 +503,7 @@ An index can be invoked to match any whole words contained within:
 {% capture shell_14 %}
 GRAPH.QUERY DEMO_GRAPH
 "CALL db.idx.fulltext.queryNodes('Movie', 'Book') YIELD node RETURN node.title"
+
 1) 1) "node.title"
 2) 1) 1) "The Jungle Book"
    2) 1) "The Book of Life"
@@ -488,9 +514,13 @@ GRAPH.QUERY DEMO_GRAPH
 result = graph.query("CALL db.idx.fulltext.queryNodes('Movie', 'Book') YIELD node RETURN node.title")
 for record in result:
     print(record["node.title"])
-# Output:
+
+# Output
+
 # The Jungle Book
+
 # The Book of Life
+
 {% endcapture %}
 
 {% capture javascript_14 %}
@@ -593,6 +623,7 @@ graph.query("CALL db.idx.fulltext.drop('Movie')").execute().await?;
 {% include code_tabs.html id="fulltext_drop_tabs" shell=shell_15 python=python_15 javascript=javascript_15 java=java_15 rust=rust_15 %}
 
 ## Creating Full-Text indexing for Relation Labels
+
 To create a full-text index on the name property of all relations with the label Manager and enable phonetic search, use the following syntax:
 
 {% capture shell_16 %}
@@ -616,7 +647,9 @@ graph.query("CREATE FULLTEXT INDEX FOR ()-[m:Manager]-() on (m.name)").execute()
 {% endcapture %}
 
 {% include code_tabs.html id="fulltext_relation_create_tabs" shell=shell_16 python=python_16 javascript=javascript_16 java=java_16 rust=rust_16 %}
+
 ## Querying with a Full-Text Index
+
 To search for specific words within the indexed relations, use:
 
 {% capture shell_17 %}
@@ -643,6 +676,7 @@ let result = graph.query("CALL db.idx.fulltext.queryRelationships('Manager', 'Ch
 {% include code_tabs.html id="fulltext_relation_query_tabs" shell=shell_17 python=python_17 javascript=javascript_17 java=java_17 rust=rust_17 %}
 
 ## Deleting a Full-Text Index
+
 To delete the full-text index for a specific relation label, use:
 
 {% capture shell_18 %}
@@ -679,7 +713,8 @@ CREATE VECTOR INDEX FOR <entity_pattern> ON <entity_attribute> OPTIONS <options>
 ```
 
 The options are:
-```
+
+```json
 {
    dimension: INT, // Requiered, length of the vector to be indexed
    similarityFunction: STRING, // Requiered, currently only euclidean or cosine are allowed

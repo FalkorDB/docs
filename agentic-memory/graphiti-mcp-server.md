@@ -19,6 +19,7 @@ The [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) is an open 
 ## Overview
 
 The Graphiti MCP Server provides:
+
 - **Persistent Memory**: Store conversation history, facts, and relationships in a knowledge graph
 - **Contextual Retrieval**: Query the graph to retrieve relevant information for AI responses
 - **Cross-Session Memory**: Maintain knowledge across multiple conversations and sessions
@@ -28,6 +29,7 @@ The Graphiti MCP Server provides:
 ## Prerequisites
 
 Before you begin, ensure you have:
+
 - Docker installed on your system
 - An OpenAI API key (for LLM operations)
 - A FalkorDB instance running (or use the bundled Docker setup)
@@ -203,6 +205,7 @@ Add the following configuration:
 **Note**: The MCP server uses Server-Sent Events (SSE) for real-time communication between the AI client and the knowledge graph. The `OPENAI_API_KEY` is already configured in the MCP server's Docker environment, so you don't need to specify it again here.
 
 **After configuration**:
+
 1. Restart Claude Desktop to apply the changes
 2. Look for the MCP server indicator in Claude's interface
 3. Claude will now have access to persistent memory through the knowledge graph
@@ -236,18 +239,18 @@ Once configured, test the connection with these steps:
 2. **Look for the MCP indicator** in your client's interface
 3. **Test with a simple prompt**:
 
-   ```
+   ```text
    "Remember that my favorite programming language is Python"
    ```
-   
+
    The AI should confirm it has stored this information.
 
 4. **Verify the memory**:
 
-   ```
+   ```text
    "What do you remember about my programming language preferences?"
    ```
-   
+
    The AI should respond with "Python" or reference your previous statement.
 
 5. **Check the graph** (optional):
@@ -257,6 +260,7 @@ Once configured, test the connection with these steps:
    - You should see nodes representing the stored information
 
 **More example prompts**:
+
 - "Store this fact: I'm working on a project called MyApp"
 - "What projects am I working on?"
 - "Remember that I prefer dark mode in my IDE"
@@ -270,30 +274,32 @@ The Graphiti MCP server exposes the following capabilities to AI clients:
 ### Tools
 
 - **`add_episode`**: Store new information as an episode in the knowledge graph
-  - Extracts entities and relationships
-  - Adds temporal context
-  - Links to existing knowledge
+    - Extracts entities and relationships
+    - Adds temporal context
+    - Links to existing knowledge
 
 - **`search`**: Query the knowledge graph for relevant information
-  - Semantic search using embeddings
-  - Graph traversal for connected information
-  - Temporal filtering
+    - Semantic search using embeddings
+    - Graph traversal for connected information
+    - Temporal filtering
 
 - **`get_context`**: Retrieve contextual information for a conversation
-  - Builds relevant context from the graph
-  - Returns connected entities and relationships
+    - Builds relevant context from the graph
+    - Returns connected entities and relationships
 
 ### Graph Schema
 
 The Graphiti MCP server stores information in FalkorDB using the following schema:
 
 **Node Types**:
+
 - **`Entity`**: Represents people, places, things, or concepts
-  - Properties: `name`, `entity_type`, `summary`
+    - Properties: `name`, `entity_type`, `summary`
 - **`Episode`**: Represents events or pieces of information
-  - Properties: `name`, `content`, `timestamp`, `source`
+    - Properties: `name`, `content`, `timestamp`, `source`
 
 **Relationship Types**:
+
 - **`RELATES_TO`**: Connects entities that are related
 - **`MENTIONED_IN`**: Links entities to episodes where they appear
 - **`OCCURRED_AFTER`**: Creates temporal ordering between episodes
@@ -308,6 +314,7 @@ The Graphiti MCP server stores information in FalkorDB using the following schem
 > **Important**: The Graphiti MCP server is designed to be used by MCP clients (like Claude Desktop or Cursor) via the Server-Sent Events (SSE) transport protocol. It does **not** expose HTTP REST API endpoints for direct programmatic access.
 
 The server only exposes:
+
 - `/sse` - Server-Sent Events endpoint for MCP protocol communication
 
 To interact with the Graphiti knowledge graph programmatically, you have two options:
@@ -412,6 +419,7 @@ MATCH (n) RETURN n LIMIT 25
 **Problem**: MCP server cannot connect to FalkorDB
 
 **Solutions**:
+
 - Verify FalkorDB is running: `docker ps | grep falkordb`
 - Test FalkorDB connection: `docker exec -it <falkordb-container-name> redis-cli PING` (should return `PONG`)
 - Check network connectivity: Use `host.docker.internal` for local FalkorDB when running MCP server in Docker
@@ -424,6 +432,7 @@ MATCH (n) RETURN n LIMIT 25
 **Problem**: FalkorDB authentication failed
 
 **Solutions**:
+
 - Ensure `FALKORDB_USERNAME` and `FALKORDB_PASSWORD` are set correctly
 - For FalkorDB Cloud, use your cloud credentials
 - For local instances without auth, leave username/password empty
@@ -433,6 +442,7 @@ MATCH (n) RETURN n LIMIT 25
 **Problem**: LLM operations fail
 
 **Solutions**:
+
 - Verify your `OPENAI_API_KEY` is valid
 - Check you have sufficient API credits
 - Ensure you have access to the specified model (default: `gpt-4o-mini`)
@@ -443,6 +453,7 @@ MATCH (n) RETURN n LIMIT 25
 **Problem**: Claude Desktop or Cursor cannot connect to MCP server
 
 **Solutions**:
+
 - Verify the MCP server is running: `docker ps | grep graphiti-mcp`
 - Check the server logs: `docker logs graphiti-mcp`
 - Test the SSE endpoint: `curl http://localhost:8000/sse`
@@ -456,6 +467,7 @@ MATCH (n) RETURN n LIMIT 25
 **Problem**: Knowledge is lost between sessions
 
 **Solutions**:
+
 - Ensure FalkorDB has persistent storage configured
 - Check that the Docker volume is mounted correctly
 - Verify the graph name is consistent across sessions
@@ -476,9 +488,9 @@ MATCH (n) RETURN n LIMIT 25
 - **Indexing**: FalkorDB automatically creates indexes for optimal query performance
 - **Batch Operations**: For large data loads, consider batching multiple episodes
 - **Graph Size**: Monitor graph size and consider archiving old episodes to separate graphs
-- **Model Selection**: 
-  - Use `gpt-4o-mini` for cost-effective operations
-  - Use `gpt-5` for better accuracy with complex relationships
+- **Model Selection**:
+    - Use `gpt-4o-mini` for cost-effective operations
+    - Use `gpt-5` for better accuracy with complex relationships
 - **Connection Pooling**: The MCP server handles connection pooling automatically
 - **Query Optimization**: Use specific entity names and filters in search queries for faster results
 
@@ -504,7 +516,7 @@ MATCH (n) RETURN n LIMIT 25
 
 Store personal preferences, tasks, and information:
 
-```
+```text
 You: "Remember that I prefer Python over JavaScript"
 AI: "I'll remember that you prefer Python over JavaScript."
 
@@ -516,7 +528,7 @@ AI: "You prefer Python over JavaScript."
 
 Build a knowledge base about your projects:
 
-```
+```text
 You: "Store this: MyApp is a web application built with React and FastAPI"
 AI: "I've stored that MyApp is a web application built with React and FastAPI."
 
@@ -528,7 +540,7 @@ AI: "MyApp uses React and FastAPI."
 
 Remember meeting discussions and action items:
 
-```
+```text
 You: "In today's meeting, we decided to migrate to FalkorDB for the knowledge graph backend"
 AI: "I'll remember that decision from today's meeting."
 

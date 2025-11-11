@@ -8,8 +8,8 @@ parent: "Commands"
 
 # ACL
 
-The ACL command in FalkorDB provides tools for managing Access Control Lists, 
-enabling administrators to control user permissions at a granular level. 
+The ACL command in FalkorDB provides tools for managing Access Control Lists,
+enabling administrators to control user permissions at a granular level.
 This command is crucial for maintaining secure access to your FalkorDB instances.
 
 Usage: `ACL [SUBCOMMAND] [arg1] [arg2] ...`
@@ -24,19 +24,19 @@ Usage: `ACL HELP`
 
 #### Example
 
-```
+```sh
 > ACL HELP
-```
+```sh
 
 #### Output
 
-```
+```sh
 1) "GETUSER"
 2) "SETUSER"
 3) "DELUSER"
 4) "LIST"
 ...
-```
+```sh
 
 ### ACL SETUSER
 
@@ -55,9 +55,9 @@ Usage: `ACL SETUSER <username> [rule1] [rule2] ...`
 
 #### Example
 
-```
+```sh
 > ACL SETUSER john on >password123 +GRAPH.LIST +GRAPH.RO_QUERY ~*
-```
+```sh
 
 ### ACL GETUSER
 
@@ -68,19 +68,19 @@ Usage: `ACL GETUSER <username>`
 
 #### Example
 
-```
+```sh
 > ACL GETUSER john
-```
+```sh
 
 #### Output
 
-```
+```sh
 1) "on"
 2) ">password123"
 3) "+GRAPH.LIST"
 4) "+GRAPH.RO_QUERY"
 5) "~*"
-```
+```sh
 
 ### ACL DELUSER
 
@@ -90,9 +90,9 @@ Usage: `ACL DELUSER <username>`
 
 #### Example
 
-```
+```sh
 > ACL DELUSER john
-```
+```sh
 
 ### ACL LIST
 
@@ -102,17 +102,17 @@ Usage: `ACL LIST`
 
 #### Example
 
-```
+```sh
 > ACL LIST
-```
+```sh
 
 #### Output
 
-```
+```sh
 1) "admin"
 2) "john"
 3) "guest"
-```
+```sh
 
 ### ACL LOG
 
@@ -124,9 +124,9 @@ Usage: `ACL LOG [count]`
 
 #### Example
 
-```
+```sh
 > ACL LOG 10
-```
+```sh
 
 ## Notes
 

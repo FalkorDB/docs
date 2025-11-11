@@ -19,12 +19,19 @@ Note: As detailed in the link above, not all FalkorDB configuration parameters c
 graph.config get TIMEOUT
 graph.config set TIMEOUT 10000
 graph.config get TIMEOUT
-# Output:
+
+# Output
+
 # 1) "TIMEOUT"
+
 # 2) (integer) 0
+
 # OK
+
 # 1) "TIMEOUT"
+
 # 2) (integer) 10000
+
 {% endcapture %}
 
 {% capture python_0 %}
@@ -61,8 +68,11 @@ println!("{:?}", client.get_config("TIMEOUT")?);
 
 {% capture shell_1 %}
 graph.config set THREAD_COUNT 10
-# Output:
+
+# Output
+
 # (error) This configuration parameter cannot be set at run-time
+
 {% endcapture %}
 
 {% capture python_1 %}

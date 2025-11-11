@@ -50,11 +50,12 @@ After deployment, you can access your FalkorDB instance:
 2. Click on the FalkorDB service
 3. Then click on the public domain to open the browser
 <img width="2358" height="628" alt="image" src="https://github.com/user-attachments/assets/895a0039-2b23-4fb3-b9dc-273e94387a1d" />
-   
+
 4. Find the FALKORDB_PASSWORD in the service variables settings
 5. Use the FALKORDB_PASSWORD in your browser to login to your database
-   
+
 Defaults are:
+
 * Host: falkordb.railway.internal
 * Port: 16379
 * Username: default
@@ -65,7 +66,7 @@ Defaults are:
 
 To connect from your application or command line:
 
-Locate the FALKORDB_PRIVATE_URL or the FALKORDB_PUBLIC_URL: 
+Locate the FALKORDB_PRIVATE_URL or the FALKORDB_PUBLIC_URL:
 
 <img width="2411" height="1208" alt="image" src="https://github.com/user-attachments/assets/e355e2a7-d290-4cdc-b7e5-a3f593f72ecb" />
 

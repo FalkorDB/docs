@@ -10,7 +10,7 @@ nav_order: 999
 ## Abstract
 
 Graph-based data is everywhere nowadays. Facebook, Google, Twitter and Pinterest are just a few who've realize the power
-behind relationship data and are utilizing it to its fullest. As a direct result, we see a rise both in interest for and 
+behind relationship data and are utilizing it to its fullest. As a direct result, we see a rise both in interest for and
 the variety of graph data solutions.
 
 With the introduction of [Redis Modules](http://antirez.com/news/106) we've recognized the great potential of introducing a
@@ -37,10 +37,10 @@ Let’s look at some of the key concepts of FalkorDB using this example over the
 
 ### Constructing a graph
 
-It is common to represent entities as nodes within a graph. In this example, 
-we'll create a small graph with both actors and movies as its entities, 
+It is common to represent entities as nodes within a graph. In this example,
+we'll create a small graph with both actors and movies as its entities,
 and an "act" relation that will connect actors to the movies they acted in.
-We'll use the graph.QUERY command to issue a CREATE query, 
+We'll use the graph.QUERY command to issue a CREATE query,
 which will introduce new entities and relations to our graph.
 
 ```sh
@@ -151,7 +151,7 @@ One of the main reasons we chose to represent our graphs as sparse matrices is g
 
 ### Traversal
 
-Graph traversal is done by matrix multiplication. For example, if we wanted to find friends of friends for every node in the graph, 
+Graph traversal is done by matrix multiplication. For example, if we wanted to find friends of friends for every node in the graph,
 this traversal can be expressed by FOF = F^2. F stands for the friendship relation matrix, and the result matrix FOF summarizes the traversal.
 The rows of the FOF represent source nodes and its columns represent friends who are two hops away: if FOF[i,j] = 1 then j is a friend of a friend of i.
 

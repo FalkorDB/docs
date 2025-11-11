@@ -26,7 +26,6 @@ YIELD path, pathWeight, pathCost
 
 ## Parameters
 
-
 | Name            | Type     | Description                                                                          |
 |-----------------|----------|--------------------------------------------------------------------------------------|
 | `sourceNode`    | Node     | Starting node                                                                        |
@@ -46,12 +45,11 @@ YIELD path, pathWeight, pathCost
 | `pathWeight` | Integer | Sum of the weightProp across the path          |
 | `pathCost`   | Integer | Sum of the costProp across the path (if used)  |
 
+## Examples
 
-## Examples:
 Lets take this Road Network Graph as an example:
 
 ![Road network](../images/road_network.png)
-
 
 ### Example: All Shortest Paths by Distance (up to 10 km)
 
@@ -69,16 +67,17 @@ RETURN pathCost, [n in nodes(path) | n.name] AS pathNodes
 ORDER BY pathCost
 ```
 
-#### Expected Result:
-| pathCost |  pathNodes |   
+#### Expected Result
+
+| pathCost |  pathNodes |
 |----------| ---------- |
-| `2`      |  [A, D]    | 
-| `3`      |  [A, B]    | 
-| `6`      |  [A, D, C] | 
-| `7`      |  [A, D, E] | 
-| `8`      |  [A, B, D] | 
-| `8`      |  [A, C]    | 
-| `10`     |  [A, B, E] | 
+| `2`      |  [A, D]    |
+| `3`      |  [A, B]    |
+| `6`      |  [A, D, C] |
+| `7`      |  [A, D, E] |
+| `8`      |  [A, B, D] |
+| `8`      |  [A, C]    |
+| `10`     |  [A, B, E] |
 
 ---
 
@@ -97,12 +96,12 @@ RETURN pathWeight, pathCost, [n in nodes(path) | n.name] AS pathNodes
 ORDER BY pathWeight
 ```
 
-#### Expected Result:
-| pathWeight | pathCost |  pathNodes |   
-| -----------|----------| ---------- |
-| `2`        | `1`      |  [A, D]    | 
-| `3`        | `1`      |  [A, B]    | 
-| `6`        | `2`      |  [A, D, C] | 
-| `7`        | `2`      |  [A, D, E] | 
-| `8`        | `1`      |  [A, C]    | 
+#### Expected Result
 
+| pathWeight | pathCost |  pathNodes |
+| -----------|----------| ---------- |
+| `2`        | `1`      |  [A, D]    |
+| `3`        | `1`      |  [A, B]    |
+| `6`        | `2`      |  [A, D, C] |
+| `7`        | `2`      |  [A, D, E] |
+| `8`        | `1`      |  [A, C]    |

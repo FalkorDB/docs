@@ -22,6 +22,7 @@ The core idea of Betweenness Centrality is that a node is more important if it l
 ## Syntax
 
 The procedure has the following call signature:
+
 ```cypher
 CALL algo.betweenness({
   nodeLabels: [<node_label>],
@@ -44,7 +45,7 @@ YIELD node, score
 | `node`  | Node  | The node being evaluated                      |
 | `score` | Float | The betweenness centrality score for the node |
 
-## Example:
+## Example
 
 Lets take this Social Graph as an example:
 ![Social Graph](../images/between.png)

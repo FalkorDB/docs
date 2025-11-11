@@ -25,7 +25,6 @@ Patterns are fully supported.
 + Relationships
 + Path variables (alternating sequence of nodes and relationships).
 
-
 ### Composite types
 
 + Lists
@@ -147,4 +146,5 @@ and is described in their documentation.
 
 + FalkorDB provides the `GRAPH.EXPLAIN` command to print the execution plan of a provided query.
 + `GRAPH.DELETE` will remove a graph and all Redis keys associated with it.
+
 - We do not currently provide support for queries that retrieve schemas, though the LABELS and TYPE scalar functions may be used to get a graph overview.

@@ -11,6 +11,7 @@ A streamlined 2-step process to migrate data from Kuzu graph database into Falko
 ## Overview
 
 This migration tool bridges the gap between Kuzu and FalkorDB by:
+
 1. Automatically discovering your Kuzu database schema
 2. Exporting all nodes and relationships to properly formatted CSV files
 3. Loading these CSV files into FalkorDB using the FalkorDB Rust loader
@@ -39,14 +40,14 @@ The process ensures complete data migration including nodes, relationships, prop
 
 ```bash
 pip3 install kuzu
-```
+```text
 
 2. Download the migration script:
 
 ```bash
 git clone https://github.com/FalkorDB/Kuzu-to-FalkorDB.git
 cd Kuzu-to-FalkorDB
-```
+```text
 
 ## Step 1: Exporting from Kuzu
 
@@ -56,7 +57,7 @@ Export all data from a Kuzu database:
 
 ```bash
 python3 kuzu_to_falkordb_export.py --db path/to/your/database
-```
+```text
 
 ### Advanced Usage
 
@@ -69,7 +70,7 @@ python3 kuzu_to_falkordb_export.py --db network_it_smart_db --output my_csv_expo
 
 # Full example with all options
 python3 kuzu_to_falkordb_export.py --db network_it_smart_db --schema schema.json --output falkordb_import
-```
+```text
 
 ### Command Line Options
 
@@ -84,22 +85,25 @@ python3 kuzu_to_falkordb_export.py --db network_it_smart_db --schema schema.json
 The export script generates the following files:
 
 **Node CSV Files:**
+
 - Format: `nodes_<NodeType>.csv`
 - Structure: `id,labels,property1,property2,...`
 - Example: `nodes_Application.csv`, `nodes_Machine.csv`
 
 **Edge CSV Files:**
+
 - Format: `edges_<EdgeType>.csv`
 - Structure: `source,source_label,target,target_label,type`
 - Example: `edges_CONNECTS.csv`, `edges_CONTAINS.csv`
 
 **Schema File (Optional):**
+
 - File: `schema.json`
 - Contains: Export metadata, node types, relationship types, and file mappings
 
 ### Example Export Output
 
-```
+```text
 🚀 Kuzu to FalkorDB CSV Exporter
 ==================================================
 Database: network_it_smart_db
@@ -125,7 +129,7 @@ Schema: schema.json
 🎉 Export completed successfully!
 📁 Output files in: _csv_
 📊 Exported: 8 node types, 15 relationship types
-```
+```text
 
 ## Step 2: Loading into FalkorDB
 
@@ -137,7 +141,7 @@ Use the high-performance [FalkorDB Rust Loader](https://github.com/FalkorDB/Falk
 git clone https://github.com/FalkorDB/FalkorDB-Loader-RS
 cd FalkorDB-Loader-RS
 cargo build --release
-```
+```text
 
 The binary will be available at `target/release/falkordb-loader`.
 
@@ -147,9 +151,10 @@ After exporting your Kuzu database to CSV files, load them into FalkorDB:
 
 ```bash
 ./target/release/falkordb-loader my_graph
-```
+```text
 
 This command will:
+
 1. Connect to FalkorDB (localhost:6379 by default)
 2. Create the graph `my_graph`
 3. Load all CSV files from the `csv_output` directory
@@ -170,7 +175,7 @@ For more control over the loading process:
   --merge-mode \
   --stats \
   --progress-interval 500
-```
+```text
 
 ### Command-Line Options
 
@@ -199,7 +204,7 @@ The Rust loader provides significant advantages for loading Kuzu exports:
 
 ### Example Output
 
-```
+```text
 [INFO] Loading graph: my_graph
 [INFO] CSV directory: _csv_
 [INFO] Batch size: 5000
@@ -219,7 +224,7 @@ The Rust loader provides significant advantages for loading Kuzu exports:
 [INFO] ✓ Loaded 5678 CONNECTS relationships
 
 [INFO] Loading complete!
-```
+```text
 
 ### Performance Tips
 
@@ -275,4 +280,3 @@ For additional debugging information, you can modify the script to include more 
 - Explore [FalkorDB Cypher Language](/cypher) for querying your graph
 - Learn about [FalkorDB Operations](/operations) for production deployments
 - Check out [FalkorDB Integration](/integration) options
-

@@ -51,4 +51,3 @@ For path expressions like `shortestPath()` used directly in Cypher queries, refe
 
 - **[CDLP (Community Detection Label Propagation)](./cdlp.md)**
   Detects communities in a network, by propagating labels through the graph structure.
-

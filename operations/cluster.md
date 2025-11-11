@@ -56,7 +56,6 @@ for i in {1..6};do
 done
 ```
 
-
 ## Step 3: Configuring the Cluster
 
 Once all nodes are up, you need to connect them to form a cluster. Use the `redis-cli` tool inside one of the nodes to initiate the cluster setup.
@@ -76,6 +75,7 @@ You can verify the status of the cluster with:
 ```bash
 docker exec -it node1 redis-cli --cluster check node1:6379
 ```
+
 This command will display the status of each node and their roles (master/replica).
 
 ### 3.3 Create a Graph to test deployment
@@ -110,6 +110,7 @@ docker run -d \
 ```bash
 docker exec -it node1 redis-cli --cluster add-node node7:6385 node1:6379
 ```
+
 This will add node7 into the existing cluster.
 
 ### 4.3 Add the new node to the /etc/hosts file
@@ -120,4 +121,4 @@ sudo echo "127.0.0.1 node7" | sudo tee -a /etc/hosts
 
 ## Conclusion
 
-With your FalkorDB cluster set up, you now have a scalable, distributed environment that can handle increased loads and provide higher availability. 
+With your FalkorDB cluster set up, you now have a scalable, distributed environment that can handle increased loads and provide higher availability.

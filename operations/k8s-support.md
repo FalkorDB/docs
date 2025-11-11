@@ -140,13 +140,13 @@ REDISCLI_AUTH="$REDIS_PASSWORD" redis-cli -h 127.0.0.1 -p 6379
 
 To test your FalkorDB installation, run a simple Cypher query:
 
-```
+```bash
 GRAPH.QUERY mygraph "UNWIND range(1, 10) AS i RETURN i"
 ```
 
 The output should resemble the following:
 
-```
+```text
 127.0.0.1:6379> GRAPH.QUERY mygraph "UNWIND range(1, 10) AS i RETURN i"
 1) 1) "i"
 2)  1) 1) (integer) 1

@@ -8,6 +8,7 @@ parent: "Commands"
 # GRAPH.CONSTRAINT CREATE
 
 ---
+
 syntax: |
   GRAPH.CONSTRAINT CREATE key
     MANDATORY|UNIQUE
@@ -128,7 +129,9 @@ To create a unique constraint for all nodes with label `Person` enforcing unique
 {% capture shell_0 %}
 redis> GRAPH.QUERY g "CREATE INDEX FOR (p:Person) ON (p.first_name, p.last_name)"
 redis> GRAPH.CONSTRAINT CREATE g UNIQUE NODE Person PROPERTIES 2 first_name last_name
+
 # Output: PENDING
+
 {% endcapture %}
 
 {% capture python_0 %}
@@ -173,7 +176,9 @@ To create a mandatory constraint for all edges with relationship-type `Visited`,
 
 {% capture shell_1 %}
 redis> GRAPH.CONSTRAINT CREATE g MANDATORY RELATIONSHIP Visited PROPERTIES 1 date
+
 # Output: PENDING
+
 {% endcapture %}
 
 {% capture python_1 %}
@@ -204,7 +209,9 @@ To list all constraints enforced on a given graph, use the `db.constraints` proc
 
 {% capture shell_2 %}
 redis> GRAPH.RO_QUERY g "call db.constraints()"
-# Output: ...
+
+# Output:
+
 {% endcapture %}
 
 {% capture python_2 %}

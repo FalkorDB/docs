@@ -14,7 +14,7 @@ Arguments: `Graph name, Query, Timeout [optional]`
 
 Returns: [Result set](/design/result-structure)
 
-### Queries and Parameterized Queries
+## Queries and Parameterized Queries
 
 The execution plans of queries, both regular and parameterized, are cached (up to [CACHE_SIZE](/configuration#cache_size) unique queries are cached). Therefore, it is recommended to use parameterized queries when executing many queries with the same pattern but different constants.
 
@@ -51,8 +51,7 @@ println!("{:?}", result);
 
 {% include code_tabs.html id="tabs_0" shell=shell_0 python=python_0 javascript=javascript_0 java=java_0 rust=rust_0 %}
 
-
-#### Parametrized query structure:
+#### Parametrized query structure
 
 `GRAPH.QUERY graph_name "CYPHER param=val [param=val ...] query"`
 

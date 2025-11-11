@@ -61,4 +61,3 @@ graph.query("MATCH (x:Y {propname: propvalue}) DELETE x")?;
 {% include code_tabs.html id="tabs_1" shell=shell_1 python=python_1 javascript=javascript_1 java=java_1 rust=rust_1 %}
 
 WARNING: When you delete a node, all of the node's incoming/outgoing relationships are also removed.
-

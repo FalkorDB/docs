@@ -7,7 +7,7 @@ redirect_from:
   - /redisgraph-to-falkordb
 ---
 
-# FalkorDB is compatible with RedisGraph RDB files.
+# FalkorDB is compatible with RedisGraph RDB files
 
 For the migration, execute the following steps:
 
@@ -21,7 +21,7 @@ For the migration, execute the following steps:
    Make sure to place the RDB file in the directory mapped to the Docker volume.
    For FalkorDB Cloud, follow the cloud provider’s instructions for uploading and restoring from an RDB file.
 
-## Additional Tips:
+## Additional Tips
 
 * Verify the integrity of the RDB file before and after transfer.
 * Consider downtime and data consistency during the migration process.

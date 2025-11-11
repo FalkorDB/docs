@@ -12,6 +12,7 @@ The Community Detection using Label Propagation (CDLP) algorithm identifies comm
 Each node starts with a unique label, and through iterative propagation, nodes adopt the most frequent label among their neighbors, naturally forming communities where densely connected nodes share the same label.
 
 CDLP serves as a powerful algorithm in scenarios such as:
+
 - Social network community detection
 - Biological network module identification
 - Web page clustering and topic detection
@@ -32,6 +33,7 @@ It runs in near-linear time and mimics epidemic contagion by spreading labels th
 ### Performance
 
 CDLP operates with a time complexity of **O(m + n)** per iteration, where:
+
 - **n** represents the total number of nodes
 - **m** represents the total number of edges
 
@@ -54,6 +56,7 @@ The procedure accepts an optional configuration `Map` with the following paramet
 | `maxIterations`     | Integer | 10                     | Maximum number of iterations to run the algorithm                                |
 
 ### Return Values
+
 The procedure returns a stream of records with the following fields:
 
 | Name          | Type    | Description                                                         |
@@ -65,7 +68,7 @@ The procedure returns a stream of records with the following fields:
 
 Let's take this Social Network as an example:
 
-```
+```text
     (Alice)---(Bob)---(Charlie)  (Kate)
        |       |         |
     (Diana)    |      (Eve)---(Frank)
@@ -74,6 +77,7 @@ Let's take this Social Network as an example:
 ```
 
 There are 3 different communities that should emerge from this network:
+
 - Alice, Bob, Charlie, Diana, Grace, Henry
 - Eve, Frank, Iris, Jack
 - Any isolated nodes
@@ -114,6 +118,7 @@ CALL algo.labelPropagation() YIELD node, communityId RETURN node.name AS name, c
 ```
 
 #### Expected Results
+
 | name       | communityId |
 |------------|-------------|
 | `Alice`    | 0           |
@@ -164,6 +169,7 @@ ORDER BY community_size DESC
 ```
 
 #### Expected Results
+
 | community_members                                        | communityId | community_size |
 |----------------------------------------------------------|-------------|----------------|
 | `["Alice", "Bob", "Charlie", "Diana", "Grace", "Henry"]` | 0           | 6              |
@@ -178,4 +184,3 @@ RETURN communityId, collect(node) AS nodes, count(*) AS size
 ORDER BY size DESC
 LIMIT 1
 ```
-
