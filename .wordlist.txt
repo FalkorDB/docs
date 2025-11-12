@@ -117,6 +117,7 @@ Subcommands
 TF
 TTY
 TypeScript
+UI
 UNIQIE
 URIs
 UUID
@@ -309,6 +310,7 @@ weightProp
 whitespace
 xyxel
 yaml
+yml
 uri
 util
 vec
@@ -432,6 +434,7 @@ cognify
 topoteretes
 getzep
 zepai
+Zep's
 prune
 qdrant
 TechCorp
