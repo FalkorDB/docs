@@ -431,6 +431,7 @@ cognee
 cognify
 topoteretes
 getzep
+zepai
 prune
 qdrant
 TechCorp
