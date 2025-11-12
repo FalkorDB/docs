@@ -67,7 +67,7 @@ docker-compose up -d
 ```
 
 The combined image will start both FalkorDB and the MCP server in a single container, accessible at:
-- **FalkorDB (Redis):** `localhost:6379`
+- **FalkorDB:** `localhost:6379`
 - **FalkorDB Browser UI:** `http://localhost:3000`
 - **MCP Server:** `http://localhost:8000`
 
