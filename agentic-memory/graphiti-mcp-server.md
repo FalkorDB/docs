@@ -32,59 +32,80 @@ Before you begin, ensure you have:
 - An OpenAI API key (for LLM operations)
 - A FalkorDB instance running (or use the bundled Docker setup)
 
-## Quick Start with Docker
+## Quick Start with Docker Compose
 
-The easiest way to run the Graphiti MCP Server with FalkorDB is using Docker:
+The easiest way to run the Graphiti MCP Server with FalkorDB is using the official Docker Compose configuration from [Zep's Graphiti repository](https://github.com/getzep/graphiti/tree/main/mcp_server).
 
-### Step 1: Pull the Docker Image
+### Option 1: Combined Image (Recommended)
 
-```bash
-docker pull falkordb/graphiti-knowledge-graph-mcp:latest
-```
+This setup uses a single container that includes both FalkorDB and the MCP server.
 
-### Step 2: Run the MCP Server
-
-Run the server with required environment variables:
+1. **Create a directory for your setup:**
 
 ```bash
-docker run -d \
-  --name graphiti-mcp \
-  -e OPENAI_API_KEY="your-openai-api-key" \
-  -e DATABASE_TYPE="falkordb" \
-  -e FALKORDB_HOST="host.docker.internal" \
-  -e FALKORDB_PORT="6379" \
-  -p 8000:8000 \
-  falkordb/graphiti-knowledge-graph-mcp:latest
+mkdir graphiti-mcp && cd graphiti-mcp
 ```
 
-**Note**: If you're running FalkorDB on your local machine, use `host.docker.internal` as the `FALKORDB_HOST` to allow the container to access your host's localhost.
+2. **Download the docker-compose configuration:**
 
-#### Alternative: Using a .env File
+```bash
+curl -O https://raw.githubusercontent.com/getzep/graphiti/main/mcp_server/docker/docker-compose.yml
+```
 
-For easier management of environment variables, create a `.env` file:
+3. **Create a `.env` file with your API key:**
 
 ```env
 OPENAI_API_KEY=your-openai-api-key
-DATABASE_TYPE=falkordb
-FALKORDB_HOST=host.docker.internal
-FALKORDB_PORT=6379
-FALKORDB_USERNAME=
 FALKORDB_PASSWORD=
+GRAPHITI_GROUP_ID=main
 ```
 
-Then run the container with the `--env-file` option:
+4. **Start the services:**
 
 ```bash
-docker run -d \
-  --name graphiti-mcp \
-  --env-file .env \
-  -p 8000:8000 \
-  falkordb/graphiti-knowledge-graph-mcp:latest
+docker-compose up -d
 ```
 
-### Step 3: Run FalkorDB (if needed)
+The combined image will start both FalkorDB and the MCP server in a single container, accessible at:
+- **FalkorDB (Redis):** `localhost:6379`
+- **FalkorDB Browser UI:** `http://localhost:3000`
+- **MCP Server:** `http://localhost:8000`
 
-If you don't have a FalkorDB instance running, start one:
+### Option 2: Separate Containers
+
+For more flexibility, you can run FalkorDB and the MCP server in separate containers.
+
+1. **Create a directory and download the configuration:**
+
+```bash
+mkdir graphiti-mcp && cd graphiti-mcp
+curl -O https://raw.githubusercontent.com/getzep/graphiti/main/mcp_server/docker/docker-compose-falkordb.yml
+mv docker-compose-falkordb.yml docker-compose.yml
+```
+
+2. **Create a `.env` file:**
+
+```env
+OPENAI_API_KEY=your-openai-api-key
+FALKORDB_URI=redis://falkordb:6379
+FALKORDB_PASSWORD=
+FALKORDB_DATABASE=default_db
+GRAPHITI_GROUP_ID=main
+```
+
+3. **Start the services:**
+
+```bash
+docker-compose up -d
+```
+
+This configuration starts FalkorDB and the MCP server as separate containers with the same accessible ports as the combined image.
+
+## Manual Docker Setup (Alternative)
+
+If you prefer to run containers manually without Docker Compose, you can use the standalone MCP server image:
+
+### Step 1: Run FalkorDB
 
 ```bash
 docker run -d \
@@ -94,54 +115,21 @@ docker run -d \
   falkordb/falkordb:latest
 ```
 
-## Docker Compose Setup
-
-For a complete setup with both FalkorDB and the MCP server, create a `docker-compose.yml`:
-
-```yaml
-version: '3.8'
-
-services:
-  falkordb:
-    image: falkordb/falkordb:latest
-    ports:
-      - "6379:6379"      # Redis protocol port
-      - "3000:3000"      # FalkorDB Browser UI
-    volumes:
-      - falkordb-data:/data
-
-  graphiti-mcp:
-    image: falkordb/graphiti-knowledge-graph-mcp:latest
-    depends_on:
-      - falkordb
-    ports:
-      - "8000:8000"      # MCP Server HTTP/SSE port
-    environment:
-      - OPENAI_API_KEY=${OPENAI_API_KEY}
-      - DATABASE_TYPE=falkordb
-      - FALKORDB_HOST=falkordb
-      - FALKORDB_PORT=6379
-      - FALKORDB_USERNAME=${FALKORDB_USERNAME:-}
-      - FALKORDB_PASSWORD=${FALKORDB_PASSWORD:-}
-
-volumes:
-  falkordb-data:
-```
-
-Create a `.env` file in the same directory:
-
-```env
-OPENAI_API_KEY=your-openai-api-key
-DATABASE_TYPE=falkordb
-FALKORDB_USERNAME=
-FALKORDB_PASSWORD=
-```
-
-Then start both services:
+### Step 2: Run the MCP Server
 
 ```bash
-docker-compose up -d
+docker run -d \
+  --name graphiti-mcp \
+  -e OPENAI_API_KEY="your-openai-api-key" \
+  -e FALKORDB_URI="redis://host.docker.internal:6379" \
+  -e FALKORDB_PASSWORD="" \
+  -e FALKORDB_DATABASE="default_db" \
+  -e GRAPHITI_GROUP_ID="main" \
+  -p 8000:8000 \
+  zepai/knowledge-graph-mcp:standalone
 ```
+
+**Note**: Use `host.docker.internal` as the hostname to allow the container to access FalkorDB running on your host machine.
 
 ## Configuration
 
@@ -152,30 +140,26 @@ The MCP server accepts the following environment variables:
 | Variable | Description | Default | Required | Example |
 |----------|-------------|---------|----------|---------|
 | `OPENAI_API_KEY` | Your OpenAI API key for LLM operations | - | Yes | `sk-proj-...` |
-| `DATABASE_TYPE` | Database backend type (must be "falkordb") | - | Yes | `falkordb` |
-| `FALKORDB_HOST` | FalkorDB server hostname | `localhost` | No | `host.docker.internal` |
-| `FALKORDB_PORT` | FalkorDB server port | `6379` | No | `6379` |
-| `FALKORDB_USERNAME` | FalkorDB username (if authentication enabled) | - | No | `default` |
+| `FALKORDB_URI` | FalkorDB connection URI | `redis://localhost:6379` | Yes | `redis://falkordb:6379` |
 | `FALKORDB_PASSWORD` | FalkorDB password (if authentication enabled) | - | No | `your-password` |
-| `PORT` | MCP server port | `8000` | No | `8000` |
-| `MODEL_NAME` | OpenAI model to use | `gpt-4o-mini` | No | `gpt-5` |
+| `FALKORDB_DATABASE` | Database name | `default_db` | No | `default_db` |
+| `GRAPHITI_GROUP_ID` | Group ID for multi-tenant isolation | `main` | No | `main` |
+| `SEMAPHORE_LIMIT` | Concurrent operation limit | `10` | No | `10` |
+| `BROWSER` | Enable FalkorDB Browser UI (combined image only) | `1` | No | `1` |
 
 ### FalkorDB Cloud Configuration
 
-To use FalkorDB Cloud with the MCP server:
+To use FalkorDB Cloud with the MCP server, update your `.env` file:
 
-```bash
-docker run -d \
-  --name graphiti-mcp \
-  -e OPENAI_API_KEY="your-openai-api-key" \
-  -e DATABASE_TYPE="falkordb" \
-  -e FALKORDB_HOST="your-instance.falkordb.cloud" \
-  -e FALKORDB_PORT="6379" \
-  -e FALKORDB_USERNAME="default" \
-  -e FALKORDB_PASSWORD="your-cloud-password" \
-  -p 8000:8000 \
-  falkordb/graphiti-knowledge-graph-mcp:latest
+```env
+OPENAI_API_KEY=your-openai-api-key
+FALKORDB_URI=redis://your-instance.falkordb.cloud:6379
+FALKORDB_PASSWORD=your-cloud-password
+FALKORDB_DATABASE=default_db
+GRAPHITI_GROUP_ID=main
 ```
+
+Then use the docker-compose configuration with the separate containers option (docker-compose-falkordb.yml), as it's designed for external database connections.
 
 ## Client Integration
 
@@ -373,16 +357,32 @@ for record in result.result_set:
 
 ### View Server Logs
 
-To view the MCP server logs:
+To view the logs:
 
+**For combined image:**
 ```bash
+docker logs -f graphiti-falkordb
+```
+
+**For separate containers:**
+```bash
+# MCP server logs
 docker logs -f graphiti-mcp
+
+# FalkorDB logs
+docker logs -f falkordb
 ```
 
 ### Check FalkorDB Connection
 
 Verify the connection to FalkorDB using the Redis CLI:
 
+**For combined image:**
+```bash
+docker exec -it graphiti-falkordb redis-cli PING
+```
+
+**For separate containers:**
 ```bash
 # Test from the FalkorDB container
 docker exec -it falkordb redis-cli PING
@@ -391,7 +391,7 @@ docker exec -it falkordb redis-cli PING
 docker exec -it graphiti-mcp redis-cli -h falkordb -p 6379 PING
 ```
 
-Both commands should return `PONG` if the connection is successful.
+All commands should return `PONG` if the connection is successful.
 
 ### Inspect the Knowledge Graph
 
@@ -414,10 +414,11 @@ MATCH (n) RETURN n LIMIT 25
 **Solutions**:
 - Verify FalkorDB is running: `docker ps | grep falkordb`
 - Test FalkorDB connection: `docker exec -it <falkordb-container-name> redis-cli PING` (should return `PONG`)
-- Check network connectivity: Use `host.docker.internal` for local FalkorDB when running MCP server in Docker
+- Check the `FALKORDB_URI` format: `redis://hostname:port`
+- For separate containers, use the service name: `redis://falkordb:6379`
+- For external FalkorDB, use `redis://host.docker.internal:6379`
 - Verify port 6379 is accessible
 - Check firewall settings
-- Verify `DATABASE_TYPE=falkordb` environment variable is set (server won't start without it)
 
 ### Authentication Errors
 
@@ -443,8 +444,8 @@ MATCH (n) RETURN n LIMIT 25
 **Problem**: Claude Desktop or Cursor cannot connect to MCP server
 
 **Solutions**:
-- Verify the MCP server is running: `docker ps | grep graphiti-mcp`
-- Check the server logs: `docker logs graphiti-mcp`
+- Verify the MCP server is running: `docker ps | grep graphiti`
+- Check the server logs: `docker logs graphiti-mcp` (or `docker logs graphiti-falkordb` for combined image)
 - Test the SSE endpoint: `curl http://localhost:8000/sse`
 - Ensure the configuration file path is correct for your OS
 - Restart the client application after changing configuration
@@ -484,7 +485,8 @@ MATCH (n) RETURN n LIMIT 25
 
 ## Resources
 
-- 🐳 [Docker Hub Repository](https://hub.docker.com/r/falkordb/graphiti-knowledge-graph-mcp)
+- 🐳 [Graphiti MCP Server Docker Setup](https://github.com/getzep/graphiti/tree/main/mcp_server/docker)
+- 📦 [Docker Hub Repository](https://hub.docker.com/r/zepai/knowledge-graph-mcp)
 - 📚 [Model Context Protocol Documentation](https://modelcontextprotocol.io/)
 - 📖 [Graphiti Documentation](https://help.getzep.com/graphiti/)
 - 💻 [Graphiti GitHub Repository](https://github.com/getzep/graphiti)
