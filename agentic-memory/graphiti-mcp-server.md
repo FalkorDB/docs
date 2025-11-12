@@ -5,10 +5,7 @@ nav_order: 3
 description: "Run Graphiti MCP server with FalkorDB for AI agent memory in Claude Desktop and other MCP clients"
 ---
 
-# [EXPERIMENTAL] Graphiti MCP Server
-
-{: .warning }
-> **Experimental Feature**: The Graphiti MCP Server integration is experimental and under active development. Features and configurations may change in future releases.
+# Graphiti MCP Server
 
 The Graphiti MCP (Model Context Protocol) Server enables AI clients like Claude Desktop and Cursor IDE to interact with FalkorDB-powered knowledge graphs for persistent agent memory. This allows AI assistants to store and retrieve information across conversations, building a rich, contextual memory over time.
 
