@@ -646,23 +646,23 @@ let result = graph.query("CALL db.idx.fulltext.queryRelationships('Manager', 'Ch
 To delete the full-text index for a specific relation label, use:
 
 {% capture shell_18 %}
-GRAPH.QUERY DEMO_GRAPH "CALL DROP FULLTEXT INDEX FOR ()-[m:Manager]-()  ON (m.name)"
+GRAPH.QUERY DEMO_GRAPH "DROP FULLTEXT INDEX FOR ()-[m:Manager]-() ON (m.name)"
 {% endcapture %}
 
 {% capture python_18 %}
-graph.query("CALL DROP FULLTEXT INDEX FOR ()-[m:Manager]-()  ON (m.name)")
+graph.query("DROP FULLTEXT INDEX FOR ()-[m:Manager]-() ON (m.name)")
 {% endcapture %}
 
 {% capture javascript_18 %}
-await graph.query("CALL DROP FULLTEXT INDEX FOR ()-[m:Manager]-()  ON (m.name)");
+await graph.query("DROP FULLTEXT INDEX FOR ()-[m:Manager]-() ON (m.name)");
 {% endcapture %}
 
 {% capture java_18 %}
-graph.query("CALL DROP FULLTEXT INDEX FOR ()-[m:Manager]-()  ON (m.name)");
+graph.query("DROP FULLTEXT INDEX FOR ()-[m:Manager]-() ON (m.name)");
 {% endcapture %}
 
 {% capture rust_18 %}
-graph.query("CALL DROP FULLTEXT INDEX FOR ()-[m:Manager]-()  ON (m.name)").execute().await?;
+graph.query("DROP FULLTEXT INDEX FOR ()-[m:Manager]-() ON (m.name)").execute().await?;
 {% endcapture %}
 
 {% include code_tabs.html id="fulltext_relation_drop_tabs" shell=shell_18 python=python_18 javascript=javascript_18 java=java_18 rust=rust_18 %}
@@ -681,8 +681,8 @@ CREATE VECTOR INDEX FOR <entity_pattern> ON <entity_attribute> OPTIONS <options>
 The options are:
 ```
 {
-   dimension: INT, // Requiered, length of the vector to be indexed
-   similarityFunction: STRING, // Requiered, currently only euclidean or cosine are allowed
+   dimension: INT, // Required, length of the vector to be indexed
+   similarityFunction: STRING, // Required, currently only euclidean or cosine are allowed
    M: INT, // Optional, maximum number of outgoing edges per node. default 16
    efConstruction: INT, // Optional, number of candidates during construction. default 200
    efRuntime: INT // Optional, number of candidates during search. default 10
