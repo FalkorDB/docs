@@ -395,10 +395,15 @@ propvalue
 ro
 GenAI
 
-WCC
-WSL
+Kruskal's
+MSF
+MST
+MSTs
+Prim's
 SPpath
 SSpath
+WCC
+WSL
 
 undirected
 preprocessing
