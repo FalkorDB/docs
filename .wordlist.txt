@@ -56,6 +56,8 @@ JS
 js
 JSDoc
 JSON
+JWT
+tokenId
 KJDev
 Kepner
 Keren
@@ -213,6 +215,7 @@ myGraph
 myPassword
 myUsername
 namespace
+nodeId
 nan
 nav
 nd
@@ -256,6 +259,7 @@ redisgraph
 relDirection
 relTypes
 relationshipTypes
+relationshipId
 reltype
 reltype
 reltypeList
@@ -335,6 +339,7 @@ falkorDB
 GraphName
 api
 auth
+backend
 callbackUrl
 csrf
 csrfToken
