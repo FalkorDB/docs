@@ -8,19 +8,25 @@ parent: "Cypher Language"
 
 # Procedures
 
-Procedures are invoked using the syntax:
+Procedures are functions that can be called from within Cypher queries using the `CALL` syntax.
+
+## Syntax
+
+Basic procedure call:
 
 ```sh
 GRAPH.QUERY social "CALL db.labels()"
 ```
 
-Or the variant:
+With explicit `YIELD` to select specific return values:
 
 ```sh
 GRAPH.QUERY social "CALL db.labels() YIELD label"
 ```
 
-YIELD modifiers are only required if explicitly specified; by default the value in the 'Yields' column will be emitted automatically.
+**Note:** The `YIELD` clause is optional. When omitted, all values listed in the 'Yields' column are returned automatically.
+
+## Available Procedures
 
 | Procedure                       | Arguments                                       | Yields                        | Description                                                                                                                                                                            |
 | -------                         | :-------                                        | :-------                      | :-----------                                                                                                                                                                           |

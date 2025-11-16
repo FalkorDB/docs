@@ -659,3 +659,6 @@ Addon
 addon
 LoadBalancer
 NodePort
+orphaned
+replicas
+SQL's
