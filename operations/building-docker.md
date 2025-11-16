@@ -1,6 +1,6 @@
 ---
 title: "Building Docker"
-nav_order: 7
+nav_order: 9
 parent: Operations
 description: "Building docker container examples"
 redirect_from:

@@ -14,7 +14,7 @@ redirect_from:
 FalkorDB supports [Redis configuration](https://redis.io/docs/management/config/) and multiple module configuration parameters. 
 Some of these parameters can only be set at load-time, while other parameters can be set either on load-time or on run-time.
 
-For example the following will run the server with global authentication password and 4 threads.
+For example, the following command will run the server with global authentication password and 4 threads:
 
 ```sh
 docker run -p 6379:6379 -p 3000:3000 -it -e REDIS_ARGS="--requirepass falkordb" -e FALKORDB_ARGS="THREAD_COUNT 4" --rm falkordb/falkordb:latest
@@ -25,9 +25,11 @@ docker run -p 6379:6379 -p 3000:3000 -it -e REDIS_ARGS="--requirepass falkordb" 
 > docker run -p 6379:6379 -it -e REDIS_ARGS="--requirepass falkordb" -e FALKORDB_ARGS="THREAD_COUNT 4" --rm falkordb/falkordb-server:latest
 > ```
 
-## Setting configuration parameters on module load
+## Setting Configuration Parameters on Module Load
 
-Setting configuration parameters at load-time is done by appending arguments after the `--loadmodule` argument when starting a server from the command line or after the `loadmodule` directive in a Redis config file. For example:
+Configuration parameters can be set at load-time by appending arguments after the `--loadmodule` argument when starting a server from the command line or after the `loadmodule` directive in a Redis config file. 
+
+### Examples
 
 In [redis.conf](https://redis.io/docs/manual/config/):
 
@@ -59,9 +61,9 @@ Or for production use:
 docker run -p 6379:6379 -it -e FALKORDB_ARGS="[OPT VAL]" --rm falkordb/falkordb-server:latest
 ```
 
-## Setting configuration parameters at run-time (for supported parameters)
+## Setting Configuration Parameters at Run-Time (for Supported Parameters)
 
-FalkorDB exposes the `GRAPH.CONFIG` command to allowing for the setting and retrieval of configuration parameters at run-time.
+FalkorDB exposes the `GRAPH.CONFIG` command for setting and retrieving configuration parameters at run-time.
 
 To set the value of a configuration parameter at run-time (for supported parameters), simply run:
 
