@@ -46,16 +46,73 @@ The command returns an array of key-value pairs, where each pair represents a sp
 ## Examples
 
 ### Basic Usage
-```bash
+
+{% capture shell_0 %}
 GRAPH.MEMORY USAGE myGraph
-```
+{% endcapture %}
+
+{% capture python_0 %}
+from falkordb import FalkorDB
+client = FalkorDB()
+graph = client.select_graph('myGraph')
+memory_info = graph.memory_usage()
+print(memory_info)
+{% endcapture %}
+
+{% capture javascript_0 %}
+import { FalkorDB } from 'falkordb';
+const client = await FalkorDB.connect();
+const graph = client.selectGraph('myGraph');
+const memoryInfo = await graph.memoryUsage();
+console.log(memoryInfo);
+{% endcapture %}
+
+{% capture java_0 %}
+FalkorDB client = new FalkorDB();
+Graph graph = client.selectGraph("myGraph");
+Map<String, Object> memoryInfo = graph.memoryUsage();
+System.out.println(memoryInfo);
+{% endcapture %}
+
+{% capture rust_0 %}
+let client = FalkorDB::connect_default();
+let graph = client.select_graph("myGraph");
+let memory_info = graph.memory_usage()?;
+println!("{:?}", memory_info);
+{% endcapture %}
+
+{% include code_tabs.html id="memory_basic_tabs" shell=shell_0 python=python_0 javascript=javascript_0 java=java_0 rust=rust_0 %}
 
 ### With Sampling
-```bash
+
+{% capture shell_1 %}
 GRAPH.MEMORY USAGE myGraph SAMPLES 500
-```
+{% endcapture %}
+
+{% capture python_1 %}
+memory_info = graph.memory_usage(samples=500)
+print(memory_info)
+{% endcapture %}
+
+{% capture javascript_1 %}
+const memoryInfo = await graph.memoryUsage({ samples: 500 });
+console.log(memoryInfo);
+{% endcapture %}
+
+{% capture java_1 %}
+Map<String, Object> memoryInfo = graph.memoryUsage(500);
+System.out.println(memoryInfo);
+{% endcapture %}
+
+{% capture rust_1 %}
+let memory_info = graph.memory_usage_with_samples(500)?;
+println!("{:?}", memory_info);
+{% endcapture %}
+
+{% include code_tabs.html id="memory_samples_tabs" shell=shell_1 python=python_1 javascript=javascript_1 java=java_1 rust=rust_1 %}
 
 ### Sample Output
+
 ```sh
 127.0.0.1:6379> GRAPH.MEMORY USAGE flights
  1) "total_graph_sz_mb"
