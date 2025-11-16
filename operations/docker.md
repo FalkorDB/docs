@@ -26,6 +26,13 @@ FalkorDB provides two main Docker images:
 - **Ports**: 
   - `6379` - Redis/FalkorDB server
 
+### 3. `falkordb/falkordb-browser`
+- **Includes**: FalkorDB Browser UI only
+- **Use case**: Running browser separately from the server, custom deployments
+- **Ports**: 
+  - `3000` - FalkorDB Browser UI
+- **Configuration**: Requires `FALKORDB_URL` environment variable to connect to a FalkorDB server
+
 ## Quick Start with Docker
 
 ### Running with Browser (Development)
@@ -62,6 +69,8 @@ docker run -p 6379:6379 -p 3000:3000 -it \
 ## Using Docker Compose
 
 Docker Compose provides a more flexible and maintainable way to run FalkorDB, especially when you need to configure multiple services or manage complex setups.
+
+> **Quick Start**: You can download a ready-to-use docker-compose.yml file from the [FalkorDB repository](https://github.com/FalkorDB/FalkorDB/blob/master/build/docker/docker-compose.yml).
 
 ### Basic Docker Compose Setup
 
@@ -252,30 +261,6 @@ docker-compose ps
 
 # Execute commands in running container
 docker-compose exec falkordb redis-cli
-```
-
-## Connecting to FalkorDB
-
-### From the Host Machine
-
-```bash
-# Without authentication
-redis-cli -h localhost -p 6379
-
-# With authentication
-redis-cli -h localhost -p 6379 -a yourpassword
-
-# Using FalkorDB Python client
-python -c "from falkordb import FalkorDB; db = FalkorDB(host='localhost', port=6379, password='yourpassword'); print('Connected!')"
-```
-
-### From Another Container
-
-When using Docker Compose with a custom network, containers can communicate using service names:
-
-```bash
-# In another container on the same network
-redis-cli -h falkordb-server -p 6379 -a yourpassword
 ```
 
 ## Environment Variables
