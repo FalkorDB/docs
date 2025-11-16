@@ -673,6 +673,13 @@ npx
 modelcontextprotocol
 inspector
 nc
+openai
+rustup
+proto
+tlsv
+sSf
+AMD64
+ARM64
 orphaned
 replicas
 SQL's
