@@ -8,6 +8,8 @@ redirect_from:
   - /llm_integrations
   - /llm-integrations.html
   - /llm-integrations
+  - /llm_support.html
+  - /llm_support
 ---
 
 # GenAI Tools

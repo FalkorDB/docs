@@ -8,25 +8,32 @@ parent: "Cypher Language"
 
 # Procedures
 
-Procedures are invoked using the syntax:
+Procedures are functions that can be called from within Cypher queries using the `CALL` syntax.
+
+## Syntax
+
+Basic procedure call:
 
 ```sh
 GRAPH.QUERY social "CALL db.labels()"
 ```
 
-Or the variant:
+With explicit `YIELD` to select specific return values:
 
 ```sh
 GRAPH.QUERY social "CALL db.labels() YIELD label"
 ```
 
-YIELD modifiers are only required if explicitly specified; by default the value in the 'Yields' column will be emitted automatically.
+**Note:** The `YIELD` clause is optional. When omitted, all values listed in the 'Yields' column are returned automatically.
+
+## Available Procedures
 
 | Procedure                       | Arguments                                       | Yields                        | Description                                                                                                                                                                            |
 | -------                         | :-------                                        | :-------                      | :-----------                                                                                                                                                                           |
 | db.labels                       | none                                            | `label`                       | Yields all node labels in the graph.                                                                                                                                                   |
 | db.relationshipTypes            | none                                            | `relationshipType`            | Yields all relationship types in the graph.                                                                                                                                            |
 | db.propertyKeys                 | none                                            | `propertyKey`                 | Yields all property keys in the graph.                                                                                                                                                 |
+| db.meta.stats                   | none                                            | `labels`, `relTypes`, `relCount`, `nodeCount`, `labelCount`, `relTypeCount`, `propertyKeyCount` | Yield comprehensive graph statistics including maps of labels and relationship types with their counts, total node/relationship counts, and schema metadata counts. |
 | db.indexes                      | none                                            | `label`, `properties`, `types`, `options`, `language`, `stopwords`, `entitytype`, `status`, `info` | Yield all indexes in the graph, denoting whether they are of the type of exact-match ("RANGE"), full-text ("FULLTEXT") or vector ("VECTOR") and which label and properties each covers and whether they are indexing node or relationship attributes. |
 | db.constraints                  | none                                            | `type`, `label`, `properties`, `entitytype`, `status` | Yield all constraints in the graph, denoting constraint type (UNIQIE/MANDATORY), which label/relationship-type and properties each enforces. |
 | db.idx.fulltext.createNodeIndex | `label`, `property` [, `property` ...]          | none                          | Builds a full-text searchable index on a label and the 1 or more specified properties.                                                                                                 |

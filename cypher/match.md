@@ -8,16 +8,19 @@ parent: "Cypher Language"
 
 # MATCH
 
-Match describes the relationship between queried entities, using ascii art to represent pattern(s) to match against.
+The `MATCH` clause describes the relationship between queried entities using ASCII art to represent pattern(s) to match against.
 
-Nodes are represented by parentheses `()`,
-and Relationships are represented by brackets `[]`.
+**Syntax Overview:**
+- Nodes are represented by parentheses `()`
+- Relationships are represented by brackets `[]`
+- Each graph entity (node/relationship) can contain an alias, a label/relationship type, and filters, but all are optional
 
-Each graph entity node/relationship can contain an alias and a label/relationship type, but both can be left empty if necessary.
+**Entity Structure:** `alias:label {filters}`
 
-Entity structure: `alias:label {filters}`.
-
-Alias, label/relationship type, and filters are all optional.
+Where:
+- `alias` - Optional variable name to reference the entity
+- `label` - Optional label for nodes or type for relationships  
+- `{filters}` - Optional property filters
 
 Example:
 
@@ -35,10 +38,9 @@ Example:
 
 `Movie` destination node is of "type" movie.
 
-`{title:"straight outta compton"}` requires the node's title attribute to equal "straight outta compton".
+`{title:"straight outta compton"}` filters for nodes where the title property equals "straight outta compton".
 
-In this example, we're interested in actor entities which have the relation "act" with **the** entity representing the
-"straight outta compton" movie.
+In this example, we're querying for actor entities that have an "ACT" relationship with the movie entity "straight outta compton".
 
 It is possible to describe broader relationships by composing a multi-hop query such as:
 

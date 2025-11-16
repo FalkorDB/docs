@@ -6,6 +6,8 @@ parent: "Integration"
 redirect_from:
   - /bolt-support.html
   - /bolt-support
+  - /bolt_support.html
+  - /bolt_support
 ---
 
 # [EXPERIMENTAL] BOLT protocol support for FalkorDB 

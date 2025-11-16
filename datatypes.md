@@ -103,15 +103,13 @@ Since we cannot reason broadly about unknown values, `null` is an important part
 Unlike all other scalars, `null` cannot be stored as a property value.
 
 ## Temporal Types
+
 FalkorDB supports the following temporal types that allow modeling and querying time-related data:
 
-## 1. [Date](#Date)
-
-## 2. [Time](#Time)
-
-## 3. [DateTime](#DateTime)
-
-## 4. [Duration](#Duration)
+1. [Date](#date) - Calendar dates (YYYY-MM-DD)
+2. [Time](#time) - Time of day (HH:MM:SS)
+3. [DateTime](#datetime) - Combined date and time
+4. [Duration](#duration) - Time intervals
 
 These types follow the ISO 8601 standard and can be used in properties, parameters, and expressions.
 
@@ -119,16 +117,17 @@ These types follow the ISO 8601 standard and can be used in properties, paramete
 
 Represents a calendar date in the format YYYY-MM-DD.
 
-Purpose
-Use Date to store and compare dates without time information, e.g. birth dates, due dates, or deadlines.
+**Purpose:**  
+Use `Date` to store and compare dates without time information, such as birth dates, due dates, or deadlines.
+
+**Example:**
 
 ```cypher
 CREATE (:Event { name: "Conference", date: date("2025-09-15") })
 ```
 
-#### Interactions
-* Compare using operators (=, <, >, etc.)
-
+**Interactions:**
+* Compare using operators (`=`, `<`, `>`, etc.)
 * Extract components using functions:
 
 ```cypher
@@ -139,16 +138,18 @@ RETURN date("2025-09-15").day       // 15
 
 ### Time
 
-Represents a time of day, in the format hh:mm:ss.
+Represents a time of day in the format HH:MM:SS.
 
-Purpose
-Use Time to store specific times (e.g. store hours, alarm times) without date context.
+**Purpose:**  
+Use `Time` to store specific times (e.g., store hours, alarm times) without date context.
+
+**Example:**
 
 ```cypher
 CREATE (:Reminder { msg: "Wake up!", at: localtime("07:00:00") })
 ```
 
-#### Interactions
+**Interactions:**
 
 * Compare time values:
 
@@ -168,18 +169,17 @@ RETURN localtime("15:45:20").second    // 20
 
 Represents a point in time, combining both date and time. Format: YYYY-MM-DDTHH:MM:SS.
 
-Purpose
-Use DateTime when both date and time are relevant, e.g. logging events, scheduling, timestamps.
+**Purpose:**  
+Use `DateTime` when both date and time are relevant, such as logging events, scheduling, or timestamps.
 
-Example
+**Example:**
 ```cypher
 CREATE (:Log { message: "System rebooted", at: localdatetime("2025-06-29T13:45:00") })
 ```
 
-#### Interactions
+**Interactions:**
 
-* Compare with other DateTime values
-
+* Compare with other `DateTime` values
 * Extract parts:
 
 ```cypher
@@ -187,7 +187,7 @@ RETURN localdatetime("2025-06-29T13:45:00").year     // 2025
 RETURN localdatetime("2025-06-29T13:45:00").hour     // 13
 ```
 
-* Use localdatetime() with no arguments to get the current system time:
+* Use `localdatetime()` with no arguments to get the current system time:
 
 ```cypher
 RETURN localdatetime()
@@ -195,17 +195,17 @@ RETURN localdatetime()
 
 ### Duration
 
-Represents a span of time. Format: P[n]Y[n]M[n]DT[n]H[n]M[n]S (ISO 8601 Duration).
+Represents a span of time in ISO 8601 Duration format: `P[n]Y[n]M[n]DT[n]H[n]M[n]S`
 
-Purpose
-Use Duration to represent intervals, e.g. "3 days", "2 hours", or "1 year and 6 months".
+**Purpose:**  
+Use `Duration` to represent time intervals, such as "3 days", "2 hours", or "1 year and 6 months".
 
-Example
+**Example:**
 ```cypher
 CREATE (:Cooldown { period: duration("P3DT12H") })
 ```
 
-#### Interactions
+**Interactions:**
 
 * Add/subtract durations with dates or datetimes:
 

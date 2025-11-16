@@ -8,51 +8,57 @@ parent: "Cypher Language"
 
 # RETURN
 
-In its simple form, Return defines which properties the returned result-set will contain.
+The `RETURN` clause defines which properties and values the result-set will contain.
 
-Its structure is a list of `alias.property` separated by commas.
+## Basic Usage
 
-For convenience, it's possible to specify the alias only when you're interested in every attribute an entity possesses,
-and don't want to specify each attribute individually. For example:
+The basic structure is a comma-separated list of `alias.property` expressions:
+
+```sh
+RETURN person.name, person.age
+```
+
+For convenience, you can specify just the alias to return all properties of an entity:
 
 ```sh
 RETURN movie.title, actor
 ```
 
-Use the DISTINCT keyword to remove duplications within the result-set:
+## Removing Duplicates
+
+Use the `DISTINCT` keyword to remove duplicate values from the result-set:
 
 ```sh
 RETURN DISTINCT friend_of_friend.name
 ```
 
-In the above example, suppose we have two friends, Joe and Miesha,
-and both know Dominick.
-
-DISTINCT will make sure Dominick will only appear once
-in the final result set.
+For example, if you have two friends (Joe and Miesha) who both know Dominick, `DISTINCT` ensures that Dominick appears only once in the final result set.
 
 
-Return can also be used to aggregate data, similar to group by in SQL.
+## Aggregations
 
-Once an aggregation function is added to the return
-list, all other "none" aggregated values are considered as group keys, for example:
+The `RETURN` clause can also aggregate data, similar to SQL's GROUP BY functionality.
+
+When an aggregation function is used in the RETURN list, all non-aggregated values become implicit grouping keys:
 
 ```sh
 RETURN movie.title, MAX(actor.age), MIN(actor.age)
 ```
 
-Here we group data by movie title and for each movie, and we find its youngest and oldest actor age.
+This query groups data by movie title and, for each movie, returns the youngest and oldest actor ages.
 
-## Aggregations
+### Supported Aggregation Functions
 
-Supported aggregation functions include:
+| Function | Description |
+|----------|-------------|
+| `avg` | Calculate average of numeric values |
+| `collect` | Collect values into a list |
+| `count` | Count number of values |
+| `max` | Find maximum value |
+| `min` | Find minimum value |
+| `percentileCont` | Calculate continuous percentile |
+| `percentileDisc` | Calculate discrete percentile |
+| `stDev` | Calculate standard deviation |
+| `sum` | Calculate sum of numeric values |
 
-* `avg`
-* `collect`
-* `count`
-* `max`
-* `min`
-* `percentileCont`
-* `percentileDisc`
-* `stDev`
-* `sum`
+For detailed information on aggregation functions, see the [Functions documentation](/cypher/functions#aggregating-functions).
