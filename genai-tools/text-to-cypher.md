@@ -9,6 +9,17 @@ parent: "GenAI Tools"
 
 A high-performance Rust-based API service that translates natural language text to Cypher queries for graph databases, featuring integration with genai and FalkorDB. Complete all-in-one Docker solution with integrated FalkorDB database, web browser interface, text-to-cypher API, and Model Context Protocol (MCP) server support!
 
+## What's New
+
+**All-in-One Docker Solution**: Our latest Docker image now includes everything you need in a single container:
+
+- 🗄️ **FalkorDB Database** (port 6379) - Full graph database with Redis protocol
+- 🌐 **FalkorDB Web Interface** (port 3000) - Interactive graph browser and query builder  
+- 🚀 **Text-to-Cypher API** (port 8080) - Natural language to Cypher conversion
+- 🤖 **MCP Server** (port 3001) - AI assistant integration support
+
+No more complex setup - just run one Docker command and get a complete graph database stack!
+
 ## Features
 
 - **Text to Cypher Translation**: Convert natural language queries to Cypher database queries using AI
@@ -43,6 +54,12 @@ docker run -p 6379:6379 -p 3000:3000 -p 8080:8080 -p 3001:3001 \
 # Or mounting .env file for full MCP server functionality
 docker run -p 6379:6379 -p 3000:3000 -p 8080:8080 -p 3001:3001 \
   -v $(pwd)/.env:/app/.env:ro \
+  falkordb/text-to-cypher:latest
+
+# Custom ports using environment variables
+docker run -p 6379:6379 -p 3000:3000 -p 9090:9090 -p 4001:4001 \
+  -e REST_PORT=9090 -e MCP_PORT=4001 \
+  -e DEFAULT_MODEL=gpt-4o-mini -e DEFAULT_KEY=your-api-key \
   falkordb/text-to-cypher:latest
 ```
 
@@ -84,8 +101,20 @@ The local development setup requires:
 
 The application supports flexible configuration via environment variables or `.env` file:
 
+### Core Settings
+
 - `DEFAULT_MODEL`: Default AI model to use (e.g., "openai:gpt-4")
 - `DEFAULT_KEY`: Default API key for the AI service
+
+### Port Configuration
+
+- `REST_PORT`: REST API server port (default: 8080)
+- `MCP_PORT`: MCP server port for AI assistant integrations (default: 3001)
+  - The MCP server provides an SSE endpoint at `/sse` on this port
+
+### Optional Settings
+
+- `FALKORDB_CONNECTION`: FalkorDB connection string (default: "falkor://127.0.0.1:6379")
 
 Create a `.env` file from the provided example:
 
@@ -128,13 +157,92 @@ The integrated Docker solution runs four concurrent services:
 - Main REST API for text-to-cypher conversion
 - Swagger UI documentation at `http://localhost:8080/swagger-ui/`
 - OpenAPI specification at `http://localhost:8080/api-doc/openapi.json`
-- Supports both synchronous and streaming responses
+- Supports both streaming (SSE) and non-streaming responses
 
-### MCP Server (Port 3001)
+### MCP Server (Port 3001) - Conditional
 
-- Model Context Protocol server for AI assistant integration
-- Enables seamless integration with AI tools and applications
-- Requires proper `.env` configuration to start
+- Model Context Protocol server for AI assistant integrations
+- Provides `text_to_cypher` tool for natural language to Cypher conversion
+- **Note**: MCP server only starts if both `DEFAULT_MODEL` and `DEFAULT_KEY` are configured
+
+## MCP Server Usage
+
+The MCP server provides a standardized interface for AI assistants to convert natural language questions into Cypher queries. This enables seamless integration with AI tools that support the Model Context Protocol.
+
+### Using MCP Inspector
+
+To test and interact with the MCP server, you can use the MCP Inspector:
+
+1. **Start the text-to-cypher stack**:
+
+```bash
+docker run -p 6379:6379 -p 3000:3000 -p 8080:8080 -p 3001:3001 \
+  -e DEFAULT_MODEL=gpt-4o-mini -e DEFAULT_KEY=your-api-key \
+  falkordb/text-to-cypher:latest
+```
+
+2. **Install MCP Inspector** (if not already installed):
+
+```bash
+npx -y @modelcontextprotocol/inspector
+```
+
+3. **Connect MCP Inspector to the server**:
+   - Open MCP Inspector in your browser (typically `http://localhost:6274`)
+   - Add a new server connection with these settings:
+     - **Transport**: `stdio`
+     - **Command**: `nc`
+     - **Arguments**: `["localhost", "3001"]`
+
+   Or if using a direct connection:
+   - **Transport**: `sse`
+   - **URL**: `http://localhost:3001/sse`
+
+4. **Available Tools**:
+   The MCP server exposes the following tool:
+
+   #### `text_to_cypher`
+
+   Converts natural language questions into Cypher queries for graph databases.
+
+   **Parameters**:
+   - `graph_name` (required): Name of the graph database to query
+   - `question` (required): Natural language question to convert to Cypher
+
+   **Example Usage in MCP Inspector**:
+
+   ```json
+   {
+     "graph_name": "movies",
+     "question": "Find all actors who appeared in movies released after 2020"
+   }
+   ```
+
+5. **Example Workflow**:
+   - Select the `text_to_cypher` tool in MCP Inspector
+   - Fill in the parameters:
+     - Graph name: `"social_network"`
+     - Question: `"Who are the friends of John with more than 5 mutual connections?"`
+   - Execute the tool
+   - View the generated Cypher query and execution results
+
+**Pro Tip**: You can also interact with the FalkorDB directly through the web interface at `http://localhost:3000` to create and explore graphs visually!
+
+### Integration with AI Assistants
+
+The MCP server enables AI assistants to:
+
+- Convert natural language to Cypher queries
+- Execute queries against FalkorDB graphs
+- Provide structured responses with query results
+- Handle complex graph database interactions seamlessly
+
+### MCP Server Benefits
+
+- **Standardized Interface**: Uses the Model Context Protocol for consistent AI tool integration
+- **Streaming Support**: Real-time processing and response streaming
+- **Error Handling**: Comprehensive error messages and validation
+- **Documentation**: Auto-generated tool documentation with parameter descriptions and examples
 
 ## API Usage Examples
 
@@ -219,6 +327,73 @@ curl -X POST "http://localhost:8080/text_to_cypher" \
 # 4. Use MCP server for AI assistant integrations (port 3001)
 # Connect your AI assistant to http://localhost:3001
 ```
+
+## Deployment Options
+
+### Docker Deployment (Production)
+
+The project provides an all-in-one Docker image that includes FalkorDB database, web browser interface, text-to-cypher API, and MCP server:
+
+```bash
+# Pull the latest image
+docker pull falkordb/text-to-cypher:latest
+
+# Option 1: Complete stack with all services (recommended)
+docker run -d \
+  --name text-to-cypher-stack \
+  -p 6379:6379 \
+  -p 3000:3000 \
+  -p 8080:8080 \
+  -p 3001:3001 \
+  -e DEFAULT_MODEL=gpt-4o-mini \
+  -e DEFAULT_KEY=your-api-key \
+  --restart unless-stopped \
+  falkordb/text-to-cypher:latest
+
+# Option 2: Using environment file
+docker run -d \
+  --name text-to-cypher-stack \
+  -p 6379:6379 \
+  -p 3000:3000 \
+  -p 8080:8080 \
+  -p 3001:3001 \
+  --env-file .env \
+  --restart unless-stopped \
+  falkordb/text-to-cypher:latest
+
+# Option 3: Mount .env file for full MCP functionality
+docker run -d \
+  --name text-to-cypher-stack \
+  -p 6379:6379 \
+  -p 3000:3000 \
+  -p 8080:8080 \
+  -p 3001:3001 \
+  -v $(pwd)/.env:/app/.env:ro \
+  --restart unless-stopped \
+  falkordb/text-to-cypher:latest
+
+# View logs from all services
+docker logs -f text-to-cypher-stack
+```
+
+### Docker Configuration Options
+
+| Method | All Services | Use Case |
+|--------|-------------|----------|
+| `-e DEFAULT_MODEL=... -e DEFAULT_KEY=...` | ✅ | Environment-based config |
+| `--env-file .env` | ✅ | File-based configuration |
+| `-v $(pwd)/.env:/app/.env:ro` | ✅ | Mounted configuration file |
+
+**Note**: All four services (FalkorDB database, web interface, text-to-cypher API, and MCP server) will start when both `DEFAULT_MODEL` and `DEFAULT_KEY` are configured, regardless of how the environment variables are provided.
+
+### Service Ports
+
+| Service | Port | Description |
+|---------|------|-------------|
+| FalkorDB Database | 6379 | Redis protocol access to graph database |
+| FalkorDB Web Interface | 3000 | Interactive web browser for graph exploration |
+| Text-to-Cypher HTTP API | 8080 | REST API with Swagger documentation |
+| MCP Server | 3001 | Model Context Protocol server for AI integrations |
 
 ## Troubleshooting
 

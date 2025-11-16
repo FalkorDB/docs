@@ -669,6 +669,10 @@ mini
 RESTful
 OpenAPI
 Swagger
+npx
+modelcontextprotocol
+inspector
+nc
 orphaned
 replicas
 SQL's
