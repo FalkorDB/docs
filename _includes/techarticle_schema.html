@@ -1,0 +1,36 @@
+{% comment %}
+TechArticle JSON-LD Schema.org markup
+Provides structured data for technical documentation pages
+{% endcomment %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "headline": "{{ page.title | default: site.title }}",
+  {% if page.description %}
+  "description": "{{ page.description | strip_html | strip_newlines | escape }}",
+  {% endif %}
+  "url": "{{ site.url | default: 'https://docs.falkordb.com' }}{{ page.url }}",
+  {% if page.last_modified_at %}
+  "dateModified": "{{ page.last_modified_at | date_to_xmlschema }}",
+  {% elsif page.date %}
+  "dateModified": "{{ page.date | date_to_xmlschema }}",
+  {% endif %}
+  "author": {
+    "@type": "Organization",
+    "name": "FalkorDB"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "FalkorDB",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "{{ site.url | default: 'https://docs.falkordb.com' }}/images/falkor-logo.png"
+    }
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "{{ site.url | default: 'https://docs.falkordb.com' }}{{ page.url }}"
+  }
+}
+</script>
