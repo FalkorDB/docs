@@ -46,14 +46,35 @@ The command returns an array of key-value pairs, where each pair represents a sp
 ## Examples
 
 ### Basic Usage
-```bash
+
+{% capture shell_0 %}
 GRAPH.MEMORY USAGE myGraph
-```
+{% endcapture %}
+
+{% capture javascript_0 %}
+import { FalkorDB } from 'falkordb';
+const db = await FalkorDB.connect({
+  socket: { host: 'localhost', port: 6379 }
+});
+const graph = db.selectGraph('myGraph');
+const memoryInfo = await graph.memoryUsage();
+console.log(memoryInfo);
+{% endcapture %}
+
+{% include code_tabs.html id="memory_basic_tabs" shell=shell_0 javascript=javascript_0 %}
 
 ### With Sampling
-```bash
+
+{% capture shell_1 %}
 GRAPH.MEMORY USAGE myGraph SAMPLES 500
-```
+{% endcapture %}
+
+{% capture javascript_1 %}
+const memoryInfo = await graph.memoryUsage({ samples: 500 });
+console.log(memoryInfo);
+{% endcapture %}
+
+{% include code_tabs.html id="memory_samples_tabs" shell=shell_1 javascript=javascript_1 %}
 
 ### Sample Output
 
