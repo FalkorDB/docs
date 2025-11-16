@@ -646,23 +646,23 @@ let result = graph.query("CALL db.idx.fulltext.queryRelationships('Manager', 'Ch
 To delete the full-text index for a specific relation label, use:
 
 {% capture shell_18 %}
-GRAPH.QUERY DEMO_GRAPH "DROP FULLTEXT INDEX FOR ()-[m:Manager]-() ON (m.name)"
+GRAPH.QUERY DEMO_GRAPH "CALL DROP FULLTEXT INDEX FOR ()-[m:Manager]-() ON (m.name)"
 {% endcapture %}
 
 {% capture python_18 %}
-graph.query("DROP FULLTEXT INDEX FOR ()-[m:Manager]-() ON (m.name)")
+graph.query("CALL DROP FULLTEXT INDEX FOR ()-[m:Manager]-() ON (m.name)")
 {% endcapture %}
 
 {% capture javascript_18 %}
-await graph.query("DROP FULLTEXT INDEX FOR ()-[m:Manager]-() ON (m.name)");
+await graph.query("CALL DROP FULLTEXT INDEX FOR ()-[m:Manager]-() ON (m.name)");
 {% endcapture %}
 
 {% capture java_18 %}
-graph.query("DROP FULLTEXT INDEX FOR ()-[m:Manager]-() ON (m.name)");
+graph.query("CALL DROP FULLTEXT INDEX FOR ()-[m:Manager]-() ON (m.name)");
 {% endcapture %}
 
 {% capture rust_18 %}
-graph.query("DROP FULLTEXT INDEX FOR ()-[m:Manager]-() ON (m.name)").execute().await?;
+graph.query("CALL DROP FULLTEXT INDEX FOR ()-[m:Manager]-() ON (m.name)").execute().await?;
 {% endcapture %}
 
 {% include code_tabs.html id="fulltext_relation_drop_tabs" shell=shell_18 python=python_18 javascript=javascript_18 java=java_18 rust=rust_18 %}
