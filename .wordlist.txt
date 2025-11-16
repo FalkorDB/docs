@@ -25,6 +25,7 @@ DateTime
 DELUSER
 distro
 Ducati
+Embedder
 FOF
 FOREACH
 Falkor
@@ -35,6 +36,7 @@ FalkorDBGraph
 FalkorDBLite
 FalkorDBQAChain
 Gadepally
+Gemini
 Geospatial
 GETUSER
 GPL
@@ -117,6 +119,7 @@ Subcommands
 TF
 TTY
 TypeScript
+UI
 UNIQIE
 URIs
 UUID
@@ -175,6 +178,7 @@ falkordblite
 fulltext
 geospatial
 godoc
+gpt
 hasLabels
 haversin
 html
@@ -309,6 +313,7 @@ weightProp
 whitespace
 xyxel
 yaml
+yml
 uri
 util
 vec
@@ -431,6 +436,8 @@ cognee
 cognify
 topoteretes
 getzep
+zepai
+Zep's
 prune
 qdrant
 TechCorp
