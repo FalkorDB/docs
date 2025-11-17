@@ -11,6 +11,9 @@ Provides structured data for technical documentation pages
   "description": "{{ page.description | strip_html | strip_newlines | escape }}",
   {% endif %}
   "url": "{{ site.url | default: 'https://docs.falkordb.com' }}{{ page.url }}",
+  {% if page.date %}
+  "datePublished": "{{ page.date | date_to_xmlschema }}",
+  {% endif %}
   {% if page.last_modified_at %}
   "dateModified": "{{ page.last_modified_at | date_to_xmlschema }}",
   {% elsif page.date %}
