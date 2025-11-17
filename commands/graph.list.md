@@ -36,8 +36,8 @@ console.log(graphs);
 import com.falkordb.*;
 
 Driver driver = FalkorDB.driver("localhost", 6379);
-// Note: Java client accesses graphs directly by name
-// Use driver.graph("graphName") to work with a specific graph
+List<String> graphs = driver.listGraphs();
+System.out.println(graphs);
 {% endcapture %}
 
 {% capture rust_0 %}
@@ -50,8 +50,8 @@ let client = FalkorClientBuilder::new()
     .with_connection_info(connection_info)
     .build()
     .expect("Failed to build client");
-// Note: Rust client accesses graphs directly by name
-// Use client.select_graph("graphName") to work with a specific graph
+let graphs = client.list_graphs();
+println!("{:?}", graphs);
 {% endcapture %}
 
 {% include code_tabs.html id="list_tabs" shell=shell_0 python=python_0 javascript=javascript_0 java=java_0 rust=rust_0 %}
