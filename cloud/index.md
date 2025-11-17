@@ -1,3 +1,10 @@
+---
+title: "Cloud DBaaS"
+description: Cloud Offering
+nav_order: 
+has_children: true
+---
+
 # FalkorDB Cloud DBaaS
 
 Get started with FalkorDB's cloud offering. The platform provides several enterprise features, including multi-tenancy, across all tiers. Browse the available plans and select the one that suits your needs. You can scale and upgrade your deployment when ready.
