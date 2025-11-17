@@ -16,7 +16,7 @@ The free tier provides everything you need to explore FalkorDB and build initial
 
 | Feature | Included |
 |---------|----------|
-| Multi-Graph / Multi-Tenancy | ✓ |
+| [Multi-Graph / Multi-Tenancy](https://github.com/FalkorDB/docs/blob/Cloud-Docs/cloud/features.md#multi-tenancy) | ✓ |
 | Community Support | ✓ |
 | Cloud Providers (AWS, GCP) | ✓ |
 | Storage (100MB) | ✓ |
