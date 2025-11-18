@@ -12,8 +12,7 @@ redirect_from:
 
 # Getting Started with FalkorDB
 
-This guide will walk you through setting up FalkorDB, modeling a social network as a graph, 
-and accessing it using the [FalkorDB Python client](/getting-started/clients) with [Cypher](/cypher).
+This guide will walk you through setting up FalkorDB, modeling a social network as a graph, and accessing it using one of the [FalkorDB client libraries](/getting-started/clients) with the [Cypher](/cypher) query language.
 
 ---
 
@@ -58,15 +57,19 @@ Let's create a simple graph for a social network where:
 
 ### Graph Schema
 
-| Node Type | Properties               |
-|-----------|--------------------------|
-| User      | `id`, `name`, `email`    |
-| Post      | `id`, `content`, `date`  |
+**Node Types:**
 
-| Relationship Type | Start Node | End Node | Properties   |
-|-------------------|------------|----------|--------------|
-| FRIENDS_WITH      | User       | User     | `since`      |
-| CREATED           | User       | Post     | `time`       |
+| Node Type | Properties               | Description                           |
+|-----------|--------------------------|---------------------------------------|
+| User      | `id`, `name`, `email`    | Represents a user in the social network |
+| Post      | `id`, `content`, `date`  | Represents a post created by a user    |
+
+**Relationship Types:**
+
+| Relationship Type | Start Node | End Node | Properties   | Description                              |
+|-------------------|------------|----------|--------------|------------------------------------------|
+| FRIENDS_WITH      | User       | User     | `since`      | Indicates friendship between two users   |
+| CREATED           | User       | Post     | `time`       | Connects a user to their created posts   |
 
 ![FalkorDB-Model a Social Network as a Graph](https://github.com/user-attachments/assets/57d9b837-661e-4500-a9f2-88e754382d29)
 

@@ -50,7 +50,8 @@ python3 neo4j_to_csv_extractor.py [-h] [--uri URI] [--username USERNAME] --passw
                                   [--database DATABASE] [--batch-size BATCH_SIZE]
                                   [--nodes-only] [--edges-only] [--indexes-only] 
                                   [--config CONFIG] [--generate-template GENERATE_TEMPLATE]
-                                  [--analyze-only]
+                                  [--analyze-only] [--tenant-mode {label,property}]
+                                  [--tenant-filter TENANT_FILTER]
 ```
 
 **Options:**
@@ -65,6 +66,8 @@ python3 neo4j_to_csv_extractor.py [-h] [--uri URI] [--username USERNAME] --passw
 - `--config CONFIG`: Path to migration configuration JSON file
 - `--generate-template GENERATE_TEMPLATE`: Generate template migration config file
 - `--analyze-only`: Only analyze topology, do not extract data
+- `--tenant-mode {label,property}`: Enable multi-tenant mode - "label" (filter by node label) or "property" (filter by property value)
+- `--tenant-filter TENANT_FILTER`: The label name or property name to use for tenant segregation (required with --tenant-mode)
 
 ### Example Output
 
@@ -112,6 +115,30 @@ The script will:
 - Export indexes and constraints
 - Generate FalkorDB load scripts
 
+### Multi-Tenant Data Extraction
+
+If your Neo4j database contains multi-tenant data, you can extract each tenant's data into separate subdirectories:
+
+**Using property-based tenant segregation:**
+```bash
+python3 neo4j_to_csv_extractor.py --password <your-neo4j-password> \
+  --tenant-mode property --tenant-filter tenantId
+```
+
+This will:
+- Discover all distinct values of the `tenantId` property
+- Create a subdirectory for each tenant (e.g., `csv_output/tenant_cloudserve/`, `csv_output/tenant_learnhub/`, `csv_output/tenant_shopfast/`)
+- Export each tenant's nodes and relationships to their respective subdirectories
+- Automatically omit the `tenantId` property from CSV exports (since it's encoded in the folder name)
+
+**Using label-based tenant segregation:**
+```bash
+python3 neo4j_to_csv_extractor.py --password <your-neo4j-password> \
+  --tenant-mode label --tenant-filter TenantLabel
+```
+
+This filters nodes that have the specified label, allowing you to extract data for tenants organized by labels.
+
 ### Output Files
 
 The extraction creates the following files in the `csv_output` directory:
@@ -142,7 +169,7 @@ python3 falkordb_csv_loader.py MOVIES --port 6379 --stats
 ```
 
 **Options:**
-- `graph_name`: Target graph name in FalkorDB (required)
+- `graph_name`: Target graph name in FalkorDB (required). When using `--multi-graph` mode, this serves as the prefix for tenant-specific graphs
 - `--host HOST`: FalkorDB host (default: localhost)
 - `--port PORT`: FalkorDB port (default: 6379)
 - `--username USERNAME`: FalkorDB username (optional)
@@ -151,6 +178,41 @@ python3 falkordb_csv_loader.py MOVIES --port 6379 --stats
 - `--stats`: Show graph statistics after loading
 - `--csv-dir CSV_DIR`: Directory containing CSV files (default: csv_output)
 - `--merge-mode`: Use MERGE instead of CREATE for upsert behavior
+- `--multi-graph`: Enable multi-graph mode - load each tenant_* subfolder into a separate graph
+
+### Multi-Tenant Data Loading
+
+If you extracted multi-tenant data using the `--tenant-mode` option, you can load each tenant into a separate FalkorDB graph:
+
+```bash
+python3 falkordb_csv_loader.py MYAPP --multi-graph --port 6379
+```
+
+This will:
+- Scan for `tenant_*` subdirectories in `csv_output/`
+- Create a separate graph for each tenant (e.g., `MYAPP_shopfast`, `MYAPP_cloudserve`, `MYAPP_learnhub`)
+- Load each tenant's data into its own isolated graph
+- Provide detailed progress reporting per tenant
+
+Example output:
+```
+🗂️  Found 3 tenant directories: ['tenant_cloudserve', 'tenant_learnhub', 'tenant_shopfast']
+   Each will be loaded into a separate graph
+
+================================================================================
+📊 Processing tenant: cloudserve
+   Target graph: MYAPP_cloudserve
+   Source directory: csv_output/tenant_cloudserve
+================================================================================
+...
+✅ Completed loading tenant 'cloudserve' in 0:00:02.345
+
+================================================================================
+✅ Multi-graph loading complete!
+   Loaded 3 tenants into separate graphs
+   Total time: 0:00:07.891
+================================================================================
+```
 
 ### Using FalkorDB-Loader-RS (Recommended for Large Datasets)
 

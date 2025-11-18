@@ -8,15 +8,19 @@ parent: "Cypher Language"
 
 # SET
 
-SET is used to create or update properties on nodes and relationships.
+The `SET` clause is used to create or update properties on nodes and relationships.
 
-To set a property on a node, use `SET`.
+## Setting a Single Property
+
+To set a property on a node:
 
 ```sh
 GRAPH.QUERY DEMO_GRAPH "MATCH (n { name: 'Jim' }) SET n.name = 'Bob'"
 ```
 
-If you want to set multiple properties in one go, simply separate them with a comma to set multiple properties using a single SET clause.
+## Setting Multiple Properties
+
+You can set multiple properties in a single `SET` clause by separating them with commas:
 
 ```sh
 GRAPH.QUERY DEMO_GRAPH
@@ -24,7 +28,13 @@ GRAPH.QUERY DEMO_GRAPH
 SET n.age = 33, n.name = 'Bob'"
 ```
 
-The same can be accomplished by setting the graph entity variable to a map:
+## Setting Properties from a Map
+
+You can set properties using a map. There are two operators with different behaviors:
+
+### Replace All Properties (`=`)
+
+Replaces **all** existing properties with the map properties:
 
 ```sh
 GRAPH.QUERY DEMO_GRAPH
@@ -32,9 +42,23 @@ GRAPH.QUERY DEMO_GRAPH
 SET n = {age: 33, name: 'Bob'}"
 ```
 
-Using `=` in this way replaces all of the entity's previous properties, while `+=` will only set the properties it explicitly mentions.
+**Result:** The node will have only the properties `age` and `name`. Any other existing properties are removed.
 
-In the same way, the full property set of a graph entity can be assigned or merged:
+### Merge Properties (`+=`)
+
+Updates only the specified properties while keeping other existing properties:
+
+```sh
+GRAPH.QUERY DEMO_GRAPH
+"MATCH (n { name: 'Jim', age:32 })
+SET n += {age: 33}"
+```
+
+**Result:** The node's `age` is updated to 33, but `name` and any other properties remain unchanged.
+
+## Copying Properties Between Entities
+
+You can copy all properties from one entity to another:
 
 ```sh
 GRAPH.QUERY DEMO_GRAPH
@@ -42,10 +66,14 @@ GRAPH.QUERY DEMO_GRAPH
 SET jim = pam"
 ```
 
-After executing this query, the `jim` node will have the same property set as the `pam` node.
+After executing this query, the `jim` node will have exactly the same properties as the `pam` node (all of Jim's original properties are replaced).
 
-To remove a node's property, simply set property value to NULL.
+## Removing Properties
+
+To remove a property, set its value to `NULL`:
 
 ```sh
 GRAPH.QUERY DEMO_GRAPH "MATCH (n { name: 'Jim' }) SET n.name = NULL"
 ```
+
+This removes the `name` property from the node entirely.
