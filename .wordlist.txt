@@ -257,7 +257,6 @@ relTypes
 relationshipTypes
 relationshipId
 reltype
-reltype
 reltypeList
 replaceRegEx
 rgraph

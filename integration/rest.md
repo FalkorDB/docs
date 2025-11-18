@@ -36,11 +36,8 @@ curl -X POST "http://your-falkordb-browser-url/api/auth/login" \
 This will return a JWT token that you'll use for all subsequent requests:
 ```json
 {
-  "token": "<JWT_TOKEN>",
-  "user": {
-    "username": "default",
-    "role": "Admin"
-  }
+  "message": "Authentication successful",
+  "token": "<JWT_TOKEN>"
 }
 ```
 
@@ -137,50 +134,94 @@ curl -N -X GET "http://your-falkordb-browser-url/api/graph/my_graph?query=MATCH%
 ## Authentication
 
 All endpoints except `/api/auth/login` require authentication using a JWT bearer token in the Authorization header:
-```
+```http
 Authorization: Bearer <your-jwt-token>
 ```
 
 ### **User login** - `POST /api/auth/login`
 
-Authenticate user with username and password.
+Generate JWT Token (Login) - Authenticate user and generate a JWT Personal Access Token (PAT) for external API access.
 
 #### Request Body
 
 - Content-Type: `application/json`
 - Required fields: `username`, `password`
+- Optional fields: `name`, `expiresAt`, `ttlSeconds`, `host`, `port`, `tls`, `ca`
 
 Example request:
 ```json
 {
   "username": "default",
-  "password": ""
+  "password": "",
+  "name": "API Token",
+  "expiresAt": null,
+  "ttlSeconds": 31622400,
+  "host": "localhost",
+  "port": "6379",
+  "tls": "false",
+  "ca": ""
 }
 ```
 
+**Request Parameters:**
+- `username` (required): Username for database connection
+- `password` (required): Password for database connection (leave empty for 'default' user)
+- `name` (optional): Token name
+- `expiresAt` (optional): Token expiration date in ISO 8601 format
+- `ttlSeconds` (optional): Time-to-live in seconds (default: 31622400)
+- `host` (optional): FalkorDB host (default: "localhost")
+- `port` (optional): FalkorDB port (default: "6379")
+- `tls` (optional): Enable TLS connection - "true" or "false"
+- `ca` (optional): Base64-encoded CA certificate for TLS
+
 #### Responses
 
-- **200**: Login successful
+- **200**: Token generated successfully
   - Content-Type: `application/json`
   - Example response:
 
     ```json
     {
-      "token": "<JWT_TOKEN>",
-      "user": {
-        "username": "default",
-        "role": "Admin"
-      }
+      "message": "Authentication successful",
+      "token": "<JWT_TOKEN>"
     }
     ```
 
-- **400**: Bad request - missing username or password
-- **401**: Invalid credentials
-- **500**: Internal server error
+- **400**: Bad request - Invalid JSON, expiration date in the past, or invalid TTL value
+  - Content-Type: `application/json`
+  - Example response:
+
+    ```json
+    {
+      "message": "Expiration date must be in the future"
+    }
+    ```
+
+- **401**: Authentication failed - Invalid credentials or connection failed
+  - Content-Type: `application/json`
+  - Example response:
+
+    ```json
+    {
+      "message": "Invalid credentials or connection failed"
+    }
+    ```
+
+- **500**: Server configuration error - Missing NEXTAUTH_SECRET
+  - Content-Type: `application/json`
+  - Example response:
+
+    ```json
+    {
+      "message": "Server configuration error: NEXTAUTH_SECRET is not set"
+    }
+    ```
 
 ### **Revoke JWT token** - `POST /api/auth/revoke`
 
-Revoke a JWT token by removing it from the active tokens list in Redis. Once revoked, the token cannot be used for authentication. Admins can revoke any token, while regular users can only revoke their own tokens.
+Revoke a JWT token by marking it as inactive in FalkorDB. Once revoked, the token cannot be used for authentication. Admins can revoke any token, while regular users can only revoke their own tokens.
+
+**Note:** Provide either `token` or `token_id` (not both)
 
 #### Headers
 - `Authorization: Bearer <token>` (required)
@@ -188,14 +229,25 @@ Revoke a JWT token by removing it from the active tokens list in Redis. Once rev
 #### Request Body
 
 - Content-Type: `application/json`
-- Required field: `token`
+- Required field: Either `token` or `token_id` (not both)
 
-Example request:
+Example request (using token):
 ```json
 {
-  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+  "token": "<JWT_TOKEN>"
 }
 ```
+
+Example request (using token_id):
+```json
+{
+  "token_id": "1761055513181-215c579b-c6e1-4f10-9b07-aacbf89cda21"
+}
+```
+
+**Request Parameters:**
+- `token` (optional): JWT token to revoke
+- `token_id` (optional): Token ID to revoke
 
 #### Responses
 
