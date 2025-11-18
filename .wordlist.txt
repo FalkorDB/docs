@@ -77,6 +77,7 @@ MotoGP
 NRedisGraph
 NaN
 NFalkorDB
+NEXTAUTH
 NodeJS
 Nostem
 NumItems
