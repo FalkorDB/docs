@@ -398,7 +398,7 @@ graph.query("CREATE VECTOR INDEX FOR (p:Product) ON (p.embedding) OPTIONS {dimen
 
 // Insert products with embeddings (embeddings would come from your model)
 let embedding = model.encode("laptop computer");  // Your embedding model
-graph.query(&format!("CREATE (p:Product {{name: 'Laptop', embedding: vecf32({:?})}})", embedding)).execute().await?;
+graph.query(&format!("CREATE (p:Product {name: 'Laptop', embedding: vecf32({:?})})", embedding)).execute().await?;
 
 // Search for similar products
 let query_embedding = model.encode("notebook pc");
