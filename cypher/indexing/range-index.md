@@ -11,6 +11,16 @@ grand_parent: "Cypher Language"
 
 FalkorDB supports single-property indexes for node labels and for relationship type. String, numeric, and geospatial data types can be indexed.
 
+## Supported Data Types
+
+Range indexes support the following data types:
+- **String**: Text values for exact matching and range queries
+- **Numeric**: Integer and floating-point numbers for range comparisons
+- **Geospatial**: Point data types for location-based queries
+- **Arrays**: Single-property arrays containing scalar values (integers, floats, strings)
+
+**Note**: Complex types like nested arrays, maps, or vectors are not supported for range indexing.
+
 ## Creating an index for a node label
 
 For a node label, the index creation syntax is:
@@ -356,3 +366,123 @@ let result = graph.query("MATCH (p:Person) WHERE 90 IN p.samples RETURN p").exec
 {% endcapture %}
 
 {% include code_tabs.html id="array_index_tabs" shell=shell_9 python=python_9 javascript=javascript_9 java=java_9 rust=rust_9 %}
+
+## Verifying Index Usage
+
+To verify that an index is being used by your query, use `GRAPH.EXPLAIN` before and after creating the index:
+
+{% capture shell_verify %}
+# Before creating the index
+GRAPH.EXPLAIN DEMO_GRAPH "MATCH (p:Person) WHERE p.age > 30 RETURN p"
+# Output shows: Label Scan | (p:Person)
+
+# Create the index
+GRAPH.QUERY DEMO_GRAPH "CREATE INDEX FOR (p:Person) ON (p.age)"
+
+# After creating the index
+GRAPH.EXPLAIN DEMO_GRAPH "MATCH (p:Person) WHERE p.age > 30 RETURN p"
+# Output now shows: Index Scan | (p:Person)
+{% endcapture %}
+
+{% capture python_verify %}
+# Before creating the index
+result = graph.explain("MATCH (p:Person) WHERE p.age > 30 RETURN p")
+print(result)  # Shows: Label Scan | (p:Person)
+
+# Create the index
+graph.query("CREATE INDEX FOR (p:Person) ON (p.age)")
+
+# After creating the index
+result = graph.explain("MATCH (p:Person) WHERE p.age > 30 RETURN p")
+print(result)  # Now shows: Index Scan | (p:Person)
+{% endcapture %}
+
+{% capture javascript_verify %}
+// Before creating the index
+let result = await graph.explain("MATCH (p:Person) WHERE p.age > 30 RETURN p");
+console.log(result);  // Shows: Label Scan | (p:Person)
+
+// Create the index
+await graph.query("CREATE INDEX FOR (p:Person) ON (p.age)");
+
+// After creating the index
+result = await graph.explain("MATCH (p:Person) WHERE p.age > 30 RETURN p");
+console.log(result);  // Now shows: Index Scan | (p:Person)
+{% endcapture %}
+
+{% capture java_verify %}
+// Before creating the index
+String result = graph.explain("MATCH (p:Person) WHERE p.age > 30 RETURN p");
+System.out.println(result);  // Shows: Label Scan | (p:Person)
+
+// Create the index
+graph.query("CREATE INDEX FOR (p:Person) ON (p.age)");
+
+// After creating the index
+result = graph.explain("MATCH (p:Person) WHERE p.age > 30 RETURN p");
+System.out.println(result);  // Now shows: Index Scan | (p:Person)
+{% endcapture %}
+
+{% capture rust_verify %}
+// Before creating the index
+let result = graph.explain("MATCH (p:Person) WHERE p.age > 30 RETURN p").execute().await?;
+println!("{}", result);  // Shows: Label Scan | (p:Person)
+
+// Create the index
+graph.query("CREATE INDEX FOR (p:Person) ON (p.age)").execute().await?;
+
+// After creating the index
+let result = graph.explain("MATCH (p:Person) WHERE p.age > 30 RETURN p").execute().await?;
+println!("{}", result);  // Now shows: Index Scan | (p:Person)
+{% endcapture %}
+
+{% include code_tabs.html id="verify_index_tabs" shell=shell_verify python=python_verify javascript=javascript_verify java=java_verify rust=rust_verify %}
+
+## Index Management
+
+### Listing Existing Indexes
+
+To view all indexes in your graph, use the `db.indexes()` procedure:
+
+```cypher
+CALL db.indexes()
+```
+
+This returns information about all indexes including their type (RANGE), entity type (node/relationship), labels, and properties.
+
+## Performance Tradeoffs and Best Practices
+
+### When to Use Range Indexes
+
+Range indexes are ideal for:
+- **Filtering by specific values**: Queries with equality filters (e.g., `WHERE p.name = 'Alice'`)
+- **Range queries**: Numeric or string comparisons (e.g., `WHERE p.age > 30`, `WHERE p.name >= 'A' AND p.name < 'B'`)
+- **Geospatial queries**: Finding entities within a certain distance
+- **Array membership**: Checking if a value exists in an array property
+
+### Performance Considerations
+
+**Benefits:**
+- Dramatically improves query performance for filtered searches
+- Reduces the number of nodes/relationships that need to be scanned
+- Enables efficient range scans and point lookups
+
+**Costs:**
+- **Write overhead**: Every insert or update to an indexed property requires updating the index
+- **Storage**: Indexes consume additional memory and disk space
+- **Maintenance**: Index structures need to be maintained during graph modifications
+
+**Recommendations:**
+- Index properties that are frequently used in `WHERE` clauses
+- Avoid indexing properties that are rarely queried or have high write frequency
+- For properties with very few distinct values (low cardinality), indexes may not provide significant benefits
+- Monitor query performance with `GRAPH.PROFILE` to validate index effectiveness
+
+### Example: Profiling Index Performance
+
+```cypher
+# Profile query to see actual execution metrics
+GRAPH.PROFILE DEMO_GRAPH "MATCH (p:Person) WHERE p.age > 30 RETURN p"
+```
+
+This shows detailed timing information and confirms whether the index was used.

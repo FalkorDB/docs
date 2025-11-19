@@ -529,3 +529,108 @@ graph.query("DROP FULLTEXT INDEX FOR ()-[m:Manager]-() ON (m.name)").execute().a
 {% endcapture %}
 
 {% include code_tabs.html id="fulltext_relation_drop_tabs" shell=shell_18 python=python_18 javascript=javascript_18 java=java_18 rust=rust_18 %}
+
+## Index Management
+
+### Listing Full-text Indexes
+
+To view all indexes (including full-text) in your graph, use:
+
+```cypher
+CALL db.indexes()
+```
+
+This returns information about all indexes, with full-text indexes marked with type `FULLTEXT`.
+
+## Performance Tradeoffs and Best Practices
+
+### When to Use Full-text Indexes
+
+Full-text indexes are ideal for:
+- **Text-heavy search**: Searching within large text fields like descriptions, articles, or comments
+- **Partial word matching**: When users might not know the exact text
+- **Fuzzy search**: Handling typos and spelling variations
+- **Multi-word queries**: Searching for multiple terms with boolean logic
+
+### When NOT to Use Full-text Indexes
+
+Full-text indexes are not optimal for:
+- **Exact numeric filtering**: Use range indexes instead for numeric comparisons
+- **Exact-match queries**: Range indexes are more efficient for exact property matches
+- **Small or structured data**: For short, well-defined strings, range indexes may be sufficient
+
+### Performance Considerations
+
+**Benefits:**
+- Enables sophisticated text search capabilities (fuzzy, prefix, phonetic)
+- Supports stemming and language-specific optimizations
+- Returns relevance scores (TF-IDF) for ranking results
+
+**Costs:**
+- **Write overhead**: Text must be tokenized and indexed on write
+- **Storage**: Requires more space than range indexes due to tokenization and inverted indices
+- **Configuration complexity**: Language, stopwords, and stemming settings affect results
+- **Query performance**: Fuzzy matching is more expensive than exact matching
+
+**Recommendations:**
+- Choose the correct language setting for proper stemming
+- Configure appropriate stopwords for your use case
+- Use prefix matching (`*`) for autocomplete rather than full fuzzy search when possible
+- Test query performance with realistic data volumes
+- Consider the tradeoff between index configurability and query performance
+
+### Configuration Best Practices
+
+**Language Selection:**
+- Wrong language settings can produce poor stemming results
+- Example: Searching "running" with English stemming finds "run", but German stemming won't
+
+**Stopwords:**
+- Default stopwords are optimized for general text
+- Customize stopwords for domain-specific applications (e.g., legal, medical, technical documents)
+- Too many stopwords can hurt precision; too few increase index size
+
+**Phonetic Search:**
+- Useful for name searches and when spelling variations are common
+- Increases index size and query time
+- Double Metaphone (`dm:en`) is recommended for English
+
+## Verifying Full-text Index Usage
+
+Use `GRAPH.EXPLAIN` to verify that full-text queries use the index:
+
+{% capture shell_ft_verify %}
+# Check if full-text index is used
+GRAPH.EXPLAIN DEMO_GRAPH "CALL db.idx.fulltext.queryNodes('Movie', 'Book') YIELD node RETURN node"
+# Output shows: ProcedureCall | db.idx.fulltext.queryNodes
+{% endcapture %}
+
+{% capture python_ft_verify %}
+# Check if full-text index is used
+result = graph.explain("CALL db.idx.fulltext.queryNodes('Movie', 'Book') YIELD node RETURN node")
+print(result)
+# Output shows: ProcedureCall | db.idx.fulltext.queryNodes
+{% endcapture %}
+
+{% capture javascript_ft_verify %}
+// Check if full-text index is used
+const result = await graph.explain("CALL db.idx.fulltext.queryNodes('Movie', 'Book') YIELD node RETURN node");
+console.log(result);
+// Output shows: ProcedureCall | db.idx.fulltext.queryNodes
+{% endcapture %}
+
+{% capture java_ft_verify %}
+// Check if full-text index is used
+String result = graph.explain("CALL db.idx.fulltext.queryNodes('Movie', 'Book') YIELD node RETURN node");
+System.out.println(result);
+// Output shows: ProcedureCall | db.idx.fulltext.queryNodes
+{% endcapture %}
+
+{% capture rust_ft_verify %}
+// Check if full-text index is used
+let result = graph.explain("CALL db.idx.fulltext.queryNodes('Movie', 'Book') YIELD node RETURN node").execute().await?;
+println!("{}", result);
+// Output shows: ProcedureCall | db.idx.fulltext.queryNodes
+{% endcapture %}
+
+{% include code_tabs.html id="fulltext_verify_tabs" shell=shell_ft_verify python=python_ft_verify javascript=javascript_ft_verify java=java_ft_verify rust=rust_ft_verify %}
