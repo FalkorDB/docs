@@ -158,7 +158,7 @@ let result = graph.query("WITH point({latitude:41.4045886, longitude:-75.6969532
 
 {% include code_tabs.html id="geospatial_tabs" shell=shell_4 python=python_4 javascript=javascript_4 java=java_4 rust=rust_4 %}
 
-Geospatial indexes can currently only be leveraged with `<` and `<=` filters; matching nodes outside of the given radius is performed using conventional matching.
+Geospatial indexes can currently only be leveraged with `<` and `<=` filters; matching nodes outside the given radius are matched using conventional traversal.
 
 ## Creating an index for a relationship type
 

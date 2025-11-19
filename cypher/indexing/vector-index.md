@@ -80,7 +80,7 @@ graph.query("CREATE VECTOR INDEX FOR ()-[e:Call]->() ON (e.summary) OPTIONS {dim
 {% include code_tabs.html id="vector_create_relation_tabs" shell=shell_20 python=python_20 javascript=javascript_20 java=java_20 rust=rust_20 %}
 
 Please note, when creating a vector index, both the vector dimension and similarity function
-must be provided. At the moment the only supported similarity functions are 'euclidean' or 'cosine'.
+must be provided. Currently, the only supported similarity functions are 'euclidean' or 'cosine'.
 
 ## Inserting vectors
 
