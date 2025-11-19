@@ -120,6 +120,220 @@ graph.query("CALL db.idx.fulltext.createNodeIndex('Movie', {field: 'title', phon
 
 {% include code_tabs.html id="fulltext_phonetic_tabs" shell=shell_13 python=python_13 javascript=javascript_13 java=java_13 rust=rust_13 %}
 
+## Query Syntax and Features
+
+FalkorDB uses [RediSearch query syntax](https://redis.io/docs/latest/develop/ai/search-and-query/advanced-concepts/query_syntax/) which provides powerful search capabilities including fuzzy matching, prefix matching, and tokenization.
+
+### Tokenization
+
+When text is indexed, it is automatically tokenized (split into words). By default, text is split on whitespace and punctuation. This allows you to search for individual words within larger text fields.
+
+For example, if you index a `title` property containing "The Lord of the Rings", you can search for any of the individual words like "Lord" or "Rings".
+
+### Prefix Matching
+
+Prefix matching allows you to search for words that start with a specific prefix using the `*` wildcard. This is useful for autocomplete functionality or when you want to match word variations.
+
+{% capture shell_prefix %}
+# Find all movies with titles containing words starting with "Jun"
+GRAPH.QUERY DEMO_GRAPH "CALL db.idx.fulltext.queryNodes('Movie', 'Jun*') YIELD node RETURN node.title"
+# This would match "Jungle", "June", "Junior", etc.
+{% endcapture %}
+
+{% capture python_prefix %}
+# Find all movies with titles containing words starting with "Jun"
+result = graph.query("CALL db.idx.fulltext.queryNodes('Movie', 'Jun*') YIELD node RETURN node.title")
+for record in result:
+    print(record["node.title"])
+# This would match "Jungle", "June", "Junior", etc.
+{% endcapture %}
+
+{% capture javascript_prefix %}
+// Find all movies with titles containing words starting with "Jun"
+const result = await graph.query("CALL db.idx.fulltext.queryNodes('Movie', 'Jun*') YIELD node RETURN node.title");
+for (const record of result.data) {
+    console.log(record["node.title"]);
+}
+// This would match "Jungle", "June", "Junior", etc.
+{% endcapture %}
+
+{% capture java_prefix %}
+// Find all movies with titles containing words starting with "Jun"
+ResultSet result = graph.query("CALL db.idx.fulltext.queryNodes('Movie', 'Jun*') YIELD node RETURN node.title");
+for (Record record : result) {
+    System.out.println(record.get("node.title"));
+}
+// This would match "Jungle", "June", "Junior", etc.
+{% endcapture %}
+
+{% capture rust_prefix %}
+// Find all movies with titles containing words starting with "Jun"
+let result = graph.query("CALL db.idx.fulltext.queryNodes('Movie', 'Jun*') YIELD node RETURN node.title").execute().await?;
+for record in result.data() {
+    println!("{}", record["node.title"]);
+}
+// This would match "Jungle", "June", "Junior", etc.
+{% endcapture %}
+
+{% include code_tabs.html id="fulltext_prefix_tabs" shell=shell_prefix python=python_prefix javascript=javascript_prefix java=java_prefix rust=rust_prefix %}
+
+**Note:** Prefix matching only works at the end of a word (e.g., `Jun*`). The wildcard must appear at the end of the search term.
+
+### Fuzzy Matching
+
+Fuzzy matching allows you to find words that are similar to your search term, accounting for typos and spelling variations. Use the `%` symbol followed by the Levenshtein distance (number of character changes allowed).
+
+{% capture shell_fuzzy %}
+# Find movies with titles containing words similar to "Jangle" (allowing 1 character difference)
+GRAPH.QUERY DEMO_GRAPH "CALL db.idx.fulltext.queryNodes('Movie', '%Jangle%1') YIELD node RETURN node.title"
+# This would match "Jungle" (1 character different)
+
+# Allow up to 2 character differences
+GRAPH.QUERY DEMO_GRAPH "CALL db.idx.fulltext.queryNodes('Movie', '%Jngle%2') YIELD node RETURN node.title"
+# This would also match "Jungle" (1 character missing)
+{% endcapture %}
+
+{% capture python_fuzzy %}
+# Find movies with titles containing words similar to "Jangle" (allowing 1 character difference)
+result = graph.query("CALL db.idx.fulltext.queryNodes('Movie', '%Jangle%1') YIELD node RETURN node.title")
+for record in result:
+    print(record["node.title"])
+# This would match "Jungle" (1 character different)
+
+# Allow up to 2 character differences
+result = graph.query("CALL db.idx.fulltext.queryNodes('Movie', '%Jngle%2') YIELD node RETURN node.title")
+# This would also match "Jungle" (1 character missing)
+{% endcapture %}
+
+{% capture javascript_fuzzy %}
+// Find movies with titles containing words similar to "Jangle" (allowing 1 character difference)
+const result = await graph.query("CALL db.idx.fulltext.queryNodes('Movie', '%Jangle%1') YIELD node RETURN node.title");
+for (const record of result.data) {
+    console.log(record["node.title"]);
+}
+// This would match "Jungle" (1 character different)
+
+// Allow up to 2 character differences
+const result2 = await graph.query("CALL db.idx.fulltext.queryNodes('Movie', '%Jngle%2') YIELD node RETURN node.title");
+// This would also match "Jungle" (1 character missing)
+{% endcapture %}
+
+{% capture java_fuzzy %}
+// Find movies with titles containing words similar to "Jangle" (allowing 1 character difference)
+ResultSet result = graph.query("CALL db.idx.fulltext.queryNodes('Movie', '%Jangle%1') YIELD node RETURN node.title");
+for (Record record : result) {
+    System.out.println(record.get("node.title"));
+}
+// This would match "Jungle" (1 character different)
+
+// Allow up to 2 character differences
+ResultSet result2 = graph.query("CALL db.idx.fulltext.queryNodes('Movie', '%Jngle%2') YIELD node RETURN node.title");
+// This would also match "Jungle" (1 character missing)
+{% endcapture %}
+
+{% capture rust_fuzzy %}
+// Find movies with titles containing words similar to "Jangle" (allowing 1 character difference)
+let result = graph.query("CALL db.idx.fulltext.queryNodes('Movie', '%Jangle%1') YIELD node RETURN node.title").execute().await?;
+for record in result.data() {
+    println!("{}", record["node.title"]);
+}
+// This would match "Jungle" (1 character different)
+
+// Allow up to 2 character differences
+let result2 = graph.query("CALL db.idx.fulltext.queryNodes('Movie', '%Jngle%2') YIELD node RETURN node.title").execute().await?;
+// This would also match "Jungle" (1 character missing)
+{% endcapture %}
+
+{% include code_tabs.html id="fulltext_fuzzy_tabs" shell=shell_fuzzy python=python_fuzzy javascript=javascript_fuzzy java=java_fuzzy rust=rust_fuzzy %}
+
+**Fuzzy matching syntax:** `%term%distance` where:
+- `term` is the word to match
+- `distance` is the maximum Levenshtein distance (1-3, default is 1 if not specified)
+
+**Note:** Fuzzy matching is computationally more expensive than exact or prefix matching, so use it judiciously on large datasets.
+
+### Combining Query Features
+
+You can combine multiple search terms using boolean operators:
+
+- `AND` (or space): All terms must match
+- `OR` (`|`): At least one term must match
+- `NOT` (`-`): Term must not be present
+
+{% capture shell_combined %}
+# Find movies with "Jungle" AND "Book" in the title
+GRAPH.QUERY DEMO_GRAPH "CALL db.idx.fulltext.queryNodes('Movie', 'Jungle Book') YIELD node RETURN node.title"
+
+# Find movies with "Jungle" OR "Forest" in the title
+GRAPH.QUERY DEMO_GRAPH "CALL db.idx.fulltext.queryNodes('Movie', 'Jungle|Forest') YIELD node RETURN node.title"
+
+# Find movies with "Book" but NOT "Jungle"
+GRAPH.QUERY DEMO_GRAPH "CALL db.idx.fulltext.queryNodes('Movie', 'Book -Jungle') YIELD node RETURN node.title"
+
+# Combine prefix and fuzzy matching: Find "Jun*" OR words similar to "Forst"
+GRAPH.QUERY DEMO_GRAPH "CALL db.idx.fulltext.queryNodes('Movie', 'Jun*|%Forst%1') YIELD node RETURN node.title"
+{% endcapture %}
+
+{% capture python_combined %}
+# Find movies with "Jungle" AND "Book" in the title
+result = graph.query("CALL db.idx.fulltext.queryNodes('Movie', 'Jungle Book') YIELD node RETURN node.title")
+
+# Find movies with "Jungle" OR "Forest" in the title
+result = graph.query("CALL db.idx.fulltext.queryNodes('Movie', 'Jungle|Forest') YIELD node RETURN node.title")
+
+# Find movies with "Book" but NOT "Jungle"
+result = graph.query("CALL db.idx.fulltext.queryNodes('Movie', 'Book -Jungle') YIELD node RETURN node.title")
+
+# Combine prefix and fuzzy matching
+result = graph.query("CALL db.idx.fulltext.queryNodes('Movie', 'Jun*|%Forst%1') YIELD node RETURN node.title")
+{% endcapture %}
+
+{% capture javascript_combined %}
+// Find movies with "Jungle" AND "Book" in the title
+const result = await graph.query("CALL db.idx.fulltext.queryNodes('Movie', 'Jungle Book') YIELD node RETURN node.title");
+
+// Find movies with "Jungle" OR "Forest" in the title
+const result2 = await graph.query("CALL db.idx.fulltext.queryNodes('Movie', 'Jungle|Forest') YIELD node RETURN node.title");
+
+// Find movies with "Book" but NOT "Jungle"
+const result3 = await graph.query("CALL db.idx.fulltext.queryNodes('Movie', 'Book -Jungle') YIELD node RETURN node.title");
+
+// Combine prefix and fuzzy matching
+const result4 = await graph.query("CALL db.idx.fulltext.queryNodes('Movie', 'Jun*|%Forst%1') YIELD node RETURN node.title");
+{% endcapture %}
+
+{% capture java_combined %}
+// Find movies with "Jungle" AND "Book" in the title
+ResultSet result = graph.query("CALL db.idx.fulltext.queryNodes('Movie', 'Jungle Book') YIELD node RETURN node.title");
+
+// Find movies with "Jungle" OR "Forest" in the title
+ResultSet result2 = graph.query("CALL db.idx.fulltext.queryNodes('Movie', 'Jungle|Forest') YIELD node RETURN node.title");
+
+// Find movies with "Book" but NOT "Jungle"
+ResultSet result3 = graph.query("CALL db.idx.fulltext.queryNodes('Movie', 'Book -Jungle') YIELD node RETURN node.title");
+
+// Combine prefix and fuzzy matching
+ResultSet result4 = graph.query("CALL db.idx.fulltext.queryNodes('Movie', 'Jun*|%Forst%1') YIELD node RETURN node.title");
+{% endcapture %}
+
+{% capture rust_combined %}
+// Find movies with "Jungle" AND "Book" in the title
+let result = graph.query("CALL db.idx.fulltext.queryNodes('Movie', 'Jungle Book') YIELD node RETURN node.title").execute().await?;
+
+// Find movies with "Jungle" OR "Forest" in the title
+let result2 = graph.query("CALL db.idx.fulltext.queryNodes('Movie', 'Jungle|Forest') YIELD node RETURN node.title").execute().await?;
+
+// Find movies with "Book" but NOT "Jungle"
+let result3 = graph.query("CALL db.idx.fulltext.queryNodes('Movie', 'Book -Jungle') YIELD node RETURN node.title").execute().await?;
+
+// Combine prefix and fuzzy matching
+let result4 = graph.query("CALL db.idx.fulltext.queryNodes('Movie', 'Jun*|%Forst%1') YIELD node RETURN node.title").execute().await?;
+{% endcapture %}
+
+{% include code_tabs.html id="fulltext_combined_tabs" shell=shell_combined python=python_combined javascript=javascript_combined java=java_combined rust=rust_combined %}
+
+For more advanced query syntax features, see the [RediSearch query syntax documentation](https://redis.io/docs/latest/develop/ai/search-and-query/advanced-concepts/query_syntax/).
+
 ## Utilizing a full-text index for a node label
 
 An index can be invoked to match any whole words contained within:
