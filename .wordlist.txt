@@ -671,3 +671,8 @@ Levenshtein
 autocomplete
 tokenization
 tokenized
+HNSW
+ANN
+tradeoff
+tradeoffs
+unnormalized
