@@ -680,3 +680,13 @@ Forst
 configurability
 Metaphone
 ProcedureCall
+
+dimensionality
+efConstruction
+efRuntime
+queryVector
+DESC
+tolist
+pc
+queryEmbedding
+printf
