@@ -42,4 +42,4 @@ See the list of available graph [algorithms](/algorithms).
 
 ## Indexing
 
-See how to use [indexing](/cypher/indexing).
+See how to use [indexing](/cypher/indexing/).
