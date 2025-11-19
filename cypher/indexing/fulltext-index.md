@@ -2,7 +2,7 @@
 title: "Full-text Index"
 nav_order: 2
 description: >
-    FalkorDB leverages RediSearch indexing capabilities to provide full-text indices through procedure calls.
+    FalkorDB provides full-text indices through procedure calls.
 parent: "Indexing"
 grand_parent: "Cypher Language"
 ---
@@ -61,7 +61,7 @@ graph.query("CALL db.idx.fulltext.createNodeIndex('Person', 'firstName', 'lastNa
 
 {% include code_tabs.html id="fulltext_multi_property_tabs" shell=shell_11 python=python_11 javascript=javascript_11 java=java_11 rust=rust_11 %}
 
-RediSearch provide 2 index configuration options:
+Index configuration options:
 
 1. Language - Define which language to use for stemming text, which is adding the base form of a word to the index. This allows the query for "going" to also return results for "go" and "gone", for example.
 2. Stopwords - These are words that are usually so common that they do not add much information to search, but take up a lot of space and CPU time in the index.
@@ -90,7 +90,7 @@ graph.query("CALL db.idx.fulltext.createNodeIndex({ label: 'Movie', language: 'G
 
 {% include code_tabs.html id="fulltext_config_tabs" shell=shell_12 python=python_12 javascript=javascript_12 java=java_12 rust=rust_12 %}
 
-RediSearch provide 3 additional field configuration options:
+Additional field configuration options:
 
 1. Weight - The importance of the text in the field
 2. Nostem - Skip stemming when indexing text
