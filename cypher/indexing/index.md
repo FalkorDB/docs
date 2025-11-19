@@ -7,7 +7,6 @@ parent: "Cypher Language"
 has_children: true
 redirect_from:
   - /cypher/indexing.html
-  - /cypher/indexing
 ---
 
 # Indexing
