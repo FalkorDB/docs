@@ -691,3 +691,7 @@ pc
 queryEmbedding
 printf
 Jngle
+Homebrew
+libomp
+sdist
+dylib
