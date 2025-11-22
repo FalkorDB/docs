@@ -23,7 +23,6 @@ FalkorDBLite is a self-contained Python interface to the FalkorDB graph database
 ## Requirements
 
 - Python 3.12 or higher
-- System build tools (automatically handled during installation on most systems)
 
 ## Installation
 
@@ -36,46 +35,13 @@ pip install falkordblite
 The package will automatically install its dependencies, including:
 - `redis>=4.5` - Redis Python client
 - `psutil` - Process and system utilities
-- `setuptools>38.0` - Build system
 
-### System Prerequisites
+### macOS Runtime Requirement
 
-#### Linux
-
-On Ubuntu/Debian systems:
-
-```bash
-apt-get install python3-dev build-essential
-```
-
-On Redhat/Fedora systems:
-
-```bash
-yum install python3-devel gcc make
-```
-
-#### macOS
-
-FalkorDBLite for macOS comes as a wheel package by default that can be installed using current versions of pip.
-
-**Important:** The FalkorDB module requires the OpenMP runtime library (`libomp`). If you encounter an error like `Library not loaded: /opt/homebrew/opt/libomp/lib/libomp.dylib`, install it using Homebrew:
+**Important:** On macOS, the FalkorDB module requires the OpenMP runtime library (`libomp`). If you encounter an error like `Library not loaded: /opt/homebrew/opt/libomp/lib/libomp.dylib`, install it using Homebrew:
 
 ```bash
 brew install libomp
-```
-
-To install FalkorDBLite on macOS using the sdist package instead, you will need the XCode command line utilities installed. If you do not have xcode installed on recent macOS releases, they can be installed by running:
-
-```bash
-xcode-select --install
-```
-
-#### Windows
-
-FalkorDBLite can be installed on Windows 10 and later under the Windows Subsystem for Linux (WSL). Follow the [WSL installation guide](https://learn.microsoft.com/en-us/windows/wsl/install) and then install the python-dev package:
-
-```bash
-apt-get install python-dev
 ```
 
 ## Getting Started
