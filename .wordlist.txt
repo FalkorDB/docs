@@ -56,6 +56,8 @@ JS
 js
 JSDoc
 JSON
+JWT
+tokenId
 KJDev
 Kepner
 Keren
@@ -77,6 +79,7 @@ MotoGP
 NRedisGraph
 NaN
 NFalkorDB
+NEXTAUTH
 NodeJS
 Nostem
 NumItems
@@ -213,6 +216,7 @@ myGraph
 myPassword
 myUsername
 namespace
+nodeId
 nan
 nav
 nd
@@ -256,7 +260,7 @@ redisgraph
 relDirection
 relTypes
 relationshipTypes
-reltype
+relationshipId
 reltype
 reltypeList
 replaceRegEx
@@ -335,6 +339,7 @@ falkorDB
 GraphName
 api
 auth
+backend
 callbackUrl
 csrf
 csrfToken
