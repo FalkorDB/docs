@@ -5,11 +5,9 @@ parent: Operations
 description: "Self-contained Python interface to FalkorDB"
 ---
 
-# [EXPERIMENTAL] FalkorDBLite
+# FalkorDBLite
 
 FalkorDBLite is a self-contained Python interface to the FalkorDB graph database. It provides an embedded Redis server with the FalkorDB module that is automatically installed, configured, and managed when the bindings are used.
-
-> **Note:** FalkorDBLite is an experimental feature. While it's functional and useful for development and testing, it's recommended to use a full FalkorDB deployment for production environments.
 
 ## Key Features
 
