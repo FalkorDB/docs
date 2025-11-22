@@ -30,7 +30,7 @@ FalkorDB delivers an **accurate, multi-tenant RAG solution powered by a low-late
 
 * Adopts the [Property Graph Model](https://github.com/opencypher/openCypher/blob/master/docs/property-graph-model.adoc)
 * Supports [OpenCypher](http://www.opencypher.org/) query language with proprietary extensions
-* Offers [Full-Text Search](/cypher/indexing#full-text-indexing), [Vector Similarity](/cypher/indexing#vector-indexing), and [Range indexing](/cypher/indexing) for efficient querying
+* Offers [Full-Text Search](/cypher/indexing/fulltext-index), [Vector Similarity](/cypher/indexing/vector-index), and [Range indexing](/cypher/indexing/range-index) for efficient querying
 * Supports both [RESP](https://redis.io/docs/reference/protocol-spec/) and [Bolt](https://en.wikipedia.org/wiki/Bolt_(network_protocol)) protocols for flexible connectivity
 * Uses sparse adjacency matrix representation for efficient graph storage
 * Provides GraphRAG capabilities through the [GraphRAG SDK](/genai-tools/graphrag-sdk) for advanced graph reasoning and generative AI tasks
