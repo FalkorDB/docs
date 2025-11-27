@@ -25,18 +25,21 @@ To start using the FalkorDB Browser REST API, follow these simple steps:
 First, you need to authenticate to get a JWT token:
 
 ```bash
-curl -X POST "http://your-falkordb-browser-url/api/auth/login" \
+curl -X POST "http://your-falkordb-browser-url/api/auth/tokens/credentials" \
   -H "Content-Type: application/json" \
   -d '{
     "username": "default",
-    "password": ""
+    "password": "",
+    "host": "localhost",
+    "port": "6379",
+    "tls": "false"
   }'
 ```
 
 This will return a JWT token that you'll use for all subsequent requests:
 ```json
 {
-  "message": "Authentication successful",
+  "message": "Token created successfully",
   "token": "<JWT_TOKEN>"
 }
 ```
@@ -71,10 +74,10 @@ curl -N -X GET "http://your-falkordb-browser-url/api/graph/my_graph?query=MATCH%
 ## Table of Contents
 
 ### Authentication
-- [User login - POST /api/auth/login](#user-login---post-apiauthlogin)
-- [Revoke JWT token - POST /api/auth/revoke](#revoke-jwt-token---post-apiauthrevoke)
+- [Generate JWT Token with Credentials - POST /api/auth/tokens/credentials](#generate-jwt-token-with-credentials---post-apiauthtokenscredentials)
 - [List JWT tokens - GET /api/auth/tokens](#list-jwt-tokens---get-apiauthtokens)
-- [Get token metadata - GET /api/auth/token/{tokenId}](#get-token-metadata---get-apiauthtokentokenid)
+- [Get token metadata - GET /api/auth/tokens/{tokenId}](#get-token-metadata---get-apiauthtokenstokenid)
+- [Revoke token by ID - DELETE /api/auth/tokens/{tokenId}](#revoke-token-by-id---delete-apiauthtokenstokenid)
 
 ### Status
 - [Check FalkorDB connection status - GET /api/status](#check-falkordb-connection-status---get-apistatus)
@@ -133,20 +136,20 @@ curl -N -X GET "http://your-falkordb-browser-url/api/graph/my_graph?query=MATCH%
 
 ## Authentication
 
-All endpoints except `/api/auth/login` require authentication using a JWT bearer token in the Authorization header:
+All endpoints except `/api/auth/tokens/credentials` require authentication using a JWT bearer token in the Authorization header:
 ```http
 Authorization: Bearer <your-jwt-token>
 ```
 
-### **User login** - `POST /api/auth/login`
+### **Generate JWT Token with Credentials** - `POST /api/auth/tokens/credentials`
 
-Generate JWT Token (Login) - Authenticate user and generate a JWT Personal Access Token (PAT) for external API access.
+Authenticate with direct credentials and generate a JWT Personal Access Token (PAT) for external API access, CLI tools, or programmatic access. This endpoint does NOT require an existing session.
 
 #### Request Body
 
 - Content-Type: `application/json`
-- Required fields: `username`, `password`
-- Optional fields: `name`, `expiresAt`, `ttlSeconds`, `host`, `port`, `tls`, `ca`
+- Required fields: `username`, `host`, `port`, `tls`
+- Optional fields: `password`, `name`, `expiresAt`, `ttlSeconds`
 
 Example request:
 ```json
@@ -158,21 +161,19 @@ Example request:
   "ttlSeconds": 31622400,
   "host": "localhost",
   "port": "6379",
-  "tls": "false",
-  "ca": ""
+  "tls": "false"
 }
 ```
 
 **Request Parameters:**
 - `username` (required): Username for database connection
-- `password` (required): Password for database connection (leave empty for 'default' user)
+- `password` (optional): Password for database connection. Can be omitted (or empty) only when using the `default` user on localhost; otherwise a non-empty password is required
 - `name` (optional): Token name
 - `expiresAt` (optional): Token expiration date in ISO 8601 format
-- `ttlSeconds` (optional): Time-to-live in seconds (default: 31622400)
-- `host` (optional): FalkorDB host (default: "localhost")
-- `port` (optional): FalkorDB port (default: "6379")
-- `tls` (optional): Enable TLS connection - "true" or "false"
-- `ca` (optional): Base64-encoded CA certificate for TLS
+- `ttlSeconds` (optional): Time-to-live in seconds (max: 31622400)
+- `host` (required): FalkorDB host
+- `port` (required): FalkorDB port
+- `tls` (required): Enable TLS connection - "true" or "false"
 
 #### Responses
 
@@ -182,12 +183,12 @@ Example request:
 
     ```json
     {
-      "message": "Authentication successful",
+      "message": "Token created successfully",
       "token": "<JWT_TOKEN>"
     }
     ```
 
-- **400**: Bad request - Invalid JSON, expiration date in the past, or invalid TTL value
+- **400**: Bad request - Invalid JSON, validation error, expiration date in the past, or invalid TTL value
   - Content-Type: `application/json`
   - Example response:
 
@@ -213,98 +214,13 @@ Example request:
 
     ```json
     {
-      "message": "Server configuration error: NEXTAUTH_SECRET is not set"
-    }
-    ```
-
-### **Revoke JWT token** - `POST /api/auth/revoke`
-
-Revoke a JWT token by marking it as inactive in FalkorDB. Once revoked, the token cannot be used for authentication. Admins can revoke any token, while regular users can only revoke their own tokens.
-
-**Note:** Provide either `token` or `token_id` (not both)
-
-#### Headers
-- `Authorization: Bearer <token>` (required)
-
-#### Request Body
-
-- Content-Type: `application/json`
-- Required field: Either `token` or `token_id` (not both)
-
-Example request (using token):
-```json
-{
-  "token": "<JWT_TOKEN>"
-}
-```
-
-Example request (using token_id):
-```json
-{
-  "token_id": "1761055513181-215c579b-c6e1-4f10-9b07-aacbf89cda21"
-}
-```
-
-**Request Parameters:**
-- `token` (optional): JWT token to revoke
-- `token_id` (optional): Token ID to revoke
-
-#### Responses
-
-- **200**: Token revoked successfully
-  - Content-Type: `application/json`
-  - Example response:
-
-    ```json
-    {
-      "message": "Token revoked successfully",
-      "tokenId": "user-123-1640995200"
-    }
-    ```
-
-- **400**: Bad request - missing token in request body
-  - Content-Type: `application/json`
-  - Example response:
-
-    ```json
-    {
-      "message": "Token to revoke is required in request body"
-    }
-    ```
-
-- **401**: Authentication failed - invalid or missing token
-  - Content-Type: `application/json`
-  - Example response:
-
-    ```json
-    {
-      "message": "Authorization header with Bearer token required"
-    }
-    ```
-
-- **403**: Forbidden - You can only revoke your own tokens (unless you are an Admin)
-  - Content-Type: `application/json`
-  - Example response:
-
-    ```json
-    {
-      "message": "Forbidden: You can only revoke your own tokens"
-    }
-    ```
-
-- **500**: Server configuration error
-  - Content-Type: `application/json`
-  - Example response:
-
-    ```json
-    {
-      "message": "Server configuration error"
+      "message": "Server configuration error: NEXTAUTH_SECRET not set"
     }
     ```
 
 ### **List JWT tokens** - `GET /api/auth/tokens`
 
-Get a list of active JWT tokens. Admins can see all tokens from all users, while regular users can only see their own tokens.
+Get a list of active JWT tokens. Admins see all tokens, regular users see only their own tokens.
 
 #### Headers
 - `Authorization: Bearer <token>` (required)
@@ -336,9 +252,9 @@ Get a list of active JWT tokens. Admins can see all tokens from all users, while
 - **401**: Authentication failed - invalid or missing token
 - **500**: Internal server error
 
-### **Get token metadata** - `GET /api/auth/token/{tokenId}`
+### **Get token metadata** - `GET /api/auth/tokens/{tokenId}`
 
-Get detailed metadata for a specific JWT token by its token ID. Admins can view any token, while regular users can only view their own tokens.
+Get detailed metadata for a specific JWT token by its token ID. Admins can view any token, regular users can only view their own tokens.
 
 #### Headers
 - `Authorization: Bearer <token>` (required)
@@ -376,6 +292,64 @@ Get detailed metadata for a specific JWT token by its token ID. Admins can view 
     ```json
     {
       "message": "Forbidden: You can only view your own tokens"
+    }
+    ```
+
+- **404**: Token not found
+  - Content-Type: `application/json`
+  - Example response:
+
+    ```json
+    {
+      "message": "Token not found"
+    }
+    ```
+
+- **500**: Internal server error
+
+### **Revoke token by ID** - `DELETE /api/auth/tokens/{tokenId}`
+
+Revoke a specific JWT token by its token ID. Once revoked, the token cannot be used for authentication. Admins can revoke any token, regular users can only revoke their own tokens.
+
+#### Headers
+- `Authorization: Bearer <token>` (required)
+
+#### Parameters
+- `tokenId` (path, required): Token ID to revoke
+  - Example: `1761053108078-554350d7-c965-4ed7-8d32-679b7f705e81`
+
+#### Responses
+
+- **200**: Token revoked successfully
+  - Content-Type: `application/json`
+  - Example response:
+
+    ```json
+    {
+      "message": "Token revoked successfully",
+      "tokenId": "1761053108078-554350d7-c965-4ed7-8d32-679b7f705e81"
+    }
+    ```
+
+- **400**: Bad request - Token is already revoked
+  - Content-Type: `application/json`
+  - Example response:
+
+    ```json
+    {
+      "message": "Token is already revoked"
+    }
+    ```
+
+- **401**: Authentication failed - invalid or missing token
+
+- **403**: Forbidden - You can only revoke your own tokens (unless you are an Admin)
+  - Content-Type: `application/json`
+  - Example response:
+
+    ```json
+    {
+      "message": "Forbidden: You can only revoke your own tokens"
     }
     ```
 

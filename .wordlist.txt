@@ -134,7 +134,6 @@ acos
 acyclic
 algo
 alister
-alister
 allShortestPaths
 arccosine
 arcsine
@@ -198,7 +197,6 @@ Jupyter
 javadocs
 javascript
 jedis
-jfalkordb
 jinja
 jl
 jpbourbon
@@ -324,7 +322,6 @@ vec
 euclideanDistance
 cosineDistance
 vecf
-
 Dani
 Dovizioso
 Pedrosa
@@ -335,7 +332,6 @@ RDB
 scalable
 scalability
 falkorDB
-
 GraphName
 api
 auth
@@ -369,9 +365,7 @@ FalkorConnectionInfo
 h1
 tokio
 async
-falkor
 fn
-
 xxHash
 proc
 utf
@@ -382,7 +376,6 @@ thpool
 sds
 CRoaring
 RSALv
-
 hostnames
 bigmac
 calmcode
@@ -391,15 +384,12 @@ kafka
 readme
 github
 pre
-html
-body
 table
 Explainer
 propname
 propvalue
 ro
 GenAI
-
 Kruskal's
 MSF
 MST
@@ -409,7 +399,6 @@ SPpath
 SSpath
 WCC
 WSL
-
 undirected
 preprocessing
 subgraphs
@@ -424,7 +413,6 @@ prev
 componentId
 Betweenness
 betweenness
-
 LLMs
 Groq
 ontologies
@@ -460,7 +448,6 @@ embeddings
 Colab
 chatbots
 Cognee's
-
 alice
 cypher
 createQuery
@@ -483,7 +470,6 @@ copyGraph
 myproject
 mut
 readOnlyQuery
-
 Dunder
 Mifflin
 scranton
@@ -495,7 +481,6 @@ Munger
 queryRelationships
 similarityFunction
 FIELDTERMINATOR
-backend
 md
 Opire
 hh
@@ -618,7 +603,6 @@ findByAgeNotIn
 findByNameAndAgeGreaterThan
 findFirstByOrderByCreatedAtDesc
 findTop10ByOrderByAgeDesc
-findByAgeGreaterThanEqual
 findTop5ByOrderByAgeDesc
 findFirstByOrderByAgeAsc
 deleteByAge
@@ -656,7 +640,6 @@ OpsRequest
 ComponentDefinition
 ClusterDefinition
 PodMonitor
-BGSAVE
 datafile
 quorum
 NLB
