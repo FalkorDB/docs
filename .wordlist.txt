@@ -56,6 +56,8 @@ JS
 js
 JSDoc
 JSON
+JWT
+tokenId
 KJDev
 Kepner
 Keren
@@ -77,6 +79,7 @@ MotoGP
 NRedisGraph
 NaN
 NFalkorDB
+NEXTAUTH
 NodeJS
 Nostem
 NumItems
@@ -130,7 +133,6 @@ Vin
 acos
 acyclic
 algo
-alister
 alister
 allShortestPaths
 arccosine
@@ -195,7 +197,6 @@ Jupyter
 javadocs
 javascript
 jedis
-jfalkordb
 jinja
 jl
 jpbourbon
@@ -213,6 +214,7 @@ myGraph
 myPassword
 myUsername
 namespace
+nodeId
 nan
 nav
 nd
@@ -256,7 +258,7 @@ redisgraph
 relDirection
 relTypes
 relationshipTypes
-reltype
+relationshipId
 reltype
 reltypeList
 replaceRegEx
@@ -320,7 +322,6 @@ vec
 euclideanDistance
 cosineDistance
 vecf
-
 Dani
 Dovizioso
 Pedrosa
@@ -331,10 +332,10 @@ RDB
 scalable
 scalability
 falkorDB
-
 GraphName
 api
 auth
+backend
 callbackUrl
 csrf
 csrfToken
@@ -364,9 +365,7 @@ FalkorConnectionInfo
 h1
 tokio
 async
-falkor
 fn
-
 xxHash
 proc
 utf
@@ -377,7 +376,6 @@ thpool
 sds
 CRoaring
 RSALv
-
 hostnames
 bigmac
 calmcode
@@ -386,15 +384,12 @@ kafka
 readme
 github
 pre
-html
-body
 table
 Explainer
 propname
 propvalue
 ro
 GenAI
-
 Kruskal's
 MSF
 MST
@@ -404,7 +399,6 @@ SPpath
 SSpath
 WCC
 WSL
-
 undirected
 preprocessing
 subgraphs
@@ -419,7 +413,6 @@ prev
 componentId
 Betweenness
 betweenness
-
 LLMs
 Groq
 ontologies
@@ -455,7 +448,6 @@ embeddings
 Colab
 chatbots
 Cognee's
-
 alice
 cypher
 createQuery
@@ -478,7 +470,6 @@ copyGraph
 myproject
 mut
 readOnlyQuery
-
 Dunder
 Mifflin
 scranton
@@ -490,7 +481,6 @@ Munger
 queryRelationships
 similarityFunction
 FIELDTERMINATOR
-backend
 md
 Opire
 hh
@@ -613,7 +603,6 @@ findByAgeNotIn
 findByNameAndAgeGreaterThan
 findFirstByOrderByCreatedAtDesc
 findTop10ByOrderByAgeDesc
-findByAgeGreaterThanEqual
 findTop5ByOrderByAgeDesc
 findFirstByOrderByAgeAsc
 deleteByAge
@@ -651,7 +640,6 @@ OpsRequest
 ComponentDefinition
 ClusterDefinition
 PodMonitor
-BGSAVE
 datafile
 quorum
 NLB
