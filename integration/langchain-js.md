@@ -11,6 +11,8 @@ parent: "Integration"
 
 The [@falkordb/langchain-ts](https://www.npmjs.com/package/@falkordb/langchain-ts) package enables developers to integrate FalkorDB with LangChain applications. The integration allows applications to accept natural language questions, generate Cypher queries automatically, retrieve relevant context from the graph database, and return responses in natural language.
 
+> **Note:** FalkorDB also provides a Python integration for LangChain. See the [LangChain Python Integration](/genai-tools/langchain.html) for Python-specific documentation.
+
 ## Installation
 
 ### Step 1
