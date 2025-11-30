@@ -200,8 +200,7 @@ FalkorDB also provides a JavaScript/TypeScript integration for LangChain applica
 ### Installation
 
 ```bash
-npm install @falkordb/langchain-ts falkordb
-npm install langchain @langchain/openai
+npm install @falkordb/langchain-ts falkordb langchain @langchain/openai
 ```
 
 ### Quick Start (JS/TS)
