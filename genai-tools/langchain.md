@@ -9,12 +9,20 @@ parent: "GenAI Tools"
 
 FalkorDB is integrated with [LangChain](https://www.langchain.com/), bringing powerful graph database capabilities to AI-driven applications. This integration enables the creation of AI agents with memory, enhancing their ability to retain state and context across interactions.
 
+The FalkorDB LangChain integration is available for both **Python** and **JavaScript/TypeScript** environments, making it easy to build intelligent applications in your preferred language.
+
 ## Resources
 
-- 🔗 [FalkorDBQAChain Documentation](https://python.langchain.com/docs/use_cases/more/graph/graph_falkordb_qa)  
+- 🔗 [FalkorDBQAChain Documentation (Python)](https://python.langchain.com/docs/use_cases/more/graph/graph_falkordb_qa)
+- 📦 [@falkordb/langchain-ts Package (JavaScript/TypeScript)](https://www.npmjs.com/package/@falkordb/langchain-ts)
+- 💻 [FalkorDB-Langchain-js Repository](https://github.com/FalkorDB/FalkorDB-Langchain-js)
 - 📓 [Blog: Build AI Agents with Memory – LangChain + FalkorDB](https://www.falkordb.com/blog/building-ai-agents-with-memory-langchain/)
 
-## Installation
+---
+
+## Python Integration
+
+### Installation
 
 Install LangChain with FalkorDB support:
 
@@ -22,9 +30,9 @@ Install LangChain with FalkorDB support:
 pip install langchain langchain-community falkordb
 ```
 
-## Quick Start
+### Quick Start
 
-### 1. Connect to FalkorDB
+#### 1. Connect to FalkorDB
 
 ```python
 from langchain_community.graphs import FalkorDBGraph
@@ -39,7 +47,7 @@ graph = FalkorDBGraph(
 )
 ```
 
-### 2. Create a Knowledge Graph from Text
+#### 2. Create a Knowledge Graph from Text
 
 ```python
 from langchain.chains import GraphCypherQAChain
@@ -56,7 +64,7 @@ chain = GraphCypherQAChain.from_llm(
 )
 ```
 
-### 3. Query the Graph
+#### 3. Query the Graph
 
 ```python
 # Ask natural language questions
@@ -68,9 +76,9 @@ response = chain.run("What other movies did they act in?")
 print(response)
 ```
 
-## Advanced Usage
+### Advanced Usage
 
-### Using Graph Memory for Conversational AI
+#### Using Graph Memory for Conversational AI
 
 ```python
 from langchain.memory import ConversationGraphMemory
@@ -96,7 +104,7 @@ conversation.predict(input="I work as a software engineer")
 conversation.predict(input="What do you know about me?")
 ```
 
-### Custom Cypher Generation
+#### Custom Cypher Generation
 
 ```python
 from langchain.chains.graph_qa.cypher import GraphCypherQAChain
@@ -131,7 +139,7 @@ chain = GraphCypherQAChain.from_llm(
 response = chain.run("Find all products in the electronics category")
 ```
 
-### Loading Data into the Graph
+#### Loading Data into the Graph
 
 ```python
 from langchain_community.document_loaders import TextLoader
@@ -156,7 +164,7 @@ vector_store = FalkorDBVector.from_documents(
 )
 ```
 
-### Graph RAG Pattern
+#### Graph RAG Pattern
 
 ```python
 from langchain.chains import RetrievalQA
@@ -182,6 +190,102 @@ qa_chain = RetrievalQA.from_chain_type(
 response = qa_chain.run("What are the key features of our product?")
 print(response)
 ```
+
+---
+
+## JavaScript/TypeScript Integration
+
+FalkorDB also provides a JavaScript/TypeScript integration for LangChain applications through the [@falkordb/langchain-ts](https://www.npmjs.com/package/@falkordb/langchain-ts) package.
+
+### Installation
+
+```bash
+npm install @falkordb/langchain-ts falkordb
+npm install langchain @langchain/openai
+```
+
+### Quick Start (JS/TS)
+
+```typescript
+import { FalkorDBGraph } from "@falkordb/langchain-ts";
+import { ChatOpenAI } from "@langchain/openai";
+import { GraphCypherQAChain } from "@langchain/community/chains/graph_qa/cypher";
+
+// Initialize FalkorDB connection
+const graph = await FalkorDBGraph.initialize({
+  host: "localhost",
+  port: 6379,
+  graph: "movies"
+});
+
+// Set up the language model
+const model = new ChatOpenAI({ temperature: 0 });
+
+// Create and populate the graph
+await graph.query(
+  "CREATE (a:Actor {name:'Bruce Willis'})" +
+  "-[:ACTED_IN]->(:Movie {title: 'Pulp Fiction'})"
+);
+
+// Refresh the graph schema
+await graph.refreshSchema();
+
+// Create a graph QA chain
+const chain = GraphCypherQAChain.fromLLM({
+  llm: model,
+  graph: graph as any,
+});
+
+// Ask questions about your graph
+const response = await chain.run("Who played in Pulp Fiction?");
+console.log(response);
+// Output: Bruce Willis played in Pulp Fiction.
+
+await graph.close();
+```
+
+### Key Features (JS/TS)
+
+- **Natural Language Querying**: Convert questions to Cypher queries automatically
+- **Schema Management**: Automatic schema refresh and retrieval
+- **Type Safety**: Full TypeScript support with type definitions
+- **Promise-based API**: Modern async/await patterns
+
+### API Reference (JS/TS)
+
+#### `FalkorDBGraph.initialize(config)`
+
+Create and initialize a new FalkorDB connection.
+
+**Config Options:**
+- `host` (string): Database host (default: "localhost")
+- `port` (number): Database port (default: 6379)
+- `graph` (string): Graph name to use
+- `url` (string): Alternative connection URL format
+- `enhancedSchema` (boolean): Enable enhanced schema details
+
+#### `query(query: string)`
+
+Execute a Cypher query on the graph.
+
+```typescript
+const result = await graph.query(
+  "MATCH (n:Person) RETURN n.name LIMIT 10"
+);
+```
+
+#### `refreshSchema()`
+
+Update the graph schema information.
+
+```typescript
+await graph.refreshSchema();
+console.log(graph.getSchema());
+```
+
+For more detailed JavaScript/TypeScript examples and documentation, see the [LangChain JS/TS Integration Guide](/integration/langchain-js.html) and the [@falkordb/langchain-ts repository](https://github.com/FalkorDB/FalkorDB-Langchain-js).
+
+---
 
 ## Use Cases
 
