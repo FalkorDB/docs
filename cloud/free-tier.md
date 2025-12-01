@@ -38,8 +38,8 @@ The free tier provides everything you need to explore FalkorDB and build initial
 Need an extension? Speak to [sales](https://www.falkordb.com/get-a-demo/))
 
 ## Getting Started
-### Video Guide
-<img width="256" height="144" alt="FalkorDB Graph DBaaS Free Tier Tutorial Video" src="https://github.com/user-attachments/assets/56255f72-ff9d-4863-9942-b839257a723c" />
 
-> ▶️ Watch: https://www.youtube.com/watch?v=z0XO4pb2t5Y<br>
-> ⚙️ Spin up your first FalkorDB Cloud instance: [Sign up](https://app.falkordb.cloud/signup)
+[![FalkorDB Graph DBaaS Free Tier Tutorial Video](https://github.com/user-attachments/assets/56255f72-ff9d-4863-9942-b839257a723c)](https://www.youtube.com/watch?v=z0XO4pb2t5Y)
+
+⚙️ Spin up your first FalkorDB Cloud instance: 
+[![Sign Up](https://img.shields.io/badge/Sign%20Up-8A2BE2?style=for-the-badge)](https://app.falkordb.cloud/signup)
