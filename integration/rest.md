@@ -106,7 +106,7 @@ curl -N -X GET "http://your-falkordb-browser-url/api/graph/my_graph?query=MATCH%
 - [Get specific configuration value - GET /api/graph/config/{config}](#get-specific-configuration-value---get-apigraphconfigconfig)
 - [Set configuration value - POST /api/graph/config/{config}](#set-configuration-value---post-apigraphconfigconfig)
 
-### Schema Management
+<!-- ### Schema Management
 - [List all schemas - GET /api/schema](#list-all-schemas---get-apischema)
 - [Get schema information - GET /api/schema/{schema}](#get-schema-information---get-apischemaschema)
 - [Create new schema - POST /api/schema/{schema}](#create-new-schema---post-apischemaschema)
@@ -124,7 +124,7 @@ curl -N -X GET "http://your-falkordb-browser-url/api/graph/my_graph?query=MATCH%
 - [Add/Update attribute to node - PATCH /api/schema/{schema}/{nodeId}/{key}](#addupdate-attribute-to-node---patch-apischemaschemanodeidkey)
 - [Remove attribute from node - DELETE /api/schema/{schema}/{nodeId}/{key}](#remove-attribute-from-node---delete-apischemaschemanodeidkey)
 - [Add/Update attribute to relationship - PATCH /api/schema/{schema}/{relationshipId}/{key}](#addupdate-attribute-to-relationship---patch-apischemaschemarelationshipidkey)
-- [Remove attribute from relationship - DELETE /api/schema/{schema}/{relationshipId}/{key}](#remove-attribute-from-relationship---delete-apischemaschemarelationshipidkey)
+- [Remove attribute from relationship - DELETE /api/schema/{schema}/{relationshipId}/{key}](#remove-attribute-from-relationship---delete-apischemaschemarelationshipidkey) -->
 
 ### User Management
 - [List all users - GET /api/user](#list-all-users---get-apiuser)
@@ -920,7 +920,7 @@ Set the value of a specific configuration parameter.
 
 ---
 
-## Schema Management
+<!-- ## Schema Management
 
 ### **List all schemas** - `GET /api/schema`
 
@@ -1398,7 +1398,7 @@ Example request:
 
 #### Responses
 
-- **200**: Attribute removed successfully
+- **200**: Attribute removed successfully -->
 
 ---
 
