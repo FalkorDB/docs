@@ -37,7 +37,6 @@ The Pro Tier provides a robust environment to scale your application with confid
 ## Terms
 ### Pricing Calculation
 > We charge deployments based on **Core/Hour** and **Memory GB/Hour** usage. You pay **$0.200 per Core/Hour** and **$0.01 per Memory GB/Hour**.
-I sincerely apologize for the confusion! You're right - I need to use the colon alignment syntax properly. Here are the correct markdown tables:
 
 ## Standalone
 
@@ -52,27 +51,28 @@ I sincerely apologize for the confusion! You're right - I need to use the colon 
 
 ## Replicated (High Availability, Master-Replica)
 
-| Instance Type | Monthly Cost |
-| :--- | ---: |
-| E2-standard-2 / m6i.large (Starting Instance) | $350.40 |
-| E2-standard-4 / m6i.xlarge | $700.80 |
-| E2-custom-4-8192 / c6i.xlarge | $642.40 |
-| E2-custom-8-16384 / c6i.2xlarge | $1,284.80 |
-| E2-custom-16-32768 / c6i.4xlarge | $2,569.60 |
-| E2-custom-32-65536 / c6i.8xlarge | $5,139.20 |
-| **Additional monthly cost** | **$306.60** |
+
+| Instance Type                                 | Monthly Cost |
+| :-------------------------------------------- | -----------: |
+| E2-standard-2 / m6i.large (Starting Instance) |   \$1,007.40 |
+| E2-standard-4 / m6i.xlarge                    |   \$1,708.20 |
+| E2-custom-4-8192 / c6i.xlarge                 |   \$1,591.40 |
+| E2-custom-8-16384 / c6i.2xlarge               |   \$2,876.20 |
+| E2-custom-16-32768 / c6i.4xlarge              |   \$5,445.80 |
+| E2-custom-32-65536 / c6i.8xlarge              |  \$10,585.00 |
+
 
 ## Clustered (High Availability, Min. 3 Masters and 3 Replicas)
 
-| Instance Type | Monthly Cost |
-| :--- | ---: |
-| E2-standard-2 / m6i.large (Starting Instance) | $350.40 |
-| E2-standard-4 / m6i.xlarge | $700.80 |
-| E2-custom-4-8192 / c6i.xlarge | $642.40 |
-| E2-custom-8-16384 / c6i.2xlarge | $1,284.80 |
-| E2-custom-16-32768 / c6i.4xlarge | $2,569.60 |
-| E2-custom-32-65536 / c6i.8xlarge | $5,139.20 |
-| **Additional monthly cost** | **$306.60** |
+| Instance Type                                 | Monthly Cost |
+| :-------------------------------------------- | -----------: |
+| E2-standard-2 / m6i.large (Starting Instance) |   \$2,409.00 |
+| E2-standard-4 / m6i.xlarge                    |   \$4,511.40 |
+| E2-custom-4-8192 / c6i.xlarge                 |   \$4,161.00 |
+| E2-custom-8-16384 / c6i.2xlarge               |   \$8,015.40 |
+| E2-custom-16-32768 / c6i.4xlarge              |  \$15,724.20 |
+| E2-custom-32-65536 / c6i.8xlarge              |  \$31,141.80 |
+
 
 > Use our **[graph size calculator](https://www.falkordb.com/graph-database-graph-size-calculator/)** to further estimate your cost.
 > ⚠️ Prices are subject to change
