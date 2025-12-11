@@ -49,10 +49,10 @@ The Pro Tier provides a robust environment to scale your application with confid
 | E2-custom-16-32768 / c6i.4xlarge | $2,569.60 |
 | E2-custom-32-65536 / c6i.8xlarge | $5,139.20 |
 
-## Replicated (High Availability, Master-Replica)
+## Replicated (High Availability, Master (x1), Replica (x1))
 
 
-| Instance Type                                 | Monthly Cost |
+| Instances Type                                 | Monthly Cost |
 | :-------------------------------------------- | -----------: |
 | E2-standard-2 / m6i.large (Starting Instance) |   \$1,007.40 |
 | E2-standard-4 / m6i.xlarge                    |   \$1,708.20 |
@@ -62,9 +62,9 @@ The Pro Tier provides a robust environment to scale your application with confid
 | E2-custom-32-65536 / c6i.8xlarge              |  \$10,585.00 |
 
 
-## Clustered (High Availability, Min. 3 Masters and 3 Replicas)
+## Clustered (High Availability, Masters (x3), and Replicas (x3))
 
-| Instance Type                                 | Monthly Cost |
+| Instances Type                                 | Monthly Cost |
 | :-------------------------------------------- | -----------: |
 | E2-standard-2 / m6i.large (Starting Instance) |   \$2,409.00 |
 | E2-standard-4 / m6i.xlarge                    |   \$4,511.40 |
