@@ -62,6 +62,7 @@ The Pro Tier provides a robust environment to scale your application with confid
 | E2-custom-32-65536 / c6i.8xlarge              |  \$10,585.00 |
 
 
+<!--
 ## Clustered (High Availability, Masters (x3), and Replicas (x3))
 
 | Instances Type                                 | Monthly Cost |
@@ -72,7 +73,7 @@ The Pro Tier provides a robust environment to scale your application with confid
 | E2-custom-8-16384 / c6i.2xlarge               |   \$8,015.40 |
 | E2-custom-16-32768 / c6i.4xlarge              |  \$15,724.20 |
 | E2-custom-32-65536 / c6i.8xlarge              |  \$31,141.80 |
-
+-->
 
 > Use our **[graph size calculator](https://www.falkordb.com/graph-database-graph-size-calculator/)** to further estimate your cost.
 > ⚠️ Prices are subject to change
