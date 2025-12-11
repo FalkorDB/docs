@@ -35,14 +35,31 @@ The FalkorDB Free Tier provides a free FalkorDB instance for evaluation purposes
 [![Learn More](https://img.shields.io/badge/Learn%20More-8A2BE2?style=for-the-badge)](https://github.com/FalkorDB/docs/blob/Cloud-Docs/cloud/free-tier.md) 
 [![Watch Demo](https://img.shields.io/badge/Watch%20Demo-black?style=for-the-badge)](https://www.youtube.com/watch?v=z0XO4pb2t5Y)
 
+---
+
+### Billing & Setup
+ℹ️ Prior to subscribing to any of FalkorDB's paid cloud tiers, please set up your billing information here:
+> Adding your billing information is an easy, 3-step process:
+> 1. Create a billing account ([Link](https://app.falkordb.cloud/billing))
+> 2. Input your billing information [(Link)](https://billing.stripe.com/p/session/live_YWNjdF8xT3VGdlpBTEZxNUJKZk5kLF9UYUVZQ3A5WGpaZXp2Sk1CdVBTMUV5YWhqVUlXS3Vv01007QZVIlCR)
+> 3. Create a new instance within your selected tier
+
+![FDB-cloud-billing-how-to](https://github.com/user-attachments/assets/d5d6ce47-0bbc-4c71-b5fa-60a43677fb3f)
+
 
 ## Startup Tier
 
 The FalkorDB Startup Tier provides a production-ready standalone FalkorDB deployment. Choose your deployment mode, connect, and share the instance with minimal effort and no maintenance. Pick your machine size, add your dataset, and start extracting insights.
 
+[![Learn More](https://img.shields.io/badge/Learn%20More-8A2BE2?style=for-the-badge)](https://github.com/FalkorDB/docs/blob/Cloud-Docs/cloud/startup-tier.md) 
+[![Watch Demo](https://img.shields.io/badge/Watch%20Demo-black?style=for-the-badge)](https://www.youtube.com/watch?v=xjpLPoQgo2s)
+
 ## Pro Tier
 
 The FalkorDB Pro Tier provides a production-ready FalkorDB deployment. Choose your deployment mode, connect, and share the instance with minimal effort and no maintenance. Pick your machine size, add your dataset, and start extracting insights.
+
+[![Learn More](https://img.shields.io/badge/Learn%20More-8A2BE2?style=for-the-badge)](https://github.com/FalkorDB/docs/blob/Cloud-Docs/cloud/pro-tier.md) 
+[![Watch Demo](https://img.shields.io/badge/Watch%20Demo-black?style=for-the-badge)](https://youtu.be/UIzrW9otvYM?si=P1too6QjZ5r9AHtB)
 
 ## Enterprise
 
