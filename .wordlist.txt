@@ -684,3 +684,4 @@ libomp
 sdist
 dylib
 xcode
+Trendshift
