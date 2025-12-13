@@ -2,6 +2,7 @@ remote_theme: just-the-docs/just-the-docs
 title: FalkorDB Docs
 description: The FalkorDB documentation
 logo: "/images/falkor-logo.png"
+logo_link: "https://www.falkordb.com"
 favicon_ico: "/images/favicon.ico"
 gtm_tracking: GTM-MBWB627H
 
@@ -18,8 +19,12 @@ aux_links:
 # Makes Aux links open in a new tab. Default is false
 aux_links_new_tab: true
 
+# Enable the side/mobile menu globally
+nav_enabled: true
+
 plugins:
   - jekyll-sitemap
+  - jekyll-redirect-from
 
 # Footer last edited timestamp
 last_edit_timestamp: true 

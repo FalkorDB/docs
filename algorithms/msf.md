@@ -1,30 +1,35 @@
----
-title: "Minimum Spanning Forest (MSF)"
-description: "Minimum Spanning Forest (MSF)"
+
+title: "MSF"
+description: "Minimum Spanning Forest Algorithm"
 parent: "Algorithms"
----
+nav_order: 9
 
 # Minimum Spanning Forest (MSF)
 
-## Overview
+The Minimum Spanning Forest algorithm computes the minimum spanning forest of a
+graph. A minimum spanning forest is a collection of minimum spanning trees, one
+for each connected component in the graph.
 
-The Minimum Spanning Forest (MSF) finds the relationships with minimum weights such that any weakly connected component in the graph stays connected. It treats all edges as bi-directional and ensures that any pair of nodes that previously shared a path will still share a unique path in the MSF graph. 
 
-MSF serves as a common algorithm in scenarios such as:
-- Designing a cost-effective road network connecting several cities.
-- Power Grid / Utility cost optimization.
-- Identifying redundancies in networks.
+## What is a Minimum Spanning Forest?
+- For a **connected graph**, the MSF is a single minimum spanning tree (MST) that connects all nodes with the minimum total edge weight
+- For a **disconnected graph**, the MSF consists of multiple MSTs, one for each connected component
+- The forest contains no cycles and has exactly `N - C` edges, where `N` is the number of nodes and `C` is the number of connected components
+- The sum of the weights of the edges in the forest is minimized
 
-## Algorithm Details
+## Use Cases
 
-MSF first assigns each node to its own component. It iteratively scans for the minimum edges linking nodes across different components and merges them, ignoring the direction of edges throughout the process. The algorithm terminates when no further merges occur, producing a collection of trees.
-
-The procedure finds a minimum or maximum weight spanning forest based on the specified `objective` and optimizes for the given `weightAttribute`. If no attribute is given, MSF returns any collection of spanning trees. If any specified edges do not have the given weight attribute, or the value of the attribute is non-numeric, then they are treated as if they had infinite weight. Such an edge would only be included in the minimum spanning tree if no other edges with a valid weight attribute bridge the components it connects.
+- **Network Design**: Minimize cable/pipeline costs when connecting multiple locations
+- **Clustering**: Identify natural groupings in data by analyzing the forest structure
+- **Image Segmentation**: Group similar pixels using edge weights as similarity measures
+- **Road Networks**: Optimize road construction to connect all cities with minimum cost
 
 ## Syntax
 
 ```cypher
-CALL algo.MSF([config])
+CALL algo.MSF(
+    config: MAP
+) YIELD edges, nodes
 ```
 
 ### Parameters
@@ -86,3 +91,34 @@ CALL algo.MSF({weightAttribute: 'cost'}) YIELD edge, weight
 The algorithm would yield a single tree containing the following edge and node objects:
 
 ![City MSF Graph](../images/city_msf.png)
+
+## Algorithm Details
+
+FalkorDB's MSF implementation uses an efficient matrix-based approach optimized for graph databases:
+
+1. **Connected Components**: First identifies all connected components in the graph
+2. **MST per Component**: Computes a minimum spanning tree for each component using a variant of Kruskal's or Prim's algorithm
+3. **Edge Selection**: Selects edges in order of increasing weight, avoiding cycles
+
+### Performance Characteristics
+
+- **Time Complexity**: O(E log V) where E is the number of edges and V is the number of vertices
+- **Space Complexity**: O(V + E)
+- **Optimized**: Uses sparse matrix representation for efficient computation
+
+## Best Practices
+
+1. **Weight Properties**: Ensure weight properties are numeric (integers or floats)
+2. **Missing Weights**: Edges without the specified weight property will only be included in the tree if there are no other edges that could be used to connect the connected component
+4. **Directed vs Undirected**: The algorithm treats all relationships as undirected for spanning forest purposes
+
+## Related Algorithms
+
+- **[WCC (Weakly Connected Components)](./wcc.md)**: Identify connected components before running MSF
+- **[BFS](./bfs.md)**: Traverse the resulting spanning forest
+- **[SPpath](./sppath.md)**: Find shortest paths using the spanning forest structure
+
+## See Also
+
+- [Cypher Procedures](../cypher/procedures.md)
+- [Graph Algorithms Overview](./index.md)

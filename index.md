@@ -17,33 +17,33 @@ permalink: /
 ### About FalkorDB
 FalkorDB delivers an **accurate, multi-tenant RAG solution powered by a low-latency, scalable graph database technology.** 
 
-* Our solution is purpose-built for development teams working with complex, interconnected data—whether structured or unstructured—in real-time or interactive user environments. 
+* Our solution is purpose-built for development teams working with complex, interconnected data—whether structured or unstructured—in real-time or interactive user environments.
 
-* The system supports the OpenCypher query language with proprietary enhancements that streamline interactions with graph data, and its efficient graph traversal and query capabilities render it well-suited for production environments.
+* The system supports the OpenCypher query language with proprietary enhancements that streamline interactions with graph data. Its efficient graph traversal and query capabilities make it well-suited for production environments.
 
 ### Choose Your Path
-*   **Graph Path:** If you're interested in utilizing FalkorDB as a property graph database with OpenCypher support, continue with the sections below.
-*   **GraphRAG Path:** If you're aiming to implement advanced graph reasoning and generative AI tasks, jump directly to the [GraphRAG SDK](https://github.com/FalkorDB/GraphRAG-SDK) section [1].
+*   **Graph Database Path:** If you're interested in using FalkorDB as a property graph database with OpenCypher support, continue with the sections below.
+*   **GraphRAG Path:** If you're aiming to implement advanced graph reasoning and generative AI tasks, explore our [GenAI Tools](/genai-tools) section, starting with the [GraphRAG SDK](/genai-tools/graphrag-sdk).
 
 
 ## Primary Features
 
 * Adopts the [Property Graph Model](https://github.com/opencypher/openCypher/blob/master/docs/property-graph-model.adoc)
 * Supports [OpenCypher](http://www.opencypher.org/) query language with proprietary extensions
-* Offers [Full-Text Search](/cypher/indexing#full-text-indexing), [Vector Similarity](/cypher/indexing#vector-indexing) & [Numeric indexing](/cypher/indexing).
-* Interacts via either [RESP](https://redis.io/docs/reference/protocol-spec/) and [Bolt](https://en.wikipedia.org/wiki/Bolt_(network_protocol)) protocols
-* Graphs represented as sparse adjacency matrices
-* Supports GraphRAG with the [GraphRAG SDK](https://github.com/FalkorDB/GraphRAG-SDK) for advanced graph reasoning and generative AI tasks.
+* Offers [Full-Text Search](/cypher/indexing/fulltext-index), [Vector Similarity](/cypher/indexing/vector-index), and [Range indexing](/cypher/indexing/range-index) for efficient querying
+* Supports both [RESP](https://redis.io/docs/reference/protocol-spec/) and [Bolt](https://en.wikipedia.org/wiki/Bolt_(network_protocol)) protocols for flexible connectivity
+* Uses sparse adjacency matrix representation for efficient graph storage
+* Provides GraphRAG capabilities through the [GraphRAG SDK](/genai-tools/graphrag-sdk) for advanced graph reasoning and generative AI tasks
 
 ## Get Started
 
-Launch an instance using docker, or use [FalkorDB Clouds](https://app.falkordb.cloud)
+Launch an instance using Docker, or use [FalkorDB Cloud](https://app.falkordb.cloud)
 
 ```sh
 docker run -p 6379:6379 -p 3000:3000 -it --rm falkordb/falkordb:latest
 ```
 
-Once loaded you can interact with FalkorDB using any of the supported [client libraries](/clients)
+Once loaded you can interact with FalkorDB using any of the supported [client libraries](/getting-started/clients)
 
 Here we'll use [FalkorDB Python client](https://pypi.org/project/FalkorDB/) to create a small graph representing a subset of motorcycle riders and teams taking part in the MotoGP league, once created we'll start querying our data.
 
@@ -238,7 +238,7 @@ For additional demos please see visit [Demos](https://github.com/FalkorDB/demos)
 ## Client libraries
 
 Language-specific clients have been written by the community and the FalkorDB team.
-The full list and links can be found on the [Clients](/clients) page.
+The full list and links can be found on the [Client Libraries](/getting-started/clients) page.
 
 ## Data import
 

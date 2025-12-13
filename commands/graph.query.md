@@ -12,7 +12,7 @@ Executes the given query against a specified graph.
 
 Arguments: `Graph name, Query, Timeout [optional]`
 
-Returns: [Result set](/design/result_structure)
+Returns: [Result set](/design/result-structure)
 
 ### Queries and Parameterized Queries
 
@@ -34,7 +34,22 @@ GRAPH.QUERY us_government "MATCH (p:president)-[:born]->(:state {name:'Hawaii'})
 graph.query("MATCH (p:president)-[:born]->(:state {name:'Hawaii'}) RETURN p")
 {% endcapture %}
 
-{% include code_tabs.html id="tabs_0" shell=shell_0 python=python_0 %}
+{% capture javascript_0 %}
+const result = await graph.query("MATCH (p:president)-[:born]->(:state {name:'Hawaii'}) RETURN p");
+console.log(result);
+{% endcapture %}
+
+{% capture java_0 %}
+ResultSet result = graph.query("MATCH (p:president)-[:born]->(:state {name:'Hawaii'}) RETURN p");
+System.out.println(result);
+{% endcapture %}
+
+{% capture rust_0 %}
+let result = graph.query(r#"MATCH (p:president)-[:born]->(:state {name:'Hawaii'}) RETURN p"#).execute().await?;
+println!("{:?}", result);
+{% endcapture %}
+
+{% include code_tabs.html id="tabs_0" shell=shell_0 python=python_0 javascript=javascript_0 java=java_0 rust=rust_0 %}
 
 
 #### Parametrized query structure:
@@ -51,8 +66,37 @@ GRAPH.QUERY us_government "CYPHER state_name='Hawaii' MATCH (p:president)-[:born
 graph.query("MATCH (p:president)-[:born]->(:state {name:$state_name}) RETURN p", {'state_name': 'Hawaii'})
 {% endcapture %}
 
-{% include code_tabs.html id="tabs_1" shell=shell_1 python=python_1 %}
+{% capture javascript_1 %}
+const result = await graph.query(
+  "MATCH (p:president)-[:born]->(:state {name:$state_name}) RETURN p",
+  { params: { state_name: "Hawaii" } }
+);
+console.log(result);
+{% endcapture %}
+
+{% capture java_1 %}
+Map<String, Object> params = new HashMap<>();
+params.put("state_name", "Hawaii");
+ResultSet result = graph.query(
+  "MATCH (p:president)-[:born]->(:state {name:$state_name}) RETURN p",
+  params
+);
+System.out.println(result);
+{% endcapture %}
+
+{% capture rust_1 %}
+let params = std::collections::HashMap::from([
+    ("state_name", "Hawaii")
+]);
+let result = graph.query_with_params(
+    r#"MATCH (p:president)-[:born]->(:state {name:$state_name}) RETURN p"#,
+    &params
+).execute().await?;
+println!("{:?}", result);
+{% endcapture %}
+
+{% include code_tabs.html id="tabs_1" shell=shell_1 python=python_1 javascript=javascript_1 java=java_1 rust=rust_1 %}
 
 ### Query language
 
-The syntax is based on [Cypher](http://www.opencypher.org/). [Most](/cypher/cypher_support) of the language is supported. See [Cypher documentation](/cypher).
+The syntax is based on [Cypher](http://www.opencypher.org/). [Most](/cypher/cypher-support) of the language is supported. See [Cypher documentation](/cypher).

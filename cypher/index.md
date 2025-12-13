@@ -2,44 +2,44 @@
 title: "Cypher Language"
 nav_order: 7
 description: >
-    Cypher Language documentation 
+    Documentation for the Cypher query language
 has_children: true
 ---
 
 # Clauses
 
-Cypher query consists of one or more clauses
+A Cypher query consists of one or more clauses.
 
-* [MATCH](/cypher/match)
-* [OPTIONAL MATCH](/cypher/optional_match)
-* [WHERE](/cypher/where)
-* [RETURN](/cypher/return)
-* [ORDER BY](/cypher/order_by)
-* [SKIP](/cypher/skip)
-* [LIMIT](/cypher/limit)
-* [CREATE](/cypher/create)
-* [MERGE](/cypher/merge)
-* [DELETE](/cypher/delete)
-* [REMOVE](/cypher/remove)
-* [SET](/cypher/set)
-* [WITH](/cypher/with)
-* [UNION](/cypher/union)
-* [UNWIND](/cypher/unwind)
-* [FOREACH](/cypher/foreach)
-* [CALL {}](/cypher/call)
+- [MATCH](/cypher/match)
+- [OPTIONAL MATCH](/cypher/optional-match)
+- [WHERE](/cypher/where)
+- [RETURN](/cypher/return)
+- [ORDER BY](/cypher/order-by)
+- [SKIP](/cypher/skip)
+- [LIMIT](/cypher/limit)
+- [CREATE](/cypher/create)
+- [MERGE](/cypher/merge)
+- [DELETE](/cypher/delete)
+- [REMOVE](/cypher/remove)
+- [SET](/cypher/set)
+- [WITH](/cypher/with)
+- [UNION](/cypher/union)
+- [UNWIND](/cypher/unwind)
+- [FOREACH](/cypher/foreach)
+- [CALL {}](/cypher/call)
 
-# Functions
+## Functions
 
-See list of available [Functions](/cypher/functions)
+See the list of available [functions](/cypher/functions).
 
-# Procedures
+## Procedures
 
-See list of available [Procedures](/cypher/procedures)
+See the list of available [procedures](/cypher/procedures).
 
-# Algorithms
+## Algorithms
 
-See list of available graph [Algorithms](/cypher/algorithms)
+See the list of available graph [algorithms](/algorithms).
 
-# Indexing
+## Indexing
 
-See how to utilize [Indexing](/cypher/indexing)
+See how to use [indexing](/cypher/indexing/).
