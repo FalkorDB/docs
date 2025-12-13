@@ -84,10 +84,10 @@ Your goal is to connect every major building with the lowest total cost, even if
 ![City Graph](../images/city_plan.png)
 
 ```cypher
-CALL algo.MSF({weightAttribute: 'cost'}) YIELD edge, weight
+CALL algo.MSF({weightAttribute: 'cost'}) YIELD edges, nodes RETURN edges, nodes
 ```
 
-#### Expected Results
+### Expected Results
 The algorithm would yield a single tree containing the following edge and node objects:
 
 ![City MSF Graph](../images/city_msf.png)
@@ -110,7 +110,7 @@ FalkorDB's MSF implementation uses an efficient matrix-based approach optimized 
 
 1. **Weight Properties**: Ensure weight properties are numeric (integers or floats)
 2. **Missing Weights**: Edges without the specified weight property will only be included in the tree if there are no other edges that could be used to connect the connected component
-4. **Directed vs Undirected**: The algorithm treats all relationships as undirected for spanning forest purposes
+3. **Directed vs Undirected**: The algorithm treats all relationships as undirected for spanning forest purposes
 
 ## Related Algorithms
 
