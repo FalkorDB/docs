@@ -81,7 +81,7 @@ The Pro Tier provides a robust environment to scale your application with confid
 ## Getting Started
 
 <a href="https://www.youtube.com/watch?v=UIzrW9otvYM" target="_blank">
-  <img src="https://github.com/user-attachments/assets/e19fdb04-e8fd-45c5-8361-97691ff3362a" alt="FalkorDB Graph DBaaS Pro Tier Tutorial Video" width="1280" height="720">
+  <img src="https://github.com/user-attachments/assets/e19fdb04-e8fd-45c5-8361-97691ff3362a" alt="FalkorDB Graph DBaaS Pro Tier Tutorial Video" width="640" height="360">
 </a>
 
 ⚙️ Spin up your first FalkorDB Cloud instance: 
