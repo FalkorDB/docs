@@ -32,7 +32,6 @@ The Enterprise Tier is fully optimized for mission-critical applications, provid
 | **Support** | Community | Community | 24/7 | **Dedicated** |
 | **Dedicated Account Manager** | ✗ | ✗ | ✗ | **🟢** |
 | **Cloud Providers** | AWS, GCP, Azure | AWS, GCP, Azure | AWS, GCP, Azure | **AWS, GCP, Azure** |
-| **Call-to-Action** | [Sign up](https://app.falkordb.cloud/signup) | [Sign up](https://app.falkordb.cloud/signup) | [Sign up](https://app.falkordb.cloud/signup) | [Contact Us](mailto:info@falkordb.com) |
 
 ## Terms
 ### Consultation and Pricing
@@ -46,7 +45,7 @@ The Enterprise Tier is fully optimized for mission-critical applications, provid
 ## Getting Started
 
 <a href="https://www.youtube.com/watch?v=fu_8CLFKYSs" target="_blank">
-  <img src="https://github.com/user-attachments/assets/d5519002-84ad-4076-9f64-150575d2eb7b" alt="FalkorDB Graph DBaaS Enterprise Tier Tutorial Video" width="1280" height="720">
+  <img src="https://github.com/user-attachments/assets/d5519002-84ad-4076-9f64-150575d2eb7b" alt="FalkorDB Graph DBaaS Enterprise Tier Tutorial Video" width="640" height="360">
 </a>
 
 ⚙️ To begin your Enterprise journey, schedule a consultation: 
