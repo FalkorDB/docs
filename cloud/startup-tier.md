@@ -52,7 +52,7 @@ The Startup Tier includes essential features like **TLS** and **Automated Backup
 ## Getting Started
 
 <a href="https://www.youtube.com/watch?v=z0XO4pb2t5Y" target="_blank">
-  <img src="https://github.com/user-attachments/assets/ca458209-2354-4989-8b44-d5b5f6f0a445" alt="FalkorDB Graph DBaaS Startup Tier Tutorial Video" width="1280" height="720">
+  <img src="https://github.com/user-attachments/assets/ca458209-2354-4989-8b44-d5b5f6f0a445" alt="FalkorDB Graph DBaaS Startup Tier Tutorial Video" width="640" height="360">
 </a>
 
 ⚙️ Spin up your first FalkorDB Cloud instance: 
