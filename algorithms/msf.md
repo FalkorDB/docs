@@ -1,8 +1,9 @@
-
+---
 title: "MSF"
 description: "Minimum Spanning Forest Algorithm"
 parent: "Algorithms"
 nav_order: 9
+---
 
 # Minimum Spanning Forest (MSF)
 
