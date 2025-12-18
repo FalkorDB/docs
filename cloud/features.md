@@ -52,14 +52,6 @@ Organizations with security requirements need VPC deployment to control network 
 
 You deploy FalkorDB into your existing VPC, and the database becomes accessible only through your private network. Your applications connect using private IP addresses instead of public endpoints.
 
-## Clusters
-
-## Availability
-
-## Deployment Options
-
-## Scalability
-
 ## Persistence
 Persistence ensures your graph data survives system restarts, crashes, or failures by writing changes to disk. Without persistence, you lose all data when the database stops.
 
@@ -67,11 +59,6 @@ Any application storing important data requires persistence to maintain durabili
 
 FalkorDB persists data through regular snapshots and transaction logs. These mechanisms guarantee that committed transactions remain safe even if the system crashes immediately afterward.
 
-## Backups
-
-## Monitoring & Analytics
-
-### Additional Features & Services
 #### Solution Architecture
 Solution architecture support helps you design how FalkorDB integrates with your broader application infrastructure. This guidance covers connection patterns, data modeling approaches, and best practices for specific use cases.
 
