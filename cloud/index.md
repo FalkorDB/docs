@@ -11,11 +11,6 @@ has_children: true
 
 Get started with FalkorDB's cloud offering. The platform provides several enterprise features, including multi-tenancy, across all tiers. Browse the available plans and select the one that suits your needs. You can scale and upgrade your deployment when ready.
 
-> "FalkorDB has been a **game-changer** for our startup. Disappointed by Neo4j’s lack of support and slow performance, we turned to FalkorDB as a robust backend solution. Our wish? To run non-traversal queries with performance rivaling MongoDB or Postgres—something FalkorDB delivers where Neo4j fell short."
->
-> — **Anthony Ray, 2Arrows CTO**
-> <br>⭐️⭐️⭐️⭐️⭐️
-
 ## Features & Services
 
 | Group | Features |
@@ -24,16 +19,7 @@ Get started with FalkorDB's cloud offering. The platform provides several enterp
 | **Security & Access** | - Graph Access Control<br>- TLS<br>- VPC Peering |
 | **Deployment & Scaling** | - Dedicated Cluster Deployment<br>- Scalability |
 | **Support & Monitoring** | - Dedicated Support<br>- Advanced Monitoring<br>- Dedicated Account Manager |
-| ☁️ **Cloud Providers** | - AWS<br>- GCP<br>- Azure: Bring-Your-Own-Cloud |
-
-![FalkorDB GitHub Repo - Video - 640x365](https://github.com/user-attachments/assets/fc9c1e74-1766-4842-bd5e-7570b39dea53)
-
-## Free Tier
-
-The FalkorDB Free Tier provides a free FalkorDB instance for evaluation purposes. You can deploy, connect, and share the instance with minimal effort and no maintenance.
-
-[![Learn More](https://img.shields.io/badge/Learn%20More-8A2BE2?style=for-the-badge)](https://github.com/FalkorDB/docs/blob/Cloud-Docs/cloud/free-tier.md) 
-[![Watch Demo](https://img.shields.io/badge/Watch%20Demo-black?style=for-the-badge)](https://www.youtube.com/watch?v=z0XO4pb2t5Y)
+| ☁️ **Cloud Providers** | - AWS<br>- GCP<br>- Azure<br>- BYOC (AWS, GCP) |
 
 ---
 
@@ -46,21 +32,30 @@ The FalkorDB Free Tier provides a free FalkorDB instance for evaluation purposes
 
 ![FDB-cloud-billing-how-to](https://github.com/user-attachments/assets/d5d6ce47-0bbc-4c71-b5fa-60a43677fb3f)
 
+## Free Tier
+
+The FalkorDB Free Tier provides a free FalkorDB instance for evaluation purposes. You can deploy, connect, and share the instance with minimal effort and no maintenance.
+
+[![Learn More](https://img.shields.io/badge/Learn%20More-8A2BE2?style=for-the-badge)](https://github.com/FalkorDB/docs/blob/Cloud-Docs/cloud/free-tier.md) 
+[![Watch Demo](https://img.shields.io/badge/Watch%20Demo-black?style=for-the-badge)](https://www.youtube.com/watch?v=z0XO4pb2t5Y)
 
 ## Startup Tier
 
-The FalkorDB Startup Tier provides a production-ready standalone FalkorDB deployment. Choose your deployment mode, connect, and share the instance with minimal effort and no maintenance. Pick your machine size, add your dataset, and start extracting insights.
+The FalkorDB Startup Tier provides a production-ready standalone FalkorDB deployment. Pick your machine size, add your dataset, and start extracting insights.
 
 [![Learn More](https://img.shields.io/badge/Learn%20More-8A2BE2?style=for-the-badge)](https://github.com/FalkorDB/docs/blob/Cloud-Docs/cloud/startup-tier.md) 
 [![Watch Demo](https://img.shields.io/badge/Watch%20Demo-black?style=for-the-badge)](https://www.youtube.com/watch?v=xjpLPoQgo2s)
 
 ## Pro Tier
 
-The FalkorDB Pro Tier provides a production-ready FalkorDB deployment. Choose your deployment mode, connect, and share the instance with minimal effort and no maintenance. Pick your machine size, add your dataset, and start extracting insights.
+The Pro Tier provides a robust, dedicated environment to scale your application, including highly-available setups. 
 
 [![Learn More](https://img.shields.io/badge/Learn%20More-8A2BE2?style=for-the-badge)](https://github.com/FalkorDB/docs/blob/Cloud-Docs/cloud/pro-tier.md) 
 [![Watch Demo](https://img.shields.io/badge/Watch%20Demo-black?style=for-the-badge)](https://youtu.be/UIzrW9otvYM?si=P1too6QjZ5r9AHtB)
 
 ## Enterprise
 
-Contact us
+The Enterprise Tier is fully optimized for mission-critical applications, providing the highest levels of security, availability, and dedicated operational support. Schedule a call with a FalkorDB solutions architect to learn more. 
+
+[![Learn More](https://img.shields.io/badge/Learn%20More-8A2BE2?style=for-the-badge)](https://github.com/FalkorDB/docs/blob/Cloud-Docs/cloud/enterprise-tier.md) 
+[![Watch Demo](https://img.shields.io/badge/Watch%20Demo-black?style=for-the-badge)](https://youtu.be/fu_8CLFKYSs?si=G7K6dN1i5tyqXTfC)
