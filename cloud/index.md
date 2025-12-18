@@ -21,6 +21,8 @@ Get started with FalkorDB's cloud offering. The platform provides several enterp
 | **Support & Monitoring** | - Dedicated Support<br>- Advanced Monitoring<br>- Dedicated Account Manager |
 | ☁️ **Cloud Providers** | - AWS<br>- GCP<br>- Azure<br>- BYOC (AWS, GCP) |
 
+[![Learn More](https://img.shields.io/badge/Learn%20More-8A2BE2?style=for-the-badge)](https://github.com/FalkorDB/docs/edit/Cloud-Docs/cloud/features.md) 
+
 ---
 
 ### Billing & Setup
