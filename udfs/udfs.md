@@ -1,0 +1,416 @@
+# UDFs - User Defined Functions
+
+Every databases comes with a set of built-in functions, for example among FalkorDB functions you'll find:
+`abs` -  computes the absolute value of a number
+`pow` - computes v^x
+`trim` - removes leading and trailing spaces.
+
+These are baked into the DB and are part of its source code, introducing a new function e.g. `UpperCaseOdd`isn't always trivial,
+the function needs to be usable to a wide audiance for it to be considered, in the past we've rejected requests for adding new functions as these were too specific and we didn't believe they've added a great value for most of our users.
+
+But now with the support of UDFs everyone can extends FalkorDB's functionality with their own set of functions. Following is an introduction to UDFs, how to manage & use them within FalkorDB.
+
+
+## Example
+Following is a complete example which loads a new UDF library "StringUtils" that includes a single function "UpperCaseOdd", once loaded the script puts it to use.
+
+```python
+from falkordb import FalkorDB
+
+# Connect to FalkorDB
+db = FalkorDB(host='localhost', port=6379)
+
+# Define UDF library name & script
+lib = "StringUtils"
+
+# UpperCaseOdd implementation in JavaScript
+script = """
+function UpperCaseOdd(s) {
+    return s.split('')
+        .map((char, i) => {
+            if (i % 2 !== 0) {
+                return char.toUpperCase();
+            }
+            return char;
+        })
+    .join('');
+};
+
+// expose UDF to FalkorDB
+falkor.register('UpperCaseOdd', UpperCaseOdd);
+"""
+
+# Load UDF into the database
+db.udf_load(lib, script)
+
+# Call UDF
+graph = db.select_graph("G")
+s = graph.query("RETURN StringUtils.UpperCaseOdd('abcdef)").result_set[0][0]
+print(f"s: {s}") # prints 'AbCdEf'
+```
+
+## GRAPH.UDF LOAD [REPLACE] <Lib> <script>
+
+Although conveniently available through `FalkorDB-PY` Python client, FalkorDB exposes its UDF functionality via a set of new  `GRAPH.UDF <sub_cmd>` commands.
+
+Adding a UDF is done by calling `GRAPH.UDF LOAD` followed by an optional `REPLACE` keyword which if specified replaces an already registered UDF library. Proceeding with the library name and the library script written in JavaScript.
+
+A UDF library can expose multiple UDFs, here's an example of a script which includes both nonexposed utility functions and a number of callable functions:
+
+```javascript
+function ShapeType(shape) {
+	return shape.type;
+}
+
+function Triangle() {
+	return {type: 'triangle', a:2, b:3, c:5};
+}
+
+function RandomShape() {
+	return Triangle();
+}
+
+function Area(shape) {
+    if (ShapeType(shape) == 'triangle') {
+		return (shape.height * shape.b) / 2;
+    } else {
+        throw new Error("Unsupported shape");
+    }
+}
+
+function Perimeter(shape) {
+   if (ShapeType(shape) == 'triangle') {
+		return shape.a + shape.b + shape.c;
+    } else {
+        throw new Error("Unsupported shape");
+    } 
+}
+
+// Expose functions
+falkor.register('Area', Area);
+falkor.register('Perimeter', Perimeter);
+falkor.register('RandomShape', RandomShape);
+```
+
+For each UDF script FalkorDB exposes the `falkor` object, through which you register UDFs.
+To register a function call `falkor.register` and provide the name you wish to expose your function under, followed by either an anonymous function or the actual function.
+
+e.g.
+```javascript
+falkor.register('Area', Area);
+falkor.register('Perimeter', function(s) {return s.a + s.b + s.c});
+```
+
+Once loaded your functions are available as if they were built-in functions and can be invoked in the same way.
+
+For example:
+```bash
+WITH Shapes.RandomShape() AS s
+WHERE s.a > 1
+CREATE (p:Position {area: Shapes.Area(s), perimeter: Shapes.Perimeter(s)})
+SET p += s
+RETURN s
+```
+
+## GRAPH.UDF LIST [Lib] [WITHCODE]
+
+To list loaded UDF libraries you can either use the FalkorDB-PY `udf_list` function or invoke the `GRAPH.UDF LIST` command via a direct connection to the DB.
+
+The comamnd takes two optional arguments:
+- Lib to list a specific library.
+- withcode keyword to include the library source code as part of the output.
+
+For example:
+Calling the command: `GRAPH.UDF LIST WITHCODE` will generate the following output:
+
+```bash
+1) 1) library_name
+   2) Shapes
+   3) functions
+   4) 1) Area
+      2) Perimeter
+      3) RandomShape
+   5) library_code
+   6) "function ShapeType(shape) {return shape.type;} function Triangle() {return {type: 'triangle', a:2, b:3, c:5};}...
+```
+
+## GRAPH.UDF DELETE <library>
+
+To remove a UDF library use either the `udf_delete` FalkorDB-PY function, or send a `GRAPH.UDF DELETE <library>` command via a direct connection to the database.
+
+e.g.
+```python
+from falkordb import FalkorDB
+
+# Connect to FalkorDB
+db = FalkorDB(host='localhost', port=6379)
+
+# Remove the Shapes UDF library
+db.udf_delete("Shapes")
+```
+
+## GRAPH.UDF FLUSH
+Similar to delete `GRAPH.UDF FLUSH` removes **all** UDF libraries from the DB.
+
+```python
+from falkordb import FalkorDB
+
+# Connect to FalkorDB
+db = FalkorDB(host='localhost', port=6379)
+
+# Remove all UDF libraries
+db.udf_flush()
+```
+
+## Datatypes
+Any datatype available in FalkorDB can be accessible via UDFs this includes:
+Scalar, Node, Edge & Path objects.
+
+### Node
+In a UDF a node object exposes its  `ID`, `labels` and `attributes`
+via the coresponding properties: 
+`id` - node internal ID
+`labels` - node's labels
+`attributes` - node's attributes
+
+It's also possible to collect a node's neighbors by calling the node's `getNeighbors` function.
+`getNeighbors` accept an optional config map:
+
+| config name | type   | description                                          | example                                            |
+|------------|------|--------------------------------|------------------------------|
+| direction       | string | direction of edges to traverse          | 'incoming' / 'outgoing' / 'both'      |
+| types             | string array  | edge relationship types to consider | ['KNOWS', 'WORKS_AT'] |
+| labels            | string array | node types to consider | ['Person', 'City'] |
+| returnType    | string | return type, array of nodes or edges | 'nodes' / 'edges'  |
+
+ For example:
+ ```javascript
+function stringify_node(n) {
+    return "id: " + n.id + "labels: " + n.labels + "attributes: " + n.attributes;
+}
+```
+
+### Edge
+In a UDF an edge object exposes its  `ID`, `type`, `startNode`,`endNode` and `attributes`
+via the coresponding properties:
+
+`id` - edge internal ID
+`type` - edge's relationship type
+`startNode` - edge's start node
+`endNode` - edge's end node
+`attributes` - edge's attributes
+
+ For example:
+ ```javascript
+function stringify_edge(e) {
+    return "id: " + e.id +
+			"type: " + e.type +
+			"startNode: " + e.startNode.id +
+			"endNode: " + e.endNode.id +
+			"attributes: " + n.attributes;
+}
+```
+
+### Path
+In a UDF a path object exposes its  `nodes`, `length` and `relationships` via the coresponding properties:
+
+`nodes` - path's nodes
+`length` - path's length
+`relationships` - path's edges
+
+ For example:
+ ```javascript
+function stringify_path(p) {
+    return "nodes: " + p.nodes +
+			"length: " + p.length +
+			"relationships: " + p.relationships;
+}
+```
+
+## Advance examples
+In this example we'll implement Jaccard similarity for nodes.
+Jaccard's formula J(A,B) = |A ∩ B| / |A ∪ B| = |A ∩ B| / |(A| + |B| - |A B|)
+In simple words: to compute Jaccard similarity for two nodes A and B we'll compute the number of shared neighbors between them and divide it by the total number of neighbors. such that if A and B has the exact same neighbors then their similarity value would be 1 and in case they have no shared neighbors their similarity value is 0.
+
+To start with let's define two UDFS: `unio` and `intersection` in a `collection.js` file:
+
+```javascript
+function union (a, b) {
+  return [...new Set([...a, ...b])];
+}
+
+function intersection (a, b) {
+  const setB = new Set(b);
+  return a.filter(x => setB.has(x));
+}
+
+falkor.register('union', union);
+falkor.register('intersection', intersection);
+```
+
+With these functions defined we can proceed implementing `Jaccard similarity`
+Create `similarity.js` as follows:
+
+```javascript
+function jaccard(a, b) {
+    const aIds = a.getNeighbors().map(x => x.id);
+    const bIds = b.getNeighbors().map(x => x.id);
+
+    const unionSize = union(aIds, bIds).length;
+    const intersectionSize = intersection(aIds, bIds).length;
+
+    return unionSize === 0 ? 0 : intersectionSize / unionSize;
+}
+
+falkor.register('jaccard', jaccard);
+```
+
+As you'll notice `jaccard` uses both `union` and `intersection` from `collection.js` but it also collects A's and B's neightbors via a call to `getNeighbors`
+
+We're almost done, what's left is to load these UDFs libraries into FalkorDB and use them.
+
+```python
+from falkordb import FalkorDB
+
+db = FalkorDB()
+g = db.select_graph("G")
+g.delete()
+
+def load_script(name, script_path):
+    with open(script_path, "r") as f:
+        content = f.read()
+        db.udf_load(name, content, True)
+
+def load_graph(g):
+    q = """CREATE
+        (eve:Person   {name: 'Eve'}),
+        (bob:Person   {name: 'Bob'}),
+        (dave:Person  {name: 'Dave'}),
+        (carol:Person {name: 'Carol'}),
+        (alice:Person {name: 'Alice'}),
+        (eve)-[:FRIEND]->(bob),
+        (bob)-[:FRIEND]->(alice),
+        (bob)-[:FRIEND]->(carol),
+        (bob)-[:FRIEND]->(eve),
+        (dave)-[:FRIEND]->(alice),
+        (carol)-[:FRIEND]->(alice),
+        (carol)-[:FRIEND]->(bob),
+        (alice)-[:FRIEND]->(bob),
+        (alice)-[:FRIEND]->(carol),
+        (alice)-[:FRIEND]->(dave)"""
+
+    g.query(q)
+
+def compute_jaccard_sim(g):
+    q = """MATCH (alice:Person {name: 'Alice'}), (n)
+           RETURN alice.name, n.name, similarity.jaccard(alice, n) AS sim"""
+    results = g.query(q).result_set
+
+    for row in results:
+        alice = row[0]
+        node  = row[1]
+        sim   = row[2]
+        print(f"Jaccard similarity between {alice} and {node} is: {sim}")
+
+# load UDFs
+load_script("collection", "./collection.js")
+load_script("similarity", "./similarity.js")
+
+load_graph(g)
+compute_jaccard_sim(g)
+```
+
+The scripts loads our two UDF libraries `collection` and `similarity` construct a graph and conputes Jaccard similarity between `Alice` and every other node in the graph via the query:
+
+```bash
+MATCH (alice:Person {name: 'Alice'}), (n)
+RETURN alice.name, n.name, similarity.jaccard(alice, n) AS sim
+```
+
+Output:
+```bash
+Jaccard similarity between Alice and Eve is: 0.333
+Jaccard similarity between Alice and Bob is: 0.2
+Jaccard similarity between Alice and Dave is: 0
+Jaccard similarity between Alice and Carol is: 0.25
+Jaccard similarity between Alice and Alice is: 1
+```
+
+### custom traversals
+In some situations where you want to have fine control over the way graph traversals are made, Cypher might not be flexible enough.
+Let's consider the following requierment, we would like to collect all reachable nodes from a given start node, a neighbor node is added to the expanded path if its `amount` value is greater than the accumulated sum of amounts on the current path.
+
+Here's a UDF which acomplish this traversal:
+
+```javascript
+function DFS_IncreasingAmounts(n, visited, total, reachables) {
+    // Add current node to visited to prevent infinite loops in cycles
+    visited.push(n.id);
+    
+    for (const neighbor of n.getNeighbors()) {        
+        // 1. Check if already visited
+        // 2. Logic: neighbor.amount must be GREATER than accumulated amount
+        if (visited.includes(neighbor.id) || neighbor.amount <= total) {
+            continue;
+        }
+
+        // Add to the list of discovered reachable nodes
+        reachables.push(neighbor);
+
+        // Recurse: add the neighbor's amount to the accumulated sum
+        DFS_IncreasingAmounts(
+            neighbor, 
+            visited, 
+            total + neighbor.amount,
+            reachables
+        );
+    }
+}
+
+function CollectIncreasingAmounts(n) {
+    const reachables = [];
+    const visited = new Map();
+
+	DFS_IncreasingAmounts(n, visited, n.amount, reachables);
+
+    return reachables;
+}
+
+// Register function to be later used in a query
+falkor.register('CollectIncreasingAmounts', CollectIncreasingAmounts);
+```
+
+All that's left is to load this UDF
+```python
+from falkordb import FalkorDB
+
+db = FalkorDB()
+g = db.select_graph("G")
+
+# Load UDF
+with open("./traversals.js", "r") as f:
+	content = f.read()
+    db.udf_load("Traversals", content, True)
+
+# Use our custom traversal to find relevant reachable nodes
+q = """MATCH (n:Transaction)
+	   WHERE n.id = 12
+       RETURN Traversals.CollectIncreasingAmounts(n)"""
+
+reachables = g.query(q).result_set[0][0]
+for node in reachables:
+    print(f"Node ID: {node.id}, Amount: {node.properties.get('amount')}")
+```
+
+## FLEX
+Flex is FalkorDB's open source community UDF package available at ___
+It contains a variaty of useful functionality like:
+1.
+2.
+3.
+
+We'll be happy to receive controbutions and extend this library to accomadate new functionality.
+
+## Limitations
+Currently UDFs are not alowed to modify the graph, in any shape or form.
+You can't update a graph entity within a UDF nor can you add / delete entities.
