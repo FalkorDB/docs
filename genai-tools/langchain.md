@@ -243,6 +243,14 @@ console.log(response);
 await graph.close();
 ```
 
+> **Alternative Connection:** You can also connect using a URL format:
+> ```typescript
+> const graph = await FalkorDBGraph.initialize({
+>   url: "falkor://localhost:6379",
+>   graph: "movies"
+> });
+> ```
+
 ### Key Features (JS/TS)
 
 - **Natural Language Querying**: Convert questions to Cypher queries automatically
@@ -260,8 +268,23 @@ Create and initialize a new FalkorDB connection.
 - `host` (string): Database host (default: "localhost")
 - `port` (number): Database port (default: 6379)
 - `graph` (string): Graph name to use
-- `url` (string): Alternative connection URL format
+- `url` (string): Alternative connection URL format: `falkor[s]://[[username][:password]@][host][:port][/db-number]`
 - `enhancedSchema` (boolean): Enable enhanced schema details
+
+**Example with URL:**
+```typescript
+// Connect using URL format
+const graph = await FalkorDBGraph.initialize({
+  url: "falkor://localhost:6379",
+  graph: "myGraph"
+});
+
+// With authentication
+const graph = await FalkorDBGraph.initialize({
+  url: "falkor://username:password@localhost:6379",
+  graph: "myGraph"
+});
+```
 
 #### `query(query: string)`
 
@@ -282,7 +305,45 @@ await graph.refreshSchema();
 console.log(graph.getSchema());
 ```
 
-For more detailed JavaScript/TypeScript examples and documentation, see the [LangChain JS/TS Integration Guide](/integration/langchain-js.html) and the [@falkordb/langchain-ts repository](https://github.com/FalkorDB/FalkorDB-Langchain-js).
+### Advanced Usage (JS/TS)
+
+#### Custom Cypher Queries
+
+```typescript
+const graph = await FalkorDBGraph.initialize({
+  host: "localhost",
+  port: 6379,
+  graph: "movies"
+});
+
+// Complex query
+const result = await graph.query(`
+  MATCH (a:Actor)-[:ACTED_IN]->(m:Movie)
+  WHERE m.year > 2000
+  RETURN a.name, m.title, m.year
+  ORDER BY m.year DESC
+  LIMIT 10
+`);
+
+console.log(result.data);
+```
+
+#### Working with Schema (JS/TS)
+
+```typescript
+await graph.refreshSchema();
+
+// Get formatted schema
+const schema = graph.getSchema();
+console.log(schema);
+
+// Get structured schema
+const structuredSchema = graph.getStructuredSchema();
+console.log(structuredSchema.nodeProps);
+console.log(structuredSchema.relationships);
+```
+
+For more examples and source code, see the [@falkordb/langchain-ts repository](https://github.com/FalkorDB/FalkorDB-Langchain-js).
 
 ---
 

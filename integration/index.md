@@ -15,7 +15,6 @@ Learn how to leverage FalkorDB's flexible APIs and SDKs to build high-performanc
 ## Topics in This Section
 
 - [REST API](./rest.md): Learn how to interact with FalkorDB using its REST API for seamless integration with your applications.
-- [LangChain JS/TS](./langchain-js.md): Integrate FalkorDB with LangChain JavaScript/TypeScript applications for AI-powered graph querying.
 - [Kafka Connect](./kafka-connect.md): Learn how to interact with FalkorDB using Kafka Connect sink to replicate data from third-party applications.
 - [Apache Jena](./jena.md): Learn how to use FalkorDB with Apache Jena via the jena-falkordb-adapter.
 - [BOLT protocol support](./bolt-support.md): Learn how to connect to FalkorDB using the BOLT protocol.
