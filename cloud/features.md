@@ -12,7 +12,7 @@ Multi-tenancy lets you run multiple isolated graph databases within a single Fal
 
 Developers building SaaS applications need multi-tenancy to serve multiple customers without deploying separate database instances for each one. This approach reduces operational overhead and infrastructure costs while maintaining strict data isolation between tenants.
 
-In practice, you create distinct graph databases for each customer or project, and FalkorDB handles the isolation automatically. Your application connects to the appropriate tenant database using different credentials or connection strings.
+In practice, you create distinct graph databases for each customer or project, and FalkorDB handles the isolation automatically.
 
 ## Cloud Providers
 ### AWS
