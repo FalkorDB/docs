@@ -31,13 +31,6 @@ You select a GCP region during deployment, and FalkorDB sets up your graph datab
 
 > Note: Microsoft Azure is currently available in a Bring-Your-Own-Cloud configuration
 
-## Storage
-Storage defines how much disk space your graph database has for nodes, relationships, properties, and indexes. The amount of storage you need depends on your graph size and how much data you store in each node and relationship.
-
-Applications with large knowledge graphs, social networks, or recommendation systems require substantial storage. Running out of storage stops your database from accepting new data, so you must monitor usage and scale accordingly.
-
-FalkorDB allocates the specified storage capacity to your instance. You can track how much space your graph consumes and increase storage limits as your data grows.
-
 ## TLS
 TLS (Transport Layer Security) encrypts all data transmitted between your application and FalkorDB. This encryption prevents anyone intercepting network traffic from reading your queries or results.
 
