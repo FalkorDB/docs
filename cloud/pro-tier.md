@@ -31,7 +31,7 @@ The Pro Tier provides a robust environment to scale your application with confid
 | Advanced Monitoring | ✗ | ✗ | **🔴** | ✓ |
 | **Support** | Community | Community | **24/7** | Dedicated |
 | Dedicated Account Manager | ✗ | ✗ | **🔴** | ✓ |
-| **Cloud Providers** | AWS, GCP, Azure | AWS, GCP, Azure | **AWS, GCP, Azure** | AWS, GCP, Azure |
+| **Cloud Providers** | AWS, GCP | AWS, GCP | **AWS, GCP** | AWS, GCP, Azure (BYOC) |
 | **Get started** | [Sign up](https://app.falkordb.cloud/signup) | [Sign up](https://app.falkordb.cloud/signup) | [Sign up](https://app.falkordb.cloud/signup) | [Contact Us](mailto:info@falkordb.com) |
 
 ## Terms
@@ -61,7 +61,9 @@ The Pro Tier provides a robust environment to scale your application with confid
 | E2-custom-16-32768 / c6i.4xlarge              |   \$5,445.80 |
 | E2-custom-32-65536 / c6i.8xlarge              |  \$10,585.00 |
 
+> Note: We charge an additional 2 cores and 2 GB for replication and cluster since they require an extra component (sentinel for replication and rebalancer for cluster).
 
+---
 <!--
 ## Clustered (High Availability, Masters (x3), and Replicas (x3))
 
