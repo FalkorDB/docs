@@ -31,7 +31,7 @@ The Startup Tier includes essential features like **TLS** and **Automated Backup
 | Advanced Monitoring | ✗ | **🔴** | ✗ | ✓ |
 | **Support** | Community | **Community** | 24/7 | Dedicated |
 | Dedicated Account Manager | ✗ | **🔴** | ✗ | ✓ |
-| **Cloud Providers** | AWS, GCP, Azure | **AWS, GCP, Azure** | AWS, GCP, Azure | AWS, GCP, Azure |
+| **Cloud Providers** | AWS, GCP | **AWS, GCP** | AWS, GCP | AWS, GCP, Azure (BYOC) |
 | **Call-to-Action** | [Sign up](https://app.falkordb.cloud/signup) | [Sign up](https://app.falkordb.cloud/signup) | [Sign up](https://app.falkordb.cloud/signup) | [Contact Us](mailto:info@falkordb.com) |
 
 ## Terms
