@@ -163,7 +163,7 @@ db.udf_flush()
 ```
 
 ## Datatypes
-Any datatype available in FalkorDB can be accessible via UDFs this includes:
+Any datatype available in FalkorDB is accessible within UDFs this includes:
 Scalar, Node, Edge & Path objects.
 
 ### Node
@@ -172,6 +172,13 @@ via the coresponding properties:
 `id` - node internal ID
 `labels` - node's labels
 `attributes` - node's attributes
+
+For example:
+ ```javascript
+function stringify_node(n) {
+    return "id: " + n.id + "labels: " + n.labels + "attributes: " + n.attributes;
+}
+```
 
 It's also possible to collect a node's neighbors by calling the node's `getNeighbors` function.
 `getNeighbors` accept an optional config map:
@@ -182,13 +189,6 @@ It's also possible to collect a node's neighbors by calling the node's `getNeigh
 | types             | string array  | edge relationship types to consider | ['KNOWS', 'WORKS_AT'] |
 | labels            | string array | node types to consider | ['Person', 'City'] |
 | returnType    | string | return type, array of nodes or edges | 'nodes' / 'edges'  |
-
- For example:
- ```javascript
-function stringify_node(n) {
-    return "id: " + n.id + "labels: " + n.labels + "attributes: " + n.attributes;
-}
-```
 
 ### Edge
 In a UDF an edge object exposes its  `ID`, `type`, `startNode`,`endNode` and `attributes`
@@ -403,11 +403,11 @@ for node in reachables:
 ```
 
 ## FLEX
-Flex is FalkorDB's open source community UDF package available at ___
+Flex is FalkorDB's open source community UDF package available at https://github.com/FalkorDB/flex
 It contains a variaty of useful functionality like:
-1.
-2.
-3.
+1. String and set similarity metrics for fuzzy matching and comparison.
+2. Date and time manipulation, formatting, and parsing.
+3. Low-level bitwise operations on integers.
 
 We'll be happy to receive controbutions and extend this library to accomadate new functionality.
 
