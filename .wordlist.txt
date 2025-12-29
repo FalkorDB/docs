@@ -691,3 +691,12 @@ UDFs
 StringUtils
 UpperCaseOdd
 
+DBaaS
+GCP
+VPC
+VPCs
+BYOC
+FDB
+xlarge
+SaaS
+GCP's
