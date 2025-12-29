@@ -30,7 +30,7 @@ The free tier provides everything you need to explore FalkorDB and build initial
 | Advanced Monitoring | ✗ | ✗ | ✗ | **✓** |
 | **Support** | Community | Community | 24/7 | Dedicated |
 | Dedicated Account Manager | ✗ | ✗ | ✗ | **✓** |
-| **Cloud Providers** | AWS, GCP, Azure | AWS, GCP, Azure | AWS, GCP, Azure | AWS, GCP, Azure |
+| **Cloud Providers** | AWS, GCP | AWS, GCP | AWS, GCP | AWS, GCP, Azure |
 | **Call-to-Action** | [Sign up](https://app.falkordb.cloud/signup) | [Sign up](https://app.falkordb.cloud/signup) | [Sign up](https://app.falkordb.cloud/signup) | [Contact Us](mailto:info@falkordb.com) |
 
 #### Terms
