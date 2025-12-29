@@ -54,9 +54,9 @@ Although conveniently available through `FalkorDB-PY` Python client, FalkorDB ex
 
 ### GRAPH.UDF LOAD [REPLACE] <Lib> <script>
 
-Adding a UDF is done by calling `GRAPH.UDF LOAD` followed by an optional `REPLACE` keyword which, if specified, replaces an already registered UDF library, proceeding with the library name and the library script written in JavaScript.
+Adding a UDF is done by calling `GRAPH.UDF LOAD` followed by an optional `REPLACE` keyword which, if specified, replaces an already registered UDF library. The command then takes the library name and the library script written in JavaScript arguments.
 
-A UDF library can expose multiple UDFs, here's an example of a script which includes both nonexposed utility functions and a number of callable functions:
+A UDF library can expose multiple UDFs, here's an example of a script which includes both non-exposed utility functions and a number of callable functions:
 
 ```javascript
 function ShapeType(shape) {
@@ -118,8 +118,8 @@ RETURN s
 To list loaded UDF libraries you can either use the FalkorDB-PY `udf_list` function or invoke the `GRAPH.UDF LIST` command via a direct connection to the DB.
 
 The command takes two optional arguments:
-- Lib to list a specific library.
-- withcode keyword to include the library source code as part of the output.
+- Lib: list only a specific library.
+- WITHCODE: to include the library source code as part of the output.
 
 For example:
 Calling the command: `GRAPH.UDF LIST WITHCODE` will generate the following output:
@@ -168,8 +168,7 @@ Any datatype available in FalkorDB is accessible within UDFs, these include:
 Scalar, Node, Edge & Path objects.
 
 ### Node
-In a UDF a node object exposes its  `ID`, `labels` and `attributes`
-via the corresponding properties: 
+In a UDF, a node object exposes its  `ID`, `labels` and `attributes` via the corresponding properties: 
 `id` - node internal ID
 `labels` - node's labels
 `attributes` - node's attributes
@@ -192,8 +191,7 @@ It's also possible to collect a node's neighbors by calling the node's `getNeigh
 | returnType    | string | return type, array of nodes or edges | 'nodes' / 'edges'  |
 
 ### Edge
-In a UDF, an edge object exposes its  `ID`, `type`, `startNode`,`endNode` and `attributes`
-via the corresponding properties:
+In a UDF, an edge object exposes its  `ID`, `type`, `startNode`,`endNode` and `attributes` via the corresponding properties:
 
 `id` - edge internal ID
 `type` - edge's relationship type
@@ -230,10 +228,11 @@ function stringify_path(p) {
 
 ## Advanced examples
 In this example we'll implement Jaccard similarity for nodes.
-Jaccard's formula J(A,B) = |A ∩ B| / |A ∪ B| = |A ∩ B| / |(A| + |B| - |A ∩ B|)
-In simple words: to compute Jaccard similarity for two nodes A and B we'll compute the number of shared neighbors between them and divide it by the total number of neighbors. such that if A and B has the same neighbors then their similarity value would be 1 and in case they have no shared neighbors their similarity value is 0.
+Jaccard's formula J(A,B) = |A ∩ B| / |A ∪ B| = |A ∩ B| / (|A| + |B| - |A ∩ B|)
 
-To start with let's define two UDFS: `union` and `intersection` in a `collection.js` file:
+In simple words: to compute Jaccard similarity for two nodes A and B we'll compute the number of shared neighbors between them and divide it by the total number of neighbors. such that if A and B have the same neighbors then their similarity value would be 1 and in case they have no shared neighbors their similarity value is 0.
+
+To start with let's define two UDFs: `union` and `intersection`, in a `collection.js` file:
 
 ```javascript
 function union (a, b) {
@@ -341,7 +340,8 @@ Jaccard similarity between Alice and Alice is: 1
 In some situations where you want to have fine control over the way graph traversals are made, Cypher might not be flexible enough.
 Let's consider the following requirement, we would like to collect all reachable nodes from a given start node, a neighbor node is added to the expanded path if its `amount` value is greater than the accumulated sum of amounts on the current path.
 
-Here's a UDF which acomplishes this traversal:
+Here's a UDF that accomplishes this traversal. It performs a DFS and only expands to neighbors whose `amount` value is greater than the accumulated sum of amounts along the current path:
+
 
 ```javascript
 function DFS_IncreasingAmounts(n, visited, total, reachables) {
@@ -381,7 +381,7 @@ function CollectIncreasingAmounts(n) {
 falkor.register('CollectIncreasingAmounts', CollectIncreasingAmounts);
 ```
 
-All that's left is to load this UDF
+All that's left is to load this UDF:
 ```python
 from falkordb import FalkorDB
 
@@ -404,14 +404,18 @@ for node in reachables:
 ```
 
 ## FLEX
-Flex is FalkorDB's open source community UDF package available at https://github.com/FalkorDB/flex
-It contains a variety of useful functionality like:
-1. String and set similarity metrics for fuzzy matching and comparison.
-2. Date and time manipulation, formatting, and parsing.
+
+FLEX is FalkorDB's open source community UDF package, available at [github.com/FalkorDB/flex](https://github.com/FalkorDB/flex).  
+It contains a variety of useful functionality, including:
+
+1. String and set similarity metrics for fuzzy matching and comparison.  
+2. Date and time manipulation, formatting, and parsing.  
 3. Low-level bitwise operations on integers.
 
-We'll be happy to receive contributions and extend this library to accommodate new functionality.
+We welcome contributions to extend this library with additional functionality.
 
 ## Limitations
-Currently UDFs are not allowed to modify the graph, in any shape or form.
-You can't update a graph entity within a UDF nor can you add / delete entities.
+
+Currently UDFs are not allowed to modify the graph in any way.  
+You can't update graph entities within a UDF, nor can you add or delete entities.
+
