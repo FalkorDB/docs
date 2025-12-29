@@ -8,7 +8,7 @@ Every databases comes with a set of built-in functions, for example among Falkor
 These are baked into the DB and are part of its source code, introducing a new function e.g. `UpperCaseOdd`isn't always trivial,
 the function needs to be usable to a wide audience for it to be considered, in the past we've rejected requests for adding new functions as these were too specific and we didn't believe they've added a significant value for most of our users.
 
-But now with the support of UDFs everyone can extends FalkorDB's functionality with their own set of functions. Following is an introduction to UDFs, how to manage & use them within FalkorDB.
+But now, with the support of UDFs, everyone can extend FalkorDB's functionality with their own set of functions. Following is an introduction to UDFs, how to manage & use them within FalkorDB.
 
 
 ## Example
