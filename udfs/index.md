@@ -192,7 +192,7 @@ It's also possible to collect a node's neighbors by calling the node's `getNeigh
 
 ### Edge
 In a UDF an edge object exposes its  `ID`, `type`, `startNode`,`endNode` and `attributes`
-via the coresponding properties:
+via the corresponding properties:
 
 `id` - edge internal ID
 `type` - edge's relationship type
@@ -212,7 +212,7 @@ function stringify_edge(e) {
 ```
 
 ### Path
-In a UDF a path object exposes its  `nodes`, `length` and `relationships` via the coresponding properties:
+In a UDF a path object exposes its  `nodes`, `length` and `relationships` via the corresponding properties:
 
 `nodes` - path's nodes
 `length` - path's length

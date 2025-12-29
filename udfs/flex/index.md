@@ -119,18 +119,3 @@ Low-level bitwise operations on integers.
 ### Permission and Flag Management
 - `bitwise.and`, `bitwise.or` - Check and set permission flags
 - `bitwise.xor` - Toggle flags
-
-## Contributing
-
-When adding new functions, please:
-1. Follow the [standard template](./TEMPLATE.md)
-2. Include practical examples with expected output
-3. Document edge cases and null handling
-4. Add "See Also" references to related functions
-5. Update this index with the new function
-
-## Version
-
-This documentation is for FLEX v1.0.0+
-
-For more information, see the [main README](../README.md).
