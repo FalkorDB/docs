@@ -1,14 +1,15 @@
 # FLEX Function Reference
 
-Flex is FalkorDB's open source community UDF package available at https://github.com/FalkorDB/flex 
-It contains a variety of useful functionality like:
+FLEX is FalkorDB's open source community UDF package, available at [github.com/FalkorDB/flex](https://github.com/FalkorDB/flex).  
+It contains a variety of useful functionality, including:
 
-String and set similarity metrics for fuzzy matching and comparison.
-Date and time manipulation, formatting, and parsing.
-Low-level bitwise operations on integers.
-We'll be happy to receive contributions and extend this library to accommodate additional functionality.
+- String and set similarity metrics for fuzzy matching and comparison  
+- Date and time manipulation, formatting, and parsing  
+- Low-level bitwise operations on integers  
 
-The following list covers documentation for all FLEX (FalkorDB Library for EXtensions) functions.
+We welcome contributions to extend this library with additional functionality.
+
+The following sections document all FLEX (FalkorDB Library for EXtensions) functions.
 
 ## Function Categories
 
