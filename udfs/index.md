@@ -48,8 +48,8 @@ graph = db.select_graph("G")
 s = graph.query("RETURN StringUtils.UpperCaseOdd('abcdef'").result_set[0][0]
 print(f"s: {s}") # prints 'AbCdEf'
 ```
-
-## GRAPH.UDF LOAD [REPLACE] <Lib> <script>
+## Commands Specification
+### GRAPH.UDF LOAD [REPLACE] <Lib> <script>
 
 Although conveniently available through `FalkorDB-PY` Python client, FalkorDB exposes its UDF functionality via a set of new  `GRAPH.UDF <sub_cmd>` commands.
 
@@ -112,7 +112,7 @@ SET p += s
 RETURN s
 ```
 
-## GRAPH.UDF LIST [Lib] [WITHCODE]
+### GRAPH.UDF LIST [Lib] [WITHCODE]
 
 To list loaded UDF libraries you can either use the FalkorDB-PY `udf_list` function or invoke the `GRAPH.UDF LIST` command via a direct connection to the DB.
 
@@ -134,7 +134,7 @@ Calling the command: `GRAPH.UDF LIST WITHCODE` will generate the following outpu
    6) "function ShapeType(shape) {return shape.type;} function Triangle() {return {type: 'triangle', a:2, b:3, c:5};}...
 ```
 
-## GRAPH.UDF DELETE <library>
+### GRAPH.UDF DELETE <library>
 
 To remove a UDF library use either the `udf_delete` FalkorDB-PY function, or send a `GRAPH.UDF DELETE <library>` command via a direct connection to the database.
 
@@ -149,7 +149,7 @@ db = FalkorDB(host='localhost', port=6379)
 db.udf_delete("Shapes")
 ```
 
-## GRAPH.UDF FLUSH
+### GRAPH.UDF FLUSH
 Similar to delete `GRAPH.UDF FLUSH` removes **all** UDF libraries from the DB.
 
 ```python
@@ -227,7 +227,7 @@ function stringify_path(p) {
 }
 ```
 
-## Advance examples
+## Advanced examples
 In this example we'll implement Jaccard similarity for nodes.
 Jaccard's formula J(A,B) = |A ∩ B| / |A ∪ B| = |A ∩ B| / |(A| + |B| - |A ∩ B|)
 In simple words: to compute Jaccard similarity for two nodes A and B we'll compute the number of shared neighbors between them and divide it by the total number of neighbors. such that if A and B has the same neighbors then their similarity value would be 1 and in case they have no shared neighbors their similarity value is 0.
@@ -336,7 +336,7 @@ Jaccard similarity between Alice and Carol is: 0.25
 Jaccard similarity between Alice and Alice is: 1
 ```
 
-### custom traversals
+### Custom Traversals
 In some situations where you want to have fine control over the way graph traversals are made, Cypher might not be flexible enough.
 Let's consider the following requirement, we would like to collect all reachable nodes from a given start node, a neighbor node is added to the expanded path if its `amount` value is greater than the accumulated sum of amounts on the current path.
 
