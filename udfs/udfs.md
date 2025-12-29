@@ -6,7 +6,7 @@ Every databases comes with a set of built-in functions, for example among Falkor
 `trim` - removes leading and trailing spaces.
 
 These are baked into the DB and are part of its source code, introducing a new function e.g. `UpperCaseOdd`isn't always trivial,
-the function needs to be usable to a wide audiance for it to be considered, in the past we've rejected requests for adding new functions as these were too specific and we didn't believe they've added a great value for most of our users.
+the function needs to be usable to a wide audience for it to be considered, in the past we've rejected requests for adding new functions as these were too specific and we didn't believe they've added a significant value for most of our users.
 
 But now with the support of UDFs everyone can extends FalkorDB's functionality with their own set of functions. Following is an introduction to UDFs, how to manage & use them within FalkorDB.
 
@@ -45,7 +45,7 @@ db.udf_load(lib, script)
 
 # Call UDF
 graph = db.select_graph("G")
-s = graph.query("RETURN StringUtils.UpperCaseOdd('abcdef)").result_set[0][0]
+s = graph.query("RETURN StringUtils.UpperCaseOdd('abcdef'").result_set[0][0]
 print(f"s: {s}") # prints 'AbCdEf'
 ```
 
@@ -72,7 +72,7 @@ function RandomShape() {
 
 function Area(shape) {
     if (ShapeType(shape) == 'triangle') {
-		return (shape.height * shape.b) / 2;
+		return (shape.a * shape.b) / 2;
     } else {
         throw new Error("Unsupported shape");
     }
@@ -116,7 +116,7 @@ RETURN s
 
 To list loaded UDF libraries you can either use the FalkorDB-PY `udf_list` function or invoke the `GRAPH.UDF LIST` command via a direct connection to the DB.
 
-The comamnd takes two optional arguments:
+The command takes two optional arguments:
 - Lib to list a specific library.
 - withcode keyword to include the library source code as part of the output.
 
@@ -168,7 +168,7 @@ Scalar, Node, Edge & Path objects.
 
 ### Node
 In a UDF a node object exposes its  `ID`, `labels` and `attributes`
-via the coresponding properties: 
+via the corresponding properties: 
 `id` - node internal ID
 `labels` - node's labels
 `attributes` - node's attributes
@@ -176,7 +176,7 @@ via the coresponding properties:
 For example:
  ```javascript
 function stringify_node(n) {
-    return "id: " + n.id + "labels: " + n.labels + "attributes: " + n.attributes;
+    return "id: " + n.id + " labels: " + JSON.stringify(n.labels) + " attributes: " + JSON.stringify(n.attributes);
 }
 ```
 
@@ -204,10 +204,10 @@ via the coresponding properties:
  ```javascript
 function stringify_edge(e) {
     return "id: " + e.id +
-			"type: " + e.type +
-			"startNode: " + e.startNode.id +
-			"endNode: " + e.endNode.id +
-			"attributes: " + n.attributes;
+			" type: " + e.type +
+			" startNode: " + e.startNode.id +
+			" endNode: " + e.endNode.id +
+			" attributes: " + JSON.stringify(e.attributes);
 }
 ```
 
@@ -229,10 +229,10 @@ function stringify_path(p) {
 
 ## Advance examples
 In this example we'll implement Jaccard similarity for nodes.
-Jaccard's formula J(A,B) = |A ∩ B| / |A ∪ B| = |A ∩ B| / |(A| + |B| - |A B|)
-In simple words: to compute Jaccard similarity for two nodes A and B we'll compute the number of shared neighbors between them and divide it by the total number of neighbors. such that if A and B has the exact same neighbors then their similarity value would be 1 and in case they have no shared neighbors their similarity value is 0.
+Jaccard's formula J(A,B) = |A ∩ B| / |A ∪ B| = |A ∩ B| / |(A| + |B| - |A ∩ B|)
+In simple words: to compute Jaccard similarity for two nodes A and B we'll compute the number of shared neighbors between them and divide it by the total number of neighbors. such that if A and B has the same neighbors then their similarity value would be 1 and in case they have no shared neighbors their similarity value is 0.
 
-To start with let's define two UDFS: `unio` and `intersection` in a `collection.js` file:
+To start with let's define two UDFS: `union` and `intersection` in a `collection.js` file:
 
 ```javascript
 function union (a, b) {
@@ -265,7 +265,7 @@ function jaccard(a, b) {
 falkor.register('jaccard', jaccard);
 ```
 
-As you'll notice `jaccard` uses both `union` and `intersection` from `collection.js` but it also collects A's and B's neightbors via a call to `getNeighbors`
+As you'll notice `jaccard` uses both `union` and `intersection` from `collection.js` but it also collects A's and B's neighbors via a call to `getNeighbors`
 
 We're almost done, what's left is to load these UDFs libraries into FalkorDB and use them.
 
@@ -320,7 +320,7 @@ load_graph(g)
 compute_jaccard_sim(g)
 ```
 
-The scripts loads our two UDF libraries `collection` and `similarity` construct a graph and conputes Jaccard similarity between `Alice` and every other node in the graph via the query:
+The scripts loads our two UDF libraries `collection` and `similarity` construct a graph and computes Jaccard similarity between `Alice` and every other node in the graph via the query:
 
 ```bash
 MATCH (alice:Person {name: 'Alice'}), (n)
@@ -338,7 +338,7 @@ Jaccard similarity between Alice and Alice is: 1
 
 ### custom traversals
 In some situations where you want to have fine control over the way graph traversals are made, Cypher might not be flexible enough.
-Let's consider the following requierment, we would like to collect all reachable nodes from a given start node, a neighbor node is added to the expanded path if its `amount` value is greater than the accumulated sum of amounts on the current path.
+Let's consider the following requirement, we would like to collect all reachable nodes from a given start node, a neighbor node is added to the expanded path if its `amount` value is greater than the accumulated sum of amounts on the current path.
 
 Here's a UDF which acomplish this traversal:
 
@@ -368,8 +368,8 @@ function DFS_IncreasingAmounts(n, visited, total, reachables) {
 }
 
 function CollectIncreasingAmounts(n) {
+    const visited = [];
     const reachables = [];
-    const visited = new Map();
 
 	DFS_IncreasingAmounts(n, visited, n.amount, reachables);
 
@@ -390,7 +390,7 @@ g = db.select_graph("G")
 # Load UDF
 with open("./traversals.js", "r") as f:
 	content = f.read()
-    db.udf_load("Traversals", content, True)
+	db.udf_load("Traversals", content, True)
 
 # Use our custom traversal to find relevant reachable nodes
 q = """MATCH (n:Transaction)
@@ -404,13 +404,13 @@ for node in reachables:
 
 ## FLEX
 Flex is FalkorDB's open source community UDF package available at https://github.com/FalkorDB/flex
-It contains a variaty of useful functionality like:
+It contains a variety of useful functionality like:
 1. String and set similarity metrics for fuzzy matching and comparison.
 2. Date and time manipulation, formatting, and parsing.
 3. Low-level bitwise operations on integers.
 
-We'll be happy to receive controbutions and extend this library to accomadate new functionality.
+We'll be happy to receive contributions and extend this library to accommodate new functionality.
 
 ## Limitations
-Currently UDFs are not alowed to modify the graph, in any shape or form.
+Currently UDFs are not allowed to modify the graph, in any shape or form.
 You can't update a graph entity within a UDF nor can you add / delete entities.
