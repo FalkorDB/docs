@@ -42,7 +42,7 @@ The FalkorDB Free Tier provides a free FalkorDB instance for evaluation purposes
 
 ## Startup Tier
 
-The FalkorDB Startup Tier provides a production-ready standalone FalkorDB deployment. Pick your machine size, add your dataset size, and start extracting insights.
+The FalkorDB Startup Tier provides a production-ready standalone FalkorDB deployment. Pick your machine size, add a dataset size, and start extracting insights.
 
 [![Learn More](https://img.shields.io/badge/Learn%20More-8A2BE2?style=for-the-badge)](https://github.com/FalkorDB/docs/cloud/startup-tier.md) 
 [![Watch Demo](https://img.shields.io/badge/Watch%20Demo-black?style=for-the-badge)](https://www.youtube.com/watch?v=xjpLPoQgo2s)
