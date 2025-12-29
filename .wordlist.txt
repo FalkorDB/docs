@@ -685,3 +685,9 @@ sdist
 dylib
 xcode
 Trendshift
+
+UDF
+UDFs
+StringUtils
+UpperCaseOdd
+
