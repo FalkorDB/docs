@@ -45,7 +45,7 @@ db.udf_load(lib, script)
 
 # Call UDF
 graph = db.select_graph("G")
-s = graph.query("RETURN StringUtils.UpperCaseOdd('abcdef'").result_set[0][0]
+s = graph.query("RETURN StringUtils.UpperCaseOdd('abcdef')").result_set[0][0]
 print(f"s: {s}") # prints 'AbCdEf'
 ```
 ## Commands Specification
