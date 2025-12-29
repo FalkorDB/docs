@@ -12,7 +12,7 @@ But now with the support of UDFs everyone can extends FalkorDB's functionality w
 
 
 ## Example
-Following is a complete example which loads a new UDF library "StringUtils" that includes a single function "UpperCaseOdd", once loaded the script puts it to use.
+In order to introduce UDFs, please review the following, a complete example which loads a new UDF library "StringUtils" that includes a single function "UpperCaseOdd", once loaded the script puts it to use.
 
 ```python
 from falkordb import FalkorDB
@@ -49,11 +49,12 @@ s = graph.query("RETURN StringUtils.UpperCaseOdd('abcdef'").result_set[0][0]
 print(f"s: {s}") # prints 'AbCdEf'
 ```
 ## Commands Specification
-### GRAPH.UDF LOAD [REPLACE] <Lib> <script>
 
 Although conveniently available through `FalkorDB-PY` Python client, FalkorDB exposes its UDF functionality via a set of new  `GRAPH.UDF <sub_cmd>` commands.
 
-Adding a UDF is done by calling `GRAPH.UDF LOAD` followed by an optional `REPLACE` keyword which if specified replaces an already registered UDF library. Proceeding with the library name and the library script written in JavaScript.
+### GRAPH.UDF LOAD [REPLACE] <Lib> <script>
+
+Adding a UDF is done by calling `GRAPH.UDF LOAD` followed by an optional `REPLACE` keyword which, if specified, replaces an already registered UDF library, proceeding with the library name and the library script written in JavaScript.
 
 A UDF library can expose multiple UDFs, here's an example of a script which includes both nonexposed utility functions and a number of callable functions:
 
@@ -163,7 +164,7 @@ db.udf_flush()
 ```
 
 ## Datatypes
-Any datatype available in FalkorDB is accessible within UDFs this includes:
+Any datatype available in FalkorDB is accessible within UDFs, these include:
 Scalar, Node, Edge & Path objects.
 
 ### Node
@@ -191,7 +192,7 @@ It's also possible to collect a node's neighbors by calling the node's `getNeigh
 | returnType    | string | return type, array of nodes or edges | 'nodes' / 'edges'  |
 
 ### Edge
-In a UDF an edge object exposes its  `ID`, `type`, `startNode`,`endNode` and `attributes`
+In a UDF, an edge object exposes its  `ID`, `type`, `startNode`,`endNode` and `attributes`
 via the corresponding properties:
 
 `id` - edge internal ID
@@ -212,7 +213,7 @@ function stringify_edge(e) {
 ```
 
 ### Path
-In a UDF a path object exposes its  `nodes`, `length` and `relationships` via the corresponding properties:
+In a UDF, a path object exposes its  `nodes`, `length` and `relationships` via the corresponding properties:
 
 `nodes` - path's nodes
 `length` - path's length
@@ -320,7 +321,7 @@ load_graph(g)
 compute_jaccard_sim(g)
 ```
 
-The scripts loads our two UDF libraries `collection` and `similarity` construct a graph and computes Jaccard similarity between `Alice` and every other node in the graph via the query:
+The scripts load our two UDF libraries `collection` and `similarity` construct a graph and computes Jaccard similarity between `Alice` and every other node in the graph via the query:
 
 ```bash
 MATCH (alice:Person {name: 'Alice'}), (n)
@@ -340,7 +341,7 @@ Jaccard similarity between Alice and Alice is: 1
 In some situations where you want to have fine control over the way graph traversals are made, Cypher might not be flexible enough.
 Let's consider the following requirement, we would like to collect all reachable nodes from a given start node, a neighbor node is added to the expanded path if its `amount` value is greater than the accumulated sum of amounts on the current path.
 
-Here's a UDF which acomplish this traversal:
+Here's a UDF which acomplishes this traversal:
 
 ```javascript
 function DFS_IncreasingAmounts(n, visited, total, reachables) {
