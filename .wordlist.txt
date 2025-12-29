@@ -667,3 +667,11 @@ NodePort
 orphaned
 replicas
 SQL's
+DBaaS
+GCP
+VPC
+VPCs
+BYOC
+FDB
+xlarge
+SaaS
