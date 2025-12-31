@@ -1,3 +1,10 @@
+---
+layout: default
+title: coll.intersection
+parent: FLEX Function Reference
+grand_parent: UDFs - User Defined Functions
+---
+
 # coll.intersection
 
 ## Description

@@ -1,3 +1,10 @@
+---
+layout: default
+title: text.upperCamelCase
+parent: FLEX Function Reference
+grand_parent: UDFs - User Defined Functions
+---
+
 # text.upperCamelCase
 
 ## Description

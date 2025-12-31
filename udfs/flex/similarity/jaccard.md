@@ -1,3 +1,10 @@
+---
+layout: default
+title: sim.jaccard
+parent: FLEX Function Reference
+grand_parent: UDFs - User Defined Functions
+---
+
 # sim.jaccard
 
 ## Description

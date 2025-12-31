@@ -1,3 +1,10 @@
+---
+layout: default
+title: text.swapCase
+parent: FLEX Function Reference
+grand_parent: UDFs - User Defined Functions
+---
+
 # text.swapCase
 
 ## Description

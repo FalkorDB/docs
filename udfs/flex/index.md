@@ -1,3 +1,10 @@
+---
+layout: default
+title: FLEX Function Reference
+parent: UDFs - User Defined Functions
+has_children: true
+---
+
 # FLEX Function Reference
 
 FLEX is FalkorDB's open source community UDF package, available at [github.com/FalkorDB/flex](https://github.com/FalkorDB/flex).  

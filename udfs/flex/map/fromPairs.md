@@ -1,3 +1,10 @@
+---
+layout: default
+title: map.fromPairs
+parent: FLEX Function Reference
+grand_parent: UDFs - User Defined Functions
+---
+
 # map.fromPairs
 
 ## Description
