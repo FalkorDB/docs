@@ -35,7 +35,7 @@ eastern
 ```
 (UTC fields now show 09:00 which is the local time in -05:00)
 
-### Example 2: Convert to Multiple Timezones
+### Example 2: Convert to Multiple Time Zones
 ```cypher
 WITH datetime('2024-03-15T12:00:00Z') AS utc
 RETURN 

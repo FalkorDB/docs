@@ -9,7 +9,7 @@ It contains a variety of useful functionality, including:
 
 We welcome contributions to extend this library with additional functionality.
 
-The following sections document all FLEX (FalkorDB Library for EXtensions) functions.
+The following sections document all FLEX (FalkorDB Library for Extensions) functions.
 
 ## Function Categories
 
