@@ -16,6 +16,7 @@ flex.text.join(array, delimiter)
 ```
 
 ## Parameters
+
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
 | `array` | list | Yes | The array of strings to join |

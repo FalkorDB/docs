@@ -16,6 +16,7 @@ flex.map.removeKey(map, key)
 ```
 
 ## Parameters
+
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
 | `map` | map | Yes | The map to remove the key from |

@@ -16,6 +16,7 @@ flex.text.swapCase(string)
 ```
 
 ## Parameters
+
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
 | `string` | string | Yes | The string to swap case |

@@ -16,6 +16,7 @@ flex.bitwise.or(a, b)
 ```
 
 ## Parameters
+
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
 | `a` | number (integer) | Yes | First operand |

@@ -16,6 +16,7 @@ flex.text.indexOf(string, substring, offset, to)
 ```
 
 ## Parameters
+
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
 | `string` | string | Yes | The string to search in |

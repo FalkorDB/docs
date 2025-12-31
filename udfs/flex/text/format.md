@@ -16,6 +16,7 @@ flex.text.format(template, parameters)
 ```
 
 ## Parameters
+
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
 | `template` | string | Yes | The format string containing `{0}`, `{1}`, etc. placeholders |

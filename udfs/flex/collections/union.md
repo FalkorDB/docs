@@ -16,6 +16,7 @@ flex.coll.union(list1, list2)
 ```
 
 ## Parameters
+
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
 | `list1` | list | Yes | The first list |

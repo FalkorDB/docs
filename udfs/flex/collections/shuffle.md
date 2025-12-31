@@ -16,6 +16,7 @@ flex.coll.shuffle(list)
 ```
 
 ## Parameters
+
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
 | `list` | list | Yes | The list to shuffle |

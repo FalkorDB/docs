@@ -16,6 +16,7 @@ flex.date.format(datetime, pattern, timezone)
 ```
 
 ## Parameters
+
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
 | `datetime` | Date/number/string | Yes | The date/time value to format |

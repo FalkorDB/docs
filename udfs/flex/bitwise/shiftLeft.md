@@ -16,6 +16,7 @@ flex.bitwise.shiftLeft(a, positions)
 ```
 
 ## Parameters
+
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
 | `a` | number (integer) | Yes | The value to shift |

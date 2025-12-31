@@ -16,6 +16,7 @@ flex.json.fromJsonMap(jsonString)
 ```
 
 ## Parameters
+
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
 | `jsonString` | string | Yes | A JSON string representing an object |

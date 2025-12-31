@@ -16,6 +16,7 @@ flex.text.upperCamelCase(string)
 ```
 
 ## Parameters
+
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
 | `string` | string | Yes | The string to convert to UpperCamelCase |
