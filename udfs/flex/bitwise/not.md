@@ -16,6 +16,7 @@ flex.bitwise.not(a)
 ```
 
 ## Parameters
+
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
 | `a` | number (integer) | Yes | The operand to invert |

@@ -16,6 +16,7 @@ flex.date.toTimeZone(datetime, timezone)
 ```
 
 ## Parameters
+
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
 | `datetime` | Date/number/string | Yes | The date/time value to convert |

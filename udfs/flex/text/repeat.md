@@ -16,6 +16,7 @@ flex.text.repeat(string, count)
 ```
 
 ## Parameters
+
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
 | `string` | string | Yes | The string to repeat |

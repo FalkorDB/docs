@@ -16,6 +16,7 @@ flex.map.fromPairs(pairs)
 ```
 
 ## Parameters
+
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
 | `pairs` | list | Yes | A list of two-element arrays, each containing `[key, value]` |

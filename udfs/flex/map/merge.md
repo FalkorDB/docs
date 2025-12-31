@@ -16,6 +16,7 @@ flex.map.merge(map1, map2, ...)
 ```
 
 ## Parameters
+
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
 | `map1` | map | No | First map to merge |

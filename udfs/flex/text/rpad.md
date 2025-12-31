@@ -16,6 +16,7 @@ flex.text.rpad(string, length, padChar)
 ```
 
 ## Parameters
+
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
 | `string` | string/number | Yes | The string to pad (will be converted to string if number) |

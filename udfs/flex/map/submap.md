@@ -16,6 +16,7 @@ flex.map.submap(map, keys)
 ```
 
 ## Parameters
+
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
 | `map` | map | Yes | The source map to extract keys from |

@@ -16,6 +16,7 @@ flex.text.decapitalize(string)
 ```
 
 ## Parameters
+
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
 | `string` | string | Yes | The string to decapitalize |

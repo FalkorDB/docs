@@ -16,6 +16,7 @@ flex.text.jaroWinkler(string1, string2)
 ```
 
 ## Parameters
+
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
 | `string1` | string | Yes | The first string to compare |
