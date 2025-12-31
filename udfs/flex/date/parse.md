@@ -1,3 +1,10 @@
+---
+layout: default
+title: date.parse
+parent: FLEX Function Reference
+grand_parent: UDFs - User Defined Functions
+---
+
 # date.parse
 
 ## Description

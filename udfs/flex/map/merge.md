@@ -1,3 +1,10 @@
+---
+layout: default
+title: map.merge
+parent: FLEX Function Reference
+grand_parent: UDFs - User Defined Functions
+---
+
 # map.merge
 
 ## Description

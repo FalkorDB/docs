@@ -1,3 +1,10 @@
+---
+layout: default
+title: text.regexGroups
+parent: FLEX Function Reference
+grand_parent: UDFs - User Defined Functions
+---
+
 # text.regexGroups
 
 ## Description

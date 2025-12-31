@@ -1,3 +1,10 @@
+---
+layout: default
+title: coll.shuffle
+parent: FLEX Function Reference
+grand_parent: UDFs - User Defined Functions
+---
+
 # coll.shuffle
 
 ## Description

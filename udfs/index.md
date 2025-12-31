@@ -1,3 +1,9 @@
+---
+layout: default
+title: UDFs - User Defined Functions
+has_children: true
+---
+
 # UDFs - User Defined Functions
 
 Every databases comes with a set of built-in functions, for example among FalkorDB functions you'll find:
