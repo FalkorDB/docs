@@ -53,7 +53,7 @@ Any application storing important data requires persistence to maintain durabili
 FalkorDB persists data through regular snapshots and transaction logs. These mechanisms guarantee that committed transactions remain safe even if the system crashes immediately afterward.
 
 ## Graph Browser
-You can connect to the falkordb browser (intergated into your web browser) from the cloud console. The browser allows visualizing query results, allows you to traverse the graph and more. Multi Graph support is enabled by default in the broswer which simplifies navigation and data management.
+You can connect to the falkordb browser (integrated into your web browser) from the cloud console. The browser allows visualizing query results, allows you to traverse the graph and more. Multi Graph support is enabled by default in the browser which simplifies navigation and data management.
 
 ### Solution Architecture
 Solution architecture support helps you design how FalkorDB integrates with your broader application infrastructure. This guidance covers connection patterns, data modeling approaches, and best practices for specific use cases.
