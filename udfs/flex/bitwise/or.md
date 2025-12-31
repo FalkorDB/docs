@@ -1,8 +1,8 @@
 ---
 layout: default
 title: bitwise.or
-parent: FLEX Function Reference
-grand_parent: UDFs - User Defined Functions
+parent: Bitwise Functions
+grand_parent: FLEX Function Reference
 ---
 
 # bitwise.or

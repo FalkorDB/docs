@@ -1,8 +1,8 @@
 ---
 layout: default
 title: map.removeKey
-parent: FLEX Function Reference
-grand_parent: UDFs - User Defined Functions
+parent: Map Functions
+grand_parent: FLEX Function Reference
 ---
 
 # map.removeKey

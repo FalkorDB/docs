@@ -1,8 +1,8 @@
 ---
 layout: default
 title: coll.union
-parent: FLEX Function Reference
-grand_parent: UDFs - User Defined Functions
+parent: Collection Functions
+grand_parent: FLEX Function Reference
 ---
 
 # coll.union

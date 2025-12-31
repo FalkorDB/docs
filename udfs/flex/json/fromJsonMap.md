@@ -1,8 +1,8 @@
 ---
 layout: default
 title: json.fromJsonMap
-parent: FLEX Function Reference
-grand_parent: UDFs - User Defined Functions
+parent: JSON Functions
+grand_parent: FLEX Function Reference
 ---
 
 # json.fromJsonMap

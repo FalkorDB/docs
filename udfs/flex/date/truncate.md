@@ -1,8 +1,8 @@
 ---
 layout: default
 title: date.truncate
-parent: FLEX Function Reference
-grand_parent: UDFs - User Defined Functions
+parent: Date Functions
+grand_parent: FLEX Function Reference
 ---
 
 # date.truncate
