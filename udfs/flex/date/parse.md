@@ -16,6 +16,7 @@ flex.date.parse(dateString, pattern, timezone)
 ```
 
 ## Parameters
+
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
 | `dateString` | string | Yes | The date/time string to parse |

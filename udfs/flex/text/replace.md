@@ -16,6 +16,7 @@ flex.text.replace(string, regex, replacement)
 ```
 
 ## Parameters
+
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
 | `string` | string | Yes | The string to perform replacements on |

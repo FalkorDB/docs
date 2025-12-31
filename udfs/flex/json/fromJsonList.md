@@ -16,6 +16,7 @@ flex.json.fromJsonList(jsonString)
 ```
 
 ## Parameters
+
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
 | `jsonString` | string | Yes | A JSON string representing an array |

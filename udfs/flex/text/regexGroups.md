@@ -16,6 +16,7 @@ flex.text.regexGroups(string, regex)
 ```
 
 ## Parameters
+
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
 | `string` | string | Yes | The string to search in |

@@ -16,6 +16,7 @@ flex.coll.frequencies(list)
 ```
 
 ## Parameters
+
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
 | `list` | list | Yes | The list to analyze |

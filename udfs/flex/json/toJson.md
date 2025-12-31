@@ -16,6 +16,7 @@ flex.json.toJson(value)
 ```
 
 ## Parameters
+
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
 | `value` | any | Yes | The value to serialize to JSON |
