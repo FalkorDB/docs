@@ -1,8 +1,8 @@
 ---
 layout: default
 title: sim.jaccard
-parent: FLEX Function Reference
-grand_parent: UDFs - User Defined Functions
+parent: Similarity Functions
+grand_parent: FLEX Function Reference
 ---
 
 # sim.jaccard

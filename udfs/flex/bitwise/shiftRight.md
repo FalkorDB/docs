@@ -1,8 +1,8 @@
 ---
 layout: default
 title: bitwise.shiftRight
-parent: FLEX Function Reference
-grand_parent: UDFs - User Defined Functions
+parent: Bitwise Functions
+grand_parent: FLEX Function Reference
 ---
 
 # bitwise.shiftRight

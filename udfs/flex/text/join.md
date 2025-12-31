@@ -1,8 +1,8 @@
 ---
 layout: default
 title: text.join
-parent: FLEX Function Reference
-grand_parent: UDFs - User Defined Functions
+parent: Text Functions
+grand_parent: FLEX Function Reference
 ---
 
 # text.join
