@@ -204,11 +204,14 @@ keyspace
 lTrim
 labelsList
 len
+listGraphs
+list_graphs
 lon
 malte
 matchRegEx
 maxCost
 maxLen
+memoryUsage
 multithreaded
 myGraph
 myPassword
@@ -272,6 +275,7 @@ schemas
 shortestPath
 signum
 slowlog
+slowLog
 sourceNode
 sqrt
 stDev
@@ -735,6 +739,8 @@ GCP
 VPC
 VPCs
 BYOC
+
+memoryInfo
 FDB
 xlarge
 SaaS
