@@ -5,9 +5,19 @@ description: >
 parent: "Commands"
 ---
 
-# GRAPH.INFO [Section [Section ...]]
+# GRAPH.INFO
 
-Returns information and statistics about the current executing commands.
+Returns information and statistics about currently running and waiting queries.
+
+## Syntax
+
+```
+GRAPH.INFO [RunningQueries | WaitingQueries]
+```
+
+If no argument is provided, both running and waiting queries are returned.
+
+## Examples
 
 ```sh
 127.0.0.1:6379> GRAPH.INFO

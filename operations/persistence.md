@@ -36,27 +36,34 @@ This volume will be used to store the database files.
 You can now run FalkorDB with the volume attached:
 
 ```bash
-docker run -d --name falkordb -v falkordb_data:/data -p 6379:6379 falkordb/falkordb
+docker run -d --name falkordb -v falkordb_data:/var/lib/falkordb/data -p 6379:6379 falkordb/falkordb
 ```
 
-In this configuration:
-
-The -v falkordb_data:/data flag mounts the volume to the /data directory inside the container.
-FalkorDB will use the /data directory by default.
+**Configuration details:**
+- The `-v falkordb_data:/var/lib/falkordb/data` flag mounts the volume to the `/var/lib/falkordb/data` directory inside the container
+- FalkorDB stores its data in the `/var/lib/falkordb/data` directory by default
 
 ## Step 2: Verifying the Setup
 
-To verify that your setup is working correctly:
+To verify that persistence is working correctly, follow these steps:
 
-* Persistence Check: Stop the FalkorDB container and start it again. The data should persist across restarts.
+### 2.1 Create Test Data
 
 ```bash
-redis-cli graph.query mygraph "CREATE (:Database {name:'falkordb'})"
+redis-cli GRAPH.QUERY mygraph "CREATE (:Database {name:'falkordb'})"
+```
 
+### 2.2 Restart Container
+
+```bash
 docker stop falkordb
 docker start falkordb
+```
 
-redis-cli graph.query mygraph "MATCH (n) return n"
+### 2.3 Verify Data Persists
+
+```bash
+redis-cli GRAPH.QUERY mygraph "MATCH (n) RETURN n"
 # Output should be:
 # 1) 1) "n"
 # 2) 1) 1) 1) 1) "id"
@@ -70,9 +77,15 @@ redis-cli graph.query mygraph "MATCH (n) return n"
 #    2) "Query internal execution time: 0.122645 milliseconds"
 ```
 
-## Conclusion
+## Best Practices
 
-With persistence configured, FalkorDB is now set up for reliable data storage that remains intact across container restarts. This setup ensures that your data is consistently saved, providing a stable and dependable environment for your applications. 
+- **Backup Regularly:** Even with persistence, maintain regular backups of your data
+- **Monitor Disk Space:** Ensure sufficient disk space is available for the volume
+- **Use Named Volumes:** Named volumes are easier to manage than bind mounts
 
-If you're interested in learning more about high availability and replication, be sure to check out the [replication](/operations/replication) chapter in the documentation.
+## Next Steps
+
+With persistence configured, FalkorDB is now set up for reliable data storage that remains intact across container restarts. 
+
+For high availability and data redundancy, explore [Replication](/operations/replication) to set up multiple FalkorDB instances.
 

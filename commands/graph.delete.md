@@ -8,11 +8,20 @@ parent: "Commands"
 
 # GRAPH.DELETE
 
-Completely removes the graph and all of its entities.
+Completely removes a graph and all of its entities (nodes and relationships).
 
-Arguments: `Graph name`
+## Syntax
 
-Returns: `String indicating if operation succeeded or failed.`
+```
+GRAPH.DELETE graph_name
+```
+
+**Arguments:**
+- `graph_name` - Name of the graph to delete
+
+**Returns:** String indicating if the operation succeeded or failed.
+
+## Examples
 
 {% capture shell_0 %}
 GRAPH.DELETE us_government
@@ -22,9 +31,23 @@ GRAPH.DELETE us_government
 graph.delete()
 {% endcapture %}
 
-{% include code_tabs.html id="tabs_0" shell=shell_0 python=python_0 %}
+{% capture javascript_0 %}
+await graph.delete();
+{% endcapture %}
 
-Note: To delete a node from the graph (not the entire graph), execute a `MATCH` query and pass the alias to the `DELETE` clause:
+{% capture java_0 %}
+graph.delete();
+{% endcapture %}
+
+{% capture rust_0 %}
+graph.delete()?;
+{% endcapture %}
+
+{% include code_tabs.html id="tabs_0" shell=shell_0 python=python_0 javascript=javascript_0 java=java_0 rust=rust_0 %}
+
+## Deleting Individual Nodes
+
+**Note:** To delete specific nodes or relationships (not the entire graph), use the Cypher `DELETE` clause with a `MATCH` query:
 
 {% capture shell_1 %}
 GRAPH.QUERY DEMO_GRAPH "MATCH (x:Y {propname: propvalue}) DELETE x"
@@ -34,7 +57,19 @@ GRAPH.QUERY DEMO_GRAPH "MATCH (x:Y {propname: propvalue}) DELETE x"
 graph.query("MATCH (x:Y {propname: propvalue}) DELETE x")
 {% endcapture %}
 
-{% include code_tabs.html id="tabs_1" shell=shell_1 python=python_1 %}
+{% capture javascript_1 %}
+await graph.query("MATCH (x:Y {propname: propvalue}) DELETE x");
+{% endcapture %}
 
-WARNING: When you delete a node, all of the node's incoming/outgoing relationships are also removed.
+{% capture java_1 %}
+graph.query("MATCH (x:Y {propname: propvalue}) DELETE x");
+{% endcapture %}
+
+{% capture rust_1 %}
+graph.query("MATCH (x:Y {propname: propvalue}) DELETE x")?;
+{% endcapture %}
+
+{% include code_tabs.html id="tabs_1" shell=shell_1 python=python_1 javascript=javascript_1 java=java_1 rust=rust_1 %}
+
+**⚠️ Warning:** When you delete a node using the Cypher `DELETE` clause, all of the node's incoming and outgoing relationships are also automatically removed.
 

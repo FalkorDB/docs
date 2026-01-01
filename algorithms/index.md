@@ -3,6 +3,9 @@ title: "Algorithms"
 description: Graph Algorithms Overview
 nav_order: 3
 has_children: true
+redirect_from:
+  - /cypher/algorithms.html
+  - /cypher/algorithms
 ---
 
 # FalkorDB Algorithms Overview
@@ -31,6 +34,9 @@ This overview summarizes the available algorithms and links to their individual 
 - **[SSpath](./sspath.md)**  
   Enumerates all paths from a single source node to other nodes, based on constraints like edge filters and depth.
 
+- **[MSF](./msf.md)**  
+  Computes the Minimum Spanning Forest of a graph, finding the minimum spanning tree for each connected component.
+
 For path expressions like `shortestPath()` used directly in Cypher queries, refer to the [Cypher Path Functions section](../cypher/functions.md#path-functions).
 
 ## Centrality Measures
@@ -38,7 +44,7 @@ For path expressions like `shortestPath()` used directly in Cypher queries, refe
 - **[PageRank](./pagerank.md)**  
   Computes the PageRank score of each node in the graph, representing its influence based on the structure of incoming links.
 
-- **[Betweenness Centrality](./betweenness_centrality.md)**  
+- **[Betweenness Centrality](./betweenness-centrality.md)**  
   Calculates the number of shortest paths that pass through each node, indicating its importance as a connector in the graph.
 
 ## Community Detection
