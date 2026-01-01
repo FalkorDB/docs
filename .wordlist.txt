@@ -739,6 +739,8 @@ GCP
 VPC
 VPCs
 BYOC
+
+memoryInfo
 FDB
 xlarge
 SaaS
