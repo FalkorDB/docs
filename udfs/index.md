@@ -1,10 +1,11 @@
 ---
 layout: default
-title: UDFs - User Defined Functions
+title: UDFs
 has_children: true
+nav_order: 6
 ---
 
-# UDFs - User Defined Functions
+# UDFs
 
 Every databases comes with a set of built-in functions, for example among FalkorDB functions you'll find:
 `abs` -  computes the absolute value of a number
