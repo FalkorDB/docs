@@ -1,7 +1,7 @@
 ---
 layout: default
 title: FLEX Function Reference
-parent: UDFs - User Defined Functions
+parent: UDFs
 has_children: true
 ---
 
