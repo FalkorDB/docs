@@ -2,6 +2,7 @@
 FalkorDB Browser is a web UI for exploring, querying, and managing FalkorDB graphs.
 It allows a developer to interact with graphs loaded to FaklorDB, explore how specific queries behave and review the current data model.
 
+<img width="1419" height="825" alt="falkordb-browser-eye-candy" src="https://github.com/user-attachments/assets/74375cd1-c704-40a9-9339-f1f885135a75" />
 
 ## Main features
 
