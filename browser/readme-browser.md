@@ -7,7 +7,7 @@ permalink: /browser/
 
 # FalkorDB Browser
 FalkorDB Browser is a web UI for exploring, querying, and managing FalkorDB graphs.
-It allows a developer to interact with graphs loaded to FaklorDB, explore how specific queries behave and review the current data model.
+It allows a developer to interact with graphs loaded to FalkorDB, explore how specific queries behave and review the current data model.
 FalkorDB Browser is integrated within the main falkordb docker, and through the Cloud service as well.
 
 <img width="1419" height="825" alt="falkordb-browser-eye-candy" src="https://github.com/user-attachments/assets/74375cd1-c704-40a9-9339-f1f885135a75" />
@@ -78,7 +78,7 @@ FalkorDB Browser is integrated within the main falkordb docker, and through the 
 - **Memory Usage tracking** Exposes current memory utilization of the graph in MB.
 - **Node Label tracking** View all node labels in the graph, control style visualization for labels. Click on a node label to trigger a query to visualize nodes from this label.
 - **Edge Type tracking** View all edge types in the graph. Click on an edge type to trigger a graph query showing only nodes connected through this edge type.
-- **Proerty Keys tracking** View all property keys in the graph. Click on a key to issue a query that shows nodes and edges where the property exists (not NULL).
+- **Property Keys tracking** View all property keys in the graph. Click on a key to issue a query that shows nodes and edges where the property exists (not NULL).
 
 
 ### API documentation
