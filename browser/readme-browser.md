@@ -110,7 +110,7 @@ The `/settings` area includes multiple sections:
   - Tutorial replay.
 - **DB configurations** (Admin)
   - View and update server configuration values.
-  - Some runtime configs are intentionally read-only.
+  - Some runtime configurations are intentionally read-only.
 - **Users** (Admin)
   - List users and adjust roles.
   - Add and delete users.
