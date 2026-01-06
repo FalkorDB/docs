@@ -25,6 +25,7 @@ DateTime
 DELUSER
 distro
 Ducati
+Dropzone
 Embedder
 FOF
 FOREACH
@@ -80,11 +81,13 @@ NRedisGraph
 NaN
 NFalkorDB
 NEXTAUTH
+NextAuth
 NodeJS
 Nostem
 NumItems
 OMP
 OpenAI
+OpenAPI
 OpenCypher
 OpenTelemetry
 opentelemetry
@@ -123,6 +126,7 @@ TF
 TTY
 TypeScript
 UI
+UX
 UNIQIE
 URIs
 UUID
