@@ -50,6 +50,8 @@ FalkorDB Browser is integrated within the main falkordb docker, and through the 
   - Delete single queries, multi-select delete, or “delete all”.
 - **Per-query metadata**
   - Review metadata / explain / profile for past queries.
+<img width="1419" height="825" alt="query-history-eye-candy" src="https://github.com/user-attachments/assets/be000961-f456-4b04-adf0-96f754b7447a" />
+
 
 ### Data manipulation (nodes/relationships)
 - **Create node / create relationship** flows from the Graph UI.
