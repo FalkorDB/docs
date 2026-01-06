@@ -81,6 +81,9 @@ FalkorDB Browser is integrated within the main falkordb docker, and through the 
   - “Try it out” enabled.
   - Adds an `X-JWT-Only: true` header when calling endpoints from Swagger UI.
 
+<img width="1419" height="825" alt="browser-api-doc-eye-candy" src="https://github.com/user-attachments/assets/35b0ca72-83f7-4f16-927c-413bf5f65593" />
+
+
 ### Authentication & access control
 - Uses **NextAuth** (credentials-backed) for authentication.
 - UI capabilities are role-aware:
