@@ -23,12 +23,24 @@ To start using the FalkorDB Browser REST API, follow these simple steps:
 
 #### 1. Environment Setup
 
-Before you can authenticate, configure these required environment variables:
+Before you can authenticate, configure the required environment variables:
 
-- **NEXTAUTH_SECRET** - Secret for JWT signing (generate with: `openssl rand -base64 32`)
-- **ENCRYPTION_KEY** - Key for encrypting stored credentials (generate with: `node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"`)
+**Step 1:** Copy the template
+```bash
+cp .env.local.template .env.local
+```
 
-Without these environment variables, the authentication endpoints will fail with server configuration errors.
+**Step 2:** Generate and add ENCRYPTION_KEY
+```bash
+openssl rand -hex 32
+```
+
+Add the generated key to your `.env.local` file:
+```
+ENCRYPTION_KEY=<generated_key>
+```
+
+Without the ENCRYPTION_KEY, the authentication endpoints will fail with server configuration errors.
 
 #### 2. Authentication
 First, you need to authenticate to get a JWT token:
