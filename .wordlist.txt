@@ -10,7 +10,9 @@ Benchmarking
 Booleans
 booleans
 CLI
+Cmd
 CMD
+Ctrl
 CSC
 CSV
 CSVs
@@ -25,6 +27,7 @@ DateTime
 DELUSER
 distro
 Ducati
+Dropzone
 Embedder
 FOF
 FOREACH
@@ -72,6 +75,7 @@ Lipman
 LlamaIndex
 LocalDateTime
 LocalTime
+localStorage
 Lovitz
 MEM
 Miesha
@@ -80,11 +84,13 @@ NRedisGraph
 NaN
 NFalkorDB
 NEXTAUTH
+NextAuth
 NodeJS
 Nostem
 NumItems
 OMP
 OpenAI
+OpenAPI
 OpenCypher
 OpenTelemetry
 opentelemetry
@@ -123,6 +129,7 @@ TF
 TTY
 TypeScript
 UI
+UX
 UNIQIE
 URIs
 UUID
