@@ -10,7 +10,9 @@ Benchmarking
 Booleans
 booleans
 CLI
+Cmd
 CMD
+Ctrl
 CSC
 CSV
 CSVs
@@ -73,6 +75,7 @@ Lipman
 LlamaIndex
 LocalDateTime
 LocalTime
+localStorage
 Lovitz
 MEM
 Miesha
