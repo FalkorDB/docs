@@ -6,9 +6,13 @@ parent: "Integration"
 redirect_from:
   - /bolt-support.html
   - /bolt-support
+  - /bolt_support.html
+  - /bolt_support
 ---
 
 # [EXPERIMENTAL] BOLT protocol support for FalkorDB 
+
+> **Note:** For production use cases, please use our [official client libraries](../getting-started/clients.md) instead.
 
 FalkorDB provides an experimental support for querying using BOLT drivers.
 We intend to extend the support in the future versions, the current version is not meant to be used in production.
