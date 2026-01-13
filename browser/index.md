@@ -15,21 +15,24 @@ FalkorDB's Browser provides a web UI for exploring, querying, and managing Falko
 ## Main Features
 
 ### Graph exploration (Graph page)
-| Feature                           | Description                                                                                                                                                                                         |
-| --------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+
+| Feature                           | Description                                                                                                                                                                              |
+| --------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Interactive graph canvas          | Visualizes query results containing nodes and edges as an interactive graph. Supports pan, zoom, and interaction with nodes and relationships. Toggles visibility by labels and relationship types. |
 | Element search (in-canvas search) | Search nodes and edges by node properties (string prefix match), IDs, relationship type, and labels. Jump to, zoom to, and select the match.                                                        |
 | Data and inspection panel         | Selecting an element opens a side panel for inspecting its properties. This panel supports editing workflows (see "Data manipulation").                                                             |
 | Entity Creation Tools             | Add a node, an edge, or both to the current graph from the canvas view.                                                                                                                             |
 
 ### Querying
-| Feature                      | Description                                                                                                                                                                                                                                                                    |
-| ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+
+| Feature                      | Description                              |
+| ---------------------------- | ---------------------------------------- |
 | Cypher query editor (Monaco) | The editor-style experience for writing Cypher includes keyboard shortcuts: Run (Enter and Cmd/Ctrl + Enter in the query-history editor) and Insert newline (Shift + Enter). The editor includes Cypher keyword and function completion based on the Browser's built-in lists. |
 | Results views                | Graph view for node and edge results. Table view for tabular results.                                                                                                                                                                                                          |
 | Query metadata               | The Metadata tab shows query metadata text, explain plan (rendered as a nested tree), and profile output (rendered as a nested tree).                                                                                                                                          |
 
 ### Query history
+
 | Feature                  | Description                                                                                                                                    |
 | ------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------- |
 | Persistent query history | Stores in browser localStorage.                                                                                                                |
@@ -39,12 +42,14 @@ FalkorDB's Browser provides a web UI for exploring, querying, and managing Falko
 
 
 ### Data manipulation (nodes/relationships)
+
 | Feature                      | Description                                                                                                            |
 | ---------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
 | Create and delete operations | Create node and create relationship flows from the Graph UI. Delete elements (node or relationship) from the Graph UI. |
 | Edit labels                  | Edit labels through API routes (the UI provides label management components).                                          |
 
 ### Graph management
+
 | Feature          | Description                                                                                              |
 | ---------------- | -------------------------------------------------------------------------------------------------------- |
 | Create graphs    | Create graphs from the UI.                                                                               |
@@ -54,6 +59,7 @@ FalkorDB's Browser provides a web UI for exploring, querying, and managing Falko
 | Upload data      | Upload data through the "Upload Data" dialog, which supports drag-and-drop file selection (Dropzone UI). |
 
 ### Graph Info panel
+
 | Feature                | Description                                                                                                                                                        |
 | ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | Memory Usage tracking  | Exposes current memory utilization of the graph in MB.                                                                                                             |
@@ -65,6 +71,7 @@ FalkorDB's Browser provides a web UI for exploring, querying, and managing Falko
 ---
 
 ### API Documentation
+
 | Feature             | Description                                                                                                                                                           |
 | ------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Built-in Swagger UI | Available at /docs. Loads the Browser's OpenAPI spec from /api/swagger. "Try it out" enabled. Adds an X-JWT-Only: true header when calling endpoints from Swagger UI. |
@@ -73,14 +80,16 @@ FalkorDB's Browser provides a web UI for exploring, querying, and managing Falko
 
 
 ### Authentication & access control
+
 | Feature                    | Description                                                                                                                   |
 | -------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
 | Authentication             | Uses NextAuth (credentials-backed) for authentication.                                                                        |
 | Role-aware UI capabilities | Read-Only users cannot create graphs. Admin users can access database configuration and user-management sections in settings. |
 
 ### Settings
+
 | Section                   | Description                                                                                                                                                                                                                                                                          |
-| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| ------------------------- | ---------------------------------------------------- |
 | Browser settings          | Query execution defaults and limits: timeout, result limit, run default query on load. User experience: content persistence (auto-save and restore), display-text priority (controls which node property appears as the node caption). Graph info refresh interval. Tutorial replay. |
 | DB configurations (Admin) | View and update server configuration values. Some runtime configurations remain read-only.                                                                                                                                                                                           |
 | Users (Admin)             | List users and adjust roles. Add and delete users.                                                                                                                                                                                                                                   |
@@ -96,7 +105,9 @@ If enabled, the Browser includes a **Chat panel** that streams responses from a 
 ---
 
 ## Common Workflows
+
 ### Running and visualizing queries
+
 | Step | Action                                                                                 |
 | ---- | -------------------------------------------------------------------------------------- |
 | 1    | Go to Graphs and select a graph.                                                       |
@@ -107,12 +118,14 @@ If enabled, the Browser includes a **Chat panel** that streams responses from a 
 [NEED GIF HERE]
 
 ### Inspecting and editing elements
+
 | Step | Action                                                                                 |
 | ---- | -------------------------------------------------------------------------------------- |
 | 1    | Click a node or edge in the canvas.                                                    |
 | 2    | Use the Data panel to inspect properties and apply create or delete actions as needed. |
 
 ### Working with query history
+
 | Step | Action                                                                 |
 | ---- | ---------------------------------------------------------------------- |
 | 1    | Open Query History and filter by graph or search for a previous query. |
@@ -121,6 +134,7 @@ If enabled, the Browser includes a **Chat panel** that streams responses from a 
 [NEED GIF HERE]
 
 ### Exporting graph data
+
 | Step | Action                                      |
 | ---- | ------------------------------------------- |
 | 1    | Open graph management and select a graph.   |
