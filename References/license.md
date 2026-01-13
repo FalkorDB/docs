@@ -1,7 +1,11 @@
 ---
 title: "FalkorDB License"
-nav_order: 1100
+nav_order: 2
 description: "Understanding the FalkorDB License"
+parent: "References"
+redirect_from:
+  - /license.html
+  - /license
 ---
 
 # FalkorDB License

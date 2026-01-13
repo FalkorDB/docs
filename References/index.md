@@ -1,7 +1,10 @@
 ---
 title: "References"
 description: Learn more about the Technology behind FalkorDB
+has_children: true
 nav_order: 998
+redirect_from:
+  - /References.html
 ---
 
 # References
