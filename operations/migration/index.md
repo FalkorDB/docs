@@ -4,7 +4,6 @@ description: "Migrate to FalkorDB from other graph databases"
 has_children: true
 nav_order: 1
 parent: "Operations"
-has_children: true
 redirect_from:
   - /migration.html
 
