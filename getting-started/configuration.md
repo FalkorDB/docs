@@ -101,6 +101,7 @@ The following table summarizes which configuration parameters can be set at modu
 | [EFFECTS_THRESHOLD](#effects_threshold)                      | V     | V     |
 | [CMD_INFO](#cmd_info)                                        | V     | V     |
 | [MAX_INFO_QUERIES](#max_info_queries)                        | V     | V     |
+| [DELTA_MAX_PENDING_CHANGES](#delta_max_pending_changes)      | V     | V     |
 | [IMPORT_FOLDER](#import_folder)                              | V     | X     |
 
 ---
@@ -400,6 +401,32 @@ query will be replicated.
 
 ---
 
+
+### DELTA_MAX_PENDING_CHANGES
+
+The `DELTA_MAX_PENDING_CHANGES` configuration parameter controls the maximum number of uncommitted (pending) changes that can be accumulated in FalkorDB's internal delta structure before they must be processed.
+
+The delta is a data structure used by FalkorDB to buffer graph modifications (such as node or edge creation, updates, or deletions) before they're finalized. This parameter helps manage memory usage and transaction behavior by limiting how many changes can accumulate.
+
+Increasing this value allows larger transactions and bulk operations to proceed with fewer interruptions, which may improve throughput for write-heavy workloads. Conversely, decreasing it provides stricter memory control and helps prevent memory spikes during large transactions.
+
+#### Default
+
+`DELTA_MAX_PENDING_CHANGES` defaults to 10,000.
+
+#### Minimum
+
+The value must be non-negative (0 or greater). Setting it to 0 resets it to the default value.
+
+#### Example
+
+```sh
+$ redis-server --loadmodule ./falkordb.so DELTA_MAX_PENDING_CHANGES 20000
+
+$ redis-cli GRAPH.CONFIG SET DELTA_MAX_PENDING_CHANGES 20000
+```
+
+---
 
 ### IMPORT_FOLDER
 
