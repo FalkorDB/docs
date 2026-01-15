@@ -1,7 +1,6 @@
 ---
 title: "Kuzu to FalkorDB"
 description: "Migrate from Kuzu to FalkorDB."
-parent: "Migration"
 ---
 
 # Kuzu to FalkorDB Migration

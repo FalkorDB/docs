@@ -1,8 +1,6 @@
 ---
 title: "Lightning.AI"
-nav_order: 8
 description: "Deploy FalkorDB on Lightning.AI"
-parent: "Operations"
 ---
 
 # Deploy FalkorDB on Lightning.AI

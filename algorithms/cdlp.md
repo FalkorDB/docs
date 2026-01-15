@@ -1,7 +1,6 @@
 ---
 title: "Community Detection using Label Propagation (CDLP)"
 description: "Community Detection using Label Propagation (CDLP)"
-parent: "Algorithms"
 ---
 
 # Community Detection using Label Propagation (CDLP)

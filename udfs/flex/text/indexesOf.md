@@ -1,8 +1,5 @@
 ---
-layout: default
 title: text.indexesOf
-parent: Text Functions
-grand_parent: FLEX Function Reference
 ---
 
 # text.indexesOf

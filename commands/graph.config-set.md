@@ -2,8 +2,10 @@
 title: "GRAPH.CONFIG-SET"
 description: >
     Updates a FalkorDB configuration
-parent: "Commands"    
 ---
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 
 # GRAPH.CONFIG-SET
 
@@ -15,7 +17,11 @@ FalkorDB configuration parameters are detailed [here](/configuration).
 
 Note: As detailed in the link above, not all FalkorDB configuration parameters can be set at run-time.
 
-{% capture shell_0 %}
+
+<Tabs groupId="programming-language">
+  <TabItem value="shell" label="Shell">
+
+```bash
 graph.config get TIMEOUT
 graph.config set TIMEOUT 10000
 graph.config get TIMEOUT
@@ -25,73 +31,103 @@ graph.config get TIMEOUT
 # OK
 # 1) "TIMEOUT"
 # 2) (integer) 10000
-{% endcapture %}
+```
 
-{% capture python_0 %}
+  </TabItem>
+  <TabItem value="python" label="Python">
+
+```python
 from falkordb import FalkorDB
 client = FalkorDB()
 print(client.get_config('TIMEOUT'))
 client.set_config('TIMEOUT', 10000)
 print(client.get_config('TIMEOUT'))
-{% endcapture %}
+```
 
-{% capture javascript_0 %}
+  </TabItem>
+  <TabItem value="javascript" label="Javascript">
+
+```javascript
 import { FalkorDB } from 'falkordb';
 const client = await FalkorDB.connect();
 console.log(await client.getConfig('TIMEOUT'));
 await client.setConfig('TIMEOUT', 10000);
 console.log(await client.getConfig('TIMEOUT'));
-{% endcapture %}
+```
 
-{% capture java_0 %}
+  </TabItem>
+  <TabItem value="java" label="Java">
+
+```java
 FalkorDB client = new FalkorDB();
 System.out.println(client.getConfig("TIMEOUT"));
 client.setConfig("TIMEOUT", 10000);
 System.out.println(client.getConfig("TIMEOUT"));
-{% endcapture %}
+```
 
-{% capture rust_0 %}
+  </TabItem>
+  <TabItem value="rust" label="Rust">
+
+```rust
 let client = FalkorDB::connect_default();
 println!("{:?}", client.get_config("TIMEOUT")?);
 client.set_config("TIMEOUT", 10000)?;
 println!("{:?}", client.get_config("TIMEOUT")?);
-{% endcapture %}
+```
 
-{% include code_tabs.html id="config_set_tabs" shell=shell_0 python=python_0 javascript=javascript_0 java=java_0 rust=rust_0 %}
+  </TabItem>
+</Tabs>
 
-{% capture shell_1 %}
+
+<Tabs groupId="programming-language">
+  <TabItem value="shell" label="Shell">
+
+```bash
 graph.config set THREAD_COUNT 10
 # Output:
 # (error) This configuration parameter cannot be set at run-time
-{% endcapture %}
+```
 
-{% capture python_1 %}
+  </TabItem>
+  <TabItem value="python" label="Python">
+
+```python
 try:
     client.set_config('THREAD_COUNT', 10)
 except Exception as e:
     print(e)
-{% endcapture %}
+```
 
-{% capture javascript_1 %}
+  </TabItem>
+  <TabItem value="javascript" label="Javascript">
+
+```javascript
 try {
   await client.setConfig('THREAD_COUNT', 10);
 } catch (e) {
   console.error(e);
 }
-{% endcapture %}
+```
 
-{% capture java_1 %}
+  </TabItem>
+  <TabItem value="java" label="Java">
+
+```java
 try {
     client.setConfig("THREAD_COUNT", 10);
 } catch (Exception e) {
     System.out.println(e);
 }
-{% endcapture %}
+```
 
-{% capture rust_1 %}
+  </TabItem>
+  <TabItem value="rust" label="Rust">
+
+```rust
 if let Err(e) = client.set_config("THREAD_COUNT", 10) {
     println!("{}", e);
 }
-{% endcapture %}
+```
 
-{% include code_tabs.html id="config_set_error_tabs" shell=shell_1 python=python_1 javascript=javascript_1 java=java_1 rust=rust_1 %}
+  </TabItem>
+</Tabs>

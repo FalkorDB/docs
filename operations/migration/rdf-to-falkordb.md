@@ -1,7 +1,6 @@
 ---
 title: "RDF to FalkorDB"
 description: "Migrate from RDF (TTL) to FalkorDB."
-parent: "Migration"
 ---
 
 # RDF to FalkorDB Migration

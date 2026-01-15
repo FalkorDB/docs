@@ -1,10 +1,8 @@
 ---
 title: "REMOVE"
-nav_order: 23
 description: >
     REMOVE is used to remove attributes from node and relationships, in addition to
     removing labels from nodes.
-parent: "Cypher Language"
 ---
 
 # REMOVE

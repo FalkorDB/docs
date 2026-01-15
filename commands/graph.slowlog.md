@@ -2,8 +2,10 @@
 title: "GRAPH.SLOWLOG"
 description: >
     Returns a list containing up to 10 of the slowest queries issued against the given graph
-parent: "Commands"    
 ---
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 
 # GRAPH.SLOWLOG
 
@@ -20,19 +22,29 @@ Each item in the list has the following structure:
 
 ### Get slowlog
 
-{% capture shell_0 %}
-GRAPH.SLOWLOG graph_id
-{% endcapture %}
 
-{% capture python_0 %}
+<Tabs groupId="programming-language">
+  <TabItem value="shell" label="Shell">
+
+```bash
+GRAPH.SLOWLOG graph_id
+```
+
+  </TabItem>
+  <TabItem value="python" label="Python">
+
+```python
 from falkordb import FalkorDB
 db = FalkorDB(host='localhost', port=6379)
 graph = db.select_graph('graph_id')
 slowlog = graph.slowlog()
 print(slowlog)
-{% endcapture %}
+```
 
-{% capture javascript_0 %}
+  </TabItem>
+  <TabItem value="javascript" label="Javascript">
+
+```javascript
 import { FalkorDB } from 'falkordb';
 const db = await FalkorDB.connect({
   socket: { host: 'localhost', port: 6379 }
@@ -40,9 +52,10 @@ const db = await FalkorDB.connect({
 const graph = db.selectGraph('graph_id');
 const slowlog = await graph.slowLog();
 console.log(slowlog);
-{% endcapture %}
+```
 
-{% include code_tabs.html id="slowlog_tabs" shell=shell_0 python=python_0 javascript=javascript_0 %}
+  </TabItem>
+</Tabs>
 
 ### Sample Output
 
@@ -60,14 +73,22 @@ GRAPH.SLOWLOG graph_id
 
 ### Reset slowlog
 
-{% capture shell_1 %}
+
+<Tabs groupId="programming-language">
+  <TabItem value="shell" label="Shell">
+
+```bash
 GRAPH.SLOWLOG graph_id RESET
-{% endcapture %}
+```
 
-{% capture python_1 %}
+  </TabItem>
+  <TabItem value="python" label="Python">
+
+```python
 graph.slowlog_reset()
-{% endcapture %}
+```
 
-{% include code_tabs.html id="slowlog_reset_tabs" shell=shell_1 python=python_1 %}
+  </TabItem>
+</Tabs>
 
 Once cleared the information is lost forever.

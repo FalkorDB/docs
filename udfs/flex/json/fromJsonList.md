@@ -1,8 +1,5 @@
 ---
-layout: default
 title: json.fromJsonList
-parent: JSON Functions
-grand_parent: FLEX Function Reference
 ---
 
 # json.fromJsonList

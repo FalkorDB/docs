@@ -1,8 +1,5 @@
 ---
-layout: default
 title: json.fromJsonMap
-parent: JSON Functions
-grand_parent: FLEX Function Reference
 ---
 
 # json.fromJsonMap

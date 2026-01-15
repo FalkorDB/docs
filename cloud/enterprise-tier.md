@@ -1,7 +1,5 @@
 ---
 title: "Enterprise Tier"
-parent: "Cloud DBaaS"
-nav_order: 4
 description: "FalkorDB DBaaS Enterprise Tier"
 ---
 

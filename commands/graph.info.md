@@ -2,7 +2,6 @@
 title: "GRAPH.INFO"
 description: >
     Returns information and statistics about the current executing commands
-parent: "Commands"
 ---
 
 # GRAPH.INFO

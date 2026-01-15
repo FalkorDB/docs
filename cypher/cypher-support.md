@@ -1,12 +1,7 @@
 ---
 title: "Cypher coverage"
-nav_order: 22
 description: >
     FalkorDB implements a subset of the Cypher language, which is growing as development continues.
-parent: "Cypher Language"
-redirect_from:
-  - /cypher/cypher_support.html
-  - /cypher/cypher_support
 ---
 
 # Cypher coverage
@@ -94,7 +89,7 @@ We do not support any of these properties at the type level, meaning nodes and r
 
 + MERGE
 + CALL (procedures)
-    - The currently-supported procedures are listed in [the Procedures documentation](/commands/graph.query#procedures).
+  + The currently-supported procedures are listed in [the Procedures documentation](/cypher/procedures).
 
 ### Set Operations
 
@@ -103,7 +98,7 @@ We do not support any of these properties at the type level, meaning nodes and r
 
 ## Functions
 
-The currently-supported functions are listed in [the Functions documentation](/commands/graph.query#functions).
+The currently-supported functions are listed in [the Functions documentation](/cypher/functions).
 
   **Unsupported:**
 
@@ -114,7 +109,7 @@ The currently-supported functions are listed in [the Functions documentation](/c
 
 ### Mathematical operators
 
-The currently-supported functions are listed in [the mathematical operators documentation](/commands/graph.query#mathematical-operators).
+See the arithmetic functions section in [Cypher functions](/cypher/functions).
 
 ### String operators
 

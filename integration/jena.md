@@ -1,8 +1,6 @@
 ---
 title: "Apache Jena"
-nav_order: 3
 description: "How to use FalkorDB with Apache Jena via the jena-falkordb-adapter."
-parent: "Integration"
 ---
 
 # Apache Jena Integration

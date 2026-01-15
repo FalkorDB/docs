@@ -1,8 +1,6 @@
 ---
 title: "Browser"
 description: "FalkorDB Browser web UI documentation"
-nav_order: 9
-permalink: /browser/
 ---
 
 # FalkorDB Graph Visualization Tool (Browser)

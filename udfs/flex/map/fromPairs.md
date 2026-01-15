@@ -1,8 +1,5 @@
 ---
-layout: default
 title: map.fromPairs
-parent: Map Functions
-grand_parent: FLEX Function Reference
 ---
 
 # map.fromPairs

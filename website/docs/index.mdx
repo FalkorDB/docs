@@ -1,0 +1,316 @@
+---
+title: FalkorDB Documentation
+description: The fastest way to your knowledge
+sidebar_position: 1
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+
+[![Trendshift](https://trendshift.io/api/badge/repositories/14787)](https://trendshift.io/repositories/14787)
+
+[![Docker Hub](https://img.shields.io/docker/pulls/falkordb/falkordb?label=Docker&style=flat-square)](https://hub.docker.com/r/falkordb/falkordb/)
+[![Discord](https://img.shields.io/discord/1146782921294884966?style=flat-square)](https://discord.gg/ErBEqN9E) 
+[![Try Free](https://img.shields.io/badge/Try%20Free-FalkorDB%20Cloud-FF8101?labelColor=FDE900&style=flat-square)](https://app.falkordb.cloud)
+
+![FalkorDB Docs Readme Banner](https://github.com/user-attachments/assets/201b07e1-ac6d-4593-98cf-e58946d7766c)
+
+### The Graph platform developers use to achieve accurate GraphRAG for enterprise GenAI
+
+### About FalkorDB
+FalkorDB delivers an **accurate, multi-tenant RAG solution powered by a low-latency, scalable graph database technology.** 
+
+* Our solution is purpose-built for development teams working with complex, interconnected data—whether structured or unstructured—in real-time or interactive user environments.
+
+* The system supports the OpenCypher query language with proprietary enhancements that streamline interactions with graph data. Its efficient graph traversal and query capabilities make it well-suited for production environments.
+
+### Choose Your Path
+*   **Graph Database Path:** If you're interested in using FalkorDB as a property graph database with OpenCypher support, continue with the sections below.
+*   **GraphRAG Path:** If you're aiming to implement advanced graph reasoning and generative AI tasks, explore our [GenAI Tools](/genai-tools) section, starting with the [GraphRAG SDK](/genai-tools/graphrag-sdk).
+
+
+## Primary Features
+
+* Adopts the [Property Graph Model](https://github.com/opencypher/openCypher/blob/master/docs/property-graph-model.adoc)
+* Supports [OpenCypher](http://www.opencypher.org/) query language with proprietary extensions
+* Offers [Full-Text Search](/cypher/indexing/fulltext-index), [Vector Similarity](/cypher/indexing/vector-index), and [Range indexing](/cypher/indexing/range-index) for efficient querying
+* Supports both [RESP](https://redis.io/docs/reference/protocol-spec/) and [Bolt](https://en.wikipedia.org/wiki/Bolt_(network_protocol)) protocols for flexible connectivity
+* Uses sparse adjacency matrix representation for efficient graph storage
+* Provides GraphRAG capabilities through the [GraphRAG SDK](/genai-tools/graphrag-sdk) for advanced graph reasoning and generative AI tasks
+
+## Get Started
+
+Launch an instance using Docker, or use [FalkorDB Cloud](https://app.falkordb.cloud)
+
+```sh
+---
+title: FalkorDB Documentation
+description: Low-latency graph database with OpenCypher support and GraphRAG capabilities
+sidebar_position: 1
+slug: /
+redirect_from:
+  - /staging
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+[![Docker Hub](https://img.shields.io/docker/pulls/falkordb/falkordb?label=Docker&style=flat-square)](https://hub.docker.com/r/falkordb/falkordb/)
+[![Discord](https://img.shields.io/discord/1146782921294884966?style=flat-square)](https://discord.gg/ErBEqN9E) 
+[![Try Free](https://img.shields.io/badge/Try%20Free-FalkorDB%20Cloud-FF8101?labelColor=FDE900&style=flat-square)](https://app.falkordb.cloud)
+[![Trendshift](https://trendshift.io/api/badge/repositories/14787)](https://trendshift.io/repositories/14787)
+
+# FalkorDB
+
+FalkorDB is a low-latency graph database built on sparse adjacency matrix representation. It supports the OpenCypher query language with proprietary extensions and provides native GraphRAG capabilities for AI applications.
+
+The system is designed for development teams working with complex, interconnected data in production environments where query performance and data relationships are critical.
+
+---
+
+## Overview
+
+FalkorDB implements a property graph database with these characteristics:
+
+- **Data Model**: [Property Graph Model](https://github.com/opencypher/openCypher/blob/master/docs/property-graph-model.adoc) with nodes, relationships, and properties
+- **Query Language**: [OpenCypher](http://www.opencypher.org/) with FalkorDB-specific extensions
+- **Storage**: Sparse adjacency matrix representation for efficient graph traversal
+- **Protocols**: Both [RESP](https://redis.io/docs/reference/protocol-spec/) (Redis) and [Bolt](https://en.wikipedia.org/wiki/Bolt_(network_protocol)) protocol support
+- **Indexing**: [Full-text search](/cypher/indexing/fulltext-index), [vector similarity](/cypher/indexing/vector-index), and [range indexing](/cypher/indexing/range-index)
+- **Architecture**: Multi-tenant with ACID transaction support
+- **GraphRAG**: Native integration via [GraphRAG SDK](/genai-tools/graphrag-sdk) for LLM applications
+
+---
+
+## Use Cases
+
+FalkorDB is suitable for applications requiring:
+
+- **Graph Analysis**: Social networks, supply chain modeling, network topology
+- **Knowledge Graphs**: Entity relationship modeling, semantic search, data discovery  
+- **Recommendation Systems**: Collaborative filtering based on relationship patterns
+- **Fraud Detection**: Pattern matching across transaction networks
+- **GraphRAG**: Retrieval augmented generation with structured knowledge graphs
+- **Master Data Management**: Complex entity relationships and hierarchies
+
+---
+
+## Quick Start
+
+Launch a local instance:
+
+```bash
+docker run -p 6379:6379 -p 3000:3000 -it --rm falkordb/falkordb:latest
+```
+
+Alternative deployment options:
+- [FalkorDB Cloud](https://app.falkordb.cloud) - Managed service with free tier
+- [Kubernetes deployment](/operations/k8s-support) - Production orchestration
+- [Railway](/operations/railway) - One-click deployment
+
+---
+
+## Documentation Paths
+
+### Graph Database
+
+For developers using FalkorDB as a property graph database:
+
+- [Getting Started Guide](/getting-started) - Installation and first queries
+- [OpenCypher Reference](/cypher) - Query language syntax and features
+- [Client Libraries](/getting-started/clients) - Python, JavaScript, Java, Rust, Go, C#
+- [Graph Algorithms](/algorithms) - PageRank, BFS, shortest path, community detection
+- [Configuration](/getting-started/configuration) - Server settings and tuning
+
+### GraphRAG and AI Integration
+
+For developers building AI applications with graph knowledge:
+
+- [GraphRAG SDK](/genai-tools/graphrag-sdk) - Core SDK for graph-based RAG
+- [LangChain Integration](/genai-tools/langchain) - LangChain graph tools
+- [LlamaIndex Integration](/genai-tools/llamaindex) - LlamaIndex graph index
+- [AG2 Integration](/genai-tools/ag2) - AutoGen agent framework support
+
+### Operations
+
+For deployment and production environments:
+
+- [Docker Deployment](/operations/docker) - Container configuration
+- [Kubernetes](/operations/k8s-support) - Helm charts and operators
+- [Replication](/operations/replication) - High availability setup
+- [Persistence](/operations/persistence) - Data durability options
+- [Cloud Tiers](/cloud) - Managed service options
+
+---
+
+## Example Usage
+
+<Tabs groupId="programming-language">
+<TabItem value="python" label="Python">
+
+```python
+from falkordb import FalkorDB
+
+# Connect to FalkorDB
+db = FalkorDB(host='localhost', port=6379)
+g = db.select_graph('social')
+
+# Create nodes and relationships
+g.query("""
+    CREATE 
+      (alice:Person {name: 'Alice', age: 30}),
+      (bob:Person {name: 'Bob', age: 25}),
+      (alice)-[:KNOWS]->(bob)
+""")
+
+# Query with pattern matching
+result = g.query("""
+    MATCH (p:Person)-[:KNOWS]->(friend)
+    WHERE p.name = 'Alice'
+    RETURN friend.name, friend.age
+""")
+
+for row in result.result_set:
+    print(f"{row[0]}, age {row[1]}")
+```
+
+</TabItem>
+<TabItem value="javascript" label="JavaScript">
+
+```javascript
+import { FalkorDB } from 'falkordb';
+
+const db = await FalkorDB.connect({
+    socket: { host: 'localhost', port: 6379 }
+});
+
+const graph = db.selectGraph('social');
+
+await graph.query(`
+    CREATE 
+      (alice:Person {name: 'Alice', age: 30}),
+      (bob:Person {name: 'Bob', age: 25}),
+      (alice)-[:KNOWS]->(bob)
+`);
+
+const result = await graph.query(`
+    MATCH (p:Person)-[:KNOWS]->(friend)
+    WHERE p.name = $name
+    RETURN friend.name, friend.age
+`, { params: { name: 'Alice' } });
+
+console.log(result);
+```
+
+</TabItem>
+<TabItem value="java" label="Java">
+
+```java
+import com.falkordb.*;
+
+Driver driver = FalkorDB.driver("localhost", 6379);
+Graph graph = driver.graph("social");
+
+graph.query(
+    "CREATE (alice:Person {name: 'Alice', age: 30}), " +
+    "(bob:Person {name: 'Bob', age: 25}), " +
+    "(alice)-[:KNOWS]->(bob)"
+);
+
+Map<String, Object> params = Map.of("name", "Alice");
+ResultSet result = graph.query(
+    "MATCH (p:Person)-[:KNOWS]->(friend) " +
+    "WHERE p.name = $name " +
+    "RETURN friend.name, friend.age",
+    params
+);
+
+for (Record record : result) {
+    System.out.println(record.getValue("friend.name"));
+}
+```
+
+</TabItem>
+<TabItem value="rust" label="Rust">
+
+```rust
+use falkordb::{FalkorClientBuilder, FalkorConnectionInfo};
+
+#[tokio::main]
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    let connection_info: FalkorConnectionInfo = 
+        "falkor://127.0.0.1:6379".try_into()?;
+    
+    let client = FalkorClientBuilder::new_async()
+        .with_connection_info(connection_info)
+        .build()
+        .await?;
+    
+    let mut graph = client.select_graph("social");
+    
+    graph.query(r#"
+        CREATE 
+          (alice:Person {name: 'Alice', age: 30}),
+          (bob:Person {name: 'Bob', age: 25}),
+          (alice)-[:KNOWS]->(bob)
+    "#).execute().await?;
+    
+    let mut result = graph.query(r#"
+        MATCH (p:Person)-[:KNOWS]->(friend)
+        WHERE p.name = 'Alice'
+        RETURN friend.name, friend.age
+    "#).execute().await?;
+    
+    for node in result.data.by_ref() {
+        println!("{:?}", node);
+    }
+    
+    Ok(())
+}
+```
+
+</TabItem>
+</Tabs>
+
+See [complete examples](https://github.com/FalkorDB/demos) for more sample applications.
+
+---
+
+## Ecosystem Integration
+
+**Client Libraries**: [Python](https://pypi.org/project/FalkorDB/) • [JavaScript](https://www.npmjs.com/package/falkordb) • [Java](https://github.com/FalkorDB/JFalkorDB) • [Rust](https://crates.io/crates/falkordb) • [Go](https://github.com/FalkorDB/go-falkordb) • [C#](https://github.com/FalkorDB/falkordb-dotnet) • [View all →](/getting-started/clients)
+
+**AI Frameworks**: [LangChain](/genai-tools/langchain) • [LangGraph](/genai-tools/langgraph) • [LlamaIndex](/genai-tools/llamaindex) • [AG2](/genai-tools/ag2)
+
+**Data Integration**: [Kafka Connect](/integration/kafka-connect) • [Spring Data FalkorDB](/integration/spring-data-falkordb) • [Apache Jena](/integration/jena)
+
+**Deployment Platforms**: [Docker](/operations/docker) • [Kubernetes](/operations/k8s-support) • [Railway](/operations/railway) • [Lightning.AI](/operations/lightning-ai)
+
+---
+
+## Performance Characteristics
+
+- Query latency: Sub-10ms for typical graph traversals
+- Storage: Sparse matrix reduces memory footprint by 90%+ compared to dense representations
+- Concurrency: Multi-tenant architecture with transaction isolation
+- Scalability: Horizontal scaling via replication
+
+[See benchmarks](https://github.com/FalkorDB/FalkorDB#benchmarks)
+
+---
+
+## Community and Support
+
+- **Discord**: [Join community](https://discord.gg/ErBEqN9E) for technical discussions
+- **GitHub Discussions**: [Ask questions](https://github.com/FalkorDB/FalkorDB/discussions)
+- **Issue Tracker**: [Report bugs](https://github.com/FalkorDB/FalkorDB/issues)
+- **Documentation**: [Browse docs](/)
+
+---
+
+## License
+
+FalkorDB is licensed under the [Server Side Public License v1 (SSPLv1)](https://github.com/FalkorDB/FalkorDB/blob/master/LICENSE.txt).
+
+[GitHub Repository](https://github.com/FalkorDB/FalkorDB) • [Official Website](https://www.falkordb.com) • [Blog](https://www.falkordb.com/blog)

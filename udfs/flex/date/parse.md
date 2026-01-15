@@ -1,8 +1,5 @@
 ---
-layout: default
 title: date.parse
-parent: Date Functions
-grand_parent: FLEX Function Reference
 ---
 
 # date.parse

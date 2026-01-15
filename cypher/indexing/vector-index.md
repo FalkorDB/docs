@@ -1,11 +1,10 @@
 ---
 title: "Vector Index"
-nav_order: 3
 description: >
     FalkorDB supports vector indexes for similarity search on vector embeddings, essential for AI and machine learning applications.
-parent: "Indexing"
-grand_parent: "Cypher Language"
 ---
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
 
 # Vector indexing
 
@@ -32,52 +31,84 @@ The options are:
 For example, to create a vector index over all `Product` nodes `description` attribute
 use the following syntax:
 
-{% capture shell_19 %}
+<Tabs groupId="programming-language">
+  <TabItem value="shell" label="Shell">
+
+```bash
 CREATE VECTOR INDEX FOR (p:Product) ON (p.description) OPTIONS {dimension:128, similarityFunction:'euclidean'}
-{% endcapture %}
+```
 
-{% capture python_19 %}
+  </TabItem>
+  <TabItem value="python" label="Python">
+
+```python
 graph.query("CREATE VECTOR INDEX FOR (p:Product) ON (p.description) OPTIONS {dimension:128, similarityFunction:'euclidean'}")
-{% endcapture %}
+```
 
-{% capture javascript_19 %}
+  </TabItem>
+  <TabItem value="javascript" label="JavaScript">
+
+```javascript
 await graph.query("CREATE VECTOR INDEX FOR (p:Product) ON (p.description) OPTIONS {dimension:128, similarityFunction:'euclidean'}");
-{% endcapture %}
+```
 
-{% capture java_19 %}
+  </TabItem>
+  <TabItem value="java" label="Java">
+
+```java
 graph.query("CREATE VECTOR INDEX FOR (p:Product) ON (p.description) OPTIONS {dimension:128, similarityFunction:'euclidean'}");
-{% endcapture %}
+```
 
-{% capture rust_19 %}
+  </TabItem>
+  <TabItem value="rust" label="Rust">
+
+```rust
 graph.query("CREATE VECTOR INDEX FOR (p:Product) ON (p.description) OPTIONS {dimension:128, similarityFunction:'euclidean'}").execute().await?;
-{% endcapture %}
+```
 
-{% include code_tabs.html id="vector_create_node_tabs" shell=shell_19 python=python_19 javascript=javascript_19 java=java_19 rust=rust_19 %}
+  </TabItem>
+</Tabs>
 
 Similarly to create a vector index over all `Call` relationships `summary` attribute
 use the following syntax:
 
-{% capture shell_20 %}
+<Tabs groupId="programming-language">
+  <TabItem value="shell" label="Shell">
+
+```bash
 CREATE VECTOR INDEX FOR ()-[e:Call]->() ON (e.summary) OPTIONS {dimension:128, similarityFunction:'euclidean'}
-{% endcapture %}
+```
 
-{% capture python_20 %}
+  </TabItem>
+  <TabItem value="python" label="Python">
+
+```python
 graph.query("CREATE VECTOR INDEX FOR ()-[e:Call]->() ON (e.summary) OPTIONS {dimension:128, similarityFunction:'euclidean'}")
-{% endcapture %}
+```
 
-{% capture javascript_20 %}
+  </TabItem>
+  <TabItem value="javascript" label="JavaScript">
+
+```javascript
 await graph.query("CREATE VECTOR INDEX FOR ()-[e:Call]->() ON (e.summary) OPTIONS {dimension:128, similarityFunction:'euclidean'}");
-{% endcapture %}
+```
 
-{% capture java_20 %}
+  </TabItem>
+  <TabItem value="java" label="Java">
+
+```java
 graph.query("CREATE VECTOR INDEX FOR ()-[e:Call]->() ON (e.summary) OPTIONS {dimension:128, similarityFunction:'euclidean'}");
-{% endcapture %}
+```
 
-{% capture rust_20 %}
+  </TabItem>
+  <TabItem value="rust" label="Rust">
+
+```rust
 graph.query("CREATE VECTOR INDEX FOR ()-[e:Call]->() ON (e.summary) OPTIONS {dimension:128, similarityFunction:'euclidean'}").execute().await?;
-{% endcapture %}
+```
 
-{% include code_tabs.html id="vector_create_relation_tabs" shell=shell_20 python=python_20 javascript=javascript_20 java=java_20 rust=rust_20 %}
+  </TabItem>
+</Tabs>
 
 **Important**: When creating a vector index, both the vector dimension and similarity function must be provided. Currently, the only supported similarity functions are 'euclidean' or 'cosine'.
 
@@ -114,27 +145,43 @@ These parameters control the HNSW (Hierarchical Navigable Small World) index str
 To create a new vector use the [vecf32](/cypher/functions#vector-functions) function
 as follows:
 
-{% capture shell_21 %}
+<Tabs groupId="programming-language">
+  <TabItem value="shell" label="Shell">
+
+```bash
 CREATE (p: Product {description: vecf32([2.1, 0.82, 1.3])})
-{% endcapture %}
+```
 
-{% capture python_21 %}
+  </TabItem>
+  <TabItem value="python" label="Python">
+
+```python
 graph.query("CREATE (p: Product {description: vecf32([2.1, 0.82, 1.3])})")
-{% endcapture %}
+```
 
-{% capture javascript_21 %}
+  </TabItem>
+  <TabItem value="javascript" label="JavaScript">
+
+```javascript
 await graph.query("CREATE (p: Product {description: vecf32([2.1, 0.82, 1.3])})");
-{% endcapture %}
+```
 
-{% capture java_21 %}
+  </TabItem>
+  <TabItem value="java" label="Java">
+
+```java
 graph.query("CREATE (p: Product {description: vecf32([2.1, 0.82, 1.3])})");
-{% endcapture %}
+```
 
-{% capture rust_21 %}
+  </TabItem>
+  <TabItem value="rust" label="Rust">
+
+```rust
 graph.query("CREATE (p: Product {description: vecf32([2.1, 0.82, 1.3])})").execute().await?;
-{% endcapture %}
+```
 
-{% include code_tabs.html id="vector_insert_tabs" shell=shell_21 python=python_21 javascript=javascript_21 java=java_21 rust=rust_21 %}
+  </TabItem>
+</Tabs>
 
 The above query creates a new `Product` node with a `description` attribute containing a vector.
 
@@ -167,32 +214,48 @@ CALL db.idx.vector.queryRelationships(
 To query up to 10 similar `Product` descriptions to a given query description vector
 issue the following procedure call:
 
-{% capture shell_22 %}
+<Tabs groupId="programming-language">
+  <TabItem value="shell" label="Shell">
+
+```bash
 CALL db.idx.vector.queryNodes(
     'Product',
     'description',
     10,
     vecf32(<array_of_vector_elements>),
     ) YIELD node
-{% endcapture %}
+```
 
-{% capture python_22 %}
+  </TabItem>
+  <TabItem value="python" label="Python">
+
+```python
 result = graph.query("CALL db.idx.vector.queryNodes('Product', 'description', 10, vecf32(<array_of_vector_elements>)) YIELD node")
-{% endcapture %}
+```
 
-{% capture javascript_22 %}
+  </TabItem>
+  <TabItem value="javascript" label="JavaScript">
+
+```javascript
 const result = await graph.query("CALL db.idx.vector.queryNodes('Product', 'description', 10, vecf32(<array_of_vector_elements>)) YIELD node");
-{% endcapture %}
+```
 
-{% capture java_22 %}
+  </TabItem>
+  <TabItem value="java" label="Java">
+
+```java
 ResultSet result = graph.query("CALL db.idx.vector.queryNodes('Product', 'description', 10, vecf32(<array_of_vector_elements>)) YIELD node");
-{% endcapture %}
+```
 
-{% capture rust_22 %}
+  </TabItem>
+  <TabItem value="rust" label="Rust">
+
+```rust
 let result = graph.query("CALL db.idx.vector.queryNodes('Product', 'description', 10, vecf32(<array_of_vector_elements>)) YIELD node").execute().await?;
-{% endcapture %}
+```
 
-{% include code_tabs.html id="vector_query_tabs" shell=shell_22 python=python_22 javascript=javascript_22 java=java_22 rust=rust_22 %}
+  </TabItem>
+</Tabs>
 
 The procedure can yield both the indexed entity assigned to the found similar vector
 in addition to a similarity score of that entity.
@@ -207,27 +270,43 @@ DROP VECTOR INDEX FOR <entity_pattern> (<entity_attribute>)
 
 For example, to drop the vector index over Product description, invoke:
 
-{% capture shell_23 %}
+<Tabs groupId="programming-language">
+  <TabItem value="shell" label="Shell">
+
+```bash
 DROP VECTOR INDEX FOR (p:Product) ON (p.description)
-{% endcapture %}
+```
 
-{% capture python_23 %}
+  </TabItem>
+  <TabItem value="python" label="Python">
+
+```python
 graph.query("DROP VECTOR INDEX FOR (p:Product) ON (p.description)")
-{% endcapture %}
+```
 
-{% capture javascript_23 %}
+  </TabItem>
+  <TabItem value="javascript" label="JavaScript">
+
+```javascript
 await graph.query("DROP VECTOR INDEX FOR (p:Product) ON (p.description)");
-{% endcapture %}
+```
 
-{% capture java_23 %}
+  </TabItem>
+  <TabItem value="java" label="Java">
+
+```java
 graph.query("DROP VECTOR INDEX FOR (p:Product) ON (p.description)");
-{% endcapture %}
+```
 
-{% capture rust_23 %}
+  </TabItem>
+  <TabItem value="rust" label="Rust">
+
+```rust
 graph.query("DROP VECTOR INDEX FOR (p:Product) ON (p.description)").execute().await?;
-{% endcapture %}
+```
 
-{% include code_tabs.html id="vector_drop_tabs" shell=shell_23 python=python_23 javascript=javascript_23 java=java_23 rust=rust_23 %}
+  </TabItem>
+</Tabs>
 
 ## Index Management
 
@@ -245,44 +324,60 @@ Vector indexes are marked with type `VECTOR` and show the dimension and similari
 
 To verify that a vector index is being used, examine the query execution plan:
 
-{% capture shell_vec_verify %}
+<Tabs groupId="programming-language">
+  <TabItem value="shell" label="Shell">
+
+```bash
 # Query using vector index
 GRAPH.EXPLAIN DEMO_GRAPH "CALL db.idx.vector.queryNodes('Product', 'description', 10, vecf32([2.1, 0.82, 1.3])) YIELD node RETURN node"
 # Output shows: ProcedureCall | db.idx.vector.queryNodes
-{% endcapture %}
+```
 
-{% capture python_vec_verify %}
+  </TabItem>
+  <TabItem value="python" label="Python">
+
+```python
 # Query using vector index
 query_vector = [2.1, 0.82, 1.3]
 result = graph.explain(f"CALL db.idx.vector.queryNodes('Product', 'description', 10, vecf32({query_vector})) YIELD node RETURN node")
 print(result)
 # Output shows: ProcedureCall | db.idx.vector.queryNodes
-{% endcapture %}
+```
 
-{% capture javascript_vec_verify %}
+  </TabItem>
+  <TabItem value="javascript" label="JavaScript">
+
+```javascript
 // Query using vector index
 const queryVector = [2.1, 0.82, 1.3];
 const result = await graph.explain(`CALL db.idx.vector.queryNodes('Product', 'description', 10, vecf32([${queryVector}])) YIELD node RETURN node`);
 console.log(result);
 // Output shows: ProcedureCall | db.idx.vector.queryNodes
-{% endcapture %}
+```
 
-{% capture java_vec_verify %}
+  </TabItem>
+  <TabItem value="java" label="Java">
+
+```java
 // Query using vector index
 float[] queryVector = {2.1f, 0.82f, 1.3f};
 String result = graph.explain("CALL db.idx.vector.queryNodes('Product', 'description', 10, vecf32([2.1, 0.82, 1.3])) YIELD node RETURN node");
 System.out.println(result);
 // Output shows: ProcedureCall | db.idx.vector.queryNodes
-{% endcapture %}
+```
 
-{% capture rust_vec_verify %}
+  </TabItem>
+  <TabItem value="rust" label="Rust">
+
+```rust
 // Query using vector index
 let result = graph.explain("CALL db.idx.vector.queryNodes('Product', 'description', 10, vecf32([2.1, 0.82, 1.3])) YIELD node RETURN node").execute().await?;
 println!("{}", result);
 // Output shows: ProcedureCall | db.idx.vector.queryNodes
-{% endcapture %}
+```
 
-{% include code_tabs.html id="vector_verify_tabs" shell=shell_vec_verify python=python_vec_verify javascript=javascript_vec_verify java=java_vec_verify rust=rust_vec_verify %}
+  </TabItem>
+</Tabs>
 
 ## Performance Tradeoffs and Best Practices
 
@@ -334,7 +429,10 @@ Vector indexes are essential for:
 
 ### Example: Realistic Vector Search
 
-{% capture shell_vec_example %}
+<Tabs groupId="programming-language">
+  <TabItem value="shell" label="Shell">
+
+```bash
 # Create vector index for product embeddings
 GRAPH.QUERY DEMO_GRAPH "CREATE VECTOR INDEX FOR (p:Product) ON (p.embedding) OPTIONS {dimension:768, similarityFunction:'cosine', M:32, efConstruction:200}"
 
@@ -343,9 +441,12 @@ GRAPH.QUERY DEMO_GRAPH "CREATE (p:Product {name: 'Laptop', embedding: vecf32([0.
 
 # Search for similar products
 GRAPH.QUERY DEMO_GRAPH "CALL db.idx.vector.queryNodes('Product', 'embedding', 5, vecf32([0.15, 0.18, ...])) YIELD node, score RETURN node.name, score ORDER BY score DESC"
-{% endcapture %}
+```
 
-{% capture python_vec_example %}
+  </TabItem>
+  <TabItem value="python" label="Python">
+
+```python
 # Create vector index for product embeddings
 graph.query("CREATE VECTOR INDEX FOR (p:Product) ON (p.embedding) OPTIONS {dimension:768, similarityFunction:'cosine', M:32, efConstruction:200}")
 
@@ -358,9 +459,12 @@ query_embedding = model.encode("notebook pc")
 result = graph.query(f"CALL db.idx.vector.queryNodes('Product', 'embedding', 5, vecf32({query_embedding.tolist()})) YIELD node, score RETURN node.name, score ORDER BY score DESC")
 for record in result.result_set:
     print(f"Product: {record[0]}, Similarity: {record[1]}")
-{% endcapture %}
+```
 
-{% capture javascript_vec_example %}
+  </TabItem>
+  <TabItem value="javascript" label="JavaScript">
+
+```javascript
 // Create vector index for product embeddings
 await graph.query("CREATE VECTOR INDEX FOR (p:Product) ON (p.embedding) OPTIONS {dimension:768, similarityFunction:'cosine', M:32, efConstruction:200}");
 
@@ -374,9 +478,12 @@ const result = await graph.query(`CALL db.idx.vector.queryNodes('Product', 'embe
 for (const record of result.data) {
     console.log(`Product: ${record['node.name']}, Similarity: ${record['score']}`);
 }
-{% endcapture %}
+```
 
-{% capture java_vec_example %}
+  </TabItem>
+  <TabItem value="java" label="Java">
+
+```java
 // Create vector index for product embeddings
 graph.query("CREATE VECTOR INDEX FOR (p:Product) ON (p.embedding) OPTIONS {dimension:768, similarityFunction:'cosine', M:32, efConstruction:200}");
 
@@ -390,9 +497,12 @@ ResultSet result = graph.query(String.format("CALL db.idx.vector.queryNodes('Pro
 for (Record record : result) {
     System.out.printf("Product: %s, Similarity: %s%n", record.get("node.name"), record.get("score"));
 }
-{% endcapture %}
+```
 
-{% capture rust_vec_example %}
+  </TabItem>
+  <TabItem value="rust" label="Rust">
+
+```rust
 // Create vector index for product embeddings
 graph.query("CREATE VECTOR INDEX FOR (p:Product) ON (p.embedding) OPTIONS {dimension:768, similarityFunction:'cosine', M:32, efConstruction:200}").execute().await?;
 
@@ -406,9 +516,10 @@ let result = graph.query(&format!("CALL db.idx.vector.queryNodes('Product', 'emb
 for record in result.data() {
     println!("Product: {}, Similarity: {}", record["node.name"], record["score"]);
 }
-{% endcapture %}
+```
 
-{% include code_tabs.html id="vector_example_tabs" shell=shell_vec_example python=python_vec_example javascript=javascript_vec_example java=java_vec_example rust=rust_vec_example %}
+  </TabItem>
+</Tabs>
 
 ### Troubleshooting
 

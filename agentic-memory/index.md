@@ -1,8 +1,6 @@
 ---
 title: "Agentic Memory"
 description: "Learn how to implement agentic memory with FalkorDB for AI agents"
-has_children: true
-nav_order: 11
 ---
 
 # Agentic Memory

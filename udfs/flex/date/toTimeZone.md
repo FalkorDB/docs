@@ -1,8 +1,5 @@
 ---
-layout: default
 title: date.toTimeZone
-parent: Date Functions
-grand_parent: FLEX Function Reference
 ---
 
 # date.toTimeZone

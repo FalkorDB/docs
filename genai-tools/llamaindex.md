@@ -1,8 +1,6 @@
 ---
 title: "LlamaIndex"
-nav_order: 5
 description: "Build efficient GraphRAG systems with LlamaIndex and FalkorDB."
-parent: "GenAI Tools"
 ---
 
 # LlamaIndex

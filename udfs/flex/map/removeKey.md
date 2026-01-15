@@ -1,8 +1,5 @@
 ---
-layout: default
 title: map.removeKey
-parent: Map Functions
-grand_parent: FLEX Function Reference
 ---
 
 # map.removeKey

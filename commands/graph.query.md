@@ -1,10 +1,13 @@
 ---
 title: "GRAPH.QUERY"
-nav_order: 1
 description: >
     Executes the given query against a specified graph
-parent: "Commands"    
 ---
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+<!-- markdownlint-disable MD033 -->
+
 
 # GRAPH.QUERY
 
@@ -14,88 +17,150 @@ Arguments: `Graph name, Query, Timeout [optional]`
 
 Returns: [Result set](/design/result-structure)
 
-### Queries and Parameterized Queries
+## Queries and Parameterized Queries
 
 The execution plans of queries, both regular and parameterized, are cached (up to [CACHE_SIZE](/configuration#cache_size) unique queries are cached). Therefore, it is recommended to use parameterized queries when executing many queries with the same pattern but different constants.
 
 Query-level timeouts can be set as described in [the configuration section](/configuration#timeout).
 
-#### Command structure
+### Command structure
 
-`GRAPH.QUERY graph_name "query"`
+Use client libraries to send Cypher, rather than invoking `GRAPH.QUERY` directly. The raw Cypher pattern stays the same across languages:
 
-example:
+<Tabs groupId="programming-language">
+  <TabItem value="cypher" label="Cypher">
 
-{% capture shell_0 %}
-GRAPH.QUERY us_government "MATCH (p:president)-[:born]->(:state {name:'Hawaii'}) RETURN p"
-{% endcapture %}
+```cypher
+MATCH (p:president)-[:born]->(:state {name:'Hawaii'})
+RETURN p
+```
 
-{% capture python_0 %}
-graph.query("MATCH (p:president)-[:born]->(:state {name:'Hawaii'}) RETURN p")
-{% endcapture %}
+  </TabItem>
+  <TabItem value="python" label="Python">
 
-{% capture javascript_0 %}
-const result = await graph.query("MATCH (p:president)-[:born]->(:state {name:'Hawaii'}) RETURN p");
+```python
+graph.query("""
+MATCH (p:president)-[:born]->(:state {name:'Hawaii'})
+RETURN p
+""")
+```
+
+  </TabItem>
+  <TabItem value="javascript" label="JavaScript">
+
+```javascript
+const result = await graph.query(`
+  MATCH (p:president)-[:born]->(:state {name:'Hawaii'})
+  RETURN p
+`);
 console.log(result);
-{% endcapture %}
+```
 
-{% capture java_0 %}
-ResultSet result = graph.query("MATCH (p:president)-[:born]->(:state {name:'Hawaii'}) RETURN p");
+  </TabItem>
+  <TabItem value="java" label="Java">
+
+```java
+ResultSet result = graph.query("""
+MATCH (p:president)-[:born]->(:state {name:'Hawaii'})
+RETURN p
+""");
 System.out.println(result);
-{% endcapture %}
+```
 
-{% capture rust_0 %}
-let result = graph.query(r#"MATCH (p:president)-[:born]->(:state {name:'Hawaii'}) RETURN p"#).execute().await?;
+  </TabItem>
+  <TabItem value="rust" label="Rust">
+
+```rust
+let result = graph
+    .query(
+        r#"
+MATCH (p:president)-[:born]->(:state {name:'Hawaii'})
+RETURN p
+"#,
+    )
+    .execute()
+    .await?;
 println!("{:?}", result);
-{% endcapture %}
+```
 
-{% include code_tabs.html id="tabs_0" shell=shell_0 python=python_0 javascript=javascript_0 java=java_0 rust=rust_0 %}
+  </TabItem>
+</Tabs>
 
+### Parameterized query structure
 
-#### Parametrized query structure:
+Use named parameters to let the server cache query plans while varying values. The Cypher stays the same across clients:
 
-`GRAPH.QUERY graph_name "CYPHER param=val [param=val ...] query"`
+<Tabs groupId="programming-language">
+  <TabItem value="cypher" label="Cypher">
 
-example:
+```cypher
+MATCH (p:president)-[:born]->(:state {name:$state_name})
+RETURN p
+```
 
-{% capture shell_1 %}
-GRAPH.QUERY us_government "CYPHER state_name='Hawaii' MATCH (p:president)-[:born]->(:state {name:$state_name}) RETURN p"
-{% endcapture %}
+  </TabItem>
+  <TabItem value="python" label="Python">
 
-{% capture python_1 %}
-graph.query("MATCH (p:president)-[:born]->(:state {name:$state_name}) RETURN p", {'state_name': 'Hawaii'})
-{% endcapture %}
+```python
+graph.query(
+    """
+MATCH (p:president)-[:born]->(:state {name:$state_name})
+RETURN p
+""",
+    {"state_name": "Hawaii"},
+)
+```
 
-{% capture javascript_1 %}
+  </TabItem>
+  <TabItem value="javascript" label="JavaScript">
+
+```javascript
 const result = await graph.query(
-  "MATCH (p:president)-[:born]->(:state {name:$state_name}) RETURN p",
+  `
+  MATCH (p:president)-[:born]->(:state {name:$state_name})
+  RETURN p
+  `,
   { params: { state_name: "Hawaii" } }
 );
 console.log(result);
-{% endcapture %}
+```
 
-{% capture java_1 %}
+  </TabItem>
+  <TabItem value="java" label="Java">
+
+```java
 Map<String, Object> params = new HashMap<>();
 params.put("state_name", "Hawaii");
 ResultSet result = graph.query(
-  "MATCH (p:president)-[:born]->(:state {name:$state_name}) RETURN p",
-  params
+    """
+MATCH (p:president)-[:born]->(:state {name:$state_name})
+RETURN p
+""",
+    params
 );
 System.out.println(result);
-{% endcapture %}
+```
 
-{% capture rust_1 %}
-let params = std::collections::HashMap::from([
-    ("state_name", "Hawaii")
-]);
-let result = graph.query_with_params(
-    r#"MATCH (p:president)-[:born]->(:state {name:$state_name}) RETURN p"#,
-    &params
-).execute().await?;
+  </TabItem>
+  <TabItem value="rust" label="Rust">
+
+```rust
+let params = std::collections::HashMap::from([(String::from("state_name"), "Hawaii")]);
+let result = graph
+    .query_with_params(
+        r#"
+MATCH (p:president)-[:born]->(:state {name:$state_name})
+RETURN p
+"#,
+        &params,
+    )
+    .execute()
+    .await?;
 println!("{:?}", result);
-{% endcapture %}
+```
 
-{% include code_tabs.html id="tabs_1" shell=shell_1 python=python_1 javascript=javascript_1 java=java_1 rust=rust_1 %}
+  </TabItem>
+</Tabs>
 
 ### Query language
 

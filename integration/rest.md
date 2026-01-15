@@ -1,8 +1,6 @@
 ---
 title: "Rest API"
-nav_order: 1
 description: "Rest API detailed doc"
-parent: "Integration"
 ---
 
 # FalkorDB Browser REST API

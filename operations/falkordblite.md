@@ -1,7 +1,5 @@
 ---
 title: "FalkorDBLite"
-nav_order: 6
-parent: Operations
 description: "Self-contained Python interface to FalkorDB"
 ---
 

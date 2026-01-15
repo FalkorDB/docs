@@ -1,9 +1,7 @@
 ---
 title: "Cypher Language"
-nav_order: 7
 description: >
     Documentation for the Cypher query language
-has_children: true
 ---
 
 # Clauses

@@ -1,9 +1,7 @@
 ---
 title: "SET"
-nav_order: 10
 description: >
     SET is used to create or update properties on nodes and relationships.
-parent: "Cypher Language"
 ---
 
 # SET

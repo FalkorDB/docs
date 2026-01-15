@@ -1,8 +1,6 @@
 ---
 title: "Cloud DBaaS"
 description: Cloud Offering
-nav_order: 10
-has_children: true
 ---
 
 ![FalkorDB Cloud Banner](https://github.com/user-attachments/assets/e436f01d-d60a-42cf-ac76-7e457180482e)

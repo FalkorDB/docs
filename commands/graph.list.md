@@ -1,9 +1,7 @@
 ---
 title: "GRAPH.LIST"
-nav_order: 5
 description: >
     Lists all graph keys in the keyspace
-parent: "Commands"
 ---
 
 # GRAPH.LIST
@@ -12,35 +10,53 @@ Lists all graph keys in the keyspace.
 
 ## Examples
 
-{% capture shell_0 %}
-GRAPH.LIST
-{% endcapture %}
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
 
-{% capture python_0 %}
+<Tabs groupId="programming-language">
+  <TabItem value="shell" label="Shell">
+
+```bash
+GRAPH.LIST
+```
+
+  </TabItem>
+  <TabItem value="python" label="Python">
+
+```python
 from falkordb import FalkorDB
 db = FalkorDB(host='localhost', port=6379)
 graphs = db.list_graphs()
 print(graphs)
-{% endcapture %}
+```
 
-{% capture javascript_0 %}
+  </TabItem>
+  <TabItem value="javascript" label="Javascript">
+
+```javascript
 import { FalkorDB } from 'falkordb';
 const db = await FalkorDB.connect({
   socket: { host: 'localhost', port: 6379 }
 });
 const graphs = await db.list();
 console.log(graphs);
-{% endcapture %}
+```
 
-{% capture java_0 %}
+  </TabItem>
+  <TabItem value="java" label="Java">
+
+```java
 import com.falkordb.*;
 
 Driver driver = FalkorDB.driver("localhost", 6379);
 List<String> graphs = driver.listGraphs();
 System.out.println(graphs);
-{% endcapture %}
+```
 
-{% capture rust_0 %}
+  </TabItem>
+  <TabItem value="rust" label="Rust">
+
+```rust
 use falkordb::{FalkorClientBuilder, FalkorConnectionInfo};
 
 let connection_info: FalkorConnectionInfo = "falkor://127.0.0.1:6379"
@@ -52,9 +68,10 @@ let client = FalkorClientBuilder::new()
     .expect("Failed to build client");
 let graphs = client.list_graphs();
 println!("{:?}", graphs);
-{% endcapture %}
+```
 
-{% include code_tabs.html id="list_tabs" shell=shell_0 python=python_0 javascript=javascript_0 java=java_0 rust=rust_0 %}
+  </TabItem>
+</Tabs>
 
 ### Sample Output
 

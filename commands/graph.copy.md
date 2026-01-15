@@ -2,7 +2,6 @@
 title: "GRAPH.COPY"
 description: >
     creates a copy of the given graph
-parent: "Commands"
 ---
 
 # GRAPH.COPY
@@ -13,7 +12,13 @@ The `GRAPH.COPY` command creates a copy of a graph, while the copy is performed 
 
 Example:
 
-{% capture shell_0 %}
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+<Tabs groupId="programming-language">
+  <TabItem value="shell" label="Shell">
+
+```bash
 127.0.0.1:6379> GRAPH.LIST
 (empty array)
 127.0.0.1:6379> GRAPH.QUERY A "CREATE (:Account {number: 516637})"
@@ -33,9 +38,12 @@ Example:
 2) 1) 1) (integer) 516637
 3) 1) "Cached execution: 0"
    2) "Query internal execution time: 0.638375 milliseconds"
-{% endcapture %}
+```
 
-{% capture python_0 %}
+  </TabItem>
+  <TabItem value="python" label="Python">
+
+```python
 # Graphs list is empty
 graph_list = db.list()
 
@@ -51,9 +59,12 @@ graph_list = db.list()
 
 # Query Graph 'Z'
 result = graph_z.query('MATCH (a:Account) RETURN a.number')Query Graph 'Z'
-{% endcapture %}
+```
 
-{% capture javascript_0 %}
+  </TabItem>
+  <TabItem value="javascript" label="Javascript">
+
+```javascript
 import { FalkorDB } from 'falkordb';
 
 const client = await FalkorDB.connect();
@@ -69,9 +80,12 @@ await client.copyGraph('A', 'Z');
 const graphZ = client.selectGraph('Z');
 const result = await graphZ.query("MATCH (a:Account) RETURN a.number");
 console.log(result);
-{% endcapture %}
+```
 
-{% capture java_0 %}
+  </TabItem>
+  <TabItem value="java" label="Java">
+
+```java
 FalkorDB client = new FalkorDB();
 
 // Create Graph 'A'
@@ -85,9 +99,12 @@ Graph graphZ = client.selectGraph("Z");
 // Query Graph 'Z'
 ResultSet result = graphZ.query("MATCH (a:Account) RETURN a.number");
 System.out.println(result);
-{% endcapture %}
+```
 
-{% capture rust_0 %}
+  </TabItem>
+  <TabItem value="rust" label="Rust">
+
+```rust
 let client = FalkorDB::connect_default();
 let graph_a = client.select_graph("A");
 
@@ -97,6 +114,7 @@ client.copy_graph("A", "Z")?;
 let graph_z = client.select_graph("Z");
 let result = graph_z.query("MATCH (a:Account) RETURN a.number")?;
 println!("{:?}", result);
-{% endcapture %}
+```
 
-{% include code_tabs.html id="copy_tabs" shell=shell_0 python=python_0 javascript=javascript_0 java=java_0 rust=rust_0 %}
+  </TabItem>
+</Tabs>

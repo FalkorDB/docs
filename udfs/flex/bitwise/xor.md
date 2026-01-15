@@ -1,8 +1,5 @@
 ---
-layout: default
 title: bitwise.xor
-parent: Bitwise Functions
-grand_parent: FLEX Function Reference
 ---
 
 # bitwise.xor

@@ -1,8 +1,5 @@
 ---
-layout: default
 title: coll.intersection
-parent: Collection Functions
-grand_parent: FLEX Function Reference
 ---
 
 # coll.intersection

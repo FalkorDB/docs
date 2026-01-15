@@ -1,8 +1,5 @@
 ---
-layout: default
 title: text.levenshtein
-parent: Text Functions
-grand_parent: FLEX Function Reference
 ---
 
 # text.levenshtein

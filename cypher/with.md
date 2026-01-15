@@ -1,9 +1,7 @@
 ---
 title: "WITH"
-nav_order: 12
 description: >
     The WITH clause allows parts of queries to be independently executed and have their results handled uniquely.
-parent: "Cypher Language"
 ---
 
 # WITH

@@ -1,9 +1,7 @@
 ---
 title: "RETURN"
-nav_order: 4
 description: >
     Return defines which properties the returned result-set will contain.
-parent: "Cypher Language"
 ---
 
 # RETURN

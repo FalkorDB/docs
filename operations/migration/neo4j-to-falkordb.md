@@ -1,7 +1,6 @@
 ---
 title: "Neo4j to FalkorDB"
 description: "Migrate from Neo4j to FalkorDB."
-parent: "Migration"
 ---
 
 # Neo4j to FalkorDB Migration

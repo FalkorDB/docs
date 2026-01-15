@@ -1,0 +1,132 @@
+.docFooter {
+  margin-top: 3rem;
+  padding-top: 2rem;
+}
+
+.separator {
+  border-top: 1px solid var(--ifm-toc-border-color);
+  margin: 2rem 0 1.5rem;
+}
+
+.feedbackContainer {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.5rem;
+  background-color: var(--ifm-background-surface-color);
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  border: 1px solid var(--ifm-toc-border-color);
+}
+
+.feedbackQuestion {
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--ifm-font-color-base);
+}
+
+.feedbackButtons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.feedbackButton {
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--ifm-color-emphasis-300);
+  background-color: transparent;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+  color: var(--ifm-font-color-base);
+}
+
+.feedbackButton:hover {
+  background-color: var(--ifm-color-emphasis-100);
+  transform: translateY(-2px);
+}
+
+.feedbackYes:hover {
+  border-color: var(--ifm-color-success);
+  background-color: var(--ifm-color-success-light);
+}
+
+.feedbackNo:hover {
+  border-color: var(--ifm-color-danger);
+  background-color: var(--ifm-color-danger-light);
+}
+
+.feedbackThanks {
+  color: var(--ifm-color-success);
+  font-weight: 500;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.footerActions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1rem;
+}
+
+.backToTop {
+  padding: 0.5rem 1rem;
+  background-color: var(--ifm-color-primary);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.backToTop:hover {
+  background-color: var(--ifm-color-primary-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.lastUpdated {
+  text-align: right;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .feedbackContainer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .feedbackButtons {
+    width: 100%;
+  }
+
+  .feedbackButton {
+    flex: 1;
+  }
+
+  .footerActions {
+    justify-content: center;
+    width: 100%;
+  }
+
+  .backToTop {
+    width: 100%;
+    justify-content: center;
+  }
+}

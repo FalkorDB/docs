@@ -1,0 +1,71 @@
+/**
+ * Any CSS included here will be global. The classic template
+ * bundles Infima by default. Infima is a CSS framework designed to
+ * work well for content-centric websites.
+ */
+
+/* You can override the default Infima variables here. */
+:root {
+  --ifm-color-primary: #2e8555;
+  --ifm-color-primary-dark: #29784c;
+  --ifm-color-primary-darker: #277148;
+  --ifm-color-primary-darkest: #205d3b;
+  --ifm-color-primary-light: #33925d;
+  --ifm-color-primary-lighter: #359962;
+  --ifm-color-primary-lightest: #3cad6e;
+  --ifm-code-font-size: 95%;
+  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
+}
+
+/* For readability concerns, you should choose a lighter palette in dark mode. */
+[data-theme='dark'] {
+  --ifm-color-primary: #7466FF;
+  --ifm-color-primary-dark: #5a4bff;
+  --ifm-color-primary-darker: #4d3cff;
+  --ifm-color-primary-darkest: #3320ff;
+  --ifm-color-primary-light: #8e81ff;
+  --ifm-color-primary-lighter: #9b90ff;
+  --ifm-color-primary-lightest: #b5abff;
+  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
+}
+
+/* Improved sidebar spacing for better visual hierarchy */
+.theme-doc-sidebar-menu > .menu__list > .menu__list-item {
+  margin-top: 1.25rem !important;
+  padding-top: 1.25rem !important;
+  border-top: 2px solid #e3e3e3 !important;
+}
+
+[data-theme='dark'] .theme-doc-sidebar-menu > .menu__list > .menu__list-item {
+  border-top-color: #444 !important;
+}
+
+.theme-doc-sidebar-menu > .menu__list > .menu__list-item:first-child,
+.theme-doc-sidebar-menu > .menu__list > .menu__list-item:nth-child(2) {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+  border-top: none !important;
+}
+
+/* Make top-level category headers bold and prominent */
+.theme-doc-sidebar-menu > .menu__list > .menu__list-item > .menu__link,
+.theme-doc-sidebar-menu > .menu__list > .menu__list-item > .menu__list-item-collapsible > .menu__link {
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+/* Also make category labels bold */
+.menu__list-item-collapsible > .menu__link {
+  font-weight: 700;
+}
+
+/* Regular menu items (not categories) should have normal weight */
+.menu__list .menu__list .menu__link {
+  font-weight: 400;
+}
+
+/* Reduce visual clutter in nested menus */
+.menu__list .menu__list {
+  margin-top: 0.25rem;
+}
+

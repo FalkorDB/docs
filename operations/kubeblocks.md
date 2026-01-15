@@ -1,8 +1,6 @@
 ---
 title: "KubeBlocks"
-nav_order: 10
 description: "Deploy FalkorDB on Kubernetes with KubeBlocks"
-parent: "Operations"
 ---
 
 # Deploy FalkorDB with KubeBlocks

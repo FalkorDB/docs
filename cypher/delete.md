@@ -1,9 +1,7 @@
 ---
 title: "DELETE"
-nav_order: 9
 description: >
     DELETE is used to remove both nodes and relationships.
-parent: "Cypher Language"
 ---
 
 # DELETE

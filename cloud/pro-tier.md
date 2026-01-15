@@ -1,7 +1,5 @@
 ---
 title: "Pro Tier"
-parent: "Cloud DBaaS"
-nav_order: 3
 description: "FalkorDB DBaaS Pro Tier"
 ---
 

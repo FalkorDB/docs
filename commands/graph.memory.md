@@ -2,8 +2,10 @@
 title: "GRAPH.MEMORY"
 description: >
     The GRAPH.MEMORY USAGE command returns detailed memory usage statistics for the specified graph. This command provides insight into how much memory is used by various internal data structures such as nodes, edges, schemas, and indices. It enables users to analyze memory consumption at the graph level, reporting statistics in megabytes (MB). This is useful for debugging, monitoring, performance optimization, and capacity planning in FalkorDB deployments.
-parent: "Commands"
 ---
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 
 # GRAPH.MEMORY
 The `GRAPH.MEMORY` command returns detailed memory consumption statistics for a specific graph in **megabytes (MB)**. It provides insight into how much memory is used by various internal data structures such as nodes, edges, schemas, indices, and matrix representations. This command can be used to monitor memory consumption at the graph level, making it especially useful for debugging, monitoring, performance optimization, and capacity planning in FalkorDB deployments.
@@ -47,11 +49,18 @@ The command returns an array of key-value pairs, where each pair represents a sp
 
 ### Basic Usage
 
-{% capture shell_0 %}
-GRAPH.MEMORY USAGE myGraph
-{% endcapture %}
 
-{% capture javascript_0 %}
+<Tabs groupId="programming-language">
+  <TabItem value="shell" label="Shell">
+
+```bash
+GRAPH.MEMORY USAGE myGraph
+```
+
+  </TabItem>
+  <TabItem value="javascript" label="Javascript">
+
+```javascript
 import { FalkorDB } from 'falkordb';
 const db = await FalkorDB.connect({
   socket: { host: 'localhost', port: 6379 }
@@ -59,22 +68,31 @@ const db = await FalkorDB.connect({
 const graph = db.selectGraph('myGraph');
 const memoryInfo = await graph.memoryUsage();
 console.log(memoryInfo);
-{% endcapture %}
+```
 
-{% include code_tabs.html id="memory_basic_tabs" shell=shell_0 javascript=javascript_0 %}
+  </TabItem>
+</Tabs>
 
 ### With Sampling
 
-{% capture shell_1 %}
-GRAPH.MEMORY USAGE myGraph SAMPLES 500
-{% endcapture %}
 
-{% capture javascript_1 %}
+<Tabs groupId="programming-language">
+  <TabItem value="shell" label="Shell">
+
+```bash
+GRAPH.MEMORY USAGE myGraph SAMPLES 500
+```
+
+  </TabItem>
+  <TabItem value="javascript" label="Javascript">
+
+```javascript
 const memoryInfo = await graph.memoryUsage({ samples: 500 });
 console.log(memoryInfo);
-{% endcapture %}
+```
 
-{% include code_tabs.html id="memory_samples_tabs" shell=shell_1 javascript=javascript_1 %}
+  </TabItem>
+</Tabs>
 
 ### Sample Output
 

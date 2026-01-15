@@ -1,0 +1,97 @@
+---
+title: GRAPH.LIST
+description: List all graph keys in the keyspace
+sidebar_position: 5
+sidebar_label: GRAPH.LIST
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+
+# GRAPH.LIST
+
+Lists all graph keys in the keyspace.
+
+## Examples
+
+
+
+
+
+
+
+
+
+
+
+
+<Tabs groupId="programming-language">
+<TabItem value="python" label="Python">
+
+```python
+from falkordb import FalkorDB
+db = FalkorDB(host='localhost', port=6379)
+graphs = db.list_graphs()
+print(graphs)
+```
+
+</TabItem>
+<TabItem value="javascript" label="Javascript">
+
+```javascript
+import { FalkorDB } from 'falkordb';
+const db = await FalkorDB.connect({
+  socket: { host: 'localhost', port: 6379 }
+});
+const graphs = await db.list();
+console.log(graphs);
+```
+
+</TabItem>
+<TabItem value="rust" label="Rust">
+
+```rust
+use falkordb::{FalkorClientBuilder, FalkorConnectionInfo};
+
+let connection_info: FalkorConnectionInfo = "falkor://127.0.0.1:6379"
+    .try_into()
+    .expect("Invalid connection info");
+let client = FalkorClientBuilder::new()
+    .with_connection_info(connection_info)
+    .build()
+    .expect("Failed to build client");
+let graphs = client.list_graphs();
+println!("{:?}", graphs);
+```
+
+</TabItem>
+<TabItem value="java" label="Java">
+
+```java
+import com.falkordb.*;
+
+Driver driver = FalkorDB.driver("localhost", 6379);
+List<String> graphs = driver.listGraphs();
+System.out.println(graphs);
+```
+
+</TabItem>
+<TabItem value="shell" label="Shell">
+
+```bash
+GRAPH.LIST
+```
+
+</TabItem>
+</Tabs>
+
+
+### Sample Output
+
+```sh
+127.0.0.1:6379> GRAPH.LIST
+2) G
+3) resources
+4) players
+```

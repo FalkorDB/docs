@@ -1,7 +1,5 @@
 ---
 title: "Startup Tier"
-parent: "Cloud DBaaS"
-nav_order: 2
 description: "FalkorDB DBaaS Startup Tier"
 ---
 

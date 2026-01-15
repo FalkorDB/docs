@@ -1,7 +1,5 @@
 ---
 title: "Graphiti"
-parent: "Agentic Memory"
-nav_order: 1
 description: "Build temporally-aware knowledge graphs with Graphiti and FalkorDB"
 ---
 

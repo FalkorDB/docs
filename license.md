@@ -1,6 +1,5 @@
 ---
 title: "FalkorDB License"
-nav_order: 1100
 description: "Understanding the FalkorDB License"
 ---
 

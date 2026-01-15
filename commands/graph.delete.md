@@ -1,10 +1,11 @@
 ---
 title: "GRAPH.DELETE"
-nav_order: 3
 description: >
     Completely removes the graph and all of its entities
-parent: "Commands"    
 ---
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 
 # GRAPH.DELETE
 
@@ -23,53 +24,87 @@ GRAPH.DELETE graph_name
 
 ## Examples
 
-{% capture shell_0 %}
+
+<Tabs groupId="programming-language">
+  <TabItem value="shell" label="Shell">
+
+```bash
 GRAPH.DELETE us_government
-{% endcapture %}
+```
 
-{% capture python_0 %}
+  </TabItem>
+  <TabItem value="python" label="Python">
+
+```python
 graph.delete()
-{% endcapture %}
+```
 
-{% capture javascript_0 %}
+  </TabItem>
+  <TabItem value="javascript" label="Javascript">
+
+```javascript
 await graph.delete();
-{% endcapture %}
+```
 
-{% capture java_0 %}
+  </TabItem>
+  <TabItem value="java" label="Java">
+
+```java
 graph.delete();
-{% endcapture %}
+```
 
-{% capture rust_0 %}
+  </TabItem>
+  <TabItem value="rust" label="Rust">
+
+```rust
 graph.delete()?;
-{% endcapture %}
+```
 
-{% include code_tabs.html id="tabs_0" shell=shell_0 python=python_0 javascript=javascript_0 java=java_0 rust=rust_0 %}
+  </TabItem>
+</Tabs>
 
 ## Deleting Individual Nodes
 
 **Note:** To delete specific nodes or relationships (not the entire graph), use the Cypher `DELETE` clause with a `MATCH` query:
 
-{% capture shell_1 %}
+
+<Tabs groupId="programming-language">
+  <TabItem value="shell" label="Shell">
+
+```bash
 GRAPH.QUERY DEMO_GRAPH "MATCH (x:Y {propname: propvalue}) DELETE x"
-{% endcapture %}
+```
 
-{% capture python_1 %}
+  </TabItem>
+  <TabItem value="python" label="Python">
+
+```python
 graph.query("MATCH (x:Y {propname: propvalue}) DELETE x")
-{% endcapture %}
+```
 
-{% capture javascript_1 %}
+  </TabItem>
+  <TabItem value="javascript" label="Javascript">
+
+```javascript
 await graph.query("MATCH (x:Y {propname: propvalue}) DELETE x");
-{% endcapture %}
+```
 
-{% capture java_1 %}
+  </TabItem>
+  <TabItem value="java" label="Java">
+
+```java
 graph.query("MATCH (x:Y {propname: propvalue}) DELETE x");
-{% endcapture %}
+```
 
-{% capture rust_1 %}
+  </TabItem>
+  <TabItem value="rust" label="Rust">
+
+```rust
 graph.query("MATCH (x:Y {propname: propvalue}) DELETE x")?;
-{% endcapture %}
+```
 
-{% include code_tabs.html id="tabs_1" shell=shell_1 python=python_1 javascript=javascript_1 java=java_1 rust=rust_1 %}
+  </TabItem>
+</Tabs>
 
 **⚠️ Warning:** When you delete a node using the Cypher `DELETE` clause, all of the node's incoming and outgoing relationships are also automatically removed.
 

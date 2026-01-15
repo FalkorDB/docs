@@ -1,7 +1,5 @@
 ---
 title: "Cognee"
-parent: "Agentic Memory"
-nav_order: 2
 description: "Build flexible agentic memory with Cognee and FalkorDB"
 ---
 

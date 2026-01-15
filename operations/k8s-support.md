@@ -1,11 +1,6 @@
 ---
 title: "Kubernetes support"
-nav_order: 4
 description: "Deploy FalkorDB to Kubernetes."
-parent: "Operations"
-redirect_from:
-  - /operations/k8s_support.html
-  - /operations/k8s_support
 ---
 
 # Kubernetes support for FalkorDB

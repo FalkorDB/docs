@@ -1,0 +1,753 @@
+Found 125 files with duplicate H1 headings:
+
+================================================================================
+
+File: References.md
+Line: 9
+Heading: # References
+Frontmatter Title: References
+--------------------------------------------------------------------------------
+
+File: agentic-memory/cognee.md
+Line: 9
+Heading: # Cognee
+Frontmatter Title: Cognee
+--------------------------------------------------------------------------------
+
+File: agentic-memory/graphiti.md
+Line: 9
+Heading: # Graphiti
+Frontmatter Title: Graphiti
+--------------------------------------------------------------------------------
+
+File: agentic-memory/index.md
+Line: 9
+Heading: # Agentic Memory
+Frontmatter Title: Agentic Memory
+--------------------------------------------------------------------------------
+
+File: algorithms/betweenness-centrality.md
+Line: 8
+Heading: # Betweenness Centrality
+Frontmatter Title: Betweenness Centrality
+--------------------------------------------------------------------------------
+
+File: algorithms/bfs.md
+Line: 8
+Heading: # BFS
+Frontmatter Title: BFS
+--------------------------------------------------------------------------------
+
+File: algorithms/cdlp.md
+Line: 8
+Heading: # Community Detection using Label Propagation (CDLP)
+Frontmatter Title: Community Detection using Label Propagation (CDLP)
+--------------------------------------------------------------------------------
+
+File: algorithms/index.md
+Line: 9
+Heading: # FalkorDB Algorithms Overview
+Frontmatter Title: Algorithms
+--------------------------------------------------------------------------------
+
+File: algorithms/msf.md
+Line: 9
+Heading: # Minimum Spanning Forest (MSF)
+Frontmatter Title: MSF
+--------------------------------------------------------------------------------
+
+File: algorithms/pagerank.md
+Line: 8
+Heading: # PageRank
+Frontmatter Title: PageRank
+--------------------------------------------------------------------------------
+
+File: algorithms/sppath.md
+Line: 8
+Heading: # `algo.SPpaths` - Shortest Path (Single Pair)
+Frontmatter Title: algo.SPpaths
+--------------------------------------------------------------------------------
+
+File: algorithms/sspath.md
+Line: 8
+Heading: # `algo.SSpaths` - Single Source Paths
+Frontmatter Title: algo.SSpaths
+--------------------------------------------------------------------------------
+
+File: algorithms/wcc.md
+Line: 8
+Heading: # Weakly Connected Components (WCC)
+Frontmatter Title: Weakly Connected Components (WCC)
+--------------------------------------------------------------------------------
+
+File: cloud/features.md
+Line: 9
+Heading: # Features
+Frontmatter Title: Features
+--------------------------------------------------------------------------------
+
+File: cloud/index.md
+Line: 11
+Heading: # FalkorDB Cloud DBaaS
+Frontmatter Title: Cloud DBaaS
+--------------------------------------------------------------------------------
+
+File: commands/acl.md
+Line: 9
+Heading: # ACL
+Frontmatter Title: ACL
+--------------------------------------------------------------------------------
+
+File: commands/graph.info.md
+Line: 8
+Heading: # GRAPH.INFO
+Frontmatter Title: GRAPH.INFO
+--------------------------------------------------------------------------------
+
+File: commands/index.md
+Line: 9
+Heading: # Commands
+Frontmatter Title: Commands
+--------------------------------------------------------------------------------
+
+File: cypher/call.md
+Line: 9
+Heading: # CALL \{\}
+Frontmatter Title: CALL
+--------------------------------------------------------------------------------
+
+File: cypher/create.md
+Line: 9
+Heading: # CREATE
+Frontmatter Title: CREATE
+--------------------------------------------------------------------------------
+
+File: cypher/cypher-support.md
+Line: 9
+Heading: # Cypher coverage
+Frontmatter Title: Cypher coverage
+--------------------------------------------------------------------------------
+
+File: cypher/delete.md
+Line: 9
+Heading: # DELETE
+Frontmatter Title: DELETE
+--------------------------------------------------------------------------------
+
+File: cypher/foreach.md
+Line: 9
+Heading: # FOREACH
+Frontmatter Title: FOREACH
+--------------------------------------------------------------------------------
+
+File: cypher/functions.md
+Line: 9
+Heading: # Functions
+Frontmatter Title: Functions
+--------------------------------------------------------------------------------
+
+File: cypher/indexing/index.md
+Line: 9
+Heading: # Indexing
+Frontmatter Title: Indexing
+--------------------------------------------------------------------------------
+
+File: cypher/known-limitations.md
+Line: 9
+Heading: # Known limitations
+Frontmatter Title: Known limitations
+--------------------------------------------------------------------------------
+
+File: cypher/limit.md
+Line: 9
+Heading: # LIMIT
+Frontmatter Title: LIMIT
+--------------------------------------------------------------------------------
+
+File: cypher/load-csv.md
+Line: 9
+Heading: # LOAD CSV
+Frontmatter Title: LOAD CSV
+--------------------------------------------------------------------------------
+
+File: cypher/match.md
+Line: 9
+Heading: # MATCH
+Frontmatter Title: MATCH
+--------------------------------------------------------------------------------
+
+File: cypher/merge.md
+Line: 9
+Heading: # MERGE
+Frontmatter Title: MERGE
+--------------------------------------------------------------------------------
+
+File: cypher/optional-match.md
+Line: 9
+Heading: # OPTIONAL MATCH
+Frontmatter Title: OPTIONAL MATCH
+--------------------------------------------------------------------------------
+
+File: cypher/order-by.md
+Line: 9
+Heading: # ORDER BY
+Frontmatter Title: ORDER BY
+--------------------------------------------------------------------------------
+
+File: cypher/procedures.md
+Line: 9
+Heading: # Procedures
+Frontmatter Title: Procedures
+--------------------------------------------------------------------------------
+
+File: cypher/remove.md
+Line: 9
+Heading: # REMOVE
+Frontmatter Title: REMOVE
+--------------------------------------------------------------------------------
+
+File: cypher/return.md
+Line: 9
+Heading: # RETURN
+Frontmatter Title: RETURN
+--------------------------------------------------------------------------------
+
+File: cypher/set.md
+Line: 9
+Heading: # SET
+Frontmatter Title: SET
+--------------------------------------------------------------------------------
+
+File: cypher/skip.md
+Line: 9
+Heading: # SKIP
+Frontmatter Title: SKIP
+--------------------------------------------------------------------------------
+
+File: cypher/union.md
+Line: 9
+Heading: # UNION
+Frontmatter Title: UNION
+--------------------------------------------------------------------------------
+
+File: cypher/unwind.md
+Line: 9
+Heading: # UNWIND
+Frontmatter Title: UNWIND
+--------------------------------------------------------------------------------
+
+File: cypher/where.md
+Line: 9
+Heading: # WHERE
+Frontmatter Title: WHERE
+--------------------------------------------------------------------------------
+
+File: cypher/with.md
+Line: 9
+Heading: # WITH
+Frontmatter Title: WITH
+--------------------------------------------------------------------------------
+
+File: design/client-spec.md
+Line: 8
+Heading: # Client Specification
+Frontmatter Title: Client Specification
+--------------------------------------------------------------------------------
+
+File: design/index.md
+Line: 9
+Heading: # The FalkorDB Design
+Frontmatter Title: The FalkorDB Design
+--------------------------------------------------------------------------------
+
+File: design/result-structure.md
+Line: 8
+Heading: # Result Set Structure
+Frontmatter Title: Result Set Structure
+--------------------------------------------------------------------------------
+
+File: design/third-party.md
+Line: 8
+Heading: # Third-Party Components in FalkorDB
+Frontmatter Title: Third Party
+--------------------------------------------------------------------------------
+
+File: genai-tools/ag2.md
+Line: 9
+Heading: # AG2
+Frontmatter Title: AG2
+--------------------------------------------------------------------------------
+
+File: genai-tools/graphrag-sdk.md
+Line: 9
+Heading: # GraphRAG-SDK
+Frontmatter Title: GraphRAG-SDK
+--------------------------------------------------------------------------------
+
+File: genai-tools/graphrag-toolkit.md
+Line: 9
+Heading: # GraphRAG Toolkit
+Frontmatter Title: GraphRAG Toolkit
+--------------------------------------------------------------------------------
+
+File: genai-tools/index.md
+Line: 9
+Heading: # GenAI Tools
+Frontmatter Title: GenAI Tools
+--------------------------------------------------------------------------------
+
+File: genai-tools/langchain.md
+Line: 9
+Heading: # LangChain
+Frontmatter Title: LangChain
+--------------------------------------------------------------------------------
+
+File: genai-tools/langgraph.md
+Line: 9
+Heading: # LangGraph
+Frontmatter Title: LangGraph
+--------------------------------------------------------------------------------
+
+File: genai-tools/llamaindex.md
+Line: 9
+Heading: # LlamaIndex
+Frontmatter Title: LlamaIndex
+--------------------------------------------------------------------------------
+
+File: getting-started/configuration.md
+Line: 9
+Heading: # Configuration
+Frontmatter Title: Configuration
+--------------------------------------------------------------------------------
+
+File: index.mdx
+Line: 19
+Heading: # FalkorDB
+Frontmatter Title: FalkorDB Documentation
+--------------------------------------------------------------------------------
+
+File: integration/bolt-support.md
+Line: 9
+Heading: # [EXPERIMENTAL] BOLT protocol support for FalkorDB
+Frontmatter Title: BOLT protocol support
+--------------------------------------------------------------------------------
+
+File: integration/index.md
+Line: 9
+Heading: # Integration
+Frontmatter Title: Integration
+--------------------------------------------------------------------------------
+
+File: integration/jena.md
+Line: 9
+Heading: # Apache Jena Integration
+Frontmatter Title: Apache Jena
+--------------------------------------------------------------------------------
+
+File: integration/kafka-connect.md
+Line: 9
+Heading: # Kafka Connect Sink
+Frontmatter Title: Kafka Connect Sink
+--------------------------------------------------------------------------------
+
+File: integration/rest.md
+Line: 9
+Heading: # FalkorDB Browser REST API
+Frontmatter Title: Rest API
+--------------------------------------------------------------------------------
+
+File: integration/spring-data-falkordb.md
+Line: 9
+Heading: # Spring Data FalkorDB
+Frontmatter Title: Spring Data FalkorDB
+--------------------------------------------------------------------------------
+
+File: license.md
+Line: 9
+Heading: # FalkorDB License
+Frontmatter Title: FalkorDB License
+--------------------------------------------------------------------------------
+
+File: operations/cluster.md
+Line: 9
+Heading: # Setting Up a FalkorDB Cluster
+Frontmatter Title: Cluster
+--------------------------------------------------------------------------------
+
+File: operations/docker.md
+Line: 9
+Heading: # Running FalkorDB with Docker and Docker Compose
+Frontmatter Title: Docker and Docker Compose
+--------------------------------------------------------------------------------
+
+File: operations/falkordblite.md
+Line: 9
+Heading: # FalkorDBLite
+Frontmatter Title: FalkorDBLite
+--------------------------------------------------------------------------------
+
+File: operations/index.md
+Line: 9
+Heading: # Operations
+Frontmatter Title: Operations
+--------------------------------------------------------------------------------
+
+File: operations/k8s-support.md
+Line: 9
+Heading: # Kubernetes support for FalkorDB
+Frontmatter Title: Kubernetes support
+--------------------------------------------------------------------------------
+
+File: operations/kubeblocks.md
+Line: 9
+Heading: # Deploy FalkorDB with KubeBlocks
+Frontmatter Title: KubeBlocks
+--------------------------------------------------------------------------------
+
+File: operations/lightning-ai.md
+Line: 9
+Heading: # Deploy FalkorDB on Lightning.AI
+Frontmatter Title: Lightning.AI
+--------------------------------------------------------------------------------
+
+File: operations/migration/index.md
+Line: 9
+Heading: # Migration
+Frontmatter Title: Migration
+--------------------------------------------------------------------------------
+
+File: operations/migration/kuzu-to-falkordb.md
+Line: 8
+Heading: # Kuzu to FalkorDB Migration
+Frontmatter Title: Kuzu to FalkorDB
+--------------------------------------------------------------------------------
+
+File: operations/migration/neo4j-to-falkordb.md
+Line: 8
+Heading: # Neo4j to FalkorDB Migration
+Frontmatter Title: Neo4j to FalkorDB
+--------------------------------------------------------------------------------
+
+File: operations/migration/rdf-to-falkordb.md
+Line: 8
+Heading: # RDF to FalkorDB Migration
+Frontmatter Title: RDF to FalkorDB
+--------------------------------------------------------------------------------
+
+File: operations/migration/redisgraph-to-falkordb.md
+Line: 8
+Heading: # RedisGraph to FalkorDB Migration
+Frontmatter Title: RedisGraph to FalkorDB
+--------------------------------------------------------------------------------
+
+File: operations/persistence.md
+Line: 9
+Heading: # Configuring FalkorDB Docker for Persistence
+Frontmatter Title: Persistence
+--------------------------------------------------------------------------------
+
+File: operations/replication.md
+Line: 9
+Heading: # Configuring FalkorDB Docker for Replication
+Frontmatter Title: Replication
+--------------------------------------------------------------------------------
+
+File: udfs/flex/bitwise/and.md
+Line: 7
+Heading: # bitwise.and
+Frontmatter Title: bitwise.and
+--------------------------------------------------------------------------------
+
+File: udfs/flex/bitwise/index.md
+Line: 8
+Heading: # Bitwise Functions
+Frontmatter Title: Bitwise Functions
+--------------------------------------------------------------------------------
+
+File: udfs/flex/bitwise/not.md
+Line: 7
+Heading: # bitwise.not
+Frontmatter Title: bitwise.not
+--------------------------------------------------------------------------------
+
+File: udfs/flex/bitwise/or.md
+Line: 7
+Heading: # bitwise.or
+Frontmatter Title: bitwise.or
+--------------------------------------------------------------------------------
+
+File: udfs/flex/bitwise/shiftLeft.md
+Line: 7
+Heading: # bitwise.shiftLeft
+Frontmatter Title: bitwise.shiftLeft
+--------------------------------------------------------------------------------
+
+File: udfs/flex/bitwise/shiftRight.md
+Line: 7
+Heading: # bitwise.shiftRight
+Frontmatter Title: bitwise.shiftRight
+--------------------------------------------------------------------------------
+
+File: udfs/flex/bitwise/xor.md
+Line: 7
+Heading: # bitwise.xor
+Frontmatter Title: bitwise.xor
+--------------------------------------------------------------------------------
+
+File: udfs/flex/collections/frequencies.md
+Line: 7
+Heading: # coll.frequencies
+Frontmatter Title: coll.frequencies
+--------------------------------------------------------------------------------
+
+File: udfs/flex/collections/index.md
+Line: 8
+Heading: # Collection Functions
+Frontmatter Title: Collection Functions
+--------------------------------------------------------------------------------
+
+File: udfs/flex/collections/intersection.md
+Line: 7
+Heading: # coll.intersection
+Frontmatter Title: coll.intersection
+--------------------------------------------------------------------------------
+
+File: udfs/flex/collections/shuffle.md
+Line: 7
+Heading: # coll.shuffle
+Frontmatter Title: coll.shuffle
+--------------------------------------------------------------------------------
+
+File: udfs/flex/collections/union.md
+Line: 7
+Heading: # coll.union
+Frontmatter Title: coll.union
+--------------------------------------------------------------------------------
+
+File: udfs/flex/collections/zip.md
+Line: 7
+Heading: # coll.zip
+Frontmatter Title: coll.zip
+--------------------------------------------------------------------------------
+
+File: udfs/flex/date/format.md
+Line: 7
+Heading: # date.format
+Frontmatter Title: date.format
+--------------------------------------------------------------------------------
+
+File: udfs/flex/date/index.md
+Line: 8
+Heading: # Date Functions
+Frontmatter Title: Date Functions
+--------------------------------------------------------------------------------
+
+File: udfs/flex/date/parse.md
+Line: 7
+Heading: # date.parse
+Frontmatter Title: date.parse
+--------------------------------------------------------------------------------
+
+File: udfs/flex/date/toTimeZone.md
+Line: 7
+Heading: # date.toTimeZone
+Frontmatter Title: date.toTimeZone
+--------------------------------------------------------------------------------
+
+File: udfs/flex/date/truncate.md
+Line: 7
+Heading: # date.truncate
+Frontmatter Title: date.truncate
+--------------------------------------------------------------------------------
+
+File: udfs/flex/index.md
+Line: 7
+Heading: # FLEX Function Reference
+Frontmatter Title: FLEX Function Reference
+--------------------------------------------------------------------------------
+
+File: udfs/flex/json/fromJsonList.md
+Line: 7
+Heading: # json.fromJsonList
+Frontmatter Title: json.fromJsonList
+--------------------------------------------------------------------------------
+
+File: udfs/flex/json/fromJsonMap.md
+Line: 7
+Heading: # json.fromJsonMap
+Frontmatter Title: json.fromJsonMap
+--------------------------------------------------------------------------------
+
+File: udfs/flex/json/index.md
+Line: 8
+Heading: # JSON Functions
+Frontmatter Title: JSON Functions
+--------------------------------------------------------------------------------
+
+File: udfs/flex/json/toJson.md
+Line: 7
+Heading: # json.toJson
+Frontmatter Title: json.toJson
+--------------------------------------------------------------------------------
+
+File: udfs/flex/map/fromPairs.md
+Line: 7
+Heading: # map.fromPairs
+Frontmatter Title: map.fromPairs
+--------------------------------------------------------------------------------
+
+File: udfs/flex/map/index.md
+Line: 8
+Heading: # Map Functions
+Frontmatter Title: Map Functions
+--------------------------------------------------------------------------------
+
+File: udfs/flex/map/merge.md
+Line: 7
+Heading: # map.merge
+Frontmatter Title: map.merge
+--------------------------------------------------------------------------------
+
+File: udfs/flex/map/removeKey.md
+Line: 7
+Heading: # map.removeKey
+Frontmatter Title: map.removeKey
+--------------------------------------------------------------------------------
+
+File: udfs/flex/map/removeKeys.md
+Line: 7
+Heading: # map.removeKeys
+Frontmatter Title: map.removeKeys
+--------------------------------------------------------------------------------
+
+File: udfs/flex/map/submap.md
+Line: 7
+Heading: # map.submap
+Frontmatter Title: map.submap
+--------------------------------------------------------------------------------
+
+File: udfs/flex/similarity/index.md
+Line: 8
+Heading: # Similarity Functions
+Frontmatter Title: Similarity Functions
+--------------------------------------------------------------------------------
+
+File: udfs/flex/similarity/jaccard.md
+Line: 7
+Heading: # sim.jaccard
+Frontmatter Title: sim.jaccard
+--------------------------------------------------------------------------------
+
+File: udfs/flex/text/camelCase.md
+Line: 7
+Heading: # text.camelCase
+Frontmatter Title: text.camelCase
+--------------------------------------------------------------------------------
+
+File: udfs/flex/text/capitalize.md
+Line: 7
+Heading: # text.capitalize
+Frontmatter Title: text.capitalize
+--------------------------------------------------------------------------------
+
+File: udfs/flex/text/decapitalize.md
+Line: 7
+Heading: # text.decapitalize
+Frontmatter Title: text.decapitalize
+--------------------------------------------------------------------------------
+
+File: udfs/flex/text/format.md
+Line: 7
+Heading: # text.format
+Frontmatter Title: text.format
+--------------------------------------------------------------------------------
+
+File: udfs/flex/text/index.md
+Line: 8
+Heading: # Text Functions
+Frontmatter Title: Text Functions
+--------------------------------------------------------------------------------
+
+File: udfs/flex/text/indexOf.md
+Line: 7
+Heading: # text.indexOf
+Frontmatter Title: text.indexOf
+--------------------------------------------------------------------------------
+
+File: udfs/flex/text/indexesOf.md
+Line: 7
+Heading: # text.indexesOf
+Frontmatter Title: text.indexesOf
+--------------------------------------------------------------------------------
+
+File: udfs/flex/text/jaroWinkler.md
+Line: 7
+Heading: # text.jaroWinkler
+Frontmatter Title: text.jaroWinkler
+--------------------------------------------------------------------------------
+
+File: udfs/flex/text/join.md
+Line: 7
+Heading: # text.join
+Frontmatter Title: text.join
+--------------------------------------------------------------------------------
+
+File: udfs/flex/text/levenshtein.md
+Line: 7
+Heading: # text.levenshtein
+Frontmatter Title: text.levenshtein
+--------------------------------------------------------------------------------
+
+File: udfs/flex/text/lpad.md
+Line: 7
+Heading: # text.lpad
+Frontmatter Title: text.lpad
+--------------------------------------------------------------------------------
+
+File: udfs/flex/text/regexGroups.md
+Line: 7
+Heading: # text.regexGroups
+Frontmatter Title: text.regexGroups
+--------------------------------------------------------------------------------
+
+File: udfs/flex/text/repeat.md
+Line: 7
+Heading: # text.repeat
+Frontmatter Title: text.repeat
+--------------------------------------------------------------------------------
+
+File: udfs/flex/text/replace.md
+Line: 7
+Heading: # text.replace
+Frontmatter Title: text.replace
+--------------------------------------------------------------------------------
+
+File: udfs/flex/text/rpad.md
+Line: 7
+Heading: # text.rpad
+Frontmatter Title: text.rpad
+--------------------------------------------------------------------------------
+
+File: udfs/flex/text/snakeCase.md
+Line: 7
+Heading: # text.snakeCase
+Frontmatter Title: text.snakeCase
+--------------------------------------------------------------------------------
+
+File: udfs/flex/text/swapCase.md
+Line: 7
+Heading: # text.swapCase
+Frontmatter Title: text.swapCase
+--------------------------------------------------------------------------------
+
+File: udfs/flex/text/upperCamelCase.md
+Line: 7
+Heading: # text.upperCamelCase
+Frontmatter Title: text.upperCamelCase
+--------------------------------------------------------------------------------
+
+File: udfs/index.md
+Line: 8
+Heading: # UDFs
+Frontmatter Title: UDFs
+--------------------------------------------------------------------------------

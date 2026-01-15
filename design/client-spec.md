@@ -2,10 +2,6 @@
 title: "Client Specification"
 description: >
    Technical specification for writing FalkorDB client libraries
-parent: "The FalkorDB Design"
-redirect_from:
-  - /design/client_spec.html
-  - /design/client_spec
 ---
 
 # Client Specification
@@ -248,7 +244,7 @@ Property keys, node labels, and relationship types are all returned as IDs rathe
 
 As such, the client should store a string array for each of these 3 mappings, and print the appropriate string for the user by checking an array at position _ID_. If an ID greater than the array length is encountered, the local array should be updated with a procedure call.
 
-These calls are described generally in the [Procedures documentation](/commands/graph.query#procedures).
+These calls are described generally in the [Procedures documentation](/cypher/procedures).
 
 To retrieve each full mapping, the appropriate calls are:
 

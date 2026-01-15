@@ -1,8 +1,5 @@
 ---
-layout: default
 title: text.upperCamelCase
-parent: Text Functions
-grand_parent: FLEX Function Reference
 ---
 
 # text.upperCamelCase

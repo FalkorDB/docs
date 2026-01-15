@@ -1,0 +1,161 @@
+---
+title: GRAPH.QUERY
+description: Execute queries against a graph
+sidebar_position: 1
+sidebar_label: GRAPH.QUERY
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+
+# GRAPH.QUERY
+
+Executes the given query against a specified graph.
+
+Arguments: `Graph name, Query, Timeout [optional]`
+
+Returns: [Result set](/design/result-structure)
+
+### Queries and Parameterized Queries
+
+The execution plans of queries, both regular and parameterized, are cached (up to [CACHE_SIZE](/getting-started/configuration#cache_size) unique queries are cached). Therefore, it is recommended to use parameterized queries when executing many queries with the same pattern but different constants.
+
+Query-level timeouts can be set as described in [the configuration section](/getting-started/configuration#timeout).
+
+#### Command structure
+
+`GRAPH.QUERY graph_name "query"`
+
+example:
+
+
+
+
+
+
+
+
+
+
+
+
+<Tabs groupId="programming-language">
+<TabItem value="python" label="Python">
+
+```python
+graph.query("MATCH (p:president)-[:born]->(:state {name:'Hawaii'}) RETURN p")
+```
+
+</TabItem>
+<TabItem value="javascript" label="Javascript">
+
+```javascript
+const result = await graph.query("MATCH (p:president)-[:born]->(:state {name:'Hawaii'}) RETURN p");
+console.log(result);
+```
+
+</TabItem>
+<TabItem value="rust" label="Rust">
+
+```rust
+let result = graph.query(r#"MATCH (p:president)-[:born]->(:state {name:'Hawaii'}) RETURN p"#).execute().await?;
+println!("{:?}", result);
+```
+
+</TabItem>
+<TabItem value="java" label="Java">
+
+```java
+ResultSet result = graph.query("MATCH (p:president)-[:born]->(:state {name:'Hawaii'}) RETURN p");
+System.out.println(result);
+```
+
+</TabItem>
+<TabItem value="shell" label="Shell">
+
+```bash
+GRAPH.QUERY us_government "MATCH (p:president)-[:born]->(:state {name:'Hawaii'}) RETURN p"
+```
+
+</TabItem>
+</Tabs>
+
+
+
+#### Parametrized query structure:
+
+`GRAPH.QUERY graph_name "CYPHER param=val [param=val ...] query"`
+
+example:
+
+
+
+
+
+
+
+
+
+
+
+
+<Tabs groupId="programming-language">
+<TabItem value="python" label="Python">
+
+```python
+graph.query("MATCH (p:president)-[:born]->(:state {name:$state_name}) RETURN p", {'state_name': 'Hawaii'})
+```
+
+</TabItem>
+<TabItem value="javascript" label="Javascript">
+
+```javascript
+const result = await graph.query(
+  "MATCH (p:president)-[:born]->(:state {name:$state_name}) RETURN p",
+  { params: { state_name: "Hawaii" } }
+);
+console.log(result);
+```
+
+</TabItem>
+<TabItem value="rust" label="Rust">
+
+```rust
+let params = std::collections::HashMap::from([
+    ("state_name", "Hawaii")
+]);
+let result = graph.query_with_params(
+    r#"MATCH (p:president)-[:born]->(:state {name:$state_name}) RETURN p"#,
+    &params
+).execute().await?;
+println!("{:?}", result);
+```
+
+</TabItem>
+<TabItem value="java" label="Java">
+
+```java
+Map<String, Object> params = new HashMap<>();
+params.put("state_name", "Hawaii");
+ResultSet result = graph.query(
+  "MATCH (p:president)-[:born]->(:state {name:$state_name}) RETURN p",
+  params
+);
+System.out.println(result);
+```
+
+</TabItem>
+<TabItem value="shell" label="Shell">
+
+```bash
+GRAPH.QUERY us_government "CYPHER state_name='Hawaii' MATCH (p:president)-[:born]->(:state {name:$state_name}) RETURN p"
+```
+
+</TabItem>
+</Tabs>
+
+
+### Query language
+
+The syntax is based on [Cypher](http://www.opencypher.org/). [Most](/cypher/cypher-support) of the language is supported. See [Cypher documentation](/cypher).

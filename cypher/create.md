@@ -1,9 +1,7 @@
 ---
 title: "CREATE"
-nav_order: 8
 description: >
     CREATE is used to introduce new nodes and relationships.
-parent: "Cypher Language"
 ---
 
 # CREATE

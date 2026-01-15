@@ -1,9 +1,7 @@
 ---
 title: "ACL"
-nav_order: 100
 description: >
     Managing Access Control Lists, enabling administrators to control user permissions at a granular level
-parent: "Commands"    
 ---
 
 # ACL

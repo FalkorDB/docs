@@ -1,10 +1,6 @@
 ---
 title: "Result Set Structure"
 description: The Result Set's format
-parent: "The FalkorDB Design"
-redirect_from:
-  - /design/result_structure.html
-  - /design/result_structure
 ---
 
 # Result Set Structure

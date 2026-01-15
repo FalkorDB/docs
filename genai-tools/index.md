@@ -1,15 +1,6 @@
 ---
 title: "GenAI Tools"
 description: "FalkorDB tools and integrations for building GenAI applications"
-has_children: true
-nav_order: 8
-redirect_from:
-  - /llm_integrations.html
-  - /llm_integrations
-  - /llm-integrations.html
-  - /llm-integrations
-  - /llm_support.html
-  - /llm_support
 ---
 
 # GenAI Tools

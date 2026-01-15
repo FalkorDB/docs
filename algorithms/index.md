@@ -1,11 +1,6 @@
 ---
 title: "Algorithms"
 description: Graph Algorithms Overview
-nav_order: 3
-has_children: true
-redirect_from:
-  - /cypher/algorithms.html
-  - /cypher/algorithms
 ---
 
 # FalkorDB Algorithms Overview

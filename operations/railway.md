@@ -1,8 +1,6 @@
 ---
 title: "Railway"
-nav_order: 5
 description: "Deploy FalkorDB on Railway"
-parent: "Operations"
 ---
 
 # Deploy FalkorDB on Railway

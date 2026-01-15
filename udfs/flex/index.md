@@ -1,8 +1,5 @@
 ---
-layout: default
 title: FLEX Function Reference
-parent: UDFs
-has_children: true
 ---
 
 # FLEX Function Reference

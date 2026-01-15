@@ -1,0 +1,504 @@
+Found 125 files with duplicate H1 headings (frontmatter title + markdown H1):
+
+```
+File: website/docs/References.md
+Line: 9
+Heading: # References
+
+File: website/docs/agentic-memory/cognee.md
+Line: 9
+Heading: # Cognee
+
+File: website/docs/agentic-memory/graphiti.md
+Line: 9
+Heading: # Graphiti
+
+File: website/docs/agentic-memory/index.md
+Line: 9
+Heading: # Agentic Memory
+
+File: website/docs/algorithms/betweenness-centrality.md
+Line: 8
+Heading: # Betweenness Centrality
+
+File: website/docs/algorithms/bfs.md
+Line: 8
+Heading: # BFS
+
+File: website/docs/algorithms/cdlp.md
+Line: 8
+Heading: # Community Detection using Label Propagation (CDLP)
+
+File: website/docs/algorithms/index.md
+Line: 9
+Heading: # FalkorDB Algorithms Overview
+
+File: website/docs/algorithms/msf.md
+Line: 9
+Heading: # Minimum Spanning Forest (MSF)
+
+File: website/docs/algorithms/pagerank.md
+Line: 8
+Heading: # PageRank
+
+File: website/docs/algorithms/sppath.md
+Line: 8
+Heading: # `algo.SPpaths` - Shortest Path (Single Pair)
+
+File: website/docs/algorithms/sspath.md
+Line: 8
+Heading: # `algo.SSpaths` - Single Source Paths
+
+File: website/docs/algorithms/wcc.md
+Line: 8
+Heading: # Weakly Connected Components (WCC)
+
+File: website/docs/cloud/features.md
+Line: 9
+Heading: # Features
+
+File: website/docs/cloud/index.md
+Line: 11
+Heading: # FalkorDB Cloud DBaaS
+
+File: website/docs/commands/acl.md
+Line: 9
+Heading: # ACL
+
+File: website/docs/commands/graph.info.md
+Line: 8
+Heading: # GRAPH.INFO
+
+File: website/docs/commands/index.md
+Line: 9
+Heading: # Commands
+
+File: website/docs/cypher/call.md
+Line: 9
+Heading: # CALL \{\}
+
+File: website/docs/cypher/create.md
+Line: 9
+Heading: # CREATE
+
+File: website/docs/cypher/cypher-support.md
+Line: 9
+Heading: # Cypher coverage
+
+File: website/docs/cypher/delete.md
+Line: 9
+Heading: # DELETE
+
+File: website/docs/cypher/foreach.md
+Line: 9
+Heading: # FOREACH
+
+File: website/docs/cypher/functions.md
+Line: 9
+Heading: # Functions
+
+File: website/docs/cypher/indexing/index.md
+Line: 9
+Heading: # Indexing
+
+File: website/docs/cypher/known-limitations.md
+Line: 9
+Heading: # Known limitations
+
+File: website/docs/cypher/limit.md
+Line: 9
+Heading: # LIMIT
+
+File: website/docs/cypher/load-csv.md
+Line: 9
+Heading: # LOAD CSV
+
+File: website/docs/cypher/match.md
+Line: 9
+Heading: # MATCH
+
+File: website/docs/cypher/merge.md
+Line: 9
+Heading: # MERGE
+
+File: website/docs/cypher/optional-match.md
+Line: 9
+Heading: # OPTIONAL MATCH
+
+File: website/docs/cypher/order-by.md
+Line: 9
+Heading: # ORDER BY
+
+File: website/docs/cypher/procedures.md
+Line: 9
+Heading: # Procedures
+
+File: website/docs/cypher/remove.md
+Line: 9
+Heading: # REMOVE
+
+File: website/docs/cypher/return.md
+Line: 9
+Heading: # RETURN
+
+File: website/docs/cypher/set.md
+Line: 9
+Heading: # SET
+
+File: website/docs/cypher/skip.md
+Line: 9
+Heading: # SKIP
+
+File: website/docs/cypher/union.md
+Line: 9
+Heading: # UNION
+
+File: website/docs/cypher/unwind.md
+Line: 9
+Heading: # UNWIND
+
+File: website/docs/cypher/where.md
+Line: 9
+Heading: # WHERE
+
+File: website/docs/cypher/with.md
+Line: 9
+Heading: # WITH
+
+File: website/docs/design/client-spec.md
+Line: 8
+Heading: # Client Specification
+
+File: website/docs/design/index.md
+Line: 9
+Heading: # The FalkorDB Design
+
+File: website/docs/design/result-structure.md
+Line: 8
+Heading: # Result Set Structure
+
+File: website/docs/design/third-party.md
+Line: 8
+Heading: # Third-Party Components in FalkorDB
+
+File: website/docs/genai-tools/ag2.md
+Line: 9
+Heading: # AG2
+
+File: website/docs/genai-tools/graphrag-sdk.md
+Line: 9
+Heading: # GraphRAG-SDK
+
+File: website/docs/genai-tools/graphrag-toolkit.md
+Line: 9
+Heading: # GraphRAG Toolkit
+
+File: website/docs/genai-tools/index.md
+Line: 9
+Heading: # GenAI Tools
+
+File: website/docs/genai-tools/langchain.md
+Line: 9
+Heading: # LangChain
+
+File: website/docs/genai-tools/langgraph.md
+Line: 9
+Heading: # LangGraph
+
+File: website/docs/genai-tools/llamaindex.md
+Line: 9
+Heading: # LlamaIndex
+
+File: website/docs/getting-started/configuration.md
+Line: 9
+Heading: # Configuration
+
+File: website/docs/index.mdx
+Line: 19
+Heading: # FalkorDB
+
+File: website/docs/integration/bolt-support.md
+Line: 9
+Heading: # [EXPERIMENTAL] BOLT protocol support for FalkorDB
+
+File: website/docs/integration/index.md
+Line: 9
+Heading: # Integration
+
+File: website/docs/integration/jena.md
+Line: 9
+Heading: # Apache Jena Integration
+
+File: website/docs/integration/kafka-connect.md
+Line: 9
+Heading: # Kafka Connect Sink
+
+File: website/docs/integration/rest.md
+Line: 9
+Heading: # FalkorDB Browser REST API
+
+File: website/docs/integration/spring-data-falkordb.md
+Line: 9
+Heading: # Spring Data FalkorDB
+
+File: website/docs/license.md
+Line: 9
+Heading: # FalkorDB License
+
+File: website/docs/operations/cluster.md
+Line: 9
+Heading: # Setting Up a FalkorDB Cluster
+
+File: website/docs/operations/docker.md
+Line: 9
+Heading: # Running FalkorDB with Docker and Docker Compose
+
+File: website/docs/operations/falkordblite.md
+Line: 9
+Heading: # FalkorDBLite
+
+File: website/docs/operations/index.md
+Line: 9
+Heading: # Operations
+
+File: website/docs/operations/k8s-support.md
+Line: 9
+Heading: # Kubernetes support for FalkorDB
+
+File: website/docs/operations/kubeblocks.md
+Line: 9
+Heading: # Deploy FalkorDB with KubeBlocks
+
+File: website/docs/operations/lightning-ai.md
+Line: 9
+Heading: # Deploy FalkorDB on Lightning.AI
+
+File: website/docs/operations/migration/index.md
+Line: 9
+Heading: # Migration
+
+File: website/docs/operations/migration/kuzu-to-falkordb.md
+Line: 8
+Heading: # Kuzu to FalkorDB Migration
+
+File: website/docs/operations/migration/neo4j-to-falkordb.md
+Line: 8
+Heading: # Neo4j to FalkorDB Migration
+
+File: website/docs/operations/migration/rdf-to-falkordb.md
+Line: 8
+Heading: # RDF to FalkorDB Migration
+
+File: website/docs/operations/migration/redisgraph-to-falkordb.md
+Line: 8
+Heading: # RedisGraph to FalkorDB Migration
+
+File: website/docs/operations/persistence.md
+Line: 9
+Heading: # Configuring FalkorDB Docker for Persistence
+
+File: website/docs/operations/replication.md
+Line: 9
+Heading: # Configuring FalkorDB Docker for Replication
+
+File: website/docs/udfs/flex/bitwise/and.md
+Line: 7
+Heading: # bitwise.and
+
+File: website/docs/udfs/flex/bitwise/index.md
+Line: 8
+Heading: # Bitwise Functions
+
+File: website/docs/udfs/flex/bitwise/not.md
+Line: 7
+Heading: # bitwise.not
+
+File: website/docs/udfs/flex/bitwise/or.md
+Line: 7
+Heading: # bitwise.or
+
+File: website/docs/udfs/flex/bitwise/shiftLeft.md
+Line: 7
+Heading: # bitwise.shiftLeft
+
+File: website/docs/udfs/flex/bitwise/shiftRight.md
+Line: 7
+Heading: # bitwise.shiftRight
+
+File: website/docs/udfs/flex/bitwise/xor.md
+Line: 7
+Heading: # bitwise.xor
+
+File: website/docs/udfs/flex/collections/frequencies.md
+Line: 7
+Heading: # coll.frequencies
+
+File: website/docs/udfs/flex/collections/index.md
+Line: 8
+Heading: # Collection Functions
+
+File: website/docs/udfs/flex/collections/intersection.md
+Line: 7
+Heading: # coll.intersection
+
+File: website/docs/udfs/flex/collections/shuffle.md
+Line: 7
+Heading: # coll.shuffle
+
+File: website/docs/udfs/flex/collections/union.md
+Line: 7
+Heading: # coll.union
+
+File: website/docs/udfs/flex/collections/zip.md
+Line: 7
+Heading: # coll.zip
+
+File: website/docs/udfs/flex/date/format.md
+Line: 7
+Heading: # date.format
+
+File: website/docs/udfs/flex/date/index.md
+Line: 8
+Heading: # Date Functions
+
+File: website/docs/udfs/flex/date/parse.md
+Line: 7
+Heading: # date.parse
+
+File: website/docs/udfs/flex/date/toTimeZone.md
+Line: 7
+Heading: # date.toTimeZone
+
+File: website/docs/udfs/flex/date/truncate.md
+Line: 7
+Heading: # date.truncate
+
+File: website/docs/udfs/flex/index.md
+Line: 7
+Heading: # FLEX Function Reference
+
+File: website/docs/udfs/flex/json/fromJsonList.md
+Line: 7
+Heading: # json.fromJsonList
+
+File: website/docs/udfs/flex/json/fromJsonMap.md
+Line: 7
+Heading: # json.fromJsonMap
+
+File: website/docs/udfs/flex/json/index.md
+Line: 8
+Heading: # JSON Functions
+
+File: website/docs/udfs/flex/json/toJson.md
+Line: 7
+Heading: # json.toJson
+
+File: website/docs/udfs/flex/map/fromPairs.md
+Line: 7
+Heading: # map.fromPairs
+
+File: website/docs/udfs/flex/map/index.md
+Line: 8
+Heading: # Map Functions
+
+File: website/docs/udfs/flex/map/merge.md
+Line: 7
+Heading: # map.merge
+
+File: website/docs/udfs/flex/map/removeKey.md
+Line: 7
+Heading: # map.removeKey
+
+File: website/docs/udfs/flex/map/removeKeys.md
+Line: 7
+Heading: # map.removeKeys
+
+File: website/docs/udfs/flex/map/submap.md
+Line: 7
+Heading: # map.submap
+
+File: website/docs/udfs/flex/similarity/index.md
+Line: 8
+Heading: # Similarity Functions
+
+File: website/docs/udfs/flex/similarity/jaccard.md
+Line: 7
+Heading: # sim.jaccard
+
+File: website/docs/udfs/flex/text/camelCase.md
+Line: 7
+Heading: # text.camelCase
+
+File: website/docs/udfs/flex/text/capitalize.md
+Line: 7
+Heading: # text.capitalize
+
+File: website/docs/udfs/flex/text/decapitalize.md
+Line: 7
+Heading: # text.decapitalize
+
+File: website/docs/udfs/flex/text/format.md
+Line: 7
+Heading: # text.format
+
+File: website/docs/udfs/flex/text/index.md
+Line: 8
+Heading: # Text Functions
+
+File: website/docs/udfs/flex/text/indexOf.md
+Line: 7
+Heading: # text.indexOf
+
+File: website/docs/udfs/flex/text/indexesOf.md
+Line: 7
+Heading: # text.indexesOf
+
+File: website/docs/udfs/flex/text/jaroWinkler.md
+Line: 7
+Heading: # text.jaroWinkler
+
+File: website/docs/udfs/flex/text/join.md
+Line: 7
+Heading: # text.join
+
+File: website/docs/udfs/flex/text/levenshtein.md
+Line: 7
+Heading: # text.levenshtein
+
+File: website/docs/udfs/flex/text/lpad.md
+Line: 7
+Heading: # text.lpad
+
+File: website/docs/udfs/flex/text/regexGroups.md
+Line: 7
+Heading: # text.regexGroups
+
+File: website/docs/udfs/flex/text/repeat.md
+Line: 7
+Heading: # text.repeat
+
+File: website/docs/udfs/flex/text/replace.md
+Line: 7
+Heading: # text.replace
+
+File: website/docs/udfs/flex/text/rpad.md
+Line: 7
+Heading: # text.rpad
+
+File: website/docs/udfs/flex/text/snakeCase.md
+Line: 7
+Heading: # text.snakeCase
+
+File: website/docs/udfs/flex/text/swapCase.md
+Line: 7
+Heading: # text.swapCase
+
+File: website/docs/udfs/flex/text/upperCamelCase.md
+Line: 7
+Heading: # text.upperCamelCase
+
+File: website/docs/udfs/index.md
+Line: 8
+Heading: # UDFs
+
+```

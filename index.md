@@ -1,10 +1,9 @@
 ---
-layout: default
 title: Home
-nav_order: 1
 description: "The fastest way to your knowledge"
-permalink: /
 ---
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
 
 [![Trendshift](https://trendshift.io/api/badge/repositories/14787)](https://trendshift.io/repositories/14787)
 
@@ -28,7 +27,6 @@ FalkorDB delivers an **accurate, multi-tenant RAG solution powered by a low-late
 *   **Graph Database Path:** If you're interested in using FalkorDB as a property graph database with OpenCypher support, continue with the sections below.
 *   **GraphRAG Path:** If you're aiming to implement advanced graph reasoning and generative AI tasks, explore our [GenAI Tools](/genai-tools) section, starting with the [GraphRAG SDK](/genai-tools/graphrag-sdk).
 
-
 ## Primary Features
 
 * Adopts the [Property Graph Model](https://github.com/opencypher/openCypher/blob/master/docs/property-graph-model.adoc)
@@ -50,7 +48,10 @@ Once loaded you can interact with FalkorDB using any of the supported [client li
 
 Here we'll use [FalkorDB Python client](https://pypi.org/project/FalkorDB/) to create a small graph representing a subset of motorcycle riders and teams taking part in the MotoGP league, once created we'll start querying our data.
 
-{% capture python_code %}
+<Tabs groupId="programming-language">
+  <TabItem value="python" label="Python">
+
+```python
 from falkordb import FalkorDB
 
 # Connect to FalkorDB
@@ -77,9 +78,12 @@ for row in res.result_set:
 res = g.query("""MATCH (r:Rider)-[:rides]->(t:Team {name:'Ducati'}) RETURN count(r)""")
 
 print(res.result_set[0][0]) # Prints: 1
-{% endcapture %}
+```
 
-{% capture javascript_code %}
+  </TabItem>
+  <TabItem value="javascript" label="JavaScript">
+
+```javascript
 import { FalkorDB } from 'falkordb';
 
 const db = await FalkorDB.connect({
@@ -109,10 +113,12 @@ console.log(await db.list())
 console.log(await db.info())
 
 db.close()
-{% endcapture %}
+```
 
+  </TabItem>
+  <TabItem value="java" label="Java">
 
-{% capture java_code %}
+```java
 package com.falkordb;
 
 import com.falkordb.*;
@@ -149,9 +155,12 @@ public class FalkorDBExample {
         driver.close();
     }
 }
-{% endcapture %}
+```
 
-{% capture rust_code %}
+  </TabItem>
+  <TabItem value="rust" label="Rust">
+
+```rust
 use falkordb::{FalkorClientBuilder, FalkorConnectionInfo};
 
 #[tokio::main]
@@ -208,9 +217,12 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     Ok(())
 }
-{% endcapture %}
+```
 
-{% capture shell_code %}
+  </TabItem>
+  <TabItem value="shell" label="Shell">
+
+```bash
 $ redis-cli -h localhost -p 6379
 
 127.0.0.1:6379> GRAPH.QUERY MotoGP "CREATE (:Rider {name:'Valentino Rossi'})-[:rides]->(:Team {name:'Yamaha'}), (:Rider {name:'Dani Pedrosa'})-[:rides]->(:Team {name:'Honda'}), (:Rider {name:'Andrea Dovizioso'})-[:rides]->(:Team {name:'Ducati'})"
@@ -232,9 +244,10 @@ $ redis-cli -h localhost -p 6379
 2) 1) 1) (integer) 1
 3) 1) "Cached execution: 0"
    2) "Query internal execution time: 1.153678 milliseconds"
-{% endcapture %}
+```
 
-{% include code_tabs.html id="code_tabs_0" python=python_code javascript=javascript_code java=java_code rust=rust_code shell=shell_code %}
+  </TabItem>
+</Tabs>
 
 For additional demos please see visit [Demos](https://github.com/FalkorDB/demos).
 

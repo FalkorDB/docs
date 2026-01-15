@@ -6,17 +6,6 @@
 
 # https://docs.falkordb.com
 
+## Build
 
-
-# Build
-
-```bash
-bundle install
-bundle exec jekyll build
-```
-
-# Run
-
-```bash
-bundle exec jekyll serve
-```
+See the `website/` directory for Docusaurus documentation setup.

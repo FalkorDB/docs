@@ -1,7 +1,5 @@
 ---
 title: "Docker and Docker Compose"
-nav_order: 11
-parent: Operations
 description: "Running FalkorDB with Docker and Docker Compose"
 ---
 

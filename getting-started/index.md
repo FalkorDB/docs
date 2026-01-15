@@ -1,14 +1,10 @@
 ---
 title: "Getting Started"
-nav_order: 2
 description: >
     Getting Started with FalkorDB Graph Database.
-has_children: true
-redirect_from:
-  - /getting_started.html
-  - /getting_started
-  - /getting-started.html
 ---
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
 
 # Getting Started with FalkorDB
 
@@ -23,29 +19,43 @@ This guide will walk you through setting up FalkorDB, modeling a social network 
    - [Create a FalkorDB Cloud Instance](https://app.falkordb.cloud/signup)
 2. **Install FalkorDB Client**:
    
-{% capture pypi_0 %}
+
+<Tabs groupId="programming-language">
+  <TabItem value="python" label="Python">
+
+```python
 pip install falkordb
-{% endcapture %}
+```
 
-{% capture npm_0 %}
+  </TabItem>
+  <TabItem value="javascript" label="JavaScript">
+
+```javascript
 npm install falkordb
-{% endcapture %}
+```
 
-{% capture cargo_0 %}
-cargo add falkordb
-{% endcapture %}
+  </TabItem>
+  <TabItem value="java" label="Java">
 
-{% capture maven_0 %}
-  <dependencies>
+```java
+<dependencies>
     <dependency>
       <groupId>com.falkordb</groupId>
       <artifactId>jfalkordb</artifactId>
       <version>0.4.0</version>
     </dependency>
   </dependencies>
-{% endcapture %}
+```
 
-{% include code_tabs.html id="install_tabs" python=pypi_0 javascript=npm_0 java=maven_0 rust=cargo_0 %}
+  </TabItem>
+  <TabItem value="rust" label="Rust">
+
+```rust
+cargo add falkordb
+```
+
+  </TabItem>
+</Tabs>
 
 ---
 
@@ -81,7 +91,10 @@ Here's how you can model and load the data.
 
 ### Cypher Query to Create the Data
 
-{% capture cypher_0 %}
+<Tabs groupId="programming-language">
+  <TabItem value="cypher" label="Cypher">
+
+```cypher
 CREATE (alice:User {id: 1, name: "Alice", email: "alice@example.com"})
 CREATE (bob:User {id: 2, name: "Bob", email: "bob@example.com"})
 CREATE (charlie:User {id: 3, name: "Charlie", email: "charlie@example.com"})
@@ -93,9 +106,10 @@ CREATE (alice)-[:FRIENDS_WITH {since: 1640995200}]->(bob)
 CREATE (bob)-[:FRIENDS_WITH {since: 1684108800}]->(charlie)
 CREATE (alice)-[:CREATED {time: 1701388800}]->(post1)
 CREATE (bob)-[:CREATED {time: 1701475200}]->(post2)
-{% endcapture %}
+```
 
-{% include code_tabs.html id="cypher_create_tabs" cypher=cypher_0 %}
+  </TabItem>
+</Tabs>
 
 You can execute these commands using the FalkorDB Python client or any supported client.
 
@@ -105,15 +119,21 @@ You can execute these commands using the FalkorDB Python client or any supported
 
 ### Connect to FalkorDB
 
-{% capture python_0 %}
+<Tabs groupId="programming-language">
+  <TabItem value="python" label="Python">
+
+```python
 from falkordb import FalkorDB
 
 # Connect to FalkorDB
 client = FalkorDB(host="localhost", port=6379, password="your-password")
 graph = client.select_graph('social')
-{% endcapture %}
+```
 
-{% capture javascript_0 %}
+  </TabItem>
+  <TabItem value="javascript" label="JavaScript">
+
+```javascript
 import { FalkorDB } from 'falkordb';
 
 const client = await FalkorDB.connect({
@@ -122,18 +142,24 @@ const client = await FalkorDB.connect({
   password: "your-password"
 });
 const graph = client.selectGraph('social');
-{% endcapture %}
+```
 
-{% capture java_0 %}
+  </TabItem>
+  <TabItem value="java" label="Java">
+
+```java
 package com.myproject;
 
 import com.falkordb.*;
 
 Driver driver = FalkorDB.driver("localhost", 6379);
 Graph graph = driver.graph("social");
-{% endcapture %}
+```
 
-{% capture rust_0 %}
+  </TabItem>
+  <TabItem value="rust" label="Rust">
+
+```rust
 use falkordb::{FalkorClientBuilder, FalkorConnectionInfo};
 
 // Connect to FalkorDB
@@ -147,15 +173,19 @@ let client = FalkorClientBuilder::new()
 
 // Select the social graph
 let mut graph = client.select_graph("social");
-{% endcapture %}
+```
 
-{% include code_tabs.html id="connect_tabs" python=python_0 javascript=javascript_0 java=java_0 rust=rust_0 %}
+  </TabItem>
+</Tabs>
 
 ### Execute Cypher Queries
 
 #### Create the Graph
 
-{% capture python_1 %}
+<Tabs groupId="programming-language">
+  <TabItem value="python" label="Python">
+
+```python
 create_query = """
 CREATE (alice:User {id: 1, name: "Alice", email: "alice@example.com"})
 CREATE (bob:User {id: 2, name: "Bob", email: "bob@example.com"})
@@ -172,9 +202,12 @@ CREATE (bob)-[:CREATED {time: 1701475200}]->(post2)
 
 graph.query(create_query)
 print("Graph created successfully!")
-{% endcapture %}
+```
 
-{% capture javascript_1 %}
+  </TabItem>
+  <TabItem value="javascript" label="JavaScript">
+
+```javascript
 const createQuery = `
 CREATE (alice:User {id: 1, name: "Alice", email: "alice@example.com"})
 CREATE (bob:User {id: 2, name: "Bob", email: "bob@example.com"})
@@ -191,9 +224,12 @@ CREATE (bob)-[:CREATED {time: 1701475200}]->(post2)
 
 let result = await graph.query(createQuery);
 console.log("Graph created successfully!");
-{% endcapture %}
+```
 
-{% capture java_1 %}
+  </TabItem>
+  <TabItem value="java" label="Java">
+
+```java
 String createQuery = 
 "CREATE (alice:User {id: 1, name: \"Alice\", email: \"alice@example.com\"}) " +
 "CREATE (bob:User {id: 2, name: \"Bob\", email: \"bob@example.com\"}) " +
@@ -209,9 +245,12 @@ String createQuery =
 
 ResultSet resultSet = graph.query(createQuery);
 System.out.println("Graph created successfully!");
-{% endcapture %}
+```
 
-{% capture rust_1 %}
+  </TabItem>
+  <TabItem value="rust" label="Rust">
+
+```rust
 let create_query = r#"
 CREATE (alice:User {id: 1, name: \"Alice\", email: \"alice@example.com\"})
 CREATE (bob:User {id: 2, name: \"Bob\", email: \"bob@example.com\"})
@@ -228,15 +267,19 @@ CREATE (bob)-[:CREATED {time: 1701475200}]->(post2)
 
 graph.query(create_query).execute().await?;
 println!("Graph created successfully!");
-{% endcapture %}
+```
 
-{% include code_tabs.html id="create_graph_tabs" python=python_1 javascript=javascript_1 java=java_1 rust=rust_1 %}
+  </TabItem>
+</Tabs>
 
 ![image](https://github.com/user-attachments/assets/f67c9a1d-4b80-435d-9038-b7e1f931da74)
 
 #### Query the Graph
 
-{% capture python_2 %}
+<Tabs groupId="programming-language">
+  <TabItem value="python" label="Python">
+
+```python
 # Find all friends of Alice
 query = """
 MATCH (alice:User {name: 'Alice'})-[:FRIENDS_WITH]->(friend)
@@ -248,9 +291,12 @@ result = graph.ro_query(query).result_set
 print("Alice's friends:")
 for record in result:
     print(record[0])
-{% endcapture %}
+```
 
-{% capture javascript_2 %}
+  </TabItem>
+  <TabItem value="javascript" label="JavaScript">
+
+```javascript
 const query = `
 MATCH (alice:User {name: "Alice"})-[:FRIENDS_WITH]->(friend)
 RETURN friend.name AS Friend
@@ -260,9 +306,12 @@ console.log("Alice's friends:");
 for (const record of result) {
   console.log(record["Friend"]);
 }
-{% endcapture %}
+```
 
-{% capture java_2 %}
+  </TabItem>
+  <TabItem value="java" label="Java">
+
+```java
 String query = """
 MATCH (alice:User {name: \"Alice\"})-[:FRIENDS_WITH]->(friend)
 RETURN friend.name AS Friend
@@ -272,9 +321,12 @@ System.out.println("Alice's friends:");
 for (Record record : result) {
     System.out.println(record.get("Friend"));
 }
-{% endcapture %}
+```
 
-{% capture rust_2 %}
+  </TabItem>
+  <TabItem value="rust" label="Rust">
+
+```rust
 let query = r#"
 MATCH (alice:User {name: \"Alice\"})-[:FRIENDS_WITH]->(friend)
 RETURN friend.name AS Friend
@@ -285,13 +337,17 @@ println!("Alice's friends:");
 for record in result.data.by_ref() {
     println!("{}", record["Friend"]);
 }
-{% endcapture %}
+```
 
-{% include code_tabs.html id="query_friends_tabs" python=python_2 javascript=javascript_2 java=java_2 rust=rust_2 %}
+  </TabItem>
+</Tabs>
 
 #### Query Relationships
 
-{% capture python_3 %}
+<Tabs groupId="programming-language">
+  <TabItem value="python" label="Python">
+
+```python
 # Find posts created by Bob
 query = """
 MATCH (bob:User {name: 'Bob'})-[:CREATED]->(post:Post)
@@ -303,9 +359,12 @@ result = graph.ro_query(query).result_set
 print("Posts created by Bob:")
 for record in result:
     print(record[0])
-{% endcapture %}
+```
 
-{% capture javascript_3 %}
+  </TabItem>
+  <TabItem value="javascript" label="JavaScript">
+
+```javascript
 const query = `
 MATCH (bob:User {name: "Bob"})-[:CREATED]->(post:Post)
 RETURN post.content AS PostContent
@@ -315,9 +374,12 @@ console.log("Posts created by Bob:");
 for (const record of result) {
   console.log(record["PostContent"]);
 }
-{% endcapture %}
+```
 
-{% capture java_3 %}
+  </TabItem>
+  <TabItem value="java" label="Java">
+
+```java
 String query = """
 MATCH (bob:User {name: \"Bob\"})-[:CREATED]->(post:Post)
 RETURN post.content AS PostContent
@@ -327,9 +389,12 @@ System.out.println("Posts created by Bob:");
 for (Record record : result) {
     System.out.println(record.get("PostContent"));
 }
-{% endcapture %}
+```
 
-{% capture rust_3 %}
+  </TabItem>
+  <TabItem value="rust" label="Rust">
+
+```rust
 let query = r#"
 MATCH (bob:User {name: \"Bob\"})-[:CREATED]->(post:Post)
 RETURN post.content AS PostContent
@@ -339,9 +404,10 @@ println!("Posts created by Bob:");
 for record in result.data.by_ref() {
     println!("{}", record["PostContent"]);
 }
-{% endcapture %}
+```
 
-{% include code_tabs.html id="query_posts_tabs" python=python_3 javascript=javascript_3 java=java_3 rust=rust_3 %}
+  </TabItem>
+</Tabs>
 
 ---
 

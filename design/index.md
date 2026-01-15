@@ -1,8 +1,6 @@
 ---
 title: "The FalkorDB Design"
 description: "FalkorDB: A High Performance In-Memory Graph Database"
-has_children: true
-nav_order: 999
 ---
 
 # The FalkorDB Design

@@ -1,8 +1,6 @@
 ---
 title: "LangGraph"
-nav_order: 4
 description: "Build stateful, multi-actor agentic applications with LangGraph and FalkorDB."
-parent: "GenAI Tools"
 ---
 
 # LangGraph

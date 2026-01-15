@@ -1,8 +1,5 @@
 ---
-layout: default
 title: text.decapitalize
-parent: Text Functions
-grand_parent: FLEX Function Reference
 ---
 
 # text.decapitalize

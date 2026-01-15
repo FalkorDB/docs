@@ -1,8 +1,6 @@
 ---
 title: "LangChain"
-nav_order: 3
 description: "FalkorDB integration with LangChain for AI agents with memory."
-parent: "GenAI Tools"
 ---
 
 # LangChain

@@ -2,8 +2,10 @@
 title: "GRAPH.CONSTRAINT CREATE"
 description: >
     Creates a constraint on specified graph
-parent: "Commands"    
 ---
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 
 # GRAPH.CONSTRAINT CREATE
 
@@ -125,109 +127,160 @@ is a list of `propCount` property names.
 
 To create a unique constraint for all nodes with label `Person` enforcing uniqueness on the combination of values of attributes `first_name` and `last_name`, issue the following commands:
 
-{% capture shell_0 %}
+
+<Tabs groupId="programming-language">
+  <TabItem value="shell" label="Shell">
+
+```bash
 redis> GRAPH.QUERY g "CREATE INDEX FOR (p:Person) ON (p.first_name, p.last_name)"
 redis> GRAPH.CONSTRAINT CREATE g UNIQUE NODE Person PROPERTIES 2 first_name last_name
 # Output: PENDING
-{% endcapture %}
+```
 
-{% capture python_0 %}
+  </TabItem>
+  <TabItem value="python" label="Python">
+
+```python
 from falkordb import FalkorDB
 client = FalkorDB()
 graph = client.select_graph('g')
 graph.query("CREATE INDEX FOR (p:Person) ON (p.first_name, p.last_name)")
 result = client.create_constraint('g', 'UNIQUE', 'NODE', 'Person', ['first_name', 'last_name'])
 print(result)
-{% endcapture %}
+```
 
-{% capture javascript_0 %}
+  </TabItem>
+  <TabItem value="javascript" label="Javascript">
+
+```javascript
 import { FalkorDB } from 'falkordb';
 const client = await FalkorDB.connect();
 const graph = client.selectGraph('g');
 await graph.query("CREATE INDEX FOR (p:Person) ON (p.first_name, p.last_name)");
 const result = await client.createConstraint('g', 'UNIQUE', 'NODE', 'Person', ['first_name', 'last_name']);
 console.log(result);
-{% endcapture %}
+```
 
-{% capture java_0 %}
+  </TabItem>
+  <TabItem value="java" label="Java">
+
+```java
 FalkorDB client = new FalkorDB();
 Graph graph = client.selectGraph("g");
 graph.query("CREATE INDEX FOR (p:Person) ON (p.first_name, p.last_name)");
 String result = client.createConstraint("g", "UNIQUE", "NODE", "Person", Arrays.asList("first_name", "last_name"));
 System.out.println(result);
-{% endcapture %}
+```
 
-{% capture rust_0 %}
+  </TabItem>
+  <TabItem value="rust" label="Rust">
+
+```rust
 let client = FalkorDB::connect_default();
 let graph = client.select_graph("g");
 graph.query("CREATE INDEX FOR (p:Person) ON (p.first_name, p.last_name)")?;
 let result = client.create_constraint("g", "UNIQUE", "NODE", "Person", &["first_name", "last_name"])?;
 println!("{}", result);
-{% endcapture %}
+```
 
-{% include code_tabs.html id="unique_constraint_tabs" shell=shell_0 python=python_0 javascript=javascript_0 java=java_0 rust=rust_0 %}
+  </TabItem>
+</Tabs>
 
 ### Creating a mandatory constraint for a relationship type
 
 To create a mandatory constraint for all edges with relationship-type `Visited`, enforcing the existence of a `date` attribute, issue the following command:
 
-{% capture shell_1 %}
+
+<Tabs groupId="programming-language">
+  <TabItem value="shell" label="Shell">
+
+```bash
 redis> GRAPH.CONSTRAINT CREATE g MANDATORY RELATIONSHIP Visited PROPERTIES 1 date
 # Output: PENDING
-{% endcapture %}
+```
 
-{% capture python_1 %}
+  </TabItem>
+  <TabItem value="python" label="Python">
+
+```python
 result = client.create_constraint('g', 'MANDATORY', 'RELATIONSHIP', 'Visited', ['date'])
 print(result)
-{% endcapture %}
+```
 
-{% capture javascript_1 %}
+  </TabItem>
+  <TabItem value="javascript" label="Javascript">
+
+```javascript
 const result = await client.createConstraint('g', 'MANDATORY', 'RELATIONSHIP', 'Visited', ['date']);
 console.log(result);
-{% endcapture %}
+```
 
-{% capture java_1 %}
+  </TabItem>
+  <TabItem value="java" label="Java">
+
+```java
 String result = client.createConstraint("g", "MANDATORY", "RELATIONSHIP", "Visited", Arrays.asList("date"));
 System.out.println(result);
-{% endcapture %}
+```
 
-{% capture rust_1 %}
+  </TabItem>
+  <TabItem value="rust" label="Rust">
+
+```rust
 let result = client.create_constraint("g", "MANDATORY", "RELATIONSHIP", "Visited", &["date"])?;
 println!("{}", result);
-{% endcapture %}
+```
 
-{% include code_tabs.html id="mandatory_constraint_tabs" shell=shell_1 python=python_1 javascript=javascript_1 java=java_1 rust=rust_1 %}
+  </TabItem>
+</Tabs>
 
 ### Listing constraints
 
 To list all constraints enforced on a given graph, use the `db.constraints` procedure:
 
-{% capture shell_2 %}
+
+<Tabs groupId="programming-language">
+  <TabItem value="shell" label="Shell">
+
+```bash
 redis> GRAPH.RO_QUERY g "call db.constraints()"
 # Output: ...
-{% endcapture %}
+```
 
-{% capture python_2 %}
+  </TabItem>
+  <TabItem value="python" label="Python">
+
+```python
 result = graph.ro_query("call db.constraints()")
 print(result)
-{% endcapture %}
+```
 
-{% capture javascript_2 %}
+  </TabItem>
+  <TabItem value="javascript" label="Javascript">
+
+```javascript
 const result = await graph.ro_query("call db.constraints()");
 console.log(result);
-{% endcapture %}
+```
 
-{% capture java_2 %}
+  </TabItem>
+  <TabItem value="java" label="Java">
+
+```java
 ResultSet result = graph.ro_query("call db.constraints()");
 System.out.println(result);
-{% endcapture %}
+```
 
-{% capture rust_2 %}
+  </TabItem>
+  <TabItem value="rust" label="Rust">
+
+```rust
 let result = graph.ro_query("call db.constraints()")?;
 println!("{:?}", result);
-{% endcapture %}
+```
 
-{% include code_tabs.html id="list_constraints_tabs" shell=shell_2 python=python_2 javascript=javascript_2 java=java_2 rust=rust_2 %}
+  </TabItem>
+</Tabs>
 
 ## Deleting a constraint
 

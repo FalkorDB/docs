@@ -1,8 +1,5 @@
 ---
-layout: default
 title: text.join
-parent: Text Functions
-grand_parent: FLEX Function Reference
 ---
 
 # text.join

@@ -1,13 +1,6 @@
 ---
 title: "GraphRAG-SDK"
-nav_order: 1
 description: "Build intelligent GraphRAG applications with FalkorDB and LLMs."
-parent: "GenAI Tools"
-redirect_from:
-  - /graphrag_sdk.html
-  - /graphrag_sdk
-  - /graphrag-sdk.html
-  - /graphrag-sdk
 ---
 
 # GraphRAG-SDK

@@ -1,7 +1,6 @@
 ---
 title: "algo.SPpaths"
 description: "Find shortest paths between two nodes with advanced cost and length constraints."
-parent: "Algorithms"
 ---
 
 # `algo.SPpaths` - Shortest Path (Single Pair)

@@ -1,24 +1,117 @@
 ---
 title: "Client Libraries"
-parent: "Getting Started"
-nav_order: 3
 description: >
     FalkorDB Clients
-redirect_from:
-  - /clients.html
-  - /clients
 ---
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
 
-# Official Clients
+<!-- markdownlint-disable MD033 MD025 MD046 MD060 -->
 
-| Project                            | Docs                 | Language   | License    | Author                                      | Package                                  |
-| -----------------------------------|--------------------- | ---------- | ---------- | ------------------------------------------- | ---------------------------------------- |
-| [falkordb-py][falkordb-py-url]    |  [Pydoc][falkordb-py-docs]                   | Python     | MIT        | [FalkorDB][falkordb-url]                    | [pypi][falkordb-py-package]              |
-| [falkordb-ts][falkordb-ts-url]    |  [JSDoc][falkordb-ts-docs] | Node.JS    | MIT        | [FalkorDB][falkordb-url]                    | [npm][falkordb-ts-package]               |
-| [jfalkordb][jfalkordb-url]        |  [javadocs][jfalkordb-docs] | Java       | BSD        | [FalkorDB][falkordb-url]                    | [maven][jfalkordb-package]               |
-| [falkordb-rs][falkordb-rs-url]    |  [docs.rs][falkordb-rs-docs]| Rust       | MIT        | [FalkorDB][falkordb-url]                    | [crates][falkordb-rs-package]             |
-| [falkordb-go][falkordb-go-url]    |  [godoc][falkordb-go-docs] | Go       | BSD        | [FalkorDB][falkordb-url]                    | [Github][falkordb-go-package]             |
-| [NFalkorDB][nfalkordb-url]        |  [readme][nfalkordb-docs]   | C#       | Apache-2.0        | [FalkorDB][falkordb-url]                    | [nuget][nfalkordb-package]             |
+# Client Libraries
+
+Choose an official FalkorDB client to get production-grade support, packaged releases, and API parity across languages. Each client exposes the same graph selection and `query`/`ro_query` primitives, so onboarding stays consistent no matter which stack you use.
+
+## Quick connect
+
+The snippets below install the client and open a connection to a local FalkorDB instance. Swap credentials as needed.
+
+<Tabs groupId="programming-language">
+    <TabItem value="python" label="Python">
+
+```bash
+pip install falkordb
+```
+
+```python
+from falkordb import FalkorDB
+
+client = FalkorDB(host="localhost", port=6379, password="your-password")
+graph = client.select_graph("examples")
+result = graph.query("RETURN 1 AS ok")
+print(result.result_set)
+```
+
+    </TabItem>
+    <TabItem value="javascript" label="JavaScript">
+
+```bash
+npm install falkordb
+```
+
+```javascript
+import { FalkorDB } from "falkordb";
+
+const client = await FalkorDB.connect({ host: "localhost", port: 6379, password: "your-password" });
+const graph = client.selectGraph("examples");
+const result = await graph.query("RETURN 1 AS ok");
+console.log(result);
+```
+
+    </TabItem>
+    <TabItem value="java" label="Java">
+
+```xml
+<dependencies>
+    <dependency>
+        <groupId>com.falkordb</groupId>
+        <artifactId>jfalkordb</artifactId>
+        <version>0.4.0</version>
+    </dependency>
+</dependencies>
+```
+
+```java
+import com.falkordb.*;
+
+Driver driver = FalkorDB.driver("localhost", 6379);
+Graph graph = driver.graph("examples");
+ResultSet result = graph.query("RETURN 1 AS ok");
+result.forEach(row -> System.out.println(row.get("ok")));
+```
+
+    </TabItem>
+    <TabItem value="rust" label="Rust">
+
+```bash
+cargo add falkordb
+```
+
+```rust
+use falkordb::{FalkorClientBuilder, FalkorConnectionInfo};
+
+let info: FalkorConnectionInfo = "falkor://127.0.0.1:6379".try_into().expect("bad uri");
+let client = FalkorClientBuilder::new()
+        .with_connection_info(info)
+        .build()
+        .expect("client build");
+let mut graph = client.select_graph("examples");
+let result = graph.query("RETURN 1 AS ok").execute().await?;
+println!("{:?}", result);
+```
+
+    </TabItem>
+</Tabs>
+
+## Choosing a client
+
+- Python: quickest start for data science, notebooks, and scripting.
+- JavaScript/TypeScript: best for Node.js and edge runtimes; pairs well with GenAI integrations.
+- Java: stable for JVM services and Spring-based stacks.
+- Rust: strong type-safety and async performance for systems work.
+- Go: great for lightweight cloud services; see the official Go client below.
+- .NET: use NFalkorDB for first-class FalkorDB support.
+
+## Official Clients
+
+| Project                            | Docs                             | Language   | License    | Author                                      | Package                                  | Best for                                      |
+| -----------------------------------|--------------------------------- | ---------- | ---------- | ------------------------------------------- | ---------------------------------------- | --------------------------------------------- |
+| [falkordb-py][falkordb-py-url]    |  [Pydoc][falkordb-py-docs]       | Python     | MIT        | [FalkorDB][falkordb-url]                    | [pypi][falkordb-py-package]              | Data science, notebooks, quick prototyping    |
+| [falkordb-ts][falkordb-ts-url]    |  [JSDoc][falkordb-ts-docs]       | Node.JS    | MIT        | [FalkorDB][falkordb-url]                    | [npm][falkordb-ts-package]               | Node/Edge apps, serverless, GenAI pipelines   |
+| [jfalkordb][jfalkordb-url]        |  [javadocs][jfalkordb-docs]      | Java       | BSD        | [FalkorDB][falkordb-url]                    | [maven][jfalkordb-package]               | JVM services, Spring, enterprise backends     |
+| [falkordb-rs][falkordb-rs-url]    |  [docs.rs][falkordb-rs-docs]     | Rust       | MIT        | [FalkorDB][falkordb-url]                    | [crates][falkordb-rs-package]            | Async systems, high-performance workloads     |
+| [falkordb-go][falkordb-go-url]    |  [godoc][falkordb-go-docs]       | Go         | BSD        | [FalkorDB][falkordb-url]                    | [GitHub][falkordb-go-package]            | Cloud-native services, CLIs, microservices    |
+| [NFalkorDB][nfalkordb-url]        |  [readme][nfalkordb-docs]        | C#         | Apache-2.0  | [FalkorDB][falkordb-url]                    | [nuget][nfalkordb-package]               | .NET apps, Windows services, desktop tools    |
 
 ## Additional Clients
 

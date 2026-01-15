@@ -1,8 +1,5 @@
 ---
-layout: default
 title: bitwise.shiftRight
-parent: Bitwise Functions
-grand_parent: FLEX Function Reference
 ---
 
 # bitwise.shiftRight

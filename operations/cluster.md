@@ -1,8 +1,6 @@
 ---
 title: "Cluster"
-nav_order: 3
 description: "Configuring FalkorDB Docker for Cluster"
-parent: "Operations"
 ---
 
 # Setting Up a FalkorDB Cluster

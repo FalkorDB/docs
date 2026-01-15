@@ -1,7 +1,5 @@
 ---
 title: "Features"
-parent: "Cloud DBaaS"
-nav_order: 5
 description: "FalkorDB DBaaS Features"
 ---
 

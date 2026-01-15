@@ -1,8 +1,5 @@
 ---
-layout: default
 title: bitwise.or
-parent: Bitwise Functions
-grand_parent: FLEX Function Reference
 ---
 
 # bitwise.or

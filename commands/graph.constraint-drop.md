@@ -2,7 +2,6 @@
 title: "GRAPH.CONSTRAINT DROP"
 description: >
     Deletes a constraint from specified graph
-parent: "Commands"
 ---
 
 # GRAPH.CONSTRAINT DROP
@@ -60,35 +59,54 @@ is a list of `propCount` property names.
 
 To delete a unique constraint for all nodes with label `Person` enforcing uniqueness on the combination of values of attributes `first_name` and `last_name`, issue the following command:
 
-{% capture shell_0 %}
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+<Tabs groupId="programming-language">
+  <TabItem value="shell" label="Shell">
+
+```bash
 redis> GRAPH.CONSTRAINT DROP g UNIQUE NODE Person PROPERTIES 2 first_name last_name
 # Output: OK
-{% endcapture %}
+```
 
-{% capture python_0 %}
+  </TabItem>
+  <TabItem value="python" label="Python">
+
+```python
 from falkordb import FalkorDB
 client = FalkorDB()
 result = client.drop_constraint('g', 'UNIQUE', 'NODE', 'Person', ['first_name', 'last_name'])
 print(result)
-{% endcapture %}
+```
 
-{% capture javascript_0 %}
+  </TabItem>
+  <TabItem value="javascript" label="Javascript">
+
+```javascript
 import { FalkorDB } from 'falkordb';
 const client = await FalkorDB.connect();
 const result = await client.dropConstraint('g', 'UNIQUE', 'NODE', 'Person', ['first_name', 'last_name']);
 console.log(result);
-{% endcapture %}
+```
 
-{% capture java_0 %}
+  </TabItem>
+  <TabItem value="java" label="Java">
+
+```java
 FalkorDB client = new FalkorDB();
 String result = client.dropConstraint("g", "UNIQUE", "NODE", "Person", Arrays.asList("first_name", "last_name"));
 System.out.println(result);
-{% endcapture %}
+```
 
-{% capture rust_0 %}
+  </TabItem>
+  <TabItem value="rust" label="Rust">
+
+```rust
 let client = FalkorDB::connect_default();
 let result = client.drop_constraint("g", "UNIQUE", "NODE", "Person", &["first_name", "last_name"])?;
 println!("{}", result);
-{% endcapture %}
+```
 
-{% include code_tabs.html id="drop_constraint_tabs" shell=shell_0 python=python_0 javascript=javascript_0 java=java_0 rust=rust_0 %}
+  </TabItem>
+</Tabs>

@@ -1,9 +1,7 @@
 ---
 title: "MATCH"
-nav_order: 1
 description: >
     Match describes the relationship between queried entities, using ascii art to represent pattern(s) to match against.
-parent: "Cypher Language"
 ---
 
 # MATCH
@@ -24,7 +22,7 @@ Where:
 
 Example:
 
-```sh
+```cypher
 (a:Actor)-[:ACT]->(m:Movie {title:"straight outta compton"})
 ```
 
@@ -44,7 +42,7 @@ In this example, we're querying for actor entities that have an "ACT" relationsh
 
 It is possible to describe broader relationships by composing a multi-hop query such as:
 
-```sh
+```cypher
 (me {name:'swilly'})-[:FRIENDS_WITH]->()-[:FRIENDS_WITH]->(foaf)
 ```
 
@@ -52,7 +50,7 @@ Here we're interested in finding out who my friends' friends are.
 
 Nodes can have more than one relationship coming in or out of them, for instance:
 
-```sh
+```cypher
 (me {name:'swilly'})-[:VISITED]->(c:Country)<-[:VISITED]-(friend)<-[:FRIENDS_WITH]-(me)
 ```
 
@@ -62,7 +60,7 @@ Here we're interested in knowing which of my friends have visited at least one c
 
 Nodes that are a variable number of relationship→node hops away can be found using the following syntax:
 
-```sh
+```cypher
 -[:TYPE*minHops..maxHops]->
 ```
 
@@ -72,10 +70,9 @@ When no bounds are given the dots may be omitted. The dots may also be omitted w
 
 Example:
 
-```sh
-GRAPH.QUERY DEMO_GRAPH
-"MATCH (charlie:Actor { name: 'Charlie Sheen' })-[:PLAYED_WITH*1..3]->(colleague:Actor)
-RETURN colleague"
+```cypher
+MATCH (charlie:Actor { name: 'Charlie Sheen' })-[:PLAYED_WITH*1..3]->(colleague:Actor)
+RETURN colleague
 ```
 
 Returns all actors related to 'Charlie Sheen' by 1 to 3 hops.
@@ -84,16 +81,15 @@ Returns all actors related to 'Charlie Sheen' by 1 to 3 hops.
 
 If a relationship pattern does not specify a direction, it will match regardless of which node is the source and which is the destination:
 
-```sh
+```cypher
 -[:TYPE]-
 ```
 
 Example:
 
-```sh
-GRAPH.QUERY DEMO_GRAPH
-"MATCH (person_a:Person)-[:KNOWS]-(person_b:Person)
-RETURN person_a, person_b"
+```cypher
+MATCH (person_a:Person)-[:KNOWS]-(person_b:Person)
+RETURN person_a, person_b
 ```
 
 Returns all pairs of people connected by a `KNOWS` relationship. Note that each pair will be returned twice, once with each node in the `person_a` field and once in the `person_b` field.
@@ -107,14 +103,13 @@ The bracketed edge description can be omitted if all relations should be conside
 Named path variables are created by assigning a path in a MATCH clause to a single alias with the syntax:
 `MATCH named_path = (path)-[to]->(capture)`
 
-The named path includes all entities in the path, regardless of whether they have been explicitly aliased. Named paths can be accessed using [designated built-in functions](#path-functions) or returned directly if using a language-specific client.
+The named path includes all entities in the path, regardless of whether they have been explicitly aliased. Named paths can be accessed using built-in functions such as `nodes()` or returned directly if using a language-specific client.
 
 Example:
 
-```sh
-GRAPH.QUERY DEMO_GRAPH
-"MATCH p=(charlie:Actor { name: 'Charlie Sheen' })-[:PLAYED_WITH*1..3]->(:Actor)
-RETURN nodes(p) as actors"
+```cypher
+MATCH p=(charlie:Actor { name: 'Charlie Sheen' })-[:PLAYED_WITH*1..3]->(:Actor)
+RETURN nodes(p) as actors
 ```
 
 This query will produce all the paths matching the pattern contained in the named path `p`. All of these paths will share the same starting point, the actor node representing Charlie Sheen, but will otherwise vary in length and contents. Though the variable-length traversal and `(:Actor)` endpoint are not explicitly aliased, all nodes and edges traversed along the path will be included in `p`. In this case, we are only interested in the nodes of each path, which we'll collect using the built-in function `nodes()`. The returned value will contain, in order, Charlie Sheen, between 0 and 2 intermediate nodes, and the unaliased endpoint.

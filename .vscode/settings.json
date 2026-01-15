@@ -1,0 +1,9 @@
+{
+    "chat.tools.terminal.autoApprove": {
+        "/^cd /Users/danshalev/docs-staging && python3 migrate\\.py$/": {
+            "approve": true,
+            "matchCommandLine": true
+        },
+        "npm run build": true
+    }
+}

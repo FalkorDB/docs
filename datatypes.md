@@ -1,7 +1,6 @@
 ---
 title: "Data types"
 description: "FalkorDB supports a number of distinct data types, some of which can be persisted as property values and some of which are ephemeral."
-nav_order: 5
 ---
 
 # Graph types
@@ -92,7 +91,7 @@ All FalkorDB floating-point values are treated as 64-bit signed doubles.
 
 ### Geospatial Points
 
-The Point data type is a set of latitude/longitude coordinates, stored within FalkorDB as a pair of 32-bit floats. It is instantiated using the [point() function call](/commands/graph.query#point-functions).
+The Point data type is a set of latitude/longitude coordinates, stored within FalkorDB as a pair of 32-bit floats. It is instantiated using the `point()` function (see [Cypher functions](/cypher/functions)).
 
 ### Nulls
 

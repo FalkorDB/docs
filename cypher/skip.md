@@ -1,9 +1,7 @@
 ---
 title: "SKIP"
-nav_order: 6
 description: >
     The optional skip clause allows a specified number of records to be omitted from the result set.
-parent: "Cypher Language"
 ---
 
 # SKIP

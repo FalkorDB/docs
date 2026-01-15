@@ -1,11 +1,10 @@
 ---
 title: "Full-text Index"
-nav_order: 2
 description: >
     FalkorDB provides full-text indices through procedure calls.
-parent: "Indexing"
-grand_parent: "Cypher Language"
 ---
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
 
 # Full-text indexing
 
@@ -15,51 +14,83 @@ FalkorDB leverages the indexing capabilities of [RediSearch](https://redis.io/do
 
 To construct a full-text index on the `title` property of all nodes with label `Movie`, use the syntax:
 
-{% capture shell_10 %}
+<Tabs groupId="programming-language">
+  <TabItem value="shell" label="Shell">
+
+```bash
 GRAPH.QUERY DEMO_GRAPH "CALL db.idx.fulltext.createNodeIndex('Movie', 'title')"
-{% endcapture %}
+```
 
-{% capture python_10 %}
+  </TabItem>
+  <TabItem value="python" label="Python">
+
+```python
 graph.query("CALL db.idx.fulltext.createNodeIndex('Movie', 'title')")
-{% endcapture %}
+```
 
-{% capture javascript_10 %}
+  </TabItem>
+  <TabItem value="javascript" label="JavaScript">
+
+```javascript
 await graph.query("CALL db.idx.fulltext.createNodeIndex('Movie', 'title')");
-{% endcapture %}
+```
 
-{% capture java_10 %}
+  </TabItem>
+  <TabItem value="java" label="Java">
+
+```java
 graph.query("CALL db.idx.fulltext.createNodeIndex('Movie', 'title')");
-{% endcapture %}
+```
 
-{% capture rust_10 %}
+  </TabItem>
+  <TabItem value="rust" label="Rust">
+
+```rust
 graph.query("CALL db.idx.fulltext.createNodeIndex('Movie', 'title')").execute().await?;
-{% endcapture %}
+```
 
-{% include code_tabs.html id="fulltext_create_tabs" shell=shell_10 python=python_10 javascript=javascript_10 java=java_10 rust=rust_10 %}
+  </TabItem>
+</Tabs>
 
 More properties can be added to this index by adding their names to the above set of arguments, or using this syntax again with the additional names.
 
-{% capture shell_11 %}
+<Tabs groupId="programming-language">
+  <TabItem value="shell" label="Shell">
+
+```bash
 GRAPH.QUERY DEMO_GRAPH "CALL db.idx.fulltext.createNodeIndex('Person', 'firstName', 'lastName')"
-{% endcapture %}
+```
 
-{% capture python_11 %}
+  </TabItem>
+  <TabItem value="python" label="Python">
+
+```python
 graph.query("CALL db.idx.fulltext.createNodeIndex('Person', 'firstName', 'lastName')")
-{% endcapture %}
+```
 
-{% capture javascript_11 %}
+  </TabItem>
+  <TabItem value="javascript" label="JavaScript">
+
+```javascript
 await graph.query("CALL db.idx.fulltext.createNodeIndex('Person', 'firstName', 'lastName')");
-{% endcapture %}
+```
 
-{% capture java_11 %}
+  </TabItem>
+  <TabItem value="java" label="Java">
+
+```java
 graph.query("CALL db.idx.fulltext.createNodeIndex('Person', 'firstName', 'lastName')");
-{% endcapture %}
+```
 
-{% capture rust_11 %}
+  </TabItem>
+  <TabItem value="rust" label="Rust">
+
+```rust
 graph.query("CALL db.idx.fulltext.createNodeIndex('Person', 'firstName', 'lastName')").execute().await?;
-{% endcapture %}
+```
 
-{% include code_tabs.html id="fulltext_multi_property_tabs" shell=shell_11 python=python_11 javascript=javascript_11 java=java_11 rust=rust_11 %}
+  </TabItem>
+</Tabs>
 
 Index configuration options:
 
@@ -68,27 +99,43 @@ Index configuration options:
 
 To construct a full-text index on the `title` property using `German` language and using custom stopwords of all nodes with label `Movie`, use the syntax:
 
-{% capture shell_12 %}
+<Tabs groupId="programming-language">
+  <TabItem value="shell" label="Shell">
+
+```bash
 GRAPH.QUERY DEMO_GRAPH "CALL db.idx.fulltext.createNodeIndex({ label: 'Movie', language: 'German', stopwords: ['a', 'ab'] }, 'title')"
-{% endcapture %}
+```
 
-{% capture python_12 %}
+  </TabItem>
+  <TabItem value="python" label="Python">
+
+```python
 graph.query("CALL db.idx.fulltext.createNodeIndex({ label: 'Movie', language: 'German', stopwords: ['a', 'ab'] }, 'title')")
-{% endcapture %}
+```
 
-{% capture javascript_12 %}
+  </TabItem>
+  <TabItem value="javascript" label="JavaScript">
+
+```javascript
 await graph.query("CALL db.idx.fulltext.createNodeIndex({ label: 'Movie', language: 'German', stopwords: ['a', 'ab'] }, 'title')");
-{% endcapture %}
+```
 
-{% capture java_12 %}
+  </TabItem>
+  <TabItem value="java" label="Java">
+
+```java
 graph.query("CALL db.idx.fulltext.createNodeIndex({ label: 'Movie', language: 'German', stopwords: ['a', 'ab'] }, 'title')");
-{% endcapture %}
+```
 
-{% capture rust_12 %}
+  </TabItem>
+  <TabItem value="rust" label="Rust">
+
+```rust
 graph.query("CALL db.idx.fulltext.createNodeIndex({ label: 'Movie', language: 'German', stopwords: ['a', 'ab'] }, 'title')").execute().await?;
-{% endcapture %}
+```
 
-{% include code_tabs.html id="fulltext_config_tabs" shell=shell_12 python=python_12 javascript=javascript_12 java=java_12 rust=rust_12 %}
+  </TabItem>
+</Tabs>
 
 Additional field configuration options:
 
@@ -98,27 +145,43 @@ Additional field configuration options:
 
 To construct a full-text index on the `title` property with phonetic search of all nodes with label `Movie`, use the syntax:
 
-{% capture shell_13 %}
+<Tabs groupId="programming-language">
+  <TabItem value="shell" label="Shell">
+
+```bash
 GRAPH.QUERY DEMO_GRAPH "CALL db.idx.fulltext.createNodeIndex('Movie', {field: 'title', phonetic: 'dm:en'})"
-{% endcapture %}
+```
 
-{% capture python_13 %}
+  </TabItem>
+  <TabItem value="python" label="Python">
+
+```python
 graph.query("CALL db.idx.fulltext.createNodeIndex('Movie', {field: 'title', phonetic: 'dm:en'})")
-{% endcapture %}
+```
 
-{% capture javascript_13 %}
+  </TabItem>
+  <TabItem value="javascript" label="JavaScript">
+
+```javascript
 await graph.query("CALL db.idx.fulltext.createNodeIndex('Movie', {field: 'title', phonetic: 'dm:en'})");
-{% endcapture %}
+```
 
-{% capture java_13 %}
+  </TabItem>
+  <TabItem value="java" label="Java">
+
+```java
 graph.query("CALL db.idx.fulltext.createNodeIndex('Movie', {field: 'title', phonetic: 'dm:en'})");
-{% endcapture %}
+```
 
-{% capture rust_13 %}
+  </TabItem>
+  <TabItem value="rust" label="Rust">
+
+```rust
 graph.query("CALL db.idx.fulltext.createNodeIndex('Movie', {field: 'title', phonetic: 'dm:en'})").execute().await?;
-{% endcapture %}
+```
 
-{% include code_tabs.html id="fulltext_phonetic_tabs" shell=shell_13 python=python_13 javascript=javascript_13 java=java_13 rust=rust_13 %}
+  </TabItem>
+</Tabs>
 
 ## Query Syntax and Features
 
@@ -134,48 +197,64 @@ For example, if you index a `title` property containing "The Lord of the Rings",
 
 Prefix matching allows you to search for words that start with a specific prefix using the `*` wildcard. This is useful for autocomplete functionality or when you want to match word variations.
 
-{% capture shell_prefix %}
+<Tabs groupId="programming-language">
+  <TabItem value="shell" label="Shell">
+
+```bash
 # Find all movies with titles containing words starting with "Jun"
 GRAPH.QUERY DEMO_GRAPH "CALL db.idx.fulltext.queryNodes('Movie', 'Jun*') YIELD node RETURN node.title"
 # This would match "Jungle", "June", "Junior", etc.
-{% endcapture %}
+```
 
-{% capture python_prefix %}
+  </TabItem>
+  <TabItem value="python" label="Python">
+
+```python
 # Find all movies with titles containing words starting with "Jun"
 result = graph.query("CALL db.idx.fulltext.queryNodes('Movie', 'Jun*') YIELD node RETURN node.title")
 for record in result:
     print(record["node.title"])
 # This would match "Jungle", "June", "Junior", etc.
-{% endcapture %}
+```
 
-{% capture javascript_prefix %}
+  </TabItem>
+  <TabItem value="javascript" label="JavaScript">
+
+```javascript
 // Find all movies with titles containing words starting with "Jun"
 const result = await graph.query("CALL db.idx.fulltext.queryNodes('Movie', 'Jun*') YIELD node RETURN node.title");
 for (const record of result.data) {
     console.log(record["node.title"]);
 }
 // This would match "Jungle", "June", "Junior", etc.
-{% endcapture %}
+```
 
-{% capture java_prefix %}
+  </TabItem>
+  <TabItem value="java" label="Java">
+
+```java
 // Find all movies with titles containing words starting with "Jun"
 ResultSet result = graph.query("CALL db.idx.fulltext.queryNodes('Movie', 'Jun*') YIELD node RETURN node.title");
 for (Record record : result) {
     System.out.println(record.get("node.title"));
 }
 // This would match "Jungle", "June", "Junior", etc.
-{% endcapture %}
+```
 
-{% capture rust_prefix %}
+  </TabItem>
+  <TabItem value="rust" label="Rust">
+
+```rust
 // Find all movies with titles containing words starting with "Jun"
 let result = graph.query("CALL db.idx.fulltext.queryNodes('Movie', 'Jun*') YIELD node RETURN node.title").execute().await?;
 for record in result.data() {
     println!("{}", record["node.title"]);
 }
 // This would match "Jungle", "June", "Junior", etc.
-{% endcapture %}
+```
 
-{% include code_tabs.html id="fulltext_prefix_tabs" shell=shell_prefix python=python_prefix javascript=javascript_prefix java=java_prefix rust=rust_prefix %}
+  </TabItem>
+</Tabs>
 
 **Note:** Prefix matching only works at the end of a word (e.g., `Jun*`). The wildcard must appear at the end of the search term.
 
@@ -183,7 +262,10 @@ for record in result.data() {
 
 Fuzzy matching allows you to find words that are similar to your search term, accounting for typos and spelling variations. Use the `%` symbol followed by the Levenshtein distance (number of character changes allowed).
 
-{% capture shell_fuzzy %}
+<Tabs groupId="programming-language">
+  <TabItem value="shell" label="Shell">
+
+```bash
 # Find movies with titles containing words similar to "Jangle" (allowing 1 character difference)
 GRAPH.QUERY DEMO_GRAPH "CALL db.idx.fulltext.queryNodes('Movie', '%Jangle%1') YIELD node RETURN node.title"
 # This would match "Jungle" (1 character different)
@@ -191,9 +273,12 @@ GRAPH.QUERY DEMO_GRAPH "CALL db.idx.fulltext.queryNodes('Movie', '%Jangle%1') YI
 # Allow up to 2 character differences
 GRAPH.QUERY DEMO_GRAPH "CALL db.idx.fulltext.queryNodes('Movie', '%Jngle%2') YIELD node RETURN node.title"
 # This would also match "Jungle" (1 character missing)
-{% endcapture %}
+```
 
-{% capture python_fuzzy %}
+  </TabItem>
+  <TabItem value="python" label="Python">
+
+```python
 # Find movies with titles containing words similar to "Jangle" (allowing 1 character difference)
 result = graph.query("CALL db.idx.fulltext.queryNodes('Movie', '%Jangle%1') YIELD node RETURN node.title")
 for record in result:
@@ -203,9 +288,12 @@ for record in result:
 # Allow up to 2 character differences
 result = graph.query("CALL db.idx.fulltext.queryNodes('Movie', '%Jngle%2') YIELD node RETURN node.title")
 # This would also match "Jungle" (1 character missing)
-{% endcapture %}
+```
 
-{% capture javascript_fuzzy %}
+  </TabItem>
+  <TabItem value="javascript" label="JavaScript">
+
+```javascript
 // Find movies with titles containing words similar to "Jangle" (allowing 1 character difference)
 const result = await graph.query("CALL db.idx.fulltext.queryNodes('Movie', '%Jangle%1') YIELD node RETURN node.title");
 for (const record of result.data) {
@@ -216,9 +304,12 @@ for (const record of result.data) {
 // Allow up to 2 character differences
 const result2 = await graph.query("CALL db.idx.fulltext.queryNodes('Movie', '%Jngle%2') YIELD node RETURN node.title");
 // This would also match "Jungle" (1 character missing)
-{% endcapture %}
+```
 
-{% capture java_fuzzy %}
+  </TabItem>
+  <TabItem value="java" label="Java">
+
+```java
 // Find movies with titles containing words similar to "Jangle" (allowing 1 character difference)
 ResultSet result = graph.query("CALL db.idx.fulltext.queryNodes('Movie', '%Jangle%1') YIELD node RETURN node.title");
 for (Record record : result) {
@@ -229,9 +320,12 @@ for (Record record : result) {
 // Allow up to 2 character differences
 ResultSet result2 = graph.query("CALL db.idx.fulltext.queryNodes('Movie', '%Jngle%2') YIELD node RETURN node.title");
 // This would also match "Jungle" (1 character missing)
-{% endcapture %}
+```
 
-{% capture rust_fuzzy %}
+  </TabItem>
+  <TabItem value="rust" label="Rust">
+
+```rust
 // Find movies with titles containing words similar to "Jangle" (allowing 1 character difference)
 let result = graph.query("CALL db.idx.fulltext.queryNodes('Movie', '%Jangle%1') YIELD node RETURN node.title").execute().await?;
 for record in result.data() {
@@ -242,9 +336,10 @@ for record in result.data() {
 // Allow up to 2 character differences
 let result2 = graph.query("CALL db.idx.fulltext.queryNodes('Movie', '%Jngle%2') YIELD node RETURN node.title").execute().await?;
 // This would also match "Jungle" (1 character missing)
-{% endcapture %}
+```
 
-{% include code_tabs.html id="fulltext_fuzzy_tabs" shell=shell_fuzzy python=python_fuzzy javascript=javascript_fuzzy java=java_fuzzy rust=rust_fuzzy %}
+  </TabItem>
+</Tabs>
 
 **Fuzzy matching syntax:** `%term%distance` where:
 - `term` is the word to match
@@ -260,7 +355,10 @@ You can combine multiple search terms using boolean operators:
 - `OR` (`|`): At least one term must match
 - `NOT` (`-`): Term must not be present
 
-{% capture shell_combined %}
+<Tabs groupId="programming-language">
+  <TabItem value="shell" label="Shell">
+
+```bash
 # Find movies with "Jungle" AND "Book" in the title
 GRAPH.QUERY DEMO_GRAPH "CALL db.idx.fulltext.queryNodes('Movie', 'Jungle Book') YIELD node RETURN node.title"
 
@@ -272,9 +370,12 @@ GRAPH.QUERY DEMO_GRAPH "CALL db.idx.fulltext.queryNodes('Movie', 'Book -Jungle')
 
 # Combine prefix and fuzzy matching: Find "Jun*" OR words similar to "Forst"
 GRAPH.QUERY DEMO_GRAPH "CALL db.idx.fulltext.queryNodes('Movie', 'Jun*|%Forst%1') YIELD node RETURN node.title"
-{% endcapture %}
+```
 
-{% capture python_combined %}
+  </TabItem>
+  <TabItem value="python" label="Python">
+
+```python
 # Find movies with "Jungle" AND "Book" in the title
 result = graph.query("CALL db.idx.fulltext.queryNodes('Movie', 'Jungle Book') YIELD node RETURN node.title")
 
@@ -286,9 +387,12 @@ result = graph.query("CALL db.idx.fulltext.queryNodes('Movie', 'Book -Jungle') Y
 
 # Combine prefix and fuzzy matching
 result = graph.query("CALL db.idx.fulltext.queryNodes('Movie', 'Jun*|%Forst%1') YIELD node RETURN node.title")
-{% endcapture %}
+```
 
-{% capture javascript_combined %}
+  </TabItem>
+  <TabItem value="javascript" label="JavaScript">
+
+```javascript
 // Find movies with "Jungle" AND "Book" in the title
 const result = await graph.query("CALL db.idx.fulltext.queryNodes('Movie', 'Jungle Book') YIELD node RETURN node.title");
 
@@ -300,9 +404,12 @@ const result3 = await graph.query("CALL db.idx.fulltext.queryNodes('Movie', 'Boo
 
 // Combine prefix and fuzzy matching
 const result4 = await graph.query("CALL db.idx.fulltext.queryNodes('Movie', 'Jun*|%Forst%1') YIELD node RETURN node.title");
-{% endcapture %}
+```
 
-{% capture java_combined %}
+  </TabItem>
+  <TabItem value="java" label="Java">
+
+```java
 // Find movies with "Jungle" AND "Book" in the title
 ResultSet result = graph.query("CALL db.idx.fulltext.queryNodes('Movie', 'Jungle Book') YIELD node RETURN node.title");
 
@@ -314,9 +421,12 @@ ResultSet result3 = graph.query("CALL db.idx.fulltext.queryNodes('Movie', 'Book 
 
 // Combine prefix and fuzzy matching
 ResultSet result4 = graph.query("CALL db.idx.fulltext.queryNodes('Movie', 'Jun*|%Forst%1') YIELD node RETURN node.title");
-{% endcapture %}
+```
 
-{% capture rust_combined %}
+  </TabItem>
+  <TabItem value="rust" label="Rust">
+
+```rust
 // Find movies with "Jungle" AND "Book" in the title
 let result = graph.query("CALL db.idx.fulltext.queryNodes('Movie', 'Jungle Book') YIELD node RETURN node.title").execute().await?;
 
@@ -328,9 +438,10 @@ let result3 = graph.query("CALL db.idx.fulltext.queryNodes('Movie', 'Book -Jungl
 
 // Combine prefix and fuzzy matching
 let result4 = graph.query("CALL db.idx.fulltext.queryNodes('Movie', 'Jun*|%Forst%1') YIELD node RETURN node.title").execute().await?;
-{% endcapture %}
+```
 
-{% include code_tabs.html id="fulltext_combined_tabs" shell=shell_combined python=python_combined javascript=javascript_combined java=java_combined rust=rust_combined %}
+  </TabItem>
+</Tabs>
 
 For more advanced query syntax features, see the [RediSearch query syntax documentation](https://redis.io/docs/latest/develop/ai/search-and-query/advanced-concepts/query_syntax/).
 
@@ -338,25 +449,34 @@ For more advanced query syntax features, see the [RediSearch query syntax docume
 
 An index can be invoked to match any whole words contained within:
 
-{% capture shell_14 %}
+<Tabs groupId="programming-language">
+  <TabItem value="shell" label="Shell">
+
+```bash
 GRAPH.QUERY DEMO_GRAPH
 "CALL db.idx.fulltext.queryNodes('Movie', 'Book') YIELD node RETURN node.title"
 1) 1) "node.title"
 2) 1) 1) "The Jungle Book"
    2) 1) "The Book of Life"
 3) 1) "Query internal execution time: 0.927409 milliseconds"
-{% endcapture %}
+```
 
-{% capture python_14 %}
+  </TabItem>
+  <TabItem value="python" label="Python">
+
+```python
 result = graph.query("CALL db.idx.fulltext.queryNodes('Movie', 'Book') YIELD node RETURN node.title")
 for record in result:
     print(record["node.title"])
 # Output:
 # The Jungle Book
 # The Book of Life
-{% endcapture %}
+```
 
-{% capture javascript_14 %}
+  </TabItem>
+  <TabItem value="javascript" label="JavaScript">
+
+```javascript
 const result = await graph.query("CALL db.idx.fulltext.queryNodes('Movie', 'Book') YIELD node RETURN node.title");
 for (const record of result.data) {
     console.log(record["node.title"]);
@@ -364,9 +484,12 @@ for (const record of result.data) {
 // Output:
 // The Jungle Book
 // The Book of Life
-{% endcapture %}
+```
 
-{% capture java_14 %}
+  </TabItem>
+  <TabItem value="java" label="Java">
+
+```java
 ResultSet result = graph.query("CALL db.idx.fulltext.queryNodes('Movie', 'Book') YIELD node RETURN node.title");
 for (Record record : result) {
     System.out.println(record.get("node.title"));
@@ -374,9 +497,12 @@ for (Record record : result) {
 // Output:
 // The Jungle Book
 // The Book of Life
-{% endcapture %}
+```
 
-{% capture rust_14 %}
+  </TabItem>
+  <TabItem value="rust" label="Rust">
+
+```rust
 let result = graph.query("CALL db.idx.fulltext.queryNodes('Movie', 'Book') YIELD node RETURN node.title").execute().await?;
 for record in result.data() {
     println!("{}", record["node.title"]);
@@ -384,9 +510,10 @@ for record in result.data() {
 // Output:
 // The Jungle Book
 // The Book of Life
-{% endcapture %}
+```
 
-{% include code_tabs.html id="fulltext_query_tabs" shell=shell_14 python=python_14 javascript=javascript_14 java=java_14 rust=rust_14 %}
+  </TabItem>
+</Tabs>
 
 This CALL clause can be interleaved with other Cypher clauses to perform more elaborate manipulations:
 
@@ -433,102 +560,166 @@ GRAPH.QUERY DEMO_GRAPH
 
 For a node label, the full-text index deletion syntax is:
 
-{% capture shell_15 %}
+<Tabs groupId="programming-language">
+  <TabItem value="shell" label="Shell">
+
+```bash
 GRAPH.QUERY DEMO_GRAPH "CALL db.idx.fulltext.drop('Movie')"
-{% endcapture %}
+```
 
-{% capture python_15 %}
+  </TabItem>
+  <TabItem value="python" label="Python">
+
+```python
 graph.query("CALL db.idx.fulltext.drop('Movie')")
-{% endcapture %}
+```
 
-{% capture javascript_15 %}
+  </TabItem>
+  <TabItem value="javascript" label="JavaScript">
+
+```javascript
 await graph.query("CALL db.idx.fulltext.drop('Movie')");
-{% endcapture %}
+```
 
-{% capture java_15 %}
+  </TabItem>
+  <TabItem value="java" label="Java">
+
+```java
 graph.query("CALL db.idx.fulltext.drop('Movie')");
-{% endcapture %}
+```
 
-{% capture rust_15 %}
+  </TabItem>
+  <TabItem value="rust" label="Rust">
+
+```rust
 graph.query("CALL db.idx.fulltext.drop('Movie')").execute().await?;
-{% endcapture %}
+```
 
-{% include code_tabs.html id="fulltext_drop_tabs" shell=shell_15 python=python_15 javascript=javascript_15 java=java_15 rust=rust_15 %}
+  </TabItem>
+</Tabs>
 
 ## Creating Full-Text indexing for Relation Labels
 To create a full-text index on the name property of all relations with the label Manager and enable phonetic search, use the following syntax:
 
-{% capture shell_16 %}
+<Tabs groupId="programming-language">
+  <TabItem value="shell" label="Shell">
+
+```bash
 GRAPH.QUERY DEMO_GRAPH "CREATE FULLTEXT INDEX FOR ()-[m:Manager]-() on (m.name)"
-{% endcapture %}
+```
 
-{% capture python_16 %}
+  </TabItem>
+  <TabItem value="python" label="Python">
+
+```python
 graph.query("CREATE FULLTEXT INDEX FOR ()-[m:Manager]-() on (m.name)")
-{% endcapture %}
+```
 
-{% capture javascript_16 %}
+  </TabItem>
+  <TabItem value="javascript" label="JavaScript">
+
+```javascript
 await graph.query("CREATE FULLTEXT INDEX FOR ()-[m:Manager]-() on (m.name)");
-{% endcapture %}
+```
 
-{% capture java_16 %}
+  </TabItem>
+  <TabItem value="java" label="Java">
+
+```java
 graph.query("CREATE FULLTEXT INDEX FOR ()-[m:Manager]-() on (m.name)");
-{% endcapture %}
+```
 
-{% capture rust_16 %}
+  </TabItem>
+  <TabItem value="rust" label="Rust">
+
+```rust
 graph.query("CREATE FULLTEXT INDEX FOR ()-[m:Manager]-() on (m.name)").execute().await?;
-{% endcapture %}
+```
 
-{% include code_tabs.html id="fulltext_relation_create_tabs" shell=shell_16 python=python_16 javascript=javascript_16 java=java_16 rust=rust_16 %}
+  </TabItem>
+</Tabs>
 ## Querying with a Full-Text Index
 To search for specific words within the indexed relations, use:
 
-{% capture shell_17 %}
+<Tabs groupId="programming-language">
+  <TabItem value="shell" label="Shell">
+
+```bash
 GRAPH.QUERY DEMO_GRAPH
 "CALL db.idx.fulltext.queryRelationships('Manager', 'Charlie Munger') YIELD relationship RETURN relationship.name"
-{% endcapture %}
+```
 
-{% capture python_17 %}
+  </TabItem>
+  <TabItem value="python" label="Python">
+
+```python
 result = graph.query("CALL db.idx.fulltext.queryRelationships('Manager', 'Charlie Munger') YIELD relationship RETURN relationship.name")
-{% endcapture %}
+```
 
-{% capture javascript_17 %}
+  </TabItem>
+  <TabItem value="javascript" label="JavaScript">
+
+```javascript
 const result = await graph.query("CALL db.idx.fulltext.queryRelationships('Manager', 'Charlie Munger') YIELD relationship RETURN relationship.name");
-{% endcapture %}
+```
 
-{% capture java_17 %}
+  </TabItem>
+  <TabItem value="java" label="Java">
+
+```java
 ResultSet result = graph.query("CALL db.idx.fulltext.queryRelationships('Manager', 'Charlie Munger') YIELD relationship RETURN relationship.name");
-{% endcapture %}
+```
 
-{% capture rust_17 %}
+  </TabItem>
+  <TabItem value="rust" label="Rust">
+
+```rust
 let result = graph.query("CALL db.idx.fulltext.queryRelationships('Manager', 'Charlie Munger') YIELD relationship RETURN relationship.name").execute().await?;
-{% endcapture %}
+```
 
-{% include code_tabs.html id="fulltext_relation_query_tabs" shell=shell_17 python=python_17 javascript=javascript_17 java=java_17 rust=rust_17 %}
+  </TabItem>
+</Tabs>
 
 ## Deleting a Full-Text Index
 To delete the full-text index for a specific relation label, use:
 
-{% capture shell_18 %}
+<Tabs groupId="programming-language">
+  <TabItem value="shell" label="Shell">
+
+```bash
 GRAPH.QUERY DEMO_GRAPH "DROP FULLTEXT INDEX FOR ()-[m:Manager]-() ON (m.name)"
-{% endcapture %}
+```
 
-{% capture python_18 %}
+  </TabItem>
+  <TabItem value="python" label="Python">
+
+```python
 graph.query("DROP FULLTEXT INDEX FOR ()-[m:Manager]-() ON (m.name)")
-{% endcapture %}
+```
 
-{% capture javascript_18 %}
+  </TabItem>
+  <TabItem value="javascript" label="JavaScript">
+
+```javascript
 await graph.query("DROP FULLTEXT INDEX FOR ()-[m:Manager]-() ON (m.name)");
-{% endcapture %}
+```
 
-{% capture java_18 %}
+  </TabItem>
+  <TabItem value="java" label="Java">
+
+```java
 graph.query("DROP FULLTEXT INDEX FOR ()-[m:Manager]-() ON (m.name)");
-{% endcapture %}
+```
 
-{% capture rust_18 %}
+  </TabItem>
+  <TabItem value="rust" label="Rust">
+
+```rust
 graph.query("DROP FULLTEXT INDEX FOR ()-[m:Manager]-() ON (m.name)").execute().await?;
-{% endcapture %}
+```
 
-{% include code_tabs.html id="fulltext_relation_drop_tabs" shell=shell_18 python=python_18 javascript=javascript_18 java=java_18 rust=rust_18 %}
+  </TabItem>
+</Tabs>
 
 ## Index Management
 
@@ -599,38 +790,54 @@ Full-text indexes are not optimal for:
 
 Use `GRAPH.EXPLAIN` to verify that full-text queries use the index:
 
-{% capture shell_ft_verify %}
+<Tabs groupId="programming-language">
+  <TabItem value="shell" label="Shell">
+
+```bash
 # Check if full-text index is used
 GRAPH.EXPLAIN DEMO_GRAPH "CALL db.idx.fulltext.queryNodes('Movie', 'Book') YIELD node RETURN node"
 # Output shows: ProcedureCall | db.idx.fulltext.queryNodes
-{% endcapture %}
+```
 
-{% capture python_ft_verify %}
+  </TabItem>
+  <TabItem value="python" label="Python">
+
+```python
 # Check if full-text index is used
 result = graph.explain("CALL db.idx.fulltext.queryNodes('Movie', 'Book') YIELD node RETURN node")
 print(result)
 # Output shows: ProcedureCall | db.idx.fulltext.queryNodes
-{% endcapture %}
+```
 
-{% capture javascript_ft_verify %}
+  </TabItem>
+  <TabItem value="javascript" label="JavaScript">
+
+```javascript
 // Check if full-text index is used
 const result = await graph.explain("CALL db.idx.fulltext.queryNodes('Movie', 'Book') YIELD node RETURN node");
 console.log(result);
 // Output shows: ProcedureCall | db.idx.fulltext.queryNodes
-{% endcapture %}
+```
 
-{% capture java_ft_verify %}
+  </TabItem>
+  <TabItem value="java" label="Java">
+
+```java
 // Check if full-text index is used
 String result = graph.explain("CALL db.idx.fulltext.queryNodes('Movie', 'Book') YIELD node RETURN node");
 System.out.println(result);
 // Output shows: ProcedureCall | db.idx.fulltext.queryNodes
-{% endcapture %}
+```
 
-{% capture rust_ft_verify %}
+  </TabItem>
+  <TabItem value="rust" label="Rust">
+
+```rust
 // Check if full-text index is used
 let result = graph.explain("CALL db.idx.fulltext.queryNodes('Movie', 'Book') YIELD node RETURN node").execute().await?;
 println!("{}", result);
 // Output shows: ProcedureCall | db.idx.fulltext.queryNodes
-{% endcapture %}
+```
 
-{% include code_tabs.html id="fulltext_verify_tabs" shell=shell_ft_verify python=python_ft_verify javascript=javascript_ft_verify java=java_ft_verify rust=rust_ft_verify %}
+  </TabItem>
+</Tabs>

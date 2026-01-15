@@ -1,7 +1,5 @@
 ---
 title: "Free Tier"
-parent: "Cloud DBaaS"
-nav_order: 1
 description: "FalkorDB DBaaS Free Tier"
 ---
 

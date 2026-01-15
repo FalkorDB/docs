@@ -1,8 +1,5 @@
 ---
-layout: default
 title: sim.jaccard
-parent: Similarity Functions
-grand_parent: FLEX Function Reference
 ---
 
 # sim.jaccard

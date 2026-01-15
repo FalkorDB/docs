@@ -1,8 +1,11 @@
 ---
 title: "PageRank"
 description: "Rank nodes based on the number and quality of edges pointing to them, simulating the likelihood of a random traversal landing on each node."
-parent: "Algorithms"
 ---
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+<!-- markdownlint-disable MD033 MD025 -->
 
 # PageRank
 
@@ -91,9 +94,83 @@ Expected results:
 | Social Network Graph Theory          | 0.03  |
 
 
+## Client usage
+
+Run the same Cypher through FalkorDB client libraries to pull PageRank scores into your app:
+
+<Tabs groupId="programming-language">
+  <TabItem value="python" label="Python">
+
+```python
+query = """
+CALL pagerank.stream('Paper', 'CITES')
+YIELD node, score
+RETURN node.title AS paper, score
+ORDER BY score DESC
+"""
+
+result = graph.query(query)
+for record in result.result_set:
+    print(record[0], record[1])
+```
+
+  </TabItem>
+  <TabItem value="javascript" label="JavaScript">
+
+```javascript
+const query = `
+CALL pagerank.stream('Paper', 'CITES')
+YIELD node, score
+RETURN node.title AS paper, score
+ORDER BY score DESC
+`;
+
+const result = await graph.query(query);
+for (const row of result) {
+  console.log(row.paper, row.score);
+}
+```
+
+  </TabItem>
+  <TabItem value="java" label="Java">
+
+```java
+String query = """
+CALL pagerank.stream('Paper', 'CITES')
+YIELD node, score
+RETURN node.title AS paper, score
+ORDER BY score DESC
+""";
+
+ResultSet result = graph.query(query);
+result.forEach(row -> System.out.println(row.get("paper") + ": " + row.get("score")));
+```
+
+  </TabItem>
+  <TabItem value="rust" label="Rust">
+
+```rust
+let query = r#"
+CALL pagerank.stream('Paper', 'CITES')
+YIELD node, score
+RETURN node.title AS paper, score
+ORDER BY score DESC
+"#;
+
+let result = graph.query(query).execute().await?;
+for record in result.data.by_ref() {
+    println!("{}: {}", record["paper"], record["score"]);
+}
+```
+
+  </TabItem>
+</Tabs>
+
+
 ## Usage Notes
 
 **Interpreting scores**:
-   - PageRank scores are relative, not absolute measures
-   - The sum of all scores in a graph equals 1.0
-   - Scores typically follow a power-law distribution
+
+- PageRank scores are relative, not absolute measures
+- The sum of all scores in a graph equals 1.0
+- Scores typically follow a power-law distribution

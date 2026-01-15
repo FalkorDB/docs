@@ -1,9 +1,7 @@
 ---
 title: "UNION"
-nav_order: 13
 description: >
     The UNION clause is used to combine the result of multiple queries.
-parent: "Cypher Language"
 ---
 
 # UNION

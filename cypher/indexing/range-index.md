@@ -1,11 +1,10 @@
 ---
 title: "Range Index"
-nav_order: 1
 description: >
     FalkorDB supports single-property indexes for node labels and for relationship type. String, numeric, and geospatial data types can be indexed.
-parent: "Indexing"
-grand_parent: "Cypher Language"
 ---
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
 
 # Range Index
 
@@ -25,148 +24,228 @@ Range indexes support the following data types:
 
 For a node label, the index creation syntax is:
 
-{% capture shell_0 %}
+<Tabs groupId="programming-language">
+  <TabItem value="shell" label="Shell">
+
+```bash
 GRAPH.QUERY DEMO_GRAPH "CREATE INDEX FOR (p:Person) ON (p.age)"
-{% endcapture %}
+```
 
-{% capture python_0 %}
+  </TabItem>
+  <TabItem value="python" label="Python">
+
+```python
 graph.query("CREATE INDEX FOR (p:Person) ON (p.age)")
-{% endcapture %}
+```
 
-{% capture javascript_0 %}
+  </TabItem>
+  <TabItem value="javascript" label="JavaScript">
+
+```javascript
 await graph.query("CREATE INDEX FOR (p:Person) ON (p.age)");
-{% endcapture %}
+```
 
-{% capture java_0 %}
+  </TabItem>
+  <TabItem value="java" label="Java">
+
+```java
 graph.query("CREATE INDEX FOR (p:Person) ON (p.age)");
-{% endcapture %}
+```
 
-{% capture rust_0 %}
+  </TabItem>
+  <TabItem value="rust" label="Rust">
+
+```rust
 graph.query("CREATE INDEX FOR (p:Person) ON (p.age)").execute().await?;
-{% endcapture %}
+```
 
-{% include code_tabs.html id="create_index_tabs" shell=shell_0 python=python_0 javascript=javascript_0 java=java_0 rust=rust_0 %}
+  </TabItem>
+</Tabs>
 
 An old syntax is also supported:
 
-{% capture shell_1 %}
+<Tabs groupId="programming-language">
+  <TabItem value="shell" label="Shell">
+
+```bash
 GRAPH.QUERY DEMO_GRAPH "CREATE INDEX ON :Person(age)"
-{% endcapture %}
+```
 
-{% capture python_1 %}
+  </TabItem>
+  <TabItem value="python" label="Python">
+
+```python
 graph.query("CREATE INDEX ON :Person(age)")
-{% endcapture %}
+```
 
-{% capture javascript_1 %}
+  </TabItem>
+  <TabItem value="javascript" label="JavaScript">
+
+```javascript
 await graph.query("CREATE INDEX ON :Person(age)");
-{% endcapture %}
+```
 
-{% capture java_1 %}
+  </TabItem>
+  <TabItem value="java" label="Java">
+
+```java
 graph.query("CREATE INDEX ON :Person(age)");
-{% endcapture %}
+```
 
-{% capture rust_1 %}
+  </TabItem>
+  <TabItem value="rust" label="Rust">
+
+```rust
 graph.query("CREATE INDEX ON :Person(age)").execute().await?;
-{% endcapture %}
+```
 
-{% include code_tabs.html id="old_syntax_tabs" shell=shell_1 python=python_1 javascript=javascript_1 java=java_1 rust=rust_1 %}
+  </TabItem>
+</Tabs>
 
 After an index is explicitly created, it will automatically be used by queries that reference that label and any indexed property in a filter.
 
-{% capture shell_2 %}
+<Tabs groupId="programming-language">
+  <TabItem value="shell" label="Shell">
+
+```bash
 GRAPH.EXPLAIN DEMO_GRAPH "MATCH (p:Person) WHERE p.age > 80 RETURN p"
 1) "Results"
 2) "    Project"
 3) "        Index Scan | (p:Person)"
-{% endcapture %}
+```
 
-{% capture python_2 %}
+  </TabItem>
+  <TabItem value="python" label="Python">
+
+```python
 result = graph.explain("MATCH (p:Person) WHERE p.age > 80 RETURN p")
 print(result)
 # Output:
 # Results
 #     Project
 #         Index Scan | (p:Person)
-{% endcapture %}
+```
 
-{% capture javascript_2 %}
+  </TabItem>
+  <TabItem value="javascript" label="JavaScript">
+
+```javascript
 const result = await graph.explain("MATCH (p:Person) WHERE p.age > 80 RETURN p");
 console.log(result);
 // Output:
 // Results
 //     Project
 //         Index Scan | (p:Person)
-{% endcapture %}
+```
 
-{% capture java_2 %}
+  </TabItem>
+  <TabItem value="java" label="Java">
+
+```java
 String result = graph.explain("MATCH (p:Person) WHERE p.age > 80 RETURN p");
 System.out.println(result);
 // Output:
 // Results
 //     Project
 //         Index Scan | (p:Person)
-{% endcapture %}
+```
 
-{% capture rust_2 %}
+  </TabItem>
+  <TabItem value="rust" label="Rust">
+
+```rust
 let result = graph.explain("MATCH (p:Person) WHERE p.age > 80 RETURN p").execute().await?;
 println!("{}", result);
 // Output:
 // Results
 //     Project
 //         Index Scan | (p:Person)
-{% endcapture %}
+```
 
-{% include code_tabs.html id="explain_tabs" shell=shell_2 python=python_2 javascript=javascript_2 java=java_2 rust=rust_2 %}
+  </TabItem>
+</Tabs>
 
 This can significantly improve the runtime of queries with very specific filters. An index on `:employer(name)`, for example, will dramatically benefit the query:
 
-{% capture shell_3 %}
+<Tabs groupId="programming-language">
+  <TabItem value="shell" label="Shell">
+
+```bash
 GRAPH.QUERY DEMO_GRAPH
 "MATCH (:Employer {name: 'Dunder Mifflin'})-[:EMPLOYS]->(p:Person) RETURN p"
-{% endcapture %}
+```
 
-{% capture python_3 %}
+  </TabItem>
+  <TabItem value="python" label="Python">
+
+```python
 result = graph.query("MATCH (:Employer {name: 'Dunder Mifflin'})-[:EMPLOYS]->(p:Person) RETURN p")
-{% endcapture %}
+```
 
-{% capture javascript_3 %}
+  </TabItem>
+  <TabItem value="javascript" label="JavaScript">
+
+```javascript
 const result = await graph.query("MATCH (:Employer {name: 'Dunder Mifflin'})-[:EMPLOYS]->(p:Person) RETURN p");
-{% endcapture %}
+```
 
-{% capture java_3 %}
+  </TabItem>
+  <TabItem value="java" label="Java">
+
+```java
 ResultSet result = graph.query("MATCH (:Employer {name: 'Dunder Mifflin'})-[:EMPLOYS]->(p:Person) RETURN p");
-{% endcapture %}
+```
 
-{% capture rust_3 %}
+  </TabItem>
+  <TabItem value="rust" label="Rust">
+
+```rust
 let result = graph.query("MATCH (:Employer {name: 'Dunder Mifflin'})-[:EMPLOYS]->(p:Person) RETURN p").execute().await?;
-{% endcapture %}
+```
 
-{% include code_tabs.html id="employer_query_tabs" shell=shell_3 python=python_3 javascript=javascript_3 java=java_3 rust=rust_3 %}
+  </TabItem>
+</Tabs>
 
 An example of utilizing a geospatial index to find `Employer` nodes within 5 kilometers of Scranton are:
 
-{% capture shell_4 %}
+<Tabs groupId="programming-language">
+  <TabItem value="shell" label="Shell">
+
+```bash
 GRAPH.QUERY DEMO_GRAPH
 "WITH point({latitude:41.4045886, longitude:-75.6969532}) AS scranton MATCH (e:Employer) WHERE distance(e.location, scranton) < 5000 RETURN e"
-{% endcapture %}
+```
 
-{% capture python_4 %}
+  </TabItem>
+  <TabItem value="python" label="Python">
+
+```python
 result = graph.query("WITH point({latitude:41.4045886, longitude:-75.6969532}) AS scranton MATCH (e:Employer) WHERE distance(e.location, scranton) < 5000 RETURN e")
-{% endcapture %}
+```
 
-{% capture javascript_4 %}
+  </TabItem>
+  <TabItem value="javascript" label="JavaScript">
+
+```javascript
 const result = await graph.query("WITH point({latitude:41.4045886, longitude:-75.6969532}) AS scranton MATCH (e:Employer) WHERE distance(e.location, scranton) < 5000 RETURN e");
-{% endcapture %}
+```
 
-{% capture java_4 %}
+  </TabItem>
+  <TabItem value="java" label="Java">
+
+```java
 ResultSet result = graph.query("WITH point({latitude:41.4045886, longitude:-75.6969532}) AS scranton MATCH (e:Employer) WHERE distance(e.location, scranton) < 5000 RETURN e");
-{% endcapture %}
+```
 
-{% capture rust_4 %}
+  </TabItem>
+  <TabItem value="rust" label="Rust">
+
+```rust
 let result = graph.query("WITH point({latitude:41.4045886, longitude:-75.6969532}) AS scranton MATCH (e:Employer) WHERE distance(e.location, scranton) < 5000 RETURN e").execute().await?;
-{% endcapture %}
+```
 
-{% include code_tabs.html id="geospatial_tabs" shell=shell_4 python=python_4 javascript=javascript_4 java=java_4 rust=rust_4 %}
+  </TabItem>
+</Tabs>
 
 Geospatial indexes can currently only be leveraged with `<` and `<=` filters; matching nodes outside the given radius are matched using conventional traversal.
 
@@ -174,39 +253,61 @@ Geospatial indexes can currently only be leveraged with `<` and `<=` filters; ma
 
 For a relationship type, the index creation syntax is:
 
-{% capture shell_5 %}
+<Tabs groupId="programming-language">
+  <TabItem value="shell" label="Shell">
+
+```bash
 GRAPH.QUERY DEMO_GRAPH "CREATE INDEX FOR ()-[f:FOLLOW]-() ON (f.created_at)"
-{% endcapture %}
+```
 
-{% capture python_5 %}
+  </TabItem>
+  <TabItem value="python" label="Python">
+
+```python
 graph.query("CREATE INDEX FOR ()-[f:FOLLOW]-() ON (f.created_at)")
-{% endcapture %}
+```
 
-{% capture javascript_5 %}
+  </TabItem>
+  <TabItem value="javascript" label="JavaScript">
+
+```javascript
 await graph.query("CREATE INDEX FOR ()-[f:FOLLOW]-() ON (f.created_at)");
-{% endcapture %}
+```
 
-{% capture java_5 %}
+  </TabItem>
+  <TabItem value="java" label="Java">
+
+```java
 graph.query("CREATE INDEX FOR ()-[f:FOLLOW]-() ON (f.created_at)");
-{% endcapture %}
+```
 
-{% capture rust_5 %}
+  </TabItem>
+  <TabItem value="rust" label="Rust">
+
+```rust
 graph.query("CREATE INDEX FOR ()-[f:FOLLOW]-() ON (f.created_at)").execute().await?;
-{% endcapture %}
+```
 
-{% include code_tabs.html id="relationship_index_tabs" shell=shell_5 python=python_5 javascript=javascript_5 java=java_5 rust=rust_5 %}
+  </TabItem>
+</Tabs>
 
 Then the execution plan for using the index:
 
-{% capture shell_6 %}
+<Tabs groupId="programming-language">
+  <TabItem value="shell" label="Shell">
+
+```bash
 GRAPH.EXPLAIN DEMO_GRAPH "MATCH (p:Person {id: 0})-[f:FOLLOW]->(fp) WHERE 0 < f.created_at AND f.created_at < 1000 RETURN fp"
 1) "Results"
 2) "    Project"
 3) "        Edge By Index Scan | [f:FOLLOW]"
 4) "            Node By Index Scan | (p:Person)"
-{% endcapture %}
+```
 
-{% capture python_6 %}
+  </TabItem>
+  <TabItem value="python" label="Python">
+
+```python
 result = graph.explain("MATCH (p:Person {id: 0})-[f:FOLLOW]->(fp) WHERE 0 < f.created_at AND f.created_at < 1000 RETURN fp")
 print(result)
 # Output:
@@ -214,9 +315,12 @@ print(result)
 #     Project
 #         Edge By Index Scan | [f:FOLLOW]
 #             Node By Index Scan | (p:Person)
-{% endcapture %}
+```
 
-{% capture javascript_6 %}
+  </TabItem>
+  <TabItem value="javascript" label="JavaScript">
+
+```javascript
 const result = await graph.explain("MATCH (p:Person {id: 0})-[f:FOLLOW]->(fp) WHERE 0 < f.created_at AND f.created_at < 1000 RETURN fp");
 console.log(result);
 // Output:
@@ -224,9 +328,12 @@ console.log(result);
 //     Project
 //         Edge By Index Scan | [f:FOLLOW]
 //             Node By Index Scan | (p:Person)
-{% endcapture %}
+```
 
-{% capture java_6 %}
+  </TabItem>
+  <TabItem value="java" label="Java">
+
+```java
 String result = graph.explain("MATCH (p:Person {id: 0})-[f:FOLLOW]->(fp) WHERE 0 < f.created_at AND f.created_at < 1000 RETURN fp");
 System.out.println(result);
 // Output:
@@ -234,9 +341,12 @@ System.out.println(result);
 //     Project
 //         Edge By Index Scan | [f:FOLLOW]
 //             Node By Index Scan | (p:Person)
-{% endcapture %}
+```
 
-{% capture rust_6 %}
+  </TabItem>
+  <TabItem value="rust" label="Rust">
+
+```rust
 let result = graph.explain("MATCH (p:Person {id: 0})-[f:FOLLOW]->(fp) WHERE 0 < f.created_at AND f.created_at < 1000 RETURN fp").execute().await?;
 println!("{}", result);
 // Output:
@@ -244,9 +354,10 @@ println!("{}", result);
 //     Project
 //         Edge By Index Scan | [f:FOLLOW]
 //             Node By Index Scan | (p:Person)
-{% endcapture %}
+```
 
-{% include code_tabs.html id="relationship_explain_tabs" shell=shell_6 python=python_6 javascript=javascript_6 java=java_6 rust=rust_6 %}
+  </TabItem>
+</Tabs>
 
 This can significantly improve the runtime of queries that traverse super nodes or when we want to start traverse from relationships.
 
@@ -254,53 +365,85 @@ This can significantly improve the runtime of queries that traverse super nodes 
 
 For a node label, the index deletion syntax is:
 
-{% capture shell_7 %}
+<Tabs groupId="programming-language">
+  <TabItem value="shell" label="Shell">
+
+```bash
 GRAPH.QUERY DEMO_GRAPH "DROP INDEX ON :Person(age)"
-{% endcapture %}
+```
 
-{% capture python_7 %}
+  </TabItem>
+  <TabItem value="python" label="Python">
+
+```python
 graph.query("DROP INDEX ON :Person(age)")
-{% endcapture %}
+```
 
-{% capture javascript_7 %}
+  </TabItem>
+  <TabItem value="javascript" label="JavaScript">
+
+```javascript
 await graph.query("DROP INDEX ON :Person(age)");
-{% endcapture %}
+```
 
-{% capture java_7 %}
+  </TabItem>
+  <TabItem value="java" label="Java">
+
+```java
 graph.query("DROP INDEX ON :Person(age)");
-{% endcapture %}
+```
 
-{% capture rust_7 %}
+  </TabItem>
+  <TabItem value="rust" label="Rust">
+
+```rust
 graph.query("DROP INDEX ON :Person(age)").execute().await?;
-{% endcapture %}
+```
 
-{% include code_tabs.html id="drop_node_index_tabs" shell=shell_7 python=python_7 javascript=javascript_7 java=java_7 rust=rust_7 %}
+  </TabItem>
+</Tabs>
 
 ## Deleting an index for a relationship type
 
 For a relationship type, the index deletion syntax is:
 
-{% capture shell_8 %}
+<Tabs groupId="programming-language">
+  <TabItem value="shell" label="Shell">
+
+```bash
 GRAPH.QUERY DEMO_GRAPH "DROP INDEX ON :FOLLOW(created_at)"
-{% endcapture %}
+```
 
-{% capture python_8 %}
+  </TabItem>
+  <TabItem value="python" label="Python">
+
+```python
 graph.query("DROP INDEX ON :FOLLOW(created_at)")
-{% endcapture %}
+```
 
-{% capture javascript_8 %}
+  </TabItem>
+  <TabItem value="javascript" label="JavaScript">
+
+```javascript
 await graph.query("DROP INDEX ON :FOLLOW(created_at)");
-{% endcapture %}
+```
 
-{% capture java_8 %}
+  </TabItem>
+  <TabItem value="java" label="Java">
+
+```java
 graph.query("DROP INDEX ON :FOLLOW(created_at)");
-{% endcapture %}
+```
 
-{% capture rust_8 %}
+  </TabItem>
+  <TabItem value="rust" label="Rust">
+
+```rust
 graph.query("DROP INDEX ON :FOLLOW(created_at)").execute().await?;
-{% endcapture %}
+```
 
-{% include code_tabs.html id="drop_relationship_index_tabs" shell=shell_8 python=python_8 javascript=javascript_8 java=java_8 rust=rust_8 %}
+  </TabItem>
+</Tabs>
 
 ## Array Indices
 
@@ -310,7 +453,10 @@ Note: Complex types like nested arrays, maps, or vectors are not supported for i
 
 The following example demonstrates how to index and search an array property:
 
-{% capture shell_9 %}
+<Tabs groupId="programming-language">
+  <TabItem value="shell" label="Shell">
+
+```bash
 # Create a node with an array property
 GRAPH.QUERY DEMO_GRAPH "CREATE (:Person {samples: [-21, 30.5, 0, 90, 3.14]})"
 
@@ -319,9 +465,12 @@ GRAPH.QUERY DEMO_GRAPH "CREATE INDEX FOR (p:Person) ON (p.samples)"
 
 # Use the index to search for nodes containing a specific value in the array
 GRAPH.QUERY DEMO_GRAPH "MATCH (p:Person) WHERE 90 IN p.samples RETURN p"
-{% endcapture %}
+```
 
-{% capture python_9 %}
+  </TabItem>
+  <TabItem value="python" label="Python">
+
+```python
 # Create a node with an array property
 graph.query("CREATE (:Person {samples: [-21, 30.5, 0, 90, 3.14]})")
 
@@ -330,9 +479,12 @@ graph.query("CREATE INDEX FOR (p:Person) ON (p.samples)")
 
 # Use the index to search for nodes containing a specific value in the array
 result = graph.query("MATCH (p:Person) WHERE 90 IN p.samples RETURN p")
-{% endcapture %}
+```
 
-{% capture javascript_9 %}
+  </TabItem>
+  <TabItem value="javascript" label="JavaScript">
+
+```javascript
 // Create a node with an array property
 await graph.query("CREATE (:Person {samples: [-21, 30.5, 0, 90, 3.14]})");
 
@@ -341,9 +493,12 @@ await graph.query("CREATE INDEX FOR (p:Person) ON (p.samples)");
 
 // Use the index to search for nodes containing a specific value in the array
 const result = await graph.query("MATCH (p:Person) WHERE 90 IN p.samples RETURN p");
-{% endcapture %}
+```
 
-{% capture java_9 %}
+  </TabItem>
+  <TabItem value="java" label="Java">
+
+```java
 // Create a node with an array property
 graph.query("CREATE (:Person {samples: [-21, 30.5, 0, 90, 3.14]})");
 
@@ -352,9 +507,12 @@ graph.query("CREATE INDEX FOR (p:Person) ON (p.samples)");
 
 // Use the index to search for nodes containing a specific value in the array
 ResultSet result = graph.query("MATCH (p:Person) WHERE 90 IN p.samples RETURN p");
-{% endcapture %}
+```
 
-{% capture rust_9 %}
+  </TabItem>
+  <TabItem value="rust" label="Rust">
+
+```rust
 // Create a node with an array property
 graph.query("CREATE (:Person {samples: [-21, 30.5, 0, 90, 3.14]})").execute().await?;
 
@@ -363,15 +521,19 @@ graph.query("CREATE INDEX FOR (p:Person) ON (p.samples)").execute().await?;
 
 // Use the index to search for nodes containing a specific value in the array
 let result = graph.query("MATCH (p:Person) WHERE 90 IN p.samples RETURN p").execute().await?;
-{% endcapture %}
+```
 
-{% include code_tabs.html id="array_index_tabs" shell=shell_9 python=python_9 javascript=javascript_9 java=java_9 rust=rust_9 %}
+  </TabItem>
+</Tabs>
 
 ## Verifying Index Usage
 
 To verify that an index is being used by your query, use `GRAPH.EXPLAIN` before and after creating the index:
 
-{% capture shell_verify %}
+<Tabs groupId="programming-language">
+  <TabItem value="shell" label="Shell">
+
+```bash
 # Before creating the index
 GRAPH.EXPLAIN DEMO_GRAPH "MATCH (p:Person) WHERE p.age > 30 RETURN p"
 # Output shows: Label Scan | (p:Person)
@@ -382,9 +544,12 @@ GRAPH.QUERY DEMO_GRAPH "CREATE INDEX FOR (p:Person) ON (p.age)"
 # After creating the index
 GRAPH.EXPLAIN DEMO_GRAPH "MATCH (p:Person) WHERE p.age > 30 RETURN p"
 # Output now shows: Index Scan | (p:Person)
-{% endcapture %}
+```
 
-{% capture python_verify %}
+  </TabItem>
+  <TabItem value="python" label="Python">
+
+```python
 # Before creating the index
 result = graph.explain("MATCH (p:Person) WHERE p.age > 30 RETURN p")
 print(result)  # Shows: Label Scan | (p:Person)
@@ -395,9 +560,12 @@ graph.query("CREATE INDEX FOR (p:Person) ON (p.age)")
 # After creating the index
 result = graph.explain("MATCH (p:Person) WHERE p.age > 30 RETURN p")
 print(result)  # Now shows: Index Scan | (p:Person)
-{% endcapture %}
+```
 
-{% capture javascript_verify %}
+  </TabItem>
+  <TabItem value="javascript" label="JavaScript">
+
+```javascript
 // Before creating the index
 let result = await graph.explain("MATCH (p:Person) WHERE p.age > 30 RETURN p");
 console.log(result);  // Shows: Label Scan | (p:Person)
@@ -408,9 +576,12 @@ await graph.query("CREATE INDEX FOR (p:Person) ON (p.age)");
 // After creating the index
 result = await graph.explain("MATCH (p:Person) WHERE p.age > 30 RETURN p");
 console.log(result);  // Now shows: Index Scan | (p:Person)
-{% endcapture %}
+```
 
-{% capture java_verify %}
+  </TabItem>
+  <TabItem value="java" label="Java">
+
+```java
 // Before creating the index
 String result = graph.explain("MATCH (p:Person) WHERE p.age > 30 RETURN p");
 System.out.println(result);  // Shows: Label Scan | (p:Person)
@@ -421,9 +592,12 @@ graph.query("CREATE INDEX FOR (p:Person) ON (p.age)");
 // After creating the index
 result = graph.explain("MATCH (p:Person) WHERE p.age > 30 RETURN p");
 System.out.println(result);  // Now shows: Index Scan | (p:Person)
-{% endcapture %}
+```
 
-{% capture rust_verify %}
+  </TabItem>
+  <TabItem value="rust" label="Rust">
+
+```rust
 // Before creating the index
 let result = graph.explain("MATCH (p:Person) WHERE p.age > 30 RETURN p").execute().await?;
 println!("{}", result);  // Shows: Label Scan | (p:Person)
@@ -434,9 +608,10 @@ graph.query("CREATE INDEX FOR (p:Person) ON (p.age)").execute().await?;
 // After creating the index
 let result = graph.explain("MATCH (p:Person) WHERE p.age > 30 RETURN p").execute().await?;
 println!("{}", result);  // Now shows: Index Scan | (p:Person)
-{% endcapture %}
+```
 
-{% include code_tabs.html id="verify_index_tabs" shell=shell_verify python=python_verify javascript=javascript_verify java=java_verify rust=rust_verify %}
+  </TabItem>
+</Tabs>
 
 ## Index Management
 
