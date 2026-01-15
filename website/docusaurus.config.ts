@@ -18,12 +18,12 @@ const config: Config = {
   url: 'https://falkordb.github.io',
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
-  baseUrl: '/',
+  baseUrl: '/docs-staging/',
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
   organizationName: 'FalkorDB', // Usually your GitHub org/user name.
-  projectName: 'docs', // Usually your repo name.
+  projectName: 'docs-staging', // Usually your repo name.
 
   onBrokenLinks: 'throw',
 
@@ -42,7 +42,7 @@ const config: Config = {
         docs: {
           routeBasePath: '/', // Serve docs at the root
           sidebarPath: './sidebars.ts',
-          editUrl: 'https://github.com/FalkorDB/docs/edit/main/',
+          editUrl: 'https://github.com/FalkorDB/docs-staging/edit/main/',
           showLastUpdateTime: false,
           showLastUpdateAuthor: false,
           // Enable previous/next navigation at the bottom of each doc page
