@@ -7,13 +7,16 @@ nav_order: 9
 
 # Minimum Spanning Forest (MSF)
 
-The Minimum Spanning Forest algorithm computes the minimum spanning forest of a graph. A minimum spanning forest is a collection of minimum spanning trees, one for each connected component in the graph.
+The Minimum Spanning Forest algorithm computes the minimum spanning forest of a
+graph. A minimum spanning forest is a collection of minimum spanning trees, one
+for each connected component in the graph.
+
 
 ## What is a Minimum Spanning Forest?
-
 - For a **connected graph**, the MSF is a single minimum spanning tree (MST) that connects all nodes with the minimum total edge weight
 - For a **disconnected graph**, the MSF consists of multiple MSTs, one for each connected component
 - The forest contains no cycles and has exactly `N - C` edges, where `N` is the number of nodes and `C` is the number of connected components
+- The sum of the weights of the edges in the forest is minimized
 
 ## Use Cases
 
@@ -27,122 +30,68 @@ The Minimum Spanning Forest algorithm computes the minimum spanning forest of a 
 ```cypher
 CALL algo.MSF(
     config: MAP
-) YIELD src, dest, weight, relationshipType
+) YIELD edges, nodes
 ```
 
 ### Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `config` | MAP | Configuration map containing algorithm parameters |
+The procedure accepts an optional configuration `Map` with the following optional parameters:
 
-#### Configuration Options
+| Name                | Type   | Default                | Description                                                                |
+|---------------------|--------|------------------------|----------------------------------------------------------------------------|
+| `nodeLabels`        | Array  | All labels             | Array of node labels to filter which nodes are included in the computation |
+| `relationshipTypes` | Array  | All relationship types | Array of relationship types to define which edges are traversed            |
+| `objective`         | string | 'minimize'             | 'minimize' or 'maximize' what to optimize in the spanning tree             |
+| `weightAttribute`   | string | Unweighted             | the attribute to use as the tree weight.                                   |
 
-| Option | Type | Required | Default | Description |
-|--------|------|----------|---------|-------------|
-| `sourceNodes` | List of Nodes | No | All nodes | Starting nodes for the algorithm. If not provided, all nodes in the graph are considered |
-| `relationshipTypes` | List of Strings | No | All types | Relationship types to traverse. If not provided, all relationship types are considered |
-| `relationshipWeightProperty` | String | No | `null` | Property name containing edge weights. If not specified, all edges have weight 1.0 |
-| `defaultValue` | Float | No | `1.0` | Default weight for edges that don't have the weight property |
+### Return Values
+The procedure returns a stream of records corresponding to each tree in the forest with the following fields:
 
-### Returns
+| Name    | Type | Description                      |
+|---------|------|----------------------------------|
+| `edges` | List | The edges that connect each tree |
+| `nodes` | List | The nodes in the tree            |
 
-| Field | Type | Description |
-|-------|------|-------------|
-| `src` | Node | Source node of the edge in the spanning forest |
-| `dest` | Node | Destination node of the edge in the spanning forest |
-| `weight` | Float | Weight of the edge |
-| `relationshipType` | String | Type of the relationship |
-
-## Examples
-
-### Example 1: Basic MSF with Unweighted Graph
-
-Find the minimum spanning forest treating all edges equally:
+### Create the Graph
 
 ```cypher
-CALL algo.MSF({}) YIELD src, dest, weight, relationshipType
-RETURN src.name AS source, dest.name AS destination, weight, relationshipType
+CREATE 
+  (CityHall:GOV),
+  (CourtHouse:GOV),
+  (FireStation:GOV),
+  (Electricity:UTIL),
+  (Water:UTIL),
+  (Building_A:RES),
+  (Building_B:RES),
+  (CityHall)-[rA:ROAD {cost: 2.2}]->(CourtHouse),
+  (CityHall)-[rB:ROAD {cost: 8.0}]->(FireStation),
+  (CourtHouse)-[rC:ROAD {cost: 3.4}]->(Building_A),
+  (FireStation)-[rD:ROAD {cost: 3.0}]->(Building_B),
+  (Building_A)-[rF:ROAD {cost: 5.2}]->(Building_B),
+  (Electricity)-[rG:ROAD {cost: 0.7}]->(Building_A),
+  (Water)-[rH:ROAD {cost: 2.3}]->(Building_B),
+  (CityHall)-[tA:TRAM {cost: 1.5}]->(Building_A),
+  (CourtHouse)-[tB:TRAM {cost: 7.3}]->(Building_B),
+  (FireStation)-[tC:TRAM {cost: 1.2}]->(Electricity)
+RETURN *
 ```
 
-### Example 2: MSF with Weighted Edges
+## Examples:
 
-Consider a graph representing cities connected by roads with distances:
+Suppose you are an urban planner tasked with designing a new transportation network for a town. There are several vital buildings that must be connected by this new network. A cost estimator has already provided you with the estimated cost for some of the potential routes between these buildings.
+
+Your goal is to connect every major building with the lowest total cost, even if travel between some buildings requires multiple stops and different modes of transport. The Minimum Spanning Forest algorithm helps you achieve this by identifying the most cost-effective network.
+
+![City Graph](../images/city_plan.png)
 
 ```cypher
-// Create a weighted graph
-CREATE (a:City {name: 'A'}), (b:City {name: 'B'}), (c:City {name: 'C'}),
-       (d:City {name: 'D'}), (e:City {name: 'E'})
-CREATE (a)-[:ROAD {distance: 2}]->(b),
-       (a)-[:ROAD {distance: 3}]->(c),
-       (b)-[:ROAD {distance: 1}]->(c),
-       (b)-[:ROAD {distance: 4}]->(d),
-       (c)-[:ROAD {distance: 5}]->(d),
-       (d)-[:ROAD {distance: 6}]->(e)
-
-// Find minimum spanning forest using distance weights
-CALL algo.MSF({
-    relationshipWeightProperty: 'distance'
-}) YIELD src, dest, weight
-RETURN src.name AS from, dest.name AS to, weight AS distance
-ORDER BY weight
+CALL algo.MSF({weightAttribute: 'cost'}) YIELD edges, nodes RETURN edges, nodes
 ```
 
-**Result:**
-```text
-from | to | distance
------|----|---------
-B    | C  | 1.0
-A    | B  | 2.0
-A    | C  | 3.0
-B    | D  | 4.0
-D    | E  | 6.0
-```
+### Expected Results
+The algorithm would yield a single tree containing the following edge and node objects:
 
-### Example 3: MSF on Specific Relationship Types
-
-Find the spanning forest considering only specific relationship types:
-
-```cypher
-CALL algo.MSF({
-    relationshipTypes: ['ROAD', 'HIGHWAY'],
-    relationshipWeightProperty: 'distance'
-}) YIELD src, dest, weight, relationshipType
-RETURN src.name AS from, dest.name AS to, weight, relationshipType
-```
-
-### Example 4: MSF Starting from Specific Nodes
-
-Compute the spanning forest starting from a subset of nodes:
-
-```cypher
-MATCH (start:City) WHERE start.name IN ['A', 'B']
-WITH collect(start) AS startNodes
-CALL algo.MSF({
-    sourceNodes: startNodes,
-    relationshipWeightProperty: 'distance'
-}) YIELD src, dest, weight
-RETURN src.name AS from, dest.name AS to, weight
-```
-
-### Example 5: Disconnected Graph
-
-For a graph with multiple components, MSF returns multiple trees:
-
-```cypher
-// Create two disconnected components
-CREATE (a:Node {name: 'A'})-[:CONNECTED {weight: 1}]->(b:Node {name: 'B'}),
-       (b)-[:CONNECTED {weight: 2}]->(c:Node {name: 'C'}),
-       (x:Node {name: 'X'})-[:CONNECTED {weight: 3}]->(y:Node {name: 'Y'})
-
-// Find MSF
-CALL algo.MSF({
-    relationshipWeightProperty: 'weight'
-}) YIELD src, dest, weight
-RETURN src.name AS from, dest.name AS to, weight
-```
-
-**Result:** Two separate trees (A-B-C and X-Y)
+![City MSF Graph](../images/city_msf.png)
 
 ## Algorithm Details
 
@@ -161,9 +110,8 @@ FalkorDB's MSF implementation uses an efficient matrix-based approach optimized 
 ## Best Practices
 
 1. **Weight Properties**: Ensure weight properties are numeric (integers or floats)
-2. **Missing Weights**: Use `defaultValue` to handle edges without weight properties
-3. **Large Graphs**: For large graphs (100K+ nodes), consider filtering by `sourceNodes` or `relationshipTypes`
-4. **Directed vs Undirected**: The algorithm treats relationships as undirected for spanning forest purposes
+2. **Missing Weights**: Edges without the specified weight property will only be included in the tree if there are no other edges that could be used to connect the connected component
+3. **Directed vs Undirected**: The algorithm treats all relationships as undirected for spanning forest purposes
 
 ## Related Algorithms
 
