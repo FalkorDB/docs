@@ -19,9 +19,9 @@ Table of Contents
 
 Learn how to run FalkorDB using Docker and Docker Compose, with examples for development and production environments including persistence, networking, and configuration options.
 
-## 2. [Configuring Persistence](/operations/persistence)
+## 2. [Data Durability](/operations/durability)
 
-Learn how to set up FalkorDB with data persistence, ensuring that your data remains intact even after server restarts.
+Understand FalkorDB's durability mechanisms including RDB snapshots, AOF logging, and graph-specific backup options to balance performance and data safety.
 
 ## 3. [Configuring Replication](/operations/replication)
 
