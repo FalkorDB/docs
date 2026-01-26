@@ -191,23 +191,23 @@ const config: Config = {
       respectPrefersColorScheme: false,
     },
     navbar: {
-      title: 'FalkorDB',
       logo: {
         alt: 'FalkorDB Logo',
-        src: 'img/falkor-logo.png',
+        src: 'img/FalkorDB Full Logo - Color.svg',
+        srcDark: 'img/falkor-logo.png',
         href: '/',
         target: '_self',
       },
       items: [
         {
-          href: 'https://www.falkordb.com',
-          label: 'Website',
+          type: 'search',
           position: 'left',
+          className: 'navbar__search-center',
         },
         {
-          href: 'https://app.falkordb.cloud',
-          label: 'Try Cloud',
-          position: 'left',
+          href: 'https://www.falkordb.com',
+          label: 'Website',
+          position: 'right',
         },
         {
           href: 'https://github.com/falkordb/falkordb',
@@ -218,6 +218,12 @@ const config: Config = {
           href: 'https://discord.gg/ErBEqN9E',
           label: 'Discord',
           position: 'right',
+        },
+        {
+          href: 'https://app.falkordb.cloud',
+          label: 'Try Cloud',
+          position: 'right',
+          className: 'button button--primary button--sm navbar__cta',
         },
       ],
     },

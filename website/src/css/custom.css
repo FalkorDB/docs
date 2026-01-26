@@ -6,13 +6,13 @@
 
 /* You can override the default Infima variables here. */
 :root {
-  --ifm-color-primary: #2e8555;
-  --ifm-color-primary-dark: #29784c;
-  --ifm-color-primary-darker: #277148;
-  --ifm-color-primary-darkest: #205d3b;
-  --ifm-color-primary-light: #33925d;
-  --ifm-color-primary-lighter: #359962;
-  --ifm-color-primary-lightest: #3cad6e;
+  --ifm-color-primary: #7466ff;
+  --ifm-color-primary-dark: #5a4bff;
+  --ifm-color-primary-darker: #4d3cff;
+  --ifm-color-primary-darkest: #3320ff;
+  --ifm-color-primary-light: #8e81ff;
+  --ifm-color-primary-lighter: #9b90ff;
+  --ifm-color-primary-lightest: #b5abff;
   --ifm-code-font-size: 95%;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
 }
@@ -67,5 +67,178 @@
 /* Reduce visual clutter in nested menus */
 .menu__list .menu__list {
   margin-top: 0.25rem;
+}
+
+/* Increase internal padding of doc articles */
+.theme-doc-page article {
+  padding: 3.5rem 4rem;
+}
+
+.theme-doc-page .theme-doc-markdown.markdown {
+  padding: 2rem 2.5rem;
+}
+
+.centered-badge {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 0 1rem;
+}
+
+.centered-badge img {
+  display: block;
+}
+
+/* Choose Your Path section */
+.path-section {
+  margin: 1.5rem 0 2rem;
+}
+
+.path-lead {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.path-cards {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.5rem;
+}
+
+.path-card {
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: 14px;
+  padding: 1rem 1.25rem;
+  background: var(--ifm-background-surface-color);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+}
+
+[data-theme='dark'] .path-card {
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+}
+
+.path-icon {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.path-card h4 {
+  margin-bottom: 0.5rem;
+}
+
+.path-card p {
+  margin-bottom: 0.75rem;
+}
+
+.path-card ul {
+  margin: 0 0 1rem 1.25rem;
+}
+
+.path-cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.path-note {
+  margin-top: 1rem;
+  color: var(--ifm-color-emphasis-700);
+}
+
+@media (max-width: 996px) {
+  .path-cards {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Core Capabilities section */
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  margin: 1rem 0 0.75rem;
+}
+
+.feature-card {
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+  background: var(--ifm-background-surface-color);
+}
+
+.feature-card h4 {
+  margin-bottom: 0.4rem;
+}
+
+.feature-card p {
+  margin: 0;
+}
+
+.feature-footer {
+  margin-top: 0.5rem;
+  color: var(--ifm-color-emphasis-700);
+  font-weight: 600;
+}
+
+@media (max-width: 996px) {
+  .feature-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Increase default paragraph font size in docs */
+.theme-doc-markdown p {
+  font-size: 1.05rem;
+  line-height: 1.75;
+}
+
+@media (max-width: 996px) {
+  .theme-doc-page article {
+    padding: 2rem 1.5rem;
+  }
+
+  .theme-doc-page .theme-doc-markdown.markdown {
+    padding: 1.25rem 1rem;
+  }
+}
+
+/* Navbar layout: center search, right-align outbound links */
+.navbar__inner {
+  position: relative;
+}
+
+.navbar__items--left,
+.navbar__items--right {
+  flex: 1 1 0;
+}
+
+.navbar__item.navbar__search-center {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(520px, 60vw);
+  margin: 0;
+}
+
+.navbar__item.navbar__search-center .navbar__search-input {
+  width: 100%;
+}
+
+.navbar__cta {
+  margin-left: 0.5rem;
+}
+
+@media (max-width: 996px) {
+  .navbar__items--left,
+  .navbar__items--right {
+    flex: 0 0 auto;
+  }
+
+  .navbar__item.navbar__search-center {
+    position: static;
+    transform: none;
+    width: auto;
+  }
 }
 
