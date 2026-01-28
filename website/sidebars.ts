@@ -16,7 +16,16 @@ const sidebars: SidebarsConfig = {
       items: [
         'getting-started/index',
         'getting-started/clients',
-        'getting-started/configuration',
+      ],
+    },
+
+    // CORE CONCEPTS
+    {
+      type: 'category',
+      label: 'Core Concepts',
+      collapsed: false,
+      items: [
+        'datatypes',
       ],
     },
 
@@ -44,6 +53,20 @@ const sidebars: SidebarsConfig = {
         'operations/falkordblite',
         'operations/railway',
         'operations/lightning-ai',
+        {
+          type: 'category',
+          label: 'Migration & Import',
+          link: {
+            type: 'doc',
+            id: 'operations/migration/index',
+          },
+          items: [
+            'operations/migration/redisgraph-to-falkordb',
+            'operations/migration/neo4j-to-falkordb',
+            'operations/migration/kuzu-to-falkordb',
+            'operations/migration/rdf-to-falkordb',
+          ],
+        },
         {
           type: 'category',
           label: 'FalkorDB Cloud',
@@ -253,6 +276,7 @@ const sidebars: SidebarsConfig = {
         'integration/kafka-connect',
         'integration/spring-data-falkordb',
         'integration/jena',
+        'operations/opentelemetry',
       ],
     },
 
@@ -268,22 +292,6 @@ const sidebars: SidebarsConfig = {
       type: 'doc',
       id: 'troubleshooting/index',
       label: 'Troubleshooting & FAQ',
-    },
-
-    // MIGRATION
-    {
-      type: 'category',
-      label: 'Migration Guides',
-      link: {
-        type: 'doc',
-        id: 'operations/migration/index',
-      },
-      items: [
-        'operations/migration/redisgraph-to-falkordb',
-        'operations/migration/neo4j-to-falkordb',
-        'operations/migration/kuzu-to-falkordb',
-        'operations/migration/rdf-to-falkordb',
-      ],
     },
 
     // ADVANCED TOPICS
@@ -422,8 +430,26 @@ const sidebars: SidebarsConfig = {
             },
           ],
         },
+      ],
+    },
+
+    // REFERENCE & RESOURCES
+    {
+      type: 'category',
+      label: 'Reference & Resources',
+      items: [
+        'getting-started/configuration',
+        'References',
+        'license',
+      ],
+    },
+
+    // DEVELOPER GUIDE
+    {
+      type: 'category',
+      label: 'Developer Guide',
+      items: [
         'operations/building-docker',
-        'operations/opentelemetry',
         {
           type: 'category',
           label: 'Design & Specifications',
@@ -438,17 +464,6 @@ const sidebars: SidebarsConfig = {
             'design/third-party',
           ],
         },
-      ],
-    },
-
-    // REFERENCE
-    {
-      type: 'category',
-      label: 'Reference',
-      items: [
-        'datatypes',
-        'References',
-        'license',
       ],
     },
   ],
