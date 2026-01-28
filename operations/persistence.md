@@ -1,8 +1,9 @@
 ---
-title: "Persistence"
-nav_order: 2
+title: "Persistence on Docker"
+nav_order: 1
 description: "Configuring FalkorDB Docker for Persistence"
-parent: "Operations"
+parent: "Durability"
+grand_parent: "Operations"
 ---
 
 # Configuring FalkorDB Docker for Persistence
@@ -82,6 +83,12 @@ redis-cli GRAPH.QUERY mygraph "MATCH (n) RETURN n"
 - **Backup Regularly:** Even with persistence, maintain regular backups of your data
 - **Monitor Disk Space:** Ensure sufficient disk space is available for the volume
 - **Use Named Volumes:** Named volumes are easier to manage than bind mounts
+
+## Understanding Durability Options
+
+Docker volume configuration ensures your data persists across container restarts, but FalkorDB also provides multiple durability mechanisms (RDB snapshots, AOF logging) to protect against data loss and optimize for different use cases.
+
+For a comprehensive guide on configuring RDB, AOF, and graph-specific backup options, see [Data Durability](/operations/durability).
 
 ## Next Steps
 
