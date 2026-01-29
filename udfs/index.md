@@ -235,7 +235,7 @@ function stringify_path(p) {
 ### Graph
 UDFs have access to a global `graph` object which represents the current graph executing the UDF.
 The object exposes a single function `traverse` which is similar to the node's `getNeighbors` function (see docs above)
-but can perform multi source traversal.
+but can perform multi-source traversal.
 
 ```javascript
 function multi_source_bfs(sources, config) {
@@ -248,13 +248,12 @@ function multi_source_bfs(sources, config) {
 ```
 
 ### Falkor
-The `falkor` global object represents the FalkorDB database and is used mostly to register UDFs
-the object exposes two functions:
+The `falkor` global object represents the FalkorDB database and is used mostly to register UDFs. The object exposes two functions:
 
 Using the multi source traversal can be faster than performing multiple individual calls to getNeighbors.
 
-- `log` - logs a message to the database stdout
-- `register` - exposes a function to the database
+- `log` - logs a message to the database stdout.
+- `register` - exposes a function to the database.
 
 #### falkor.log
 
