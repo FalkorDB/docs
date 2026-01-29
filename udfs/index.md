@@ -242,13 +242,13 @@ function multi_source_bfs(sources, config) {
     const targets = graph.traverse(sources, config) ;
     // source i neighbors are in targets[i], which is an array of node or edge objects
     // depending on the optional config map passed to graph.traverse
-    s0_neighbors = sources[0];
+    const s0_neighbors = targets[0];
     ...
 }
 ```
 
 ### Falkor
-The `falkor` global objects represents the FalkorDB database and is used mostly to register UDFs
+The `falkor` global object represents the FalkorDB database and is used mostly to register UDFs
 the object exposes two functions:
 
 Using the multi source traversal can be faster than performing multiple individual calls to getNeighbors.
