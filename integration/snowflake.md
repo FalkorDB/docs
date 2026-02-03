@@ -163,16 +163,19 @@ Follow the UI steps above to bind `social_data` table to FalkorDB.
 
 ```sql
 -- Load person nodes
-CALL app_public.load_csv(
+CALL <app_instance_name>.app_public.load_csv(
   'social_network',
-  'CREATE (:Person {
-    id: toInteger(row.PERSON_ID),
-    name: row.NAME,
-    age: toInteger(row.AGE),
-    city: row.CITY
-  })'
+  'LOAD CSV FROM ''file://consumer_data.csv'' AS row 
+   CREATE (:Person {
+     id: toInteger(row[0]),
+     name: row[1],
+     age: toInteger(row[2]),
+     city: row[3]
+   })'
 );
 ```
+
+**Note**: Columns are accessed by index: `row[0]` = person_id, `row[1]` = name, `row[2]` = age, `row[3]` = city
 
 ### Step 4: Load Relationships
 
@@ -189,32 +192,35 @@ WHERE knows_id IS NOT NULL;
 Bind `social_relationships` and load:
 
 ```sql
-CALL app_public.load_csv(
+CALL <app_instance_name>.app_public.load_csv(
   'social_network',
-  'MATCH (a:Person {id: toInteger(row.PERSON_ID)})
-   MATCH (b:Person {id: toInteger(row.KNOWS_ID)})
-   CREATE (a)-[:KNOWS {since: toInteger(row.KNOWS_SINCE)}]->(b)'
+  'LOAD CSV FROM ''file://consumer_data.csv'' AS row 
+   MATCH (a:Person {id: toInteger(row[0])})
+   MATCH (b:Person {id: toInteger(row[1])})
+   CREATE (a)-[:KNOWS {since: toInteger(row[2])}]->(b)'
 );
 ```
+
+**Note**: For relationships table: `row[0]` = person_id, `row[1]` = knows_id, `row[2]` = knows_since
 
 ### Step 5: Query the Graph
 
 ```sql
 -- Find all friends of Alice
-CALL app_public.graph_query('social_network',
+CALL <app_instance_name>.app_public.graph_query('social_network',
   'MATCH (a:Person {name: ''Alice''})-[:KNOWS]->(friend)
    RETURN friend.name, friend.city'
 );
 
 -- Find friend-of-friend connections
-CALL app_public.graph_query('social_network',
+CALL <app_instance_name>.app_public.graph_query('social_network',
   'MATCH (a:Person {name: ''Alice''})-[:KNOWS*2]-(fof)
    WHERE fof.name <> ''Alice''
    RETURN DISTINCT fof.name, fof.city'
 );
 
 -- Find shortest path between two people
-CALL app_public.graph_query('social_network',
+CALL <app_instance_name>.app_public.graph_query('social_network',
   'MATCH path = shortestPath(
      (a:Person {name: ''Alice''})-[:KNOWS*]-(b:Person {name: ''Eve''})
    )
@@ -298,16 +304,16 @@ ALTER COMPUTE POOL falkordb_pool RESUME;
 
 ```sql
 -- Stop the service (doesn't delete compute pool)
-CALL app_public.stop_app();
+CALL <app_instance_name>.app_public.stop_app();
 
 -- Restart the service
-CALL app_public.start_app('falkordb_pool', 'falkordb_wh');
+CALL <app_instance_name>.app_public.start_app('FALKORDB_POOL', 'FALKORDB_WH');
 
 -- Check logs (if issues occur)
-CALL app_public.get_service_logs('0', 'falkordb', 100);
+CALL <app_instance_name>.app_public.get_service_logs('0', 'falkordb', 100);
 
 -- List containers
-CALL app_public.get_service_containers();
+CALL <app_instance_name>.app_public.get_service_containers();
 ```
 
 ## Cypher Query Language Basics
@@ -386,11 +392,11 @@ ORDER BY friend_count DESC
 **Solution**: 
 ```sql
 -- Check logs
-CALL app_public.get_service_logs('0', 'falkordb', 200);
+CALL <app_instance_name>.app_public.get_service_logs('0', 'falkordb', 200);
 
 -- Restart service
-CALL app_public.stop_app();
-CALL app_public.start_app('falkordb_pool', 'falkordb_wh');
+CALL <app_instance_name>.app_public.stop_app();
+CALL <app_instance_name>.app_public.start_app('FALKORDB_POOL', 'FALKORDB_WH');
 ```
 
 ### Duplicate Nodes After Reload
@@ -399,15 +405,24 @@ CALL app_public.start_app('falkordb_pool', 'falkordb_wh');
 
 **Solution**: Delete graph before reloading:
 ```sql
-CALL app_public.graph_delete('my_graph');
-CALL app_public.load_csv('my_graph', '...');
+CALL <app_instance_name>.app_public.graph_delete('my_graph');
+CALL <app_instance_name>.app_public.load_csv('my_graph', 
+  'LOAD CSV FROM ''file://consumer_data.csv'' AS row CREATE (:Node {id: row[0]})');
 ```
 
 ### Column Not Found in CSV
 
-**Problem**: Cypher query references `row.columnname` but column not found.
+**Problem**: Cypher query can't access CSV columns.
 
-**Solution**: Use UPPERCASE column names: `row.COLUMNNAME`
+**Solution**: Use index-based access: `row[0]`, `row[1]`, `row[2]`, etc. (not `row.COLUMNNAME`)
+
+```cypher
+-- Correct
+LOAD CSV FROM 'file://consumer_data.csv' AS row CREATE (:Person {id: row[0], name: row[1]})
+
+-- Incorrect
+CREATE (:Person {id: row.ID, name: row.NAME})
+```
 
 ## Performance Tips
 
