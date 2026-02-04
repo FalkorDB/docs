@@ -2,7 +2,7 @@
 
 ## Overview
 
-FalkorDB is available as a Snowflake Native App, allowing you to run graph database operations directly within your Snowflake environment. This integration enables you to:
+FalkorDB is available as a [Snowflake Native App](https://app.snowflake.com/marketplace/listing/GZT1Z2XCTHL/falkordb-falkordb-graph-database?search=falkordb), allowing you to run graph database operations directly within your Snowflake environment. This integration enables you to:
 
 - Load data from Snowflake tables into graph structures
 - Query relationships using Cypher query language
@@ -18,6 +18,9 @@ FalkorDB is available as a Snowflake Native App, allowing you to run graph datab
 3. Click **Get** to install the app
 4. Select your target database and warehouse
 5. Click **Get** to complete installation
+
+<img width="1333" height="299" alt="image" src="https://github.com/user-attachments/assets/a7b321a1-805f-4569-9802-c8e663ecb0ed" />
+
 
 ### Initial Setup
 
