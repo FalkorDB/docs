@@ -199,8 +199,8 @@ In a UDF, an edge object exposes its  `ID`, `type`, `startNode`,`endNode` and `a
 
 - `id` - edge internal ID
 - `type` - edge's relationship type
-- `startNode` - edge's start node
-- `endNode` - edge's end node
+- `source` - edge's start node
+- `target` - edge's end node
 - `attributes` - edge's attributes
 
  For example:
@@ -208,8 +208,8 @@ In a UDF, an edge object exposes its  `ID`, `type`, `startNode`,`endNode` and `a
 function stringify_edge(e) {
     return "id: " + e.id +
 			" type: " + e.type +
-			" startNode: " + e.startNode.id +
-			" endNode: " + e.endNode.id +
+			" sourceNode: " + e.source.id +
+			" targetNode: " + e.target.id +
 			" attributes: " + JSON.stringify(e.attributes);
 }
 ```
@@ -228,6 +228,74 @@ function stringify_path(p) {
 			"length: " + p.length +
 			"relationships: " + p.relationships;
 }
+```
+
+## Global objects
+
+### Graph
+UDFs have access to a global `graph` object which represents the current graph executing the UDF.
+The object exposes a single function `traverse` which is similar to the node's `getNeighbors` function (see docs above)
+but can perform multi-source traversal.
+
+```javascript
+function multi_source_bfs(sources, config) {
+    const targets = graph.traverse(sources, config) ;
+    // source i neighbors are in targets[i], which is an array of node or edge objects
+    // depending on the optional config map passed to graph.traverse
+    const s0_neighbors = targets[0];
+    ...
+}
+```
+
+### Falkor
+The `falkor` global object represents the FalkorDB database and is used mostly to register UDFs. The object exposes two functions:
+
+Using the multi source traversal can be faster than performing multiple individual calls to getNeighbors.
+
+- `log` - logs a message to the database stdout.
+- `register` - exposes a function to the database.
+
+#### falkor.log
+
+##### Description
+Logs a message to the database stdout
+
+##### Syntax
+```javascript
+falkor.log(msg)
+```
+
+##### Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `message` | string | Yes | message to log |
+
+##### falkor.register
+
+##### Description
+Register a function to the database
+
+##### Syntax
+```javascript
+falkor.register(name, function)
+```
+
+##### Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `name` | string | Yes | expose function under this name |
+| `function` | function pointer | Yes | function to expose |
+
+##### Example
+
+```javascript
+function add(a,b) {
+    return a + b;
+}
+
+falkor.register('addition', add);
 ```
 
 ## Advanced examples
