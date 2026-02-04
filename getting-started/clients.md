@@ -20,9 +20,9 @@ redirect_from:
 | [falkordb-go][falkordb-go-url]    |  [godoc][falkordb-go-docs] | Go       | BSD        | [FalkorDB][falkordb-url]                    | [Github][falkordb-go-package]             |
 | [NFalkorDB][nfalkordb-url]        |  [readme][nfalkordb-docs]   | C#       | Apache-2.0        | [FalkorDB][falkordb-url]                    | [nuget][nfalkordb-package]             |
 
-## Official Object Mapping (ORM) Libraries
+## Official Object-Graph Mapping (OGM) Libraries
 
-FalkorDB provides official Object-Relational Mapping (ORM) libraries that allow you to work with graph data using native language objects and structures.
+FalkorDB provides official Object-Graph Mapping (OGM) libraries that allow you to work with graph data using native language objects and structures.
 
 | Project                                    | Docs                        | Language   | License    | Author                       | Package                                  |
 | -------------------------------------------| --------------------------- | ---------- | ---------- | ---------------------------- | ---------------------------------------- |
