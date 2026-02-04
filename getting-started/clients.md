@@ -18,17 +18,17 @@ redirect_from:
 | [jfalkordb][jfalkordb-url]        |  [javadocs][jfalkordb-docs] | Java       | BSD        | [FalkorDB][falkordb-url]                    | [maven][jfalkordb-package]               |
 | [falkordb-rs][falkordb-rs-url]    |  [docs.rs][falkordb-rs-docs]| Rust       | MIT        | [FalkorDB][falkordb-url]                    | [crates][falkordb-rs-package]             |
 | [falkordb-go][falkordb-go-url]    |  [godoc][falkordb-go-docs] | Go       | BSD        | [FalkorDB][falkordb-url]                    | [Github][falkordb-go-package]             |
-|| [NFalkorDB][nfalkordb-url]        |  [readme][nfalkordb-docs]   | C#       | Apache-2.0        | [FalkorDB][falkordb-url]                    | [nuget][nfalkordb-package]             |
+| [NFalkorDB][nfalkordb-url]        |  [readme][nfalkordb-docs]   | C#       | Apache-2.0        | [FalkorDB][falkordb-url]                    | [nuget][nfalkordb-package]             |
 
 ## Official Object Mapping (ORM) Libraries
 
 FalkorDB provides official Object-Relational Mapping (ORM) libraries that allow you to work with graph data using native language objects and structures.
 
-|| Project                                    | Docs                        | Language   | License    | Author                       | Package                                  |
-|| -------------------------------------------| --------------------------- | ---------- | ---------- | ---------------------------- | ---------------------------------------- |
-|| [falkordb-py-orm][falkordb-py-orm-url]    | [readme][falkordb-py-orm-docs] | Python     | MIT        | [FalkorDB][falkordb-url]     | [GitHub][falkordb-py-orm-url]            |
-|| [falkordb-go-orm][falkordb-go-orm-url]    | [readme][falkordb-go-orm-docs] | Go         | MIT        | [FalkorDB][falkordb-url]     | [GitHub][falkordb-go-orm-url]            |
-|| [spring-data-falkordb][spring-data-url]   | [readme][spring-data-docs]     | Java       | Apache-2.0 | [FalkorDB][falkordb-url]     | [GitHub][spring-data-url]                |
+| Project                                    | Docs                        | Language   | License    | Author                       | Package                                  |
+| -------------------------------------------| --------------------------- | ---------- | ---------- | ---------------------------- | ---------------------------------------- |
+| [falkordb-py-orm][falkordb-py-orm-url]    | [readme][falkordb-py-orm-docs] | Python     | MIT        | [FalkorDB][falkordb-url]     | [GitHub][falkordb-py-orm-url]            |
+| [falkordb-go-orm][falkordb-go-orm-url]    | [readme][falkordb-go-orm-docs] | Go         | MIT        | [FalkorDB][falkordb-url]     | [GitHub][falkordb-go-orm-url]            |
+| [spring-data-falkordb][spring-data-url]   | [readme][spring-data-docs]     | Java       | Apache-2.0 | [FalkorDB][falkordb-url]     | [GitHub][spring-data-url]                |
 
 ## Additional Clients
 
