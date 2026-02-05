@@ -56,7 +56,7 @@ FalkorDB persists data through regular snapshots and transaction logs. These mec
 You can connect to the falkordb browser (integrated into your web browser) from the cloud console. The browser allows visualizing query results, allows you to traverse the graph and more. Multi Graph support is enabled by default in the browser which simplifies navigation and data management.
 
 ## Command Availability
-FalkorDB Cloud supports all graph database commands and most Redis commands. Some administrative commands are managed automatically by the cloud infrastructure for security and reliability. For a complete list of available commands and cloud-specific restrictions, see [Allowed Redis Commands](/cloud/redis-commands).
+FalkorDB Cloud supports all graph database commands and most Redis commands. Some administrative commands are managed automatically by the cloud infrastructure for security and reliability. For a complete list of available commands and cloud-specific restrictions, see [Allowed Redis Commands](/cloud/commands).
 
 ### Solution Architecture
 Solution architecture support helps you design how FalkorDB integrates with your broader application infrastructure. This guidance covers connection patterns, data modeling approaches, and best practices for specific use cases.
