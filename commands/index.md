@@ -14,7 +14,7 @@ FalkorDB exposes graph database functionality within Redis using the [openCypher
 ## Command Categories
 
 * **[FalkorDB Graph Commands](#falkordb-api)** - Graph database operations (GRAPH.*)
-* **[Redis Commands](/commands/redis-commands)** - Supported Redis commands and their availability on FalkorDB Cloud
+* **[Cloud Redis Commands](/cloud/redis-commands)** - Redis commands available on FalkorDB Cloud
 
 ## FalkorDB API
 

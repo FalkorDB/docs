@@ -1,14 +1,14 @@
 ---
-title: "Redis Commands"
-nav_order: 99
+title: "Allowed Redis Commands"
+nav_order: 10
 description: >
-    Allowed Redis commands in FalkorDB and their availability on FalkorDB Cloud
-parent: "Commands"
+    Redis commands available on FalkorDB Cloud
+parent: "Cloud DBaaS"
 ---
 
-# Redis Commands
+# Allowed Redis Commands
 
-FalkorDB is built as a Redis module, which means it supports a subset of Redis commands alongside its graph database commands. This page documents the Redis commands that are available in FalkorDB.
+FalkorDB Cloud supports a subset of Redis commands as FalkorDB is built as a Redis module. This page documents the Redis commands that are available on FalkorDB Cloud.
 
 ## Available Redis Commands
 
@@ -79,29 +79,29 @@ FalkorDB provides the following graph database commands:
 
 ## Command Availability on FalkorDB Cloud
 
-All Redis commands and FalkorDB graph commands listed above are generally available on FalkorDB Cloud. However, certain administrative commands are restricted on the managed cloud service for security and stability reasons:
+All Redis commands and FalkorDB graph commands listed above are available on FalkorDB Cloud. However, certain administrative commands have restrictions on the managed cloud service for security and stability reasons:
 
-### Commands with Restrictions on Cloud
+### Commands with Cloud Restrictions
 
-Commands marked with ⚠️ have restrictions on FalkorDB Cloud:
+Commands marked with ⚠️ have the following restrictions:
 
-- **READONLY** - This command is restricted as it affects replication behavior and is managed by the cloud infrastructure
-- **BGREWRITEAOF** - Background persistence operations are automatically managed by FalkorDB Cloud
-- **FLUSHALL** - Deleting all data across databases is restricted to prevent accidental data loss. Use `GRAPH.DELETE` for individual graphs instead
+- **READONLY** - This command is restricted as replication behavior is automatically managed by the cloud infrastructure
+- **BGREWRITEAOF** - Background persistence operations are automatically managed by FalkorDB Cloud based on your tier
+- **FLUSHALL** - Deleting all data across databases is restricted to prevent accidental data loss. Use `GRAPH.DELETE` to delete individual graphs instead
 
 ### Cloud-Managed Features
 
-On FalkorDB Cloud, the following features are automatically managed:
+On FalkorDB Cloud, the following features are automatically managed for you:
 
 - **Persistence**: Automated backups are configured based on your tier (every 12 hours for Startup/Pro, every hour for Enterprise)
-- **Replication**: High availability configurations automatically handle read replicas
+- **Replication**: High availability configurations automatically handle read replicas in Pro and Enterprise tiers
 - **Security**: TLS encryption is enabled on Startup tier and above
 
-For more information about FalkorDB Cloud features and tiers, see the [Cloud DBaaS documentation](/cloud/).
+For more information about FalkorDB Cloud tiers and features, see the [Cloud DBaaS overview](/cloud/).
 
 ## See Also
 
-- [FalkorDB Commands Overview](/commands/)
 - [FalkorDB Cloud](/cloud/)
-- [Configuration](/getting-started/configuration)
+- [Cloud Features](/cloud/features)
+- [FalkorDB Commands Overview](/commands/)
 - [Access Control Lists (ACL)](/commands/acl)
