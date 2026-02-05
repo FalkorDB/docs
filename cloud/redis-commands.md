@@ -1,12 +1,12 @@
 ---
-title: "Allowed Redis Commands"
+title: "Commands"
 nav_order: 10
 description: >
-    Redis commands available on FalkorDB Cloud
+    Commands available on FalkorDB Cloud
 parent: "Cloud DBaaS"
 ---
 
-# Allowed Redis Commands
+# Commands
 
 FalkorDB Cloud supports a subset of Redis commands as FalkorDB is built as a Redis module. This page documents the Redis commands that are available on FalkorDB Cloud.
 
