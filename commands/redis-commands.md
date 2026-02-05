@@ -63,7 +63,7 @@ The following Redis commands are supported in FalkorDB:
 ### FalkorDB Graph Commands
 FalkorDB provides the following graph database commands:
 
-- **[GRAPH.BULK](/commands/graph.bulk)** - Bulk insert data into a graph
+- **GRAPH.BULK** - Bulk insert data into a graph (see [bulk loader specification](/design/bulk-spec))
 - **[GRAPH.CONFIG](/commands/graph.config-get)** - Get or set graph configuration parameters
 - **[GRAPH.CONSTRAINT](/commands/graph.constraint-create)** - Manage graph constraints
 - **[GRAPH.COPY](/commands/graph.copy)** - Copy a graph to a new key
