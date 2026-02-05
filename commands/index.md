@@ -11,6 +11,11 @@ has_children: true
 
 FalkorDB exposes graph database functionality within Redis using the [openCypher](https://opencypher.org/) query language. Its basic commands accept openCypher queries, while additional commands are exposed for configuration or metadata retrieval.
 
+## Command Categories
+
+* **[FalkorDB Graph Commands](#falkordb-api)** - Graph database operations (GRAPH.*)
+* **[Redis Commands](/commands/redis-commands)** - Supported Redis commands and their availability on FalkorDB Cloud
+
 ## FalkorDB API
 
 Command details can be retrieved by filtering for the [module](/commands/?group=graph) or for a specific command, e.g., `GRAPH.QUERY`.
