@@ -21,7 +21,28 @@ REST API for FalkorDB Browser - Graph Database Management Interface
 
 To start using the FalkorDB Browser REST API, follow these simple steps:
 
-#### 1. Authentication
+#### 1. Environment Setup
+
+Before you can authenticate, configure the required environment variables:
+
+**Step 1:** Copy the template
+```bash
+cp .env.local.template .env.local
+```
+
+**Step 2:** Generate and add ENCRYPTION_KEY
+```bash
+openssl rand -hex 32
+```
+
+Add the generated key to your `.env.local` file:
+```
+ENCRYPTION_KEY=<generated_key>
+```
+
+Without the ENCRYPTION_KEY, the authentication endpoints will fail with server configuration errors.
+
+#### 2. Authentication
 First, you need to authenticate to get a JWT token:
 
 ```bash
@@ -44,7 +65,7 @@ This will return a JWT token that you'll use for all subsequent requests:
 }
 ```
 
-#### 2. Check Connection Status
+#### 3. Check Connection Status
 Verify that FalkorDB is running and accessible:
 
 ```bash
@@ -52,7 +73,7 @@ curl -X GET "http://your-falkordb-browser-url/api/status" \
   -H "Authorization: Bearer $JWT_TOKEN"
 ```
 
-#### 3. List Available Graphs
+#### 4. List Available Graphs
 See what graphs are available in your FalkorDB instance:
 
 ```bash
@@ -61,7 +82,7 @@ curl -X GET "http://your-falkordb-browser-url/api/graph" \
   -H "$AUTH_HEADER"
 ```
 
-#### 4. Execute Your First Query
+#### 5. Execute Your First Query
 Run a simple Cypher query on a graph:
 
 ```bash
@@ -208,13 +229,19 @@ Example request:
     }
     ```
 
-- **500**: Server configuration error - Missing NEXTAUTH_SECRET
+- **500**: Server configuration error - Missing NEXTAUTH_SECRET or ENCRYPTION_KEY
   - Content-Type: `application/json`
-  - Example response:
+  - Example responses:
 
     ```json
     {
       "message": "Server configuration error: NEXTAUTH_SECRET not set"
+    }
+    ```
+
+    ```json
+    {
+      "message": "Server configuration error: ENCRYPTION_KEY not set"
     }
     ```
 
