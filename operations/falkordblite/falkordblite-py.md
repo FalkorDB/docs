@@ -1,3 +1,4 @@
+---
 title: "FalkorDBLite (Python)"
 nav_order: 1
 parent: "FalkorDBLite"
