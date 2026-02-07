@@ -15,11 +15,13 @@ Get started with FalkorDB's cloud offering. The platform provides several enterp
 
 | Group | Features |
 | :--- | :--- |
-| **Availability & Resilience** | - High Availability<br>- Multi-zone Deployment<br>- Multi-Graph / Multi-Tenancy<br>- Automated Backups<br>- Continuous Persistence |
-| **Security & Access** | - Graph Access Control<br>- TLS<br>- VPC Peering |
+| **Availability & Resilience** | - High Availability<br>- Multi-zone Deployment<br>- Multi-Graph / Multi-Tenancy<br>- Automated Backups*<br>- Continuous Persistence |
+| **Security & Access** | - TLS<br>- VPC Peering |
 | **Deployment & Scaling** | - Dedicated Cluster Deployment<br>- Scalability |
 | **Support & Monitoring** | - Dedicated Support<br>- Advanced Monitoring<br>- Dedicated Account Manager |
 | ☁️ **Cloud Providers** | - AWS<br>- GCP<br>- Azure (BYOC) |
+
+> * Automated backups are provided every 2 hours for Enterprise accounts
 
 [![Learn More](https://img.shields.io/badge/Learn%20More-8A2BE2?style=for-the-badge)](https://github.com/FalkorDB/docs/edit/Cloud-Docs/cloud/features.md) 
 
