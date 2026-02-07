@@ -22,7 +22,6 @@ Get started with FalkorDB's cloud offering. The platform provides several enterp
 | ☁️ **Cloud Providers** | - AWS<br>- GCP<br>- Azure (BYOC) |
 
 > * Automated backups are provided every 2 hours for Enterprise accounts
-> * 
 [![Learn More](https://img.shields.io/badge/Learn%20More-8A2BE2?style=for-the-badge)](https://github.com/FalkorDB/docs/edit/Cloud-Docs/cloud/features.md) 
 
 ---
