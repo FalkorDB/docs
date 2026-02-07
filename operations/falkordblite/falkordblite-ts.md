@@ -73,12 +73,12 @@ Set options on `FalkorDB.open()` to control the embedded server:
 
 | Option | Type | Default | Purpose |
 | --- | --- | --- | --- |
-| `path` | `string` | temp dir | Data directory; enables persistence and snapshots. |
+| `path` | `string` | temporary directory | Data directory; enables persistence and snapshots. |
 | `redisServerPath` | `string` | auto | Use a custom `redis-server` binary. |
 | `modulePath` | `string` | auto | Use a custom FalkorDB module (`.so`) path. |
 | `maxMemory` | `string` | unset | Redis `maxmemory`, e.g. `"256mb"`. |
 | `logLevel` | `'debug' \| 'verbose' \| 'notice' \| 'warning'` | unset | Redis log level. |
-| `logFile` | `string` | stdout | Where the embedded server logs. |
+| `logFile` | `string` | standard output | Where the embedded server logs. |
 | `timeout` | `number` | `10000` | Startup timeout in milliseconds. |
 | `additionalConfig` | `Record<string, string>` | none | Extra redis.conf entries (e.g. `{ port: '6379' }`). |
 | `falkordbVersion` | `string` | `v4.16.3` | FalkorDB module release tag to download. |
