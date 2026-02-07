@@ -4,6 +4,9 @@ description: "Embedded FalkorDB runtime with Python and TypeScript bindings"
 nav_order: 6
 parent: "Operations"
 has_children: true
+redirect_from:
+  - /operations/falkordblite.html
+
 ---
 
 # FalkorDBLite
