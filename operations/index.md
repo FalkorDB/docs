@@ -19,9 +19,9 @@ Table of Contents
 
 Learn how to run FalkorDB using Docker and Docker Compose, with examples for development and production environments including persistence, networking, and configuration options.
 
-## 2. [Configuring Persistence](/operations/persistence)
+## 2. [Data Durability](/operations/durability)
 
-Learn how to set up FalkorDB with data persistence, ensuring that your data remains intact even after server restarts.
+Understand FalkorDB's durability mechanisms including RDB snapshots, AOF logging, and graph-specific backup options to balance performance and data safety.
 
 ## 3. [Configuring Replication](/operations/replication)
 
@@ -49,7 +49,7 @@ Comprehensive guide for setting up OpenTelemetry observability and tracing with 
 
 ## 9. [FalkorDBLite](/operations/falkordblite)
 
-Self-contained Python interface to FalkorDB with embedded Redis server, ideal for development and testing.
+Embedded FalkorDB runtime for local development with guides for [Python](/operations/falkordblite/falkordblite-py) and [TypeScript](/operations/falkordblite/falkordblite-ts).
 
 ## 10. [Deploy FalkorDB on Lightning.AI](/operations/lightning-ai)
 
