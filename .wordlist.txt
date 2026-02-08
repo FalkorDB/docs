@@ -78,6 +78,7 @@ LocalTime
 localStorage
 Lovitz
 MEM
+MSF
 Miesha
 MotoGP
 NRedisGraph
