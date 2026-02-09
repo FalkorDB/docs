@@ -2,7 +2,7 @@
 title: "RETURN"
 nav_order: 4
 description: >
-    Return defines which properties the returned result-set will contain.
+    Define result-set properties with the RETURN clause in Cypher queries. Support for DISTINCT, aggregations (COUNT, SUM, AVG), and implicit GROUP BY functionality.
 parent: "Cypher Language"
 ---
 

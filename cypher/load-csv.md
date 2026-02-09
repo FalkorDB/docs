@@ -2,7 +2,7 @@
 title: "LOAD CSV"
 nav_order: 17
 description: >
-    LOAD CSV allows a query to access data within a CSV file
+    Load CSV files into FalkorDB with LOAD CSV clause for data import. Supports local files, remote HTTPS URLs, headers, custom delimiters, and batch processing.
 parent: "Cypher Language"
 redirect_from:
   - /cypher/load_csv.html

@@ -1,7 +1,7 @@
 ---
 tile: "GRAPH.BULK endpoint specification"
 description: >
-    Implementation details for the GRAPH.BULK endpoint
+    Technical specification for the GRAPH.BULK endpoint used to import large datasets into FalkorDB with binary data format for nodes, edges, and properties.
 parent: "The FalkorDB Design"
 redirect_from:
   - /design/bulk_spec.html

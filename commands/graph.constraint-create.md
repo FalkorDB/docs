@@ -1,7 +1,7 @@
 ---
 title: "GRAPH.CONSTRAINT CREATE"
 description: >
-    Creates a constraint on specified graph
+    Create mandatory and unique constraints on FalkorDB graphs to enforce data integrity. Guarantee property existence and value uniqueness for nodes and relationships.
 parent: "Commands"    
 ---
 

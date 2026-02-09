@@ -1,7 +1,7 @@
 ---
 title: "Replication"
 nav_order: 2
-description: "Configuring FalkorDB Docker for Replication"
+description: "Configure FalkorDB replication in Docker for high availability and data redundancy. Set up master-replica architecture with step-by-step instructions for data synchronization."
 parent: "Operations"
 redirect_from:
   - /operation/replication

@@ -1,6 +1,6 @@
 ---
 title: "RDF to FalkorDB"
-description: "Migrate from RDF (TTL) to FalkorDB."
+description: "Migrate RDF (TTL) data to FalkorDB property graph with schema extraction, URI shortening, CSV export, and automated loading. Python and Rust loaders for efficient data transfer."
 parent: "Migration"
 ---
 
