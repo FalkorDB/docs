@@ -3,7 +3,7 @@ title: "Client Libraries"
 parent: "Getting Started"
 nav_order: 3
 description: >
-    FalkorDB Clients
+    Official FalkorDB client libraries for Python, Node.js, Java, Rust, Go, and C# with Object-Graph Mapping (OGM) support for Spring Data, and additional community clients.
 redirect_from:
   - /clients.html
   - /clients
