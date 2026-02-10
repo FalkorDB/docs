@@ -20,6 +20,7 @@ CDLP
 communityId
 Cailliau
 Centos
+CentOS
 ColumnType
 Costanza
 Cypher
@@ -100,6 +101,7 @@ OTLP
 OpenMP
 Ouaknine
 Parametrized
+pathfinding
 Pieter
 Pinterest
 Pydoc
