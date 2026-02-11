@@ -1,5 +1,5 @@
 ---
-tile: "GRAPH.BULK endpoint specification"
+title: "GRAPH.BULK endpoint specification"
 description: >
     Technical specification for the GRAPH.BULK endpoint used to import large datasets into FalkorDB with binary data format for nodes, edges, and properties.
 parent: "The FalkorDB Design"
