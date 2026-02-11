@@ -1,6 +1,6 @@
 ---
 title: "GenAI Tools"
-description: "Build intelligent GenAI applications with FalkorDB and LLMs using GraphRAG-SDK, AG2, LangChain, LangGraph, LlamaIndex, and GraphRAG Toolkit for AI agents with graph memory."
+description: "Build intelligent GenAI applications with FalkorDB and LLMs using popular GraphRAG and agent frameworks like LangChain and LlamaIndex."
 has_children: true
 nav_order: 8
 redirect_from:
