@@ -1,7 +1,7 @@
 ---
 title: "Railway"
 nav_order: 5
-description: "Deploy FalkorDB on Railway"
+description: "Deploy FalkorDB on Railway with verified templates for single instance or cluster configurations. Quick setup for development and production workloads."
 parent: "Operations"
 ---
 

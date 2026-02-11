@@ -1,7 +1,7 @@
 ---
 title: "AG2"
 nav_order: 2
-description: "Build multi-agent AI systems with AG2 (formerly AutoGen) and FalkorDB GraphRAG."
+description: "Build multi-agent AI systems with AG2 (formerly AutoGen) and FalkorDB GraphRAG. Orchestrate collaborative agents with structured knowledge graphs for intelligent applications."
 parent: "GenAI Tools"
 ---
 

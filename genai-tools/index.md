@@ -1,6 +1,6 @@
 ---
 title: "GenAI Tools"
-description: "FalkorDB tools and integrations for building GenAI applications"
+description: "Build intelligent GenAI applications with FalkorDB and LLMs using popular GraphRAG and agent frameworks like LangChain and LlamaIndex."
 has_children: true
 nav_order: 8
 redirect_from:

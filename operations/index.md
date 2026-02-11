@@ -1,7 +1,7 @@
 ---
 title: "Operations"
 nav_order: 10
-description: "Configuring FalkorDB Docker"
+description: "Learn how to configure, deploy, and manage FalkorDB in production environments with Docker, persistence, replication, clustering, and Kubernetes support."
 redirect_from:
   - /operation
   - /operation.html

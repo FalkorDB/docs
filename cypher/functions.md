@@ -2,7 +2,7 @@
 title: "Functions"
 nav_order: 18
 description: >
-    Information on all supported functions from the Cypher query language
+    Complete reference for Cypher functions in FalkorDB including predicate, scalar, aggregating, list, mathematical, string, type conversion, node, path, and vector functions.
 parent: "Cypher Language"
 ---
 

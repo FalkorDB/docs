@@ -1,6 +1,6 @@
 ---
 title: "Cloud DBaaS"
-description: Cloud Offering
+description: "FalkorDB Cloud DBaaS with Free, Startup, Pro, and Enterprise tiers. Get managed graph database hosting with high availability, multi-zone deployment, TLS, VPC, and dedicated support."
 nav_order: 10
 has_children: true
 ---

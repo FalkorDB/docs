@@ -1,6 +1,6 @@
 ---
 title: "Browser"
-description: "FalkorDB Browser web UI documentation"
+description: "FalkorDB Browser web UI for visualizing graphs, running Cypher queries, exploring data models, managing nodes and relationships, with query history and API documentation."
 nav_order: 9
 permalink: /browser/
 ---

@@ -1,6 +1,6 @@
 ---
 title: "Agentic Memory"
-description: "Learn how to implement agentic memory with FalkorDB for AI agents"
+description: "Implement persistent, contextual memory for AI agents with FalkorDB using Graphiti, Cognee, and MCP servers for temporally-aware, multi-tenant knowledge graphs."
 has_children: true
 nav_order: 11
 ---

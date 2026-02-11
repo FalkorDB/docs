@@ -2,7 +2,7 @@
 title: "Building Docker"
 nav_order: 9
 parent: Operations
-description: "Building docker container examples"
+description: "Build custom FalkorDB Docker containers from source with platform-specific examples for CentOS, Ubuntu, Debian, and Alpine. Manual installation and build system instructions."
 redirect_from:
   - /building-docker.html
   - /building-docker

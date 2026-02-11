@@ -3,7 +3,7 @@ title: "Configuration"
 parent: "Getting Started"
 nav_order: 2
 description: >
-    FalkorDB supports multiple module configuration parameters. 
+    Configure FalkorDB with Redis settings and module parameters for threads, cache, timeouts, query limits, and persistence. Adjust settings at load-time or runtime.
 redirect_from:
   - /configuration.html
   - /configuration

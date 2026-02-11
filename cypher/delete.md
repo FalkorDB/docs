@@ -2,7 +2,7 @@
 title: "DELETE"
 nav_order: 9
 description: >
-    DELETE is used to remove both nodes and relationships.
+    Use the DELETE clause to remove nodes and relationships from FalkorDB graphs. Deleting a node automatically removes all its incoming and outgoing relationships.
 parent: "Cypher Language"
 ---
 

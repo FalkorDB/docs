@@ -2,7 +2,7 @@
 title: "Pro Tier"
 parent: "Cloud DBaaS"
 nav_order: 3
-description: "FalkorDB DBaaS Pro Tier"
+description: "FalkorDB Cloud Pro Tier starting at $350/month with high availability, multi-zone deployment, cluster support, continuous persistence, and 24/7 dedicated support for production workloads."
 ---
 
 ![FalkorDB Cloud Pro Tier Banner](https://github.com/user-attachments/assets/2d39df96-f932-4cba-a124-bfff93f9a0ca)

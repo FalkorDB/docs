@@ -1,6 +1,6 @@
 ---
 title: "Community Detection using Label Propagation (CDLP)"
-description: "Community Detection using Label Propagation (CDLP)"
+description: "Detect communities in graphs using Label Propagation (CDLP) algorithm. Identifies densely connected clusters in social networks, biological systems, and web structures."
 parent: "Algorithms"
 ---
 

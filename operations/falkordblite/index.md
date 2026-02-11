@@ -1,6 +1,6 @@
 ---
 title: "FalkorDBLite"
-description: "Embedded FalkorDB runtime with Python and TypeScript bindings"
+description: "Embedded FalkorDB runtime with Python and TypeScript bindings for embedded graph, local development, testing, and CI/CD pipelines without managing external servers."
 nav_order: 6
 parent: "Operations"
 has_children: true

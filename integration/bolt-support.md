@@ -1,7 +1,7 @@
 ---
 title: "BOLT protocol support"
 nav_order: 4
-description: "Connecting to FalkorDB using BOLT protocol."
+description: "Connect to FalkorDB using the BOLT protocol with neo4j drivers. Experimental feature for compatibility with BOLT-based tools and Neo4j client libraries."
 parent: "Integration"
 redirect_from:
   - /bolt-support.html

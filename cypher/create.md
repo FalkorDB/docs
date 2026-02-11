@@ -2,7 +2,7 @@
 title: "CREATE"
 nav_order: 8
 description: >
-    CREATE is used to introduce new nodes and relationships.
+    Use the CREATE clause to add new nodes and relationships to FalkorDB graphs. Create single or multiple entities, set properties and labels, and build complete graph patterns.
 parent: "Cypher Language"
 ---
 
