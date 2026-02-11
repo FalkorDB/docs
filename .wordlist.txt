@@ -20,6 +20,7 @@ CDLP
 communityId
 Cailliau
 Centos
+CentOS
 ColumnType
 Costanza
 Cypher
@@ -78,6 +79,7 @@ LocalTime
 localStorage
 Lovitz
 MEM
+MSF
 Miesha
 MotoGP
 NRedisGraph
@@ -99,6 +101,7 @@ OTLP
 OpenMP
 Ouaknine
 Parametrized
+pathfinding
 Pieter
 Pinterest
 Pydoc
@@ -752,3 +755,10 @@ FDB
 xlarge
 SaaS
 GCP's
+fsync
+cron
+everysec
+ORM
+orm
+OGM
+ogm

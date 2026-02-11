@@ -1,7 +1,7 @@
 ---
 title: "Lightning.AI"
 nav_order: 8
-description: "Deploy FalkorDB on Lightning.AI"
+description: "Deploy FalkorDB on Lightning.AI platform to build fast, accurate GenAI applications using advanced RAG (Retrieval-Augmented Generation) with graph-enhanced context and relationships."
 parent: "Operations"
 ---
 

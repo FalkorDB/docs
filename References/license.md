@@ -1,7 +1,11 @@
 ---
 title: "FalkorDB License"
-nav_order: 1100
-description: "Understanding the FalkorDB License"
+nav_order: 2
+description: "Understanding the FalkorDB SSPLv1 license: usage rights, commercial applications, open-source requirements, internal use, and licensing FAQ for developers."
+parent: "References"
+redirect_from:
+  - /license.html
+  - /license
 ---
 
 # FalkorDB License

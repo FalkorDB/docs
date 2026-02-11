@@ -2,7 +2,7 @@
 title: "Graphiti MCP Server"
 parent: "Agentic Memory"
 nav_order: 3
-description: "Run Graphiti MCP server with FalkorDB for AI agent memory in Claude Desktop and other MCP clients"
+description: "Run Graphiti MCP server with FalkorDB for persistent AI agent memory in Claude Desktop, Cursor IDE, and other MCP clients with temporally-aware knowledge graphs."
 ---
 
 # Graphiti MCP Server

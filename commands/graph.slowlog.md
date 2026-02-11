@@ -1,7 +1,7 @@
 ---
 title: "GRAPH.SLOWLOG"
 description: >
-    Returns a list containing up to 10 of the slowest queries issued against the given graph
+    View the 10 slowest queries executed against a FalkorDB graph with GRAPH.SLOWLOG command. Monitor query performance, execution times, and optimize slow operations.
 parent: "Commands"    
 ---
 

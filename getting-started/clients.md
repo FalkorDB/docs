@@ -3,7 +3,7 @@ title: "Client Libraries"
 parent: "Getting Started"
 nav_order: 3
 description: >
-    FalkorDB Clients
+    Official FalkorDB client libraries for Python, Node.js, Java, Rust, Go, and C# with Object-Graph Mapping (OGM) support for Spring Data, and additional community clients.
 redirect_from:
   - /clients.html
   - /clients
@@ -19,6 +19,16 @@ redirect_from:
 | [falkordb-rs][falkordb-rs-url]    |  [docs.rs][falkordb-rs-docs]| Rust       | MIT        | [FalkorDB][falkordb-url]                    | [crates][falkordb-rs-package]             |
 | [falkordb-go][falkordb-go-url]    |  [godoc][falkordb-go-docs] | Go       | BSD        | [FalkorDB][falkordb-url]                    | [Github][falkordb-go-package]             |
 | [NFalkorDB][nfalkordb-url]        |  [readme][nfalkordb-docs]   | C#       | Apache-2.0        | [FalkorDB][falkordb-url]                    | [nuget][nfalkordb-package]             |
+
+## Official Object-Graph Mapping (OGM) Libraries
+
+FalkorDB provides official Object-Graph Mapping (OGM) libraries that allow you to work with graph data using native language objects and structures.
+
+| Project                                    | Docs                        | Language   | License    | Author                       | Package                                  |
+| -------------------------------------------| --------------------------- | ---------- | ---------- | ---------------------------- | ---------------------------------------- |
+| [falkordb-py-orm][falkordb-py-orm-url]    | [readme][falkordb-py-orm-docs] | Python     | MIT        | [FalkorDB][falkordb-url]     | [GitHub][falkordb-py-orm-url]            |
+| [falkordb-go-orm][falkordb-go-orm-url]    | [readme][falkordb-go-orm-docs] | Go         | MIT        | [FalkorDB][falkordb-url]     | [GitHub][falkordb-go-orm-url]            |
+| [spring-data-falkordb][spring-data-url]   | [readme][spring-data-docs]     | Java       | Apache-2.0 | [FalkorDB][falkordb-url]     | [GitHub][spring-data-url]                |
 
 ## Additional Clients
 
@@ -123,6 +133,15 @@ redirect_from:
 [drivine-url]: https://github.com/liberation-data/drivine
 [drivine-author]: https://github.com/liberation-data
 [drivine-package]: https://www.npmjs.com/package/@liberation-data/drivine
+
+[falkordb-py-orm-url]: https://github.com/FalkorDB/falkordb-py-orm
+[falkordb-py-orm-docs]: https://github.com/FalkorDB/falkordb-py-orm#readme
+
+[falkordb-go-orm-url]: https://github.com/FalkorDB/falkordb-go-orm
+[falkordb-go-orm-docs]: https://github.com/FalkorDB/falkordb-go-orm#readme
+
+[spring-data-url]: https://github.com/FalkorDB/spring-data-falkordb
+[spring-data-docs]: https://github.com/FalkorDB/spring-data-falkordb#readme
 
 ## Implementing a client
 

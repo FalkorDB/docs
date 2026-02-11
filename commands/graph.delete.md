@@ -2,7 +2,7 @@
 title: "GRAPH.DELETE"
 nav_order: 3
 description: >
-    Completely removes the graph and all of its entities
+    Completely remove a graph and all its entities (nodes and relationships) from FalkorDB using the GRAPH.DELETE command with examples for multiple programming languages.
 parent: "Commands"    
 ---
 
