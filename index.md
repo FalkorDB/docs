@@ -50,7 +50,7 @@ docker run -p 6379:6379 -p 3000:3000 -it --rm falkordb/falkordb:latest
 
 ### Ports Exposed
 
-- **6379 (FalkorDB)**  
+- **6379 (FalkorDB Server)**  
   Use this port to connect via the CLI or any FalkorDB-compatible client.
 
 - **3000 (FalkorDB Browser)**  
