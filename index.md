@@ -6,6 +6,8 @@ description: "The fastest way to your knowledge"
 permalink: /
 ---
 
+
+
 [![Trendshift](https://trendshift.io/api/badge/repositories/14787)](https://trendshift.io/repositories/14787)
 
 [![Docker Hub](https://img.shields.io/docker/pulls/falkordb/falkordb?label=Docker&style=flat-square)](https://hub.docker.com/r/falkordb/falkordb/)
@@ -46,9 +48,19 @@ Launch an instance using Docker, or use [FalkorDB Cloud](https://app.falkordb.cl
 docker run -p 6379:6379 -p 3000:3000 -it --rm falkordb/falkordb:latest
 ```
 
+### Ports Exposed
+
+- **6379 (FalkorDB Server)**  
+  Use this port to connect via the CLI or any FalkorDB-compatible client.
+
+- **3000 (FalkorDB Browser)**  
+  Access the FalkorDB web UI by opening your browser at: http://localhost:3000
+
+
 Once loaded you can interact with FalkorDB using any of the supported [client libraries](/getting-started/clients)
 
 Here we'll use [FalkorDB Python client](https://pypi.org/project/FalkorDB/) to create a small graph representing a subset of motorcycle riders and teams taking part in the MotoGP league, once created we'll start querying our data.
+
 
 {% capture python_code %}
 from falkordb import FalkorDB
