@@ -48,11 +48,13 @@ Launch an instance using Docker, or use [FalkorDB Cloud](https://app.falkordb.cl
 docker run -p 6379:6379 -p 3000:3000 -it --rm falkordb/falkordb:latest
 ```
 
-**Ports exposed**
+### Ports Exposed
 
-* 6379 (FalkorDB) : Use this port to connect from the CLI or any FalkorDB-compatible client.
+- **6379 (FalkorDB)**  
+  Use this port to connect via the CLI or any FalkorDB-compatible client.
 
-* 3000 (FalkorDB Browser) Open the FalkorDB web UI in your browser at
+- **3000 (FalkorDB Browser)**  
+  Access the FalkorDB web UI by opening your browser at: http://localhost:3000
 
 
 Once loaded you can interact with FalkorDB using any of the supported [client libraries](/getting-started/clients)
