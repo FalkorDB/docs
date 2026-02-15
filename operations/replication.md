@@ -1,8 +1,11 @@
 ---
 title: "Replication"
 nav_order: 2
-description: "Configuring FalkorDB Docker for Replication"
+description: "Configure FalkorDB Docker replication for high availability and redundancy. Set up master–replica architecture with step-by-step synchronization."
 parent: "Operations"
+redirect_from:
+  - /operation/replication
+  - /operation/replication.html
 ---
 
 # Configuring FalkorDB Docker for Replication
@@ -19,8 +22,9 @@ Before you begin, ensure you have the following:
 
 ## Step 1: Configuring Replication
 
-Replication ensures that your data is available across multiple FalkorDB instances. You can configure one instance as the master and others as replicas.
-For that to work with Docker, we need to first set up a network.
+Replication ensures that your data is available across multiple FalkorDB instances. You configure one instance as the primary (master) and others as replicas.
+
+To enable communication between FalkorDB containers, we first need to set up a Docker network.
 
 ### 1.1 Creating a Network
 
@@ -43,7 +47,7 @@ docker run -d \
   falkordb/falkordb
 ```
 
-This instance will be created in the Standalone mode, as master.
+This instance runs in standalone mode and will serve as the primary (master) node.
 
 ### 1.2 Setting up the Replica Instance
 
@@ -70,19 +74,23 @@ This command tells the replica to replicate data from the master instance.
 
 ## Step 2: Verifying the Setup
 
-To verify that your setup is working correctly:
+To verify that replication is working correctly:
 
-* Replication Check: Insert some data into the master instance and check if it is available in the replica.
+### 2.1 Insert Data on Master
 
 ```bash
 # Connect to the master
-docker exec -it falkordb-master /bin/bash
-redis-cli graph.query mygraph "CREATE (:Database {name:'falkordb'})"
+docker exec -it falkordb-master redis-cli
+GRAPH.QUERY mygraph "CREATE (:Database {name:'falkordb'})"
 exit
+```
 
+### 2.2 Verify Data on Replica
+
+```bash
 # Connect to the replica
-docker exec -it falkordb-replica1 /bin/bash
-redis-cli graph.ro_query mygraph "MATCH (n) return n"
+docker exec -it falkordb-replica1 redis-cli
+GRAPH.RO_QUERY mygraph "MATCH (n) RETURN n"
 # Output should be:
 # 1) 1) "n"
 # 2) 1) 1) 1) 1) "id"
@@ -96,8 +104,25 @@ redis-cli graph.ro_query mygraph "MATCH (n) return n"
 #    2) "Query internal execution time: 0.122645 milliseconds"
 ```
 
-## Conclusion
+**Expected output:** The data created on the master should be available on the replica.
 
-With replication configured, FalkorDB is now set up for high availability and data redundancy, ensuring that your data is synchronized across multiple instances. This setup provides a robust and fault-tolerant environment for your applications.
+## Best Practices
 
-If you're interested in learning more about clustering and scaling out, be sure to check out the [Cluster](/operations/cluster) chapter in the documentation.
+- **Read-Only Queries on Replicas:** Use `GRAPH.RO_QUERY` for read operations on replicas to prevent accidental writes
+- **Monitor Replication Lag:** Check replication status regularly using Redis `INFO replication` command
+- **Multiple Replicas:** Configure multiple replicas for better read scalability and redundancy
+- **Network Latency:** Place master and replicas in the same network or region for optimal performance
+
+## Troubleshooting
+
+If replication is not working:
+
+1. Verify network connectivity between containers
+2. Check that the master is accessible from the replica
+3. Review logs for errors: `docker logs falkordb-replica1`
+
+## Next Steps
+
+With replication configured, FalkorDB provides high availability and data redundancy. Your data is now synchronized across multiple instances, creating a robust and fault-tolerant environment.
+
+For horizontal scalability and distributed graph operations, explore [Clustering](/operations/cluster).

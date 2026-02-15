@@ -1,13 +1,13 @@
 ---
 title: "Kafka Connect Sink"
 nav_order: 2
-description: "Kafka Connect sink detailed doc"
+description: "Stream data from Apache Kafka to FalkorDB using Kafka Connect Sink. Configure connector properties, define message formats, and execute Cypher commands from Kafka topics."
 parent: "Integration"
 ---
 
+# Kafka Connect Sink
+
 ![FalkorDB x Kafka Connect Banner](https://github.com/user-attachments/assets/941bb532-8613-4135-b4c9-232a700da314)
-
-
 
 ## Get Started
 

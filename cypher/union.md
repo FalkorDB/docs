@@ -2,7 +2,7 @@
 title: "UNION"
 nav_order: 13
 description: >
-    The UNION clause is used to combine the result of multiple queries.
+    Combine results from multiple Cypher queries using the UNION clause. Use UNION ALL to keep all rows or UNION to remove duplicates from the combined result set.
 parent: "Cypher Language"
 ---
 
