@@ -81,7 +81,7 @@ Here's how you can model and load the data.
 
 ### Cypher Query to Create the Data
 
-{% capture cypher_0 %}
+```cypher
 CREATE (alice:User {id: 1, name: "Alice", email: "alice@example.com"})
 CREATE (bob:User {id: 2, name: "Bob", email: "bob@example.com"})
 CREATE (charlie:User {id: 3, name: "Charlie", email: "charlie@example.com"})
@@ -93,9 +93,7 @@ CREATE (alice)-[:FRIENDS_WITH {since: 1640995200}]->(bob)
 CREATE (bob)-[:FRIENDS_WITH {since: 1684108800}]->(charlie)
 CREATE (alice)-[:CREATED {time: 1701388800}]->(post1)
 CREATE (bob)-[:CREATED {time: 1701475200}]->(post2)
-{% endcapture %}
-
-{% include code_tabs.html id="cypher_create_tabs" cypher=cypher_0 %}
+```
 
 You can execute these commands using the FalkorDB Python client or any supported client.
 
