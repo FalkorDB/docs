@@ -456,7 +456,7 @@ graph.query("CALL db.idx.fulltext.drop('Movie')").execute().await?;
 {% include code_tabs.html id="fulltext_drop_tabs" shell=shell_15 python=python_15 javascript=javascript_15 java=java_15 rust=rust_15 %}
 
 ## Creating Full-Text indexing for Relation Labels
-To create a full-text index on the name property of all relations with the label Manager and enable phonetic search, use the following syntax:
+To create a full-text index on the name property of all relations with the label Manager, use the following syntax:
 
 {% capture shell_16 %}
 GRAPH.QUERY DEMO_GRAPH "CREATE FULLTEXT INDEX FOR ()-[m:Manager]-() on (m.name)"
