@@ -19,6 +19,10 @@ redirect_from:
 - Supports streaming responses and conversational sessions.
 - Integrates with multiple language model providers (OpenAI, Gemini, Groq, etc.).
 
+**Resources:**
+- [GraphRAG-SDK GitHub Repository](https://github.com/FalkorDB/GraphRAG-SDK)
+- [Documentation and Examples](https://github.com/FalkorDB/GraphRAG-SDK#readme)
+
 ## Quick Start
 
 ### Start FalkorDB Graph Instance
@@ -70,7 +74,7 @@ graph = db.select_graph(graph_name)
 ontology = Ontology.from_kg_graph(graph)
 
 # Configure model and create GraphRAG instance
-model = LiteModel()  # Default is OpenAI GPT-4.1, can specify different model
+model = LiteModel()  # Default is OpenAI GPT-4o, can specify different model
 model_config = KnowledgeGraphModelConfig.with_model(model)
 
 # Create KnowledgeGraph instance
