@@ -2,6 +2,7 @@
 title: "BFS"
 description: "Breadth-First Search (BFS) explores a graph level by level, visiting all neighbors of a node before moving to the next depth."
 parent: "Algorithms"
+nav_order: 1
 ---
 
 # BFS
