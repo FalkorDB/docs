@@ -52,7 +52,7 @@ For example, the following query returns all paths of any length connecting the 
 $ redis-cli GRAPH.QUERY G "MATCH p=(:City {name: 'London'})-[*]->(:City {name: 'New York'}) RETURN p"
 ```
 
-## Scalar types
+## Scalar Types
 
 All scalar types may be provided by queries or stored as property values on node and relationship objects.
 
@@ -229,7 +229,7 @@ RETURN duration("P1Y2M3DT4H5M6S").years      // 1
 RETURN duration("P1Y2M3DT4H5M6S").hours      // 4
 ```
 
-## Collection types
+## Collection Types
 
 ### Arrays
 
