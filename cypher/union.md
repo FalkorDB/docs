@@ -18,9 +18,8 @@ To keep all the result rows, use UNION ALL.
 
 Using just UNION will combine and remove duplicates from the result set.
 
-```sh
-GRAPH.QUERY DEMO_GRAPH
-"MATCH (n:Actor) RETURN n.name AS name
+```cypher
+MATCH (n:Actor) RETURN n.name AS name
 UNION ALL
-MATCH (n:Movie) RETURN n.title AS name"
+MATCH (n:Movie) RETURN n.title AS name
 ```

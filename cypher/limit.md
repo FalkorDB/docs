@@ -11,7 +11,7 @@ parent: "Cypher Language"
 Although not mandatory, you can use the limit clause
 to limit the number of records returned by a query:
 
-```sql
+```cypher
 LIMIT <max records to return>
 ```
 

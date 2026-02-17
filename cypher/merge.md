@@ -30,20 +30,20 @@ The MERGE path can be followed by ON MATCH SET and ON CREATE SET directives to c
 
 To merge a single node with a label:
 
-```sh
-GRAPH.QUERY DEMO_GRAPH "MERGE (robert:Critic)"
+```cypher
+MERGE (robert:Critic)
 ```
 
 To merge a single node with properties:
 
-```sh
-GRAPH.QUERY DEMO_GRAPH "MERGE (charlie { name: 'Charlie Sheen', age: 10 })"
+```cypher
+MERGE (charlie { name: 'Charlie Sheen', age: 10 })
 ```
 
 To merge a single node, specifying both label and property:
 
-```sh
-GRAPH.QUERY DEMO_GRAPH "MERGE (michael:Person { name: 'Michael Douglas' })"
+```cypher
+MERGE (michael:Person { name: 'Michael Douglas' })
 ```
 
 ## Merging paths
@@ -52,29 +52,26 @@ Because MERGE either matches or creates a full path, it is easy to accidentally 
 
 For example, if we run the following query on our sample graph:
 
-```sh
-GRAPH.QUERY DEMO_GRAPH
-"MERGE (charlie { name: 'Charlie Sheen '})-[r:ACTED_IN]->(wallStreet:Movie { name: 'Wall Street' })"
+```cypher
+MERGE (charlie { name: 'Charlie Sheen '})-[r:ACTED_IN]->(wallStreet:Movie { name: 'Wall Street' })
 ```
 
 Even though a node with the name 'Charlie Sheen' already exists, the full pattern does not match, so 1 relation and 2 nodes - including a duplicate 'Charlie Sheen' node - will be created.
 
 We should use multiple MERGE clauses to merge a relation and only create non-existent endpoints:
 
-```sh
-GRAPH.QUERY DEMO_GRAPH
-"MERGE (charlie { name: 'Charlie Sheen' })
- MERGE (wallStreet:Movie { name: 'Wall Street' })
- MERGE (charlie)-[r:ACTED_IN]->(wallStreet)"
+```cypher
+MERGE (charlie { name: 'Charlie Sheen' })
+MERGE (wallStreet:Movie { name: 'Wall Street' })
+MERGE (charlie)-[r:ACTED_IN]->(wallStreet)
 ```
 
 If we don't want to create anything if pattern elements don't exist, we can combine MATCH and MERGE clauses. The following query merges a relation only if both of its endpoints already exist:
 
-```sh
-GRAPH.QUERY DEMO_GRAPH
-"MATCH (charlie { name: 'Charlie Sheen' })
- MATCH (wallStreet:Movie { name: 'Wall Street' })
- MERGE (charlie)-[r:ACTED_IN]->(wallStreet)"
+```cypher
+MATCH (charlie { name: 'Charlie Sheen' })
+MATCH (wallStreet:Movie { name: 'Wall Street' })
+MERGE (charlie)-[r:ACTED_IN]->(wallStreet)
 ```
 
 ## On Match and On Create directives
@@ -83,10 +80,9 @@ Using ON MATCH and ON CREATE, MERGE can set properties differently depending on 
 
 In this query, we'll merge paths based on a list of properties and conditionally set a property when creating new entities:
 
-```sh
-GRAPH.QUERY DEMO_GRAPH
-"UNWIND ['Charlie Sheen', 'Michael Douglas', 'Tamara Tunie'] AS actor_name
- MATCH (movie:Movie { name: 'Wall Street' })
- MERGE (person {name: actor_name})-[:ACTED_IN]->(movie)
- ON CREATE SET person.first_role = movie.name"
+```cypher
+UNWIND ['Charlie Sheen', 'Michael Douglas', 'Tamara Tunie'] AS actor_name
+MATCH (movie:Movie { name: 'Wall Street' })
+MERGE (person {name: actor_name})-[:ACTED_IN]->(movie)
+ON CREATE SET person.first_role = movie.name
 ```

@@ -24,8 +24,7 @@ The CALL {} clause may be used for numerous purposes, such as: Post-`UNION` proc
 
 We can easily get the cheapest and most expensive items in a store and set their `of_interest` property to `true` (to keep monitoring the 'interesting' items) using post-`UNION` processing:
   
-  ```sh
-  GRAPH.QUERY DEMO_GRAPH
+  ```cypher
   CALL {
     MATCH (s:Store {name: 'Walmart'})-[:SELLS]->(i:Item)
     RETURN i AS item
@@ -43,8 +42,7 @@ We can easily get the cheapest and most expensive items in a store and set their
 
 We can utilize post-`UNION` processing to perform aggregations over differently-matched entities. For example, we can count the number of customers and vendors that a store interacts with:
 
-  ```sh
-  GRAPH.QUERY DEMO_GRAPH
+  ```cypher
   CALL {
     MATCH (s:Store {name: 'Walmart'})-[:SELLS_TO]->(c:Customer)
     RETURN c AS interface
@@ -59,8 +57,7 @@ We can utilize post-`UNION` processing to perform aggregations over differently-
 
 Another key feature of the CALL {} clause is the ability to perform isolated aggregations on every input row. For example, let's check if there is any correlation between the amount of sales per-product and the advertisement-intensity implemented for it in a particular month.
 
-  ```sh
-  GRAPH.QUERY DEMO_GRAPH
+  ```cypher
   MATCH (item:Item)
   CALL {
     WITH item
@@ -132,8 +129,7 @@ Runtime: 99 ms. -->
 
 We can comfortably perform side-effects using non-returning subqueries. For example, we can mark a sub-group of nodes in the graph withholding some shared property. Let's mark all the items in a Walmart store that were sold more than 100 times as popular items, and return **all** items in the store:
 
-  ```sh
-  GRAPH.QUERY DEMO_GRAPH
+  ```cypher
   MATCH (item:Item)
   CALL {
     WITH item

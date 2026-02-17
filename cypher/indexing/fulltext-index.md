@@ -390,11 +390,13 @@ for record in result.data() {
 
 This CALL clause can be interleaved with other Cypher clauses to perform more elaborate manipulations:
 
-```sh
-GRAPH.QUERY DEMO_GRAPH
-"CALL db.idx.fulltext.queryNodes('Movie', 'Book') YIELD node AS m
+```cypher
+CALL db.idx.fulltext.queryNodes('Movie', 'Book') YIELD node AS m
 WHERE m.genre = 'Adventure'
-RETURN m ORDER BY m.rating"
+RETURN m ORDER BY m.rating
+```
+
+```sh
 1) 1) "m"
 2) 1) 1) 1) 1) "id"
             2) (integer) 1168
@@ -416,9 +418,11 @@ RETURN m ORDER BY m.rating"
 
 In addition to yielding matching nodes, full-text index scans will return the score of each node. This is the [TF-IDF](https://redis.io/docs/interact/search-and-query/advanced-concepts/scoring/#tfidf-default) score of the node, which is informed by how many times the search terms appear in the node and how closely grouped they are. This can be observed in the example:
 
+```cypher
+CALL db.idx.fulltext.queryNodes('Node', 'hello world') YIELD node, score RETURN score, node.val
+```
+
 ```sh
-GRAPH.QUERY DEMO_GRAPH
-"CALL db.idx.fulltext.queryNodes('Node', 'hello world') YIELD node, score RETURN score, node.val"
 1) 1) "score"
    2) "node.val"
 2) 1) 1) "2"

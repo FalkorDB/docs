@@ -223,7 +223,7 @@ List comprehensions are a syntactical construct that accepts an array and produc
 
 They are a common construct in functional languages and modern high-level languages. In Cypher, they use the syntax:
 
-```sh
+```cypher
 [element IN array WHERE condition | output elem]
 ```
 
@@ -247,7 +247,7 @@ any(element IN array WHERE condition)
 
 They can operate on any form of input array, but are particularly useful for path filtering. The following query collects all paths of any length in which all traversed edges have a weight less than 3:
 
-```sh
+```cypher
 MATCH p=()-[*]->() WHERE all(edge IN relationships(p) WHERE edge.weight < 3) RETURN p
 ```
 
@@ -393,7 +393,7 @@ Using the unbounded traversal pattern `(a:City{name:'A'})-[*]->(g:City{name:'G'}
 
 The format for a node object in JSON is:
 
-```sh
+```json
 {
   "type": "node",
   "id": id(int),
@@ -406,7 +406,7 @@ The format for a node object in JSON is:
 
 The format for a relationship object in JSON is:
 
-```sh
+```json
 {
   "type": "relationship",
   "id": id(int),

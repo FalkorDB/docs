@@ -18,16 +18,16 @@ The `DELETE` clause is used to remove nodes and relationships from the graph.
 
 To delete a node and all of its relationships:
 
-```sh
-GRAPH.QUERY DEMO_GRAPH "MATCH (p:Person {name:'Jim'}) DELETE p"
+```cypher
+MATCH (p:Person {name:'Jim'}) DELETE p
 ```
 
 ## Deleting Relationships
 
 To delete specific relationships:
 
-```sh
-GRAPH.QUERY DEMO_GRAPH "MATCH (:Person {name:'Jim'})-[r:FRIENDS]->() DELETE r"
+```cypher
+MATCH (:Person {name:'Jim'})-[r:FRIENDS]->() DELETE r
 ```
 
 This query deletes all outgoing `FRIENDS` relationships from the node with name 'Jim', while keeping the nodes intact.
@@ -36,16 +36,16 @@ This query deletes all outgoing `FRIENDS` relationships from the node with name 
 
 ### Delete all nodes and relationships in a graph
 
-```sh
-GRAPH.QUERY DEMO_GRAPH "MATCH (n) DETACH DELETE n"
+```cypher
+MATCH (n) DETACH DELETE n
 ```
 
 The `DETACH DELETE` automatically removes all relationships before deleting the node.
 
 ### Conditional deletion
 
-```sh
-GRAPH.QUERY DEMO_GRAPH "MATCH (p:Person) WHERE p.age < 18 DELETE p"
+```cypher
+MATCH (p:Person) WHERE p.age < 18 DELETE p
 ```
 
 Deletes all Person nodes where age is less than 18.

@@ -14,14 +14,14 @@ Procedures are functions that can be called from within Cypher queries using the
 
 Basic procedure call:
 
-```sh
-GRAPH.QUERY social "CALL db.labels()"
+```cypher
+CALL db.labels()
 ```
 
 With explicit `YIELD` to select specific return values:
 
-```sh
-GRAPH.QUERY social "CALL db.labels() YIELD label"
+```cypher
+CALL db.labels() YIELD label
 ```
 
 **Note:** The `YIELD` clause is optional. When omitted, all values listed in the 'Yields' column are returned automatically.

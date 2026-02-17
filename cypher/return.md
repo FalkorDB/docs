@@ -14,13 +14,13 @@ The `RETURN` clause defines which properties and values the result-set will cont
 
 The basic structure is a comma-separated list of `alias.property` expressions:
 
-```sh
+```cypher
 RETURN person.name, person.age
 ```
 
 For convenience, you can specify just the alias to return all properties of an entity:
 
-```sh
+```cypher
 RETURN movie.title, actor
 ```
 
@@ -28,7 +28,7 @@ RETURN movie.title, actor
 
 Use the `DISTINCT` keyword to remove duplicate values from the result-set:
 
-```sh
+```cypher
 RETURN DISTINCT friend_of_friend.name
 ```
 
@@ -41,7 +41,7 @@ The `RETURN` clause can also aggregate data, similar to SQL's GROUP BY functiona
 
 When an aggregation function is used in the RETURN list, all non-aggregated values become implicit grouping keys:
 
-```sh
+```cypher
 RETURN movie.title, MAX(actor.age), MIN(actor.age)
 ```
 

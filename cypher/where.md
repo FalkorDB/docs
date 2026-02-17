@@ -33,11 +33,11 @@ Use parentheses to control precedence when combining multiple predicates.
 
 ### Examples:
 
-```sql
+```cypher
 WHERE (actor.name = "john doe" OR movie.rating > 8.8) AND movie.votes <= 250
 ```
 
-```sql
+```cypher
 WHERE actor.age >= director.age AND actor.age > 32
 ```
 
@@ -45,7 +45,7 @@ WHERE actor.age >= director.age AND actor.age > 32
 
 You can specify equality predicates directly within node patterns using curly braces:
 
-```sql
+```cypher
 (:President {name:"Jed Bartlett"})-[:WON]->(:State)
 ```
 
@@ -57,17 +57,17 @@ Inline predicates are functionally equivalent to predicates specified in the WHE
 
 You can also filter based on graph patterns. These two queries are equivalent and both return presidents and the states they won:
 
-```sh
+```cypher
 MATCH (p:President), (s:State) WHERE (p)-[:WON]->(s) RETURN p, s
 ```
 
-```sh
+```cypher
 MATCH (p:President)-[:WON]->(s:State) RETURN p, s
 ```
 
 Pattern predicates can be negated and combined with logical operators. This query returns presidents who did not win in states where they were governors:
 
-```sh
+```cypher
 MATCH (p:President), (s:State) WHERE NOT (p)-[:WON]->(s) AND (p)-[:GOVERNOR]->(s) RETURN p, s
 ```
 
@@ -75,8 +75,8 @@ MATCH (p:President), (s:State) WHERE NOT (p)-[:WON]->(s) AND (p)-[:GOVERNOR]->(s
 
 Nodes can be filtered by label in the WHERE clause:
 
-```sh
-MATCH (n)-[:R]->() WHERE n:L1 OR n:L2 RETURN n 
+```cypher
+MATCH (n)-[:R]->() WHERE n:L1 OR n:L2 RETURN n
 ```
 
 **Best Practice:** When possible, specify labels directly in the node pattern of the MATCH clause for better performance.

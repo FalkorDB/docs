@@ -18,23 +18,20 @@ We show examples of queries performing the above 3 use-cases.
 
 The following query will create 4 nodes, each with property `v` with the values from 1 to 4 corresponding to the elements in the list.
 
-```sh
-GRAPH.QUERY DEMO_GRAPH
-"FOREACH(i in [1, 2, 3, 4] | CREATE (n:N {v: i}))"
+```cypher
+FOREACH(i in [1, 2, 3, 4] | CREATE (n:N {v: i}))
 ```
 
 The following query marks the nodes of all paths of length up to 15 km from a hotel in Toronto to a steakhouse with at least 2 Michelin stars.
 
-```sh
-GRAPH.QUERY DEMO_GRAPH
-"MATCH p = (hotel:HOTEL {City: 'Toronto'})-[r:ROAD*..5]->(rest:RESTAURANT {type: 'Steakhouse'}) WHERE sum(r.length) <= 15 AND hotel.stars >= 4 AND rest.Michelin_stars >= 2
-FOREACH(n in nodes(p) | SET n.part_of_path = true)"
+```cypher
+MATCH p = (hotel:HOTEL {City: 'Toronto'})-[r:ROAD*..5]->(rest:RESTAURANT {type: 'Steakhouse'}) WHERE sum(r.length) <= 15 AND hotel.stars >= 4 AND rest.Michelin_stars >= 2
+FOREACH(n in nodes(p) | SET n.part_of_path = true)
 ```
 
 The following query searches for all the hotels, checks whether they buy directly from a bakery, and if not - makes sure they are marked as buying from a supplier that supplies bread, and that they do not buy directly from a bakery.
 
-```sh
-GRAPH.QUERY DEMO_GRAPH
-"MATCH (h:HOTEL) OPTIONAL MATCH (h)-[b:BUYS_FROM]->(bakery:BAKERY)
-FOREACH(do_perform IN CASE WHEN b IS NULL THEN [1] ELSE [] END | MERGE (h)-[b2:BUYS_FROM]->(s:SUPPLIER {supplies_bread: true}) SET b2.direct = false)"
+```cypher
+MATCH (h:HOTEL) OPTIONAL MATCH (h)-[b:BUYS_FROM]->(bakery:BAKERY)
+FOREACH(do_perform IN CASE WHEN b IS NULL THEN [1] ELSE [] END | MERGE (h)-[b2:BUYS_FROM]->(s:SUPPLIER {supplies_bread: true}) SET b2.direct = false)
 ```

@@ -14,18 +14,17 @@ The `SET` clause is used to create or update properties on nodes and relationshi
 
 To set a property on a node:
 
-```sh
-GRAPH.QUERY DEMO_GRAPH "MATCH (n { name: 'Jim' }) SET n.name = 'Bob'"
+```cypher
+MATCH (n { name: 'Jim' }) SET n.name = 'Bob'
 ```
 
 ## Setting Multiple Properties
 
 You can set multiple properties in a single `SET` clause by separating them with commas:
 
-```sh
-GRAPH.QUERY DEMO_GRAPH
-"MATCH (n { name: 'Jim', age:32 })
-SET n.age = 33, n.name = 'Bob'"
+```cypher
+MATCH (n { name: 'Jim', age:32 })
+SET n.age = 33, n.name = 'Bob'
 ```
 
 ## Setting Properties from a Map
@@ -36,10 +35,9 @@ You can set properties using a map. There are two operators with different behav
 
 Replaces **all** existing properties with the map properties:
 
-```sh
-GRAPH.QUERY DEMO_GRAPH
-"MATCH (n { name: 'Jim', age:32 })
-SET n = {age: 33, name: 'Bob'}"
+```cypher
+MATCH (n { name: 'Jim', age:32 })
+SET n = {age: 33, name: 'Bob'}
 ```
 
 **Result:** The node will have only the properties `age` and `name`. Any other existing properties are removed.
@@ -48,10 +46,9 @@ SET n = {age: 33, name: 'Bob'}"
 
 Updates only the specified properties while keeping other existing properties:
 
-```sh
-GRAPH.QUERY DEMO_GRAPH
-"MATCH (n { name: 'Jim', age:32 })
-SET n += {age: 33}"
+```cypher
+MATCH (n { name: 'Jim', age:32 })
+SET n += {age: 33}
 ```
 
 **Result:** The node's `age` is updated to 33, but `name` and any other properties remain unchanged.
@@ -60,10 +57,9 @@ SET n += {age: 33}"
 
 You can copy all properties from one entity to another:
 
-```sh
-GRAPH.QUERY DEMO_GRAPH
-"MATCH (jim {name: 'Jim'}), (pam {name: 'Pam'})
-SET jim = pam"
+```cypher
+MATCH (jim {name: 'Jim'}), (pam {name: 'Pam'})
+SET jim = pam
 ```
 
 After executing this query, the `jim` node will have exactly the same properties as the `pam` node (all of Jim's original properties are replaced).
@@ -72,8 +68,8 @@ After executing this query, the `jim` node will have exactly the same properties
 
 To remove a property, set its value to `NULL`:
 
-```sh
-GRAPH.QUERY DEMO_GRAPH "MATCH (n { name: 'Jim' }) SET n.name = NULL"
+```cypher
+MATCH (n { name: 'Jim' }) SET n.name = NULL
 ```
 
 This removes the `name` property from the node entirely.

@@ -22,18 +22,16 @@ The `WITH` clause allows you to chain query parts together, passing results from
 
 Find all children above the average age of all people:
 
-```sh
-GRAPH.QUERY DEMO_GRAPH
-"MATCH (p:Person) WITH AVG(p.age) AS average_age MATCH (:Person)-[:PARENT_OF]->(child:Person) WHERE child.age > average_age return child"
+```cypher
+MATCH (p:Person) WITH AVG(p.age) AS average_age MATCH (:Person)-[:PARENT_OF]->(child:Person) WHERE child.age > average_age RETURN child
 ```
 
 ## Example: Using Modifiers Mid-Query
 
 You can use query modifiers with `WITH` to filter or sort before continuing:
 
-```sh
-GRAPH.QUERY DEMO_GRAPH
-"MATCH (u:User)  WITH u AS nonrecent ORDER BY u.lastVisit LIMIT 3 SET nonrecent.should_contact = true"
+```cypher
+MATCH (u:User) WITH u AS nonrecent ORDER BY u.lastVisit LIMIT 3 SET nonrecent.should_contact = true
 ```
 
 This query:
