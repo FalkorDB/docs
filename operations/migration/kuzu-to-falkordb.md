@@ -77,7 +77,7 @@ python3 kuzu_to_falkordb_export.py --db network_it_smart_db --schema schema.json
 |--------|-------------|----------|---------|
 | `--db`, `--database` | Path to Kuzu database file/directory | Yes | - |
 | `--schema` | Path to output schema JSON file | No | None |
-| `--output` | Output directory for CSV files | No | `_csv_` |
+| `--output` | Output directory for CSV files | No | `csv_output` |
 
 ### Output Structure
 
@@ -266,7 +266,7 @@ For additional debugging information, you can modify the script to include more 
 
 ## Additional Resources
 
-- [Kuzu-to-FalkorDB GitHub Repository](https://github.com/FalkorDB-POCs/Kuzu-to-FalkorDB)
+- [Kuzu-to-FalkorDB GitHub Repository](https://github.com/FalkorDB/Kuzu-to-FalkorDB)
 - [FalkorDB Rust Loader](https://github.com/FalkorDB/FalkorDB-Loader-RS)
 - [FalkorDB Bulk Loader](https://github.com/falkordb/falkordb-bulk-loader)
 
