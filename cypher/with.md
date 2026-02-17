@@ -24,7 +24,7 @@ Find all children above the average age of all people:
 
 ```sh
 GRAPH.QUERY DEMO_GRAPH
-"MATCH (p:Person) WITH AVG(p.age) AS average_age MATCH (:Person)-[:PARENT_OF]->(child:Person) WHERE child.age > average_age return child
+"MATCH (p:Person) WITH AVG(p.age) AS average_age MATCH (:Person)-[:PARENT_OF]->(child:Person) WHERE child.age > average_age return child"
 ```
 
 ## Example: Using Modifiers Mid-Query

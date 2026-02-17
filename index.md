@@ -77,7 +77,7 @@ g.query("""CREATE
            (:Rider {name:'Dani Pedrosa'})-[:rides]->(:Team {name:'Honda'}),
            (:Rider {name:'Andrea Dovizioso'})-[:rides]->(:Team {name:'Ducati'})""")
 
-# Query which riders represents Yamaha?
+# Query which riders represent Yamaha?
 res = g.query("""MATCH (r:Rider)-[:rides]->(t:Team)
                  WHERE t.name = 'Yamaha'
                  RETURN r.name""")
@@ -111,7 +111,7 @@ await graph.query(`CREATE (:Rider {name:'Valentino Rossi'})-[:rides]->(:Team {na
         (:Rider {name:'Dani Pedrosa'})-[:rides]->(:Team {name:'Honda'}),
         (:Rider {name:'Andrea Dovizioso'})-[:rides]->(:Team {name:'Ducati'})`)
 
-result = await graph.query(`MATCH (r:Rider)-[:rides]->(t:Team) 
+const result = await graph.query(`MATCH (r:Rider)-[:rides]->(t:Team)
                             WHERE t.name = $name RETURN r.name`, 
                             {params: {name: 'Yamaha'}})
                             
@@ -248,7 +248,7 @@ $ redis-cli -h localhost -p 6379
 
 {% include code_tabs.html id="code_tabs_0" python=python_code javascript=javascript_code java=java_code rust=rust_code shell=shell_code %}
 
-For additional demos please see visit [Demos](https://github.com/FalkorDB/demos).
+For additional demos please visit [Demos](https://github.com/FalkorDB/demos).
 
 ## Client libraries
 

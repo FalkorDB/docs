@@ -16,7 +16,7 @@ The `FOREACH` clause can be used for numerous purposes, such as: Updating and cr
 
 We show examples of queries performing the above 3 use-cases.
 
-The following query will create 5 nodes, each with property `v` with the values from 0 to 4 corresponding to the appropriate index in the list.
+The following query will create 4 nodes, each with property `v` with the values from 1 to 4 corresponding to the elements in the list.
 
 ```sh
 GRAPH.QUERY DEMO_GRAPH
@@ -36,5 +36,5 @@ The following query searches for all the hotels, checks whether they buy directl
 ```sh
 GRAPH.QUERY DEMO_GRAPH
 "MATCH (h:HOTEL) OPTIONAL MATCH (h)-[b:BUYS_FROM]->(bakery:BAKERY)
-FOREACH(do_perform IN CASE WHEN b = NULL THEN [1] ELSE [] END | MERGE (h)-[b2:BUYS_FROM]->(s:SUPPLIER {supplies_bread: true}) SET b2.direct = false)"
+FOREACH(do_perform IN CASE WHEN b IS NULL THEN [1] ELSE [] END | MERGE (h)-[b2:BUYS_FROM]->(s:SUPPLIER {supplies_bread: true}) SET b2.direct = false)"
 ```

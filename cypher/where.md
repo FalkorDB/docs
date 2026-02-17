@@ -34,7 +34,7 @@ Use parentheses to control precedence when combining multiple predicates.
 ### Examples:
 
 ```sql
-WHERE (actor.name = "john doe" OR movie.rating > 8.8) AND movie.votes <= 250)
+WHERE (actor.name = "john doe" OR movie.rating > 8.8) AND movie.votes <= 250
 ```
 
 ```sql

@@ -145,7 +145,7 @@ Our sample query `MATCH (a)-[e]->(b) RETURN a, e, b.name` generated the header:
    3) "b.name"
 ```
 
-The 4 array members correspond, in order, to the 3 entities described in the RETURN clause.
+The 3 array members correspond, in order, to the 3 entities described in the RETURN clause.
 
 Each is emitted as a 2-array:
 
@@ -199,7 +199,7 @@ The `ValueType` for the first entry is `VALUE_NODE`. The node representation con
 ]
 ```
 
-The `ValueType` for the first entry is `VALUE_EDGE`. The edge representation differs from the node representation in two respects:
+The `ValueType` for the second entry is `VALUE_EDGE`. The edge representation differs from the node representation in two respects:
 
 - Each relation has exactly one type, rather than the 0+ labels a node may have.
 - A relation is emitted with the IDs of its source and destination nodes.

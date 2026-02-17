@@ -50,7 +50,7 @@ graph_z = graph_a.copy('Z')
 graph_list = db.list()
 
 # Query Graph 'Z'
-result = graph_z.query('MATCH (a:Account) RETURN a.number')Query Graph 'Z'
+result = graph_z.query('MATCH (a:Account) RETURN a.number')  # Query Graph 'Z'
 {% endcapture %}
 
 {% capture javascript_0 %}

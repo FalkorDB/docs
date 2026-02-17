@@ -172,7 +172,7 @@ CALL db.idx.vector.queryNodes(
     'Product',
     'description',
     10,
-    vecf32(<array_of_vector_elements>),
+    vecf32(<array_of_vector_elements>)
     ) YIELD node
 {% endcapture %}
 
