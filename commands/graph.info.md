@@ -3,6 +3,7 @@ title: "GRAPH.INFO"
 description: >
     Returns information and statistics about the current executing commands
 parent: "Commands"
+nav_order: 10
 ---
 
 # GRAPH.INFO
