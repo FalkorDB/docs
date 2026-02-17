@@ -1,8 +1,10 @@
 ---
 layout: default
 title: date.format
+description: "Formats a date/time value using a token-based pattern, with optional timezone offset adjustment."
 parent: Date Functions
 grand_parent: FLEX Function Reference
+nav_order: 1
 ---
 
 # date.format

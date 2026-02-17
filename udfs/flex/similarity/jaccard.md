@@ -1,8 +1,10 @@
 ---
 layout: default
 title: sim.jaccard
+description: "Computes the Jaccard similarity coefficient between two lists, returning a score between 0 (no overlap) and 1 (identical sets)."
 parent: Similarity Functions
 grand_parent: FLEX Function Reference
+nav_order: 1
 ---
 
 # sim.jaccard

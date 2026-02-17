@@ -1,8 +1,10 @@
 ---
 layout: default
 title: map.submap
+description: "Creates a new map containing only the specified keys from the input map."
 parent: Map Functions
 grand_parent: FLEX Function Reference
+nav_order: 5
 ---
 
 # map.submap

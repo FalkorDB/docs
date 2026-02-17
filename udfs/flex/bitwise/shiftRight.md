@@ -1,8 +1,10 @@
 ---
 layout: default
 title: bitwise.shiftRight
+description: "Performs a sign-propagating right bit shift, moving all bits right by a specified number of positions."
 parent: Bitwise Functions
 grand_parent: FLEX Function Reference
+nav_order: 5
 ---
 
 # bitwise.shiftRight

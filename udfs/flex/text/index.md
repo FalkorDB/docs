@@ -1,6 +1,7 @@
 ---
 layout: default
 title: Text Functions
+description: "FLEX text functions for case conversion, string formatting, padding, searching, and similarity metrics in Cypher queries."
 parent: FLEX Function Reference
 grand_parent: UDFs
 has_children: true

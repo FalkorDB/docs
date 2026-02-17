@@ -1,8 +1,10 @@
 ---
 layout: default
 title: text.snakeCase
+description: "Converts a string to snake_case format, separating words with underscores and lowercasing all characters."
 parent: Text Functions
 grand_parent: FLEX Function Reference
+nav_order: 15
 ---
 
 # text.snakeCase

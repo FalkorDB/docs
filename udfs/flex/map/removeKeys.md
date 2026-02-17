@@ -1,8 +1,10 @@
 ---
 layout: default
 title: map.removeKeys
+description: "Returns a copy of a map with multiple specified keys removed."
 parent: Map Functions
 grand_parent: FLEX Function Reference
+nav_order: 4
 ---
 
 # map.removeKeys

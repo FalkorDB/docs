@@ -1,8 +1,10 @@
 ---
 layout: default
 title: coll.intersection
+description: "Returns a list of elements that appear in both input lists."
 parent: Collection Functions
 grand_parent: FLEX Function Reference
+nav_order: 2
 ---
 
 # coll.intersection
