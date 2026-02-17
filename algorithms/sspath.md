@@ -47,8 +47,9 @@ YIELD path, pathWeight, pathCost
 | `pathCost`   | Integer | Sum of the costProp across the path (if used)  |
 
 
-## Examples:
-Lets take this Road Network Graph as an example:
+## Examples
+
+Let's take this Road Network Graph as an example:
 
 ![Road network](../images/road_network.png)
 
