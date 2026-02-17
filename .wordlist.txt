@@ -515,6 +515,8 @@ mcp
 sse
 SSE
 mcpServers
+MCPServer
+QueryWeaver
 stdio
 Cursor
 IDE

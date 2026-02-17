@@ -1,0 +1,10 @@
+# Python dependencies for GitHub Actions workflows
+
+# GitHub API client
+PyGithub>=2.1.1
+
+# HTTP requests
+requests>=2.31.0
+
+# YAML parsing
+PyYAML>=6.0

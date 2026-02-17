@@ -1,0 +1,175 @@
+name: Agentic Documentation Sync
+
+on:
+  # Real-time triggers from source repositories
+  repository_dispatch:
+    types: [docs-sync]
+
+  # Manual trigger for testing
+  workflow_dispatch:
+    inputs:
+      source_repo:
+        description: 'Source repository name (e.g., FalkorDB)'
+        required: false
+        type: string
+      source_ref:
+        description: 'Source repository ref/branch'
+        required: false
+        default: 'main'
+        type: string
+
+  # Fallback scheduled sync (daily at 2 AM UTC)
+  schedule:
+    - cron: '0 2 * * *'
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: read
+
+jobs:
+  sync-documentation:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout docs repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Extract source repository information
+        id: extract_info
+        run: |
+          if [ "${{ github.event_name }}" == "repository_dispatch" ]; then
+            echo "source_repo=${{ github.event.client_payload.repository }}" >> $GITHUB_OUTPUT
+            echo "source_ref=${{ github.event.client_payload.ref || 'main' }}" >> $GITHUB_OUTPUT
+            echo "commit_sha=${{ github.event.client_payload.sha }}" >> $GITHUB_OUTPUT
+            echo "commit_message=${{ github.event.client_payload.commit_message }}" >> $GITHUB_OUTPUT
+          elif [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            echo "source_repo=${{ github.event.inputs.source_repo }}" >> $GITHUB_OUTPUT
+            echo "source_ref=${{ github.event.inputs.source_ref }}" >> $GITHUB_OUTPUT
+            echo "commit_sha=HEAD" >> $GITHUB_OUTPUT
+            echo "commit_message=Manual sync triggered" >> $GITHUB_OUTPUT
+          else
+            # Scheduled run - sync all repositories
+            echo "source_repo=all" >> $GITHUB_OUTPUT
+            echo "source_ref=main" >> $GITHUB_OUTPUT
+            echo "commit_sha=HEAD" >> $GITHUB_OUTPUT
+            echo "commit_message=Scheduled sync" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r .github/requirements.txt
+
+      - name: Run agentic sync script
+        id: sync
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SOURCE_REPO: ${{ steps.extract_info.outputs.source_repo }}
+          SOURCE_REF: ${{ steps.extract_info.outputs.source_ref }}
+          COMMIT_SHA: ${{ steps.extract_info.outputs.commit_sha }}
+          COMMIT_MESSAGE: ${{ steps.extract_info.outputs.commit_message }}
+        run: python .github/scripts/sync_docs.py
+
+      - name: Check for changes
+        id: check_changes
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "has_changes=true" >> $GITHUB_OUTPUT
+          else
+            echo "has_changes=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Validate Jekyll build
+        if: steps.check_changes.outputs.has_changes == 'true'
+        run: |
+          # Install Jekyll dependencies
+          sudo apt-get update
+          sudo apt-get install -y ruby-full build-essential zlib1g-dev
+
+          # Install bundler if Gemfile exists
+          if [ -f "Gemfile" ]; then
+            gem install bundler
+            bundle install
+            bundle exec jekyll build
+          else
+            echo "No Gemfile found, skipping Jekyll build validation"
+          fi
+
+      - name: Run spellcheck
+        if: steps.check_changes.outputs.has_changes == 'true'
+        uses: rojopolis/spellcheck-github-actions@0.33.1
+        with:
+          config_path: .spellcheck.yml
+          task_name: Markdown
+        continue-on-error: true
+
+      - name: Create Pull Request
+        if: steps.check_changes.outputs.has_changes == 'true'
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: |
+            docs: sync from ${{ steps.extract_info.outputs.source_repo }}
+
+            Automated sync from FalkorDB/${{ steps.extract_info.outputs.source_repo }}
+            Source commit: ${{ steps.extract_info.outputs.commit_sha }}
+            Source ref: ${{ steps.extract_info.outputs.source_ref }}
+
+            🤖 Generated with GitHub Actions Agentic Workflow
+          branch: sync/${{ steps.extract_info.outputs.source_repo }}-${{ github.run_number }}
+          delete-branch: true
+          title: 'docs: sync documentation from ${{ steps.extract_info.outputs.source_repo }}'
+          body: |
+            ## 📚 Automated Documentation Sync
+
+            This PR was automatically generated by the Agentic Documentation Sync workflow.
+
+            ### Source Information
+            - **Repository:** FalkorDB/${{ steps.extract_info.outputs.source_repo }}
+            - **Branch/Ref:** ${{ steps.extract_info.outputs.source_ref }}
+            - **Commit:** ${{ steps.extract_info.outputs.commit_sha }}
+            - **Trigger:** ${{ github.event_name }}
+
+            ### Changes
+            ${{ steps.sync.outputs.changes_summary }}
+
+            ### Review Checklist
+            - [ ] Documentation content is accurate and up-to-date
+            - [ ] Links and references work correctly
+            - [ ] Code examples are properly formatted
+            - [ ] Spellcheck passes (see workflow results)
+            - [ ] Jekyll build succeeds
+
+            ### Notes
+            This PR requires **human review and approval** before merging.
+
+            ---
+            🤖 Generated by [Agentic Workflow](.github/workflows/sync-docs-agentic.yml) |
+            📖 [Workflow Documentation](.github/SYNC_WORKFLOW.md)
+          labels: |
+            documentation
+            automated
+            sync
+          draft: false
+
+      - name: Summary
+        run: |
+          if [ "${{ steps.check_changes.outputs.has_changes }}" == "true" ]; then
+            echo "✅ Documentation sync completed - PR created"
+          else
+            echo "ℹ️ No changes detected - skipping PR creation"
+          fi
