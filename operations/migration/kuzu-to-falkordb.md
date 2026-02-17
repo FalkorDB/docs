@@ -28,7 +28,7 @@ The process ensures complete data migration including nodes, relationships, prop
 
 ## Prerequisites
 
-- Python 3.6+
+- Python 3.9+
 - `kuzu` Python package
 - FalkorDB instance (local, Docker, or Cloud)
 - [FalkorDB Rust Loader](https://github.com/FalkorDB/FalkorDB-Loader-RS)

@@ -9,7 +9,7 @@ has_children: true
 
 ## FalkorDB Features
 
-FalkorDB exposes graph database functionality within Redis using the [openCypher](https://opencypher.org/) query language. Its basic commands accept openCypher queries, while additional commands are exposed for configuration or metadata retrieval.
+FalkorDB is a graph database that exposes its functionality using the [openCypher](https://opencypher.org/) query language. Its basic commands accept openCypher queries, while additional commands are exposed for configuration or metadata retrieval.
 
 ## FalkorDB API
 

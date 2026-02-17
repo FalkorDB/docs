@@ -22,7 +22,7 @@ The migration process consists of the following steps:
 
 - Neo4j instance (local or remote)
 - FalkorDB instance (local, Docker, or Cloud)
-- Python 3.6+
+- Python 3.9+
 - Migration tools from the [Neo4j-to-FalkorDB repository](https://github.com/FalkorDB/Neo4j-to-FalkorDB)
 
 ## Step 1: Setting Up Neo4j

@@ -35,9 +35,9 @@ Instructions on how to efficiently convert these IDs in the [Procedure Calls](#p
 
 Additionally, two enums are exposed:
 
-[ColumnType](https://github.com/FalkorDB/FalkorDB/blob/ff108d7e21061025166a35d29be1a1cb5bac6d55/src/resultset/formatters/resultset_formatter.h#L14-L19), which as of v2.1.0 will always be `COLUMN_SCALAR`. This enum is retained for backwards compatibility, and may be ignored by the client unless versions older than v2.1.0 must be supported.
+[ColumnType](https://github.com/FalkorDB/FalkorDB/blob/master/src/resultset/formatters/resultset_formatter.h) enum, which as of v2.1.0 will always be `COLUMN_SCALAR`. This enum is retained for backwards compatibility, and may be ignored by the client unless versions older than v2.1.0 must be supported.
 
-[ValueType](https://github.com/FalkorDB/FalkorDB/blob/ff108d7e21061025166a35d29be1a1cb5bac6d55/src/resultset/formatters/resultset_formatter.h#L21-L28) indicates the data type (such as Node, integer, or string) of each returned value. Each value is emitted as a 2-array, with this enum in the first position and the actual value in the second. Each property on a graph entity also has a scalar as its value, so this construction is nested in each value of the properties array when a column contains a node or relationship.
+[ValueType](https://github.com/FalkorDB/FalkorDB/blob/master/src/resultset/formatters/resultset_formatter.h) enum indicates the data type (such as Node, integer, or string) of each returned value. Each value is emitted as a 2-array, with this enum in the first position and the actual value in the second. Each property on a graph entity also has a scalar as its value, so this construction is nested in each value of the properties array when a column contains a node or relationship.
 
 ## Decoding the result set
 
@@ -154,7 +154,7 @@ Each is emitted as a 2-array:
 2) column name (string)
 ```
 
-The first element is the [ColumnType enum](https://github.com/FalkorDB/FalkorDB/blob/master/src/resultset/formatters/resultset_formatter.h#L14-L19), which as of RedisGraph v2.1.0 will always be `COLUMN_SCALAR`. This element is retained for backwards compatibility, and may be ignored by the client unless RedisGraph versions older than v2.1.0 must be supported.
+The first element is the [ColumnType enum](https://github.com/FalkorDB/FalkorDB/blob/master/src/resultset/formatters/resultset_formatter.h), which as of FalkorDB v2.1.0 will always be `COLUMN_SCALAR`. This element is retained for backwards compatibility, and may be ignored by the client unless FalkorDB versions older than v2.1.0 must be supported.
 
 ### Reading result rows
 
@@ -183,12 +183,12 @@ Our query produced one row of results with 3 columns (as described by the header
 
 Each element is emitted as a 2-array - [`ValueType`, value].
 
-It is the client's responsibility to store the [ValueType enum](https://github.com/FalkorDB/FalkorDB/blob/master/src/resultset/formatters/resultset_formatter.h#L21-L28). FalkorDB guarantees that this enum may be extended in the future, but the existing values will not be altered.
+It is the client's responsibility to store the [ValueType enum](https://github.com/FalkorDB/FalkorDB/blob/master/src/resultset/formatters/resultset_formatter.h). FalkorDB guarantees that this enum may be extended in the future, but the existing values will not be altered.
 
 The `ValueType` for the first entry is `VALUE_NODE`. The node representation contains 3 top-level elements:
 
 1. The node's internal ID.
-2. An array of all label IDs associated with the node (currently, each node can have either 0 or 1 labels, though this restriction may be lifted in the future).
+2. An array of all label IDs associated with the node (nodes can have zero or more labels).
 3. An array of all properties the node contains. Properties are represented as 3-arrays - [property key ID, `ValueType`, value].
 
 ```sh
@@ -231,11 +231,11 @@ The final top-level member of the GRAPH.QUERY reply is the execution statistics.
 The statistics always include query execution time, while any combination of the other elements may be included depending on how the graph was modified.
 
 1. "Labels added: (integer)"
-2. "Labels removed: (integer)"    (since RedisGraph 2.10)
+2. "Labels removed: (integer)"
 3. "Nodes created: (integer)"
 4. "Nodes deleted: (integer)"
 5. "Properties set: (integer)"
-6. "Properties removed: (integer)"    (since RedisGraph 2.10)
+6. "Properties removed: (integer)"
 7. "Relationships created: (integer)"
 8. "Relationships deleted: (integer)"
 9. "Indices created: (integer)"
@@ -289,10 +289,6 @@ CALL db.propertyKeys() YIELD propertyKey RETURN propertyKey SKIP [cached_array_l
 
 Though the property calls are quite efficient regardless of whether this optimization is used.
 
-As an example, the Python client checks its local array of labels to resolve every label ID [as seen here](https://github.com/RedisGraph/redisgraph-py/blob/d65ec325b1909489845427b7100dcba6c4050b66/redisgraph/graph.py#L20-L32).
-
-In the case of an IndexError, it issues a procedure call to fully refresh its label cache [as seen here](https://github.com/RedisGraph/redisgraph-py/blob/d65ec325b1909489845427b7100dcba6c4050b66/redisgraph/graph.py#L153-L154).
-
 ## Reference clients
 
-All the logic described in this document has been implemented in most of the clients listed in [Client Libraries](clients). Among these, `node-redis`, `redis-py` and `jedis` are currently the most sophisticated.
+All the logic described in this document has been implemented in most of the clients listed in [Client Libraries](/getting-started/clients). Among these, the official FalkorDB clients for Python, Node.js, and Java are currently the most sophisticated.
