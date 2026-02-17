@@ -5,6 +5,9 @@ description: >
     REMOVE is used to remove attributes from node and relationships, in addition to
     removing labels from nodes.
 parent: "Cypher Language"
+redirect_from:
+  - /cypher/remove.html
+  - /cypher/remove
 ---
 
 # REMOVE
