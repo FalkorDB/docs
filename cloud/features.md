@@ -55,9 +55,27 @@ FalkorDB persists data through regular snapshots and transaction logs. These mec
 ## Graph Browser
 You can connect to the falkordb browser (integrated into your web browser) from the cloud console. The browser allows visualizing query results, allows you to traverse the graph and more. Multi Graph support is enabled by default in the browser which simplifies navigation and data management.
 
-### Solution Architecture
+## Solution Architecture
 Solution architecture support helps you design how FalkorDB integrates with your broader application infrastructure. This guidance covers connection patterns, data modeling approaches, and best practices for specific use cases.
 
 Teams building complex systems benefit from architectural advice to avoid common pitfalls and optimize their graph database implementation. Poor architectural decisions early in development create technical debt that becomes expensive to fix later.
 
 Architecture consultations provide recommendations on graph schema design, query optimization strategies, and integration patterns that match your application requirements.
+
+## Graph Access Control
+_Documentation pending_
+
+## Cluster Deployment
+_Documentation pending_
+
+## High Availability
+_Documentation pending_
+
+## Multi-zone Deployment
+_Documentation pending_
+
+## Automated Backups
+_Documentation pending_
+
+## Advanced Monitoring
+_Documentation pending_

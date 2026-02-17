@@ -32,6 +32,8 @@ FalkorDB provides official Object-Graph Mapping (OGM) libraries that allow you t
 
 ## Additional Clients
 
+**Note:** Some clients below were originally developed for RedisGraph. While many may work with FalkorDB due to protocol compatibility, they are not officially tested or supported. For best results, use the official FalkorDB clients listed above.
+
 | Project                                                   | Language   | License    | Author                                      | Package                                  |
 | --------------------------------------------------------- | ---------- | ---------- | ------------------------------------------- | ---------------------------------------- |
 | [nredisstack][nredisstack-url]                            | .NET       | MIT        | [Redis][redis-url]                          | [nuget][nredisstack-package]             |
