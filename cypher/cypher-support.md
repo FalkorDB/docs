@@ -84,11 +84,7 @@ We do not support any of these properties at the type level, meaning nodes and r
 + DELETE
     + We actually implement DETACH DELETE, the distinction being that relationships invalidated by node deletions are automatically deleted.
 + SET
-
-  **Unsupported:**
-
-- REMOVE (to modify properties)
-    + Properties can be deleted with SET [prop] = NULL.
++ REMOVE (to modify properties and labels). See [REMOVE](/cypher/remove) for details.
 
 ### Reading/Writing Clauses
 

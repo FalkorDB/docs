@@ -4,7 +4,9 @@ description: "FalkorDB supports a number of distinct data types, some of which c
 nav_order: 5
 ---
 
-# Graph types
+# Data types
+
+## Graph types
 
 All graph types are either structural elements of the graph or projections thereof. None can be stored as a property value.
 
@@ -32,7 +34,7 @@ Relationships are always directed, connecting a source node to its destination.
 
 Like nodes, relationships have sets of properties to describe all of their salient characteristics.
 
-When querying relationships, multiple types can be specified when separated by types. Relationships that hold any of the specified types will be matched:
+When querying relationships, multiple types can be specified by separating them with a pipe (`|`). Relationships that hold any of the specified types will be matched:
 
 ```sh
 $ redis-cli GRAPH.QUERY G "MATCH (:Person)-[r:RESIDENT_OF|:VISITOR_TO]->(:Place {name: 'London'}) RETURN r"
@@ -211,7 +213,7 @@ CREATE (:Cooldown { period: duration("P3DT12H") })
 
 ```cypher
 RETURN date("2025-01-01") + duration("P1M")  // 2025-02-01
-RETURN datetime("2025-06-29T13:00:00") - duration("PT30M") // 2025-06-29T12:30:00
+RETURN localdatetime("2025-06-29T13:00:00") - duration("PT30M") // 2025-06-29T12:30:00
 ```
 
 * Add durations together:

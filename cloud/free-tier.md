@@ -35,7 +35,7 @@ The free tier provides everything you need to explore FalkorDB and build initial
 
 #### Terms
 > ⚠️ Free instances that aren't utilized for 1 day will be stopped, and deleted after 7 days.
-Need an extension? Speak to [sales](https://www.falkordb.com/get-a-demo/))
+Need an extension? Speak to [sales](https://www.falkordb.com/get-a-demo/)
 
 ## Getting Started
 
