@@ -763,4 +763,3 @@ ORM
 orm
 OGM
 ogm
-lowercasing
