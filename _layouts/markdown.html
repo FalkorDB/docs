@@ -1,0 +1,10 @@
+---
+# Clean markdown layout for AI tools
+# Strips navigation, footer, and other non-content elements
+# Outputs plain text content type for markdown
+---
+{% if page.title %}# {{ page.title }}
+
+{% endif %}{% if page.description %}{{ page.description }}
+
+{% endif %}{{ content | strip }}

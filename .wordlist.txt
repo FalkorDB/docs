@@ -4,11 +4,13 @@ AST
 Aldis
 Analytics
 APIs
+baseurl
 BFS
 BLAS
 Benchmarking
 Booleans
 booleans
+bundler
 CLI
 Cmd
 CMD
@@ -40,6 +42,7 @@ FalkorDBGraph
 FalkorDBLite
 FalkorDBQAChain
 Gadepally
+Gemfile
 Gemini
 Geospatial
 GETUSER
