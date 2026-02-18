@@ -3,6 +3,7 @@ title: "GRAPH.MEMORY"
 description: >
     The GRAPH.MEMORY USAGE command returns detailed memory usage statistics for the specified graph. This command provides insight into how much memory is used by various internal data structures such as nodes, edges, schemas, and indices. It enables users to analyze memory consumption at the graph level, reporting statistics in megabytes (MB). This is useful for debugging, monitoring, performance optimization, and capacity planning in FalkorDB deployments.
 parent: "Commands"
+nav_order: 11
 ---
 
 # GRAPH.MEMORY

@@ -1,8 +1,10 @@
 ---
 layout: default
 title: bitwise.or
+description: "Performs a bitwise OR operation on two integers, returning 1 for each bit position where at least one operand has a 1."
 parent: Bitwise Functions
 grand_parent: FLEX Function Reference
+nav_order: 3
 ---
 
 # bitwise.or

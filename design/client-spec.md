@@ -3,6 +3,7 @@ title: "Client Specification"
 description: >
    Technical specification for writing FalkorDB client libraries
 parent: "The FalkorDB Design"
+nav_order: 1
 redirect_from:
   - /design/client_spec.html
   - /design/client_spec

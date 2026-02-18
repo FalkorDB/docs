@@ -1,8 +1,10 @@
 ---
 layout: default
 title: map.merge
+description: "Performs a shallow merge of multiple maps, with later map values overriding earlier ones on key conflicts."
 parent: Map Functions
 grand_parent: FLEX Function Reference
+nav_order: 2
 ---
 
 # map.merge

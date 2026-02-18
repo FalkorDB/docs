@@ -1,6 +1,7 @@
 ---
 layout: default
 title: UDFs
+description: "Learn how to extend FalkorDB with custom User Defined Functions (UDFs) written in JavaScript."
 has_children: true
 nav_order: 6
 ---

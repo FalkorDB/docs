@@ -1,8 +1,10 @@
 ---
 layout: default
 title: coll.frequencies
+description: "Counts the frequency of each element in a list, returning a map of elements to their occurrence counts."
 parent: Collection Functions
 grand_parent: FLEX Function Reference
+nav_order: 1
 ---
 
 # coll.frequencies

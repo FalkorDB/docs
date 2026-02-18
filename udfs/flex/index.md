@@ -1,8 +1,10 @@
 ---
 layout: default
 title: FLEX Function Reference
+description: "Reference for FLEX, FalkorDB's open-source community UDF package with text, date, JSON, map, collection, bitwise, and similarity utilities."
 parent: UDFs
 has_children: true
+nav_order: 1
 ---
 
 # FLEX Function Reference

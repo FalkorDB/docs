@@ -1,8 +1,10 @@
 ---
 layout: default
 title: text.join
+description: "Joins an array of strings into a single string using a specified delimiter."
 parent: Text Functions
 grand_parent: FLEX Function Reference
+nav_order: 8
 ---
 
 # text.join

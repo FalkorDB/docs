@@ -1,8 +1,10 @@
 ---
 layout: default
 title: bitwise.not
+description: "Performs a bitwise NOT (one's complement) on an integer, inverting all bits."
 parent: Bitwise Functions
 grand_parent: FLEX Function Reference
+nav_order: 2
 ---
 
 # bitwise.not

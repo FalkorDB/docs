@@ -1,8 +1,10 @@
 ---
 layout: default
 title: text.replace
+description: "Replaces all occurrences of a regex pattern in a string with a replacement string."
 parent: Text Functions
 grand_parent: FLEX Function Reference
+nav_order: 13
 ---
 
 # text.replace

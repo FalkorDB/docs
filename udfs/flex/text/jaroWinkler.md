@@ -1,8 +1,10 @@
 ---
 layout: default
 title: text.jaroWinkler
+description: "Computes the Jaro-Winkler similarity between two strings, returning a value between 0 (no similarity) and 1 (exact match)."
 parent: Text Functions
 grand_parent: FLEX Function Reference
+nav_order: 7
 ---
 
 # text.jaroWinkler

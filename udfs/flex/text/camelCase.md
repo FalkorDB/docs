@@ -1,8 +1,10 @@
 ---
 layout: default
 title: text.camelCase
+description: "Converts a string to camelCase format, capitalizing the first letter of each word except the first."
 parent: Text Functions
 grand_parent: FLEX Function Reference
+nav_order: 1
 ---
 
 # text.camelCase
