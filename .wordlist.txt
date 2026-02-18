@@ -700,6 +700,10 @@ dylib
 xcode
 Trendshift
 lowercasing
+snake_case
+camel_case
+pascal_case
+kebab
 
 UDF
 UDFs
