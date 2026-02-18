@@ -1,8 +1,10 @@
 ---
 layout: default
 title: text.swapCase
+description: "Swaps the case of every character in a string — uppercase becomes lowercase and vice versa."
 parent: Text Functions
 grand_parent: FLEX Function Reference
+nav_order: 16
 ---
 
 # text.swapCase

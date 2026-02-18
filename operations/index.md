@@ -1,7 +1,7 @@
 ---
 title: "Operations"
 nav_order: 10
-description: "Configuring FalkorDB Docker"
+description: "Learn how to configure, deploy, and manage FalkorDB in production environments with Docker, persistence, replication, clustering, and Kubernetes support."
 redirect_from:
   - /operation
   - /operation.html
@@ -49,7 +49,7 @@ Comprehensive guide for setting up OpenTelemetry observability and tracing with 
 
 ## 9. [FalkorDBLite](/operations/falkordblite)
 
-Self-contained Python interface to FalkorDB with embedded Redis server, ideal for development and testing.
+Embedded FalkorDB runtime for local development with guides for [Python](/operations/falkordblite/falkordblite-py) and [TypeScript](/operations/falkordblite/falkordblite-ts).
 
 ## 10. [Deploy FalkorDB on Lightning.AI](/operations/lightning-ai)
 

@@ -1,8 +1,10 @@
 ---
 layout: default
 title: bitwise.shiftLeft
+description: "Shifts all bits of an integer to the left by a specified number of positions, filling vacated positions with zeros."
 parent: Bitwise Functions
 grand_parent: FLEX Function Reference
+nav_order: 4
 ---
 
 # bitwise.shiftLeft

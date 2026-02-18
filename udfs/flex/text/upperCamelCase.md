@@ -1,8 +1,10 @@
 ---
 layout: default
 title: text.upperCamelCase
+description: "Converts a string to UpperCamelCase (PascalCase) format, capitalizing the first letter of every word."
 parent: Text Functions
 grand_parent: FLEX Function Reference
+nav_order: 17
 ---
 
 # text.upperCamelCase

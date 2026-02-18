@@ -1,7 +1,8 @@
 ---
 title: "Result Set Structure"
-description: The Result Set's format
+description: "FalkorDB result set format specification for redis-cli output including headers, data arrays, metadata, scalars, graph entities (nodes and relationships), and collections."
 parent: "The FalkorDB Design"
+nav_order: 2
 redirect_from:
   - /design/result_structure.html
   - /design/result_structure

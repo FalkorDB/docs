@@ -2,7 +2,7 @@
 title: "Graphiti"
 parent: "Agentic Memory"
 nav_order: 1
-description: "Build temporally-aware knowledge graphs with Graphiti and FalkorDB"
+description: "Build temporally-aware, multi-tenant knowledge graphs with Graphiti and FalkorDB for AI systems with persistent memory, hybrid search, and real-time data integration."
 ---
 
 # Graphiti

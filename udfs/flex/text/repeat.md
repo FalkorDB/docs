@@ -1,8 +1,10 @@
 ---
 layout: default
 title: text.repeat
+description: "Returns a string repeated a specified number of times."
 parent: Text Functions
 grand_parent: FLEX Function Reference
+nav_order: 12
 ---
 
 # text.repeat

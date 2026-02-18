@@ -1,7 +1,7 @@
 ---
 title: "Cluster"
 nav_order: 3
-description: "Configuring FalkorDB Docker for Cluster"
+description: "Set up a FalkorDB cluster with Docker for horizontal scalability and fault tolerance. Configure multiple master and replica nodes with step-by-step instructions."
 parent: "Operations"
 ---
 

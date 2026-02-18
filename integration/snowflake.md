@@ -1,3 +1,10 @@
+---
+title: "Snowflake Integration"
+nav_order: 6
+description: "Run graph database operations directly within your Snowflake environment using the FalkorDB Native App."
+parent: "Integration"
+---
+
 # FalkorDB Snowflake Integration Guide
 
 ## Overview

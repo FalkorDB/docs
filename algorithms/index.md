@@ -1,6 +1,6 @@
 ---
 title: "Algorithms"
-description: Graph Algorithms Overview
+description: "Explore FalkorDB's high-performance graph algorithms including pathfinding (BFS, shortest path), centrality measures (PageRank, betweenness), and community detection (WCC, CDLP)."
 nav_order: 3
 has_children: true
 redirect_from:

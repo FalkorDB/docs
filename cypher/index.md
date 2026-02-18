@@ -2,7 +2,7 @@
 title: "Cypher Language"
 nav_order: 7
 description: >
-    Documentation for the Cypher query language
+    Complete Cypher query language reference for FalkorDB including clauses (MATCH, CREATE, DELETE), functions, procedures, algorithms, and indexing for graph queries.
 has_children: true
 ---
 

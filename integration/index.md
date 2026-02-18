@@ -19,5 +19,6 @@ Learn how to leverage FalkorDB's flexible APIs and SDKs to build high-performanc
 - [Apache Jena](./jena.md): Learn how to use FalkorDB with Apache Jena via the jena-falkordb-adapter.
 - [BOLT protocol support](./bolt-support.md): Learn how to connect to FalkorDB using the BOLT protocol.
 - [Spring Data FalkorDB](./spring-data-falkordb.md): Learn how to use FalkorDB with Spring Data for JPA-style object-graph mapping.
+- [Snowflake Integration](./snowflake.md): Learn how to run graph database operations directly within your Snowflake environment using the FalkorDB Native App.
 
 

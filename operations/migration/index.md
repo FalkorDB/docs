@@ -1,6 +1,6 @@
 ---
 title: "Migration"
-description: "Migrate to FalkorDB from other graph databases"
+description: "Migrate graph data to FalkorDB from RedisGraph, Neo4j, Kuzu, and RDF-based systems. Step-by-step guides for seamless data and application transitions with schema discovery."
 has_children: true
 nav_order: 1
 parent: "Operations"

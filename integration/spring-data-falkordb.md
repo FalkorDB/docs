@@ -1,7 +1,7 @@
 ---
 title: "Spring Data FalkorDB"
 nav_order: 4
-description: "How to use FalkorDB with Spring Data for JPA-style object-graph mapping."
+description: "Use FalkorDB with Spring Data for JPA-style object-graph mapping. Repository pattern, derived queries, @Node/@Relationship annotations, and transaction support for Java applications."
 parent: "Integration"
 ---
 

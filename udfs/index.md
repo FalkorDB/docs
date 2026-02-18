@@ -1,6 +1,7 @@
 ---
 layout: default
 title: UDFs
+description: "Learn how to extend FalkorDB with custom User Defined Functions (UDFs) written in JavaScript."
 has_children: true
 nav_order: 6
 ---
@@ -52,7 +53,7 @@ db.udf_load(lib, script)
 # Call UDF
 graph = db.select_graph("G")
 s = graph.query("RETURN StringUtils.UpperCaseOdd('abcdef')").result_set[0][0]
-print(f"s: {s}") # prints 'AbCdEf'
+print(f"s: {s}") # prints 'aBcDeF'
 ```
 ## Commands Specification
 
@@ -195,7 +196,7 @@ You can also collect a node's neighbors by calling the node's `getNeighbors` fun
 | returnType    | string | return type, array of nodes or edges | 'nodes' / 'edges'  |
 
 ### Edge
-In a UDF, an edge object exposes its  `ID`, `type`, `startNode`,`endNode` and `attributes` via the corresponding properties:
+In a UDF, an edge object exposes its `ID`, `type`, `source`, `target` and `attributes` via the corresponding properties:
 
 - `id` - edge internal ID
 - `type` - edge's relationship type

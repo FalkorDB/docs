@@ -1,8 +1,10 @@
 ---
 layout: default
 title: text.capitalize
+description: "Converts the first character of a string to uppercase, leaving the remainder unchanged."
 parent: Text Functions
 grand_parent: FLEX Function Reference
+nav_order: 2
 ---
 
 # text.capitalize

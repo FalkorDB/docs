@@ -1,8 +1,10 @@
 ---
 layout: default
 title: map.fromPairs
+description: "Converts a list of [key, value] pairs into a map."
 parent: Map Functions
 grand_parent: FLEX Function Reference
+nav_order: 1
 ---
 
 # map.fromPairs

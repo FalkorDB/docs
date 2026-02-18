@@ -1,8 +1,10 @@
 ---
 layout: default
 title: bitwise.and
+description: "Performs a bitwise AND operation on two integers, returning 1 for each bit position where both operands have a 1."
 parent: Bitwise Functions
 grand_parent: FLEX Function Reference
+nav_order: 1
 ---
 
 # bitwise.and

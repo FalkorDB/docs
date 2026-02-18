@@ -3,6 +3,7 @@ title: "GRAPH.COPY"
 description: >
     creates a copy of the given graph
 parent: "Commands"
+nav_order: 9
 ---
 
 # GRAPH.COPY
@@ -50,7 +51,7 @@ graph_z = graph_a.copy('Z')
 graph_list = db.list()
 
 # Query Graph 'Z'
-result = graph_z.query('MATCH (a:Account) RETURN a.number')Query Graph 'Z'
+result = graph_z.query('MATCH (a:Account) RETURN a.number')
 {% endcapture %}
 
 {% capture javascript_0 %}

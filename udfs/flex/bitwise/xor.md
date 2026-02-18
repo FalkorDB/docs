@@ -1,8 +1,10 @@
 ---
 layout: default
 title: bitwise.xor
+description: "Performs a bitwise XOR operation on two integers, returning 1 for each bit position where the operands differ."
 parent: Bitwise Functions
 grand_parent: FLEX Function Reference
+nav_order: 6
 ---
 
 # bitwise.xor

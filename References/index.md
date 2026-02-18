@@ -1,8 +1,8 @@
 ---
 title: "References"
-description: Learn more about the Technology behind FalkorDB
+description: "Explore FalkorDB resources including blog posts, videos, research papers, tutorials, and technical articles about graph databases, GraphBLAS, and performance benchmarks."
 has_children: true
-nav_order: 998
+nav_order: 999
 redirect_from:
   - /References.html
 ---

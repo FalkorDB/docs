@@ -2,6 +2,7 @@
 title: "Betweenness Centrality"
 description: "Measures the importance of nodes based on the number of shortest paths that pass through them."
 parent: "Algorithms"
+nav_order: 2
 redirect_from:
   - /algorithms/betweenness_centrality.html
   - /algorithms/betweenness_centrality

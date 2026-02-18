@@ -1,7 +1,7 @@
 ---
 title: "GRAPH.CONFIG-GET"
 description: >
-    Retrieves a FalkorDB configuration
+    Retrieve FalkorDB configuration parameters with GRAPH.CONFIG-GET command. Query specific settings or use '*' to get all configuration values for threads, timeouts, and limits.
 parent: "Commands"
 ---
 
