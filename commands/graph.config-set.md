@@ -2,7 +2,8 @@
 title: "GRAPH.CONFIG-SET"
 description: >
     Updates a FalkorDB configuration
-parent: "Commands"    
+parent: "Commands"
+nav_order: 7
 ---
 
 # GRAPH.CONFIG-SET

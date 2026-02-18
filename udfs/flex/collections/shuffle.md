@@ -1,8 +1,10 @@
 ---
 layout: default
 title: coll.shuffle
+description: "Returns a randomly shuffled copy of a list using the Fisher-Yates algorithm."
 parent: Collection Functions
 grand_parent: FLEX Function Reference
+nav_order: 3
 ---
 
 # coll.shuffle

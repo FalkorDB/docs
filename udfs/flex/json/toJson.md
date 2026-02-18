@@ -1,8 +1,10 @@
 ---
 layout: default
 title: json.toJson
+description: "Serializes a value (object, array, string, number, boolean, or null) to a JSON string."
 parent: JSON Functions
 grand_parent: FLEX Function Reference
+nav_order: 3
 ---
 
 # json.toJson

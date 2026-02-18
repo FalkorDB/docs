@@ -1,8 +1,10 @@
 ---
 layout: default
 title: text.levenshtein
+description: "Computes the Levenshtein edit distance between two strings, useful for fuzzy matching and spell checking."
 parent: Text Functions
 grand_parent: FLEX Function Reference
+nav_order: 9
 ---
 
 # text.levenshtein

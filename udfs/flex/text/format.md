@@ -1,8 +1,10 @@
 ---
 layout: default
 title: text.format
+description: "Formats a string by replacing numbered placeholders {0}, {1}, etc. with values from a parameters array."
 parent: Text Functions
 grand_parent: FLEX Function Reference
+nav_order: 4
 ---
 
 # text.format

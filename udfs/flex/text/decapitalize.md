@@ -1,8 +1,10 @@
 ---
 layout: default
 title: text.decapitalize
+description: "Converts the first character of a string to lowercase, leaving the remainder unchanged."
 parent: Text Functions
 grand_parent: FLEX Function Reference
+nav_order: 3
 ---
 
 # text.decapitalize

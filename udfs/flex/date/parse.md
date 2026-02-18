@@ -1,8 +1,10 @@
 ---
 layout: default
 title: date.parse
+description: "Parses a date/time string into a Date object using an optional format pattern."
 parent: Date Functions
 grand_parent: FLEX Function Reference
+nav_order: 2
 ---
 
 # date.parse

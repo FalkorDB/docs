@@ -1,8 +1,10 @@
 ---
 layout: default
 title: json.fromJsonMap
+description: "Parses a JSON string and returns it as a map, returning an empty map on parse errors."
 parent: JSON Functions
 grand_parent: FLEX Function Reference
+nav_order: 2
 ---
 
 # json.fromJsonMap
