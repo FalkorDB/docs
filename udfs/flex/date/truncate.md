@@ -25,6 +25,7 @@ flex.date.truncate(datetime, unit)
 | `unit` | string | Yes | The unit to truncate to |
 
 ### Supported Units
+
 | Unit | Description | Truncates To |
 |------|-------------|--------------|
 | `'minute'` | Truncate to start of minute | Sets seconds and milliseconds to 0 |
