@@ -1,8 +1,10 @@
 ---
 layout: default
 title: text.regexGroups
+description: "Extracts all regex matches and capture groups from a string, returning a nested array of results."
 parent: Text Functions
 grand_parent: FLEX Function Reference
+nav_order: 11
 ---
 
 # text.regexGroups

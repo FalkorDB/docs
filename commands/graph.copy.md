@@ -3,6 +3,7 @@ title: "GRAPH.COPY"
 description: >
     Creates a copy of the given graph
 parent: "Commands"
+nav_order: 9
 ---
 
 # GRAPH.COPY

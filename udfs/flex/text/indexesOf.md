@@ -1,8 +1,10 @@
 ---
 layout: default
 title: text.indexesOf
+description: "Returns an array of all positions where a substring occurs in a string, with optional range constraints."
 parent: Text Functions
 grand_parent: FLEX Function Reference
+nav_order: 6
 ---
 
 # text.indexesOf

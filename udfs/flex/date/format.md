@@ -1,8 +1,10 @@
 ---
 layout: default
 title: date.format
+description: "Formats a date/time value using a token-based pattern, with optional timezone offset adjustment."
 parent: Date Functions
 grand_parent: FLEX Function Reference
+nav_order: 1
 ---
 
 # date.format
@@ -24,6 +26,7 @@ flex.date.format(datetime, pattern, timezone)
 | `timezone` | string | No | Timezone offset like `"+02:00"` or `"-05:00"` |
 
 ### Supported Pattern Tokens
+
 | Token | Description | Example |
 |-------|-------------|---------|
 | `YYYY` | 4-digit year | `2024` |
@@ -33,7 +36,7 @@ flex.date.format(datetime, pattern, timezone)
 | `mm` | 2-digit minute (00-59) | `30` |
 | `ss` | 2-digit second (00-59) | `45` |
 | `SSS` | 3-digit milliseconds | `123` |
-| `[Z]` | Literal 'Z' character | `Z` |
+| `[Z]` | Literal `Z` character | `Z` |
 
 ## Returns
 **Type:** string

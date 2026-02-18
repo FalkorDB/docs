@@ -1,8 +1,10 @@
 ---
 layout: default
 title: coll.zip
+description: "Combines two lists element-by-element into a list of pairs, stopping at the shorter list's length."
 parent: Collection Functions
 grand_parent: FLEX Function Reference
+nav_order: 5
 ---
 
 # coll.zip

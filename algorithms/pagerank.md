@@ -2,6 +2,7 @@
 title: "PageRank"
 description: "Rank nodes based on the number and quality of edges pointing to them, simulating the likelihood of a random traversal landing on each node."
 parent: "Algorithms"
+nav_order: 4
 ---
 
 # PageRank

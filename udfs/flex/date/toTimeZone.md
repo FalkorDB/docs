@@ -1,8 +1,10 @@
 ---
 layout: default
 title: date.toTimeZone
+description: "Converts a date/time instant to the equivalent wall clock time in a specified timezone offset."
 parent: Date Functions
 grand_parent: FLEX Function Reference
+nav_order: 3
 ---
 
 # date.toTimeZone

@@ -2,6 +2,7 @@
 title: "Weakly Connected Components (WCC)"
 description: "Weakly Connected Components (WCC)"
 parent: "Algorithms"
+nav_order: 7
 ---
 
 # Weakly Connected Components (WCC)

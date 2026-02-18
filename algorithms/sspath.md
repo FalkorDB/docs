@@ -2,6 +2,7 @@
 title: "algo.SSpaths"
 description: "Explore all shortest paths from a single source node with weight, cost, and length constraints."
 parent: "Algorithms"
+nav_order: 6
 ---
 
 # `algo.SSpaths` - Single Source Paths

@@ -2,6 +2,7 @@
 title: "Kuzu to FalkorDB"
 description: "Migrate from Kuzu to FalkorDB."
 parent: "Migration"
+nav_order: 3
 ---
 
 # Kuzu to FalkorDB Migration
