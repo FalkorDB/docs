@@ -44,7 +44,7 @@ public class JenaFalkorExample {
         // Create or obtain a Jena Model backed by FalkorDB.
         // The exact factory method depends on the adapter; check the adapter README/Main.java for the
         // connection options (hostname, port, credentials, etc.).
-        Model model = FalkorDBJenaFactory.createModel("http://localhost:6379");
+        Model model = FalkorDBJenaFactory.createModel("http://localhost:7474");
 
         // Example: add a triple
         model.createResource("http://example.org/alice")
