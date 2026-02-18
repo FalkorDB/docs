@@ -1,6 +1,7 @@
-remote_theme: just-the-docs/just-the-docs
+remote_theme: just-the-docs/just-the-docs@v0.10.0
 title: FalkorDB Docs
 description: The FalkorDB documentation
+url: "https://docs.falkordb.com"
 logo: "/images/falkor-logo.png"
 logo_link: "https://www.falkordb.com"
 favicon_ico: "/images/favicon.ico"
@@ -11,9 +12,9 @@ color_scheme: dark
 
 aux_links:
   "Docs Repository":
-    - "//github.com/falkordb/docs"
+    - "https://github.com/falkordb/docs"
   "FalkorDB Repository":
-    - "//github.com/falkordb/falkordb"
+    - "https://github.com/falkordb/falkordb"
 
 
 # Makes Aux links open in a new tab. Default is false
@@ -25,10 +26,18 @@ nav_enabled: true
 plugins:
   - jekyll-sitemap
   - jekyll-redirect-from
+  - jekyll-seo-tag
+
+exclude:
+  - README.md
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor
 
 # Footer last edited timestamp
-last_edit_timestamp: true 
-last_edit_time_format: "%b %e %Y at %I:%M %p" # uses ruby's time format: https://ruby-doc.org/stdlib-2.7.0/libdoc/time/rdoc/Time.html
+last_edit_timestamp: true
+last_edit_time_format: "%b %e %Y at %I:%M %p" # uses ruby's time format: https://ruby-doc.org/core/Time.html
 
 # Footer "Edit this page on GitHub" link text
 gh_edit_link: true

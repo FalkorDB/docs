@@ -4,6 +4,9 @@ nav_order: 10
 description: >
     SET is used to create or update properties on nodes and relationships.
 parent: "Cypher Language"
+redirect_from:
+  - /cypher/set.html
+  - /cypher/set
 ---
 
 # SET

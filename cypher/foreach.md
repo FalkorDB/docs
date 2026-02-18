@@ -4,6 +4,9 @@ nav_order: 15
 description: >
     The FOREACH clause feeds the components of a list to a sub-query comprised of updating clauses only
 parent: "Cypher Language"
+redirect_from:
+  - /cypher/foreach.html
+  - /cypher/foreach
 ---
 
 # FOREACH

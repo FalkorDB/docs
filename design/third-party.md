@@ -48,15 +48,10 @@ Below is a list of these libraries along with their respective licenses.
 ### 10. [CRoaring](https://github.com/RoaringBitmap/CRoaring?tab=License-1-ov-file#readme)
 - **License**: [Apache License 2.0](https://github.com/RoaringBitmap/CRoaring?tab=License-1-ov-file#readme)
 
-### 11. RedisGraph
-- **License**: [RSALv2](https://redis.io/legal/rsalv2-agreement/) or [SSPLv1](https://redis.io/legal/server-side-public-license-sspl/)
-
-### 12. Redis
-- **License**: [RSALv2](https://redis.io/legal/rsalv2-agreement/) or [SSPLv1](https://redis.io/legal/server-side-public-license-sspl/)
-
-### 13. RediSearch
-- **License**: [RSALv2](https://redis.io/legal/rsalv2-agreement/) or [SSPLv1](https://redis.io/legal/server-side-public-license-sspl/)
-
 ---
 
 Each of these libraries is crucial for FalkorDB's performance, scalability, and functionality. For further details, consult the respective license files linked above.
+
+## Historical Attribution
+
+FalkorDB is built upon technology originally developed as RedisGraph (licensed under RSALv2/SSPLv1) and Redis (licensed under RSALv2/SSPLv1), and RediSearch (licensed under RSALv2/SSPLv1). FalkorDB continues to evolve these technologies under an open-source model.

@@ -4,6 +4,9 @@ nav_order: 11
 description: >
     The MERGE clause ensures that a path exists in the graph (either the path already exists, or it needs to be created).
 parent: "Cypher Language"
+redirect_from:
+  - /cypher/merge.html
+  - /cypher/merge
 ---
 
 # MERGE
