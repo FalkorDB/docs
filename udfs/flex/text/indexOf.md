@@ -1,8 +1,10 @@
 ---
 layout: default
 title: text.indexOf
+description: "Finds the index of the first occurrence of a substring in a string, with optional range constraints."
 parent: Text Functions
 grand_parent: FLEX Function Reference
+nav_order: 5
 ---
 
 # text.indexOf

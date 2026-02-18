@@ -1,8 +1,10 @@
 ---
 layout: default
 title: coll.union
+description: "Returns a list of all unique elements from both input lists, treating them as sets."
 parent: Collection Functions
 grand_parent: FLEX Function Reference
+nav_order: 4
 ---
 
 # coll.union

@@ -1,8 +1,10 @@
 ---
 layout: default
 title: text.lpad
+description: "Pads the left side of a string with a specified character until it reaches a desired length."
 parent: Text Functions
 grand_parent: FLEX Function Reference
+nav_order: 10
 ---
 
 # text.lpad

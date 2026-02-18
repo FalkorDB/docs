@@ -2,6 +2,7 @@
 title: "Third Party"
 description: "Third-Party Components in FalkorDB"
 parent: "The FalkorDB Design"
+nav_order: 4
 redirect_from:
   - /third-party.html
   - /third-party

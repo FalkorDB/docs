@@ -1,8 +1,10 @@
 ---
 layout: default
 title: date.truncate
+description: "Truncates a date/time to the specified unit (year, month, day, etc.), zeroing out all smaller units."
 parent: Date Functions
 grand_parent: FLEX Function Reference
+nav_order: 4
 ---
 
 # date.truncate
