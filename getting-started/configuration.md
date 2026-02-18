@@ -317,7 +317,7 @@ The configuration argument is the maximum number of bytes that can be allocated 
 #### Example
 
 ```sh
-$ redis-server --loadmodule ./falkordb.so QUERY_MEM_CAPACITY 1048576 // 1 megabyte limit
+$ redis-server --loadmodule ./falkordb.so QUERY_MEM_CAPACITY 1048576 # 1 megabyte limit
 
 $ redis-cli GRAPH.CONFIG SET QUERY_MEM_CAPACITY 1048576
 ```

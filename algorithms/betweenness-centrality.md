@@ -45,9 +45,9 @@ YIELD node, score
 | `node`  | Node  | The node being evaluated                      |
 | `score` | Float | The betweenness centrality score for the node |
 
-## Example:
+## Example
 
-Lets take this Social Graph as an example:
+Let's take this Social Graph as an example:
 ![Social Graph](../images/between.png)
 
 ### Create the Graph

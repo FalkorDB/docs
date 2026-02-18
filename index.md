@@ -34,7 +34,7 @@ FalkorDB delivers an **accurate, multi-tenant RAG solution powered by a low-late
 ## Primary Features
 
 * Adopts the [Property Graph Model](https://github.com/opencypher/openCypher/blob/master/docs/property-graph-model.adoc)
-* Supports [OpenCypher](http://www.opencypher.org/) query language with proprietary extensions
+* Supports [OpenCypher](https://www.opencypher.org/) query language with proprietary extensions
 * Offers [Full-Text Search](/cypher/indexing/fulltext-index), [Vector Similarity](/cypher/indexing/vector-index), and [Range indexing](/cypher/indexing/range-index) for efficient querying
 * Supports both [RESP](https://redis.io/docs/reference/protocol-spec/) and [Bolt](https://en.wikipedia.org/wiki/Bolt_(network_protocol)) protocols for flexible connectivity
 * Uses sparse adjacency matrix representation for efficient graph storage
@@ -57,7 +57,7 @@ docker run -p 6379:6379 -p 3000:3000 -it --rm falkordb/falkordb:latest
   Access the FalkorDB web UI by opening your browser at: http://localhost:3000
 
 
-Once loaded you can interact with FalkorDB using any of the supported [client libraries](/getting-started/clients)
+Once loaded, you can interact with FalkorDB using any of the supported [client libraries](/getting-started/clients)
 
 Here we'll use [FalkorDB Python client](https://pypi.org/project/FalkorDB/) to create a small graph representing a subset of motorcycle riders and teams taking part in the MotoGP league, once created we'll start querying our data.
 
@@ -259,7 +259,7 @@ The full list and links can be found on the [Client Libraries](/getting-started/
 
 When loading large graphs from CSV files, we recommend using [falkordb-bulk-loader](https://github.com/falkordb/falkordb-bulk-loader)
 
-## Mailing List / Forum
+## GitHub Discussions
 
 Got questions? Please contact us at the [FalkorDB forum](https://github.com/FalkorDB/FalkorDB/discussions).
 
