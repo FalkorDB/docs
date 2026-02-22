@@ -527,6 +527,7 @@ Kuzu
 neo
 subfolder
 upsert
+Upserts
 TTL
 ttl
 txt
