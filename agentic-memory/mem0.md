@@ -245,26 +245,6 @@ uv run python demo.py
 
 See the [demo README](https://github.com/FalkorDB/mem0-falkordb/blob/main/demo/README.md) for complete instructions.
 
-## How It Works
-
-The plugin uses Python's runtime patching to integrate with Mem0 without modifying its source code:
-
-1. `GraphStoreFactory.provider_to_class` gets a new `"falkordb"` entry
-2. `GraphStoreConfig` is patched to accept `FalkorDBConfig`
-3. A `MemoryGraph` class translates Mem0's graph operations to FalkorDB-compatible Cypher
-4. The `register()` function must be called before creating a Mem0 `Memory` instance
-
-### Key Cypher Translations
-
-The plugin translates Neo4j-style Cypher (used by Mem0) to FalkorDB-compatible Cypher:
-
-| Neo4j                                    | FalkorDB                                          |
-|------------------------------------------|---------------------------------------------------|
-| `elementId(n)`                           | `id(n)`                                           |
-| `vector.similarity.cosine()`             | `db.idx.vector.queryNodes()` procedure            |
-| `db.create.setNodeVectorProperty()`      | `SET n.embedding = vecf32($vec)`                  |
-| `CALL { ... UNION ... }` subqueries      | Separate outgoing + incoming queries              |
-
 ## Best Practices
 
 1. **Call register() once**: Always call `register()` before creating a Mem0 `Memory` instance
