@@ -79,6 +79,8 @@ LocalTime
 localStorage
 Lovitz
 MEM
+Mem
+mem
 MSF
 Miesha
 MotoGP
