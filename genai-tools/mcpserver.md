@@ -120,7 +120,7 @@ The `query_graph` tool supports a `readOnly` parameter to execute queries using 
 
 ### Environment Variables
 
-```env
+```bash
 # FalkorDB Configuration
 FALKORDB_HOST=localhost
 FALKORDB_PORT=6379
@@ -142,14 +142,14 @@ ENABLE_FILE_LOGGING=false
 #### stdio (default)
 Used for direct integration with AI clients like Claude Desktop. Communication happens via standard input/output.
 
-```env
+```bash
 MCP_TRANSPORT=stdio
 ```
 
 #### HTTP
 Exposes the MCP server over HTTP for remote or networked access:
 
-```env
+```bash
 MCP_TRANSPORT=http
 MCP_PORT=3000
 MCP_API_KEY=your-secret-api-key  # Optional but recommended
@@ -161,7 +161,7 @@ When using HTTP transport, clients connect via the MCP Streamable HTTP protocol.
 
 Enable read-only mode by default to prevent writes to replica instances:
 
-```env
+```bash
 FALKORDB_DEFAULT_READONLY=true
 ```
 
