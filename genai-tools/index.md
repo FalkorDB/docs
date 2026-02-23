@@ -24,3 +24,4 @@ FalkorDB provides powerful tools and integrations for building intelligent GenAI
 - [LangGraph](./langgraph.md): Build stateful, multi-actor agentic applications with LangGraph.
 - [LlamaIndex](./llamaindex.md): Simplify development of LLM-powered applications with LlamaIndex.
 - [GraphRAG Toolkit](./graphrag-toolkit.md): AWS GraphRAG Toolkit integration for building knowledge graph applications.
+- [FalkorDB MCP Server](./mcpserver.md): Enable AI assistants like Claude to interact with FalkorDB using the Model Context Protocol.
