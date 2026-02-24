@@ -23,11 +23,13 @@
 
 - [GenAI Tools](https://docs.falkordb.com/genai-tools/): Build intelligent GenAI applications with FalkorDB and LLMs
 - [GraphRAG SDK](https://docs.falkordb.com/genai-tools/graphrag-sdk): Build intelligent GraphRAG applications with FalkorDB and LLMs
+- [MCP Server](https://docs.falkordb.com/genai-tools/mcpserver/): Enable AI assistants like Claude to interact with FalkorDB using the Model Context Protocol
 - [LangChain Integration](https://docs.falkordb.com/genai-tools/langchain): AI agents with memory using LangChain (Python and JavaScript/TypeScript)
 - [LangGraph Integration](https://docs.falkordb.com/genai-tools/langgraph): Stateful, multi-actor agentic applications with LangGraph
 - [LlamaIndex Integration](https://docs.falkordb.com/genai-tools/llamaindex): LLM-powered applications with LlamaIndex
 - [AG2 Integration](https://docs.falkordb.com/genai-tools/ag2): Multi-agent AI systems with AG2 (formerly AutoGen)
-- [Agentic Memory](https://docs.falkordb.com/agentic-memory/): Memory systems for AI agents including Cognee and Graphiti integrations
+- [GraphRAG Toolkit](https://docs.falkordb.com/genai-tools/graphrag-toolkit): AWS GraphRAG Toolkit integration for building knowledge graph applications
+- [Agentic Memory](https://docs.falkordb.com/agentic-memory/): Memory systems for AI agents with Graphiti, Cognee, Mem0, and MCP server integrations
 
 ## Operations and Deployment
 
@@ -43,7 +45,7 @@
 
 - [User-Defined Functions (UDFs)](https://docs.falkordb.com/udfs/): Extend FalkorDB with custom functions including date, text, JSON, and similarity functions
 - [Browser Interface](https://docs.falkordb.com/browser/): Web-based query interface and graph visualization
-- [Integrations](https://docs.falkordb.com/integration/): Third-party integrations and tools
+- [Integrations](https://docs.falkordb.com/integration/): Third-party integrations including REST API, Kafka Connect, Apache Jena, BOLT protocol, Spring Data, and Snowflake Native App
 - [Design Specifications](https://docs.falkordb.com/design/): Client specification, bulk load specification, and result structure
 
 ## Optional
