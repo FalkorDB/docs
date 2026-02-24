@@ -481,7 +481,7 @@ Range indexes are ideal for:
 ### Example: Profiling Index Performance
 
 ```cypher
-# Profile query to see actual execution metrics
+// Profile query to see actual execution metrics
 GRAPH.PROFILE DEMO_GRAPH "MATCH (p:Person) WHERE p.age > 30 RETURN p"
 ```
 

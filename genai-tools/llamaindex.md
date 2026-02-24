@@ -13,9 +13,10 @@ In a typical RAG (Retrieval-Augmented Generation) setup, LlamaIndex orchestrates
 
 ## Resources
 
-- 🔗 [FalkorDB Graph Store Demo](https://gpt-index.readthedocs.io/en/latest/examples/index_structs/knowledge_graph/FalkorDBGraphDemo.html)  
-- 📓 [Blog: LlamaIndex RAG – Build Efficient GraphRAG Systems](https://www.falkordb.com/blog/llamaindex-rag-implementation-graphrag/)
-- 🔗 [LlamaIndex Documentation](https://docs.llamaindex.ai/)
+- [LlamaIndex Documentation](https://docs.llamaindex.ai/)
+- [FalkorDB Graph Store Documentation](https://docs.llamaindex.ai/en/stable/examples/index_structs/knowledge_graph/FalkorDBGraphDemo/)
+- [Blog: LlamaIndex RAG Implementation](https://www.falkordb.com/blog/llamaindex-rag-implementation-graphrag/)
+- [LlamaIndex GitHub Repository](https://github.com/run-llama/llama_index)
 
 ## Installation
 
@@ -296,10 +297,3 @@ storage_context = StorageContext.from_defaults(
 )
 index = load_index_from_storage(storage_context)
 ```
-
-## Resources
-
-- [LlamaIndex Documentation](https://docs.llamaindex.ai/)
-- [FalkorDB Graph Store Documentation](https://docs.llamaindex.ai/en/stable/examples/index_structs/knowledge_graph/FalkorDBGraphDemo/)
-- [Blog: LlamaIndex RAG Implementation](https://www.falkordb.com/blog/llamaindex-rag-implementation-graphrag/)
-- [LlamaIndex GitHub Repository](https://github.com/run-llama/llama_index)
