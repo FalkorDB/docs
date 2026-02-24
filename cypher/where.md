@@ -4,6 +4,9 @@ nav_order: 3
 description: >
     Optional clause used to filter results based on predicates.
 parent: "Cypher Language"
+redirect_from:
+  - /cypher/where.html
+  - /cypher/where
 ---
 
 # WHERE

@@ -4,6 +4,9 @@ nav_order: 14
 description: >
     The UNWIND clause breaks down a given list into a sequence of records; each contains a single element in the list.
 parent: "Cypher Language"
+redirect_from:
+  - /cypher/unwind.html
+  - /cypher/unwind
 ---
 
 # UNWIND

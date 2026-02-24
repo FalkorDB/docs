@@ -2,23 +2,25 @@
 title: "OpenTelemetry Integration"
 nav_order: 5
 parent: Operations
-description: "Comprehensive guide for setting up OpenTelemetry observability and tracing with FalkorDB Python applications"
+description: "Guide for setting up OpenTelemetry tracing with FalkorDB Python applications"
 redirect_from:
   - /opentelemetry.html
   - /opentelemetry
 ---
 
-# OpenTelemetry with FalkorDB-py Guide
+# OpenTelemetry Tracing with FalkorDB-py Guide
 
-This guide explains how to set up and use OpenTelemetry (OTel) to monitor and trace your FalkorDB Python applications.
+This guide explains how to set up and use OpenTelemetry (OTel) tracing to monitor your FalkorDB Python applications.
 
 ## Overview
 
-OpenTelemetry is an observability framework that allows you to collect, process, and export telemetry data (metrics, logs, and traces) from your applications. When integrated with FalkorDB-py, it provides valuable insights into database operations, query performance, and application behavior.
+OpenTelemetry is an observability framework that allows you to collect, process, and export telemetry data from your applications. When integrated with FalkorDB-py, it provides valuable insights into database operations and query performance through distributed tracing.
+
+**Note:** This guide focuses on tracing capabilities. OpenTelemetry supports additional observability features like metrics and logs that can be configured separately.
 
 ## Prerequisites
 
-- Python 3.8 or higher
+- Python 3.9 or higher
 - FalkorDB server running (locally or remotely)
 - Basic understanding of Python and FalkorDB
 
