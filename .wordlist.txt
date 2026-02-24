@@ -7,6 +7,7 @@ APIs
 BFS
 BLAS
 Benchmarking
+bool
 Booleans
 booleans
 Bundler
@@ -80,6 +81,8 @@ LocalTime
 localStorage
 Lovitz
 MEM
+Mem
+mem
 MSF
 Miesha
 MotoGP
@@ -528,6 +531,7 @@ Kuzu
 neo
 subfolder
 upsert
+Upserts
 TTL
 ttl
 txt
@@ -701,6 +705,10 @@ dylib
 xcode
 Trendshift
 lowercasing
+snake_case
+camel_case
+pascal_case
+kebab
 
 UDF
 UDFs
@@ -764,3 +772,8 @@ ORM
 orm
 OGM
 ogm
+npx
+Claude
+MCPServer
+dotenv
+Streamable

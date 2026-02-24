@@ -37,7 +37,7 @@ Like nodes, relationships have sets of properties to describe all of their salie
 When querying relationships, multiple types can be specified by separating them with a pipe (`|`). Relationships that hold any of the specified types will be matched:
 
 ```sh
-$ redis-cli GRAPH.QUERY G "MATCH (:Person)-[r:RESIDENT_OF|:VISITOR_TO]->(:Place {name: 'London'}) RETURN r"
+$ redis-cli GRAPH.QUERY G "MATCH (:Person)-[r:RESIDENT_OF|VISITOR_TO]->(:Place {name: 'London'}) RETURN r"
 ```
 
 ## Paths
