@@ -25,7 +25,6 @@ nav_enabled: true
 plugins:
   - jekyll-sitemap
   - jekyll-redirect-from
-  - markdown_exporter
 
 # Footer last edited timestamp
 last_edit_timestamp: true 
