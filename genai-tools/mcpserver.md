@@ -7,7 +7,7 @@ parent: "GenAI Tools"
 
 # MCP Server
 
-## Enable AI assistants to query and interact with FalkorDB graph databases
+Enable AI assistants to query and interact with FalkorDB graph databases
 
 A Model Context Protocol (MCP) server that allows AI models like Claude to interact with FalkorDB using natural language. Query your graph data, create relationships, and manage your knowledge graph through conversational AI.
 
