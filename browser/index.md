@@ -3,6 +3,7 @@ title: "Browser"
 description: "FalkorDB Browser web UI for visualizing graphs, running Cypher queries, exploring data models, managing nodes and relationships, with query history and API documentation."
 nav_order: 9
 permalink: /browser/
+has_children: true
 ---
 
 # FalkorDB Graph Visualization Tool (Browser)
@@ -10,6 +11,12 @@ permalink: /browser/
 FalkorDB's Browser provides a web UI for exploring, querying, and managing FalkorDB graphs. It allows developers to interact with graphs loaded to FalkorDB, explore how specific queries behave, and review the current data model. FalkorDB Browser integrates within the main FalkorDB Docker container and through the Cloud service.
 
 ![FalkorDB Browser GIF_01-26(1)](https://github.com/user-attachments/assets/af4f4d1c-111a-46a4-8442-8c08c037014f)
+
+---
+
+## UI elements
+For detailed documentation of each major UI element (login, settings, graph canvas, panels, query editor/history, table view, etc.), see:
+- [UI Elements](./ui/)
 
 ---
 
