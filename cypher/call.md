@@ -80,60 +80,9 @@ Another key feature of the CALL {} clause is the ability to perform isolated agg
   RETURN item.name AS name, item_sales_ads_high as high_ads_sales, item_sales_ads_low as low_ads_sales
   ```
 
-<!-- * Observe changes from previous executions (on previous records).
-
-We can form useful structures and connections like linked-lists via the CALL {} clause. Let's form a linked-list of all items in a store, from the cheapest to the priciest:
-
-```sh
-MATCH (i:Item)
-WITH i order BY i.price ASC LIMIT 1
-SET i:HEAD
-WITH i
-MATCH (next_item:Item) WHERE NOT next_item:HEAD
-WITH next_item ORDER BY next_item.price ASC
-CALL {
-  WITH next_item
-  MATCH (curr_head:HEAD)
-  REMOVE curr_head:HEAD
-  SET next_item:HEAD
-  CREATE (curr_head)-[:IS_CHEAPER_THAN]->(next_item)
-}
-``` -->
-
-<!-- This will be added to a "performance-enhancement" section in the near future.
-
-* Efficient operations using a limited namespace (via imports).
-
-Given a query holding a respectively large namespace (a lot of bound variables), we can execute a subquery on a sub-namespace, and by thus enhance performance significantly. Let's look at an example.
-
-Without a CALL {} clause:
-
-```sh
-GRAPH.QUERY DEMO_GRAPH
-"MATCH (n:N), (m:M), (x:X), (y:Y), (z:Z), (e:E), (q:Q)
-MATCH (temp:TEMP)
-SET temp.v = n.v
-RETURN n, m, x, y, z, e, q"
-```
-Runtime: 256 ms.
-
-With a CALL {} clause:
-
-```sh
-GRAPH.QUERY DEMO_GRAPH
-"MATCH (n:N), (m:M), (x:X), (y:Y), (z:Z), (e:E), (q:Q)
-CALL {
-  WITH n
-  MATCH (temp:TEMP)
-  SET temp.v = n.v
-}
-RETURN n, m, x, y, z, e, q"
-```
-Runtime: 99 ms. -->
-
 * Side-effects.
 
-We can comfortably perform side-effects using non-returning subqueries. For example, we can mark a sub-group of nodes in the graph withholding some shared property. Let's mark all the items in a Walmart store that were sold more than 100 times as popular items, and return **all** items in the store:
+We can comfortably perform side-effects using non-returning subqueries. For example, we can mark a sub-group of nodes in the graph holding some shared property. Let's mark all the items in a Walmart store that were sold more than 100 times as popular items, and return **all** items in the store:
 
   ```sh
   GRAPH.QUERY DEMO_GRAPH

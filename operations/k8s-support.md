@@ -30,7 +30,7 @@ Create a values.yaml file with the following content:
 ```yaml
 global:
   security:
-    # Required to be able to run the FalkorDB image
+    # Required to run the FalkorDB image which may use non-standard base configurations
     allowInsecureImages: true
 
 image:
@@ -77,6 +77,7 @@ This deployment uses Redis Cluster for horizontal scalability and sharding.
 ```yaml
 global:
   security:
+    # Required to run the FalkorDB image which may use non-standard base configurations
     allowInsecureImages: true
 
 image:
