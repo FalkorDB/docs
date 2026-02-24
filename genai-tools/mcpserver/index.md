@@ -24,9 +24,9 @@ The [Model Context Protocol (MCP)](https://modelcontextprotocol.io) is an open p
 
 ## Topics in This Section
 
-- [Quick Start](./mcpserver-quickstart.md): Install and connect the MCP server to Claude Desktop in minutes.
-- [Configuration](./mcpserver-configuration.md): Environment variables, transport modes, and multi-instance setup.
-- [Docker Deployment](./mcpserver-docker.md): Run the MCP server using Docker Hub images.
+- [Quick Start](./quickstart.md): Install and connect the MCP server to Claude Desktop in minutes.
+- [Configuration](./configuration.md): Environment variables, transport modes, and multi-instance setup.
+- [Docker Deployment](./docker.md): Run the MCP server using Docker Hub images.
 
 ## Resources
 
