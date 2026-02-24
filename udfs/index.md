@@ -397,7 +397,7 @@ load_graph(g)
 compute_jaccard_sim(g)
 ```
 
-The scripts load our two UDF libraries `collection` and `similarity` construct a graph, and compute Jaccard similarity between `Alice` and every other node in the graph via the query:
+The scripts load our two UDF libraries `collection` and `similarity`, construct a graph, and compute Jaccard similarity between `Alice` and every other node in the graph via the query:
 
 ```bash
 MATCH (alice:Person {name: 'Alice'}), (n)
