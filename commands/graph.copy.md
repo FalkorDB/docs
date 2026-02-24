@@ -1,7 +1,7 @@
 ---
 title: "GRAPH.COPY"
 description: >
-    creates a copy of the given graph
+    Creates a copy of the given graph
 parent: "Commands"
 nav_order: 9
 ---
