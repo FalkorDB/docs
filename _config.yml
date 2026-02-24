@@ -23,6 +23,7 @@ aux_links_new_tab: true
 nav_enabled: true
 
 plugins:
+  - jekyll-remote-theme
   - jekyll-sitemap
   - jekyll-redirect-from
   - markdown_exporter
