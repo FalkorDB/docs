@@ -19,7 +19,7 @@ The Settings page is organized into these sections:
 If you navigate away from **Browser Settings** while there are unsaved changes, the UI prompts you to **Save** or **Discard** changes.
 
 ## Browser Settings
-The Browser Settings panel is a scrollable page with grouped sections (collapsed/expanded in the UI). Common settings include:
+The Browser Settings panel is a page that can be scrolled, with grouped sections (collapsed/expanded in the UI). Common settings include:
 - **Query execution**
   - Query timeout
   - Result limits

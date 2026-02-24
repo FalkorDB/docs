@@ -23,7 +23,7 @@ These toggles update visibility on the canvas without re-running the query.
 
 ## Canvas controls
 The controls area includes:
-- **Animation control** (play/pause force-layout cooldown)
+- **Animation control** (play/pause force-layout delay)
 - **Zoom in / Zoom out**
 - **Center / fit to screen**
 

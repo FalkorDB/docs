@@ -31,7 +31,7 @@ Properties are managed via the embedded table component. Typical operations incl
 - Editing existing values
 - Adding/removing properties
 
-(Exact editing affordances depend on the table component implementation.)
+(Exact editing options depend on the table component implementation.)
 
 ## Keyboard shortcut
 - `Esc` closes the Data panel.

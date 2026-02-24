@@ -16,7 +16,7 @@ The Style panel ("Style Settings") customizes how nodes of a specific label appe
 ## What you can change
 - **Color**
   - Preset colors
-  - Custom color via an RGB picker
+  - Custom color via a red/green/blue color picker
 - **Size**
   - Choose from predefined size options
 

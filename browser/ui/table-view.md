@@ -23,6 +23,6 @@ The **Table** tab is enabled when the current query produced `graph.Data` (i.e.,
 Click **Export** to download the current table results as a CSV file.
 
 Notes:
-- Complex values (objects) are JSON-stringified.
+- Complex values (objects) are serialized as JSON.
 - The output filename includes the graph ID (e.g., `<graph>_table_export.csv`).
 
