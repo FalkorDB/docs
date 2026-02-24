@@ -296,4 +296,5 @@ In the case of an IndexError, it issues a procedure call to fully refresh its la
 
 ## Reference clients
 
-All the logic described in this document has been implemented in most of the clients listed in [Client Libraries](clients). Among these, `node-redis`, `redis-py` and `jedis` are currently the most sophisticated.
+All the logic described in this document has been implemented in most of the clients listed in [Client Libraries](/getting-started/clients). 
+Among these, the official FalkorDB clients for Python, Node.js, and Java are currently the most sophisticated.
