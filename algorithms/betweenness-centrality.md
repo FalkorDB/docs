@@ -40,7 +40,7 @@ YIELD node, score
 |---------------------|---------|-------------|---------|
 | `nodeLabels`        | Array   | *(Optional)* List of node labels to include in the computation. | `[]` (all labels) |
 | `relationshipTypes` | Array   | *(Optional)* List of relationship types to traverse. | `[]` (all relationship types) |
-| `samplingSize`      | Integer | *(Optional)* Number of randomly sampled **source nodes** used to approximate betweenness centrality. Larger values improve accuracy but increase runtime. The value is clamped to the number of reachable nodes in the graph. | `32` |
+| `samplingSize`      | Integer | *(Optional)* Number of randomly sampled **source nodes** used to approximate betweenness centrality. Larger values improve accuracy but increase runtime. For similar accuracy across different graph sizes, keep `samplingSize` proportional to the number of input nodes (i.e., sample a similar fraction of nodes). If `samplingSize` is larger than the number of eligible nodes, all eligible nodes are used. | `32` |
 | `samplingSeed`      | Integer | *(Optional)* Random seed used when sampling source nodes. Use a fixed value for reproducible results. If omitted (or set to `0`), a time-based seed is used and results may vary between runs. | time-based |
 
 ### Yield
