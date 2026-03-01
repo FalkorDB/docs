@@ -26,6 +26,7 @@ CentOS
 ColumnType
 Costanza
 Cypher
+Databricks
 DateTime
 DELUSER
 distro

@@ -7,7 +7,7 @@ nav_order: 5
 
 # Online Data Migration from SQL Sources to FalkorDB
 
-The [DM-SQL-to-FalkorDB](https://github.com/FalkorDB/DM-SQL-to-FalkorDB) repository provides Rust-based CLI tools to **backfill** data from SQL systems into FalkorDB and optionally keep it **continuously synchronized** (one-way sync) using **incremental watermarks**.
+The [DM-SQL-to-FalkorDB](https://github.com/FalkorDB/DM-SQL-to-FalkorDB) repository provides Rust-based CLI tools to **perform an initial load** of data from SQL systems into FalkorDB and optionally keep it **continuously synchronized** (one-way sync) using **incremental watermarks**.
 
 It also includes an optional **control plane** (web UI + REST API) for creating configurations, starting runs, and monitoring progress.
 
@@ -57,7 +57,7 @@ Each loader uses a JSON/YAML configuration to define:
 ### Common concepts
 
 - **Declarative mapping**: you describe the mapping; the tool handles extraction + loading.
-- **Idempotent upserts**: writes use Cypher `UNWIND` + `MERGE` based on configured keys.
+- **Idempotent upsert operations**: writes use Cypher `UNWIND` + `MERGE` based on configured keys.
 - **Incremental watermarks**: for incremental mappings, the loader fetches only rows newer than the last successful run.
 - **State safety**: watermarks are advanced after successful writes; if a run fails, the next run retries from the previous watermark.
 
@@ -132,7 +132,7 @@ cargo run --release
 Configuration (environment variables):
 
 - `CONTROL_PLANE_BIND` (default: `0.0.0.0:3003`)
-- `CONTROL_PLANE_REPO_ROOT` (optional; repo root to scan for `tool.manifest.json`)
+- `CONTROL_PLANE_REPO_ROOT` (optional; repository root to scan for `tool.manifest.json`)
 - `CONTROL_PLANE_DATA_DIR` (default: `control-plane/data/`)
 - `CONTROL_PLANE_UI_DIST` (default: `control-plane/ui/dist/`; if missing, the API still works)
 - `CONTROL_PLANE_API_KEY` (optional; if set, API calls must include `Authorization: Bearer <key>`)
