@@ -149,6 +149,13 @@ cd control-plane/ui
 npm install
 npm run dev
 ```
+Screenshots:
+The following example shows how you manually execute a migration run, with visibility to the latest incremental watermark, and an option to clear it to restart incremental migration from scratch.
+<img width="1422" height="861" alt="DM-UI--screenshot" src="https://github.com/user-attachments/assets/0c622f06-7b03-454c-a693-cd302d057343" />
+
+The following example shows the log view after successful run.
+<img width="1422" height="861" alt="DM-UI--logs" src="https://github.com/user-attachments/assets/e0b2c286-b857-44d4-887d-3aa3664744b9" />
+
 
 ## Operational tips
 
