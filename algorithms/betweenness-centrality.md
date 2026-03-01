@@ -22,21 +22,26 @@ The core idea of Betweenness Centrality is that a node is more important if it l
 
 ## Syntax
 
-The procedure has the following call signature:
+The procedure accepts an optional configuration map:
+
 ```cypher
 CALL algo.betweenness({
   nodeLabels: [<node_label>],
-  relationshipTypes: [<relationship_type>]
+  relationshipTypes: [<relationship_type>],
+  samplingSize: <int>,
+  samplingSeed: <int>
 })
 YIELD node, score
 ```
 
 ### Parameters
 
-| Name                  | Type    | Description                                     | Default |
-|-----------------------|---------|-------------------------------------------------|---------|
-| `nodeLabels`          | Array   | *(Optional)* List of Strings representing node labels        | []      |
-| `relationshipTypes`   | Array   | *(Optional)* List of Strings representing relationship types | []      |
+| Name                | Type    | Description | Default |
+|---------------------|---------|-------------|---------|
+| `nodeLabels`        | Array   | *(Optional)* List of node labels to include in the computation. | `[]` (all labels) |
+| `relationshipTypes` | Array   | *(Optional)* List of relationship types to traverse. | `[]` (all relationship types) |
+| `samplingSize`      | Integer | *(Optional)* Number of randomly sampled **source nodes** used to approximate betweenness centrality. Larger values usually improve accuracy but increase runtime. If `samplingSize` exceeds the number of eligible source nodes (nodes matching `nodeLabels`), all eligible source nodes are used. | `32` |
+| `samplingSeed`      | Integer | *(Optional)* Random seed used when sampling source nodes. Use a fixed value for reproducible results. If omitted (or set to `0`), a time-based seed is used and results may vary between runs. | `0` (time-based) |
 
 ### Yield
 
@@ -92,4 +97,6 @@ Expected result:
 
 - Scores are based on **all shortest paths** between node pairs.
 - Nodes that serve as bridges between clusters tend to score higher.
-- Can be computationally expensive on large, dense graphs.
+- Betweenness Centrality can be computationally expensive on large, dense graphs.
+- Use `samplingSize` to trade accuracy for performance (larger samples are slower but usually more accurate).
+- Set `samplingSeed` to a fixed value to make runs reproducible; if you omit it, results may vary between runs due to random sampling.
