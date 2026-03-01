@@ -112,7 +112,7 @@ cargo run --release -- --config path/to/config.yaml
 
 The control plane discovers tools in the repository by scanning for `tool.manifest.json` files and provides a UI to:
 
-- Create and edit per-tool configs (YAML/JSON)
+- Create and edit per-tool configurations (YAML/JSON)
 - Start runs (one-shot or daemon)
 - Stream logs via Server-Sent Events (SSE)
 - Keep run history and state in a local data directory (SQLite + file-backed artifacts)
