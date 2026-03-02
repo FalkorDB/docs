@@ -539,6 +539,8 @@ txt
 VGF
 VPNs
 rdf
+samplingSize
+samplingSeed
 ontology
 sharding
 recomputation
