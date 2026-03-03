@@ -1,0 +1,41 @@
+{% comment %}
+BreadcrumbList JSON-LD Schema.org markup
+Generates breadcrumb navigation structure for SEO
+{% endcomment %}
+{% if page.url != "/" %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "{{ site.url | default: 'https://docs.falkordb.com' }}"
+    }
+    {% assign position = 2 %}
+    {% if page.parent %}
+    {% comment %}Find parent page{% endcomment %}
+    {% assign parent_pages = site.pages | where: "title", page.parent %}
+    {% if parent_pages.size > 0 %}
+    {% assign parent = parent_pages | first %}
+    ,{
+      "@type": "ListItem",
+      "position": {{ position }},
+      "name": "{{ parent.title }}",
+      "item": "{{ site.url | default: 'https://docs.falkordb.com' }}{{ parent.url }}"
+    }
+    {% assign position = position | plus: 1 %}
+    {% endif %}
+    {% endif %}
+    ,{
+      "@type": "ListItem",
+      "position": {{ position }},
+      "name": "{{ page.title }}",
+      "item": "{{ site.url | default: 'https://docs.falkordb.com' }}{{ page.url }}"
+    }
+  ]
+}
+</script>
+{% endif %}
