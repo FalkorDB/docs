@@ -27,6 +27,7 @@ ColumnType
 Costanza
 Cypher
 Databricks
+ClickHouse
 DateTime
 DELUSER
 distro
