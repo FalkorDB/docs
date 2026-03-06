@@ -35,7 +35,7 @@ Use these tools when you want:
 - A reachable FalkorDB endpoint (for example `falkor://127.0.0.1:6379`)
 - Node.js + npm (optional; only needed for control plane UI)
 
-Most configs reference environment variables for secrets and credentials, for example: `$MYSQL_URL`, `$MARIADB_URL`, `$SQLSERVER_CONNECTION_STRING`, `$POSTGRES_URL`, `$SNOWFLAKE_PASSWORD`, `$DATABRICKS_TOKEN`, `$CLICKHOUSE_URL`.
+Most configurations reference environment variables for secrets and credentials, for example: `$MYSQL_URL`, `$MARIADB_URL`, `$SQLSERVER_CONNECTION_STRING`, `$POSTGRES_URL`, `$SNOWFLAKE_PASSWORD`, `$DATABRICKS_TOKEN`, `$CLICKHOUSE_URL`.
 
 ## Getting the tools
 
@@ -181,11 +181,11 @@ cargo run --release -- --config path/to/config.yaml --purge-mapping customers
 
 The control plane discovers tools by scanning for `tool.manifest.json` files and provides a UI/API to:
 
-- Create and edit per-tool YAML/JSON configs
+- Create and edit per-tool YAML/JSON configurations
 - Start runs (one-shot or daemon where supported)
 - Stop running jobs
 - Stream logs live (SSE)
-- Store run history and artifacts (SQLite + file-backed data dir)
+- Store run history and artifacts (SQLite + file-backed data directory)
 - Auto-wire tool metrics ports for metrics-capable tools
 - Persist per-tool/per-mapping metrics snapshots
 
@@ -205,7 +205,7 @@ Default server URL: `http://localhost:3003`
 Configuration (environment variables):
 
 - `CONTROL_PLANE_BIND` (default `0.0.0.0:3003`)
-- `CONTROL_PLANE_REPO_ROOT` (optional; repo root for manifest scan)
+- `CONTROL_PLANE_REPO_ROOT` (optional; repository root for manifest scan)
 - `CONTROL_PLANE_DATA_DIR` (default `control-plane/data/`)
 - `CONTROL_PLANE_UI_DIST` (default `control-plane/ui/dist/`)
 - `CONTROL_PLANE_API_KEY` (optional bearer token requirement)
