@@ -1,6 +1,6 @@
 ---
 title: "SQL Sources to FalkorDB (Online Migration)"
-description: "Online migration and incremental sync from SQL sources (MySQL, MariaDB, SQL Server, Databricks, PostgreSQL, Snowflake, ClickHouse) into FalkorDB using DM-SQL-to-FalkorDB loaders and control plane."
+description: "Online migration and incremental sync from SQL sources (ClickHouse, Databricks, MariaDB, MySQL, PostgreSQL, Snowflake, SQL Server) into FalkorDB using DM-SQL-to-FalkorDB loaders and control plane."
 parent: "Migration"
 nav_order: 5
 ---
@@ -13,13 +13,13 @@ It also includes an optional control plane (web UI + REST API) for creating conf
 
 ## Supported sources
 
-- MySQL
+- ClickHouse
+- Databricks (Databricks SQL / warehouses)
 - MariaDB
-- SQL Server
+- MySQL
 - PostgreSQL
 - Snowflake
-- Databricks (Databricks SQL / warehouses)
-- ClickHouse
+- SQL Server
 
 ## When to use this approach
 
@@ -31,11 +31,11 @@ Use these tools when you want:
 ## Prerequisites
 
 - Rust toolchain (Cargo)
-- Network access to your SQL source (MySQL, MariaDB, SQL Server, PostgreSQL, Snowflake, Databricks SQL warehouse, or ClickHouse)
+- Network access to your SQL source (ClickHouse, Databricks SQL warehouse, MariaDB, MySQL, PostgreSQL, Snowflake, or SQL Server)
 - A reachable FalkorDB endpoint (for example `falkor://127.0.0.1:6379`)
 - Node.js + npm (optional; only needed for control plane UI)
 
-Most configurations reference environment variables for secrets and credentials, for example: `$MYSQL_URL`, `$MARIADB_URL`, `$SQLSERVER_CONNECTION_STRING`, `$POSTGRES_URL`, `$SNOWFLAKE_PASSWORD`, `$DATABRICKS_TOKEN`, `$CLICKHOUSE_URL`.
+Most configurations reference environment variables for secrets and credentials, for example: `$CLICKHOUSE_URL`, `$DATABRICKS_TOKEN`, `$MARIADB_URL`, `$MYSQL_URL`, `$POSTGRES_URL`, `$SNOWFLAKE_PASSWORD`, `$SQLSERVER_CONNECTION_STRING`.
 
 ## Getting the tools
 
@@ -240,7 +240,7 @@ The following example shows how you manually execute a migration run, with visib
 The following example shows the log view after a successful run.
 <img width="1422" height="861" alt="DM-UI--logs" src="https://github.com/user-attachments/assets/e0b2c286-b857-44d4-887d-3aa3664744b9" />
 
-THe following shows the metrics view summarizing a run:
+The following shows the metrics view summarizing a run:
 <img width="1403" height="832" alt="DM-UI--metrics" src="https://github.com/user-attachments/assets/af09d6ff-c1ed-4148-b1ab-6fa2500887dc" />
 
 ## Metrics feature (all SQL loaders)
@@ -263,12 +263,12 @@ All current SQL loaders expose Prometheus-style metrics with:
 Default metrics ports:
 
 - ClickHouse: `9991`
-- Snowflake: `9992`
-- PostgreSQL: `9993`
 - Databricks: `9994`
-- MySQL: `9995`
-- SQL Server: `9996`
 - MariaDB: `9997`
+- MySQL: `9995`
+- PostgreSQL: `9993`
+- Snowflake: `9992`
+- SQL Server: `9996`
 
 You can override ports with `--metrics-port` (or each tool's corresponding environment variable).
 
