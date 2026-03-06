@@ -40,28 +40,46 @@ The Pro Tier provides a robust environment to scale your application with confid
 
 ## Standalone
 
-| Instance Type | Monthly Cost |
-| :--- | ---: |
-| E2-standard-2 / m6i.large (Starting Instance) | $350.40 |
-| E2-standard-4 / m6i.xlarge | $700.80 |
-| E2-custom-4-8192 / c6i.xlarge | $642.40 |
-| E2-custom-8-16384 / c6i.2xlarge | $1,284.80 |
-| E2-custom-16-32768 / c6i.4xlarge | $2,569.60 |
-| E2-custom-32-65536 / c6i.8xlarge | $5,139.20 |
+| Instance Type | Cores | Memory (GB) | Monthly Cost |
+| :--- | :---: | :---: | ---: |
+| E2-medium | 1 | 4 | $175.20 |
+| t2.medium | 2 | 4 | $321.20 |
+| E2-standard-2 / m6i.large (Starting Instance) | 2 | 8 | $350.40 |
+| E2-standard-4 / m6i.xlarge | 4 | 16 | $700.80 |
+| E2-standard-8 / m6i.2xlarge | 8 | 32 | $1,401.60 |
+| E2-highmem-2 / r6i.large | 2 | 16 | $408.80 |
+| E2-highmem-4 / r6i.xlarge | 4 | 32 | $817.60 |
+| E2-highmem-8 / r6i.2xlarge | 8 | 64 | $1,635.20 |
+| m6i.4xlarge | 16 | 64 | $2,803.20 |
+| m6i.8xlarge | 32 | 128 | $5,606.40 |
+| r6i.4xlarge | 16 | 128 | $3,270.40 |
+| E2-custom-4-8192 / c6i.xlarge | 4 | 8 | $642.40 |
+| E2-custom-8-16384 / c6i.2xlarge | 8 | 16 | $1,284.80 |
+| E2-custom-16-32768 / c6i.4xlarge | 16 | 32 | $2,569.60 |
+| E2-custom-32-65536 / c6i.8xlarge | 32 | 64 | $5,139.20 |
 
 ## Replicated (High Availability, Master (x1), Replica (x1))
 
 
-| Instances Type                                 | Monthly Cost |
-| :-------------------------------------------- | -----------: |
-| E2-standard-2 / m6i.large (Starting Instance) |   \$1,007.40 |
-| E2-standard-4 / m6i.xlarge                    |   \$1,708.20 |
-| E2-custom-4-8192 / c6i.xlarge                 |   \$1,591.40 |
-| E2-custom-8-16384 / c6i.2xlarge               |   \$2,876.20 |
-| E2-custom-16-32768 / c6i.4xlarge              |   \$5,445.80 |
-| E2-custom-32-65536 / c6i.8xlarge              |  \$10,585.00 |
+| Instances Type                                 | Cores | Memory (GB) | Monthly Cost |
+| :--------------------------------------------- | :---: | :---------: | -----------: |
+| E2-medium                                      |   1   |      4      |     \$657.00 |
+| t2.medium                                      |   2   |      4      |     \$949.00 |
+| E2-standard-2 / m6i.large (Starting Instance)  |   2   |      8      |   \$1,007.40 |
+| E2-standard-4 / m6i.xlarge                     |   4   |     16      |   \$1,708.20 |
+| E2-standard-8 / m6i.2xlarge                    |   8   |     32      |   \$3,109.80 |
+| E2-highmem-2 / r6i.large                       |   2   |     16      |   \$1,124.20 |
+| E2-highmem-4 / r6i.xlarge                      |   4   |     32      |   \$1,941.80 |
+| E2-highmem-8 / r6i.2xlarge                     |   8   |     64      |   \$3,577.00 |
+| m6i.4xlarge                                    |  16   |     64      |   \$5,913.00 |
+| m6i.8xlarge                                    |  32   |    128      |  \$11,519.40 |
+| r6i.4xlarge                                    |  16   |    128      |   \$6,847.40 |
+| E2-custom-4-8192 / c6i.xlarge                  |   4   |      8      |   \$1,591.40 |
+| E2-custom-8-16384 / c6i.2xlarge                |   8   |     16      |   \$2,876.20 |
+| E2-custom-16-32768 / c6i.4xlarge               |  16   |     32      |   \$5,445.80 |
+| E2-custom-32-65536 / c6i.8xlarge               |  32   |     64      |  \$10,585.00 |
 
-> Note: We charge an additional 2 cores and 2 GB for replication and cluster since they require an extra component (sentinel for replication and rebalancer for cluster).
+> Note: In the Replicated table, **Cores** and **Memory (GB)** are per instance. We charge an additional 2 cores and 2 GB for replication and cluster since they require an extra component (sentinel for replication and rebalancer for cluster).
 
 ---
 <!--
