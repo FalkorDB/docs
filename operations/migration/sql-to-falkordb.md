@@ -230,12 +230,18 @@ npm install
 npm run dev
 ```
 
-Screenshots:
+**Screenshots:**
+The main tools menu with migration selection options.
+<img width="1403" height="832" alt="DM-UI-7-tools" src="https://github.com/user-attachments/assets/e0100f17-caa0-495c-8914-e4a38ab44fc9" />
+
 The following example shows how you manually execute a migration run, with visibility to the latest incremental watermark, and an option to clear it to restart incremental migration from scratch.
 <img width="1422" height="861" alt="DM-UI--screenshot" src="https://github.com/user-attachments/assets/0c622f06-7b03-454c-a693-cd302d057343" />
 
 The following example shows the log view after a successful run.
 <img width="1422" height="861" alt="DM-UI--logs" src="https://github.com/user-attachments/assets/e0b2c286-b857-44d4-887d-3aa3664744b9" />
+
+THe following shows the metrics view summarizing a run:
+<img width="1403" height="832" alt="DM-UI--metrics" src="https://github.com/user-attachments/assets/af09d6ff-c1ed-4148-b1ab-6fa2500887dc" />
 
 ## Metrics feature (all SQL loaders)
 
