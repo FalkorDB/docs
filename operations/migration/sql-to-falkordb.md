@@ -1,18 +1,21 @@
 ---
 title: "SQL Sources to FalkorDB (Online Migration)"
-description: "Online migration and incremental sync from SQL sources (PostgreSQL, Snowflake, Databricks, ClickHouse) into FalkorDB using DM-SQL-to-FalkorDB loaders and control plane."
+description: "Online migration and incremental sync from SQL sources (MySQL, MariaDB, SQL Server, Databricks, PostgreSQL, Snowflake, ClickHouse) into FalkorDB using DM-SQL-to-FalkorDB loaders and control plane."
 parent: "Migration"
 nav_order: 5
 ---
 
 # Online Data Migration from SQL Sources to FalkorDB
 
-The [DM-SQL-to-FalkorDB](https://github.com/FalkorDB/DM-SQL-to-FalkorDB) repository provides Rust-based CLI tools to **perform an initial load** of data from SQL systems into FalkorDB and optionally keep it **continuously synchronized** (one-way sync) using **incremental watermarks**.
+The [DM-SQL-to-FalkorDB](https://github.com/FalkorDB/DM-SQL-to-FalkorDB) repository provides Rust-based CLI loaders to perform an initial load from SQL systems into FalkorDB and optionally keep FalkorDB continuously synchronized using incremental watermarks.
 
-It also includes an optional **control plane** (web UI + REST API) for creating configurations, starting runs, monitoring progress, and viewing persisted metrics snapshots.
+It also includes an optional control plane (web UI + REST API) for creating configurations, starting runs, monitoring progress, and viewing persisted metrics snapshots.
 
 ## Supported sources
 
+- MySQL
+- MariaDB
+- SQL Server
 - PostgreSQL
 - Snowflake
 - Databricks (Databricks SQL / warehouses)
@@ -23,16 +26,16 @@ It also includes an optional **control plane** (web UI + REST API) for creating 
 Use these tools when you want:
 
 - A one-time migration from SQL tables into a FalkorDB property graph
-- **Ongoing sync** ("online migration") where FalkorDB stays updated as rows change in the source system
+- Ongoing one-way sync so FalkorDB stays updated as rows change in the source system
 
 ## Prerequisites
 
 - Rust toolchain (Cargo)
-- Network access to your SQL source (PostgreSQL, Snowflake, Databricks SQL warehouse, or ClickHouse HTTP endpoint)
+- Network access to your SQL source (MySQL, MariaDB, SQL Server, PostgreSQL, Snowflake, Databricks SQL warehouse, or ClickHouse)
 - A reachable FalkorDB endpoint (for example `falkor://127.0.0.1:6379`)
-- Node.js + npm (optional; only needed for control plane UI development)
+- Node.js + npm (optional; only needed for control plane UI)
 
-Most configurations reference environment variables for credentials/secrets (for example `$POSTGRES_URL`, `$SNOWFLAKE_PASSWORD`, `$DATABRICKS_TOKEN`, `$CLICKHOUSE_URL`, etc.).
+Most configs reference environment variables for secrets and credentials, for example: `$MYSQL_URL`, `$MARIADB_URL`, `$SQLSERVER_CONNECTION_STRING`, `$POSTGRES_URL`, `$SNOWFLAKE_PASSWORD`, `$DATABRICKS_TOKEN`, `$CLICKHOUSE_URL`.
 
 ## Getting the tools
 
@@ -43,32 +46,85 @@ cd DM-SQL-to-FalkorDB
 
 ## How the loaders work (high level)
 
-Each loader uses a JSON/YAML configuration to define:
+Each loader uses JSON/YAML configuration to define:
 
-- How to read rows from the source system (table + optional filter, or a custom SELECT)
+- How to read rows from the source (`table` + optional filter, or custom `SELECT`)
 - How rows map to:
-  - **Nodes** (labels, key properties, property mappings)
-  - **Edges** (relationship type, direction, how to match `from` and `to` nodes)
-- Whether a mapping is:
-  - **full** (load everything every time)
-  - **incremental** (load only changed rows using a watermark column such as `updated_at`)
-- How to interpret optional **soft delete flags**
-- Where to persist incremental sync **state** (typically a local `state.json` file)
+  - Nodes (labels, keys, property mappings)
+  - Edges (relationship type, direction, and endpoint matching rules)
+- Whether each mapping is full or incremental
+- Optional soft-delete behavior
+- Where incremental state/watermarks are persisted (typically a file-backed `state.json`)
 
 ### Common concepts
 
-- **Declarative mapping**: you describe the mapping; the tool handles extraction + loading.
-- **Idempotent upsert operations**: writes use Cypher `UNWIND` + `MERGE` based on configured keys.
-- **Incremental watermarks**: for incremental mappings, the loader fetches only rows newer than the last successful run.
-- **State safety**: watermarks are advanced after successful writes; if a run fails, the next run retries from the previous watermark.
+- Declarative mapping: you define mappings, and the loader handles extraction + load.
+- Idempotent writes: loaders use Cypher `UNWIND` + `MERGE` patterns.
+- Incremental safety: watermarks advance only after successful writes.
+- Restart safety: after failures, reruns continue from the last successful watermark.
 
 ## Option A: Run a loader directly (CLI)
 
+### ClickHouse → FalkorDB
+
+- Docs: [ClickHouse-to-FalkorDB/readme.md](https://github.com/FalkorDB/DM-SQL-to-FalkorDB/tree/main/ClickHouse-to-FalkorDB)
+
+```bash
+cd ClickHouse-to-FalkorDB
+cargo build --release
+
+# One-shot run
+cargo run --release -- --config clickhouse.incremental.yaml
+
+# Continuous sync
+cargo run --release -- --config clickhouse.incremental.yaml --daemon --interval-secs 60
+```
+
+### Databricks → FalkorDB
+
+- Docs: [Databricks-to-FalkorDB/README.md](https://github.com/FalkorDB/DM-SQL-to-FalkorDB/tree/main/Databricks-to-FalkorDB)
+
+```bash
+cd Databricks-to-FalkorDB/databricks-to-falkordb
+cargo build --release
+cargo run --release -- --config path/to/config.yaml
+```
+
+Note: this loader currently supports one-shot execution (no daemon/purge flags in the manifest).
+
+### MariaDB → FalkorDB
+
+- Docs: [MariaDB-to-FalkorDB/readme.md](https://github.com/FalkorDB/DM-SQL-to-FalkorDB/tree/main/MariaDB-to-FalkorDB)
+
+```bash
+cd MariaDB-to-FalkorDB
+cargo build --release
+
+# One-shot run
+cargo run --release -- --config mariadb.incremental.yaml
+
+# Continuous sync
+cargo run --release -- --config mariadb.incremental.yaml --daemon --interval-secs 60
+```
+
+### MySQL → FalkorDB
+
+- Docs: [MySQL-to-FalkorDB/readme.md](https://github.com/FalkorDB/DM-SQL-to-FalkorDB/tree/main/MySQL-to-FalkorDB)
+
+```bash
+cd MySQL-to-FalkorDB
+cargo build --release
+
+# One-shot run
+cargo run --release -- --config mysql.incremental.yaml
+
+# Continuous sync
+cargo run --release -- --config mysql.incremental.yaml --daemon --interval-secs 60
+```
+
 ### PostgreSQL → FalkorDB
 
-- Tool docs: [PostgreSQL-to-FalkorDB/README.md](https://github.com/FalkorDB/DM-SQL-to-FalkorDB/tree/main/PostgreSQL-to-FalkorDB)
-
-Build and run (from the crate directory):
+- Docs: [PostgreSQL-to-FalkorDB/README.md](https://github.com/FalkorDB/DM-SQL-to-FalkorDB/tree/main/PostgreSQL-to-FalkorDB)
 
 ```bash
 cd PostgreSQL-to-FalkorDB/postgres-to-falkordb
@@ -76,17 +132,14 @@ cargo build --release
 
 # One-shot run
 cargo run --release -- --config path/to/config.yaml
-```
 
-Continuous sync (daemon mode):
-
-```bash
+# Continuous sync
 cargo run --release -- --config path/to/config.yaml --daemon --interval-secs 60
 ```
 
 ### Snowflake → FalkorDB
 
-- Tool docs: [Snowflake-to-FalkorDB/README.md](https://github.com/FalkorDB/DM-SQL-to-FalkorDB/tree/main/Snowflake-to-FalkorDB)
+- Docs: [Snowflake-to-FalkorDB/README.md](https://github.com/FalkorDB/DM-SQL-to-FalkorDB/tree/main/Snowflake-to-FalkorDB)
 
 ```bash
 cd Snowflake-to-FalkorDB
@@ -99,32 +152,22 @@ cargo run --release -- --config path/to/config.yaml
 cargo run --release -- --config path/to/config.yaml --daemon --interval-secs 300
 ```
 
-### Databricks → FalkorDB
+### SQL Server → FalkorDB
 
-- Tool docs: [Databricks-to-FalkorDB/README.md](https://github.com/FalkorDB/DM-SQL-to-FalkorDB/tree/main/Databricks-to-FalkorDB)
-
-```bash
-cd Databricks-to-FalkorDB/databricks-to-falkordb
-cargo build --release
-cargo run --release -- --config path/to/config.yaml
-```
-
-### ClickHouse → FalkorDB
-
-- Tool docs: [ClickHouse-to-FalkorDB/readme.md](https://github.com/FalkorDB/DM-SQL-to-FalkorDB/tree/main/ClickHouse-to-FalkorDB)
+- Docs: [SQLServer-to-FalkorDB/readme.md](https://github.com/FalkorDB/DM-SQL-to-FalkorDB/tree/main/SQLServer-to-FalkorDB)
 
 ```bash
-cd ClickHouse-to-FalkorDB
+cd SQLServer-to-FalkorDB
 cargo build --release
 
 # One-shot run
-cargo run --release -- --config path/to/config.yaml
+cargo run --release -- --config sqlserver.incremental.yaml
 
 # Continuous sync
-cargo run --release -- --config path/to/config.yaml --daemon --interval-secs 60
+cargo run --release -- --config sqlserver.incremental.yaml --daemon --interval-secs 60
 ```
 
-Optional purge modes (supported by ClickHouse and Snowflake loaders):
+Optional purge modes (supported by ClickHouse, MariaDB, MySQL, Snowflake, and SQL Server):
 
 ```bash
 # Purge full graph before loading
@@ -136,46 +179,48 @@ cargo run --release -- --config path/to/config.yaml --purge-mapping customers
 
 ## Option B: Use the control plane (web UI + API)
 
-The control plane discovers tools in the repository by scanning for `tool.manifest.json` files and provides a UI to:
+The control plane discovers tools by scanning for `tool.manifest.json` files and provides a UI/API to:
 
-- Create and edit per-tool configurations (YAML/JSON)
-- Start runs (one-shot or daemon)
-- Stream logs via Server-Sent Events (SSE)
-- Keep run history and state in a local data directory (SQLite + file-backed artifacts)
-- Auto-wire and collect runtime metrics for metrics-capable tools
-- View persisted metrics snapshots (overall + per-mapping counters)
+- Create and edit per-tool YAML/JSON configs
+- Start runs (one-shot or daemon where supported)
+- Stop running jobs
+- Stream logs live (SSE)
+- Store run history and artifacts (SQLite + file-backed data dir)
+- Auto-wire tool metrics ports for metrics-capable tools
+- Persist per-tool/per-mapping metrics snapshots
 
 Start the server:
 
 ```bash
 cd control-plane/server
 
-# Optional: require an API key for all /api routes (except /api/health)
+# Optional: require API key on /api (except /api/health)
 export CONTROL_PLANE_API_KEY="..."
 
 cargo run --release
-# UI (if built) + API will be on http://localhost:3003
 ```
+
+Default server URL: `http://localhost:3003`
 
 Configuration (environment variables):
 
-- `CONTROL_PLANE_BIND` (default: `0.0.0.0:3003`)
-- `CONTROL_PLANE_REPO_ROOT` (optional; repository root to scan for `tool.manifest.json`)
-- `CONTROL_PLANE_DATA_DIR` (default: `control-plane/data/`)
-- `CONTROL_PLANE_UI_DIST` (default: `control-plane/ui/dist/`; if missing, the API still works)
-- `CONTROL_PLANE_API_KEY` (optional; if set, API calls must include `Authorization: Bearer <key>`)
+- `CONTROL_PLANE_BIND` (default `0.0.0.0:3003`)
+- `CONTROL_PLANE_REPO_ROOT` (optional; repo root for manifest scan)
+- `CONTROL_PLANE_DATA_DIR` (default `control-plane/data/`)
+- `CONTROL_PLANE_UI_DIST` (default `control-plane/ui/dist/`)
+- `CONTROL_PLANE_API_KEY` (optional bearer token requirement)
 
 Selected metrics API endpoints:
 
-- `GET /api/metrics` (all tools latest metrics snapshots)
-- `GET /api/metrics/:tool_id` (single tool latest metrics snapshot)
+- `GET /api/metrics`
+- `GET /api/metrics/:tool_id`
 
 Notes:
 
-- Runs are executed locally on the machine running the control plane server (it spawns the underlying CLI tools).
-- The run log endpoint uses Server-Sent Events (SSE).
-- For tools with `supports_metrics: true`, the control plane injects `--metrics-port`, scrapes metrics while runs are active, and persists latest snapshots in SQLite.
-- The Metrics UI reads persisted snapshots; internal scrape endpoint/port details are not shown in the UI.
+- Runs execute locally on the machine hosting the control plane server.
+- Log streaming uses SSE.
+- For `supports_metrics: true` tools, the control plane injects `--metrics-port` and persists snapshots in SQLite.
+- The Metrics UI uses persisted snapshots and does not expose internal scrape endpoint/port settings.
 
 UI development (optional):
 
@@ -184,16 +229,17 @@ cd control-plane/ui
 npm install
 npm run dev
 ```
+
 Screenshots:
 The following example shows how you manually execute a migration run, with visibility to the latest incremental watermark, and an option to clear it to restart incremental migration from scratch.
 <img width="1422" height="861" alt="DM-UI--screenshot" src="https://github.com/user-attachments/assets/0c622f06-7b03-454c-a693-cd302d057343" />
 
-The following example shows the log view after successful run.
+The following example shows the log view after a successful run.
 <img width="1422" height="861" alt="DM-UI--logs" src="https://github.com/user-attachments/assets/e0b2c286-b857-44d4-887d-3aa3664744b9" />
 
-## Metrics feature (all 4 SQL loaders)
+## Metrics feature (all SQL loaders)
 
-All four SQL loaders expose Prometheus-style metrics and support:
+All current SQL loaders expose Prometheus-style metrics with:
 
 - Global counters:
   - total runs
@@ -214,20 +260,18 @@ Default metrics ports:
 - Snowflake: `9992`
 - PostgreSQL: `9993`
 - Databricks: `9994`
+- MySQL: `9995`
+- SQL Server: `9996`
+- MariaDB: `9997`
 
-You can override the port per run with `--metrics-port` (or each tool's corresponding environment variable).
-
-When using the control plane, metrics are aggregated and exposed via:
-
-- `GET /api/metrics`
-- `GET /api/metrics/:tool_id`
+You can override ports with `--metrics-port` (or each tool's corresponding environment variable).
 
 ## Operational tips
 
-- Define **node mappings before edge mappings** (edges reference node mappings).
-- Pick **stable keys** for `MERGE` (primary keys are usually ideal).
-- Run with `RUST_LOG=info` (or `debug`) to get more detailed loader logs.
-- Keep the state file/data directory somewhere durable if you rely on continuous sync.
+- Define node mappings before edge mappings (edges depend on nodes).
+- Choose stable keys for `MERGE` (primary keys are usually best).
+- Use `RUST_LOG=info` (or `debug`) for richer loader diagnostics.
+- Keep state and control-plane data on durable storage for long-running sync setups.
 
 ## Additional resources
 
