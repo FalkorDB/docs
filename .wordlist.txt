@@ -28,6 +28,9 @@ Costanza
 Cypher
 Databricks
 ClickHouse
+MariaDB
+MySQL
+SQLServer
 DateTime
 DELUSER
 distro
