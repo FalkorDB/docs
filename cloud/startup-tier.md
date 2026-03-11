@@ -38,10 +38,12 @@ The Startup Tier includes essential features like **TLS** and **Automated Backup
 ### Pricing Calculation
 > We calculate deployment costs based on **Memory GB/Hour** usage. Each Memory GB/Hour costs **$0.100**.
 >
-> The list below shows approximate monthly costs for different instance sizes (based on 730 hours/month):
+> The table below shows approximate monthly costs for different instance sizes (based on 730 hours/month), along with max graph dataset size (75% of RAM):
 >
-> * **1 Gigabyte memory instance:** $0.100 × 1 (Memory GB) × 730 hours = **$73/month***
-> * **2 Gigabyte memory instance:** $0.100 × 2 (Memory GB) × 730 hours = **$146/month***
+> | Instance Size (RAM) | Max Graph Dataset (GB) | Monthly Cost |
+> | :--- | ---: | ---: |
+> | 1 GB | 0.75 | $73/month* |
+> | 2 GB | 1.5 | $146/month* |
 >
 > You can estimate your monthly costs by multiplying your instance's memory allocation (in GB) by **$73**.
 >
