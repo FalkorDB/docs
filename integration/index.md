@@ -20,5 +20,6 @@ Learn how to leverage FalkorDB's flexible APIs and SDKs to build high-performanc
 - [BOLT protocol support](./bolt-support.md): Learn how to connect to FalkorDB using the BOLT protocol.
 - [Spring Data FalkorDB](./spring-data-falkordb.md): Learn how to use FalkorDB with Spring Data for JPA-style object-graph mapping.
 - [Snowflake Integration](./snowflake.md): Learn how to run graph database operations directly within your Snowflake environment using the FalkorDB Native App.
+- [PyTorch Geometric](./pyg.md): Train Graph Neural Networks directly on graphs stored in FalkorDB using PyG's remote backend interface.
 
 
