@@ -789,3 +789,10 @@ Streamable
 
 ErBEqN
 gg
+
+PyG's
+PyG
+pyg
+NeighborLoader
+GraphSAGE
+
