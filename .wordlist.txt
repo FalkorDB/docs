@@ -795,4 +795,6 @@ PyG
 pyg
 NeighborLoader
 GraphSAGE
+atomicity
+bottlenecked
 
