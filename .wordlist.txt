@@ -39,6 +39,7 @@ Dropzone
 Embedder
 FOF
 FOREACH
+foreach
 Falkor
 FalkorDB
 FalkorDB's
