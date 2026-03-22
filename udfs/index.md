@@ -234,6 +234,7 @@ function stringify_path(p) {
 ## Global objects
 
 ### Graph
+
 UDFs have access to a global `graph` object which represents the current graph executing the UDF.
 The object exposes a single function `traverse` which is similar to the node's `getNeighbors` function (see docs above)
 but can perform multi-source traversal, which can be faster than performing multiple individual calls to getNeighbors.
@@ -249,6 +250,7 @@ function multi_source_bfs(sources, config) {
 ```
 
 ### Falkor
+
 The `falkor` global object represents the FalkorDB database and is used mostly to register UDFs. The object exposes two functions:
 
 - `log` - logs a message to the database stdout.
@@ -257,9 +259,11 @@ The `falkor` global object represents the FalkorDB database and is used mostly t
 #### falkor.log
 
 ##### Description
+
 Logs a message to the database stdout
 
 ##### Syntax
+
 ```javascript
 falkor.log(msg)
 ```
@@ -273,9 +277,11 @@ falkor.log(msg)
 #### falkor.register
 
 ##### Description
+
 Register a function to the database
 
 ##### Syntax
+
 ```javascript
 falkor.register(name, function)
 ```
@@ -298,6 +304,7 @@ falkor.register('addition', add);
 ```
 
 ## Advanced examples
+
 In this example, we'll implement Jaccard similarity for nodes.
 Jaccard's formula is: J(A,B) = |A ∩ B| / |A ∪ B| = |A ∩ B| / (|A| + |B| - |A ∩ B|)
 

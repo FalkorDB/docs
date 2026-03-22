@@ -26,6 +26,11 @@ CentOS
 ColumnType
 Costanza
 Cypher
+Databricks
+ClickHouse
+MariaDB
+MySQL
+SQLServer
 DateTime
 DELUSER
 distro
@@ -374,6 +379,7 @@ www
 yourQuery
 yourSourceName
 htmlcontent
+<htmlcontent>
 index.md
 html
 body
@@ -538,6 +544,8 @@ txt
 VGF
 VPNs
 rdf
+samplingSize
+samplingSeed
 ontology
 sharding
 recomputation
@@ -763,6 +771,7 @@ BYOC
 memoryInfo
 FDB
 xlarge
+highmem
 SaaS
 GCP's
 fsync
@@ -780,3 +789,10 @@ Streamable
 
 ErBEqN
 gg
+
+PyG's
+PyG
+pyg
+NeighborLoader
+GraphSAGE
+

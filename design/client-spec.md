@@ -292,4 +292,5 @@ Though the property calls are quite efficient regardless of whether this optimiz
 
 ## Reference clients
 
-All the logic described in this document has been implemented in most of the clients listed in [Client Libraries](/getting-started/clients). Among these, the official FalkorDB clients for Python, Node.js, and Java are currently the most sophisticated.
+All the logic described in this document has been implemented in most of the clients listed in [Client Libraries](/getting-started/clients). 
+Among these, the official FalkorDB clients for Python, Node.js, and Java are currently the most sophisticated.
