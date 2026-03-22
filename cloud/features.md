@@ -70,21 +70,3 @@ Solution architecture support helps you design how FalkorDB integrates with your
 Teams building complex systems benefit from architectural advice to avoid common pitfalls and optimize their graph database implementation. Poor architectural decisions early in development create technical debt that becomes expensive to fix later.
 
 Architecture consultations provide recommendations on graph schema design, query optimization strategies, and integration patterns that match your application requirements.
-
-## Graph Access Control
-_Documentation pending_
-
-## Cluster Deployment
-_Documentation pending_
-
-## High Availability
-_Documentation pending_
-
-## Multi-zone Deployment
-_Documentation pending_
-
-## Automated Backups
-_Documentation pending_
-
-## Advanced Monitoring
-_Documentation pending_
