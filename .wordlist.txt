@@ -16,6 +16,7 @@ Bundler
 CLI
 Cmd
 CMD
+cmd
 Ctrl
 CSC
 CSV
