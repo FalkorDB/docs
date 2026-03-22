@@ -1,4 +1,5 @@
 ACL
+AGPLv3
 AOF
 AST
 Aldis
