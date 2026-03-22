@@ -33,7 +33,8 @@ The free tier provides everything you need to explore FalkorDB and build initial
 | **Cloud Providers** | AWS, GCP | AWS, GCP | AWS, GCP | AWS, GCP, Azure |
 | **Call-to-Action** | [Sign up](https://app.falkordb.cloud/signup) | [Sign up](https://app.falkordb.cloud/signup) | [Sign up](https://app.falkordb.cloud/signup) | [Contact Us](mailto:info@falkordb.com) |
 
-#### Terms
+### Terms
+
 > ⚠️ Free instances that aren't utilized for 1 day will be stopped, and deleted after 7 days.
 Need an extension? Speak to [sales](https://www.falkordb.com/get-a-demo/)
 

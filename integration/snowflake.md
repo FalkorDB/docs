@@ -89,24 +89,22 @@ To load data from your existing Snowflake tables, you need to bind a table refer
 #### Step 2: Load Data Using CSV
 
 ```sql
--- Example: Load customer data
+-- Example: Load customer data (using MERGE to prevent duplicates on reload)
 -- Assumes your bound table has columns: ID, NAME, EMAIL, CITY
 CALL <app_instance_name>.app_public.load_csv(
   'customer_graph',
-  'LOAD CSV FROM ''file://consumer_data.csv'' AS row 
-   CREATE (:Customer {
-     id: row[0],
-     name: row[1],
-     email: row[2],
-     city: row[3]
-   })'
+  'LOAD CSV FROM ''file://consumer_data.csv'' AS row
+   MERGE (c:Customer {id: row[0]})
+   ON CREATE SET c.name = row[1], c.email = row[2], c.city = row[3]
+   ON MATCH SET c.name = row[1], c.email = row[2], c.city = row[3]'
 );
 ```
 
-**Note**: 
+**Note**:
 - The table is automatically retrieved from your Config UI binding—no need to specify it as a parameter
 - The Cypher query must include `LOAD CSV FROM 'file://consumer_data.csv' AS row` to access the CSV data
 - Access columns using `row[0]`, `row[1]`, `row[2]`, etc. (0-indexed)
+- Use MERGE instead of CREATE to safely reload data without duplicates
 
 ### Querying Graphs
 
@@ -172,20 +170,28 @@ Follow the UI steps above to bind `social_data` table to FalkorDB.
 ### Step 3: Load Nodes
 
 ```sql
--- Load person nodes
+-- Load person nodes using MERGE (prevents duplicates on reload)
 CALL <app_instance_name>.app_public.load_csv(
   'social_network',
   'LOAD CSV FROM ''file://consumer_data.csv'' AS row 
-   CREATE (:Person {
-     id: toInteger(row[0]),
-     name: row[1],
-     age: toInteger(row[2]),
-     city: row[3]
-   })'
+   MERGE (p:Person {id: toInteger(row[0])})
+   ON CREATE SET 
+     p.name = row[1],
+     p.age = toInteger(row[2]),
+     p.city = row[3],
+     p.created = timestamp()
+   ON MATCH SET
+     p.name = row[1],
+     p.age = toInteger(row[2]),
+     p.city = row[3],
+     p.updated = timestamp()'
 );
 ```
 
-**Note**: Columns are accessed by index: `row[0]` = person_id, `row[1]` = name, `row[2]` = age, `row[3]` = city
+**Note**: 
+- Columns are accessed by index: `row[0]` = person_id, `row[1]` = name, `row[2]` = age, `row[3]` = city
+- MERGE on `id` ensures no duplicates when reloading data
+- Use CREATE instead of MERGE if you want one-time bulk loading
 
 ### Step 4: Load Relationships
 
@@ -207,7 +213,9 @@ CALL <app_instance_name>.app_public.load_csv(
   'LOAD CSV FROM ''file://consumer_data.csv'' AS row 
    MATCH (a:Person {id: toInteger(row[0])})
    MATCH (b:Person {id: toInteger(row[1])})
-   CREATE (a)-[:KNOWS {since: toInteger(row[2])}]->(b)'
+   MERGE (a)-[r:KNOWS]->(b)
+   ON CREATE SET r.since = toInteger(row[2]), r.created = timestamp()
+   ON MATCH SET r.since = toInteger(row[2]), r.updated = timestamp()'
 );
 ```
 
@@ -265,19 +273,33 @@ CALL <app_instance_name>.app_public.graph_query('demo_social_network',
 
 ### Data Updates and Duplicates
 
-**Current Limitation**: Running `load_csv()` multiple times will create duplicate nodes. FalkorDB currently uses `CREATE` statements which always insert new data.
+**Using MERGE for Upserts**: FalkorDB supports MERGE with ON CREATE and ON MATCH directives to prevent duplicate nodes when reloading data.
 
-**Workaround**: Delete and recreate the graph for updates:
+**Recommended Approach**: Use MERGE instead of CREATE for data that may be updated:
 
 ```sql
--- Delete existing graph
-CALL <app_instance_name>.app_public.graph_delete('my_graph');
+-- Using MERGE to prevent duplicates
+CALL <app_instance_name>.app_public.load_csv(
+  'my_graph',
+  'LOAD CSV FROM ''file://consumer_data.csv'' AS row 
+   MERGE (p:Person {id: row[0]})
+   ON CREATE SET p.name = row[1], p.email = row[2], p.created = timestamp()
+   ON MATCH SET p.name = row[1], p.email = row[2], p.updated = timestamp()'
+);
 
--- Reload with updated data
-CALL <app_instance_name>.app_public.load_csv('my_graph', '...');
+-- Run this multiple times - updates existing nodes, no duplicates!
 ```
 
-**Future**: We're working on MERGE/upsert support for incremental updates.
+**CREATE vs MERGE**:
+- **CREATE**: Always creates new nodes (use for one-time bulk loads)
+- **MERGE**: Matches existing or creates new (use for incremental updates)
+
+**Alternative**: If you need to fully replace data, delete and recreate:
+
+```sql
+CALL <app_instance_name>.app_public.graph_delete('my_graph');
+CALL <app_instance_name>.app_public.load_csv('my_graph', '...');
+```
 
 ### CSV Data Access
 
@@ -409,17 +431,6 @@ CALL <app_instance_name>.app_public.stop_app();
 CALL <app_instance_name>.app_public.start_app('FALKORDB_POOL', 'FALKORDB_WH');
 ```
 
-### Duplicate Nodes After Reload
-
-**Problem**: Running `load_csv()` twice creates duplicate nodes.
-
-**Solution**: Delete graph before reloading:
-```sql
-CALL <app_instance_name>.app_public.graph_delete('my_graph');
-CALL <app_instance_name>.app_public.load_csv('my_graph', 
-  'LOAD CSV FROM ''file://consumer_data.csv'' AS row CREATE (:Node {id: row[0]})');
-```
-
 ### Column Not Found in CSV
 
 **Problem**: Cypher query can't access CSV columns.
@@ -428,10 +439,10 @@ CALL <app_instance_name>.app_public.load_csv('my_graph',
 
 ```cypher
 -- Correct
-LOAD CSV FROM 'file://consumer_data.csv' AS row CREATE (:Person {id: row[0], name: row[1]})
+LOAD CSV FROM 'file://consumer_data.csv' AS row MERGE (p:Person {id: row[0]}) ON CREATE SET p.name = row[1]
 
 -- Incorrect
-CREATE (:Person {id: row.ID, name: row.NAME})
+MERGE (p:Person {id: row.ID}) ON CREATE SET p.name = row.NAME
 ```
 
 ## Performance Tips
@@ -452,8 +463,4 @@ CREATE (:Person {id: row.ID, name: row.NAME})
 For issues, questions, or feature requests:
 - **GitHub Issues**: [FalkorDB Snowflake Integration](https://github.com/FalkorDB/snowflake-integration/issues)
 - **Community**: FalkorDB Discord/Slack (check GitHub README for links)
-
----
-
-**Last Updated**: February 2026  
-**Version**: 2.0 (Patch 17)
+2

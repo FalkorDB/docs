@@ -8,6 +8,14 @@ nav_order: 8
 
 # GRAPH.CONSTRAINT DROP
 
+---
+syntax: |
+  GRAPH.CONSTRAINT DROP key 
+    MANDATORY|UNIQUE
+    NODE label | RELATIONSHIP reltype
+    PROPERTIES propCount prop [prop...]  
+---
+
 Deletes a graph constraint.
 
 [Examples](#examples)

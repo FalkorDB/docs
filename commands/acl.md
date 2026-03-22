@@ -30,28 +30,31 @@ ACL HELP
 
 {% capture python_0 %}
 from falkordb import FalkorDB
-client = FalkorDB()
-help_text = client.execute_command('ACL', 'HELP')
+db = FalkorDB()
+help_text = db.connection.acl_help()
 print(help_text)
 {% endcapture %}
 
 {% capture javascript_0 %}
 import { FalkorDB } from 'falkordb';
-const client = await FalkorDB.connect();
-const helpText = await client.sendCommand(['ACL', 'HELP']);
+const db = await FalkorDB.connect();
+const helpText = await db.connection.aclHelp();
 console.log(helpText);
 {% endcapture %}
 
 {% capture java_0 %}
-FalkorDB client = new FalkorDB();
-Object helpText = client.sendCommand("ACL", "HELP");
-System.out.println(helpText);
+Driver driver = FalkorDB.driver("localhost", 6379);
+try (Jedis jedis = driver.getConnection()) {
+    List<String> helpText = jedis.aclHelp();
+    System.out.println(helpText);
+}
 {% endcapture %}
 
 {% capture rust_0 %}
-let client = FalkorDB::connect_default();
-let help_text = client.execute_command(&["ACL", "HELP"])?;
-println!("{:?}", help_text);
+let client = redis::Client::open("redis://127.0.0.1/")?;
+let mut con = client.get_connection()?;
+let help: Vec<String> = redis::cmd("ACL").arg("HELP").query(&mut con)?;
+println!("{:?}", help);
 {% endcapture %}
 
 {% include code_tabs.html id="acl_help_tabs" shell=shell_0 python=python_0 javascript=javascript_0 java=java_0 rust=rust_0 %}
@@ -89,28 +92,39 @@ ACL SETUSER john on >password123 +GRAPH.LIST +GRAPH.RO_QUERY ~*
 
 {% capture python_1 %}
 from falkordb import FalkorDB
-client = FalkorDB()
-result = client.execute_command('ACL', 'SETUSER', 'john', 'on', '>password123', '+GRAPH.LIST', '+GRAPH.RO_QUERY', '~*')
+db = FalkorDB()
+result = db.connection.acl_setuser(
+    'john',
+    enabled=True,
+    passwords=['password123'],
+    commands=['+GRAPH.LIST', '+GRAPH.RO_QUERY'],
+    keys=['*']
+)
 print(result)
 {% endcapture %}
 
 {% capture javascript_1 %}
 import { FalkorDB } from 'falkordb';
-const client = await FalkorDB.connect();
-const result = await client.sendCommand(['ACL', 'SETUSER', 'john', 'on', '>password123', '+GRAPH.LIST', '+GRAPH.RO_QUERY', '~*']);
+const db = await FalkorDB.connect();
+const result = await db.connection.aclSetUser('john', 'on', '>password123', '+GRAPH.LIST', '+GRAPH.RO_QUERY', '~*');
 console.log(result);
 {% endcapture %}
 
 {% capture java_1 %}
-FalkorDB client = new FalkorDB();
-Object result = client.sendCommand("ACL", "SETUSER", "john", "on", ">password123", "+GRAPH.LIST", "+GRAPH.RO_QUERY", "~*");
-System.out.println(result);
+Driver driver = FalkorDB.driver("localhost", 6379);
+try (Jedis jedis = driver.getConnection()) {
+    String result = jedis.aclSetUser("john", "on", ">password123", "+GRAPH.LIST", "+GRAPH.RO_QUERY", "~*");
+    System.out.println(result);
+}
 {% endcapture %}
 
 {% capture rust_1 %}
-let client = FalkorDB::connect_default();
-let result = client.execute_command(&["ACL", "SETUSER", "john", "on", ">password123", "+GRAPH.LIST", "+GRAPH.RO_QUERY", "~*"])?;
-println!("{:?}", result);
+let client = redis::Client::open("redis://127.0.0.1/")?;
+let mut con = client.get_connection()?;
+let result: String = redis::cmd("ACL").arg("SETUSER").arg("john")
+    .arg("on").arg(">password123").arg("+GRAPH.LIST").arg("+GRAPH.RO_QUERY").arg("~*")
+    .query(&mut con)?;
+println!("{}", result);
 {% endcapture %}
 
 {% include code_tabs.html id="setuser_tabs" shell=shell_1 python=python_1 javascript=javascript_1 java=java_1 rust=rust_1 %}
@@ -130,27 +144,30 @@ ACL GETUSER john
 
 {% capture python_2 %}
 from falkordb import FalkorDB
-client = FalkorDB()
-user_info = client.execute_command('ACL', 'GETUSER', 'john')
+db = FalkorDB()
+user_info = db.connection.acl_getuser('john')
 print(user_info)
 {% endcapture %}
 
 {% capture javascript_2 %}
 import { FalkorDB } from 'falkordb';
-const client = await FalkorDB.connect();
-const userInfo = await client.sendCommand(['ACL', 'GETUSER', 'john']);
+const db = await FalkorDB.connect();
+const userInfo = await db.connection.aclGetUser('john');
 console.log(userInfo);
 {% endcapture %}
 
 {% capture java_2 %}
-FalkorDB client = new FalkorDB();
-Object userInfo = client.sendCommand("ACL", "GETUSER", "john");
-System.out.println(userInfo);
+Driver driver = FalkorDB.driver("localhost", 6379);
+try (Jedis jedis = driver.getConnection()) {
+    AccessControlUser userInfo = jedis.aclGetUser("john");
+    System.out.println(userInfo);
+}
 {% endcapture %}
 
 {% capture rust_2 %}
-let client = FalkorDB::connect_default();
-let user_info = client.execute_command(&["ACL", "GETUSER", "john"])?;
+let client = redis::Client::open("redis://127.0.0.1/")?;
+let mut con = client.get_connection()?;
+let user_info: Vec<String> = redis::cmd("ACL").arg("GETUSER").arg("john").query(&mut con)?;
 println!("{:?}", user_info);
 {% endcapture %}
 
@@ -180,28 +197,31 @@ ACL DELUSER john
 
 {% capture python_3 %}
 from falkordb import FalkorDB
-client = FalkorDB()
-result = client.execute_command('ACL', 'DELUSER', 'john')
+db = FalkorDB()
+result = db.connection.acl_deluser('john')
 print(result)
 {% endcapture %}
 
 {% capture javascript_3 %}
 import { FalkorDB } from 'falkordb';
-const client = await FalkorDB.connect();
-const result = await client.sendCommand(['ACL', 'DELUSER', 'john']);
+const db = await FalkorDB.connect();
+const result = await db.connection.aclDelUser('john');
 console.log(result);
 {% endcapture %}
 
 {% capture java_3 %}
-FalkorDB client = new FalkorDB();
-Object result = client.sendCommand("ACL", "DELUSER", "john");
-System.out.println(result);
+Driver driver = FalkorDB.driver("localhost", 6379);
+try (Jedis jedis = driver.getConnection()) {
+    long result = jedis.aclDelUser("john");
+    System.out.println(result);
+}
 {% endcapture %}
 
 {% capture rust_3 %}
-let client = FalkorDB::connect_default();
-let result = client.execute_command(&["ACL", "DELUSER", "john"])?;
-println!("{:?}", result);
+let client = redis::Client::open("redis://127.0.0.1/")?;
+let mut con = client.get_connection()?;
+let result: i64 = redis::cmd("ACL").arg("DELUSER").arg("john").query(&mut con)?;
+println!("{}", result);
 {% endcapture %}
 
 {% include code_tabs.html id="deluser_tabs" shell=shell_3 python=python_3 javascript=javascript_3 java=java_3 rust=rust_3 %}
@@ -220,27 +240,30 @@ ACL LIST
 
 {% capture python_4 %}
 from falkordb import FalkorDB
-client = FalkorDB()
-users = client.execute_command('ACL', 'LIST')
+db = FalkorDB()
+users = db.connection.acl_list()
 print(users)
 {% endcapture %}
 
 {% capture javascript_4 %}
 import { FalkorDB } from 'falkordb';
-const client = await FalkorDB.connect();
-const users = await client.sendCommand(['ACL', 'LIST']);
+const db = await FalkorDB.connect();
+const users = await db.connection.aclList();
 console.log(users);
 {% endcapture %}
 
 {% capture java_4 %}
-FalkorDB client = new FalkorDB();
-Object users = client.sendCommand("ACL", "LIST");
-System.out.println(users);
+Driver driver = FalkorDB.driver("localhost", 6379);
+try (Jedis jedis = driver.getConnection()) {
+    List<String> users = jedis.aclList();
+    System.out.println(users);
+}
 {% endcapture %}
 
 {% capture rust_4 %}
-let client = FalkorDB::connect_default();
-let users = client.execute_command(&["ACL", "LIST"])?;
+let client = redis::Client::open("redis://127.0.0.1/")?;
+let mut con = client.get_connection()?;
+let users: Vec<String> = redis::cmd("ACL").arg("LIST").query(&mut con)?;
 println!("{:?}", users);
 {% endcapture %}
 
@@ -270,27 +293,30 @@ ACL LOG 10
 
 {% capture python_5 %}
 from falkordb import FalkorDB
-client = FalkorDB()
-log_entries = client.execute_command('ACL', 'LOG', '10')
+db = FalkorDB()
+log_entries = db.connection.acl_log(count=10)
 print(log_entries)
 {% endcapture %}
 
 {% capture javascript_5 %}
 import { FalkorDB } from 'falkordb';
-const client = await FalkorDB.connect();
-const logEntries = await client.sendCommand(['ACL', 'LOG', '10']);
+const db = await FalkorDB.connect();
+const logEntries = await db.connection.aclLog(10);
 console.log(logEntries);
 {% endcapture %}
 
 {% capture java_5 %}
-FalkorDB client = new FalkorDB();
-Object logEntries = client.sendCommand("ACL", "LOG", "10");
-System.out.println(logEntries);
+Driver driver = FalkorDB.driver("localhost", 6379);
+try (Jedis jedis = driver.getConnection()) {
+    List<AccessControlLogEntry> logEntries = jedis.aclLog(10);
+    System.out.println(logEntries);
+}
 {% endcapture %}
 
 {% capture rust_5 %}
-let client = FalkorDB::connect_default();
-let log_entries = client.execute_command(&["ACL", "LOG", "10"])?;
+let client = redis::Client::open("redis://127.0.0.1/")?;
+let mut con = client.get_connection()?;
+let log_entries: Vec<Vec<String>> = redis::cmd("ACL").arg("LOG").arg("10").query(&mut con)?;
 println!("{:?}", log_entries);
 {% endcapture %}
 

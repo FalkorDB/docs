@@ -8,17 +8,19 @@ redirect_from:
   - /opentelemetry
 ---
 
-# OpenTelemetry with FalkorDB-py Guide
+# OpenTelemetry Tracing with FalkorDB-py Guide
 
 This guide explains how to set up and use OpenTelemetry (OTel) to monitor and trace your FalkorDB Python applications.
 
 ## Overview
 
-OpenTelemetry is an observability framework that allows you to collect, process, and export telemetry data (metrics, logs, and traces) from your applications. When integrated with FalkorDB-py, it provides valuable insights into database operations, query performance, and application behavior.
+OpenTelemetry is an observability framework that allows you to collect, process, and export telemetry data from your applications. When integrated with FalkorDB-py, it provides valuable insights into database operations and query performance through distributed tracing.
+
+**Note:** This guide focuses on tracing capabilities. OpenTelemetry supports additional observability features like metrics and logs that can be configured separately.
 
 ## Prerequisites
 
-- Python 3.8 or higher
+- Python 3.9+
 - FalkorDB server running (locally or remotely)
 - Basic understanding of Python and FalkorDB
 
@@ -27,6 +29,7 @@ OpenTelemetry is an observability framework that allows you to collect, process,
 Install the required packages using pip or poetry:
 
 ### Using pip
+
 ```bash
 pip install falkordb
 pip install opentelemetry-distro
@@ -36,6 +39,7 @@ pip install opentelemetry-sdk
 ```
 
 ### Using poetry
+
 ```bash
 poetry add falkordb
 poetry add opentelemetry-distro
@@ -269,6 +273,7 @@ if __name__ == "__main__":
 ## Best Practices
 
 ### 1. Service Naming
+
 Use descriptive service names that identify your application:
 ```python
 resource = Resource.create({
@@ -279,6 +284,7 @@ resource = Resource.create({
 ```
 
 ### 2. Meaningful Span Names
+
 Use descriptive span names that indicate the operation:
 ```python
 with tracer.start_as_current_span("user.create") as span:
@@ -291,6 +297,7 @@ with tracer.start_as_current_span("user.find_by_email") as span:
 ```
 
 ### 3. Error Handling
+
 Always handle errors properly in your spans:
 ```python
 with tracer.start_as_current_span("falkordb.query") as span:
@@ -304,6 +311,7 @@ with tracer.start_as_current_span("falkordb.query") as span:
 ```
 
 ### 4. Sensitive Data
+
 Avoid logging sensitive information in span attributes:
 ```python
 # Good - log query structure, not sensitive data

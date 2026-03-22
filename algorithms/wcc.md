@@ -52,9 +52,9 @@ The procedure returns a stream of records with the following fields:
 | `node`        | Node    | The node entity included in the component                           |
 | `componentId` | Integer | Identifier of the weakly connected component the node belongs to    |
 
-## Examples:
+## Examples
 
-Lets take this Social Graph as an example:
+Let's take this Social Graph as an example:
 
 ![Graph WCC](../images/wcc.png)
 
