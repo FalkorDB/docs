@@ -803,6 +803,12 @@ timezones
 deserialization
 subnet
 acl
+aclHelp
+aclSetUser
+aclGetUser
+aclDelUser
+aclList
+aclLog
 elif
 Ok
 msg
