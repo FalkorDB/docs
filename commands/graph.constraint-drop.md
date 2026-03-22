@@ -16,7 +16,7 @@ syntax: |
     PROPERTIES propCount prop [prop...]  
 ---
 
-Deleted a graph constraint.
+Deletes a graph constraint.
 
 [Examples](#examples)
 
