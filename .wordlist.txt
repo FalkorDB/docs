@@ -1,4 +1,5 @@
 ACL
+AGPLv
 AGPLv3
 AOF
 AST
