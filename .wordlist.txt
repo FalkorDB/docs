@@ -1,4 +1,6 @@
 ACL
+AGPLv
+AGPLv3
 AOF
 AST
 Aldis
@@ -39,6 +41,7 @@ Dropzone
 Embedder
 FOF
 FOREACH
+foreach
 Falkor
 FalkorDB
 FalkorDB's
