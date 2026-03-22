@@ -54,4 +54,4 @@ Each of these libraries is crucial for FalkorDB's performance, scalability, and 
 
 ## Historical Attribution
 
-FalkorDB is built upon technology originally developed as RedisGraph (licensed under RSALv2/SSPLv1) and Redis (licensed under RSALv2/SSPLv1), and RediSearch (licensed under RSALv2/SSPLv1). FalkorDB continues to evolve these technologies under an open-source model.
+FalkorDB is built upon technology originally developed as RedisGraph (licensed under RSALv2/SSPLv1), Redis (licensed under RSALv2/SSPLv1), and RediSearch (licensed under RSALv2/SSPLv1). FalkorDB continues to evolve these technologies under an open-source model.
