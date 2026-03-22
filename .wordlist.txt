@@ -809,6 +809,10 @@ aclGetUser
 aclDelUser
 aclList
 aclLog
+AccessControlUser
+AccessControlLogEntry
+getConnection
+arg
 elif
 Ok
 msg
