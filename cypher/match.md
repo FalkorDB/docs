@@ -4,9 +4,6 @@ nav_order: 1
 description: >
     Match describes the relationship between queried entities, using ascii art to represent pattern(s) to match against.
 parent: "Cypher Language"
-redirect_from:
-  - /cypher/match.html
-  - /cypher/match
 ---
 
 # MATCH

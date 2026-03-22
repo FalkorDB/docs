@@ -4,9 +4,6 @@ nav_order: 16
 description: >
     The CALL {} (subquery) clause allows local execution of subqueries, which opens the door for many comfortable and efficient actions on a graph.
 parent: "Cypher Language"
-redirect_from:
-  - /cypher/call.html
-  - /cypher/call
 ---
 
 # CALL \{\}

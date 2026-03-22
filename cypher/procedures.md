@@ -4,9 +4,6 @@ nav_order: 19
 description: >
     Calling procedures using CALL and YIELD.
 parent: "Cypher Language"
-redirect_from:
-  - /cypher/procedures.html
-  - /cypher/procedures
 ---
 
 # Procedures
