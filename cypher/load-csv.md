@@ -35,7 +35,7 @@ LIMIT 10
 
 ### Importing local files
 
-FalkorDB defines a data directory [see configuration](../configuration#import_folder)
+FalkorDB defines a data directory [see configuration](../getting-started/configuration.md#import_folder)
 Under which local CSV files should be stored. All `file://` URIs are resolved
 relative to that directory.
 

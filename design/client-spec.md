@@ -159,7 +159,7 @@ The first element is the [ColumnType enum](https://github.com/FalkorDB/FalkorDB/
 
 ### Reading result rows
 
-The entity representations in this section will closely resemble those found in [Result Set Graph Entities](result-structure#graph-entities).
+The entity representations in this section will closely resemble those found in [Result Set Graph Entities](result-structure.md#graph-entities).
 
 Our query produced one row of results with 3 columns (as described by the header):
 
