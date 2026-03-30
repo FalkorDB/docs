@@ -12,7 +12,7 @@ redirect_from:
 
 # GraphRAG-SDK
 
-### Build intelligent GraphRAG applications with FalkorDB and LLMs
+## Build intelligent GraphRAG applications with FalkorDB and LLMs
 
 - Automatically converts natural language questions into high-quality [Cypher](https://docs.falkordb.com/cypher/) queries.
 - Automatically generates contextually relevant answers from knowledge graph data.

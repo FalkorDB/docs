@@ -17,16 +17,16 @@ permalink: /
 ![FalkorDB Docs Readme Banner](https://github.com/user-attachments/assets/201b07e1-ac6d-4593-98cf-e58946d7766c)
 
 # FalkorDB
-### The Graph platform developers use to achieve accurate GraphRAG for enterprise GenAI
+## The Graph platform developers use to achieve accurate GraphRAG for enterprise GenAI
 
-### About FalkorDB
+## About FalkorDB
 FalkorDB delivers an **accurate, multi-tenant RAG solution powered by a low-latency, scalable graph database technology.** 
 
 * Our solution is purpose-built for development teams working with complex, interconnected data—whether structured or unstructured—in real-time or interactive user environments.
 
 * The system supports the OpenCypher query language with proprietary enhancements that streamline interactions with graph data. Its efficient graph traversal and query capabilities make it well-suited for production environments.
 
-### Choose Your Path
+## Choose Your Path
 *   **Graph Database Path:** If you're interested in using FalkorDB as a property graph database with OpenCypher support, continue with the sections below.
 *   **GraphRAG Path:** If you're aiming to implement advanced graph reasoning and generative AI tasks, explore our [GenAI Tools](/genai-tools) section, starting with the [GraphRAG SDK](/genai-tools/graphrag-sdk).
 
