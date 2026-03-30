@@ -565,7 +565,7 @@ MATCH (n) RETURN n LIMIT 25
 - 📚 [Model Context Protocol Documentation](https://modelcontextprotocol.io/)
 - 📖 [Graphiti Documentation](https://help.getzep.com/graphiti/)
 - 💻 [Graphiti GitHub Repository](https://github.com/getzep/graphiti)
-- 🔗 [FalkorDB Documentation](https://docs.falkordb.com/)
+- 🔗 [FalkorDB Documentation](/)
 - 📝 [MCP Integration Blog Post](https://www.falkordb.com/blog/mcp-integration-falkordb-graphrag/)
 
 ## Next Steps

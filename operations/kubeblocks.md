@@ -841,7 +841,7 @@ kubectl delete cluster -n demo falkordb-replication
 
 - [KubeBlocks Official Documentation](https://kubeblocks.io/docs/preview/user_docs/overview/introduction)
 - [KubeBlocks FalkorDB Examples](https://github.com/apecloud/kubeblocks-addons/tree/main/examples/falkordb)
-- [FalkorDB Documentation](https://docs.falkordb.com)
+- [FalkorDB Documentation](/)
 - [Redis Sentinel Documentation](https://redis.io/docs/latest/operate/oss_and_stack/management/sentinel/)
 - [Kubernetes Operators](https://kubernetes.io/docs/concepts/extend-kubernetes/operator/)
 

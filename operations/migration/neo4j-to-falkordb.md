@@ -155,7 +155,7 @@ The extraction creates the following files in the `csv_output` directory:
 
 ### Setting Up FalkorDB
 
-Set up FalkorDB on your local machine following the [Getting Started guide](https://docs.falkordb.com/getting_started.html).
+Set up FalkorDB on your local machine following the [Getting Started guide](/getting-started/).
 
 You can use either:
 - The full deployment with browser (port 3000)

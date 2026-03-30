@@ -14,7 +14,7 @@ redirect_from:
 
 ## Build intelligent GraphRAG applications with FalkorDB and LLMs
 
-- Automatically converts natural language questions into high-quality [Cypher](https://docs.falkordb.com/cypher/) queries.
+- Automatically converts natural language questions into high-quality [Cypher](/cypher/) queries.
 - Automatically generates contextually relevant answers from knowledge graph data.
 - Supports streaming responses and conversational sessions.
 - Integrates with multiple language model providers (OpenAI, Gemini, Groq, etc.).
