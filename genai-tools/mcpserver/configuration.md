@@ -1,11 +1,11 @@
 ---
-title: "Configuration"
+title: "MCP Server Configuration"
 parent: "MCP Server"
 nav_order: 2
 search_exclude: true
 ---
 
-# Configuration
+# MCP Server Configuration
 
 ## Environment Variables
 
