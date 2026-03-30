@@ -37,7 +37,7 @@ RETURN flex.coll.shuffle(numbers) AS shuffled
 ```
 
 **Output:** (example, actual order will vary)
-```
+```text
 shuffled
 -----------
 [3, 1, 5, 2, 4]

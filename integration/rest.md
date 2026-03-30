@@ -36,7 +36,7 @@ openssl rand -hex 32
 ```
 
 Add the generated key to your `.env.local` file:
-```
+```text
 ENCRYPTION_KEY=<generated_key>
 ```
 

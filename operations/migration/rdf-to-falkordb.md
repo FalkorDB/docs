@@ -159,7 +159,7 @@ python3 falkordb_csv_loader.py <graph-name> \
 
 #### Example Output
 
-```
+```text
 Loading nodes from vgf/nodes_Material.csv...
   Read 1 rows from vgf/nodes_Material.csv
 [2025-08-03 13:50:21] Batch complete: Loaded 1 nodes (Duration: 0:00:00.000857)

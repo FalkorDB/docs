@@ -38,7 +38,7 @@ RETURN flex.date.toTimeZone(utc, '-05:00') AS eastern
 ```
 
 **Output:**
-```
+```text
 eastern
 --------------------------
 2024-03-15T09:00:00.000Z

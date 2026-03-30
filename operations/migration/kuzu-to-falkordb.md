@@ -100,7 +100,7 @@ The export script generates the following files:
 
 ### Example Export Output
 
-```
+```text
 🚀 Kuzu to FalkorDB CSV Exporter
 ==================================================
 Database: network_it_smart_db
@@ -200,7 +200,7 @@ The Rust loader provides significant advantages for loading Kuzu exports:
 
 ### Example Output
 
-```
+```text
 [INFO] Loading graph: my_graph
 [INFO] CSV directory: _csv_
 [INFO] Batch size: 5000

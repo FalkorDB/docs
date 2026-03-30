@@ -12,7 +12,7 @@ Returns information and statistics about currently running and waiting queries.
 
 ## Syntax
 
-```
+```text
 GRAPH.INFO [RunningQueries | WaitingQueries]
 ```
 

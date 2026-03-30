@@ -38,7 +38,7 @@ RETURN flex.text.rpad('test', 8, '-') AS result
 ```
 
 **Output:**
-```
+```text
 result
 ----------
 test----
@@ -51,7 +51,7 @@ RETURN flex.text.rpad(p.name, 20, ' ') AS productName, p.price
 ```
 
 **Output:**
-```
+```text
 productName          | price
 ---------------------|-------
 Laptop               | 999.99

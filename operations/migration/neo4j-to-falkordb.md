@@ -74,7 +74,7 @@ python3 neo4j_to_csv_extractor.py [-h] [--uri URI] [--username USERNAME] --passw
 
 When analyzing a database, you'll see output similar to:
 
-```
+```text
 Connecting to Neo4j at bolt://localhost:7687 with username 'neo4j'...
 ✅ Loaded configuration from migrate_config.json
 ✅ Successfully connected to Neo4j!
@@ -196,7 +196,7 @@ This will:
 - Provide detailed progress reporting per tenant
 
 Example output:
-```
+```text
 🗂️  Found 3 tenant directories: ['tenant_cloudserve', 'tenant_learnhub', 'tenant_shopfast']
    Each will be loaded into a separate graph
 
@@ -285,7 +285,7 @@ For more details, see the [FalkorDB-Loader-RS repository](https://github.com/Fal
 
 ### Example Output
 
-```
+```text
 Connecting to FalkorDB at localhost:6379...
 ✅ Connected to FalkorDB graph 'MOVIES'
 Found 2 node files and 6 edge files

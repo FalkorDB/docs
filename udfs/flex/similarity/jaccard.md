@@ -41,7 +41,7 @@ RETURN flex.sim.jaccard(['tag1', 'tag2', 'tag3'], ['tag2', 'tag3', 'tag4']) AS s
 ```
 
 **Output:**
-```
+```text
 similarity
 ----------
 0.5

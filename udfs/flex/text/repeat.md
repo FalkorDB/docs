@@ -37,7 +37,7 @@ RETURN flex.text.repeat('Ha', 3) AS result
 ```
 
 **Output:**
-```
+```text
 result
 ------
 HaHaHa
@@ -49,7 +49,7 @@ RETURN flex.text.repeat('-', 40) AS separator
 ```
 
 **Output:**
-```
+```text
 separator
 ----------------------------------------
 ----------------------------------------
@@ -62,7 +62,7 @@ RETURN r.product, flex.text.repeat('★', r.rating) AS stars
 ```
 
 **Output:**
-```
+```text
 product     | stars
 ------------|-------
 Laptop      | ★★★★★
@@ -77,7 +77,7 @@ RETURN flex.text.repeat('  ', level) + 'Nested Item' AS indented
 ```
 
 **Output:**
-```
+```text
 indented
 ----------------
     Nested Item
