@@ -59,7 +59,7 @@ curl -O https://raw.githubusercontent.com/getzep/graphiti/main/mcp_server/docker
 
 3. **Create a `.env` file with your API key:**
 
-```text
+```env
 OPENAI_API_KEY=your-openai-api-key
 FALKORDB_PASSWORD=
 GRAPHITI_GROUP_ID=main
@@ -91,7 +91,7 @@ mv docker-compose-falkordb.yml docker-compose.yml
 
 2. **Create a `.env` file:**
 
-```text
+```env
 OPENAI_API_KEY=your-openai-api-key
 FALKORDB_URI=redis://falkordb:6379
 FALKORDB_PASSWORD=
@@ -154,27 +154,27 @@ The MCP server comes with sensible defaults:
 The server supports multiple LLM providers. Set the appropriate API key in your `.env` file:
 
 **OpenAI (default)**:
-```text
+```env
 OPENAI_API_KEY=sk-proj-your-key-here
 ```
 
 **Anthropic**:
-```text
+```env
 ANTHROPIC_API_KEY=your-anthropic-key
 ```
 
 **Google Gemini**:
-```text
+```env
 GOOGLE_API_KEY=your-google-key
 ```
 
 **Groq**:
-```text
+```env
 GROQ_API_KEY=your-groq-key
 ```
 
 **Azure OpenAI**:
-```text
+```env
 AZURE_OPENAI_API_KEY=your-azure-key
 AZURE_OPENAI_ENDPOINT=your-endpoint-url
 AZURE_OPENAI_DEPLOYMENT=your-deployment-name
@@ -211,7 +211,7 @@ If you see 429 rate limit errors, reduce the value. Monitor your LLM provider's 
 
 To use FalkorDB Cloud with the MCP server, update your `.env` file:
 
-```text
+```env
 OPENAI_API_KEY=your-openai-api-key
 FALKORDB_URI=redis://your-instance.falkordb.cloud:6379
 FALKORDB_PASSWORD=your-cloud-password
