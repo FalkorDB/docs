@@ -38,7 +38,7 @@ RETURN flex.text.regexGroups(text, '(\\w+)@(\\w+\\.\\w+)') AS matches
 ```
 
 **Output:**
-```
+```text
 matches
 ----------------------------------------------------
 [["john@example.com", "john", "example.com"], 
@@ -52,7 +52,7 @@ RETURN flex.text.regexGroups(dates, '(\\d{4})-(\\d{2})-(\\d{2})') AS parsed
 ```
 
 **Output:**
-```
+```text
 parsed
 -------------------------------------------------
 [["2024-01-15", "2024", "01", "15"],

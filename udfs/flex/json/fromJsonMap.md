@@ -37,7 +37,7 @@ RETURN flex.json.fromJsonMap(json) AS user
 ```
 
 **Output:**
-```
+```text
 user
 -------------------------------
 {name: 'Alice', age: 30, active: true}
@@ -65,7 +65,7 @@ RETURN flex.json.fromJsonMap(badJson) AS result
 ```
 
 **Output:**
-```
+```text
 result
 ------
 {}

@@ -15,7 +15,7 @@ This is particularly useful for finding the shortest path between two nodes or e
 
 ## Syntax
 
-```
+```cypher
 CALL algo.bfs(start_node, max_depth, relationship)
 YIELD nodes, edges
 ```
@@ -65,7 +65,7 @@ CREATE
 
 #### Find Friends of Friends (Potential Recommendations)
 
-```
+```cypher
 // Find Alice's friends-of-friends (potential recommendations)
 MATCH (alice:Person {name: 'Alice'})
 CALL algo.bfs(alice, 2, 'FRIEND')

@@ -37,7 +37,7 @@ RETURN flex.bitwise.and(12, 10) AS result
 ```
 
 **Output:**
-```
+```text
 result
 ------
 8

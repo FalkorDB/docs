@@ -37,7 +37,7 @@ RETURN flex.bitwise.xor(12, 10) AS result
 ```
 
 **Output:**
-```
+```text
 result
 ------
 6
@@ -51,7 +51,7 @@ RETURN flex.bitwise.xor(value, toggleMask) AS toggled
 ```
 
 **Output:**
-```
+```text
 toggled
 -------
 6
@@ -66,7 +66,7 @@ RETURN flex.bitwise.xor(encrypted, key) AS decrypted
 ```
 
 **Output:**
-```
+```text
 decrypted
 ---------
 42

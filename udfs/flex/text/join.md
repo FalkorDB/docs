@@ -37,7 +37,7 @@ RETURN flex.text.join(['apple', 'banana', 'cherry'], ', ') AS result
 ```
 
 **Output:**
-```
+```text
 result
 ----------------------
 apple, banana, cherry
@@ -57,7 +57,7 @@ RETURN p.title, flex.text.join(p.tags, ' #') AS hashtags
 ```
 
 **Output:**
-```
+```text
 title           | hashtags
 ----------------|------------------
 My First Post   | tech #coding #js
@@ -70,7 +70,7 @@ RETURN flex.text.join(parts, '/') AS path
 ```
 
 **Output:**
-```
+```text
 path
 --------------------------
 home/user/documents/file.txt

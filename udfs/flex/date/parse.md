@@ -38,7 +38,7 @@ RETURN flex.date.parse('2024-03-15', 'YYYY-MM-DD') AS date
 ```
 
 **Output:**
-```
+```text
 date
 -----------------------------
 2024-03-15T00:00:00.000Z (Date object)
