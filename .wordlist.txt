@@ -798,4 +798,6 @@ PyG
 pyg
 NeighborLoader
 GraphSAGE
-
+subgraph
+maxFlow
+modelled
