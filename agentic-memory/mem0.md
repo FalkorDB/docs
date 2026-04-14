@@ -6,17 +6,6 @@ description: "Add FalkorDB as a graph memory backend for Mem0 AI agents with per
 ---
 
 # Mem0
-{: .no_toc }
-
-<details open markdown="block">
-  <summary>
-    Table of contents
-  </summary>
-  {: .text-delta }
-- TOC
-{:toc}
-</details>
-
 
 [Mem0](https://github.com/mem0ai/mem0) is a memory management framework for AI agents that enables persistent, contextual memory across interactions. The [mem0-falkordb](https://github.com/FalkorDB/mem0-falkordb) plugin adds FalkorDB as a graph store backend for Mem0 without modifying any Mem0 source code.
 

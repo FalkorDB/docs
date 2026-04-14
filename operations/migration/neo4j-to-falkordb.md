@@ -6,17 +6,6 @@ nav_order: 2
 ---
 
 # Neo4j to FalkorDB Migration
-{: .no_toc }
-
-<details open markdown="block">
-  <summary>
-    Table of contents
-  </summary>
-  {: .text-delta }
-- TOC
-{:toc}
-</details>
-
 
 Migrating graph database contents from Neo4j to FalkorDB is straightforward using standard Cypher queries to extract data, transform labels and properties as needed, and load CSV files into FalkorDB. This process migrates nodes, edges, constraints, and indexes.
 

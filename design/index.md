@@ -6,17 +6,6 @@ nav_order: 998
 ---
 
 # The FalkorDB Design
-{: .no_toc }
-
-<details open markdown="block">
-  <summary>
-    Table of contents
-  </summary>
-  {: .text-delta }
-- TOC
-{:toc}
-</details>
-
 
 ## Abstract
 

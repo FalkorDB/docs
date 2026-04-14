@@ -9,17 +9,6 @@ redirect_from:
 ---
 
 # OpenTelemetry Tracing with FalkorDB-py Guide
-{: .no_toc }
-
-<details open markdown="block">
-  <summary>
-    Table of contents
-  </summary>
-  {: .text-delta }
-- TOC
-{:toc}
-</details>
-
 
 This guide explains how to set up and use OpenTelemetry (OTel) tracing to monitor your FalkorDB Python applications.
 

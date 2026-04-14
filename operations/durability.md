@@ -7,17 +7,6 @@ has_children: true
 ---
 
 # Data Durability in FalkorDB
-{: .no_toc }
-
-<details open markdown="block">
-  <summary>
-    Table of contents
-  </summary>
-  {: .text-delta }
-- TOC
-{:toc}
-</details>
-
 
 FalkorDB, built on Redis, provides multiple mechanisms for data durability to ensure your graph data persists across restarts and survives system failures. Understanding these options helps you balance performance requirements with data safety needs.
 

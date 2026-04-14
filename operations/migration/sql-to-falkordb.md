@@ -6,17 +6,6 @@ nav_order: 5
 ---
 
 # Online Data Migration from SQL Sources to FalkorDB
-{: .no_toc }
-
-<details open markdown="block">
-  <summary>
-    Table of contents
-  </summary>
-  {: .text-delta }
-- TOC
-{:toc}
-</details>
-
 
 The [DM-SQL-to-FalkorDB](https://github.com/FalkorDB/DM-SQL-to-FalkorDB) repository provides Rust-based CLI loaders for initial load and ongoing sync from SQL sources into FalkorDB.
 

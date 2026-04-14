@@ -6,17 +6,6 @@ nav_order: 3
 ---
 
 # Kuzu to FalkorDB Migration
-{: .no_toc }
-
-<details open markdown="block">
-  <summary>
-    Table of contents
-  </summary>
-  {: .text-delta }
-- TOC
-{:toc}
-</details>
-
 
 A streamlined 2-step process to migrate data from Kuzu graph database into FalkorDB using automated schema discovery and CSV export.
 

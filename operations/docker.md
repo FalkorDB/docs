@@ -6,17 +6,6 @@ description: "Running FalkorDB with Docker and Docker Compose"
 ---
 
 # Running FalkorDB with Docker and Docker Compose
-{: .no_toc }
-
-<details open markdown="block">
-  <summary>
-    Table of contents
-  </summary>
-  {: .text-delta }
-- TOC
-{:toc}
-</details>
-
 
 This guide covers how to run FalkorDB using Docker and Docker Compose, providing flexible deployment options for both development and production environments.
 

@@ -7,17 +7,6 @@ parent: "Cypher Language"
 ---
 
 # Functions
-{: .no_toc }
-
-<details open markdown="block">
-  <summary>
-    Table of contents
-  </summary>
-  {: .text-delta }
-- TOC
-{:toc}
-</details>
-
 
 This section contains information on all supported functions from the Cypher query language.
 

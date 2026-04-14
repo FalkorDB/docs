@@ -6,17 +6,6 @@ parent: "Operations"
 ---
 
 # Deploy FalkorDB with KubeBlocks
-{: .no_toc }
-
-<details open markdown="block">
-  <summary>
-    Table of contents
-  </summary>
-  {: .text-delta }
-- TOC
-{:toc}
-</details>
-
 
 [KubeBlocks](https://kubeblocks.io) is a cloud-native database management operator that simplifies the deployment and management of databases on Kubernetes. This guide demonstrates how to deploy and manage FalkorDB using the KubeBlocks operator.
 

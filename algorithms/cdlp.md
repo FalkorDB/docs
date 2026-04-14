@@ -6,17 +6,6 @@ nav_order: 3
 ---
 
 # Community Detection using Label Propagation (CDLP)
-{: .no_toc }
-
-<details open markdown="block">
-  <summary>
-    Table of contents
-  </summary>
-  {: .text-delta }
-- TOC
-{:toc}
-</details>
-
 
 ## Overview
 

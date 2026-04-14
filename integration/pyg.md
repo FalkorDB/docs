@@ -6,17 +6,6 @@ parent: "Integration"
 ---
 
 # PyTorch Geometric Integration
-{: .no_toc }
-
-<details open markdown="block">
-  <summary>
-    Table of contents
-  </summary>
-  {: .text-delta }
-- TOC
-{:toc}
-</details>
-
 
 This page describes how to integrate FalkorDB with [PyTorch Geometric (PyG)](https://pytorch-geometric.readthedocs.io/) using the [falkordb-pyg](https://github.com/FalkorDB/falkordb-pyg) package.
 

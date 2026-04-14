@@ -9,17 +9,6 @@ redirect_from:
 ---
 
 # FalkorDB Algorithms Overview
-{: .no_toc }
-
-<details open markdown="block">
-  <summary>
-    Table of contents
-  </summary>
-  {: .text-delta }
-- TOC
-{:toc}
-</details>
-
 
 FalkorDB offers a suite of graph algorithms optimized for high-performance graph analytics.  
 These algorithms are accessible via the `CALL algo.<name>()` interface and are built for speed and scalability using matrix-based computation.
