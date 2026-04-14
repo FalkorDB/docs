@@ -76,10 +76,13 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   }
 }
 
-/* Add right padding to content area so text doesn't flow under the TOC */
+/* Reserve right margin for the TOC on the .main container.
+   This works with JtD's max-width: 50rem on .main so the content
+   stays full-width on large screens where the natural margin
+   already accommodates the TOC. */
 @media (min-width: 1101px) {
-  #main-content {
-    padding-right: 220px;
+  .side-bar + .main {
+    margin-right: 14rem;
   }
 }
 
