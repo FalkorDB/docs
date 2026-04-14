@@ -14,6 +14,8 @@ permalink: /
 [![Discord](https://img.shields.io/discord/1146782921294884966?style=flat-square)](https://discord.gg/ErBEqN9E)
 [![Try Free](https://img.shields.io/badge/Try%20Free-FalkorDB%20Cloud-FF8101?labelColor=FDE900&style=flat-square)](https://app.falkordb.cloud)
 
+<img src="https://github.com/user-attachments/assets/201b07e1-ac6d-4593-98cf-e58946d7766c" alt="FalkorDB — Build Fast and Accurate GenAI with GraphRAG at Scale" style="max-width: 600px; width: 100%;" />
+
 The graph platform developers use to build accurate GenAI with GraphRAG at scale.
 {: .fs-6 .fw-300 }
 
