@@ -10,7 +10,7 @@ gtm_tracking: GTM-MBWB627H
 heading_anchors: true
 
 search_enabled: true
-color_scheme: dark
+color_scheme: falkordb-dark
 
 aux_links:
   "Docs Repository":
