@@ -14,12 +14,6 @@ back_to_top_text: "Back to top"
 search_enabled: true
 color_scheme: dark
 
-defaults:
-  - scope:
-      path: ""
-    values:
-      has_toc: true
-
 aux_links:
   "Docs Repository":
     - "https://github.com/falkordb/docs"

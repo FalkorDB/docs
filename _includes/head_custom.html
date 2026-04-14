@@ -11,3 +11,182 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 })(window,document,'script','dataLayer','{{ site.gtm_tracking }}');</script>
 <!-- End Google Tag Manager -->
 {% endif %}
+
+<!-- Sticky right-side Table of Contents -->
+<style>
+.toc-sidebar {
+  position: fixed;
+  top: 4rem;
+  right: 1rem;
+  width: 220px;
+  max-height: calc(100vh - 5rem);
+  overflow-y: auto;
+  padding: 0.75rem 1rem;
+  font-size: 0.75rem;
+  line-height: 1.4;
+  border-left: 1px solid var(--sidebar-color, #44434d);
+  z-index: 100;
+}
+
+.toc-sidebar .toc-title {
+  font-weight: 600;
+  font-size: 0.8rem;
+  margin-bottom: 0.5rem;
+  color: var(--link-color, #7253ed);
+}
+
+.toc-sidebar ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.toc-sidebar ol ol {
+  padding-left: 0.75rem;
+}
+
+.toc-sidebar li {
+  margin: 0.2rem 0;
+}
+
+.toc-sidebar a {
+  color: var(--body-text-color, #c7c6cb);
+  text-decoration: none;
+  display: block;
+  padding: 0.1rem 0;
+  border-left: 2px solid transparent;
+  padding-left: 0.5rem;
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.toc-sidebar a:hover {
+  color: var(--link-color, #7253ed);
+}
+
+.toc-sidebar a.toc-active {
+  color: var(--link-color, #7253ed);
+  border-left-color: var(--link-color, #7253ed);
+  font-weight: 600;
+}
+
+/* Hide on small screens and when content area is too narrow */
+@media (max-width: 1200px) {
+  .toc-sidebar {
+    display: none;
+  }
+}
+
+/* Scrollbar styling */
+.toc-sidebar::-webkit-scrollbar {
+  width: 3px;
+}
+.toc-sidebar::-webkit-scrollbar-thumb {
+  background: var(--sidebar-color, #44434d);
+  border-radius: 3px;
+}
+</style>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  var mainContent = document.querySelector("#main-content main");
+  if (!mainContent) return;
+
+  var headings = mainContent.querySelectorAll("h2, h3");
+  // Only show TOC if there are enough headings
+  if (headings.length < 3) return;
+
+  var nav = document.createElement("nav");
+  nav.className = "toc-sidebar";
+  nav.setAttribute("aria-label", "Table of contents");
+
+  var title = document.createElement("div");
+  title.className = "toc-title";
+  title.textContent = "On this page";
+  nav.appendChild(title);
+
+  var rootList = document.createElement("ol");
+  var currentH2List = null;
+
+  headings.forEach(function (h) {
+    // Skip headings marked with no_toc class
+    if (h.classList.contains("no_toc")) return;
+
+    var id = h.id;
+    if (!id) {
+      id = h.textContent.trim().toLowerCase()
+        .replace(/[^\w\s-]/g, "")
+        .replace(/\s+/g, "-");
+      h.id = id;
+    }
+
+    var li = document.createElement("li");
+    var a = document.createElement("a");
+    a.href = "#" + id;
+    a.textContent = h.textContent.replace(/^#\s*/, "").replace(/\s*¶$/, "");
+    a.dataset.targetId = id;
+    li.appendChild(a);
+
+    if (h.tagName === "H2") {
+      rootList.appendChild(li);
+      currentH2List = document.createElement("ol");
+      li.appendChild(currentH2List);
+    } else if (h.tagName === "H3" && currentH2List) {
+      currentH2List.appendChild(li);
+    } else {
+      rootList.appendChild(li);
+    }
+  });
+
+  // Remove empty nested lists
+  rootList.querySelectorAll("ol").forEach(function (ol) {
+    if (ol.children.length === 0) ol.remove();
+  });
+
+  nav.appendChild(rootList);
+  document.body.appendChild(nav);
+
+  // Scroll-spy: highlight the current heading
+  var tocLinks = nav.querySelectorAll("a[data-target-id]");
+  var headingEls = Array.from(headings).filter(function (h) {
+    return !h.classList.contains("no_toc") && h.id;
+  });
+
+  function updateActive() {
+    var scrollY = window.scrollY || window.pageYOffset;
+    var current = null;
+
+    headingEls.forEach(function (h) {
+      if (h.getBoundingClientRect().top <= 80) {
+        current = h.id;
+      }
+    });
+
+    tocLinks.forEach(function (link) {
+      if (link.dataset.targetId === current) {
+        link.classList.add("toc-active");
+        // Scroll the TOC nav to keep active item visible
+        var navRect = nav.getBoundingClientRect();
+        var linkRect = link.getBoundingClientRect();
+        if (linkRect.top < navRect.top || linkRect.bottom > navRect.bottom) {
+          link.scrollIntoView({ block: "nearest", behavior: "smooth" });
+        }
+      } else {
+        link.classList.remove("toc-active");
+      }
+    });
+  }
+
+  var ticking = false;
+  window.addEventListener("scroll", function () {
+    if (!ticking) {
+      requestAnimationFrame(function () {
+        updateActive();
+        ticking = false;
+      });
+      ticking = true;
+    }
+  });
+
+  updateActive();
+});
+</script>
