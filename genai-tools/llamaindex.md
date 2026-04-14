@@ -6,6 +6,17 @@ parent: "GenAI Tools"
 ---
 
 # LlamaIndex
+{: .no_toc }
+
+<details open markdown="block">
+  <summary>
+    Table of contents
+  </summary>
+  {: .text-delta }
+- TOC
+{:toc}
+</details>
+
 
 [LlamaIndex](https://www.llamaindex.ai/) is an open-source framework designed to simplify the development of LLM-powered applications. It provides tools for ingesting, indexing, and querying diverse data sources.
 

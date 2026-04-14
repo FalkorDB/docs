@@ -6,6 +6,17 @@ description: "Run Graphiti MCP server with FalkorDB for persistent AI agent memo
 ---
 
 # Graphiti MCP Server
+{: .no_toc }
+
+<details open markdown="block">
+  <summary>
+    Table of contents
+  </summary>
+  {: .text-delta }
+- TOC
+{:toc}
+</details>
+
 
 Graphiti is a framework for building and querying temporally-aware knowledge graphs, specifically tailored for AI agents operating in dynamic environments. The Graphiti MCP (Model Context Protocol) Server enables AI clients like Claude Desktop, Cursor IDE, and other MCP-compatible applications to interact with FalkorDB-powered knowledge graphs for persistent agent memory. This allows AI assistants to store and retrieve information across conversations, building a rich, contextual memory over time.
 

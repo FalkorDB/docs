@@ -6,6 +6,17 @@ parent: "GenAI Tools"
 ---
 
 # AG2
+{: .no_toc }
+
+<details open markdown="block">
+  <summary>
+    Table of contents
+  </summary>
+  {: .text-delta }
+- TOC
+{:toc}
+</details>
+
 
 [AG2](https://ag2.ai/) (formerly AutoGen) is an open-source agentic AI operating system (AgentOS) for building, orchestrating, and deploying multi-agent AI systems. Developed from OpenAI and Microsoft Research's AutoGen, AG2 provides a modular framework for creating sophisticated AI agents that can collaborate, use tools, and integrate with knowledge graphs.
 

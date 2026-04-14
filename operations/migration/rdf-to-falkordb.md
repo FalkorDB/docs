@@ -6,6 +6,17 @@ nav_order: 4
 ---
 
 # RDF to FalkorDB Migration
+{: .no_toc }
+
+<details open markdown="block">
+  <summary>
+    Table of contents
+  </summary>
+  {: .text-delta }
+- TOC
+{:toc}
+</details>
+
 
 A comprehensive multi-step process to migrate data from RDF (TTL) based graph data stores into FalkorDB property graph database.
 

@@ -6,6 +6,17 @@ parent: "Integration"
 ---
 
 # Spring Data FalkorDB
+{: .no_toc }
+
+<details open markdown="block">
+  <summary>
+    Table of contents
+  </summary>
+  {: .text-delta }
+- TOC
+{:toc}
+</details>
+
 
 This page describes how to integrate FalkorDB with [Spring Data](https://spring.io/projects/spring-data) using [spring-data-falkordb](https://github.com/FalkorDB/spring-data-falkordb).
 

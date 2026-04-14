@@ -7,6 +7,17 @@ nav_order: 6
 ---
 
 # UDFs
+{: .no_toc }
+
+<details open markdown="block">
+  <summary>
+    Table of contents
+  </summary>
+  {: .text-delta }
+- TOC
+{:toc}
+</details>
+
 
 Every database comes with a set of built-in functions. For example, FalkorDB functions include:
 - `abs` -  computes the absolute value of a number

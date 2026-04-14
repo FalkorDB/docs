@@ -6,6 +6,17 @@ parent: "Integration"
 ---
 
 # FalkorDB Browser REST API
+{: .no_toc }
+
+<details open markdown="block">
+  <summary>
+    Table of contents
+  </summary>
+  {: .text-delta }
+- TOC
+{:toc}
+</details>
+
 
 REST API for FalkorDB Browser - Graph Database Management Interface
 

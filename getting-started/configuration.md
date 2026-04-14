@@ -10,6 +10,17 @@ redirect_from:
 ---
 
 # Configuration
+{: .no_toc }
+
+<details open markdown="block">
+  <summary>
+    Table of contents
+  </summary>
+  {: .text-delta }
+- TOC
+{:toc}
+</details>
+
 
 FalkorDB supports [Redis configuration](https://redis.io/docs/management/config/) and multiple module configuration parameters. 
 Some of these parameters can only be set at load-time, while other parameters can be set either on load-time or on run-time.

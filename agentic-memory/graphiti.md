@@ -6,6 +6,17 @@ description: "Build temporally-aware, multi-tenant knowledge graphs with Graphit
 ---
 
 # Graphiti
+{: .no_toc }
+
+<details open markdown="block">
+  <summary>
+    Table of contents
+  </summary>
+  {: .text-delta }
+- TOC
+{:toc}
+</details>
+
 
 [Graphiti](https://github.com/getzep/graphiti) is a Python framework for building **temporally-aware, multi-tenant knowledge graphs** designed for multi-agent AI systems with persistent memory. It enables real-time integration of structured and unstructured data, supporting advanced hybrid search, temporal reasoning, and collaborative agent memory.
 

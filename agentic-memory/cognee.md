@@ -6,6 +6,17 @@ description: "Build flexible agentic memory with Cognee and FalkorDB"
 ---
 
 # Cognee
+{: .no_toc }
+
+<details open markdown="block">
+  <summary>
+    Table of contents
+  </summary>
+  {: .text-delta }
+- TOC
+{:toc}
+</details>
+
 
 [Cognee](https://github.com/topoteretes/cognee) is a memory management framework for AI agents that provides a flexible approach to storing and retrieving knowledge. It combines graph database capabilities with vector storage to create rich, context-aware memory systems.
 

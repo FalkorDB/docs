@@ -8,6 +8,17 @@ redirect_from:
 ---
 
 # Operations
+{: .no_toc }
+
+<details open markdown="block">
+  <summary>
+    Table of contents
+  </summary>
+  {: .text-delta }
+- TOC
+{:toc}
+</details>
+
 
 The Operations chapter provides essential guides for configuring and managing FalkorDB in production environments. These guides cover critical aspects like data persistence, replication for high availability, and setting up clusters for horizontal scalability.
 
