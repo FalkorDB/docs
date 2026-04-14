@@ -7,8 +7,16 @@ logo_link: "https://www.falkordb.com"
 favicon_ico: "/images/favicon.ico"
 gtm_tracking: GTM-MBWB627H
 
+heading_anchors: true
+
 search_enabled: true
 color_scheme: dark
+
+defaults:
+  - scope:
+      path: ""
+    values:
+      has_toc: true
 
 aux_links:
   "Docs Repository":
