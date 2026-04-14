@@ -69,10 +69,17 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   font-weight: 600;
 }
 
-/* Hide on small screens and when content area is too narrow */
-@media (max-width: 1200px) {
+/* Hide on screens where TOC would overlap content */
+@media (max-width: 1400px) {
   .toc-sidebar {
     display: none;
+  }
+}
+
+/* Add right padding to content area so text doesn't flow under the TOC */
+@media (min-width: 1401px) {
+  #main-content {
+    padding-right: 240px;
   }
 }
 
