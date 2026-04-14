@@ -12,7 +12,7 @@ back_to_top: true
 back_to_top_text: "Back to top"
 
 search_enabled: true
-color_scheme: dark
+color_scheme: falkordb-dark
 
 aux_links:
   "Docs Repository":
