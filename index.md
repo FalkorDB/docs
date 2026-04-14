@@ -2,7 +2,7 @@
 layout: default
 title: Home
 nav_order: 1
-description: "The fastest way to your knowledge"
+description: "FalkorDB Docs — The graph database for accurate GenAI with GraphRAG at scale"
 permalink: /
 ---
 
