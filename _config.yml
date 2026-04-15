@@ -1,4 +1,4 @@
-theme: just-the-docs
+remote_theme: just-the-docs/just-the-docs
 title: FalkorDB Docs
 description: The FalkorDB documentation
 url: "https://docs.falkordb.com"
@@ -49,9 +49,3 @@ gh_edit_link_text: "Edit this page on GitHub."
 gh_edit_repository: "https://github.com/FalkorDB/docs/"
 gh_edit_branch: "main"
 gh_edit_view_mode: "edit"
-
-defaults:
-  - scope:
-      path: ""
-    values:
-      layout: "default"
