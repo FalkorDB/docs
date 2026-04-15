@@ -15,8 +15,9 @@ jobs:
         with:
           ref: ${{ github.head_ref || github.ref_name }}
 
-      - name: Download Code-Graph images
+      - name: Download GenAI tool images
         run: |
+          set -e
           mkdir -p images/genai-tools
           curl -fL -o images/genai-tools/codegraph-code-analysis.webp \
             "https://www.falkordb.com/wp-content/uploads/2024/07/codegraph-code-analysis-falkordb.webp"
@@ -24,6 +25,10 @@ jobs:
             "https://www.falkordb.com/wp-content/uploads/2024/07/codegraph-chat-with-your-graph.webp"
           curl -fL -o images/genai-tools/queryweaver-demo.gif \
             "https://github.com/user-attachments/assets/34663279-0273-4c21-88a8-d20700020a07"
+          # Verify all files were downloaded
+          test -s images/genai-tools/codegraph-code-analysis.webp
+          test -s images/genai-tools/codegraph-chat-with-graph.webp
+          test -s images/genai-tools/queryweaver-demo.gif
 
       - name: Update markdown references
         run: |
