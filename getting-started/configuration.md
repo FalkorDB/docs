@@ -91,6 +91,9 @@ The following table summarizes which configuration parameters can be set at modu
 | [OMP_THREAD_COUNT](#omp_thread_count)                        | V     | X     |
 | [NODE_CREATION_BUFFER](#node_creation_buffer)                | V     | X     |
 | [BOLT_PORT](#bolt_port)                                      | V     | X     |
+| [IMPORT_FOLDER](#import_folder)                              | V     | X     |
+| [TEMP_FOLDER](#temp_folder)                                  | V     | X     |
+| [ASYNC_DELETE](#async_delete)                                | V     | V     |
 | [MAX_QUEUED_QUERIES](#max_queued_queries)                    | V     | V     |
 | [TIMEOUT](#timeout)                                          | V     | V     |
 | [TIMEOUT_MAX](#timeout_max)                                  | V     | V     |
@@ -102,8 +105,7 @@ The following table summarizes which configuration parameters can be set at modu
 | [CMD_INFO](#cmd_info)                                        | V     | V     |
 | [MAX_INFO_QUERIES](#max_info_queries)                        | V     | V     |
 | [DELTA_MAX_PENDING_CHANGES](#delta_max_pending_changes)      | V     | V     |
-| [IMPORT_FOLDER](#import_folder)                              | V     | X     |
-| [TEMP_FOLDER](#temp_folder)                                  | V     | X     |
+| [DELAY_INDEXING](#delay_indexing)                            | V     | V     |
 | [JS_HEAP_SIZE](#js_heap_size)                                | V     | V     |
 | [JS_STACK_SIZE](#js_stack_size)                              | V     | V     |
 
@@ -197,6 +199,26 @@ $ redis-server --loadmodule ./falkordb.so BOLT_PORT 7687
 
 ---
 
+
+### ASYNC_DELETE
+
+When enabled, graph deletion (via `GRAPH.DELETE`) is performed asynchronously in a background thread. This prevents the server from blocking on large graph deletions.
+
+Its valid values are `yes` and `no` (i.e., on and off).
+
+#### Default
+
+`ASYNC_DELETE` is `yes`.
+
+#### Example
+
+```sh
+$ redis-server --loadmodule ./falkordb.so ASYNC_DELETE yes
+
+$ redis-cli GRAPH.CONFIG SET ASYNC_DELETE yes
+```
+
+---
 
 ### MAX_QUEUED_QUERIES
 
@@ -450,6 +472,26 @@ It must be an existing, writable directory.
 #### Default
   
 `TEMP_FOLDER` defaults to `/tmp`  
+
+---
+
+### DELAY_INDEXING
+
+When enabled, index construction is deferred during graph decoding (e.g., when loading data from RDB). Indices are built after the full graph has been decoded rather than during the decode process.
+
+Its valid values are `yes` and `no` (i.e., on and off).
+
+#### Default
+
+`DELAY_INDEXING` is `no`.
+
+#### Example
+
+```sh
+$ redis-server --loadmodule ./falkordb.so DELAY_INDEXING yes
+
+$ redis-cli GRAPH.CONFIG SET DELAY_INDEXING yes
+```
 
 ---
 

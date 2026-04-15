@@ -13,9 +13,15 @@ redirect_from:
 
 Executes a given read only query against a specified graph.
 
-Arguments: `Graph name, Query, Timeout [optional]`
+Arguments: `Graph name, Query, [timeout], [--compact], [version]`
 
 Returns: [Result set](/design/result-structure) for a read only query or an error if a write query was given.
+
+| Optional argument | Description |
+| --- | --- |
+| `timeout` | Query-level timeout in milliseconds. See [the configuration section](/configuration#timeout). |
+| `--compact` | Returns results in [compact format](/design/client-spec#retrieving-the-compact-result-set). |
+| `version` | Graph version number. When provided, the server rejects the query with a `version mismatch` error if the current graph version doesn't match, allowing clients to invalidate cached schema mappings. |
 
 {% capture shell_0 %}
 GRAPH.RO_QUERY us_government "MATCH (p:president)-[:born]->(:state {name:'Hawaii'}) RETURN p"
