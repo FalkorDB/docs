@@ -43,7 +43,7 @@ docker run -p 5000:5000 --env-file .env falkordb/queryweaver
 
 ## AI/LLM Configuration
 
-QueryWeaver supports multiple AI providers. Set one API key and QueryWeaver auto-detects which provider to use.
+QueryWeaver supports multiple AI providers. Set one provider-specific environment variable and QueryWeaver auto-detects which provider to use. For Ollama, set `OLLAMA_MODEL` to your local model name; for all other providers, set the corresponding API key.
 
 **Priority order:** Ollama > OpenAI > Gemini > Anthropic > Cohere > Azure
 
@@ -82,9 +82,11 @@ QueryWeaver exposes a REST API for managing database schemas (graphs) and runnin
 
 Add an `Authorization` header with your API token:
 
-```bash
+```http
 Authorization: Bearer <API_TOKEN>
 ```
+
+API tokens can be created from the web UI (account settings → API tokens) or via the `/tokens` routes. For a local Docker deployment, any token you create through the UI at `http://localhost:5000` will work.
 
 ### Examples
 
@@ -129,13 +131,28 @@ QueryWeaver includes built-in support for the [Model Context Protocol (MCP)](htt
 - `database_schema`
 - `query_database`
 
-To connect an MCP client to a local QueryWeaver instance, use this configuration:
+To connect a VS Code (GitHub Copilot) MCP client to a local QueryWeaver instance, add the following to your `mcp.json` file:
 
 ```json
 {
   "servers": {
     "queryweaver": {
       "type": "http",
+      "url": "http://127.0.0.1:5000/mcp",
+      "headers": {
+        "Authorization": "Bearer your_token_here"
+      }
+    }
+  }
+}
+```
+
+For Claude Desktop (`claude_desktop_config.json`), QueryWeaver's HTTP MCP surface can be referenced using:
+
+```json
+{
+  "mcpServers": {
+    "queryweaver": {
       "url": "http://127.0.0.1:5000/mcp",
       "headers": {
         "Authorization": "Bearer your_token_here"

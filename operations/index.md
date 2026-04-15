@@ -13,8 +13,6 @@ The Operations chapter provides essential guides for configuring and managing Fa
 
 > **Production Tip:** For production deployments, consider using the `falkordb/falkordb-server` Docker image which is optimized for production use and doesn't include the FalkorDB Browser, making it lighter and more efficient.
 
-Table of Contents
-
 ## 1. [Docker and Docker Compose](/operations/docker)
 
 Learn how to run FalkorDB using Docker and Docker Compose, with examples for development and production environments including persistence, networking, and configuration options.
