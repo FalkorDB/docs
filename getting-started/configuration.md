@@ -449,7 +449,7 @@ It must be an existing, writable directory.
   
 #### Default
   
-`TEMP_FOLDER` default to `/tmp`  
+`TEMP_FOLDER` defaults to `/tmp`  
 
 ---
 
