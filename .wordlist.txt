@@ -800,6 +800,7 @@ NeighborLoader
 GraphSAGE
 
 QueryWeaver
+QueryWeaver's
 Text2SQL
 Swagger
 Cohere
