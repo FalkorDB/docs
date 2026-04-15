@@ -91,6 +91,8 @@ The following table summarizes which configuration parameters can be set at modu
 | [OMP_THREAD_COUNT](#omp_thread_count)                        | V     | X     |
 | [NODE_CREATION_BUFFER](#node_creation_buffer)                | V     | X     |
 | [BOLT_PORT](#bolt_port)                                      | V     | X     |
+| [IMPORT_FOLDER](#import_folder)                              | V     | X     |
+| [TEMP_FOLDER](#temp_folder)                                  | V     | X     |
 | [MAX_QUEUED_QUERIES](#max_queued_queries)                    | V     | V     |
 | [TIMEOUT](#timeout)                                          | V     | V     |
 | [TIMEOUT_MAX](#timeout_max)                                  | V     | V     |
@@ -102,8 +104,6 @@ The following table summarizes which configuration parameters can be set at modu
 | [CMD_INFO](#cmd_info)                                        | V     | V     |
 | [MAX_INFO_QUERIES](#max_info_queries)                        | V     | V     |
 | [DELTA_MAX_PENDING_CHANGES](#delta_max_pending_changes)      | V     | V     |
-| [IMPORT_FOLDER](#import_folder)                              | V     | X     |
-| [TEMP_FOLDER](#temp_folder)                                  | V     | X     |
 | [JS_HEAP_SIZE](#js_heap_size)                                | V     | V     |
 | [JS_STACK_SIZE](#js_stack_size)                              | V     | V     |
 
