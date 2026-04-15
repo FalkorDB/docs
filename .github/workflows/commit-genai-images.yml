@@ -1,0 +1,40 @@
+name: Commit GenAI tool images locally
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  download-and-commit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref || github.ref_name }}
+
+      - name: Download Code-Graph images
+        run: |
+          mkdir -p images/genai-tools
+          curl -fL -o images/genai-tools/codegraph-code-analysis.webp \
+            "https://www.falkordb.com/wp-content/uploads/2024/07/codegraph-code-analysis-falkordb.webp"
+          curl -fL -o images/genai-tools/codegraph-chat-with-graph.webp \
+            "https://www.falkordb.com/wp-content/uploads/2024/07/codegraph-chat-with-your-graph.webp"
+          curl -fL -o images/genai-tools/queryweaver-demo.gif \
+            "https://github.com/user-attachments/assets/34663279-0273-4c21-88a8-d20700020a07"
+
+      - name: Update markdown references
+        run: |
+          sed -i 's|https://www.falkordb.com/wp-content/uploads/2024/07/codegraph-code-analysis-falkordb.webp|/images/genai-tools/codegraph-code-analysis.webp|g' genai-tools/code-graph.md
+          sed -i 's|https://www.falkordb.com/wp-content/uploads/2024/07/codegraph-chat-with-your-graph.webp|/images/genai-tools/codegraph-chat-with-graph.webp|g' genai-tools/code-graph.md
+          sed -i 's|https://github.com/user-attachments/assets/34663279-0273-4c21-88a8-d20700020a07|/images/genai-tools/queryweaver-demo.gif|g' genai-tools/queryweaver.md
+
+      - name: Commit images
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add images/genai-tools/ genai-tools/code-graph.md genai-tools/queryweaver.md
+          git diff --cached --quiet || git commit -m "chore: commit GenAI tool images locally"
+          git push
