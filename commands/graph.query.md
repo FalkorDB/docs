@@ -10,9 +10,15 @@ parent: "Commands"
 
 Executes the given query against a specified graph.
 
-Arguments: `Graph name, Query, Timeout [optional]`
+Arguments: `Graph name, Query, [timeout], [--compact], [version]`
 
 Returns: [Result set](/design/result-structure)
+
+| Optional argument | Description |
+| --- | --- |
+| `timeout` | Query-level timeout in milliseconds. See [the configuration section](/configuration#timeout). |
+| `--compact` | Returns results in [compact format](/design/client-spec#retrieving-the-compact-result-set). |
+| `version` | Graph version number. When provided, the server rejects the query with a `version mismatch` error if the current graph version doesn't match, allowing clients to invalidate cached schema mappings. |
 
 ## Queries and Parameterized Queries
 
@@ -22,7 +28,7 @@ Query-level timeouts can be set as described in [the configuration section](/con
 
 ### Command structure
 
-`GRAPH.QUERY graph_name "query"`
+`GRAPH.QUERY graph_name "query" [timeout value] [--compact] [version value]`
 
 example:
 
