@@ -799,6 +799,12 @@ pyg
 NeighborLoader
 GraphSAGE
 
+QueryWeaver
+Text2SQL
+Swagger
+Cohere
+Ollama
+
 TOC
 toc
 CodeGraph

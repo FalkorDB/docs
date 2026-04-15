@@ -25,4 +25,8 @@ FalkorDB provides powerful tools and integrations for building intelligent GenAI
 - [LlamaIndex](./llamaindex.md): Simplify development of LLM-powered applications with LlamaIndex.
 - [GraphRAG Toolkit](./graphrag-toolkit.md): AWS GraphRAG Toolkit integration for building knowledge graph applications.
 - [FalkorDB MCP Server](./mcpserver/): Enable AI assistants like Claude to interact with FalkorDB using the Model Context Protocol.
+<<<<<<< copilot/doc-code-graph
 - [Code-Graph](./code-graph.md): Visualize codebases as knowledge graphs to analyze dependencies, detect bottlenecks, and query code structure.
+=======
+- [QueryWeaver](./queryweaver.md): Open-source Text2SQL tool that converts plain-English questions into SQL using graph-powered schema understanding.
+>>>>>>> main
