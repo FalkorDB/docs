@@ -103,6 +103,9 @@ The following table summarizes which configuration parameters can be set at modu
 | [MAX_INFO_QUERIES](#max_info_queries)                        | V     | V     |
 | [DELTA_MAX_PENDING_CHANGES](#delta_max_pending_changes)      | V     | V     |
 | [IMPORT_FOLDER](#import_folder)                              | V     | X     |
+| [TEMP_FOLDER](#temp_folder)                                  | V     | X     |
+| [JS_HEAP_SIZE](#js_heap_size)                                | V     | V     |
+| [JS_STACK_SIZE](#js_stack_size)                              | V     | V     |
 
 ---
 
@@ -433,6 +436,49 @@ $ redis-cli GRAPH.CONFIG SET DELTA_MAX_PENDING_CHANGES 20000
 The import folder configuration specifies an absolute path to a folder from which
 FalkorDB is allowed to load CSV files.
 
-Defaults to: `/var/lib/FalkorDB/import/`
+#### Default
+
+`IMPORT_FOLDER` defaults to `/var/lib/FalkorDB/import/`
+
+---
+
+### TEMP_FOLDER
+
+Path to the directory FalkorDB uses for temporary files (currently used by operations like GRAPH.COPY dump files).  
+It must be an existing, writable directory.  
+  
+#### Default
+  
+`TEMP_FOLDER` default to `/tmp`  
+
+---
+
+### JS_HEAP_SIZE
+
+Maximum QuickJS heap memory (in bytes) available to JavaScript UDF execution/runtime.  
+Helps prevent unbounded JS memory growth.  
+
+#### Default
+
+`JS_HEAP_SIZE` defaults to 268435456 (256 MB)  
+
+#### Minimum
+
+1048576 (1 MB)  
+
+---
+
+### JS_STACK_SIZE  
+
+Maximum QuickJS stack size (in bytes) for JavaScript UDF runtime (affects recursion/call depth limits).  
+Helps prevent excessive JS stack usage. 
+
+#### Default
+
+`JS_STACK_SIZE` defaults to 1048576 (1 MB)  
+
+#### Minimum
+
+1048576 (1 MB)  
 
 ---
