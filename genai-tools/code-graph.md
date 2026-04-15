@@ -28,7 +28,7 @@ Code-Graph is a FalkorDB-powered tool that indexes source code repositories into
 | Interactive web UI | React-based frontend for visualizing and exploring the code graph with pan, zoom, and search. |
 | GraphRAG chat | Ask natural-language questions about your codebase. Powered by LiteLLM and FalkorDB GraphRAG. |
 | CLI tool (`cgraph`) | Index repositories, search entities, explore relationships, and find paths from the terminal. All output is JSON. |
-| Git history analysis | Analyze git history to understand how code evolves over time. |
+| Git history analysis | Analyze git history to understand how code evolves. |
 | Multi-language support | Analyzers for Python, Java, and C#. |
 
 ---
