@@ -1,9 +1,11 @@
 ---
 title: "Code-Graph"
 description: "Visualize codebases as knowledge graphs with FalkorDB Code-Graph. Analyze dependencies, detect bottlenecks, and query code structure using GraphRAG and an interactive web UI or CLI."
-nav_order: 12
+nav_order: 8
+parent: "GenAI Tools"
 redirect_from:
   - /code-graph.html
+  - /code-graph
   - /codegraph.html
   - /codegraph
 ---
@@ -42,6 +44,13 @@ Code-Graph currently supports the following languages:
 ---
 
 ## Running with Docker
+
+Clone the Code-Graph repository and navigate into it:
+
+```bash
+git clone https://github.com/FalkorDB/Code-Graph.git
+cd Code-Graph
+```
 
 ### Using Docker Compose
 
@@ -217,6 +226,8 @@ curl -X POST http://127.0.0.1:5000/api/analyze_repo \
 ```bash
 curl http://127.0.0.1:5000/api/list_repos
 ```
+
+> **Note:** If `SECRET_TOKEN` is set and `CODE_GRAPH_PUBLIC` is not enabled (`1`), add `-H "Authorization: Bearer <YOUR_SECRET_TOKEN>"` to the request.
 
 ---
 
