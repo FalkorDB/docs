@@ -819,4 +819,5 @@ subgraph
 codebases
 codegraph
 frontend
+ObjectPool
 QuickJS
