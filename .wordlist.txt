@@ -800,6 +800,7 @@ NeighborLoader
 GraphSAGE
 
 QueryWeaver
+QueryWeaver's
 Text2SQL
 Swagger
 Cohere
@@ -807,3 +808,14 @@ Ollama
 
 TOC
 toc
+CodeGraph
+cgraph
+LiteLLM
+Uvicorn
+pipx
+FastAPI
+Vite
+subgraph
+codebases
+codegraph
+frontend
