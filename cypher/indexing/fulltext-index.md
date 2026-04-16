@@ -2,7 +2,7 @@
 title: "Full-text Index"
 nav_order: 2
 description: >
-    FalkorDB provides full-text indices through procedure calls.
+    FalkorDB provides full-text indices through procedure calls and DDL syntax.
 parent: "Indexing"
 grand_parent: "Cypher Language"
 ---
@@ -485,7 +485,7 @@ GRAPH.QUERY DEMO_GRAPH
 
 ### Using procedure syntax
 
-For a node label, the full-text index deletion syntax is:
+For a node label, the procedure syntax drops **all** full-text indexed properties for the given label:
 
 {% capture shell_15 %}
 GRAPH.QUERY DEMO_GRAPH "CALL db.idx.fulltext.drop('Movie')"
@@ -511,7 +511,7 @@ graph.query("CALL db.idx.fulltext.drop('Movie')").execute().await?;
 
 ### Using DDL syntax
 
-Full-text indexes for node labels can also be dropped using DDL syntax:
+Full-text indexes for node labels can also be dropped using DDL syntax. Unlike the procedure syntax above, the DDL form drops only the **specific property** index:
 
 {% capture shell_ddl_drop_node %}
 GRAPH.QUERY DEMO_GRAPH "DROP FULLTEXT INDEX FOR (n:Movie) ON (n.title)"

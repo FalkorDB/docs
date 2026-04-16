@@ -17,7 +17,7 @@ Each item in the list has the following structure:
 2. The issued command.
 3. The issued query.
 4. The amount of time needed for its execution, in milliseconds (double).
-5. The query parameters (or nil if none were provided).
+5. The query parameters (or (nil) if none were provided).
 
 ## Examples
 
