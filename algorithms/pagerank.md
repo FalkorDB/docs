@@ -26,9 +26,9 @@ For example, in a network of academic papers, a paper cited by many other highly
 The PageRank procedure has the following call signature:
 
 ```cypher
-CALL pagerank.stream(
-    [label],
-    [relationship]
+CALL algo.pageRank(
+    label,
+    relationship
 )
 YIELD node, score
 ```
@@ -75,7 +75,7 @@ CREATE
 Now we can run the PageRank algorithm on this citation network:
 
 ```cypher
-CALL pagerank.stream('Paper', 'CITES')
+CALL algo.pageRank('Paper', 'CITES')
 YIELD node, score
 RETURN node.title AS paper, score
 ORDER BY score DESC
