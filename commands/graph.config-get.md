@@ -50,29 +50,29 @@ println!("{:?}", config);
 {% include code_tabs.html id="config_get_tabs" shell=shell_0 python=python_0 javascript=javascript_0 java=java_0 rust=rust_0 %}
 
 {% capture shell_1 %}
-graph.config get TIMEOUT
+graph.config get TIMEOUT_DEFAULT
 # Output:
-# 1) "TIMEOUT"
+# 1) "TIMEOUT_DEFAULT"
 # 2) (integer) 0
 {% endcapture %}
 
 {% capture python_1 %}
-timeout = client.get_config('TIMEOUT')
+timeout = client.get_config('TIMEOUT_DEFAULT')
 print(timeout)
 {% endcapture %}
 
 {% capture javascript_1 %}
-const timeout = await client.getConfig('TIMEOUT');
+const timeout = await client.getConfig('TIMEOUT_DEFAULT');
 console.log(timeout);
 {% endcapture %}
 
 {% capture java_1 %}
-Object timeout = client.getConfig("TIMEOUT");
+Object timeout = client.getConfig("TIMEOUT_DEFAULT");
 System.out.println(timeout);
 {% endcapture %}
 
 {% capture rust_1 %}
-let timeout = client.get_config("TIMEOUT")?;
+let timeout = client.get_config("TIMEOUT_DEFAULT")?;
 println!("{:?}", timeout);
 {% endcapture %}
 

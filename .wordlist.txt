@@ -34,6 +34,8 @@ MariaDB
 MySQL
 SQLServer
 DateTime
+DDL
+ddl
 DELUSER
 distro
 Ducati
@@ -223,6 +225,7 @@ jinja
 jl
 jpbourbon
 keyspace
+labelPropagation
 lTrim
 labelsList
 len
