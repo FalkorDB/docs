@@ -15,18 +15,16 @@ The `GRAPH.MEMORY` command returns detailed memory consumption statistics for a 
 GRAPH.MEMORY USAGE <graph-name> [SAMPLES <count>]
 ```
 
-Usage: `GRAPH.MEMORY USAGE <graph_id> [SAMPLES <count>]`
-
 ## Arguments
 
 | Argument       | Description                                                                                                                              |
 |----------------|------------------------------------------------------------------------------------------------------------------------------------------|
-| `<graph-name>` | The name of the graph to inspect (also referred to as `<graph_id>`).                                                                     |
+| `<graph-name>` | The name of the graph to inspect.                                                                                                        |
 | `SAMPLES <n>`  | *(Optional)* Number of samples to take when estimating memory usage. A higher number improves accuracy but increases computation time. The samples are averaged to estimate the total size. Defaults to 100 if not specified. The value is clamped to the range [1, 10000]. |
 
 ## Return
 
-The command returns a map of key-value pairs, where each pair represents a specific memory metric and its value (in MB), corresponding to different components of the graph:
+The command returns a set of key-value pairs, where each pair represents a specific memory metric and its value (in MB), corresponding to different components of the graph. In RESP2, this is encoded as a flat array of alternating field names and values:
 
 | Metric Name / Field                           | Type    | Description                                                       |
 |-----------------------------------------------|---------|-------------------------------------------------------------------|

@@ -28,17 +28,17 @@ The PageRank procedure has the following call signature:
 ```cypher
 CALL algo.pageRank(
     label,
-    relationship
+    relationship-type
 )
 YIELD node, score
 ```
 
 ### Parameters
 
-| Name           | Type   | Default | Description                                                                  |
-|----------------|--------|---------|------------------------------------------------------------------------------|
-| `label`        | String | null    | The label of nodes to run the algorithm on. If null, all nodes are used.     |
-| `relationship` | String | null    | The relationship type to traverse. If null, all relationship types are used. |
+| Name                | Type   | Default | Description                                                                  |
+|---------------------|--------|---------|------------------------------------------------------------------------------|
+| `label`             | String | null    | The label of nodes to run the algorithm on. If null, all nodes are used.     |
+| `relationship-type` | String | null    | The relationship type to traverse. If null, all relationship types are used. |
 
 ### Yield
 
