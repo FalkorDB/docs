@@ -11,6 +11,8 @@ parent: "GenAI Tools"
 
 QueryWeaver uses FalkorDB to store and reason over database schema relationships as a graph, enabling more accurate and context-aware SQL generation.
 
+![QueryWeaver UI Demo](https://github.com/user-attachments/assets/34663279-0273-4c21-88a8-d20700020a07)
+
 ## Resources
 
 - 🔗 [QueryWeaver Website](https://www.queryweaver.ai/)

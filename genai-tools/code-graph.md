@@ -18,6 +18,8 @@ Code-Graph is a FalkorDB-powered tool that indexes source code repositories into
 
 **[Live Demo](https://code-graph.falkordb.com/)** &middot; **[GitHub Repository](https://github.com/FalkorDB/Code-Graph)**
 
+![Code-Graph — interactive code analysis visualization](https://www.falkordb.com/wp-content/uploads/2024/07/codegraph-code-analysis-falkordb.webp)
+
 ---
 
 ## Key Features
@@ -228,6 +230,14 @@ curl http://127.0.0.1:5000/api/list_repos
 ```
 
 > **Note:** If `SECRET_TOKEN` is set and `CODE_GRAPH_PUBLIC` is not enabled (`1`), add `-H "Authorization: Bearer <YOUR_SECRET_TOKEN>"` to the request.
+
+---
+
+## GraphRAG Chat
+
+Use the built-in chat interface to ask natural-language questions about your codebase. Code-Graph translates your questions into graph queries and returns contextual answers powered by LiteLLM and FalkorDB GraphRAG.
+
+![Code-Graph — chat with your code graph](https://www.falkordb.com/wp-content/uploads/2024/07/codegraph-chat-with-your-graph.webp)
 
 ---
 
