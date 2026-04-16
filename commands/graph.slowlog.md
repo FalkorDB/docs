@@ -9,12 +9,15 @@ parent: "Commands"
 
 Returns a list containing up to 10 of the slowest queries issued against the given graph ID.
 
+Only queries with a latency of 10 milliseconds or more are logged.
+
 Each item in the list has the following structure:
 
-1. A Unix timestamp at which the log entry was processed.
+1. A Unix timestamp (double) at which the log entry was processed.
 2. The issued command.
 3. The issued query.
-4. The amount of time needed for its execution, in milliseconds.
+4. The amount of time needed for its execution, in milliseconds (double).
+5. The query parameters (or nil if none were provided).
 
 ## Examples
 
@@ -48,14 +51,16 @@ console.log(slowlog);
 
 ```sh
 GRAPH.SLOWLOG graph_id
- 1) 1) "1581932396"
+ 1) 1) "1581932396.723"
     2) "GRAPH.QUERY"
     3) "MATCH (a:Person)-[:FRIEND]->(e) RETURN e.name"
-    4) "0.831"
- 2) 1) "1581932396"
+    4) "12.831"
+    5) (nil)
+ 2) 1) "1581932396.891"
     2) "GRAPH.QUERY"
     3) "MATCH (me:Person)-[:FRIEND]->(:Person)-[:FRIEND]->(fof:Person) RETURN fof.name"
-    4) "0.288"
+    4) "10.288"
+    5) (nil)
 ```
 
 ### Reset slowlog
