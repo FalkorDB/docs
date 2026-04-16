@@ -37,7 +37,7 @@ RETURN flex.map.fromPairs(pairs) AS result
 ```
 
 **Output:**
-```
+```text
 result
 ------------------------------------
 {name: 'Alice', age: 30, city: 'NYC'}
@@ -52,7 +52,7 @@ RETURN flex.map.fromPairs(pairs) AS user
 ```
 
 **Output:**
-```
+```text
 user
 ------------------------------------------
 {name: 'Bob', age: 25, email: 'bob@example.com'}

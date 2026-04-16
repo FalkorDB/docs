@@ -36,7 +36,7 @@ RETURN flex.text.snakeCase('HelloWorld') AS result
 ```
 
 **Output:**
-```
+```text
 result
 -----------
 hello_world
@@ -50,7 +50,7 @@ RETURN input AS original, flex.text.snakeCase(input) AS snake
 ```
 
 **Output:**
-```
+```text
 original        | snake
 ----------------|------------------
 camelCase       | camel_case

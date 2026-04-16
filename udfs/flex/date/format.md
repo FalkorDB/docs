@@ -52,7 +52,7 @@ RETURN flex.date.format(dt, 'YYYY-MM-DD') AS date
 ```
 
 **Output:**
-```
+```text
 date
 ----------
 2024-03-15
@@ -65,7 +65,7 @@ RETURN flex.date.format(dt, 'YYYY-MM-DD HH:mm:ss') AS formatted
 ```
 
 **Output:**
-```
+```text
 formatted
 -------------------
 2024-03-15 14:30:45
@@ -78,7 +78,7 @@ RETURN flex.date.format(dt, 'DD/MM/YYYY HH:mm', '+02:00') AS localTime
 ```
 
 **Output:**
-```
+```text
 localTime
 -----------------
 15/03/2024 16:30

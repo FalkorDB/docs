@@ -38,7 +38,7 @@ RETURN flex.coll.zip(letters, numbers) AS pairs
 ```
 
 **Output:**
-```
+```text
 pairs
 ----------------------------
 [["a", 1], ["b", 2], ["c", 3]]
@@ -51,7 +51,7 @@ RETURN flex.coll.zip(keys, values) AS result
 ```
 
 **Output:**
-```
+```text
 result
 --------------------
 [["x", 10], ["y", 20]]

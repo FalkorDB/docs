@@ -36,7 +36,7 @@ RETURN flex.bitwise.not(5) AS result
 ```
 
 **Output:**
-```
+```text
 result
 ------
 -6
@@ -49,7 +49,7 @@ RETURN flex.bitwise.not(0) AS result
 ```
 
 **Output:**
-```
+```text
 result
 ------
 -1
@@ -63,7 +63,7 @@ RETURN flex.bitwise.not(flex.bitwise.not(value)) AS restored
 ```
 
 **Output:**
-```
+```text
 restored
 --------
 42

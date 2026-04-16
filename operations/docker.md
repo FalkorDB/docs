@@ -384,7 +384,7 @@ services:
 1. **Use Environment Variables**: Store sensitive information like passwords in `.env` files or environment variables:
 
    Create a `.env` file:
-   ```
+   ```text
    FALKORDB_PASSWORD=your-secure-password
    FALKORDB_THREADS=8
    ```

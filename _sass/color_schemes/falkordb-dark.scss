@@ -1,0 +1,26 @@
+@import "color_schemes/dark";
+
+// FalkorDB brand color scheme
+// Based on the dark scheme with purple/magenta accents to match FalkorDB branding
+
+// Brand palette
+$falkordb-purple: #a78bfa;
+$falkordb-purple-dark: #7c3aed;
+$falkordb-purple-deeper: #4e26af;
+$falkordb-bg: #1b1f23;
+$falkordb-sidebar-bg: #161a1f;
+$falkordb-surface: #2d333b;
+
+// Core overrides
+$body-background-color: $falkordb-bg;
+$sidebar-color: $falkordb-sidebar-bg;
+$body-text-color: #e0e0e0;
+$link-color: $falkordb-purple;
+$nav-child-link-color: #9ca3af;
+$btn-primary-color: $falkordb-purple-dark;
+$search-background-color: $falkordb-surface;
+$code-background-color: $falkordb-surface;
+$feedback-color: darken($falkordb-sidebar-bg, 3%);
+$table-background-color: $falkordb-surface;
+$border-color: #3d434b;
+$base-button-color: $falkordb-surface;

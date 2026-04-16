@@ -39,7 +39,7 @@ RETURN flex.text.indexesOf('hello hello hello', 'hello') AS positions
 ```
 
 **Output:**
-```
+```text
 positions
 -----------
 [0, 6, 12]
@@ -51,7 +51,7 @@ RETURN flex.text.indexesOf('abcabcabc', 'abc', 1, 9) AS positions
 ```
 
 **Output:**
-```
+```text
 positions
 ---------
 [3, 6]

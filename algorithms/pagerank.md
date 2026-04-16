@@ -26,19 +26,19 @@ For example, in a network of academic papers, a paper cited by many other highly
 The PageRank procedure has the following call signature:
 
 ```cypher
-CALL pagerank.stream(
-    [label],
-    [relationship]
+CALL algo.pageRank(
+    label,
+    relationship-type
 )
 YIELD node, score
 ```
 
 ### Parameters
 
-| Name           | Type   | Default | Description                                                                  |
-|----------------|--------|---------|------------------------------------------------------------------------------|
-| `label`        | String | null    | The label of nodes to run the algorithm on. If null, all nodes are used.     |
-| `relationship` | String | null    | The relationship type to traverse. If null, all relationship types are used. |
+| Name                | Type   | Default | Description                                                                  |
+|---------------------|--------|---------|------------------------------------------------------------------------------|
+| `label`             | String | null    | The label of nodes to run the algorithm on. If null, all nodes are used.     |
+| `relationship-type` | String | null    | The relationship type to traverse. If null, all relationship types are used. |
 
 ### Yield
 
@@ -75,7 +75,7 @@ CREATE
 Now we can run the PageRank algorithm on this citation network:
 
 ```cypher
-CALL pagerank.stream('Paper', 'CITES')
+CALL algo.pageRank('Paper', 'CITES')
 YIELD node, score
 RETURN node.title AS paper, score
 ORDER BY score DESC

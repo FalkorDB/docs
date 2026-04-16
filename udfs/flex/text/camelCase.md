@@ -36,7 +36,7 @@ RETURN flex.text.camelCase('hello world') AS result
 ```
 
 **Output:**
-```
+```text
 result
 ----------
 helloWorld
@@ -48,7 +48,7 @@ RETURN flex.text.camelCase('user_first_name') AS result
 ```
 
 **Output:**
-```
+```text
 result
 -------------
 userFirstName
