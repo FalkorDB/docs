@@ -1,0 +1,59 @@
+# FalkorDB Documentation
+
+> FalkorDB is an ultra-fast, low-latency, scalable graph database designed for accurate GraphRAG and enterprise GenAI applications. It delivers a multi-tenant RAG solution powered by a property graph database with OpenCypher query language support, full-text search, vector similarity, and range indexing for efficient graph traversal and querying.
+
+> **Key Requirements**: FalkorDB supports both RESP and Bolt protocols. Requires Docker or cloud instance. Authentication via password optional. Compatible with Python, JavaScript, Java, Rust, and Go client libraries. Supports OpenCypher query language with proprietary extensions.
+
+## Getting Started
+
+- [Home](https://docs.falkordb.com/): FalkorDB overview and quick start with Docker
+- [Getting Started](https://docs.falkordb.com/getting-started/): Complete guide to setting up FalkorDB, modeling graphs, and querying data
+- [Client Libraries](https://docs.falkordb.com/getting-started/clients): Language-specific client libraries for Python, JavaScript, Java, Rust, Go, and more
+- [Configuration](https://docs.falkordb.com/getting-started/configuration): FalkorDB server configuration options and settings
+
+## Core Documentation
+
+- [Cypher Query Language](https://docs.falkordb.com/cypher/): Complete reference for OpenCypher clauses (MATCH, CREATE, DELETE), functions, and procedures
+- [Data Types](https://docs.falkordb.com/datatypes): Supported data types including primitives, arrays, maps, nodes, relationships, and vectors
+- [Commands](https://docs.falkordb.com/commands/): Graph database commands including GRAPH.QUERY, GRAPH.EXPLAIN, GRAPH.PROFILE
+- [Algorithms](https://docs.falkordb.com/algorithms/): High-performance graph algorithms including pathfinding (BFS, shortest path), centrality (PageRank), and community detection
+- [Indexing](https://docs.falkordb.com/cypher/indexing/): Full-text search, vector similarity, and range indexes for efficient querying
+
+## GenAI and GraphRAG
+
+- [GenAI Tools](https://docs.falkordb.com/genai-tools/): Build intelligent GenAI applications with FalkorDB and LLMs
+- [GraphRAG SDK](https://docs.falkordb.com/genai-tools/graphrag-sdk): Build intelligent GraphRAG applications with FalkorDB and LLMs
+- [MCP Server](https://docs.falkordb.com/genai-tools/mcpserver/): Enable AI assistants like Claude to interact with FalkorDB using the Model Context Protocol
+- [LangChain Integration](https://docs.falkordb.com/genai-tools/langchain): AI agents with memory using LangChain (Python and JavaScript/TypeScript)
+- [LangGraph Integration](https://docs.falkordb.com/genai-tools/langgraph): Stateful, multi-actor agentic applications with LangGraph
+- [LlamaIndex Integration](https://docs.falkordb.com/genai-tools/llamaindex): LLM-powered applications with LlamaIndex
+- [AG2 Integration](https://docs.falkordb.com/genai-tools/ag2): Multi-agent AI systems with AG2 (formerly AutoGen)
+- [GraphRAG Toolkit](https://docs.falkordb.com/genai-tools/graphrag-toolkit): AWS GraphRAG Toolkit integration for building knowledge graph applications
+- [Agentic Memory](https://docs.falkordb.com/agentic-memory/): Memory systems for AI agents with Graphiti, Cognee, Mem0, and MCP server integrations
+
+## Operations and Deployment
+
+- [Operations](https://docs.falkordb.com/operations/): Database operations including Docker, persistence, replication, and clustering
+- [Docker Deployment](https://docs.falkordb.com/operations/docker): Running FalkorDB with Docker including port configuration
+- [Cloud Options](https://docs.falkordb.com/cloud/): FalkorDB Cloud features and pro tier capabilities
+- [Kubernetes Support](https://docs.falkordb.com/operations/k8s-support): Deploy FalkorDB on Kubernetes
+- [Durability and Persistence](https://docs.falkordb.com/operations/durability): Data durability options including AOF and RDB snapshots
+- [Replication](https://docs.falkordb.com/operations/replication): Setting up master-replica replication
+- [OpenTelemetry](https://docs.falkordb.com/operations/opentelemetry): Monitoring and observability with OpenTelemetry
+
+## Advanced Features
+
+- [User-Defined Functions (UDFs)](https://docs.falkordb.com/udfs/): Extend FalkorDB with custom functions including date, text, JSON, and similarity functions
+- [Browser Interface](https://docs.falkordb.com/browser/): Web-based query interface and graph visualization
+- [Integrations](https://docs.falkordb.com/integration/): Third-party integrations including REST API, Kafka Connect, Apache Jena, BOLT protocol, Spring Data, and Snowflake Native App
+- [Design Specifications](https://docs.falkordb.com/design/): Client specification, bulk load specification, and result structure
+
+## Optional
+
+- [Migration Guides](https://docs.falkordb.com/operations/migration/): Migrating from other graph databases to FalkorDB
+- [FalkorDB Lite](https://docs.falkordb.com/operations/falkordblite/): Lightweight version of FalkorDB for edge computing
+- [Building from Docker](https://docs.falkordb.com/operations/building-docker): Build custom FalkorDB Docker images
+- [Railway Deployment](https://docs.falkordb.com/operations/railway): Deploy FalkorDB on Railway platform
+- [Lightning AI Deployment](https://docs.falkordb.com/operations/lightning-ai): Deploy FalkorDB on Lightning AI
+- [KubeBlocks](https://docs.falkordb.com/operations/kubeblocks): Deploy and manage FalkorDB with KubeBlocks
+- [References](https://docs.falkordb.com/References/): Additional resources and references
