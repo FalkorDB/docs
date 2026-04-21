@@ -214,14 +214,14 @@ appendonly no
 
 ## Docker Environment Persistence
 
-When running FalkorDB in Docker, proper volume configuration is essential for durability. See the [Persistence on Docker](/operations/persistence) guide for detailed instructions on:
+When running FalkorDB in Docker, proper volume configuration is essential for durability. See the [Persistence on Docker](/operations/durability/persistence) guide for detailed instructions on:
 
 - Creating persistent volumes
 - Mounting data directories
 - Verifying persistence configuration
 - Best practices for Docker deployments
 
-For persisting ACL users (so users created with `ACL SETUSER` survive container restarts), see [ACL Persistence on Docker](/operations/acl-persistence).
+For persisting ACL users (so users created with `ACL SETUSER` survive container restarts), see [ACL Persistence on Docker](/operations/durability/acl-persistence).
 
 ## Monitoring and Maintenance
 
@@ -263,5 +263,5 @@ redis-cli BGREWRITEAOF
 
 - [Persistence Options in Redis](https://redis.io/tutorials/operate/redis-at-scale/persistence-and-durability/persistence-options-in-redis/)
 - [Redis Persistence Documentation](https://redis.io/docs/management/persistence/)
-- [FalkorDB Docker Persistence Setup](/operations/persistence)
+- [FalkorDB Docker Persistence Setup](/operations/durability/persistence)
 - [FalkorDB Replication](/operations/replication)

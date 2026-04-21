@@ -481,7 +481,7 @@ docker-compose config
 
 ## Next Steps
 
-- Learn about [Persistence](/operations/persistence) for data durability
+- Learn about [Persistence](/operations/durability/persistence) for data durability
 - Set up [Replication](/operations/replication) for high availability
 - Configure a [Cluster](/operations/cluster) for scalability
 - Review [Configuration](/getting-started/configuration) options

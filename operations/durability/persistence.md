@@ -92,7 +92,7 @@ For a comprehensive guide on configuring RDB, AOF, and graph-specific backup opt
 
 ## ACL User Persistence
 
-Docker volume configuration persists your graph data, but ACL users created with `ACL SETUSER` are stored separately in an ACL file. To persist users, passwords, and permissions across restarts, see [ACL Persistence on Docker](/operations/acl-persistence).
+Docker volume configuration persists your graph data, but ACL users created with `ACL SETUSER` are stored separately in an ACL file. To persist users, passwords, and permissions across restarts, see [ACL Persistence on Docker](/operations/durability/acl-persistence).
 
 ## Next Steps
 

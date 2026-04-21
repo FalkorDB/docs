@@ -164,7 +164,7 @@ docker compose up -d
 
 ## Related
 
-- [Persistence on Docker](/operations/persistence) — persisting graph data with volumes and verifying data durability.
+- [Persistence on Docker](/operations/durability/persistence) — persisting graph data with volumes and verifying data durability.
 - [Data Durability](/operations/durability) — RDB/AOF configuration.
 - [ACL command reference](/commands/acl) — all ACL subcommands.
 - [Redis ACL documentation](https://redis.io/docs/latest/operate/oss_and_stack/management/security/acl/) — full rule syntax.
