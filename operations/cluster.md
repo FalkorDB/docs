@@ -15,36 +15,36 @@ A FalkorDB cluster shards the keyspace across multiple master nodes using Redis 
 
 ```mermaid
 flowchart TB
-    Client(["Cluster-aware client<br/>(routes by graph name → slot)"])
+    Client(["Cluster-aware client<br/>(routes by graph name to slot)"])
 
-    subgraph Cluster["FalkorDB Cluster — 16,384 hash slots, gossiping masters"]
+    subgraph Cluster["FalkorDB Cluster: 16,384 hash slots, gossiping masters"]
         direction LR
 
-        subgraph S1["Shard 1 — slots 0–5460"]
+        subgraph S1["Shard 1: slots 0-5460"]
             direction TB
-            M1["Master — node1:6379<br/>────────────────<br/>social<br/>fraud<br/>catalog<br/>…"]
-            R1["Replica — node4:6382"]
+            M1["Master node1:6379<br/>────────────────<br/>social<br/>fraud<br/>catalog<br/>..."]
+            R1["Replica node4:6382"]
             M1 -. "async replication" .-> R1
         end
 
-        subgraph S2["Shard 2 — slots 5461–10922"]
+        subgraph S2["Shard 2: slots 5461-10922"]
             direction TB
-            M2["Master — node2:6380<br/>────────────────<br/>movies<br/>recommendations<br/>iot<br/>…"]
-            R2["Replica — node5:6383"]
+            M2["Master node2:6380<br/>────────────────<br/>movies<br/>recommendations<br/>iot<br/>..."]
+            R2["Replica node5:6383"]
             M2 -. "async replication" .-> R2
         end
 
-        subgraph S3["Shard 3 — slots 10923–16383"]
+        subgraph S3["Shard 3: slots 10923-16383"]
             direction TB
-            M3["Master — node3:6381<br/>────────────────<br/>knowledge<br/>supply_chain<br/>logs<br/>…"]
-            R3["Replica — node6:6384"]
+            M3["Master node3:6381<br/>────────────────<br/>knowledge<br/>supply_chain<br/>logs<br/>..."]
+            R3["Replica node6:6384"]
             M3 -. "async replication" .-> R3
         end
     end
 
-    Client == "GRAPH.QUERY social …" ==> M1
-    Client == "GRAPH.QUERY movies …" ==> M2
-    Client == "GRAPH.QUERY knowledge …" ==> M3
+    Client == "GRAPH.QUERY social ..." ==> M1
+    Client == "GRAPH.QUERY movies ..." ==> M2
+    Client == "GRAPH.QUERY knowledge ..." ==> M3
 ```
 
 The diagram shows the deployment built in this guide: three master shards laid out side by side, each owning a slice of the slot range and hosting many graph keys. The client sends each query to the shard that owns the graph being queried — `social` lives on shard 1, `movies` on shard 2, `knowledge` on shard 3 — while every master also asynchronously replicates its data to one replica for failover and read scaling.
