@@ -221,6 +221,8 @@ When running FalkorDB in Docker, proper volume configuration is essential for du
 - Verifying persistence configuration
 - Best practices for Docker deployments
 
+For persisting ACL users (so users created with `ACL SETUSER` survive container restarts), see [ACL Persistence on Docker](/operations/acl-persistence).
+
 ## Monitoring and Maintenance
 
 ### Check Persistence Status
