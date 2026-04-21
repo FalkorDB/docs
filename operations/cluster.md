@@ -49,8 +49,6 @@ flowchart TB
 
 The diagram shows the deployment built in this guide: three master shards laid out side by side, each owning a slice of the slot range and hosting many graph keys. The client sends each query to the shard that owns the graph being queried — `social` lives on shard 1, `movies` on shard 2, `knowledge` on shard 3 — while every master also asynchronously replicates its data to one replica for failover and read scaling.
 
-> **Note:** A single graph is *not* split across shards — all of its nodes and relationships live on one master. To co-locate two graphs on the same shard (for example, to use them in the same `MULTI`/`EXEC` block), use Redis [hash tags](https://redis.io/docs/latest/operate/oss_and_stack/reference/cluster-spec/#hash-tags) in the graph names, e.g. `{tenant42}:users` and `{tenant42}:orders`.
-
 ## Prerequisites
 
 Before you begin, ensure you have the following:
