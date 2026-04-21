@@ -71,7 +71,15 @@ redis-cli ACL SETUSER alice on '>secret123' '~*' '&*' '+@all'
 redis-cli ACL SETUSER bob   on '>bobpass'   '~bob:*' '+@read' '+GRAPH.QUERY' '+GRAPH.RO_QUERY'
 ```
 
-> **Important:** `ACL SETUSER` only updates the in-memory user table. You must run `ACL SAVE` to write the changes to the ACL file. Without `aclfile` configured, `ACL SAVE` returns an error.
+> **Important:** `ACL SETUSER` only updates the in-memory user table. You must run `ACL SAVE` to write the changes to the ACL file. If `aclfile` is not configured, `ACL SAVE` returns a clear error:
+>
+> ```
+> (error) ERR This Redis instance is not configured to use an ACL file. You may want to
+> specify users via the ACL SETUSER command and then issue a CONFIG REWRITE (assuming you
+> have a Redis configuration file set) in order to store users in the Redis configuration.
+> ```
+>
+> If you see this error, check that `--aclfile` was passed (e.g. via `REDIS_ARGS`) and that the file existed on disk before the container started.
 
 Persist the users to disk:
 
@@ -156,7 +164,7 @@ docker compose up -d
 
 ## Related
 
-- [Persistence on Docker](/operations/persistence) — persisting graph data with volumes.
+- [Persistence on Docker](/operations/persistence) — persisting graph data with volumes and verifying data durability.
 - [Data Durability](/operations/durability) — RDB/AOF configuration.
 - [ACL command reference](/commands/acl) — all ACL subcommands.
 - [Redis ACL documentation](https://redis.io/docs/latest/operate/oss_and_stack/management/security/acl/) — full rule syntax.
