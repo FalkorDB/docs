@@ -12,12 +12,12 @@ description: "Practical FalkorDB guidance packaged as an Agent Skill. Give your 
 - **UDFs** (5 skills) -- load, call, list, and delete JavaScript user-defined function libraries
 - **Docker Ops** (6 skills) -- run FalkorDB with browser UI, server-only mode, authentication, module config, and Docker Compose
 
-#### Usage
+## Usage
 
-Clone the repo into your project and point your AI assistant at SKILL.md:
+Clone the repository into your project and point your AI assistant at SKILL.md:
 
 ```bash
-git clone https://github.com/FalkorDB/skills.git .falkordb-skills
+git clone https://github.com/FalkorDB/skills.git falkordb-skills
 ```
 
 Or download `SKILL.md` directly and load it into any LLM context window.
