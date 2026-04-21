@@ -114,6 +114,48 @@ Usage: `ACL LIST`
 3) "guest"
 ```
 
+### Key permissions
+
+In addition to the basic `~<pattern>` rule, ACL supports fine-grained per-key
+permissions that restrict how a command is allowed to touch a matching key.
+Key permission rules take the form `%(<permission>)~<pattern>`, where
+`<permission>` is one or more of the following characters:
+
+* `W` (Write): The data stored within the key may be updated or deleted.
+* `R` (Read): User-supplied data from the key is processed, copied or returned.
+  This does not include metadata such as size information (for example
+  `STRLEN`), type information (for example `TYPE`), or whether a value exists
+  within a collection (for example `SISMEMBER`).
+
+Permissions can be composed by specifying multiple characters. `%RW~<pattern>`
+is full access and is equivalent to plain `~<pattern>`.
+
+#### Example
+
+Consider a user with the rules `+@all ~app1:* (+@read ~app2:*)`. This grants
+full access on `app1:*` and read-only access on `app2:*`. However, commands
+such as `COPY` read from a source key and write to a destination key, so a
+request to copy `app2:user` into `app1:user` would be rejected because neither
+the root permission nor the selector fully matches the command. Using key
+permissions, the rule set `+@all ~app1:* %R~app2:*` handles this case: the
+first pattern matches the destination key with write access and the second
+pattern matches the source key with read access.
+
+#### Notes
+
+* Whether a command requires read or write permission on a key is derived from
+  the command's key specifications. Insert, update, and delete flags map to
+  the write permission; the access flag maps to the read permission. Commands
+  with no logical operation flags (for example `EXISTS`) require either read
+  or write permission on the key to execute.
+* Side channels to user data are not considered when evaluating read
+  permissions. For example, `LPUSH key1 data` modifies `key1` but only returns
+  metadata (the new list size), so it requires only write permission on
+  `key1`. `LPOP key2` modifies `key2` and also returns data from it (the
+  left-most item), so it requires both read and write permission on `key2`.
+  If an application needs to ensure no data is accessed from a key, including
+  via side channels, do not grant any access to the key.
+
 ### ACL LOG
 
 Displays a log of recent ACL-related events, such as user authentication attempts or rule changes.
