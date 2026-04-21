@@ -22,28 +22,22 @@ flowchart TB
 
         subgraph S1["Shard 1 — slots 0–5460"]
             direction TB
-            M1["Master<br/>node1:6379"]
-            G1[("Graphs on shard 1<br/>• social<br/>• fraud<br/>• catalog<br/>• …")]
-            R1["Replica<br/>node4:6382"]
-            M1 --- G1
+            M1["Master — node1:6379<br/>────────────────<br/>social<br/>fraud<br/>catalog<br/>…"]
+            R1["Replica — node4:6382"]
             M1 -. "async replication" .-> R1
         end
 
         subgraph S2["Shard 2 — slots 5461–10922"]
             direction TB
-            M2["Master<br/>node2:6380"]
-            G2[("Graphs on shard 2<br/>• movies<br/>• recommendations<br/>• iot<br/>• …")]
-            R2["Replica<br/>node5:6383"]
-            M2 --- G2
+            M2["Master — node2:6380<br/>────────────────<br/>movies<br/>recommendations<br/>iot<br/>…"]
+            R2["Replica — node5:6383"]
             M2 -. "async replication" .-> R2
         end
 
         subgraph S3["Shard 3 — slots 10923–16383"]
             direction TB
-            M3["Master<br/>node3:6381"]
-            G3[("Graphs on shard 3<br/>• knowledge<br/>• supply_chain<br/>• logs<br/>• …")]
-            R3["Replica<br/>node6:6384"]
-            M3 --- G3
+            M3["Master — node3:6381<br/>────────────────<br/>knowledge<br/>supply_chain<br/>logs<br/>…"]
+            R3["Replica — node6:6384"]
             M3 -. "async replication" .-> R3
         end
     end
