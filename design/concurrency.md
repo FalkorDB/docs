@@ -8,6 +8,7 @@ redirect_from:
   - /design/atomicity.html
   - /design/atomicity
   - /design/concurrency.html
+  - /design/concurrency
 ---
 
 # Atomicity and Concurrency
@@ -65,7 +66,7 @@ FalkorDB uses a **reader-writer concurrency model** per graph. The key guarantee
 
 Multiple read-only queries can execute in parallel against the same graph. Read queries do not block each other, enabling high throughput for analytics and traversal workloads.
 
-The number of concurrent queries is governed by the [`THREAD_COUNT`](/getting-started/configuration#thread_count) configuration parameter, which sets the size of the thread pool.
+The number of concurrent queries is governed by the [`THREAD_COUNT`](/configuration#thread_count) configuration parameter, which sets the size of the thread pool.
 
 ### Serialized Writers
 
@@ -99,4 +100,4 @@ For most use cases, single-query atomicity combined with write serialization pro
 
 - **Read-heavy workloads** scale well because multiple read queries execute concurrently.
 - **Write-heavy workloads** are bottlenecked by write serialization. Consider batching multiple changes into a single query where possible.
-- Tune [`THREAD_COUNT`](/getting-started/configuration#thread_count) to match the parallelism your hardware supports and your workload requires.
+- Tune [`THREAD_COUNT`](/configuration#thread_count) to match the parallelism your hardware supports and your workload requires.
