@@ -801,6 +801,8 @@ PyG
 pyg
 NeighborLoader
 GraphSAGE
+atomicity
+bottlenecked
 
 QueryWeaver
 QueryWeaver's
