@@ -19,8 +19,8 @@ FalkorDB replication follows a single-primary model: one master instance accepts
 ```mermaid
 flowchart LR
     W(["Write client"]) -- "GRAPH.QUERY" --> M
-    R1c(["Read client"]) -- "GRAPH.RO_QUERY" --> Rep1
-    R2c(["Read client"]) -- "GRAPH.RO_QUERY" --> Rep2
+    Rc(["Read client"]) -- "GRAPH.RO_QUERY" --> Rep1
+    Rc -- "GRAPH.RO_QUERY" --> Rep2
 
     subgraph Primary["Primary"]
         M["falkordb-master<br/>(read + write)"]
