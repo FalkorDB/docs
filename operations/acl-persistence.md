@@ -68,7 +68,7 @@ Connect with `redis-cli` and create some users:
 
 ```bash
 redis-cli ACL SETUSER alice on '>secret123' '~*' '&*' '+@all'
-redis-cli ACL SETUSER bob   on '>bobpass'   '~bob:*' '+@read' '+graph.query' '+graph.ro_query'
+redis-cli ACL SETUSER bob   on '>bobpass'   '~bob:*' '+@read' '+GRAPH.QUERY' '+GRAPH.RO_QUERY'
 ```
 
 > **Important:** `ACL SETUSER` only updates the in-memory user table. You must run `ACL SAVE` to write the changes to the ACL file. Without `aclfile` configured, `ACL SAVE` returns an error.
