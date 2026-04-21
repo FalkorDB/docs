@@ -4,6 +4,8 @@ nav_order: 2
 description: "Understand FalkorDB data durability with RDB snapshots, AOF logging, and graph-specific backup options (DUMP/RESTORE). Balance performance and data safety for production use."
 parent: "Operations"
 has_children: true
+redirect_from:
+  - /operations/durability.html
 ---
 
 # Data Durability in FalkorDB

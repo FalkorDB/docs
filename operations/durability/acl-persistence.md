@@ -6,6 +6,7 @@ parent: "Durability"
 grand_parent: "Operations"
 redirect_from:
   - /operations/acl-persistence
+  - /operations/acl-persistence.html
 ---
 
 # Persisting ACL Users in FalkorDB on Docker

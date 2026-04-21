@@ -6,6 +6,7 @@ parent: "Durability"
 grand_parent: "Operations"
 redirect_from:
   - /operations/persistence
+  - /operations/persistence.html
 ---
 
 # Configuring FalkorDB Docker for Persistence
