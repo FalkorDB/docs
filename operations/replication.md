@@ -12,6 +12,31 @@ redirect_from:
 
 FalkorDB supports advanced configurations to enable replication, ensuring that your data is available and synchronized across multiple instances. This guide will walk you through setting up FalkorDB in Docker with replication enabled, providing high availability and data redundancy.
 
+## Replication Architecture Overview
+
+FalkorDB replication follows a single-primary model: one master instance accepts all writes and asynchronously streams its changes to one or more replicas. Replicas serve read-only traffic, allowing read workloads to scale horizontally and providing a hot standby in case the master fails.
+
+```mermaid
+flowchart LR
+    W(["Write client"]) -- "GRAPH.QUERY" --> M
+    R1c(["Read client"]) -- "GRAPH.RO_QUERY" --> Rep1
+    R2c(["Read client"]) -- "GRAPH.RO_QUERY" --> Rep2
+
+    subgraph Primary["Primary"]
+        M["falkordb-master<br/>(read + write)"]
+    end
+
+    subgraph Replicas["Replicas (read-only)"]
+        Rep1["falkordb-replica1"]
+        Rep2["falkordb-replica2"]
+    end
+
+    M == "async replication stream" ==> Rep1
+    M == "async replication stream" ==> Rep2
+```
+
+Writes always flow through the master, while replicas mirror the master's state and absorb read traffic. Because replication is asynchronous, replicas may lag the master slightly under heavy write load — see the [Best Practices](#best-practices) section for tips on monitoring lag.
+
 ## Prerequisites
 
 Before you begin, ensure you have the following:

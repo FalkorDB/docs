@@ -32,6 +32,10 @@ plugins:
   - jekyll-redirect-from
   - jekyll-seo-tag
 
+# Enable Mermaid diagram rendering in fenced code blocks (```mermaid ... ```)
+mermaid:
+  version: "10.9.1"
+
 exclude:
   - README.md
   - Gemfile

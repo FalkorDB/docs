@@ -9,6 +9,41 @@ parent: "Operations"
 
 Setting up a FalkorDB cluster enables you to distribute your data across multiple nodes, providing horizontal scalability and improved fault tolerance. This guide will walk you through the steps to configure a FalkorDB cluster with 3 masters and 1 replica for each, using Docker.
 
+## Cluster Architecture Overview
+
+A FalkorDB cluster shards the keyspace across multiple master nodes using Redis Cluster's hash-slot mechanism (16,384 slots distributed across the masters). Each master can have one or more replicas that asynchronously copy its data, providing failover if the master becomes unavailable. Clients connect to any node and are transparently redirected to the master that owns the slot for the requested graph key.
+
+```mermaid
+flowchart TB
+    Client(["Client / Application"])
+
+    subgraph Cluster["FalkorDB Cluster (16,384 hash slots)"]
+        direction LR
+        subgraph S1["Shard 1<br/>slots 0–5460"]
+            M1["Master<br/>node1:6379"]
+            R1["Replica<br/>node4:6382"]
+            M1 -. "async replication" .-> R1
+        end
+        subgraph S2["Shard 2<br/>slots 5461–10922"]
+            M2["Master<br/>node2:6380"]
+            R2["Replica<br/>node5:6383"]
+            M2 -. "async replication" .-> R2
+        end
+        subgraph S3["Shard 3<br/>slots 10923–16383"]
+            M3["Master<br/>node3:6381"]
+            R3["Replica<br/>node6:6384"]
+            M3 -. "async replication" .-> R3
+        end
+        M1 <-- "gossip" --> M2
+        M2 <-- "gossip" --> M3
+        M1 <-- "gossip" --> M3
+    end
+
+    Client -- "GRAPH.QUERY mygraph ..." --> M2
+```
+
+The diagram shows the deployment built in this guide: three master shards with one replica each, gossiping cluster state with one another while clients are routed to the master that owns the slot for the queried graph.
+
 ## Prerequisites
 
 Before you begin, ensure you have the following:
