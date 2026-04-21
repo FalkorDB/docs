@@ -38,7 +38,7 @@ RETURN flex.text.lpad('5', 3, '0') AS result
 ```
 
 **Output:**
-```
+```text
 result
 ------
 005
@@ -51,7 +51,7 @@ RETURN flex.text.lpad(toString(o.id), 8, '0') AS orderId
 ```
 
 **Output:**
-```
+```text
 orderId
 --------
 00000123
@@ -66,7 +66,7 @@ RETURN flex.text.lpad(label, 12, ' ') AS aligned
 ```
 
 **Output:**
-```
+```text
 aligned
 --------------
       Total:

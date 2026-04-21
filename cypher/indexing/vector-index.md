@@ -19,7 +19,7 @@ CREATE VECTOR INDEX FOR <entity_pattern> ON <entity_attribute> OPTIONS <options>
 ```
 
 The options are:
-```
+```json
 {
    dimension: INT, // Required, length of the vector to be indexed
    similarityFunction: STRING, // Required, currently only euclidean or cosine are allowed

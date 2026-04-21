@@ -37,7 +37,7 @@ RETURN flex.bitwise.shiftRight(20, 2) AS result
 ```
 
 **Output:**
-```
+```text
 result
 ------
 5
@@ -54,7 +54,7 @@ RETURN
 ```
 
 **Output:**
-```
+```text
 div2 | div4 | div8
 -----|------|-----
 28   | 14   | 7
@@ -67,7 +67,7 @@ RETURN flex.bitwise.shiftRight(-8, 2) AS result
 ```
 
 **Output:**
-```
+```text
 result
 ------
 -2
@@ -81,7 +81,7 @@ RETURN flex.bitwise.shiftRight(value, 4) AS upperNibble
 ```
 
 **Output:**
-```
+```text
 upperNibble
 -----------
 15

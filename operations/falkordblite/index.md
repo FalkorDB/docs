@@ -15,8 +15,8 @@ FalkorDBLite bundles Redis with the FalkorDB module into an embedded runtime tha
 
 ## Choose your SDK
 
-- [FalkorDBLite for Python](./falkordblite-py) — `pip install falkordblite`
-- [FalkorDBLite for TypeScript](./falkordblite-ts) — `npm install falkordblite`
+- [FalkorDBLite for Python](./falkordblite-py.md) — `pip install falkordblite`
+- [FalkorDBLite for TypeScript](./falkordblite-ts.md) — `npm install falkordblite`
 
 ## What you get
 

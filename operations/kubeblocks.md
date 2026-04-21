@@ -348,7 +348,7 @@ redis-cli -h 127.0.0.1 -p 6379 -a <your-password>
 
 Execute a simple Cypher query to verify the connection:
 
-```
+```cypher
 GRAPH.QUERY social "CREATE (:Person {name: 'Alice', age: 30})-[:KNOWS]->(:Person {name: 'Bob', age: 25})"
 GRAPH.QUERY social "MATCH (p:Person) RETURN p.name, p.age"
 ```
@@ -841,7 +841,7 @@ kubectl delete cluster -n demo falkordb-replication
 
 - [KubeBlocks Official Documentation](https://kubeblocks.io/docs/preview/user_docs/overview/introduction)
 - [KubeBlocks FalkorDB Examples](https://github.com/apecloud/kubeblocks-addons/tree/main/examples/falkordb)
-- [FalkorDB Documentation](https://docs.falkordb.com)
+- [FalkorDB Documentation](/)
 - [Redis Sentinel Documentation](https://redis.io/docs/latest/operate/oss_and_stack/management/sentinel/)
 - [Kubernetes Operators](https://kubernetes.io/docs/concepts/extend-kubernetes/operator/)
 

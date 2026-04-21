@@ -10,19 +10,25 @@ parent: "Commands"
 
 Executes the given query against a specified graph.
 
-Arguments: `Graph name, Query, Timeout [optional]`
+Arguments: `Graph name, Query, [timeout], [--compact], [version]`
 
 Returns: [Result set](/design/result-structure)
 
-### Queries and Parameterized Queries
+| Optional argument | Description |
+| --- | --- |
+| `timeout` | Query-level timeout in milliseconds. See [the configuration section](/configuration#timeout). |
+| `--compact` | Returns results in [compact format](/design/client-spec#retrieving-the-compact-result-set). |
+| `version` | Graph version number. When provided, the server rejects the query with a `version mismatch` error if the current graph version doesn't match, allowing clients to invalidate cached schema mappings. |
+
+## Queries and Parameterized Queries
 
 The execution plans of queries, both regular and parameterized, are cached (up to [CACHE_SIZE](/configuration#cache_size) unique queries are cached). Therefore, it is recommended to use parameterized queries when executing many queries with the same pattern but different constants.
 
 Query-level timeouts can be set as described in [the configuration section](/configuration#timeout).
 
-#### Command structure
+### Command structure
 
-`GRAPH.QUERY graph_name "query"`
+`GRAPH.QUERY graph_name "query" [timeout value] [--compact] [version value]`
 
 example:
 
@@ -52,7 +58,7 @@ println!("{:?}", result);
 {% include code_tabs.html id="tabs_0" shell=shell_0 python=python_0 javascript=javascript_0 java=java_0 rust=rust_0 %}
 
 
-#### Parameterized query structure:
+### Parameterized query structure:
 
 `GRAPH.QUERY graph_name "CYPHER param=val [param=val ...] query"`
 
@@ -97,6 +103,6 @@ println!("{:?}", result);
 
 {% include code_tabs.html id="tabs_1" shell=shell_1 python=python_1 javascript=javascript_1 java=java_1 rust=rust_1 %}
 
-### Query language
+## Query language
 
 The syntax is based on [Cypher](http://www.opencypher.org/). [Most](/cypher/cypher-support) of the language is supported. See [Cypher documentation](/cypher).

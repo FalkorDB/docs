@@ -38,7 +38,7 @@ RETURN flex.map.removeKey(user, 'email') AS sanitized
 ```
 
 **Output:**
-```
+```text
 sanitized
 -----------------------
 {name: 'Alice', age: 30}
@@ -66,7 +66,7 @@ RETURN flex.map.removeKey(map, 'c') AS result
 ```
 
 **Output:**
-```
+```text
 result
 ---------
 {a: 1, b: 2}

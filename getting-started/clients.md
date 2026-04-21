@@ -3,7 +3,7 @@ title: "Client Libraries"
 parent: "Getting Started"
 nav_order: 3
 description: >
-    Official FalkorDB client libraries for Python, Node.js, Java, Rust, Go, and C# with Object-Graph Mapping (OGM) support for Spring Data, and additional community clients.
+    Official FalkorDB client libraries for Python, Node.js, Java, Rust, Go, PHP, and C# with Object-Graph Mapping (OGM) support for Spring Data, and additional community clients.
 redirect_from:
   - /clients.html
   - /clients
@@ -18,6 +18,7 @@ redirect_from:
 | [jfalkordb][jfalkordb-url]        |  [javadocs][jfalkordb-docs] | Java       | BSD        | [FalkorDB][falkordb-url]                    | [maven][jfalkordb-package]               |
 | [falkordb-rs][falkordb-rs-url]    |  [docs.rs][falkordb-rs-docs]| Rust       | MIT        | [FalkorDB][falkordb-url]                    | [crates][falkordb-rs-package]             |
 | [falkordb-go][falkordb-go-url]    |  [godoc][falkordb-go-docs] | Go       | BSD        | [FalkorDB][falkordb-url]                    | [Github][falkordb-go-package]             |
+| [falkordb-php][falkordb-php-url]  |  [readme][falkordb-php-docs] | PHP      | MIT        | [FalkorDB][falkordb-url]                    | [Github][falkordb-php-package]            |
 | [NFalkorDB][nfalkordb-url]        |  [readme][nfalkordb-docs]   | C#       | Apache-2.0        | [FalkorDB][falkordb-url]                    | [nuget][nfalkordb-package]             |
 
 ## Official Object-Graph Mapping (OGM) Libraries
@@ -31,6 +32,8 @@ FalkorDB provides official Object-Graph Mapping (OGM) libraries that allow you t
 | [spring-data-falkordb][spring-data-url]   | [readme][spring-data-docs]     | Java       | Apache-2.0 | [FalkorDB][falkordb-url]     | [GitHub][spring-data-url]                |
 
 ## Additional Clients
+
+**Note:** Some clients below were originally developed for RedisGraph. While many may work with FalkorDB due to protocol compatibility, they are not officially tested or supported. For best results, use the official FalkorDB clients listed above.
 
 | Project                                                   | Language   | License    | Author                                      | Package                                  |
 | --------------------------------------------------------- | ---------- | ---------- | ------------------------------------------- | ---------------------------------------- |
@@ -74,6 +77,10 @@ FalkorDB provides official Object-Graph Mapping (OGM) libraries that allow you t
 [falkordb-go-url]: https://github.com/falkordb/falkordb-go
 [falkordb-go-package]: https://github.com/falkordb/falkordb-go
 [falkordb-go-docs]: https://pkg.go.dev/github.com/FalkorDB/falkordb-go
+
+[falkordb-php-url]: https://github.com/FalkorDB/falkordb-php
+[falkordb-php-package]: https://github.com/FalkorDB/falkordb-php
+[falkordb-php-docs]: https://github.com/FalkorDB/falkordb-php#readme
 
 [nredisstack-url]: https://github.com/redis/nredisstack
 [nredisstack-package]: https://www.nuget.org/packages/nredisstack/

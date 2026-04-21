@@ -38,7 +38,7 @@ RETURN flex.text.replace('hello world', 'world', 'universe') AS result
 ```
 
 **Output:**
-```
+```text
 result
 --------------
 hello universe
@@ -51,7 +51,7 @@ RETURN flex.text.replace(phone, '[^0-9]', '') AS cleaned
 ```
 
 **Output:**
-```
+```text
 cleaned
 -----------
 5551234567
@@ -71,7 +71,7 @@ RETURN flex.text.replace(text, '\\s+', ' ') AS normalized
 ```
 
 **Output:**
-```
+```text
 normalized
 -------------------------
  Multiple spaces here

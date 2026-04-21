@@ -41,7 +41,7 @@ RETURN flex.text.jaroWinkler('Martha', 'Marhta') AS similarity
 ```
 
 **Output:**
-```
+```text
 similarity
 ----------
 0.961

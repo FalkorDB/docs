@@ -236,18 +236,152 @@ function stringify_path(p) {
 ### Graph
 
 UDFs have access to a global `graph` object which represents the current graph executing the UDF.
-The object exposes a single function `traverse` which is similar to the node's `getNeighbors` function (see docs above)
-but can perform multi-source traversal, which can be faster than performing multiple individual calls to getNeighbors.
+The object exposes the following functions:
+
+#### graph.traverse
+
+Similar to the node's `getNeighbors` function (see docs above), `graph.traverse` can perform multi-source traversal, which can be faster than performing multiple individual calls to `getNeighbors`.
 
 ```javascript
 function multi_source_bfs(sources, config) {
-    const targets = graph.traverse(sources, config) ;
+    const targets = graph.traverse(sources, config);
     // source i neighbors are in targets[i], which is an array of node or edge objects
     // depending on the optional config map passed to graph.traverse
     const s0_neighbors = targets[0];
     ...
 }
 ```
+
+---
+
+#### graph.getNodeById
+
+##### Description
+
+Looks up and returns a single node by its internal graph ID. Returns `null` if no node with the given ID exists.
+
+##### Syntax
+
+```javascript
+graph.getNodeById(id)
+```
+
+##### Parameters
+
+| Parameter | Type     | Required | Description                      |
+|-----------|----------|----------|----------------------------------|
+| `id`      | integer  | Yes      | The internal ID of the node to retrieve |
+
+##### Return value
+
+A **Node** object if the node exists, otherwise `null`.
+
+##### Example
+
+```javascript
+function getNode(id) {
+    let node = graph.getNodeById(id);
+    return node;
+}
+falkor.register('getNode', getNode);
+```
+
+```cypher
+// Retrieve the node with internal ID 0
+RETURN MyLib.getNode(0)
+```
+
+---
+
+#### graph.iterateNodes
+
+##### Description
+
+Returns an iterator over all nodes in the graph that carry the specified label.
+The iterator is consumed with a standard `for...of` loop and yields **Node** objects one at a time.
+If no nodes with the given label exist, the iterator is empty and the loop body never executes.
+
+##### Syntax
+
+```javascript
+graph.iterateNodes(label)
+```
+
+##### Parameters
+
+| Parameter | Type   | Required | Description                              |
+|-----------|--------|----------|------------------------------------------|
+| `label`   | string | Yes      | The node label to filter by              |
+
+##### Return value
+
+An **iterator** of **Node** objects matching the given label.
+
+##### Example
+
+```javascript
+function getNamesByLabel(label) {
+    let names = [];
+    let it = graph.iterateNodes(label);
+    for (let node of it) {
+        names.push(node.name);
+    }
+    return names;
+}
+falkor.register('getNamesByLabel', getNamesByLabel);
+```
+
+```cypher
+// Collect the names of all Person nodes
+RETURN MyLib.getNamesByLabel('Person')
+```
+
+---
+
+#### graph.iterateEdges
+
+##### Description
+
+Returns an iterator over all edges in the graph that have the specified relationship type.
+The iterator is consumed with a standard `for...of` loop and yields **Edge** objects one at a time.
+If no edges with the given relationship type exist, the iterator is empty and the loop body never executes.
+
+##### Syntax
+
+```javascript
+graph.iterateEdges(relType)
+```
+
+##### Parameters
+
+| Parameter | Type   | Required | Description                                      |
+|-----------|--------|----------|--------------------------------------------------|
+| `relType` | string | Yes      | The relationship type to filter by               |
+
+##### Return value
+
+An **iterator** of **Edge** objects matching the given relationship type.
+
+##### Example
+
+```javascript
+function getEdgesByType(relType) {
+    let edges = [];
+    let it = graph.iterateEdges(relType);
+    for (let edge of it) {
+        edges.push(edge);
+    }
+    return edges;
+}
+falkor.register('getEdgesByType', getEdgesByType);
+```
+
+```cypher
+// Collect all KNOWS edges in the graph
+RETURN MyLib.getEdgesByType('KNOWS')
+```
+
+---
 
 ### Falkor
 
@@ -397,7 +531,7 @@ load_graph(g)
 compute_jaccard_sim(g)
 ```
 
-The scripts load our two UDF libraries `collection` and `similarity`, construct a graph, and compute Jaccard similarity between `Alice` and every other node in the graph via the query:
+The scripts load our two UDF libraries, `collection` and `similarity`, construct a graph, and compute Jaccard similarity between `Alice` and every other node in the graph via the query:
 
 ```bash
 MATCH (alice:Person {name: 'Alice'}), (n)
@@ -493,4 +627,3 @@ Contributions to extend this library with additional functionality are welcome.
 
 ## Limitations
 > Currently, UDFs are not allowed to modify the graph in any way. You cannot update graph entities within a UDF, nor can you add or delete entities.
-

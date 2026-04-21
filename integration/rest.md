@@ -36,7 +36,7 @@ openssl rand -hex 32
 ```
 
 Add the generated key to your `.env.local` file:
-```
+```text
 ENCRYPTION_KEY=<generated_key>
 ```
 
@@ -91,69 +91,6 @@ curl -N -X GET "http://your-falkordb-browser-url/api/graph/my_graph?query=MATCH%
   -H "$AUTH_HEADER" \
   -H "Accept: text/event-stream"
 ```
-
-## Table of Contents
-
-### Authentication
-- [Generate JWT Token with Credentials - POST /api/auth/tokens/credentials](#generate-jwt-token-with-credentials---post-apiauthtokenscredentials)
-- [List JWT tokens - GET /api/auth/tokens](#list-jwt-tokens---get-apiauthtokens)
-- [Get token metadata - GET /api/auth/tokens/{tokenId}](#get-token-metadata---get-apiauthtokenstokenid)
-- [Revoke token by ID - DELETE /api/auth/tokens/{tokenId}](#revoke-token-by-id---delete-apiauthtokenstokenid)
-
-### Status
-- [Check FalkorDB connection status - GET /api/status](#check-falkordb-connection-status---get-apistatus)
-
-### Graph Management
-- [List all graphs - GET /api/graph](#list-all-graphs---get-apigraph)
-- [Execute graph query - GET /api/graph/{graph}](#execute-graph-query---get-apigraphgraph)
-- [Create or verify a graph - POST /api/graph/{graph}](#create-or-verify-a-graph---post-apigraphgraph)
-- [Rename graph - PATCH /api/graph/{graph}](#rename-graph---patch-apigraphgraph)
-- [Delete a graph - DELETE /api/graph/{graph}](#delete-a-graph---delete-apigraphgraph)
-- [Get query execution plan - GET /api/graph/{graph}/explain](#get-query-execution-plan---get-apigraphgraphexplain)
-- [Profile query execution - GET /api/graph/{graph}/profile](#profile-query-execution---get-apigraphgraphprofile)
-- [Get graph information - GET /api/graph/{graph}/info](#get-graph-information---get-apigraphgraphinfo)
-- [Get graph element counts - GET /api/graph/{graph}/count](#get-graph-element-counts---get-apigraphgraphcount)
-- [Export graph data - GET /api/graph/{graph}/export](#export-graph-data---get-apigraphgraphexport)
-- [Duplicate a graph - PATCH /api/graph/{graph}/duplicate](#duplicate-a-graph---patch-apigraphgraphduplicate)
-- [Get node information - GET /api/graph/{graph}/{node}](#get-node-information---get-apigraphgraphnode)
-- [Delete node or relationship - DELETE /api/graph/{graph}/{node}](#delete-node-or-relationship---delete-apigraphgraphnode)
-- [Add node label - POST /api/graph/{graph}/{node}/label](#add-node-label---post-apigraphgraphnodelabel)
-- [Remove node label - DELETE /api/graph/{graph}/{node}/label](#remove-node-label---delete-apigraphgraphnodelabel)
-- [Set node/relationship property - POST /api/graph/{graph}/{node}/{key}](#set-noderelationship-property---post-apigraphgraphnodekey)
-- [Remove node/relationship property - DELETE /api/graph/{graph}/{node}/{key}](#remove-noderelationship-property---delete-apigraphgraphnodekey)
-
-### Configuration Management
-- [Get all configuration values - GET /api/graph/config](#get-all-configuration-values---get-apigraphconfig)
-- [Get specific configuration value - GET /api/graph/config/{config}](#get-specific-configuration-value---get-apigraphconfigconfig)
-- [Set configuration value - POST /api/graph/config/{config}](#set-configuration-value---post-apigraphconfigconfig)
-
-<!-- ### Schema Management
-- [List all schemas - GET /api/schema](#list-all-schemas---get-apischema)
-- [Get schema information - GET /api/schema/{schema}](#get-schema-information---get-apischemaschema)
-- [Create new schema - POST /api/schema/{schema}](#create-new-schema---post-apischemaschema)
-- [Rename schema - PATCH /api/schema/{schema}](#rename-schema---patch-apischemaschema)
-- [Delete schema - DELETE /api/schema/{schema}](#delete-schema---delete-apischemaschema)
-- [Get schema element counts - GET /api/schema/{schema}/count](#get-schema-element-counts---get-apischemaschemacount)
-- [Duplicate schema - PATCH /api/schema/{schema}/duplicate](#duplicate-schema---patch-apischemaschemaduplicate)
-- [Create node or relationship in schema - POST /api/schema/{schema}/new](#create-node-or-relationship-in-schema---post-apischemaschemanew)
-- [Create node in schema - POST /api/schema/{schema}/nodes](#create-node-in-schema---post-apischemaschemanodes)
-- [Create relationship in schema - POST /api/schema/{schema}/relationships](#create-relationship-in-schema---post-apischemaschemarelationships)
-- [Delete node from schema - DELETE /api/schema/{schema}/{nodeId}](#delete-node-from-schema---delete-apischemaschemanodeid)
-- [Delete relationship from schema - DELETE /api/schema/{schema}/{relationshipId}](#delete-relationship-from-schema---delete-apischemaschemarelationshipid)
-- [Add label to node - POST /api/schema/{schema}/{node}/label](#add-label-to-node---post-apischemaschemanodelabel)
-- [Remove label from node - DELETE /api/schema/{schema}/{node}/label](#remove-label-from-node---delete-apischemaschemanodelabel)
-- [Add/Update attribute to node - PATCH /api/schema/{schema}/{nodeId}/{key}](#addupdate-attribute-to-node---patch-apischemaschemanodeidkey)
-- [Remove attribute from node - DELETE /api/schema/{schema}/{nodeId}/{key}](#remove-attribute-from-node---delete-apischemaschemanodeidkey)
-- [Add/Update attribute to relationship - PATCH /api/schema/{schema}/{relationshipId}/{key}](#addupdate-attribute-to-relationship---patch-apischemaschemarelationshipidkey)
-- [Remove attribute from relationship - DELETE /api/schema/{schema}/{relationshipId}/{key}](#remove-attribute-from-relationship---delete-apischemaschemarelationshipidkey) -->
-
-### User Management
-- [List all users - GET /api/user](#list-all-users---get-apiuser)
-- [Create new user - POST /api/user](#create-new-user---post-apiuser)
-- [Delete multiple users - DELETE /api/user](#delete-multiple-users---delete-apiuser)
-- [Update user role - PATCH /api/user/{user}](#update-user-role---patch-apiuseruser)
-
----
 
 ## Authentication
 

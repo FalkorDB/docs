@@ -36,7 +36,7 @@ RETURN flex.text.capitalize('hello world') AS result
 ```
 
 **Output:**
-```
+```text
 result
 -------------
 Hello world

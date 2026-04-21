@@ -38,7 +38,7 @@ RETURN flex.text.levenshtein('kitten', 'sitting') AS distance
 ```
 
 **Output:**
-```
+```text
 distance
 --------
 3
