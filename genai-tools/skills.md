@@ -1,7 +1,7 @@
 ---
 title: "FalkorDB Skills"
 parent: "GenAI Tools"
-nav_order: 7
+nav_order: 8
 description: "Practical FalkorDB guidance packaged as an Agent Skill. Give your AI coding assistant deep knowledge of FalkorDB -- Cypher queries, user-defined functions, Docker operations, indexing, and more."
 ---
 
