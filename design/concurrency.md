@@ -4,11 +4,6 @@ description: >
     How FalkorDB handles atomicity within queries and concurrency across multiple queries, including isolation guarantees and write serialization.
 parent: "The FalkorDB Design"
 nav_order: 5
-redirect_from:
-  - /design/atomicity.html
-  - /design/atomicity
-  - /design/concurrency.html
-  - /design/concurrency
 ---
 
 # Atomicity and Concurrency
