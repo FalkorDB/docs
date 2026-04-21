@@ -338,7 +338,7 @@ register_function(
 - 🔗 [AG2 GitHub Repository](https://github.com/ag2ai/ag2)
 - 📓 [AG2 GitHub Examples](https://github.com/ag2ai/ag2/tree/main/notebook)
 - 📓 [AG2 GraphRAG with FalkorDB Notebook](https://docs.ag2.ai/latest/docs/use-cases/notebooks/notebooks/agentchat_graph_rag_falkordb/)
-- 🔗 [FalkorDB GraphRAG-SDK](https://docs.falkordb.com/graphrag-sdk.html)
+- 🔗 [FalkorDB GraphRAG-SDK](/genai-tools/graphrag-sdk)
 - 📝 [Blog: FalkorDB-AG2.ai Integration for Multi-Agent Systems](https://www.falkordb.com/news-updates/ag2-integration-multi-agent-systems/)
 - 📝 [Blog: Structured Knowledge with FalkorDB Graph RAG](https://docs.ag2.ai/latest/docs/blog/2024/12/06/FalkorDB-Structured/)
 - 📝 [Blog: Knowledgeable Agents with FalkorDB Graph RAG](https://dev.to/ag2ai/knowledgeable-agents-with-falkordb-graph-rag-9d)

@@ -17,15 +17,15 @@ FalkorDB provides multiple types of indexes to optimize query performance and en
 
 FalkorDB supports the following index types:
 
-### [Range Index](./range-index)
+### [Range Index](./range-index.md)
 
 Range indexes support single-property indexes for node labels and relationship types. String, numeric, and geospatial data types can be indexed. These indexes automatically optimize queries with filters on indexed properties.
 
-### [Full-text Index](./fulltext-index)
+### [Full-text Index](./fulltext-index.md)
 
 Full-text indexes leverage RediSearch capabilities to provide powerful text search functionality. They support features like stemming, stopwords, phonetic search, and scoring based on TF-IDF.
 
-### [Vector Index](./vector-index)
+### [Vector Index](./vector-index.md)
 
 Vector indexes enable similarity search on vector embeddings. These indexes are essential for AI and machine learning applications, supporting operations like nearest neighbor search with configurable similarity functions (euclidean or cosine).
 

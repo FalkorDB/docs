@@ -50,7 +50,7 @@ RETURN flex.date.truncate(dt, 'day') AS truncated
 ```
 
 **Output:**
-```
+```text
 truncated
 --------------------------
 2024-03-15T00:00:00.000Z
@@ -63,7 +63,7 @@ RETURN flex.date.truncate(dt, 'month') AS truncated
 ```
 
 **Output:**
-```
+```text
 truncated
 --------------------------
 2024-03-01T00:00:00.000Z

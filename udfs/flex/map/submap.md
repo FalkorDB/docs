@@ -38,7 +38,7 @@ RETURN flex.map.submap(user, ['name', 'email']) AS contact
 ```
 
 **Output:**
-```
+```text
 contact
 ---------------------------------
 {name: 'Alice', email: 'alice@example.com'}
@@ -64,7 +64,7 @@ RETURN flex.map.submap(map, ['a', 'c', 'd']) AS result
 ```
 
 **Output:**
-```
+```text
 result
 ------
 {a: 1}

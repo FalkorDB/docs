@@ -16,46 +16,52 @@ FalkorDB configuration parameters are detailed [here](/configuration).
 
 Note: As detailed in the link above, not all FalkorDB configuration parameters can be set at run-time.
 
+Multiple parameters can be set in a single command:
+
+```sh
+GRAPH.CONFIG SET key1 val1 key2 val2 ...
+```
+
 {% capture shell_0 %}
-graph.config get TIMEOUT
-graph.config set TIMEOUT 10000
-graph.config get TIMEOUT
+graph.config get TIMEOUT_DEFAULT
+graph.config set TIMEOUT_DEFAULT 10000
+graph.config get TIMEOUT_DEFAULT
 # Output:
-# 1) "TIMEOUT"
+# 1) "TIMEOUT_DEFAULT"
 # 2) (integer) 0
 # OK
-# 1) "TIMEOUT"
+# 1) "TIMEOUT_DEFAULT"
 # 2) (integer) 10000
 {% endcapture %}
 
 {% capture python_0 %}
 from falkordb import FalkorDB
 client = FalkorDB()
-print(client.get_config('TIMEOUT'))
-client.set_config('TIMEOUT', 10000)
-print(client.get_config('TIMEOUT'))
+print(client.get_config('TIMEOUT_DEFAULT'))
+client.set_config('TIMEOUT_DEFAULT', 10000)
+print(client.get_config('TIMEOUT_DEFAULT'))
 {% endcapture %}
 
 {% capture javascript_0 %}
 import { FalkorDB } from 'falkordb';
 const client = await FalkorDB.connect();
-console.log(await client.getConfig('TIMEOUT'));
-await client.setConfig('TIMEOUT', 10000);
-console.log(await client.getConfig('TIMEOUT'));
+console.log(await client.getConfig('TIMEOUT_DEFAULT'));
+await client.setConfig('TIMEOUT_DEFAULT', 10000);
+console.log(await client.getConfig('TIMEOUT_DEFAULT'));
 {% endcapture %}
 
 {% capture java_0 %}
 FalkorDB client = new FalkorDB();
-System.out.println(client.getConfig("TIMEOUT"));
-client.setConfig("TIMEOUT", 10000);
-System.out.println(client.getConfig("TIMEOUT"));
+System.out.println(client.getConfig("TIMEOUT_DEFAULT"));
+client.setConfig("TIMEOUT_DEFAULT", 10000);
+System.out.println(client.getConfig("TIMEOUT_DEFAULT"));
 {% endcapture %}
 
 {% capture rust_0 %}
 let client = FalkorDB::connect_default();
-println!("{:?}", client.get_config("TIMEOUT")?);
-client.set_config("TIMEOUT", 10000)?;
-println!("{:?}", client.get_config("TIMEOUT")?);
+println!("{:?}", client.get_config("TIMEOUT_DEFAULT")?);
+client.set_config("TIMEOUT_DEFAULT", 10000)?;
+println!("{:?}", client.get_config("TIMEOUT_DEFAULT")?);
 {% endcapture %}
 
 {% include code_tabs.html id="config_set_tabs" shell=shell_0 python=python_0 javascript=javascript_0 java=java_0 rust=rust_0 %}

@@ -97,7 +97,7 @@ When adding code examples:
 
 ## Project Structure
 
-```
+```text
 docs/
 ├── algorithms/          # Graph algorithms documentation
 ├── commands/            # Command reference

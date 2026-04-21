@@ -155,11 +155,11 @@ Each is emitted as a 2-array:
 2) column name (string)
 ```
 
-The first element is the [ColumnType enum](https://github.com/FalkorDB/FalkorDB/blob/master/src/resultset/formatters/resultset_formatter.h#L14-L19), which as of RedisGraph v2.1.0 will always be `COLUMN_SCALAR`. This element is retained for backwards compatibility, and may be ignored by the client unless RedisGraph versions older than v2.1.0 must be supported.
+The first element is the [ColumnType enum](https://github.com/FalkorDB/FalkorDB/blob/master/src/resultset/formatters/resultset_formatter.h#L14-L19), which as of FalkorDB v2.1.0 will always be `COLUMN_SCALAR`. This element is retained for backwards compatibility, and may be ignored by the client unless FalkorDB versions older than v2.1.0 must be supported.
 
 ### Reading result rows
 
-The entity representations in this section will closely resemble those found in [Result Set Graph Entities](result-structure#graph-entities).
+The entity representations in this section will closely resemble those found in [Result Set Graph Entities](result-structure.md#graph-entities).
 
 Our query produced one row of results with 3 columns (as described by the header):
 
@@ -189,7 +189,7 @@ It is the client's responsibility to store the [ValueType enum](https://github.c
 The `ValueType` for the first entry is `VALUE_NODE`. The node representation contains 3 top-level elements:
 
 1. The node's internal ID.
-2. An array of all label IDs associated with the node (currently, each node can have either 0 or 1 labels, though this restriction may be lifted in the future).
+2. An array of all label IDs associated with the node (nodes can have zero or more labels).
 3. An array of all properties the node contains. Properties are represented as 3-arrays - [property key ID, `ValueType`, value].
 
 ```sh
@@ -232,11 +232,11 @@ The final top-level member of the GRAPH.QUERY reply is the execution statistics.
 The statistics always include query execution time, while any combination of the other elements may be included depending on how the graph was modified.
 
 1. "Labels added: (integer)"
-2. "Labels removed: (integer)"    (since RedisGraph 2.10)
+2. "Labels removed: (integer)"
 3. "Nodes created: (integer)"
 4. "Nodes deleted: (integer)"
 5. "Properties set: (integer)"
-6. "Properties removed: (integer)"    (since RedisGraph 2.10)
+6. "Properties removed: (integer)"
 7. "Relationships created: (integer)"
 8. "Relationships deleted: (integer)"
 9. "Indices created: (integer)"

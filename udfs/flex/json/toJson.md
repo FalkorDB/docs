@@ -37,7 +37,7 @@ RETURN flex.json.toJson(user) AS json
 ```
 
 **Output:**
-```
+```text
 json
 ---------------------------------------
 '{"name":"Alice","age":30,"active":true}'
@@ -50,7 +50,7 @@ RETURN flex.json.toJson(numbers) AS json
 ```
 
 **Output:**
-```
+```text
 json
 -----------
 '[1,2,3,4,5]'

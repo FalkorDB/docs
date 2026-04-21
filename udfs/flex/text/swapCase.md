@@ -36,7 +36,7 @@ RETURN flex.text.swapCase('Hello World') AS result
 ```
 
 **Output:**
-```
+```text
 result
 -------------
 hELLO wORLD
@@ -48,7 +48,7 @@ RETURN flex.text.swapCase('aBc123XyZ') AS result
 ```
 
 **Output:**
-```
+```text
 result
 ----------
 AbC123xYz

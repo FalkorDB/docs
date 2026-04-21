@@ -1,4 +1,6 @@
 ACL
+AGPLv
+AGPLv3
 AOF
 AST
 Aldis
@@ -32,6 +34,8 @@ MariaDB
 MySQL
 SQLServer
 DateTime
+DDL
+ddl
 DELUSER
 distro
 Ducati
@@ -39,6 +43,7 @@ Dropzone
 Embedder
 FOF
 FOREACH
+foreach
 Falkor
 FalkorDB
 FalkorDB's
@@ -220,6 +225,7 @@ jinja
 jl
 jpbourbon
 keyspace
+labelPropagation
 lTrim
 labelsList
 len
@@ -796,3 +802,27 @@ pyg
 NeighborLoader
 GraphSAGE
 
+QueryWeaver
+QueryWeaver's
+Text2SQL
+Swagger
+Cohere
+Ollama
+
+TOC
+toc
+CodeGraph
+cgraph
+LiteLLM
+Uvicorn
+pipx
+FastAPI
+Vite
+subgraph
+codebases
+codegraph
+frontend
+ObjectPool
+QuickJS
+ACLs
+filesystem

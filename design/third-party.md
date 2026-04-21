@@ -49,13 +49,13 @@ Below is a list of these libraries along with their respective licenses.
 - **License**: [Apache License 2.0](https://github.com/RoaringBitmap/CRoaring?tab=License-1-ov-file#readme)
 
 ### 11. RedisGraph
-- **License**: [RSALv2](https://redis.io/legal/rsalv2-agreement/) or [SSPLv1](https://redis.io/legal/server-side-public-license-sspl/)
+- **License**: [RSALv2](https://redis.io/legal/rsalv2-agreement/) or [SSPLv1](https://redis.io/legal/server-side-public-license-sspl/) or [AGPLv3](https://www.gnu.org/licenses/agpl-3.0.html)
 
 ### 12. Redis
-- **License**: [RSALv2](https://redis.io/legal/rsalv2-agreement/) or [SSPLv1](https://redis.io/legal/server-side-public-license-sspl/)
+- **License**: [RSALv2](https://redis.io/legal/rsalv2-agreement/) or [SSPLv1](https://redis.io/legal/server-side-public-license-sspl/) or [AGPLv3](https://www.gnu.org/licenses/agpl-3.0.html)
 
 ### 13. RediSearch
-- **License**: [RSALv2](https://redis.io/legal/rsalv2-agreement/) or [SSPLv1](https://redis.io/legal/server-side-public-license-sspl/)
+- **License**: [RSALv2](https://redis.io/legal/rsalv2-agreement/) or [SSPLv1](https://redis.io/legal/server-side-public-license-sspl/) or [AGPLv3](https://www.gnu.org/licenses/agpl-3.0.html)
 
 ---
 
