@@ -73,7 +73,7 @@ redis-cli ACL SETUSER bob   on '>bobpass'   '~bob:*' '+@read' '+GRAPH.QUERY' '+G
 
 > **Important:** `ACL SETUSER` only updates the in-memory user table. You must run `ACL SAVE` to write the changes to the ACL file. If `aclfile` is not configured, `ACL SAVE` returns a clear error:
 >
-> ```
+> ```text
 > (error) ERR This Redis instance is not configured to use an ACL file. You may want to
 > specify users via the ACL SETUSER command and then issue a CONFIG REWRITE (assuming you
 > have a Redis configuration file set) in order to store users in the Redis configuration.
