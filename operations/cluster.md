@@ -11,38 +11,51 @@ Setting up a FalkorDB cluster enables you to distribute your data across multipl
 
 ## Cluster Architecture Overview
 
-A FalkorDB cluster shards the keyspace across multiple master nodes using Redis Cluster's hash-slot mechanism (16,384 slots distributed across the masters). Each master can have one or more replicas that asynchronously copy its data, providing failover if the master becomes unavailable. Clients connect to any node and are transparently redirected to the master that owns the slot for the requested graph key.
+A FalkorDB cluster shards the keyspace across multiple master nodes using Redis Cluster's hash-slot mechanism (16,384 slots distributed across the masters). Each graph is a single Redis key, so it lives entirely on the shard whose slot range covers the hash of its name — different graphs typically land on different shards, and each shard ends up hosting many graphs. A cluster-aware client computes the slot for the target graph and routes the command directly to the master that owns it (or follows a `MOVED` redirect if it guesses wrong). Each master can have one or more replicas that asynchronously copy its data for failover and read scaling.
 
 ```mermaid
 flowchart TB
-    Client(["Client / Application"])
+    Client(["Cluster-aware client<br/>(routes by graph name → slot)"])
 
-    subgraph Cluster["FalkorDB Cluster (16,384 hash slots)"]
+    subgraph Cluster["FalkorDB Cluster — 16,384 hash slots, gossiping masters"]
         direction LR
-        subgraph S1["Shard 1<br/>slots 0–5460"]
+
+        subgraph S1["Shard 1 — slots 0–5460"]
+            direction TB
             M1["Master<br/>node1:6379"]
+            G1[("Graphs on shard 1<br/>• social<br/>• fraud<br/>• catalog<br/>• …")]
             R1["Replica<br/>node4:6382"]
+            M1 --- G1
             M1 -. "async replication" .-> R1
         end
-        subgraph S2["Shard 2<br/>slots 5461–10922"]
+
+        subgraph S2["Shard 2 — slots 5461–10922"]
+            direction TB
             M2["Master<br/>node2:6380"]
+            G2[("Graphs on shard 2<br/>• movies<br/>• recommendations<br/>• iot<br/>• …")]
             R2["Replica<br/>node5:6383"]
+            M2 --- G2
             M2 -. "async replication" .-> R2
         end
-        subgraph S3["Shard 3<br/>slots 10923–16383"]
+
+        subgraph S3["Shard 3 — slots 10923–16383"]
+            direction TB
             M3["Master<br/>node3:6381"]
+            G3[("Graphs on shard 3<br/>• knowledge<br/>• supply_chain<br/>• logs<br/>• …")]
             R3["Replica<br/>node6:6384"]
+            M3 --- G3
             M3 -. "async replication" .-> R3
         end
-        M1 <-- "gossip" --> M2
-        M2 <-- "gossip" --> M3
-        M1 <-- "gossip" --> M3
     end
 
-    Client -- "GRAPH.QUERY mygraph ..." --> M2
+    Client == "GRAPH.QUERY social …" ==> M1
+    Client == "GRAPH.QUERY movies …" ==> M2
+    Client == "GRAPH.QUERY knowledge …" ==> M3
 ```
 
-The diagram shows the deployment built in this guide: three master shards with one replica each, gossiping cluster state with one another while clients are routed to the master that owns the slot for the queried graph.
+The diagram shows the deployment built in this guide: three master shards laid out side by side, each owning a slice of the slot range and hosting many graph keys. The client sends each query to the shard that owns the graph being queried — `social` lives on shard 1, `movies` on shard 2, `knowledge` on shard 3 — while every master also asynchronously replicates its data to one replica for failover and read scaling.
+
+> **Note:** A single graph is *not* split across shards — all of its nodes and relationships live on one master. To co-locate two graphs on the same shard (for example, to use them in the same `MULTI`/`EXEC` block), use Redis [hash tags](https://redis.io/docs/latest/operate/oss_and_stack/reference/cluster-spec/#hash-tags) in the graph names, e.g. `{tenant42}:users` and `{tenant42}:orders`.
 
 ## Prerequisites
 
