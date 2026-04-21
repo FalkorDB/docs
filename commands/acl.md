@@ -14,6 +14,8 @@ This command is crucial for maintaining secure access to your FalkorDB instances
 
 Usage: `ACL [SUBCOMMAND] [arg1] [arg2] ...`
 
+> **Persisting users:** `ACL SETUSER` only updates the in-memory user table. To make users survive a restart, configure an ACL file and run `ACL SAVE`. See [ACL Persistence on Docker](/operations/durability/acl-persistence) for a complete guide.
+
 ## Subcommands
 
 ### ACL HELP
