@@ -114,18 +114,19 @@ Usage: `ACL LIST`
 3) "guest"
 ```
 
-### Key permissions
+### Graph permissions
 
-In addition to the basic `~<pattern>` rule, ACL supports fine-grained per-key
-permissions that restrict how a command is allowed to touch a matching key.
-Key permission rules take the form `%(<permission>)~<pattern>`, where
+In addition to the basic `~<pattern>` rule, ACL supports fine-grained
+permissions that restrict how a command is allowed to touch a matching graph.
+Graph permission rules take the form `%(<permission>)~<pattern>`, where
 `<permission>` is one or more of the following characters:
 
-* `W` (Write): The data stored within the key may be updated or deleted.
-* `R` (Read): User-supplied data from the key is processed, copied or returned.
-  This does not include metadata such as size information (for example
-  `STRLEN`), type information (for example `TYPE`), or whether a value exists
-  within a collection (for example `SISMEMBER`).
+* `W` (Write): Data stored within the graph may be updated or deleted (for
+  example by `GRAPH.QUERY` running a write Cypher clause, or `GRAPH.DELETE`).
+* `R` (Read): Data from the graph is returned to the client (for example by
+  `GRAPH.RO_QUERY`, or by `GRAPH.QUERY` running a read-only Cypher clause).
+  This does not include graph-level metadata such as the list of existing
+  graphs returned by `GRAPH.LIST`.
 
 Permissions can be composed by specifying multiple characters. `%RW~<pattern>`
 is full access and is equivalent to plain `~<pattern>`.
@@ -133,28 +134,29 @@ is full access and is equivalent to plain `~<pattern>`.
 #### Example
 
 Consider a user with the rules `+@all ~app1:* (+@read ~app2:*)`. This grants
-full access on `app1:*` and read-only access on `app2:*`. However, commands
-such as `COPY` read from a source key and write to a destination key, so a
-request to copy `app2:user` into `app1:user` would be rejected because neither
-the root permission nor the selector fully matches the command. Using key
-permissions, the rule set `+@all ~app1:* %R~app2:*` handles this case: the
-first pattern matches the destination key with write access and the second
-pattern matches the source key with read access.
+full access on graphs matching `app1:*` and a separate read-only selector for
+graphs matching `app2:*`. However, `GRAPH.COPY` reads from a source graph and
+writes to a destination graph, so a request to copy `app2:users` into
+`app1:users` would be rejected because neither the root permission nor the
+selector matches both graphs at once. Using graph permissions, the rule set
+`+@all ~app1:* %R~app2:*` handles this case: the first pattern matches the
+destination graph with write access and the second pattern matches the source
+graph with read access.
 
 #### Notes
 
-* Whether a command requires read or write permission on a key is derived from
-  the command's key specifications. Insert, update, and delete flags map to
-  the write permission; the access flag maps to the read permission. Commands
-  with no logical operation flags (for example `EXISTS`) require either read
-  or write permission on the key to execute.
-* Side channels to user data are not considered when evaluating read
-  permissions. For example, `LPUSH key1 data` modifies `key1` but only returns
-  metadata (the new list size), so it requires only write permission on
-  `key1`. `LPOP key2` modifies `key2` and also returns data from it (the
-  left-most item), so it requires both read and write permission on `key2`.
-  If an application needs to ensure no data is accessed from a key, including
-  via side channels, do not grant any access to the key.
+* Whether a command requires read or write permission on a graph is derived
+  from the command's key specifications. Insert, update, and delete flags map
+  to the write permission; the access flag maps to the read permission.
+  Commands that operate on a graph without a defined logical operation flag
+  still require either read or write permission on the graph to execute.
+* Side channels to graph data are not considered when evaluating read
+  permissions. A command that mutates a graph but only returns metadata about
+  the mutation (for example, the count of nodes affected) requires only write
+  permission, while a command that mutates a graph and also returns data from
+  it requires both read and write permission. If an application must ensure
+  that no data is read from a graph, including via side channels, do not
+  grant any access to that graph.
 
 ### ACL LOG
 
