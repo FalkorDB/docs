@@ -4,6 +4,8 @@ nav_order: 1
 description: "Configure persistent data storage for FalkorDB in Docker using volumes to ensure your graph data remains intact across container restarts and system reboots."
 parent: "Durability"
 grand_parent: "Operations"
+redirect_from:
+  - /operations/persistence
 ---
 
 # Configuring FalkorDB Docker for Persistence

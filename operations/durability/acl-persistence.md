@@ -4,6 +4,8 @@ nav_order: 2
 description: "Run FalkorDB in Docker with persistent Access Control List (ACL) users by mounting an external ACL file so users, passwords, and permissions survive container restarts and recreations."
 parent: "Durability"
 grand_parent: "Operations"
+redirect_from:
+  - /operations/acl-persistence
 ---
 
 # Persisting ACL Users in FalkorDB on Docker
