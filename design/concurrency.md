@@ -10,6 +10,39 @@ nav_order: 5
 
 This page describes how FalkorDB handles atomicity within individual queries and concurrency when multiple clients issue queries simultaneously.
 
+## Concurrency Model at a Glance
+
+FalkorDB uses a per-graph reader-writer model: many read queries can run in parallel against the same graph, while write queries are serialized so that only one write executes at a time on a given graph. Readers always observe a consistent snapshot of the graph as it existed when the read began — they never see partial state from an in-flight write.
+
+```mermaid
+flowchart LR
+    subgraph Clients["Concurrent clients"]
+        C1(["Reader A"])
+        C2(["Reader B"])
+        C3(["Reader C"])
+        W1(["Writer X"])
+        W2(["Writer Y"])
+    end
+
+    subgraph Engine["FalkorDB engine (per graph)"]
+        direction TB
+        TP["Thread pool<br/>(THREAD_COUNT)"]
+        WQ["Write queue<br/>(serialized, FIFO)"]
+        G[("Graph")]
+
+        TP -- "parallel reads<br/>(snapshot view)" --> G
+        WQ -- "one writer at a time<br/>(exclusive)" --> G
+    end
+
+    C1 --> TP
+    C2 --> TP
+    C3 --> TP
+    W1 --> WQ
+    W2 --> WQ
+```
+
+In the diagram above, readers A, B and C execute concurrently on threads from the shared pool and observe the graph state as it was when their query started. Writers X and Y are queued and executed one after the other, so concurrent writes to the same graph never interleave.
+
 ## Single Query Atomicity
 
 Every query that modifies the graph — using any combination of `CREATE`, `SET`, `DELETE`, or `MERGE` — is **atomic**. The entire query either succeeds completely or fails without applying any partial changes. There is no scenario where a failed query leaves the graph in an intermediate state.
