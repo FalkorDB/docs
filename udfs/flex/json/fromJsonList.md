@@ -37,7 +37,7 @@ RETURN flex.json.fromJsonList(json) AS numbers
 ```
 
 **Output:**
-```
+```text
 numbers
 -----------
 [1, 2, 3, 4, 5]
@@ -67,7 +67,7 @@ RETURN flex.json.fromJsonList(badJson) AS result
 ```
 
 **Output:**
-```
+```text
 result
 ------
 []

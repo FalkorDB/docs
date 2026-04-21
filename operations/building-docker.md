@@ -30,7 +30,7 @@ If manually installing packages, please ensure all commands are run via sudo, or
 
 In addition to the above-mentioned requirements, it is assumed that epel repositories have been enabled.
 
-```
+```bash
 yum install -q -y ca-certificates
 yum install -q -y curl wget unzip
 /usr/bin/python3 -m pip install --disable-pip-version-check wheel virtualenv
@@ -64,7 +64,7 @@ yum install -q -y git
 
 ### Ubuntu Bionic (18.04)
 
-```
+```bash
 apt-get -qq update -y
 apt-get -qq install -y ca-certificates
 apt-get -qq install -y curl wget unzip
@@ -98,7 +98,7 @@ apt-get -qq install -y git
 
 ### Debian Buster (10)
 
-```
+```bash
 apt-get -qq update -y
 apt-get -qq install -y ca-certificates
 apt-get -qq install -y curl wget unzip
@@ -130,7 +130,7 @@ apt-get -qq install -y git
 
 ### Alpine 3
 
-```
+```bash
 apk add bash busybox python3
 apk add -q ca-certificates
 apk add -q curl wget unzip

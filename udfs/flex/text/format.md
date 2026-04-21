@@ -37,7 +37,7 @@ RETURN flex.text.format('Hello {0}, you are {1} years old!', ['Alice', 30]) AS r
 ```
 
 **Output:**
-```
+```text
 result
 --------------------------------
 Hello Alice, you are 30 years old!
@@ -57,7 +57,7 @@ RETURN flex.text.format('/{0}/{1}/{2}', parts) AS path
 ```
 
 **Output:**
-```
+```text
 path
 ------------------------
 /users/profile/12345

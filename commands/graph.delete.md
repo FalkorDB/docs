@@ -12,7 +12,7 @@ Completely removes a graph and all of its entities (nodes and relationships).
 
 ## Syntax
 
-```
+```text
 GRAPH.DELETE graph_name
 ```
 

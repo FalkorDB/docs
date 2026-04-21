@@ -34,5 +34,5 @@ The [Model Context Protocol (MCP)](https://modelcontextprotocol.io) is an open p
 - 💻 [GitHub Repository](https://github.com/FalkorDB/FalkorDB-MCPServer)
 - 🐳 [Docker Hub](https://hub.docker.com/r/falkordb/mcpserver)
 - 📖 [MCP Specification](https://modelcontextprotocol.io/docs)
-- 📚 [FalkorDB Documentation](https://docs.falkordb.com)
+- 📚 [FalkorDB Documentation](/)
 - 🔍 [OpenCypher Query Language](https://opencypher.org/)

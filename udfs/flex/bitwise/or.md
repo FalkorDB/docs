@@ -37,7 +37,7 @@ RETURN flex.bitwise.or(12, 10) AS result
 ```
 
 **Output:**
-```
+```text
 result
 ------
 14
@@ -51,7 +51,7 @@ RETURN flex.bitwise.or(readFlag, writeFlag) AS readWritePermission
 ```
 
 **Output:**
-```
+```text
 readWritePermission
 -------------------
 3

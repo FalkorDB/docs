@@ -39,7 +39,7 @@ RETURN flex.map.merge(map1, map2) AS result
 ```
 
 **Output:**
-```
+```text
 result
 ------------------
 {a: 1, b: 3, c: 4}
@@ -61,7 +61,7 @@ RETURN flex.map.merge(defaults, config) AS finalConfig
 ```
 
 **Output:**
-```
+```text
 finalConfig
 --------------------------------------------------
 {host: 'localhost', port: 7000, password: 'secret'}

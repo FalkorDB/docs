@@ -37,7 +37,7 @@ RETURN flex.coll.frequencies(fruits) AS counts
 ```
 
 **Output:**
-```
+```text
 counts
 ---------------------------------------
 {apple: 3, banana: 2, cherry: 1}

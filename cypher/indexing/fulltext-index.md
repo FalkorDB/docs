@@ -2,16 +2,18 @@
 title: "Full-text Index"
 nav_order: 2
 description: >
-    FalkorDB provides full-text indices through procedure calls.
+    FalkorDB provides full-text indices through procedure calls and DDL syntax.
 parent: "Indexing"
 grand_parent: "Cypher Language"
 ---
 
 # Full-text indexing
 
-FalkorDB leverages the indexing capabilities of [RediSearch](https://redis.io/docs/interact/search-and-query/) to provide full-text indices through procedure calls.
+FalkorDB leverages the indexing capabilities of [RediSearch](https://redis.io/docs/interact/search-and-query/) to provide full-text indices through procedure calls and DDL syntax.
 
 ## Creating a full-text index for a node label
+
+### Using procedure syntax
 
 To construct a full-text index on the `title` property of all nodes with label `Movie`, use the syntax:
 
@@ -119,6 +121,56 @@ graph.query("CALL db.idx.fulltext.createNodeIndex('Movie', {field: 'title', phon
 {% endcapture %}
 
 {% include code_tabs.html id="fulltext_phonetic_tabs" shell=shell_13 python=python_13 javascript=javascript_13 java=java_13 rust=rust_13 %}
+
+### Using DDL syntax
+
+Full-text indexes for node labels can also be created using DDL syntax:
+
+{% capture shell_ddl_create_node %}
+GRAPH.QUERY DEMO_GRAPH "CREATE FULLTEXT INDEX FOR (n:Movie) ON (n.title)"
+{% endcapture %}
+
+{% capture python_ddl_create_node %}
+graph.query("CREATE FULLTEXT INDEX FOR (n:Movie) ON (n.title)")
+{% endcapture %}
+
+{% capture javascript_ddl_create_node %}
+await graph.query("CREATE FULLTEXT INDEX FOR (n:Movie) ON (n.title)");
+{% endcapture %}
+
+{% capture java_ddl_create_node %}
+graph.query("CREATE FULLTEXT INDEX FOR (n:Movie) ON (n.title)");
+{% endcapture %}
+
+{% capture rust_ddl_create_node %}
+graph.query("CREATE FULLTEXT INDEX FOR (n:Movie) ON (n.title)").execute().await?;
+{% endcapture %}
+
+{% include code_tabs.html id="fulltext_ddl_create_node_tabs" shell=shell_ddl_create_node python=python_ddl_create_node javascript=javascript_ddl_create_node java=java_ddl_create_node rust=rust_ddl_create_node %}
+
+An `OPTIONS` block can be provided to specify additional configuration such as language and stopwords:
+
+{% capture shell_ddl_create_node_opts %}
+GRAPH.QUERY DEMO_GRAPH "CREATE FULLTEXT INDEX FOR (n:Movie) ON (n.title) OPTIONS { language: 'German', stopwords: ['a', 'ab'] }"
+{% endcapture %}
+
+{% capture python_ddl_create_node_opts %}
+graph.query("CREATE FULLTEXT INDEX FOR (n:Movie) ON (n.title) OPTIONS { language: 'German', stopwords: ['a', 'ab'] }")
+{% endcapture %}
+
+{% capture javascript_ddl_create_node_opts %}
+await graph.query("CREATE FULLTEXT INDEX FOR (n:Movie) ON (n.title) OPTIONS { language: 'German', stopwords: ['a', 'ab'] }");
+{% endcapture %}
+
+{% capture java_ddl_create_node_opts %}
+graph.query("CREATE FULLTEXT INDEX FOR (n:Movie) ON (n.title) OPTIONS { language: 'German', stopwords: ['a', 'ab'] }");
+{% endcapture %}
+
+{% capture rust_ddl_create_node_opts %}
+graph.query("CREATE FULLTEXT INDEX FOR (n:Movie) ON (n.title) OPTIONS { language: 'German', stopwords: ['a', 'ab'] }").execute().await?;
+{% endcapture %}
+
+{% include code_tabs.html id="fulltext_ddl_create_node_opts_tabs" shell=shell_ddl_create_node_opts python=python_ddl_create_node_opts javascript=javascript_ddl_create_node_opts java=java_ddl_create_node_opts rust=rust_ddl_create_node_opts %}
 
 ## Query Syntax and Features
 
@@ -431,7 +483,9 @@ GRAPH.QUERY DEMO_GRAPH
 
 ## Deleting a full-text index for a node label
 
-For a node label, the full-text index deletion syntax is:
+### Using procedure syntax
+
+For a node label, the procedure syntax drops **all** full-text indexed properties for the given label:
 
 {% capture shell_15 %}
 GRAPH.QUERY DEMO_GRAPH "CALL db.idx.fulltext.drop('Movie')"
@@ -454,6 +508,32 @@ graph.query("CALL db.idx.fulltext.drop('Movie')").execute().await?;
 {% endcapture %}
 
 {% include code_tabs.html id="fulltext_drop_tabs" shell=shell_15 python=python_15 javascript=javascript_15 java=java_15 rust=rust_15 %}
+
+### Using DDL syntax
+
+Full-text indexes for node labels can also be dropped using DDL syntax. Unlike the procedure syntax above, the DDL form drops only the **specific property** index:
+
+{% capture shell_ddl_drop_node %}
+GRAPH.QUERY DEMO_GRAPH "DROP FULLTEXT INDEX FOR (n:Movie) ON (n.title)"
+{% endcapture %}
+
+{% capture python_ddl_drop_node %}
+graph.query("DROP FULLTEXT INDEX FOR (n:Movie) ON (n.title)")
+{% endcapture %}
+
+{% capture javascript_ddl_drop_node %}
+await graph.query("DROP FULLTEXT INDEX FOR (n:Movie) ON (n.title)");
+{% endcapture %}
+
+{% capture java_ddl_drop_node %}
+graph.query("DROP FULLTEXT INDEX FOR (n:Movie) ON (n.title)");
+{% endcapture %}
+
+{% capture rust_ddl_drop_node %}
+graph.query("DROP FULLTEXT INDEX FOR (n:Movie) ON (n.title)").execute().await?;
+{% endcapture %}
+
+{% include code_tabs.html id="fulltext_ddl_drop_node_tabs" shell=shell_ddl_drop_node python=python_ddl_drop_node javascript=javascript_ddl_drop_node java=java_ddl_drop_node rust=rust_ddl_drop_node %}
 
 ## Creating Full-Text indexing for Relation Labels
 To create a full-text index on the name property of all relations with the label Manager and enable phonetic search, use the following syntax:

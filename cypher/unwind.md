@@ -31,7 +31,7 @@ GRAPH.QUERY DEMO_GRAPH "MATCH (p) UNWIND p.array AS y RETURN y"
 ```
 
 **Result:**
-```
+```text
 y
 1
 2

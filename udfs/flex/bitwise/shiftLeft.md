@@ -37,7 +37,7 @@ RETURN flex.bitwise.shiftLeft(5, 2) AS result
 ```
 
 **Output:**
-```
+```text
 result
 ------
 20
@@ -54,7 +54,7 @@ RETURN
 ```
 
 **Output:**
-```
+```text
 times2 | times4 | times8
 -------|--------|-------
 14     | 28     | 56
@@ -67,7 +67,7 @@ RETURN flex.bitwise.shiftLeft(1, 3) AS mask
 ```
 
 **Output:**
-```
+```text
 mask
 ----
 8

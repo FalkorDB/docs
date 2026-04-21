@@ -38,7 +38,7 @@ RETURN flex.coll.union(a, b) AS result
 ```
 
 **Output:**
-```
+```text
 result
 --------------
 [1, 2, 3, 4, 5]

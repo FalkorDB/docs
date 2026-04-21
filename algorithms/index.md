@@ -15,14 +15,6 @@ These algorithms are accessible via the `CALL algo.<name>()` interface and are b
 
 This overview summarizes the available algorithms and links to their individual documentation.
 
-## Table of Contents
-
-- [Pathfinding Algorithms](#pathfinding-algorithms)
-- [Centrality Measures](#centrality-measures)
-- [Community Detection](#community-detection)
-
----
-
 ## Pathfinding Algorithms
 
 - **[BFS](./bfs.md)**  

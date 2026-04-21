@@ -34,6 +34,8 @@ MariaDB
 MySQL
 SQLServer
 DateTime
+DDL
+ddl
 DELUSER
 distro
 Ducati
@@ -223,6 +225,7 @@ jinja
 jl
 jpbourbon
 keyspace
+labelPropagation
 lTrim
 labelsList
 len
@@ -799,3 +802,27 @@ pyg
 NeighborLoader
 GraphSAGE
 
+QueryWeaver
+QueryWeaver's
+Text2SQL
+Swagger
+Cohere
+Ollama
+
+TOC
+toc
+CodeGraph
+cgraph
+LiteLLM
+Uvicorn
+pipx
+FastAPI
+Vite
+subgraph
+codebases
+codegraph
+frontend
+ObjectPool
+QuickJS
+ACLs
+filesystem

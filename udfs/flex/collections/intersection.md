@@ -38,7 +38,7 @@ RETURN flex.coll.intersection(a, b) AS result
 ```
 
 **Output:**
-```
+```text
 result
 -------
 [3, 4]

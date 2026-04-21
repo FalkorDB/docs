@@ -39,7 +39,7 @@ RETURN flex.text.indexOf('hello world', 'world') AS position
 ```
 
 **Output:**
-```
+```text
 position
 --------
 6
@@ -51,7 +51,7 @@ RETURN flex.text.indexOf('hello hello', 'hello', 3) AS position
 ```
 
 **Output:**
-```
+```text
 position
 --------
 6
