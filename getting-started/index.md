@@ -18,9 +18,22 @@ This guide will walk you through setting up FalkorDB, modeling a social network 
 
 ## Prerequisites
 
-1. **FalkorDB Instance**: Set up FalkorDB (on-prem or cloud). 
-   - [Run FalkorDB Docker](https://hub.docker.com/r/falkordb/falkordb/)
-   - [Create a FalkorDB Cloud Instance](https://app.falkordb.cloud/signup)
+1. **FalkorDB Instance**: Set up FalkorDB (on-prem or cloud).
+
+   **Option A — Docker (quickest)**
+
+   ```bash
+   docker run -p 6379:6379 -p 3000:3000 --rm falkordb/falkordb:latest
+   ```
+
+   This starts FalkorDB with no authentication. Open the built-in browser at
+   [http://localhost:3000](http://localhost:3000) to explore your graphs visually.
+   See [Docker & Docker Compose](/operations/docker) for additional options (persistence, auth, production images).
+
+   **Option B — FalkorDB Cloud**
+
+   [Create a free FalkorDB Cloud Instance](https://app.falkordb.cloud/signup) and skip local setup entirely.
+
 2. **Install FalkorDB Client**:
    
 {% capture pypi_0 %}
@@ -103,21 +116,24 @@ You can execute these commands using the FalkorDB Python client or any supported
 
 ### Connect to FalkorDB
 
+The examples below connect to a local FalkorDB instance started with the
+`docker run` command above, which requires no password.
+
 {% capture python_0 %}
 from falkordb import FalkorDB
 
-# Connect to FalkorDB
-client = FalkorDB(host="localhost", port=6379, password="your-password")
+# Connect to FalkorDB (no authentication — default Docker setup)
+client = FalkorDB(host="localhost", port=6379)
 graph = client.select_graph('social')
 {% endcapture %}
 
 {% capture javascript_0 %}
 import { FalkorDB } from 'falkordb';
 
+// Connect to FalkorDB (no authentication — default Docker setup)
 const client = await FalkorDB.connect({
   host: "localhost",
-  port: 6379,
-  password: "your-password"
+  port: 6379
 });
 const graph = client.selectGraph('social');
 {% endcapture %}
@@ -127,6 +143,7 @@ package com.myproject;
 
 import com.falkordb.*;
 
+// Connect to FalkorDB (no authentication — default Docker setup)
 Driver driver = FalkorDB.driver("localhost", 6379);
 Graph graph = driver.graph("social");
 {% endcapture %}
@@ -134,7 +151,7 @@ Graph graph = driver.graph("social");
 {% capture rust_0 %}
 use falkordb::{FalkorClientBuilder, FalkorConnectionInfo};
 
-// Connect to FalkorDB
+// Connect to FalkorDB (no authentication — default Docker setup)
 let connection_info: FalkorConnectionInfo = "falkor://127.0.0.1:6379".try_into()
             .expect("Invalid connection info");
 
@@ -148,6 +165,15 @@ let mut graph = client.select_graph("social");
 {% endcapture %}
 
 {% include code_tabs.html id="connect_tabs" python=python_0 javascript=javascript_0 java=java_0 rust=rust_0 %}
+
+> **Using authentication?** Start FalkorDB with a password:
+> ```bash
+> docker run -p 6379:6379 -p 3000:3000 --rm \
+>   -e REDIS_ARGS="--requirepass yourpassword" \
+>   falkordb/falkordb:latest
+> ```
+> Then pass `password="yourpassword"` (Python/JavaScript) or the equivalent
+> credential option in your client library. See [Docker & Docker Compose](/operations/docker) for details.
 
 ### Execute Cypher Queries
 
