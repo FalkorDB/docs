@@ -10,7 +10,7 @@ The [falkordb-bulk-loader](https://github.com/falkordb/falkordb-bulk-loader) is 
 ## Requirements
 
 - Python 3.10 or later
-- A running FalkorDB instance (see [Get Started](https://docs.falkordb.com))
+- A running FalkorDB instance (see [Get Started](/getting-started))
 
 ## Installation
 
