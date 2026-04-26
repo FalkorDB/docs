@@ -40,11 +40,11 @@ falkordb-bulk-insert SocialGraph \
 
 ## Connecting to FalkorDB
 
-By default the loader connects to `redis://127.0.0.1:6379`. Use `--redis-url` to point it at a different instance:
+By default the loader connects to `redis://127.0.0.1:6379`. Use `--server-url` to point it at a different instance:
 
 ```sh
 falkordb-bulk-insert SocialGraph \
-  --redis-url redis://myhost:6379 \
+  --server-url redis://myhost:6379 \
   -n Person.csv
 ```
 
@@ -52,7 +52,7 @@ falkordb-bulk-insert SocialGraph \
 
 | Flag | Extended flag | Description |
 |:----:|---------------|-------------|
-| `-u` | `--redis-url TEXT` | Server URL (default: `redis://127.0.0.1:6379`) |
+| `-u` | `--server-url TEXT` | Server URL (default: `redis://127.0.0.1:6379`) |
 | `-n` | `--nodes TEXT` | Node CSV file (filename → label) |
 | `-N` | `--nodes-with-label TEXT` | Explicit label followed by node CSV file |
 | `-r` | `--relations TEXT` | Relationship CSV file (filename → type) |
