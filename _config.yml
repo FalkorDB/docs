@@ -4,7 +4,7 @@ tagline: "Graph Database for GraphRAG, Cypher & Knowledge Graphs"
 description: "Official FalkorDB documentation — the high-performance graph database for GraphRAG, Cypher queries, and knowledge graphs powering accurate GenAI applications."
 url: "https://docs.falkordb.com"
 logo: "/images/falkor-logo.png"
-logo_link: "https://www.falkordb.com"
+logo_link: "/"
 favicon_ico: "/images/favicon.ico"
 gtm_tracking: GTM-MBWB627H
 
@@ -16,6 +16,8 @@ search_enabled: true
 color_scheme: falkordb-dark
 
 aux_links:
+  "FalkorDB.com":
+    - "https://www.falkordb.com"
   "Docs Repository":
     - "https://github.com/falkordb/docs"
   "FalkorDB Repository":
