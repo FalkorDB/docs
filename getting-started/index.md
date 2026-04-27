@@ -22,9 +22,9 @@ This guide will walk you through setting up FalkorDB, modeling a social network 
 
    **Option A — Docker (quickest)**
 
-   ```bash
-   docker run -p 6379:6379 -p 3000:3000 -it --rm falkordb/falkordb:latest
-   ```
+    ```bash
+    docker run -p 6379:6379 -p 3000:3000 --rm falkordb/falkordb:latest
+    ```
 
    This starts FalkorDB with no authentication. Open the built-in browser at
    [http://localhost:3000](http://localhost:3000) to explore your graphs visually.
