@@ -46,8 +46,8 @@ FalkorDB runs as a Redis module (RESP and Bolt protocols) and is purpose-built f
 
 ## Integrations
 
-- [LangChain](https://docs.falkordb.com/integration): FalkorDB graph store for LangChain.
-- [LlamaIndex](https://docs.falkordb.com/integration): FalkorDB property graph store for LlamaIndex.
+- [LangChain](https://docs.falkordb.com/genai-tools/langchain): FalkorDB graph store for LangChain.
+- [LlamaIndex](https://docs.falkordb.com/genai-tools/llamaindex): FalkorDB property graph store for LlamaIndex.
 - [Kafka Connect](https://docs.falkordb.com/integration/kafka-connect): Stream data into FalkorDB via Kafka Connect.
 - [Bolt Protocol Support](https://docs.falkordb.com/integration/bolt-support): Connect Neo4j-compatible drivers to FalkorDB.
 - [Apache Jena](https://docs.falkordb.com/integration/jena): RDF/SPARQL integration via Apache Jena.
