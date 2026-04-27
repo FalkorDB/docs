@@ -200,3 +200,79 @@ document.addEventListener("DOMContentLoaded", function () {
   updateActive();
 });
 </script>
+
+<!-- Structured data for AI engines and search (JSON-LD) -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "FalkorDB",
+  "url": "https://www.falkordb.com",
+  "logo": "https://docs.falkordb.com/images/falkor-logo.png",
+  "description": "FalkorDB is a high-performance graph database optimized for GraphRAG and GenAI workloads, using GraphBLAS sparse matrix representation for low-latency, scalable graph operations.",
+  "foundingDate": "2023",
+  "sameAs": [
+    "https://github.com/FalkorDB",
+    "https://github.com/FalkorDB/FalkorDB",
+    "https://x.com/falkordb",
+    "https://www.linkedin.com/company/falkordb",
+    "https://discord.gg/ErBEqN9E"
+  ]
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "FalkorDB",
+  "applicationCategory": "DatabaseApplication",
+  "operatingSystem": "Linux, macOS, Windows (via Docker)",
+  "description": "FalkorDB is a high-performance graph database with OpenCypher support, vector and full-text indexing, and built-in GraphRAG capabilities for GenAI applications.",
+  "url": "https://www.falkordb.com",
+  "downloadUrl": "https://hub.docker.com/r/falkordb/falkordb",
+  "softwareVersion": "latest",
+  "license": "https://github.com/FalkorDB/FalkorDB/blob/master/LICENSE.txt",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "FalkorDB",
+    "url": "https://www.falkordb.com"
+  }
+}
+</script>
+
+{%- comment -%}
+  BreadcrumbList JSON-LD: emitted on inner pages where the URL has at least one path segment.
+  Builds an ordered list from the URL path segments, matching the visual breadcrumbs.
+{%- endcomment -%}
+{%- assign url_path = page.url | remove_first: "/" | remove: ".html" -%}
+{%- if url_path != "" and url_path != "/" -%}
+  {%- assign segments = url_path | split: "/" -%}
+  {%- if segments.size > 0 -%}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "{{ site.url }}/"
+    }{%- assign cumulative = "" -%}{%- assign pos = 1 -%}{%- for seg in segments -%}{%- if seg != "" and seg != "index" -%}{%- assign cumulative = cumulative | append: "/" | append: seg -%}{%- assign pos = pos | plus: 1 -%},
+    {
+      "@type": "ListItem",
+      "position": {{ pos }},
+      "name": "{{ seg | replace: '-', ' ' | replace: '_', ' ' | capitalize }}",
+      "item": "{{ site.url }}{{ cumulative }}"
+    }{%- endif -%}{%- endfor -%}
+  ]
+}
+</script>
+  {%- endif -%}
+{%- endif -%}

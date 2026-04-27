@@ -1,0 +1,70 @@
+# FalkorDB
+
+> FalkorDB is a high-performance graph database optimized for GraphRAG and GenAI workloads. It uses GraphBLAS sparse-matrix representation under the hood to deliver low-latency graph traversals, supports the OpenCypher query language with proprietary extensions, and provides vector, full-text, and range indexing in a single multi-tenant engine.
+
+FalkorDB runs as a Redis module (RESP and Bolt protocols) and is purpose-built for development teams working with complex, interconnected data — structured or unstructured — in real-time or interactive applications. It powers accurate Retrieval-Augmented Generation by combining knowledge graphs with vector similarity search.
+
+## Getting Started
+
+- [Quickstart with Docker](https://docs.falkordb.com/getting-started): Install FalkorDB and run your first query in under five minutes.
+- [Configuration](https://docs.falkordb.com/getting-started/configuration): Server-level and query-level configuration parameters (TIMEOUT_DEFAULT, TIMEOUT_MAX, QUERY_MEM_CAPACITY, etc.).
+- [Client Libraries](https://docs.falkordb.com/getting-started/clients): Official and community drivers for Python, JavaScript/TypeScript, Java, Go, Rust, and more.
+- [FalkorDB Browser](https://docs.falkordb.com/browser): Built-in web UI for visualizing graphs and running queries.
+
+## Cypher Query Language
+
+- [Cypher Reference](https://docs.falkordb.com/cypher): Full OpenCypher language reference with FalkorDB extensions.
+- [MATCH](https://docs.falkordb.com/cypher/match): Pattern matching against the graph.
+- [CREATE](https://docs.falkordb.com/cypher/create): Insert nodes and relationships.
+- [MERGE](https://docs.falkordb.com/cypher/merge): Find or create graph patterns idempotently.
+- [WITH](https://docs.falkordb.com/cypher/with): Pipe results between query parts.
+- [Indexing](https://docs.falkordb.com/cypher/indexing): Range, full-text, and vector indexes.
+- [Vector Indexes](https://docs.falkordb.com/cypher/indexing/vector-index): Vector similarity search inside Cypher.
+- [Full-Text Indexes](https://docs.falkordb.com/cypher/indexing/fulltext-index): Lucene-backed text search.
+- [Functions](https://docs.falkordb.com/cypher/functions): Built-in scalar, aggregating, and path functions.
+- [Procedures](https://docs.falkordb.com/cypher/procedures): Built-in procedures (`db.idx.*`, `algo.*`, etc.).
+
+## Commands
+
+- [GRAPH.QUERY](https://docs.falkordb.com/commands/graph.query): Execute a Cypher query.
+- [GRAPH.RO_QUERY](https://docs.falkordb.com/commands/graph.ro_query): Execute a read-only Cypher query (replica-safe).
+- [GRAPH.PROFILE](https://docs.falkordb.com/commands/graph.profile): Profile a query's execution plan.
+- [GRAPH.EXPLAIN](https://docs.falkordb.com/commands/graph.explain): Show a query's execution plan without running it.
+- [GRAPH.CONFIG SET](https://docs.falkordb.com/commands/graph.config-set): Update server configuration at runtime.
+- [GRAPH.SLOWLOG](https://docs.falkordb.com/commands/graph.slowlog): Inspect queries that exceeded the slow-log threshold.
+
+## Algorithms
+
+- [Graph Algorithms](https://docs.falkordb.com/algorithms): Built-in graph algorithms (PageRank, BFS, shortest paths, community detection).
+
+## GenAI & GraphRAG
+
+- [GenAI Tools Overview](https://docs.falkordb.com/genai-tools): Index of FalkorDB's GenAI ecosystem.
+- [GraphRAG SDK](https://docs.falkordb.com/genai-tools/graphrag-sdk): Build GraphRAG applications with FalkorDB.
+- [MCP Server](https://docs.falkordb.com/genai-tools/mcpserver): Model Context Protocol server for connecting LLMs to FalkorDB.
+- [Code-Graph](https://docs.falkordb.com/genai-tools/code-graph): Convert source code into a queryable knowledge graph.
+
+## Integrations
+
+- [LangChain](https://docs.falkordb.com/integration): FalkorDB graph store for LangChain.
+- [LlamaIndex](https://docs.falkordb.com/integration): FalkorDB property graph store for LlamaIndex.
+- [Kafka Connect](https://docs.falkordb.com/integration/kafka-connect): Stream data into FalkorDB via Kafka Connect.
+- [Bolt Protocol Support](https://docs.falkordb.com/integration/bolt-support): Connect Neo4j-compatible drivers to FalkorDB.
+- [Apache Jena](https://docs.falkordb.com/integration/jena): RDF/SPARQL integration via Apache Jena.
+
+## Operations
+
+- [Operations Guide](https://docs.falkordb.com/operations): Production deployment, monitoring, and tuning.
+- [Durability](https://docs.falkordb.com/operations/durability): Persistence model and durability guarantees.
+- [Persistence (RDB & AOF)](https://docs.falkordb.com/operations/persistence): Snapshot and append-only-file configuration.
+
+## Cloud
+
+- [FalkorDB Cloud](https://docs.falkordb.com/cloud): Managed FalkorDB hosting and quickstart.
+
+## Project
+
+- [GitHub: FalkorDB](https://github.com/FalkorDB/FalkorDB): Source code and issue tracker.
+- [Docker Hub: falkordb/falkordb](https://hub.docker.com/r/falkordb/falkordb): Official Docker images.
+- [Discord Community](https://discord.gg/ErBEqN9E): Community chat and support.
+- [License: SSPLv1](https://github.com/FalkorDB/FalkorDB/blob/master/LICENSE.txt): Server Side Public License v1.
