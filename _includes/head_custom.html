@@ -264,11 +264,11 @@ document.addEventListener("DOMContentLoaded", function () {
       "position": 1,
       "name": "Home",
       "item": "{{ site.url }}/"
-    }{%- assign cumulative = "" -%}{%- assign pos = 1 -%}{%- for seg in segments -%}{%- if seg != "" and seg != "index" -%}{%- assign cumulative = cumulative | append: "/" | append: seg -%}{%- assign pos = pos | plus: 1 -%},
+    }{%- assign cumulative = "" -%}{%- assign pos = 1 -%}{%- assign last_seg = "" -%}{%- for seg in segments -%}{%- if seg != "" and seg != "index" -%}{%- assign last_seg = seg -%}{%- endif -%}{%- endfor -%}{%- for seg in segments -%}{%- if seg != "" and seg != "index" -%}{%- assign cumulative = cumulative | append: "/" | append: seg -%}{%- assign pos = pos | plus: 1 -%}{%- assign seg_words = seg | replace: '_', '-' | split: '-' -%}{%- assign seg_name = "" -%}{%- for w in seg_words -%}{%- assign cap_w = w | capitalize -%}{%- if forloop.first -%}{%- assign seg_name = cap_w -%}{%- else -%}{%- assign seg_name = seg_name | append: " " | append: cap_w -%}{%- endif -%}{%- endfor -%}{%- if seg == last_seg and page.title -%}{%- assign seg_name = page.title -%}{%- endif -%},
     {
       "@type": "ListItem",
       "position": {{ pos }},
-      "name": "{{ seg | replace: '-', ' ' | replace: '_', ' ' | capitalize }}",
+      "name": "{{ seg_name }}",
       "item": "{{ site.url }}{{ cumulative }}"
     }{%- endif -%}{%- endfor -%}
   ]
