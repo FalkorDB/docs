@@ -172,8 +172,10 @@ let mut graph = client.select_graph("social");
 >   -e REDIS_ARGS="--requirepass yourpassword" \
 >   falkordb/falkordb:latest
 > ```
-> Then pass `password="yourpassword"` (Python/JavaScript) or the equivalent
-> credential option in your client library. See [Docker & Docker Compose](/operations/docker) for details.
+> Then pass your password in the client configuration, for example
+> `password="yourpassword"` in Python or `password: 'yourpassword'` in JavaScript,
+> or use the equivalent credential option in your client library. See
+> [Docker & Docker Compose](/operations/docker) for details.
 
 ### Execute Cypher Queries
 
