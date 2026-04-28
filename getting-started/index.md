@@ -18,6 +18,8 @@ This guide will walk you through setting up FalkorDB, modeling a social network 
 
 ## Prerequisites
 
+> **Minimum Redis version:** FalkorDB requires **Redis 8.0.0 or later**. Earlier versions (including the Redis 7.x series) are not supported. If you are self-hosting, make sure to upgrade Redis before installing or upgrading FalkorDB.
+
 1. **FalkorDB Instance**: Set up FalkorDB (on-prem or cloud).
 
    **Option A — Docker (quickest)**

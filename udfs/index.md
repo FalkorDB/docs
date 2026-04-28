@@ -233,6 +233,8 @@ function stringify_path(p) {
 
 ## Global objects
 
+> **Breaking change (v4.16):** The `falkor.traverse()` function has been removed. If your UDF scripts call `falkor.traverse(...)`, migrate them to use `graph.traverse(...)` instead — the API accepts the same arguments. The `graph` object is the new unified interface for all graph-level operations.
+
 ### Graph
 
 UDFs have access to a global `graph` object which represents the current graph executing the UDF.
