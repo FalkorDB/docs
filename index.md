@@ -1,8 +1,8 @@
 ---
 layout: default
-title: Home
 nav_order: 1
-description: "FalkorDB Docs — The graph database for accurate GenAI with GraphRAG at scale"
+nav_exclude: true
+description: "Official FalkorDB documentation — the high-performance graph database for GraphRAG, Cypher queries, and knowledge graphs powering accurate GenAI applications."
 permalink: /
 ---
 
