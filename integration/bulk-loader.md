@@ -1,6 +1,8 @@
 ---
 title: "Bulk Loader"
 description: "Import large graphs from CSV files into FalkorDB using the falkordb-bulk-loader tool"
+parent: "Integration"
+nav_order: 8
 ---
 
 # Bulk Loader
@@ -103,6 +105,16 @@ falkordb-bulk-update SocialGraph \
 ```
 
 > **Note:** `falkordb-bulk-update` commits changes incrementally. Sanitize your CSV inputs beforehand to avoid leaving the graph in a partially-updated state.
+
+## Diagnostics
+
+Both `falkordb-bulk-insert` and `falkordb-bulk-update` install a `SIGUSR1` handler at startup. Sending `SIGUSR1` to a running loader process writes the tracebacks of all Python threads to `stderr`, which is useful for diagnosing hangs or unexpectedly slow loads without attaching a debugger:
+
+```sh
+kill -SIGUSR1 <pid>
+```
+
+This relies on Python's `faulthandler` module and is only available on platforms that support `SIGUSR1` (i.e., not Windows). On unsupported platforms, registration is silently skipped.
 
 ## Further Reading
 
