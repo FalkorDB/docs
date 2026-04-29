@@ -127,7 +127,7 @@ module FalkorDocs
 
       index_path = File.join(site.dest, ".well-known", "markdown-index.txt")
       FileUtils.mkdir_p(File.dirname(index_path))
-      base = (site.config["url"] || "").to_s.sub(%r{/\z}, "")
+      base = (site.config["url"] || "").sub(%r{/\z}, "")
       lines = urls.sort.uniq.map { |u| "#{base}#{u}" }
       File.write(index_path, "#{lines.join("\n")}\n")
     end

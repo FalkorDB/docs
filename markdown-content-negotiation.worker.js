@@ -29,7 +29,7 @@
  * or use it as a Pages Function placed at `functions/_middleware.js`.
  */
 
-const MARKDOWN_ACCEPT = /(?:^|,\s*)(text\/markdown|text\/x-markdown)\b/i;
+const MARKDOWN_ACCEPT = /(?:^|,\s*)(text\/markdown|text\/x-markdown|text\/plain)\b/i;
 
 function markdownPathFor(pathname) {
   if (pathname === "" || pathname === "/") return "/index.md";
