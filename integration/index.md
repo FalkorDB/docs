@@ -21,5 +21,6 @@ Learn how to leverage FalkorDB's flexible APIs and SDKs to build high-performanc
 - [Spring Data FalkorDB](./spring-data-falkordb.md): Learn how to use FalkorDB with Spring Data for JPA-style object-graph mapping.
 - [Snowflake Integration](./snowflake.md): Learn how to run graph database operations directly within your Snowflake environment using the FalkorDB Native App.
 - [PyTorch Geometric](./pyg.md): Train Graph Neural Networks directly on graphs stored in FalkorDB using PyG's remote backend interface.
+- [Bulk Loader](./bulk-loader.md): Import large graphs from CSV files using the falkordb-bulk-loader Python utility.
 
 
