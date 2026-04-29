@@ -1,3 +1,17 @@
+{%- comment -%}
+  When rendered for the AI-readable markdown export
+  (`_plugins/markdown_pages.rb` sets the `markdown_format` variable),
+  emit each code variant as a fenced code block instead of the tabbed
+  HTML widget so the markdown output is clean and self-contained.
+{%- endcomment -%}
+{% if markdown_format -%}
+{% assign codes = "python,javascript,cpp,rust,java,shell" | split: "," -%}
+{% for code_name in codes -%}{% if include[code_name] %}
+```{{ code_name }}
+{{ include[code_name] }}
+```
+{% endif -%}{% endfor -%}
+{% else %}
 <div class="tabs">
   {% assign codes = "python,javascript,cpp,rust,java,shell" | split: "," %}
 
@@ -97,3 +111,4 @@
   </style>
 
 </div>
+{% endif %}

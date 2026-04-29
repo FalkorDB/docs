@@ -45,6 +45,7 @@ exclude:
   - Gemfile.lock
   - node_modules
   - vendor
+  - markdown-content-negotiation.worker.js
 
 # Footer last edited timestamp
 last_edit_timestamp: true
