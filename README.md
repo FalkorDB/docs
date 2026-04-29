@@ -22,6 +22,34 @@ FalkorDB is a low-latency, scalable graph database with OpenCypher support. It p
 - **Operations**: Deployment, clustering, and infrastructure
 - **Integration**: Third-party tool integrations
 
+## AI-Friendly Markdown Versions
+
+Every documentation page is also published as plain markdown so AI tools
+and crawlers can ingest the content without parsing HTML.
+
+- **Per-page `.md` URLs** &mdash; append `.md` to any page URL (or replace
+  the trailing `.html`) to get the markdown source. For example:
+  - `https://docs.falkordb.com/commands/graph.query.html`
+    &rarr; `https://docs.falkordb.com/commands/graph.query.md`
+  - `https://docs.falkordb.com/` &rarr; `https://docs.falkordb.com/index.md`
+- **Manifest** &mdash; a complete list of every markdown URL is published
+  at [`/.well-known/markdown-index.txt`](https://docs.falkordb.com/.well-known/markdown-index.txt).
+- **Clean content** &mdash; the markdown export contains only the page
+  body. Front matter, navigation, footer and other site chrome are
+  stripped, and tabbed code-sample widgets are flattened into ordinary
+  fenced code blocks.
+- **Content negotiation** &mdash; requests with an
+  `Accept: text/markdown` header are answered with the markdown version
+  of the requested page. This is implemented at the CDN edge; see
+  [`markdown-content-negotiation.worker.js`](markdown-content-negotiation.worker.js)
+  for the reference Cloudflare Worker.
+
+The markdown export is produced by the
+[`_plugins/markdown_pages.rb`](_plugins/markdown_pages.rb) Jekyll
+plugin during the GitHub Actions Pages build
+([`.github/workflows/pages.yml`](.github/workflows/pages.yml)). To opt a
+page out, set `markdown_skip: true` in its front matter.
+
 ## Prerequisites
 
 To build and run the documentation locally, you need:

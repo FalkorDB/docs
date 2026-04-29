@@ -1,2 +1,8 @@
 _site/
 *.dic
+.jekyll-cache/
+.jekyll-metadata
+.sass-cache/
+Gemfile.lock
+vendor/
+.bundle/

@@ -828,3 +828,5 @@ ObjectPool
 QuickJS
 ACLs
 filesystem
+CDN
+Cloudflare
