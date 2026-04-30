@@ -1,5 +1,9 @@
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.10.0/styles/atom-one-dark.min.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.10.0/highlight.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/atom-one-dark.min.css"
+  integrity="sha512-Jk4AqjWsdSzSWCSuQTfYRIF84Rq/eV0G2+tu07byYwHcbTGfdmLrHjUSwvzp5HvbiqK4ibmNwdcG49Y5RGYPTg=="
+  crossorigin="anonymous">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"
+  integrity="sha512-EBLzUL8XLl+va/zAsmXwS7Z2B1F9HUHkZwyS/VKwh3S7T/U0nF4BaU29EP/ZSf6zgiIxYAnKLu6bJ8dqpmX5uw=="
+  crossorigin="anonymous"></script>
 <script>hljs.highlightAll();</script>
 
 {% if site.gtm_tracking != nil %}
@@ -200,3 +204,79 @@ document.addEventListener("DOMContentLoaded", function () {
   updateActive();
 });
 </script>
+
+<!-- Structured data for AI engines and search (JSON-LD) -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "FalkorDB",
+  "url": "https://www.falkordb.com",
+  "logo": "{{ '/images/falkor-logo.png' | absolute_url }}",
+  "description": "FalkorDB is a high-performance graph database optimized for GraphRAG and GenAI workloads, using GraphBLAS sparse matrix representation for low-latency, scalable graph operations.",
+  "foundingDate": "2023",
+  "sameAs": [
+    "https://github.com/FalkorDB",
+    "https://github.com/FalkorDB/FalkorDB",
+    "https://x.com/falkordb",
+    "https://www.linkedin.com/company/falkordb",
+    "https://discord.gg/ErBEqN9E"
+  ]
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "FalkorDB",
+  "applicationCategory": "DatabaseApplication",
+  "operatingSystem": "Linux, macOS, Windows (via Docker)",
+  "description": "FalkorDB is a high-performance graph database with OpenCypher support, vector and full-text indexing, and built-in GraphRAG capabilities for GenAI applications.",
+  "url": "https://www.falkordb.com",
+  "downloadUrl": "https://hub.docker.com/r/falkordb/falkordb",
+  "softwareVersion": "latest",
+  "license": "https://github.com/FalkorDB/FalkorDB/blob/master/LICENSE.txt",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "FalkorDB",
+    "url": "https://www.falkordb.com"
+  }
+}
+</script>
+
+{%- comment -%}
+  BreadcrumbList JSON-LD: emitted on inner pages where the URL has at least one path segment.
+  Builds an ordered list from the URL path segments, matching the visual breadcrumbs.
+{%- endcomment -%}
+{%- assign url_path = page.url | remove_first: "/" | remove: ".html" -%}
+{%- if url_path != "" and url_path != "/" -%}
+  {%- assign segments = url_path | split: "/" -%}
+  {%- if segments.size > 0 -%}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": {{ site.url | append: "/" | jsonify }}
+    }{%- assign cumulative = "" -%}{%- assign pos = 1 -%}{%- assign last_seg = "" -%}{%- for seg in segments -%}{%- if seg != "" and seg != "index" -%}{%- assign last_seg = seg -%}{%- endif -%}{%- endfor -%}{%- for seg in segments -%}{%- if seg != "" and seg != "index" -%}{%- assign cumulative = cumulative | append: "/" | append: seg -%}{%- assign pos = pos | plus: 1 -%}{%- assign seg_words = seg | replace: '_', '-' | split: '-' -%}{%- assign seg_name = "" -%}{%- for w in seg_words -%}{%- assign cap_w = w | capitalize -%}{%- if forloop.first -%}{%- assign seg_name = cap_w -%}{%- else -%}{%- assign seg_name = seg_name | append: " " | append: cap_w -%}{%- endif -%}{%- endfor -%}{%- if seg == last_seg and page.title -%}{%- assign seg_name = page.title -%}{%- endif -%},
+    {
+      "@type": "ListItem",
+      "position": {{ pos }},
+      "name": {{ seg_name | jsonify }},
+      "item": {{ site.url | append: cumulative | jsonify }}
+    }{%- endif -%}{%- endfor -%}
+  ]
+}
+</script>
+  {%- endif -%}
+{%- endif -%}

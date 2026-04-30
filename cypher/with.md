@@ -48,3 +48,4 @@ This query:
 - Variables not included in `WITH` are not available in subsequent parts
 - You can rename variables using `AS` in the `WITH` clause
 - Aggregations in `WITH` cause implicit grouping (like `RETURN`)
+- `WHERE` filters placed after a `WITH` boundary are evaluated **after** any write operations that preceded the `WITH`. This means the filter sees the post-write graph state — for example, it will not see edges that were deleted earlier in the same query.

@@ -6,6 +6,25 @@ description: >
 has_children: true
 ---
 
+# Comments
+
+FalkorDB Cypher supports two comment styles that can be placed anywhere whitespace is allowed:
+
+| Style | Syntax | Description |
+|-------|--------|-------------|
+| Single-line | `// comment text` | Everything from `//` to the end of the line is ignored |
+| Multi-line  | `/* comment text */` | Everything between `/*` and `*/` is ignored (may span multiple lines) |
+
+Multiple consecutive comments are fully supported, as are comments embedded mid-query:
+
+```cypher
+// Find all people named Alice
+MATCH (a:Person {name: 'Alice'})
+/* Return their
+   friends */
+RETURN a
+```
+
 # Clauses
 
 A Cypher query consists of one or more clauses.

@@ -263,6 +263,16 @@ $ redis-cli GRAPH.QUERY G "MATCH (n) RETURN n {.name, .age} AS projection"
 2) 1) 1) "{name: Jeff, age: 32}"
 ```
 
+> **Null entity projection:** Following the openCypher specification, a map projection on a `null` entity evaluates to `null` — not a map of `null` values. This matters most when combining `OPTIONAL MATCH` with map projections and `collect()`:
+>
+> ```cypher
+> OPTIONAL MATCH (p)-[:WORKS_FOR]->(o:Organization)
+> RETURN collect(DISTINCT o { .name, .uuid }) AS orgs
+> // If o is unmatched (null): orgs = []   (not [{name: null, uuid: null}])
+> ```
+>
+> Because the projection itself is `null`, `collect()` skips it, producing an empty list rather than a list containing a map of nulls.
+
 #### Map merging
 
 You can combine two maps, where values in the second map will override corresponding values in the first map.

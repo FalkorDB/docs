@@ -67,3 +67,22 @@ $ redis-cli GRAPH.EXPLAIN social "MATCH (p:person) WHERE p.id < 5 RETURN p"
 2) "    Project"
 3) "        Index Scan | (p:person)"
 ```
+
+## Aggregation functions inside pattern comprehensions
+
+Aggregation functions (e.g., `count()`, `sum()`, `avg()`) are **not allowed** inside pattern comprehensions — neither in the eval expression nor in the embedded `WHERE` predicate. Attempting to use them there returns an error:
+
+```cypher
+// This will return an error:
+RETURN [(n)-[r:REL]->(m) WHERE n IS NOT NULL | count(n)] AS v
+// Error: Invalid use of aggregating function 'count'
+```
+
+As a workaround, compute the aggregation in a preceding `WITH` or `RETURN` clause, or use list comprehension followed by `size()`:
+
+```cypher
+// Collect matching nodes first, then aggregate outside the comprehension
+MATCH (n:Paper)
+WITH [(n)-[:REL]->(m:Paper) | m] AS connected
+RETURN size(connected) AS count
+```

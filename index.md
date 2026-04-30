@@ -1,8 +1,8 @@
 ---
 layout: default
-title: Home
 nav_order: 1
-description: "FalkorDB Docs — The graph database for accurate GenAI with GraphRAG at scale"
+nav_exclude: true
+description: "Official FalkorDB documentation — the high-performance graph database for GraphRAG, Cypher queries, and knowledge graphs powering accurate GenAI applications."
 permalink: /
 ---
 
@@ -258,7 +258,14 @@ The full list and links can be found on the [Client Libraries](/getting-started/
 
 ## Data import
 
-When loading large graphs from CSV files, we recommend using [falkordb-bulk-loader](https://github.com/falkordb/falkordb-bulk-loader)
+When loading large graphs from CSV files, use the [falkordb-bulk-loader](https://github.com/falkordb/falkordb-bulk-loader):
+
+```sh
+pip install falkordb-bulk-loader
+falkordb-bulk-insert GRAPHNAME -n nodes.csv -r edges.csv
+```
+
+See the [Bulk Loader documentation](/integration/bulk-loader) for the full reference.
 
 ## GitHub Discussions
 

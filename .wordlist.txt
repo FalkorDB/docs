@@ -828,3 +828,7 @@ ObjectPool
 QuickJS
 ACLs
 filesystem
+erroring
+namespaces
+tracebacks
+eval

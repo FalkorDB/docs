@@ -47,6 +47,8 @@ In the diagram above, readers A, B and C execute concurrently on threads from th
 
 Every query that modifies the graph — using any combination of `CREATE`, `SET`, `DELETE`, or `MERGE` — is **atomic**. The entire query either succeeds completely or fails without applying any partial changes. There is no scenario where a failed query leaves the graph in an intermediate state.
 
+This atomicity also covers **schema changes** such as new node labels or relationship types created during query execution. If a query that creates a new label (e.g., via `CREATE (:NewLabel)`) subsequently fails, that label is rolled back along with all other modifications made by the query. No partial schema state is persisted.
+
 For example, a query that creates several nodes and relationships in one statement either creates all of them or none:
 
 ```cypher
@@ -71,7 +73,7 @@ CREATE (p)-[:VISITED]->(c:City {name: 'Portland'})
 
 Similarly, a `UNION` query that writes data in multiple branches is treated as one atomic operation.
 
-## Write Ordering
+## Write Ordering and Post-Write Visibility
 
 Within a single query, write operations are applied in the order dictated by the Cypher clauses. Earlier clauses are evaluated before later ones, meaning results produced by a `CREATE` are available to a subsequent `SET` or `MATCH` in the same query:
 
@@ -83,6 +85,20 @@ RETURN p
 ```
 
 In this example, the node is created first, then the property is set, and finally the node is returned.
+
+**Filters after a `WITH` boundary observe the state produced by any preceding write operation.** This means a `WHERE` predicate in the second half of a query will see nodes and relationships as they exist *after* deletions, updates, or creations performed earlier in the same query. For example:
+
+```cypher
+// Create a graph with one relationship
+CREATE (:A)-[:R]->(:B);
+
+// Delete the relationship, then conditionally delete the orphaned node
+MATCH (:A)-[r:R]->(b:B) DELETE r
+WITH b WHERE NOT (b)<-[]-() DELETE b
+RETURN 'orphan deleted';
+```
+
+The `WHERE NOT (b)<-[]-()` predicate is evaluated *after* `DELETE r` has run, so it correctly sees that `b` has no incoming relationships and the node is deleted.
 
 When a single clause produces multiple write operations (for example, `CREATE` creating several nodes), those operations are applied as a batch within that clause.
 
