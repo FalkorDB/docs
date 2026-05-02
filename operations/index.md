@@ -60,3 +60,7 @@ Comprehensive guides for migrating your data to FalkorDB from RedisGraph, Neo4j,
 ## 12. [Building Docker](/operations/building-docker)
 
 Build custom FalkorDB Docker containers from source with platform-specific examples.
+
+## 13. [Performance & Query Optimization](/operations/performance)
+
+Guide to optimizing query performance: index selection, reading GRAPH.EXPLAIN and GRAPH.PROFILE output, cache tuning, parameterized queries, and best practices.
