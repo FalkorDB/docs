@@ -2,6 +2,7 @@
 title: "Quick Start"
 parent: "MCP Server"
 nav_order: 1
+description: "Get started with FalkorDB MCP Server in minutes using Docker Compose or direct installation for Claude Desktop, Cursor IDE, and other MCP clients."
 search_exclude: true
 ---
 

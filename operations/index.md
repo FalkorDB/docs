@@ -29,9 +29,9 @@ Set up replication in FalkorDB to achieve high availability and data redundancy 
 
 Discover how to configure a FalkorDB cluster for horizontal scalability and improved fault tolerance, distributing your data across multiple nodes.
 
-## 5. [Deploy FalkorDB to Kubernetes](/operations/k8s_support)
+## 5. [Deploy FalkorDB to Kubernetes](/operations/k8s-support)
 
-Learn how falkorDB can be deployed on Kubernetes using Helm charts and Docker images.
+Learn how FalkorDB can be deployed on Kubernetes using Helm charts and Docker images.
 
 ## 6. [Deploy FalkorDB with KubeBlocks](/operations/kubeblocks)
 
@@ -53,6 +53,10 @@ Embedded FalkorDB runtime for local development with guides for [Python](/operat
 
 Deploy FalkorDB on Lightning.AI to build fast, accurate GenAI applications using advanced RAG with graph databases.
 
-## 11. [Building Docker](/operations/building-docker)
+## 11. [Migration Guides](/operations/migration)
+
+Comprehensive guides for migrating your data to FalkorDB from RedisGraph, Neo4j, Kuzu, RDF-based systems, and SQL sources.
+
+## 12. [Building Docker](/operations/building-docker)
 
 Build custom FalkorDB Docker containers from source with platform-specific examples.

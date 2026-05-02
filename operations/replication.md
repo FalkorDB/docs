@@ -59,7 +59,7 @@ First, create a Docker network to allow communication between the FalkorDB nodes
 docker network create falkordb-network
 ```
 
-### 1.1 Setting up the Master Instance
+### 1.2 Setting up the Master Instance
 
 Start the master FalkorDB instance:
 
@@ -74,7 +74,7 @@ docker run -d \
 
 This instance runs in standalone mode and will serve as the primary (master) node.
 
-### 1.2 Setting up the Replica Instance
+### 1.3 Setting up the Replica Instance
 
 Next, start the replica instance:
 
@@ -86,7 +86,7 @@ docker run -d \
   falkordb/falkordb
 ```
 
-### 1.3 Configuring Replication
+### 1.4 Configuring Replication
 
 Connect to the replica instance and configure it to replicate data from the master:
 

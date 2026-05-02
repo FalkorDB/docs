@@ -1,7 +1,7 @@
 ---
 title: "Rest API"
 nav_order: 1
-description: "Rest API detailed doc"
+description: "Complete REST API reference for FalkorDB Browser, including authentication, graph management, query execution, and node/edge operations."
 parent: "Integration"
 ---
 
