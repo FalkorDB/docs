@@ -61,10 +61,10 @@ After deployment, you can access FalkorDB through the Browser UI, from another R
 3. Click the public domain to open the FalkorDB Browser
 
 <img width="2358" height="628" alt="Railway service page showing the public domain for the FalkorDB Browser" src="https://github.com/user-attachments/assets/895a0039-2b23-4fb3-b9dc-273e94387a1d" />
-   
+
 4. Find `FALKORDB_PASSWORD` in the service **Variables** tab
 5. Use `FALKORDB_PASSWORD` in your browser to log in to your database
-   
+
 If the Browser prompts for connection fields, copy the current values from your Railway service **Variables** tab (`FALKORDB_HOST`, `FALKORDB_PORT`, and the username shown there) and authenticate with `FALKORDB_PASSWORD`.
 
 <img width="560" height="655" alt="FalkorDB Browser login screen with host, port, username, and password fields" src="https://github.com/user-attachments/assets/30237fcc-64c3-45f0-a92e-6f6f6af22ec9" />
@@ -102,7 +102,7 @@ For local development or external clients, use `FALKORDB_PUBLIC_URL`.
 Connect using `redis-cli` and run a test query in a single invocation:
 
 ```bash
-redis-cli -u $FALKORDB_PUBLIC_URL GRAPH.QUERY mygraph "RETURN 'connected' AS status"
+redis-cli -u "$FALKORDB_PUBLIC_URL" GRAPH.QUERY mygraph "RETURN 'connected' AS status"
 ```
 
 If `FALKORDB_PUBLIC_URL` is not available, enable a [Railway TCP Proxy](https://docs.railway.com/networking/tcp-proxy) for the FalkorDB service and expose the internal FalkorDB protocol port.
@@ -150,6 +150,8 @@ from falkordb import FalkorDB
 
 # Internal: use FALKORDB_PRIVATE_URL for apps running inside the same Railway project
 # External: replace with FALKORDB_PUBLIC_URL for local development or external clients
+# FalkorDB.from_url() automatically detects cluster mode at connection time
+# (probes INFO server) so no extra cluster flag is needed.
 db = FalkorDB.from_url(os.environ["FALKORDB_PRIVATE_URL"])
 
 graph = db.select_graph("mygraph")
@@ -162,10 +164,10 @@ Using `redis-cli` in cluster mode:
 
 ```bash
 # From inside Railway (private endpoint)
-redis-cli -c -u $FALKORDB_PRIVATE_URL
+redis-cli -c -u "$FALKORDB_PRIVATE_URL"
 
 # From your local machine or an external client (public endpoint)
-redis-cli -c -u $FALKORDB_PUBLIC_URL
+redis-cli -c -u "$FALKORDB_PUBLIC_URL"
 ```
 
 ## Best Practices
@@ -206,7 +208,7 @@ Railway provides built-in monitoring and logging:
 
 | Symptom | What to check |
 | --- | --- |
-| Browser login fails | Confirm the username is `default`, copy the latest `FALKORDB_PASSWORD`, and verify the Browser host and port shown by the template. |
+| Browser login fails | Confirm the username is `default`, copy the latest `FALKORDB_PASSWORD`, and use the `FALKORDB_HOST` and `FALKORDB_PORT` values from your Railway service **Variables** tab. |
 | Local `redis-cli` cannot connect | Use `FALKORDB_PUBLIC_URL`, not `FALKORDB_PRIVATE_URL`. Private URLs only work inside the same Railway project and environment. |
 | `FALKORDB_PUBLIC_URL` is missing | Enable Railway TCP Proxy for the FalkorDB service and expose the internal FalkorDB protocol port. |
 | Application cannot connect from Railway | Confirm both services are in the same project and environment, then use `FALKORDB_PRIVATE_URL`. |
