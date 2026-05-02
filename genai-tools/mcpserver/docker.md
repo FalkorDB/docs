@@ -2,6 +2,7 @@
 title: "Docker Deployment"
 parent: "MCP Server"
 nav_order: 3
+description: "Deploy FalkorDB MCP Server with Docker and Docker Compose including FalkorDB database, environment configuration, and production setup."
 search_exclude: true
 ---
 

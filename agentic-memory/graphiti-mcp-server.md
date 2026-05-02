@@ -572,7 +572,7 @@ MATCH (n) RETURN n LIMIT 25
 
 - Explore [Graphiti Python Library](./graphiti.md) for direct integration
 - Learn about [Cognee](./cognee.md) for flexible memory management
-- Check out [GraphRAG SDK](/graphrag-sdk) for advanced reasoning
+- Check out [GraphRAG SDK](/genai-tools/graphrag-sdk) for advanced reasoning
 - Review [Cypher Query Language](/cypher) for custom graph queries
 
 ## Example Use Cases

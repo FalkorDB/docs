@@ -2,6 +2,7 @@
 title: "MCP Server Configuration"
 parent: "MCP Server"
 nav_order: 2
+description: "Configure FalkorDB MCP Server environment variables, transport modes (stdio/SSE), connection settings, and multi-instance deployments."
 search_exclude: true
 ---
 

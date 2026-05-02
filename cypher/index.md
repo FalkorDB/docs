@@ -6,7 +6,13 @@ description: >
 has_children: true
 ---
 
-# Comments
+# Cypher Language
+
+FalkorDB supports the [OpenCypher](https://www.opencypher.org/) query language with proprietary extensions. Cypher is a declarative graph query language that allows you to express what data to retrieve from a graph using pattern matching, filtering, and projections.
+
+This section provides a complete reference for all supported Cypher clauses, functions, procedures, and indexing capabilities.
+
+## Comments
 
 FalkorDB Cypher supports two comment styles that can be placed anywhere whitespace is allowed:
 
@@ -25,7 +31,7 @@ MATCH (a:Person {name: 'Alice'})
 RETURN a
 ```
 
-# Clauses
+## Clauses
 
 A Cypher query consists of one or more clauses.
 
