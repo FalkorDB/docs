@@ -60,3 +60,7 @@ Comprehensive guides for migrating your data to FalkorDB from RedisGraph, Neo4j,
 ## 12. [Building Docker](/operations/building-docker)
 
 Build custom FalkorDB Docker containers from source with platform-specific examples.
+
+## 13. [Troubleshooting](/operations/troubleshooting)
+
+Common issues and solutions covering connection errors, query timeouts, out-of-memory problems, Docker, replication, and Kubernetes troubleshooting.
