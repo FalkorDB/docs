@@ -59,4 +59,8 @@ Comprehensive guides for migrating your data to FalkorDB from RedisGraph, Neo4j,
 
 ## 12. [Building Docker](/operations/building-docker)
 
+## 13. [Security Guide](/operations/security)
+
+Comprehensive security guide covering authentication, ACL access control, TLS/SSL encryption, network isolation, and least-privilege patterns for production deployments.
+
 Build custom FalkorDB Docker containers from source with platform-specific examples.
