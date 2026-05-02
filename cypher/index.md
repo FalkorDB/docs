@@ -12,6 +12,8 @@ FalkorDB supports the [OpenCypher](https://www.opencypher.org/) query language w
 
 This section provides a complete reference for all supported Cypher clauses, functions, procedures, and indexing capabilities.
 
+> **See also:** [Data Types](/datatypes) — Reference for all node, relationship, scalar, temporal, and collection types used in Cypher queries.
+
 ## Comments
 
 FalkorDB Cypher supports two comment styles that can be placed anywhere whitespace is allowed:
