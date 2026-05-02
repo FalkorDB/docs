@@ -9,7 +9,7 @@ description: "FalkorDB DBaaS Startup Tier"
 
 
 # Startup Tier
-FalkorDB's **Startup Tier** gives you instant access to a production-ready graph database starting at **$73/Month**. This tier is designed to help you **Build a Powerful MVP** with standalone deployment, multi-graph support, and multi-tenancy capabilities. You can deploy on AWS, GCP, or Azure (BYOC) and rely on community support to grow your application.
+FalkorDB's **Startup Tier** gives you instant access to a production-ready graph database starting at **$73/Month**. This tier is designed to help you **Build a Powerful MVP** with standalone deployment, multi-graph support, and multi-tenancy capabilities. You can deploy on AWS or GCP and rely on community support to grow your application.
 
 The Startup Tier includes essential features like **TLS** and **Automated Backups (Every 12 Hours)**, making it a robust, secure choice for your first production workload. When your application requires High Availability, dedicated support, or advanced enterprise features like VPC networking, you can easily upgrade to a Pro or Enterprise plan.
 
