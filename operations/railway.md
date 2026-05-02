@@ -147,17 +147,18 @@ Each graph lives on one shard. Clustering helps when you have many graphs or wor
 
 To connect to your FalkorDB cluster:
 
-1. Get the private or public cluster endpoint from your Railway project dashboard
-2. Prefer private networking for applications deployed in Railway
-3. Use cluster-aware clients so `MOVED` redirects are handled correctly
+1. **Apps deployed within Railway** – use `FALKORDB_PRIVATE_URL`. Traffic stays inside Railway's private network and never touches the public internet.
+2. **External clients and local development** – use `FALKORDB_PUBLIC_URL`. This requires a Railway TCP Proxy to be enabled for the FalkorDB service.
+3. Use cluster-aware clients so `MOVED` redirects are handled correctly.
 
-Example with Python:
+Example with Python (internal app):
 
 ```python
 import os
 
 from falkordb import FalkorDB
 
+# Use the private URL for apps running inside Railway
 db = FalkorDB.from_url(os.environ["FALKORDB_PRIVATE_URL"])
 
 graph = db.select_graph("mygraph")
@@ -166,10 +167,14 @@ graph.query("CREATE (:Person {name: 'Bob', age: 25})")
 result = graph.query("MATCH (n:Person) RETURN n.name, n.age")
 ```
 
-Using `redis-cli` with cluster mode:
+Using `redis-cli` in cluster mode:
 
 ```bash
-redis-cli -c -u <FALKORDB_PRIVATE_URL>
+# From inside Railway (private endpoint)
+redis-cli -c -u $FALKORDB_PRIVATE_URL
+
+# From your local machine or an external client (public endpoint)
+redis-cli -c -u $FALKORDB_PUBLIC_URL
 ```
 
 ## Best Practices
