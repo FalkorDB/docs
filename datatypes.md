@@ -307,3 +307,12 @@ RETURN u {.name, follower_count: count} AS user"
 2) 1) 1) "{name: Jeff, follower_count: 12}"
    2) 1) "{name: Roi, follower_count: 18}"
 ```
+
+---
+
+## Next Steps
+
+- [Getting Started](/getting-started) — Build and query your first graph
+- [Cypher Language](/cypher) — Learn the query language for working with these data types
+- [Indexing](/cypher/indexing) — Create indexes on properties to speed up queries
+- [Commands](/commands) — Full command reference for GRAPH.QUERY and more

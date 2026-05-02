@@ -378,7 +378,9 @@ for record in result.data.by_ref() {
 Congratulations! 🎉 You have successfully modeled, loaded, and queried a social network graph with FalkorDB.
 
 Next, dive deeper into FalkorDB's powerful features:
+- [FalkorDB Browser](/browser) — Explore your graph visually
 - [Advanced Cypher](/cypher)
+- [Data Types](/datatypes) — Nodes, relationships, scalars, temporal types, and collections
 - [Database Operations](/operations)
 - [GenAI Tools](/genai-tools)
 - [Agentic Memory](/agentic-memory)
