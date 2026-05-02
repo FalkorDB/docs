@@ -13,26 +13,7 @@ FalkorDB's **Startup Tier** gives you instant access to a production-ready graph
 
 The Startup Tier includes essential features like **TLS** and **Automated Backups (Every 12 Hours)**, making it a robust, secure choice for your first production workload. When your application requires High Availability, dedicated support, or advanced enterprise features like VPC networking, you can easily upgrade to a Pro or Enterprise plan.
 
-## FalkorDB Pricing Plans Comparison
-
-| Feature | FREE | STARTUP | PRO | ENTERPRISE |
-| :--- | :---: | :---: | :---: | :---: |
-| **Monthly Cost (from)** | **Free** | **$73** | **$350** | **Custom** |
-| Multi-Graph / Multi-Tenancy | ✓ | **🟢** | ✓ | ✓ |
-| Graph Access Control | ✓ | **🟢** | ✓ | ✓ |
-| **TLS** | ✗ | **🟢** | ✓ | ✓ |
-| VPC | ✗ | **🔴** | ✗ | ✓ |
-| Cluster Deployment | ✗ | **🔴** | ✓ | ✓ |
-| High Availability | ✗ | **🔴** | ✓ | ✓ |
-| Multi-zone Deployment | ✗ | **🔴** | ✓ | ✓ |
-| Scalability | ✗ | **🔴** | ✓ | ✓ |
-| Continuous Persistence | ✗ | **🔴** | ✓ | ✓ |
-| **Automated Backups** | ✗ | **Every 12 Hours** | Every 12 Hours | Every Hour |
-| Advanced Monitoring | ✗ | **🔴** | ✗ | ✓ |
-| **Support** | Community | **Community** | 24/7 | Dedicated |
-| Dedicated Account Manager | ✗ | **🔴** | ✗ | ✓ |
-| **Cloud Providers** | AWS, GCP | **AWS, GCP** | AWS, GCP | AWS, GCP, Azure (BYOC) |
-| **Call-to-Action** | [Sign up](https://app.falkordb.cloud/signup) | [Sign up](https://app.falkordb.cloud/signup) | [Sign up](https://app.falkordb.cloud/signup) | [Contact Us](mailto:info@falkordb.com) |
+> **📊 Compare all plans:** See the [full pricing comparison](/cloud#pricing-plans-comparison) on the Cloud overview page.
 
 ## Terms
 ### Pricing Calculation
