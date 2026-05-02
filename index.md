@@ -60,6 +60,8 @@ docker run -p 6379:6379 -p 3000:3000 -it --rm falkordb/falkordb:latest
 
 Once loaded, you can interact with FalkorDB using any of the supported [client libraries](/getting-started/clients)
 
+> **📖 New to FalkorDB?** Follow the step-by-step [Getting Started guide](/getting-started) for a complete walkthrough — from setup to modeling, loading, and querying your first graph.
+
 Here we'll use [FalkorDB Python client](https://pypi.org/project/FalkorDB/) to create a small graph representing a subset of motorcycle riders and teams taking part in the MotoGP league, once created we'll start querying our data.
 
 
