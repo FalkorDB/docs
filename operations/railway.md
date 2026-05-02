@@ -65,11 +65,7 @@ After deployment, you can access FalkorDB through the Browser UI, from another R
 4. Find `FALKORDB_PASSWORD` in the service **Variables** tab
 5. Use `FALKORDB_PASSWORD` in your browser to log in to your database
    
-Defaults are:
-
-* Host: falkordb.railway.internal
-* Port: 16379
-* Username: default
+If the Browser prompts for connection fields, copy the current values from your Railway service **Variables** tab (`FALKORDB_HOST`, `FALKORDB_PORT`, and the username shown there) and authenticate with `FALKORDB_PASSWORD`.
 
 <img width="560" height="655" alt="FalkorDB Browser login screen with host, port, username, and password fields" src="https://github.com/user-attachments/assets/30237fcc-64c3-45f0-a92e-6f6f6af22ec9" />
 
@@ -103,16 +99,10 @@ For local development or external clients, use `FALKORDB_PUBLIC_URL`.
 
 <img width="2411" height="1208" alt="Railway Variables tab showing FalkorDB private and public connection URLs" src="https://github.com/user-attachments/assets/e355e2a7-d290-4cdc-b7e5-a3f593f72ecb" />
 
-Connect using `redis-cli`:
+Connect using `redis-cli` and run a test query in a single invocation:
 
 ```bash
-redis-cli -u <FALKORDB_PUBLIC_URL>
-```
-
-Then run a test query:
-
-```bash
-GRAPH.QUERY mygraph "RETURN 'connected' AS status"
+redis-cli -u $FALKORDB_PUBLIC_URL GRAPH.QUERY mygraph "RETURN 'connected' AS status"
 ```
 
 If `FALKORDB_PUBLIC_URL` is not available, enable a [Railway TCP Proxy](https://docs.railway.com/networking/tcp-proxy) for the FalkorDB service and expose the internal FalkorDB protocol port.
@@ -151,14 +141,15 @@ To connect to your FalkorDB cluster:
 2. **External clients and local development** – use `FALKORDB_PUBLIC_URL`. This requires a Railway TCP Proxy to be enabled for the FalkorDB service.
 3. Use cluster-aware clients so `MOVED` redirects are handled correctly.
 
-Example with Python (internal app):
+Example with Python (internal app — swap in `FALKORDB_PUBLIC_URL` for external access):
 
 ```python
 import os
 
 from falkordb import FalkorDB
 
-# Use the private URL for apps running inside Railway
+# Internal: use FALKORDB_PRIVATE_URL for apps running inside the same Railway project
+# External: replace with FALKORDB_PUBLIC_URL for local development or external clients
 db = FalkorDB.from_url(os.environ["FALKORDB_PRIVATE_URL"])
 
 graph = db.select_graph("mygraph")
