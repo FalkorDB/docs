@@ -833,3 +833,7 @@ erroring
 namespaces
 tracebacks
 eval
+NOAUTH
+redirections
+CrashLoopBackOff
+PersistentVolumeClaim
