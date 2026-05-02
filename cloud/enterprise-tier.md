@@ -31,7 +31,7 @@ The Enterprise Tier is fully optimized for mission-critical applications, provid
 | **Advanced Monitoring** | ✗ | ✗ | ✗ | **🟢** |
 | **Support** | Community | Community | 24/7 | **Dedicated** |
 | **Dedicated Account Manager** | ✗ | ✗ | ✗ | **🟢** |
-| **Cloud Providers** | AWS, GCP | AWS, GCP | AWS, GCP | **AWS, GCP, Azure (BYOC)** |
+| **Cloud Providers** | AWS, GCP, Azure | AWS, GCP, Azure | AWS, GCP, Azure | **AWS, GCP, Azure** |
 
 ## Terms
 ### Consultation and Pricing
