@@ -62,3 +62,9 @@ The Enterprise Tier is fully optimized for mission-critical applications, provid
 
 [![Learn More](https://img.shields.io/badge/Learn%20More-8A2BE2?style=for-the-badge)](/cloud/enterprise-tier) 
 [![Watch Demo](https://img.shields.io/badge/Watch%20Demo-black?style=for-the-badge)](https://youtu.be/fu_8CLFKYSs?si=G7K6dN1i5tyqXTfC)
+
+---
+
+## Connecting to FalkorDB Cloud
+
+Ready to connect? See the [Cloud Connection Guide](/cloud/connecting) for step-by-step instructions with Python, Node.js, Java, Rust, Go, and redis-cli.
