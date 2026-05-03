@@ -2,14 +2,14 @@
 title: "Range Index"
 nav_order: 1
 description: >
-    FalkorDB supports single-property indexes for node labels and for relationship type. String, numeric, and geospatial data types can be indexed.
+    Range indexes accelerate equality, range, and geospatial queries on node and relationship properties. Supported data types include strings, numbers, geospatial points, and scalar arrays.
 parent: "Indexing"
 grand_parent: "Cypher Language"
 ---
 
 # Range Index
 
-FalkorDB supports single-property indexes for node labels and for relationship type. String, numeric, and geospatial data types can be indexed.
+Range indexes in FalkorDB allow the query planner to efficiently locate nodes and relationships by scanning only the entries that satisfy a filter, rather than performing a full label or type scan. They support equality, range, and geospatial predicates on string, numeric, geospatial, and scalar-array properties for both node labels and relationship types.
 
 ## Supported Data Types
 
