@@ -37,12 +37,32 @@ FalkorDB runs as a Redis module (RESP and Bolt protocols) and is purpose-built f
 
 - [Graph Algorithms](https://docs.falkordb.com/algorithms): Built-in graph algorithms (PageRank, BFS, shortest paths, community detection).
 
+## Data Types
+
+- [Data Types](https://docs.falkordb.com/datatypes): Nodes, relationships, paths, scalars, and other types supported as property values or query results.
+
+## UDFs
+
+- [UDFs Overview](https://docs.falkordb.com/udfs): Extend FalkorDB with custom User-Defined Functions written in JavaScript.
+
 ## GenAI & GraphRAG
 
 - [GenAI Tools Overview](https://docs.falkordb.com/genai-tools): Index of FalkorDB's GenAI ecosystem.
 - [GraphRAG SDK](https://docs.falkordb.com/genai-tools/graphrag-sdk): Build GraphRAG applications with FalkorDB.
 - [MCP Server](https://docs.falkordb.com/genai-tools/mcpserver): Model Context Protocol server for connecting LLMs to FalkorDB.
+- [AG2](https://docs.falkordb.com/genai-tools/ag2): Build multi-agent AI systems with AG2 (formerly AutoGen) and FalkorDB GraphRAG.
+- [LangGraph](https://docs.falkordb.com/genai-tools/langgraph): Build stateful, multi-actor agentic applications with LangGraph and FalkorDB.
+- [GraphRAG Toolkit](https://docs.falkordb.com/genai-tools/graphrag-toolkit): AWS GraphRAG Toolkit integration with FalkorDB for knowledge graph applications.
 - [Code-Graph](https://docs.falkordb.com/genai-tools/code-graph): Convert source code into a queryable knowledge graph.
+- [QueryWeaver](https://docs.falkordb.com/genai-tools/queryweaver): Text-to-SQL tool using graph-powered schema understanding.
+
+## Agentic Memory
+
+- [Agentic Memory Overview](https://docs.falkordb.com/agentic-memory): Implement persistent, contextual memory for AI agents using FalkorDB.
+- [Graphiti](https://docs.falkordb.com/agentic-memory/graphiti): Temporally-aware, multi-tenant knowledge graphs for multi-agent AI systems.
+- [Graphiti MCP Server](https://docs.falkordb.com/agentic-memory/graphiti-mcp-server): Run Graphiti MCP server with FalkorDB for persistent AI agent memory in Claude Desktop, Cursor, and other MCP clients.
+- [Cognee](https://docs.falkordb.com/agentic-memory/cognee): Flexible agentic memory with graph and vector storage for AI agents.
+- [Mem0](https://docs.falkordb.com/agentic-memory/mem0): Add FalkorDB as a graph memory backend for Mem0 AI agents.
 
 ## Integrations
 
@@ -55,6 +75,14 @@ FalkorDB runs as a Redis module (RESP and Bolt protocols) and is purpose-built f
 ## Operations
 
 - [Operations Guide](https://docs.falkordb.com/operations): Production deployment, monitoring, and tuning.
+- [Docker and Docker Compose](https://docs.falkordb.com/operations/docker): Run FalkorDB with Docker and Docker Compose for development and production.
+- [Replication](https://docs.falkordb.com/operations/replication): Configure master–replica architecture for high availability.
+- [Cluster](https://docs.falkordb.com/operations/cluster): Set up a multi-node FalkorDB cluster for horizontal scalability and fault tolerance.
+- [Kubernetes](https://docs.falkordb.com/operations/k8s-support): Deploy FalkorDB on Kubernetes.
+- [KubeBlocks](https://docs.falkordb.com/operations/kubeblocks): Deploy FalkorDB on Kubernetes using the KubeBlocks operator.
+- [Railway](https://docs.falkordb.com/operations/railway): Deploy FalkorDB on Railway with verified templates.
+- [Lightning.AI](https://docs.falkordb.com/operations/lightning-ai): Deploy FalkorDB on Lightning.AI for GenAI applications.
+- [OpenTelemetry](https://docs.falkordb.com/operations/opentelemetry): Set up OpenTelemetry tracing with FalkorDB Python applications.
 - [Durability](https://docs.falkordb.com/operations/durability): Persistence model and durability guarantees.
 - [Persistence (RDB & AOF)](https://docs.falkordb.com/operations/persistence): Snapshot and append-only-file configuration.
 
