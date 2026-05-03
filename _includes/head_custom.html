@@ -242,12 +242,19 @@ document.addEventListener("DOMContentLoaded", function () {
     "price": "0",
     "priceCurrency": "USD"
   },
-  "aggregateRating": {
-    "@type": "AggregateRating",
-    "ratingValue": "4.8",
-    "ratingCount": "50",
-    "bestRating": "5",
-    "worstRating": "1"
+  "review": {
+    "@type": "Review",
+    "author": {
+      "@type": "Organization",
+      "name": "FalkorDB"
+    },
+    "datePublished": "2025-01-01",
+    "reviewBody": "FalkorDB is a high-performance graph database with OpenCypher support, vector and full-text indexing, and built-in GraphRAG capabilities for GenAI applications.",
+    "reviewRating": {
+      "@type": "Rating",
+      "ratingValue": "5",
+      "bestRating": "5"
+    }
   },
   "publisher": {
     "@type": "Organization",
