@@ -111,13 +111,15 @@ Renders tabbed code blocks for Python, JavaScript, C++, Rust, Java, and Shell.
 
 Renders an accessible, no-JavaScript FAQ accordion using native `<details>`/`<summary>` elements.
 Accepts up to 10 question/answer pairs via `q1`/`a1` … `q10`/`a10` parameters.
-An optional `title` parameter adds a header to the accordion group.
+An optional `title` parameter adds a header bar with the title and a count badge showing the total number of items.
+Set `open1="true"` … `open10="true"` on any item to render it expanded by default.
 
 ```liquid
 {% include faq_accordion.html
   title="Frequently Asked Questions"
   q1="What is FalkorDB?"
   a1="FalkorDB is a high-performance graph database."
+  open1="true"
   q2="How do I get started?"
   a2="See the [Getting Started](/getting-started) guide."
 %}
