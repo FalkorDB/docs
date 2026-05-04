@@ -1,0 +1,16 @@
+<div class="faq-accordion">
+  {%- if include.title -%}
+  <p class="faq-accordion-title">{{ include.title }}</p>
+  {%- endif -%}
+
+  {%- for i in (1..10) -%}
+    {%- assign q_key = "q" | append: i -%}
+    {%- assign a_key = "a" | append: i -%}
+    {%- if include[q_key] and include[a_key] -%}
+  <details class="faq-item">
+    <summary class="faq-question">{{ include[q_key] }}</summary>
+    <div class="faq-answer">{{ include[a_key] | markdownify }}</div>
+  </details>
+    {%- endif -%}
+  {%- endfor -%}
+</div>
