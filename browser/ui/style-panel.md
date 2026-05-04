@@ -32,3 +32,5 @@ Changes are previewed immediately on the canvas.
 ## Tutorial note
 During the tutorial, saving style changes is intentionally prevented.
 
+{% include faq_accordion.html title="Frequently Asked Questions" q1="How do I open the Style panel?" a1="Open the **Graph Info** panel, then click the **palette icon** next to the node label you want to customize." q2="Are style changes saved automatically?" a2="No. You must click **Save** to persist changes to localStorage. Clicking **Cancel** or closing the panel reverts to the original style." q3="Can I use a custom color?" a3="Yes. Besides preset colors, you can choose a **custom color** using the red/green/blue color picker." q4="Do style changes affect other users?" a4="No. Styles are stored in your browser's **localStorage** and only apply to your session. Other users will see their own style settings." %}
+
