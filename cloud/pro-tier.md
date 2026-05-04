@@ -100,7 +100,7 @@ The Pro Tier provides a robust environment to scale your application with confid
   q2="How is Pro Tier pricing calculated?"
   a2="Pro Tier charges are based on **$0.200 per Core/Hour** and **$0.01 per Memory GB/Hour**. The starting configuration (2 cores, 8GB RAM) costs approximately **$350/month**."
   q3="What is continuous persistence?"
-  a3="Continuous persistence combines **AOF (Append-Only File) and Snapshots** to ensure every committed transaction is written to disk immediately. This provides maximum data durability even during unexpected crashes."
+  a3="Continuous persistence combines **AOF (Append-Only File) and Snapshots** to minimize data loss. With the default `appendfsync everysec` policy, at most ~1 second of writes may be lost during an unexpected crash. This provides strong durability without significant performance overhead."
   q4="Does the Pro Tier include dedicated support?"
   a4="Yes, the Pro Tier includes **24/7 dedicated support**. For a dedicated account manager, you would need to upgrade to the Enterprise tier."
   q5="Can I deploy across multiple availability zones?"

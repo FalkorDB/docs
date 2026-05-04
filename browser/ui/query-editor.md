@@ -33,7 +33,7 @@ The maximize button opens a full-screen editor dialog with the same Run/Clear co
 {% include faq_accordion.html
   title="Frequently Asked Questions"
   q1="What keyboard shortcuts are available for running queries?"
-  a1="Press **Enter** or **Cmd/Ctrl + Enter** to run a query. Use **Shift + Enter** to insert a newline without executing."
+  a1="Press **Enter** to run a query (only when the autocomplete suggestion widget is closed) or **Cmd/Ctrl + Enter** to run regardless. Use **Shift + Enter** to insert a newline without executing."
   q2="Does the editor support autocomplete?"
   a2="Yes. The Monaco-based editor provides **Cypher keyword suggestions**, **function suggestions**, and **graph-scoped suggestions** (labels, relationship types, property keys) fetched from the server."
   q3="How do I navigate through previous queries using the keyboard?"

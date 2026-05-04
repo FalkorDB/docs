@@ -496,7 +496,7 @@ docker-compose config
   q3="How do I configure FalkorDB module parameters like thread count?"
   a3="Use the `FALKORDB_ARGS` environment variable: `-e FALKORDB_ARGS='THREAD_COUNT 8 CACHE_SIZE 50 TIMEOUT_MAX 60000'`. See the Configuration page for all available parameters."
   q4="Why is my data lost when I restart the container?"
-  a4="You need to mount a persistent volume. Use `-v falkordb_data:/data` to attach a Docker volume, and enable AOF with `-e REDIS_ARGS='--appendonly yes'` for durability."
+  a4="You need to mount a persistent volume. Use `-v falkordb_data:/var/lib/falkordb/data` to attach a Docker volume to the default data directory, and enable AOF for durability."
   q5="How do I check if FalkorDB is healthy in Docker Compose?"
   a5="Add a healthcheck using `redis-cli ping`: `test: ['CMD', 'redis-cli', 'ping']`. With authentication, include `-a yourpassword` in the test command."
 %}

@@ -55,7 +55,7 @@ If `c` is null for any record, this query will emit an error. In this case, no c
   q2="Can I chain multiple OPTIONAL MATCH clauses?"
   a2="Yes. You can chain multiple MATCH and OPTIONAL MATCH clauses together. However, a mandatory MATCH cannot follow an OPTIONAL MATCH in the same query."
   q3="How does FalkorDB handle null values from OPTIONAL MATCH?"
-  a3="FalkorDB is lenient with nulls: property accesses and function calls on null values return null rather than errors. Clauses like SET, CREATE, and DELETE will ignore null inputs gracefully."
+  a3="FalkorDB is lenient with nulls: property accesses and function calls on null values return null rather than errors. Clauses like SET and DELETE will ignore null inputs gracefully. However, **CREATE will raise an error** if you attempt to create a relationship with a null endpoint — in that case no changes are committed."
   q4="Can I use WHERE with OPTIONAL MATCH?"
   a4="Yes. OPTIONAL MATCH clauses accept the same WHERE predicates as standard MATCH clauses to further filter the optional pattern."
 %}

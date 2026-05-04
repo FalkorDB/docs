@@ -66,11 +66,11 @@ Build custom FalkorDB Docker containers from source with platform-specific examp
   q1="What Docker image should I use for production?"
   a1="Use `falkordb/falkordb-server` for production deployments. It excludes the browser UI, making it lighter and more efficient. Use `falkordb/falkordb` for development when you need the built-in browser."
   q2="How do I ensure my data survives container restarts?"
-  a2="Mount a persistent volume to `/data` using Docker volumes or bind mounts, and enable AOF persistence with `--appendonly yes`. See the [Data Durability](/operations/durability) guide for full details."
+  a2="Mount a persistent volume to `/var/lib/falkordb/data` using Docker volumes or bind mounts, and enable AOF persistence. See the [Data Durability](/operations/durability) guide for full details."
   q3="Can FalkorDB scale horizontally?"
   a3="Yes. FalkorDB supports clustering via Redis Cluster, distributing graphs across multiple shards using hash slots. Each graph resides on one shard. See [Setting Up a Cluster](/operations/cluster) for setup instructions."
   q4="What is the easiest way to deploy FalkorDB to the cloud?"
   a4="Use [FalkorDB Cloud](https://app.falkordb.cloud) for a fully managed service, or deploy quickly using [Railway templates](/operations/railway) for single-instance or cluster configurations."
   q5="Does FalkorDB support high availability?"
-  a5="Yes. Configure replication with a master and one or more replicas for automatic failover and read scaling. On Kubernetes, use Sentinel-based deployments via Helm charts or KubeBlocks for automated HA."
+  a5="Yes. Configure replication with a master and one or more replicas for read scaling. Note that standalone replication alone does not provide automatic failover — you need Redis Sentinel or a cluster manager for that. On Kubernetes, use Sentinel-based deployments via Helm charts or KubeBlocks for automated HA."
 %}

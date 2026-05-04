@@ -534,7 +534,7 @@ Helps prevent excessive JS stack usage.
   q3="How many threads should I configure for FalkorDB?"
   a3="The `THREAD_COUNT` parameter defaults to your system's logical core count. This controls the maximum concurrent queries. For production workloads, tune this based on your query patterns and available CPU cores. Note that `OMP_THREAD_COUNT` separately controls parallelism *within* individual queries for GraphBLAS computations."
   q4="How do I limit query memory usage and execution time?"
-  a4="Use `QUERY_MEM_CAPACITY` to set a memory limit (in bytes) per query, and `TIMEOUT` or `TIMEOUT_DEFAULT` to set execution time limits (in milliseconds). Both can be changed at runtime with `GRAPH.CONFIG SET`. A value of 0 means unlimited."
+  a4="Use `QUERY_MEM_CAPACITY` to set a memory limit (in bytes) per query, and `TIMEOUT_DEFAULT`/`TIMEOUT_MAX` to set execution time limits (in milliseconds). Both can be changed at runtime with `GRAPH.CONFIG SET`. A value of 0 means unlimited. Note: the older `TIMEOUT` parameter is deprecated since v2.10."
   q5="How can I check the current configuration values?"
   a5="Use `GRAPH.CONFIG GET *` to retrieve all current configuration values, or `GRAPH.CONFIG GET PARAMETER_NAME` for a specific parameter. These commands work from any Redis client or redis-cli."
 %}
