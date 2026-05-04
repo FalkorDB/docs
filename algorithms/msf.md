@@ -123,3 +123,6 @@ FalkorDB's MSF implementation uses an efficient matrix-based approach optimized 
 
 - [Cypher Procedures](../cypher/procedures.md)
 - [Graph Algorithms Overview](./index.md)
+
+{% include faq_accordion.html title="Frequently Asked Questions" q1="What is the syntax for calling the MSF algorithm?" a1="Use `CALL algo.MSF({weightAttribute: 'cost'}) YIELD edges, nodes` with an optional configuration map. All parameters are optional." q2="Can I compute a Maximum Spanning Forest instead of minimum?" a2="Yes. Set `objective: 'maximize'` in the configuration map to find the spanning forest with the *maximum* total edge weight." q3="How does MSF handle disconnected graphs?" a3="MSF returns a separate spanning tree for each connected component. The result is a *forest* — a collection of trees, one per component." q4="What happens to edges without the specified weight property?" a4="Edges missing the weight property are only included if no other edges can connect the component. It is best practice to ensure all relevant edges have numeric weight values." q5="When should I use MSF vs WCC?" a5="Use **[WCC](./wcc.md)** to simply *identify* connected components. Use **MSF** when you need the *optimal set of edges* connecting all nodes within each component at minimum (or maximum) cost." %}
+

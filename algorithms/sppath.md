@@ -102,3 +102,6 @@ RETURN pathWeight, pathCost, [n in nodes(path) | n.name] AS pathNodes
 | `14`       | `12`     | [A, D, C, F, G]  | 
 
 ---
+
+{% include faq_accordion.html title="Frequently Asked Questions" q1="What is the difference between weightProp and costProp?" a1="**weightProp** is the property the algorithm *minimizes* (e.g. distance). **costProp** is a separate property used as a *constraint* — you can set `maxCost` to exclude paths whose total cost exceeds a threshold." q2="How do I get all shortest paths instead of just one?" a2="Set `pathCount: 0` to return all shortest paths. The default is `1` (single shortest path). You can also set a specific number like `pathCount: 5` to get up to 5 paths." q3="Can I search for paths in both directions?" a3="Yes. Set `relDirection` to `'both'` to traverse relationships regardless of direction. Other options are `'outgoing'` (default) and `'incoming'`." q4="When should I use algo.SPpaths vs algo.SSpaths?" a4="Use **algo.SPpaths** when you have a specific source *and* target node. Use **[algo.SSpaths](./sspath.md)** when you want shortest paths from one source to *all* reachable destinations." q5="What happens if no path exists between source and target?" a5="The procedure returns no results (empty result set). No error is raised." %}
+
