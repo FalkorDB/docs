@@ -67,6 +67,7 @@ BFS
 BGSAVE
 bigmac
 birthyear
+bitmasks
 Bitwise
 bitwise
 BLAS
@@ -91,7 +92,10 @@ CentOS
 Centos
 cgraph
 chatbots
+checkpointed
 Checkpointing
+checkpointing
+checksums
 Claude
 CLI
 cli
@@ -151,6 +155,7 @@ datafile
 dataset
 datasets
 DateTime
+datetime
 datetimes
 DBaaS
 dbms
@@ -240,6 +245,7 @@ FalkorDBQAChain
 FalkorDBRepository
 FalkorDBTemplate
 FalkorDBTransactionManager
+FalkorGraphRagCapability
 fallbacks
 FAQ
 faq
@@ -303,6 +309,7 @@ getzep
 gg
 GitHub
 github
+GoDoc
 godoc
 GPL
 gpt
@@ -311,6 +318,7 @@ Grafana
 graphA
 GraphBLAS
 GraphBlas
+GraphCypherQAChain
 Graphiti
 GraphName
 graphName
@@ -386,6 +394,7 @@ js
 JSDoc
 JSON
 json
+JST
 Jupyter
 JWT
 kafka
@@ -406,6 +415,7 @@ labelsList
 LangChain
 langchain
 LangGraph
+LangGraph's
 lastName
 learnhub
 len
@@ -444,6 +454,7 @@ matchRegEx
 maxAge
 maxCost
 maxLen
+mb
 MCP
 mcp
 MCPServer
@@ -458,6 +469,7 @@ Metaphone
 Miesha
 Mifflin
 minAge
+misconfigured
 MotoGP
 MSF
 MSF
@@ -547,6 +559,7 @@ pathNodes
 pathWeight
 pc
 pdf
+PDFs
 Pedrosa
 percentileCont
 percentileDisc
@@ -641,8 +654,10 @@ RSALv
 rTrim
 Rueian
 rueidis
+RunningQueries
 runtime
 rustis
+RW
 SaaS
 Saldana
 samplingSeed
@@ -729,6 +744,7 @@ substring
 sudo
 Swagger
 swapCase
+sz
 table
 targetNode
 TCP
@@ -824,6 +840,7 @@ VKEY
 VPC
 VPCs
 VPNs
+WaitingQueries
 WCC
 weightProp
 whitespace
