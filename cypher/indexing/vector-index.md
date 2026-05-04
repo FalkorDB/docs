@@ -9,7 +9,7 @@ grand_parent: "Cypher Language"
 
 # Vector indexing
 
-FalkorDB's vector index uses the HNSW (Hierarchical Navigable Small World) algorithm with cosine or euclidean similarity, supporting 1–4096-dimensional vectors.
+FalkorDB's vector index uses the HNSW (Hierarchical Navigable Small World) algorithm with cosine similarity or Euclidean distance, supporting 1–4096-dimensional vectors.
 
 With the introduction of the `vector` data-type a new type of index was introduced.
 A vector index is a dedicated index for indexing and searching through vectors.
