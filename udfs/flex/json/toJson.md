@@ -80,3 +80,5 @@ SET u.metadataJson = flex.json.toJson(metadata)
 ## See Also
 - [json.fromJsonMap](./fromJsonMap.md) - Parse JSON string to map
 - [json.fromJsonList](./fromJsonList.md) - Parse JSON string to list
+
+{% include faq_accordion.html title="Frequently Asked Questions" q1="What types can flex.json.toJson serialize?" a1="It handles maps, lists, strings, numbers, booleans, and `null`. It returns `null` for unsupported types like functions or circular references." q2="How are null and undefined values handled?" a2="`null` values are serialized as JSON `null`. `undefined` values are normalized to `null` before serialization." %}

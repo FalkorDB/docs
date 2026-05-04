@@ -78,3 +78,5 @@ RETURN prop AS camelCase, flex.text.snakeCase(prop) AS dbColumn
 ## See Also
 - [text.camelCase](./camelCase.md) - Convert to camelCase format
 - [text.upperCamelCase](./upperCamelCase.md) - Convert to UpperCamelCase format
+
+{% include faq_accordion.html title="Frequently Asked Questions" q1="What separators does flex.text.snakeCase recognize?" a1="It recognizes spaces, hyphens, and camelCase/PascalCase word boundaries (transitions between lowercase and uppercase letters)." q2="Are all characters lowercased?" a2="Yes. All characters in the output are converted to lowercase, with words separated by underscores." %}

@@ -83,3 +83,5 @@ decrypted
 - [bitwise.and](./and.md) - Bitwise AND operation
 - [bitwise.or](./or.md) - Bitwise OR operation
 - [bitwise.not](./not.md) - Bitwise NOT operation
+
+{% include faq_accordion.html title="Frequently Asked Questions" q1="What does flex.bitwise.xor return?" a1="It returns an integer where each bit is 1 only if the corresponding bits in the two operands differ. For example, `flex.bitwise.xor(5, 3)` returns `6`." q2="What is XOR commonly used for?" a2="XOR is useful for toggling flags, simple checksums, and detecting differences between two bitmasks." %}

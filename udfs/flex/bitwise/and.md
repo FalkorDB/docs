@@ -67,3 +67,5 @@ RETURN d.id, lowerNibble
 - [bitwise.or](./or.md) - Bitwise OR operation
 - [bitwise.xor](./xor.md) - Bitwise XOR operation
 - [bitwise.not](./not.md) - Bitwise NOT operation
+
+{% include faq_accordion.html title="Frequently Asked Questions" q1="What does flex.bitwise.and return?" a1="It returns an integer where each bit is 1 only if the corresponding bits in **both** input operands are 1. For example, `flex.bitwise.and(6, 3)` returns `2`." q2="Can I use bitwise.and for permission checking?" a2="Yes. A common pattern is `flex.bitwise.and(userPermissions, requiredFlag) = requiredFlag` to test whether a specific permission bit is set." %}

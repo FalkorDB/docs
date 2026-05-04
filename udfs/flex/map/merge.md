@@ -83,3 +83,5 @@ RETURN flex.map.merge(base, extra1, extra2) AS combined
 ## See Also
 - [map.submap](./submap.md) - Extract specific keys from a map
 - [map.removeKeys](./removeKeys.md) - Remove keys from a map
+
+{% include faq_accordion.html title="Frequently Asked Questions" q1="Does flex.map.merge do a deep or shallow merge?" a1="It performs a **shallow** merge. Nested maps are not recursively merged — values from later maps overwrite those from earlier maps." q2="Can I merge more than two maps?" a2="Yes. You can pass multiple maps as arguments to merge them all in sequence." %}

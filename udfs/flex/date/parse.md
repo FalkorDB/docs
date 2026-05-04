@@ -81,3 +81,5 @@ CREATE (e:Event {
 - [date.format](./format.md) - Format date to string
 - [date.truncate](./truncate.md) - Truncate date to specific unit
 - [date.toTimeZone](./toTimeZone.md) - Convert date to timezone
+
+{% include faq_accordion.html title="Frequently Asked Questions" q1="What does flex.date.parse return?" a1="It returns a date/time value parsed from a string. You can optionally provide a format pattern to match the input string's structure." q2="What happens if the string cannot be parsed?" a2="The function returns `null` if the input string does not match the expected or specified format." %}

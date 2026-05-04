@@ -78,3 +78,5 @@ RETURN d.title, urls
 - [text.replace](./replace.md) - Replace text using regex
 - [text.indexOf](./indexOf.md) - Find simple substring position
 - [text.indexesOf](./indexesOf.md) - Find all substring positions
+
+{% include faq_accordion.html title="Frequently Asked Questions" q1="What does the nested array structure look like?" a1="Each inner array contains the full match at index 0, followed by capture groups at index 1, 2, etc. For example: `[['john@ex.com', 'john', 'ex.com']]`." q2="Does regexGroups find all matches or just the first?" a2="It finds **all** matches in the string (global matching), returning one inner array per match." %}

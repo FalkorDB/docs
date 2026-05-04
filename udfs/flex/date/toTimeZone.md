@@ -86,3 +86,5 @@ RETURN flex.date.format(
 - [date.format](./format.md) - Format date with timezone support
 - [date.parse](./parse.md) - Parse date with timezone context
 - [date.truncate](./truncate.md) - Truncate date to specific unit
+
+{% include faq_accordion.html title="Frequently Asked Questions" q1="What does flex.date.toTimeZone do?" a1="It converts a date/time value to a different timezone by applying an offset, returning the adjusted date/time." q2="How do I specify the timezone offset?" a2="The offset is specified as a numeric value representing hours (e.g., `-5` for EST, `+9` for JST)." %}

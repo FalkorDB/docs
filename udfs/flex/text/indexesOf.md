@@ -79,3 +79,5 @@ ORDER BY importanceScore DESC
 - [text.indexOf](./indexOf.md) - Find first occurrence only
 - [text.replace](./replace.md) - Replace substring occurrences
 - [text.regexGroups](./regexGroups.md) - Find matches using regex patterns
+
+{% include faq_accordion.html title="Frequently Asked Questions" q1="What does flex.text.indexesOf return if no matches are found?" a1="It returns an empty list `[]`." q2="Can I limit the search to a specific range?" a2="Yes. Use the optional `from` and `to` parameters to restrict the search within a substring range." %}

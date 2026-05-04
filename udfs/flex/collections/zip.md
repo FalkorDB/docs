@@ -81,3 +81,5 @@ RETURN pair[0] AS day, pair[1] AS salesAmount
 ## See Also
 - [map.fromPairs](../map/fromPairs.md) - Convert pairs to a map
 - [coll.union](./union.md) - Combine lists as sets
+
+{% include faq_accordion.html title="Frequently Asked Questions" q1="What does flex.coll.zip return?" a1="It returns a list of two-element lists (pairs), combining elements from two input lists by position. For example, `flex.coll.zip([1,2], ['a','b'])` returns `[[1,'a'],[2,'b']]`." q2="What happens if the input lists have different lengths?" a2="The result length matches the shorter list. Extra elements from the longer list are ignored." %}
