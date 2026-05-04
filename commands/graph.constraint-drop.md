@@ -93,3 +93,5 @@ println!("{}", result);
 {% endcapture %}
 
 {% include code_tabs.html id="drop_constraint_tabs" shell=shell_0 python=python_0 javascript=javascript_0 java=java_0 rust=rust_0 %}
+
+{% include faq_accordion.html title="Frequently Asked Questions" q1="Is dropping a constraint synchronous or asynchronous?" a1="Unlike constraint creation, dropping a constraint is **synchronous**. The command returns `OK` immediately upon successful removal." q2="Do I need to drop the supporting index after dropping a unique constraint?" a2="No, the supporting index is not automatically removed. You can drop it separately if it is no longer needed, but it may still be useful for query performance." q3="What happens if I try to drop a constraint that does not exist?" a3="The command will return an error indicating that the specified constraint was not found." q4="Does dropping a constraint affect existing data?" a4="No. Dropping a constraint only removes the enforcement rule. Existing data remains unchanged; it simply will no longer be validated against that constraint." %}
