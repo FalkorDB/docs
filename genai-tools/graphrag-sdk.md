@@ -128,3 +128,17 @@ print(response["response"])
 - **Flexible Model Support**: Compatible with multiple LLM providers (OpenAI, Gemini, Groq)
 
 > 📓  [Understanding Ontologies and Knowledge Graphs](https://www.falkordb.com/blog/understanding-ontologies-knowledge-graph-schemas/)
+
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="What is the GraphRAG-SDK?"
+  a1="The GraphRAG-SDK is FalkorDB's native Python SDK for building intelligent GraphRAG applications. It automatically converts natural language questions into Cypher queries, generates contextual answers from knowledge graph data, and supports streaming responses with multiple LLM providers."
+  q2="How do I create an ontology for my existing graph?"
+  a2="You can extract an ontology from an existing FalkorDB graph using `Ontology.from_kg_graph(graph)`. You can also create ontologies from JSON configurations, data sources (PDF, CSV, HTML, URLs), or schema graphs using `Ontology.from_schema_graph()`."
+  q3="Which LLM providers does the GraphRAG-SDK support?"
+  a3="The SDK supports multiple providers through LiteLLM including **OpenAI** (GPT-4o default), **Google Gemini**, **Groq**, and others. Set the appropriate API key environment variable (e.g., `OPENAI_API_KEY`, `GOOGLE_API_KEY`, `GROQ_API_KEY`)."
+  q4="Can I maintain conversation context across multiple questions?"
+  a4="Yes. Use `kg.chat_session()` to create a chat session that maintains conversation history. Follow-up questions are answered in context, so you can ask things like 'Tell me more about the most expensive one' after an initial query."
+  q5="Do I need to write Cypher queries manually?"
+  a5="No. The GraphRAG-SDK automatically generates optimized Cypher queries from your natural language questions using the ontology schema and LLM. You just call `chat.send_message()` with a plain-English question."
+%}

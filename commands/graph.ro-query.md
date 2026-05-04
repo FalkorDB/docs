@@ -49,3 +49,15 @@ println!("{:?}", result);
 {% include code_tabs.html id="tabs_0" shell=shell_0 python=python_0 javascript=javascript_0 java=java_0 rust=rust_0 %}
 
 Query-level timeouts can be set as described in [the configuration section](/configuration#timeout).
+
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="What is the difference between GRAPH.QUERY and GRAPH.RO_QUERY?"
+  a1="**GRAPH.RO_QUERY** only executes read operations and will return an error if you attempt a write query (CREATE, SET, DELETE, MERGE with creation). **GRAPH.QUERY** supports both read and write operations."
+  q2="Why should I use GRAPH.RO_QUERY instead of GRAPH.QUERY for reads?"
+  a2="GRAPH.RO_QUERY can be distributed to read replicas in a clustered setup, improving read scalability. It also provides a safety guarantee that data will not be accidentally modified."
+  q3="What happens if I pass a write query to GRAPH.RO_QUERY?"
+  a3="The command will return an error indicating that write queries are not permitted. The graph data will remain unchanged."
+  q4="Does GRAPH.RO_QUERY support the same optional parameters as GRAPH.QUERY?"
+  a4="Yes. GRAPH.RO_QUERY accepts the same optional parameters: `timeout`, `--compact`, and `version`."
+%}

@@ -86,3 +86,15 @@ MATCH (n:Paper)
 WITH [(n)-[:REL]->(m:Paper) | m] AS connected
 RETURN size(connected) AS count
 ```
+
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="Why does my query return unexpected counts with unnamed relationships?"
+  a1="Due to relationship uniqueness optimization, when a relationship is not referenced elsewhere in the query, FalkorDB only verifies that at least one matching relationship exists. Reference the relationship alias explicitly (e.g. in WHERE or RETURN) to get accurate counts."
+  q2="Does LIMIT prevent eager operations from executing fully?"
+  a2="No. This is a known limitation. Eager operations (CREATE, SET, DELETE, MERGE, and aggregating projections) execute fully before LIMIT is applied. For example, `CREATE (n) RETURN n LIMIT 1` still creates all nodes."
+  q3="Can indexes optimize not-equal filters?"
+  a3="No. The current index implementation does not handle `<>` (not-equal) filters. Indexes are used for equality, range comparisons, and string prefix operations."
+  q4="Can I use aggregation functions inside pattern comprehensions?"
+  a4="No. Aggregation functions like `count()`, `sum()`, and `avg()` are not allowed inside pattern comprehensions. As a workaround, compute aggregations in a preceding WITH or RETURN clause, or use `size()` on the list result."
+%}

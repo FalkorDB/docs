@@ -103,3 +103,11 @@ ORDER BY e.timestamp DESC
 - [date.parse](./parse.md) - Parse string to date
 - [date.truncate](./truncate.md) - Truncate date to specific unit
 - [date.toTimeZone](./toTimeZone.md) - Convert date to timezone
+
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="What format tokens does flex.date.format support?"
+  a1="Common tokens include `yyyy` (year), `MM` (month), `dd` (day), `HH` (hour), `mm` (minute), `ss` (second). The function uses token-based pattern formatting."
+  q2="Can I include a timezone offset in the format?"
+  a2="Yes. Pass an optional timezone offset parameter to adjust the output before formatting."
+%}

@@ -64,3 +64,17 @@ bash
 ```bash
 python main.py
 ```
+
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="Is the Bolt protocol support production-ready?"
+  a1="No, Bolt protocol support in FalkorDB is currently **experimental** and not recommended for production use. For production workloads, use the official FalkorDB client libraries."
+  q2="Which Neo4j driver versions are compatible with FalkorDB Bolt support?"
+  a2="FalkorDB works with the standard `neo4j` Python driver. Install it via `pip install neo4j`. Other language drivers that support the Bolt protocol should also work, but Python is the primary tested client."
+  q3="What port does FalkorDB use for Bolt connections?"
+  a3="FalkorDB uses port **7687** for Bolt connections by default. You need to set the `BOLT_PORT` environment variable (e.g., `FALKORDB_ARGS='BOLT_PORT 7687'`) when starting the Docker container."
+  q4="Can I use Bolt and the native FalkorDB protocol simultaneously?"
+  a4="Yes, FalkorDB can expose both protocols at the same time. The native protocol runs on port 6379 (Redis protocol) while Bolt runs on port 7687. Both can be active concurrently."
+  q5="How do I authenticate when using Bolt?"
+  a5="Pass your credentials in the `auth` parameter of the driver constructor. For example: `GraphDatabase.driver('bolt://localhost:7687', auth=('falkordb', ''))`. The username is typically `falkordb` and the password matches your Redis `requirepass` setting."
+%}

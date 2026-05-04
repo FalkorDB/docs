@@ -180,3 +180,17 @@ ORDER BY size DESC
 LIMIT 1
 ```
 
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="What is the syntax for running CDLP?"
+  a1="Use `CALL algo.labelPropagation() YIELD node, communityId`. Optionally pass a configuration map with `nodeLabels`, `relationshipTypes`, or `maxIterations`."
+  q2="How does CDLP differ from WCC?"
+  a2="**[WCC](./wcc.md)** finds disconnected components (nodes unreachable from each other). **CDLP** detects *densely connected communities* within a connected graph by propagating labels iteratively."
+  q3="Do I need to specify the number of communities in advance?"
+  a3="No. CDLP automatically discovers communities without requiring prior knowledge of how many communities exist or their sizes."
+  q4="What does maxIterations control?"
+  a4="It sets the maximum number of label propagation rounds. The default is 10. The algorithm may converge earlier if labels stabilize. Increase it for very large or complex graphs."
+  q5="Are CDLP results deterministic?"
+  a5="Results may vary slightly between runs because nodes are processed in random order during each iteration. The overall community structure should remain consistent for well-defined clusters."
+%}
+

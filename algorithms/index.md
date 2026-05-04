@@ -47,3 +47,17 @@ For path expressions like `shortestPath()` used directly in Cypher queries, refe
 - **[CDLP (Community Detection Label Propagation)](./cdlp.md)**
   Detects communities in a network, by propagating labels through the graph structure.
 
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="How do I call a graph algorithm in FalkorDB?"
+  a1="All algorithms are invoked using the `CALL algo.<name>()` syntax within a Cypher query. Each algorithm returns results via `YIELD` clauses. See individual algorithm pages for specific syntax."
+  q2="Are FalkorDB algorithms optimized for large graphs?"
+  a2="Yes. FalkorDB algorithms use **matrix-based computation** for high performance and scalability, leveraging sparse matrix representations internally."
+  q3="What is the difference between algo.SPpaths and algo.SSpaths?"
+  a3="**algo.SPpaths** finds shortest paths between a single source and a single target node. **algo.SSpaths** finds shortest paths from a single source to *all* reachable nodes. Use SPpaths for point-to-point queries and SSpaths for broader exploration."
+  q4="Can I filter which nodes and edges are included in an algorithm?"
+  a4="Yes. Most algorithms accept optional `nodeLabels` and `relationshipTypes` parameters that let you restrict computation to specific subsets of the graph."
+  q5="Which algorithm should I use for community detection?"
+  a5="Use **WCC** to find disconnected components (groups of nodes connected by any path). Use **CDLP** (Label Propagation) to detect densely connected communities within a connected graph. See [WCC](./wcc.md) and [CDLP](./cdlp.md) for details."
+%}
+

@@ -33,3 +33,15 @@ The dialog supports:
 Persistence notes:
 - Stored under localStorage key: `query history`.
 
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="Where is query history stored?"
+  a1="Query history is stored in your browser's **localStorage** under the key `query history`. It persists across sessions but is local to your browser."
+  q2="How do I open the Query History dialog?"
+  a2="Click the **history button** (clock icon) in the selector bar above the query editor. The button is disabled if no queries have been saved yet."
+  q3="Can I delete specific queries from history?"
+  a3="Yes. In the Query History dialog, use **Ctrl + right-click** to multi-select queries, then delete the selected ones. You can also delete all queries at once."
+  q4="Can I filter history by graph?"
+  a4="Yes. The dialog includes a **filter by graph name** option that lets you toggle one or more graphs to narrow down the displayed queries."
+%}
+
