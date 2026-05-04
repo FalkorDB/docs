@@ -181,3 +181,17 @@ docker run -p 5000:5000 -it --env DISABLE_MCP=true falkordb/queryweaver
 
 - [FalkorDB MCP Server](./mcpserver/): Enable AI assistants to interact with FalkorDB using MCP
 - [GraphRAG-SDK](./graphrag-sdk.md): Build intelligent GraphRAG applications with FalkorDB and LLMs
+
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="What is QueryWeaver?"
+  a1="QueryWeaver is an open-source Text2SQL tool that converts plain-English questions into SQL queries using graph-powered schema understanding. It uses FalkorDB to store and reason over database schema relationships as a graph, enabling more accurate SQL generation."
+  q2="Which AI providers does QueryWeaver support?"
+  a2="QueryWeaver supports **Ollama** (local models), **OpenAI**, **Google Gemini**, **Anthropic**, **Cohere**, and **Azure OpenAI**. Set the appropriate environment variable and QueryWeaver auto-detects the provider. Priority order: Ollama > OpenAI > Gemini > Anthropic > Cohere > Azure."
+  q3="Can I use QueryWeaver with MCP-compatible AI assistants?"
+  a3="Yes. QueryWeaver includes built-in MCP server support, exposing tools like `list_databases`, `connect_database`, `database_schema`, and `query_database`. Configure your MCP client (Claude Desktop, VS Code Copilot) to connect to `http://127.0.0.1:5000/mcp`."
+  q4="How do I get started quickly?"
+  a4="Run `docker run -p 5000:5000 -it falkordb/queryweaver` and open http://localhost:5000 in your browser. Set an LLM provider API key (e.g., `OPENAI_API_KEY`) as an environment variable for AI-powered SQL generation."
+  q5="Does QueryWeaver have a REST API?"
+  a5="Yes. QueryWeaver exposes REST endpoints for managing graphs and running Text2SQL queries. Key endpoints include `GET /graphs` to list databases, `POST /graphs/{graph_id}` to run queries, and all require Bearer token authentication."
+%}

@@ -71,3 +71,11 @@ RETURN e.rawName, flex.text.upperCamelCase(e.rawName) AS className
 - [text.camelCase](./camelCase.md) - Convert to camelCase (first letter lowercase)
 - [text.snakeCase](./snakeCase.md) - Convert to snake_case format
 - [text.capitalize](./capitalize.md) - Capitalize first character only
+
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="How is upperCamelCase different from camelCase?"
+  a1="In `upperCamelCase` (PascalCase) the **first** letter is capitalized (e.g., `HelloWorld`), while `camelCase` keeps it lowercase (e.g., `helloWorld`)."
+  q2="What separators does it recognize?"
+  a2="It recognizes spaces, hyphens, underscores, and transitions between lowercase and uppercase characters as word boundaries."
+%}

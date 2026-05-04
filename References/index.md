@@ -44,3 +44,15 @@ Cailliau, Pieter & Davis, Tim & Gadepally, Vijay & Kepner, Jeremy & Lipman, Roi 
   - [RedisGraph 2.0 Boosts Performance Up to 6x](https://redis.com/blog/redisgraph-2-0-boosts-performance-up-to-6x/)
   - [Getting Started with Knowledge Graphs in RedisGraph](https://redis.com/blog/getting-started-with-knowledge-graphs-in-redisgraph/)
   - [Introducing RedisGraph 2.0](https://redis.com/blog/introducing-redisgraph-2-0/)
+
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="Where can I find the FalkorDB source code?"
+  a1="The FalkorDB source code is available on GitHub at [https://github.com/FalkorDB/FalkorDB](https://github.com/FalkorDB/FalkorDB). You can also find demo projects at [https://github.com/FalkorDB/demos](https://github.com/FalkorDB/demos)."
+  q2="Is there a community forum or chat for FalkorDB?"
+  a2="Yes! FalkorDB has an active **Discord community** where you can ask questions, share projects, and connect with other users and the development team. Join at [https://discord.gg/ErBEqN9E](https://discord.gg/ErBEqN9E)."
+  q3="What is the relationship between FalkorDB and RedisGraph?"
+  a3="FalkorDB **originated from the RedisGraph project**. Many older resources reference RedisGraph but remain relevant to understanding FalkorDB's architecture, query language, and design principles."
+  q4="Are there academic papers about FalkorDB's architecture?"
+  a4="Yes. The paper *RedisGraph GraphBLAS Enabled Graph Database* (IEEE IPDPS 2019 GrAPL workshop) by Cailliau, Davis, Gadepally, Kepner, Lipman, Lovitz, and Ouaknine describes the GraphBLAS-based architecture that FalkorDB builds upon."
+%}

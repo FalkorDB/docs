@@ -14,7 +14,7 @@ FalkorDB is licensed under the the [Server Side Public License v1 (SSPLv1)](http
 
 ## FalkorDB Licensing FAQ: Understanding the SSPLv1 License
 
-{% include faq_accordion.html
+{% include faq_accordion.html title="Licensing FAQ" open="true"
   q1="What does it mean that FalkorDB is licensed under SSPLv1?"
   a1="The Server Side Public License (SSPLv1) is designed to ensure that if you use FalkorDB as part of a service you make available to others (e.g., in the cloud or as an API), you are required to make the source code of your complete service available under the SSPLv1 license. This is similar to GPL but extends to server use."
 

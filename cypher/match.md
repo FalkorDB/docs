@@ -118,3 +118,17 @@ RETURN nodes(p) as actors"
 ```
 
 This query will produce all the paths matching the pattern contained in the named path `p`. All of these paths will share the same starting point, the actor node representing Charlie Sheen, but will otherwise vary in length and contents. Though the variable-length traversal and `(:Actor)` endpoint are not explicitly aliased, all nodes and edges traversed along the path will be included in `p`. In this case, we are only interested in the nodes of each path, which we'll collect using the built-in function `nodes()`. The returned value will contain, in order, Charlie Sheen, between 0 and 2 intermediate nodes, and the unaliased endpoint.
+
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="What does the MATCH clause do in FalkorDB?"
+  a1="The `MATCH` clause uses ASCII-art pattern syntax to find nodes and relationships in the graph that satisfy the specified pattern. It is the primary read operation in Cypher."
+  q2="Can I traverse variable-length paths with MATCH?"
+  a2="Yes. Use the syntax `-[:TYPE*minHops..maxHops]->` to match paths of varying length. Both bounds are optional and default to 1 and infinity respectively."
+  q3="What is a bidirectional relationship pattern?"
+  a3="A relationship pattern without a direction arrow (e.g. `-[:KNOWS]-`) matches regardless of which node is source or destination. The shorthand `<-[:KNOWS]->` produces the same result."
+  q4="How do named paths work?"
+  a4="Assign a MATCH pattern to a variable with `p = (a)-[r]->(b)`. The path variable `p` includes all nodes and relationships in the matched pattern and can be used with built-in functions like `nodes(p)` and `relationships(p)`."
+  q5="Do I need to specify labels and aliases in MATCH?"
+  a5="No. All parts of the entity structure (`alias:label {filters}`) are optional. However, specifying labels improves query performance by narrowing the search scope, especially when indexes exist on those labels."
+%}

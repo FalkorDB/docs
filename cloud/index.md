@@ -62,3 +62,17 @@ The Enterprise Tier is fully optimized for mission-critical applications, provid
 
 [![Learn More](https://img.shields.io/badge/Learn%20More-8A2BE2?style=for-the-badge)](/cloud/enterprise-tier) 
 [![Watch Demo](https://img.shields.io/badge/Watch%20Demo-black?style=for-the-badge)](https://youtu.be/fu_8CLFKYSs?si=G7K6dN1i5tyqXTfC)
+
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="What cloud providers does FalkorDB support?"
+  a1="FalkorDB Cloud is available on **AWS** and **GCP** for Free, Startup, and Pro tiers. **Azure** is available for Enterprise tier customers through a Bring-Your-Own-Cloud (BYOC) configuration."
+  q2="Can I upgrade my plan later?"
+  a2="Yes, you can scale and upgrade your deployment at any time. Start with the Free tier to evaluate, then move to Startup, Pro, or Enterprise as your needs grow."
+  q3="Do I need to set up billing before subscribing?"
+  a3="Yes, prior to subscribing to any paid tier, you need to create a billing account at [app.falkordb.cloud/billing](https://app.falkordb.cloud/billing) and input your billing information."
+  q4="What features are available across all tiers?"
+  a4="All tiers include **Multi-Graph / Multi-Tenancy** and **Graph Access Control**. Higher tiers add TLS, VPC, high availability, automated backups, and dedicated support."
+  q5="Is there a free trial available?"
+  a5="FalkorDB offers a **Free Tier** that provides a fully functional graph database instance with 100MB storage on AWS or GCP — no credit card required."
+%}

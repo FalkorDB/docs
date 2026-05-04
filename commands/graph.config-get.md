@@ -77,3 +77,15 @@ println!("{:?}", timeout);
 {% endcapture %}
 
 {% include code_tabs.html id="config_get_timeout_tabs" shell=shell_1 python=python_1 javascript=javascript_1 java=java_1 rust=rust_1 %}
+
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="How do I retrieve all configuration parameters at once?"
+  a1="Use the wildcard `*` as the parameter name: `GRAPH.CONFIG GET *`. This returns all current FalkorDB configuration parameters and their values."
+  q2="What configuration parameters are available?"
+  a2="Common parameters include `TIMEOUT` (query timeout), `CACHE_SIZE` (execution plan cache size), `THREAD_COUNT` (worker threads), `RESULTSET_SIZE` (max result rows), and more. See the [configuration page](/configuration) for the full list."
+  q3="Does GRAPH.CONFIG GET require any special permissions?"
+  a3="Yes. The `GRAPH.CONFIG GET` command typically requires administrative privileges to execute."
+  q4="What format does the response use?"
+  a4="The response is a nested array containing the parameter name and its current value. For example: `1) 'TIMEOUT_DEFAULT' 2) (integer) 0`."
+%}
