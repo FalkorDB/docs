@@ -130,7 +130,7 @@ summary.faq-accordion-title:hover {
 {%- if include.title -%}
 <details class="faq-accordion" open>
   <summary class="faq-accordion-title">
-    {{ include.title }}
+    {{ include.title | escape }}
     <span class="faq-count">{{ faq_count }}</span>
   </summary>
 {%- else -%}
