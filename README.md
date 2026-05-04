@@ -95,6 +95,41 @@ When adding code examples:
 - Include comments for complex operations
 - Use realistic, meaningful variable names
 
+### Reusable Components
+
+The `_includes/` directory contains reusable Jekyll include components:
+
+#### `code_tabs.html` — Multi-language code tabs
+
+Renders tabbed code blocks for Python, JavaScript, C++, Rust, Java, and Shell.
+
+```liquid
+{% include code_tabs.html id="unique_id" python=python_var shell=shell_var %}
+```
+
+#### `faq_accordion.html` — FAQ accordion
+
+Renders an accessible, no-JavaScript FAQ accordion using native `<details>`/`<summary>` elements.
+Accepts up to 10 question/answer pairs via `q1`/`a1` … `q10`/`a10` parameters.
+An optional `title` parameter adds a header bar with the title and a count badge showing the total number of items.
+Set `open1="true"` … `open10="true"` on any item to render it expanded by default.
+
+```liquid
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="What is FalkorDB?"
+  a1="FalkorDB is a high-performance graph database."
+  open1="true"
+  q2="How do I get started?"
+  a2="See the [Getting Started](/getting-started) guide."
+%}
+```
+
+Answers are passed through the `markdownify` filter, so standard Markdown syntax
+(bold, links, code spans, etc.) is supported within answer strings.
+
+See `References/license.md` for a full example using this component.
+
 ## Project Structure
 
 ```text
