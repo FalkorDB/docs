@@ -107,4 +107,16 @@ println!("{:?}", result);
 
 The syntax is based on [Cypher](http://www.opencypher.org/). [Most](/cypher/cypher-support) of the language is supported. See [Cypher documentation](/cypher).
 
-{% include faq_accordion.html title="Frequently Asked Questions" q1="Why should I use parameterized queries instead of string interpolation?" a1="Parameterized queries allow FalkorDB to cache and reuse execution plans across queries that differ only in their constant values. This significantly improves performance. They also prevent Cypher injection attacks." q2="What happens when a query exceeds the timeout?" a2="When a query exceeds the configured timeout (in milliseconds), it is terminated and an error is returned to the client. You can set timeouts per-query or globally via `GRAPH.CONFIG SET TIMEOUT`." q3="What does the --compact flag do?" a3="The `--compact` flag returns results in a compact format that uses internal IDs instead of string labels and property names. This reduces network bandwidth and is intended for use by client libraries that maintain their own schema cache." q4="What is the version parameter used for?" a4="The `version` parameter enables optimistic schema caching. When a client provides a version number that does not match the current graph version, the server returns a `version mismatch` error, signaling the client to refresh its cached schema mappings." q5="Are execution plans cached automatically?" a5="Yes. FalkorDB caches execution plans for up to `CACHE_SIZE` unique queries (configurable). Both regular and parameterized queries benefit from plan caching." %}
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="Why should I use parameterized queries instead of string interpolation?"
+  a1="Parameterized queries allow FalkorDB to cache and reuse execution plans across queries that differ only in their constant values. This significantly improves performance. They also prevent Cypher injection attacks."
+  q2="What happens when a query exceeds the timeout?"
+  a2="When a query exceeds the configured timeout (in milliseconds), it is terminated and an error is returned to the client. You can set timeouts per-query or globally via `GRAPH.CONFIG SET TIMEOUT`."
+  q3="What does the --compact flag do?"
+  a3="The `--compact` flag returns results in a compact format that uses internal IDs instead of string labels and property names. This reduces network bandwidth and is intended for use by client libraries that maintain their own schema cache."
+  q4="What is the version parameter used for?"
+  a4="The `version` parameter enables optimistic schema caching. When a client provides a version number that does not match the current graph version, the server returns a `version mismatch` error, signaling the client to refresh its cached schema mappings."
+  q5="Are execution plans cached automatically?"
+  a5="Yes. FalkorDB caches execution plans for up to `CACHE_SIZE` unique queries (configurable). Both regular and parameterized queries benefit from plan caching."
+%}

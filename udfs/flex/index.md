@@ -138,4 +138,14 @@ Low-level bitwise operations on integers.
 - `bitwise.and`, `bitwise.or` - Check and set permission flags
 - `bitwise.xor` - Toggle flags
 
-{% include faq_accordion.html title="Frequently Asked Questions" q1="What is the FLEX library?" a1="FLEX (FalkorDB Library for Extensions) is FalkorDB's open-source community UDF package. It provides ready-to-use functions for text manipulation, date/time handling, JSON processing, collections, maps, bitwise operations, and similarity metrics." q2="How do I call FLEX functions in Cypher?" a2="FLEX functions use the namespace pattern `flex.<category>.<function>()`. For example: `flex.text.camelCase('hello world')` or `flex.sim.jaccard(list1, list2)`." q3="Do I need to install FLEX separately?" a3="Yes. FLEX is available at [github.com/FalkorDB/flex](https://github.com/FalkorDB/flex) and must be loaded into your FalkorDB instance as a UDF library before use." q4="Can I contribute new functions to FLEX?" a4="Yes! FLEX is open source and welcomes community contributions. Visit the [FLEX GitHub repository](https://github.com/FalkorDB/flex) to submit new functions or improvements." %}
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="What is the FLEX library?"
+  a1="FLEX (FalkorDB Library for Extensions) is FalkorDB's open-source community UDF package. It provides ready-to-use functions for text manipulation, date/time handling, JSON processing, collections, maps, bitwise operations, and similarity metrics."
+  q2="How do I call FLEX functions in Cypher?"
+  a2="FLEX functions use the namespace pattern `flex.<category>.<function>()`. For example: `flex.text.camelCase('hello world')` or `flex.sim.jaccard(list1, list2)`."
+  q3="Do I need to install FLEX separately?"
+  a3="Yes. FLEX is available at [github.com/FalkorDB/flex](https://github.com/FalkorDB/flex) and must be loaded into your FalkorDB instance as a UDF library before use."
+  q4="Can I contribute new functions to FLEX?"
+  a4="Yes! FLEX is open source and welcomes community contributions. Visit the [FLEX GitHub repository](https://github.com/FalkorDB/flex) to submit new functions or improvements."
+%}

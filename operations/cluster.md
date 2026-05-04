@@ -162,4 +162,16 @@ sudo echo "127.0.0.1 node7" | sudo tee -a /etc/hosts
 
 With your FalkorDB cluster set up, you now have a scalable, distributed environment that can handle increased loads and provide higher availability.
 
-{% include faq_accordion.html title="Frequently Asked Questions" q1="Does a FalkorDB cluster split a single graph across multiple shards?" a1="No. Each graph is a single Redis key and resides entirely on the shard whose hash-slot range covers the hash of its name. Clustering distributes *different* graphs across shards, not a single graph." q2="How many master nodes should I use?" a2="A minimum of 3 master nodes is recommended for fault tolerance. The 16,384 hash slots are distributed evenly across masters. Add more masters to scale throughput across many graphs." q3="Do I need a cluster-aware client?" a3="Yes. A cluster-aware client computes the hash slot for the target graph and routes commands to the correct master. If it guesses wrong, the cluster returns a `MOVED` redirect. Use `redis-cli -c` or a cluster-enabled SDK." q4="How do I add a new node to an existing cluster?" a4="Start a new FalkorDB container with `--cluster-enabled yes`, then run `redis-cli --cluster add-node <new-node> <existing-node>`. The cluster will begin rebalancing hash slots to include the new node." q5="What happens if a master node goes down?" a5="Its replica is automatically promoted to master by the cluster. The failover is handled by Redis Cluster consensus. Ensure each master has at least one replica configured for this to work." %}
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="Does a FalkorDB cluster split a single graph across multiple shards?"
+  a1="No. Each graph is a single Redis key and resides entirely on the shard whose hash-slot range covers the hash of its name. Clustering distributes *different* graphs across shards, not a single graph."
+  q2="How many master nodes should I use?"
+  a2="A minimum of 3 master nodes is recommended for fault tolerance. The 16,384 hash slots are distributed evenly across masters. Add more masters to scale throughput across many graphs."
+  q3="Do I need a cluster-aware client?"
+  a3="Yes. A cluster-aware client computes the hash slot for the target graph and routes commands to the correct master. If it guesses wrong, the cluster returns a `MOVED` redirect. Use `redis-cli -c` or a cluster-enabled SDK."
+  q4="How do I add a new node to an existing cluster?"
+  a4="Start a new FalkorDB container with `--cluster-enabled yes`, then run `redis-cli --cluster add-node <new-node> <existing-node>`. The cluster will begin rebalancing hash slots to include the new node."
+  q5="What happens if a master node goes down?"
+  a5="Its replica is automatically promoted to master by the cluster. The failover is handled by Redis Cluster consensus. Ensure each master has at least one replica configured for this to work."
+%}

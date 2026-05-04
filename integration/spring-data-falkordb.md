@@ -505,4 +505,16 @@ public class FalkorDBTransactionConfig {
 - [Spring Data Documentation](https://spring.io/projects/spring-data)
 - [JFalkorDB Java Client](https://github.com/falkordb/jfalkordb)
 
-{% include faq_accordion.html title="Frequently Asked Questions" q1="What annotations does Spring Data FalkorDB support?" a1="It supports JPA-style annotations including `@Node`, `@Relationship`, `@Id`, `@Property`, and `@Query` for custom Cypher queries. Use `@EnableFalkorDBRepositories` to activate auto-configuration." q2="How do I define a repository for my graph entities?" a2="Create an interface extending `FalkorDBRepository<T, ID>` where T is your entity class annotated with `@Node` and ID is the identifier type. Spring Data automatically provides CRUD operations." q3="Does Spring Data FalkorDB support derived query methods?" a3="Yes, it fully supports Spring Data derived query methods like `findByName`, `findByAgeGreaterThan`, `findByNameContaining`, etc. The framework automatically generates the appropriate Cypher queries." q4="What dependencies do I need in my Maven project?" a4="Add `spring-data-falkordb` (groupId: `org.springframework.data`) and `jfalkordb` (groupId: `com.falkordb`) to your `pom.xml`. Check the repository for the latest versions." q5="Does it support transactions?" a5="Yes, Spring Data FalkorDB includes built-in **transaction support** via `FalkorDBTransactionManager`. Enable it with `@EnableTransactionManagement` and use `@Transactional` annotations on your service methods." %}
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="What annotations does Spring Data FalkorDB support?"
+  a1="It supports JPA-style annotations including `@Node`, `@Relationship`, `@Id`, `@Property`, and `@Query` for custom Cypher queries. Use `@EnableFalkorDBRepositories` to activate auto-configuration."
+  q2="How do I define a repository for my graph entities?"
+  a2="Create an interface extending `FalkorDBRepository<T, ID>` where T is your entity class annotated with `@Node` and ID is the identifier type. Spring Data automatically provides CRUD operations."
+  q3="Does Spring Data FalkorDB support derived query methods?"
+  a3="Yes, it fully supports Spring Data derived query methods like `findByName`, `findByAgeGreaterThan`, `findByNameContaining`, etc. The framework automatically generates the appropriate Cypher queries."
+  q4="What dependencies do I need in my Maven project?"
+  a4="Add `spring-data-falkordb` (groupId: `org.springframework.data`) and `jfalkordb` (groupId: `com.falkordb`) to your `pom.xml`. Check the repository for the latest versions."
+  q5="Does it support transactions?"
+  a5="Yes, Spring Data FalkorDB includes built-in **transaction support** via `FalkorDBTransactionManager`. Enable it with `@EnableTransactionManagement` and use `@Transactional` annotations on your service methods."
+%}

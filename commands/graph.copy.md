@@ -102,4 +102,14 @@ println!("{:?}", result);
 
 {% include code_tabs.html id="copy_tabs" shell=shell_0 python=python_0 javascript=javascript_0 java=java_0 rust=rust_0 %}
 
-{% include faq_accordion.html title="Frequently Asked Questions" q1="Can I still query the source graph while GRAPH.COPY is running?" a1="Yes. The source graph remains **fully accessible** for both reads and writes during the copy operation." q2="Does GRAPH.COPY also copy indexes and constraints?" a2="Yes. `GRAPH.COPY` creates a complete clone of the source graph including all nodes, relationships, properties, indexes, and constraints." q3="What happens if the destination graph already exists?" a3="The command will return an error. You must delete the destination graph first using `GRAPH.DELETE` before copying to that key name." q4="Is GRAPH.COPY atomic?" a4="The copy reflects a consistent snapshot of the source graph at the time the command begins. Modifications to the source graph during the copy will not affect the destination." %}
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="Can I still query the source graph while GRAPH.COPY is running?"
+  a1="Yes. The source graph remains **fully accessible** for both reads and writes during the copy operation."
+  q2="Does GRAPH.COPY also copy indexes and constraints?"
+  a2="Yes. `GRAPH.COPY` creates a complete clone of the source graph including all nodes, relationships, properties, indexes, and constraints."
+  q3="What happens if the destination graph already exists?"
+  a3="The command will return an error. You must delete the destination graph first using `GRAPH.DELETE` before copying to that key name."
+  q4="Is GRAPH.COPY atomic?"
+  a4="The copy reflects a consistent snapshot of the source graph at the time the command begins. Modifications to the source graph during the copy will not affect the destination."
+%}

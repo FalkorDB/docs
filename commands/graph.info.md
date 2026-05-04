@@ -65,4 +65,14 @@ Multiple sections can be specified simultaneously. If no section is provided, al
       2) (double) 0
 ```
 
-{% include faq_accordion.html title="Frequently Asked Questions" q1="What does GRAPH.INFO show when called without arguments?" a1="When called without arguments, `GRAPH.INFO` returns **all sections**: RunningQueries, WaitingQueries, and ObjectPool statistics." q2="What is the difference between RunningQueries and WaitingQueries?" a2="**RunningQueries** shows queries currently being executed by worker threads. **WaitingQueries** shows queries that have been received but are queued waiting for a thread to become available." q3="What is the ObjectPool section?" a3="The ObjectPool section reports statistics about FalkorDB's internal object pool, including the number of unique objects and average references per object. This is useful for monitoring memory efficiency." q4="Can I use GRAPH.INFO to monitor query performance in production?" a4="Yes. `GRAPH.INFO` is designed for real-time monitoring. You can poll it periodically to detect long-running queries, queue buildup, and resource utilization issues." %}
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="What does GRAPH.INFO show when called without arguments?"
+  a1="When called without arguments, `GRAPH.INFO` returns **all sections**: RunningQueries, WaitingQueries, and ObjectPool statistics."
+  q2="What is the difference between RunningQueries and WaitingQueries?"
+  a2="**RunningQueries** shows queries currently being executed by worker threads. **WaitingQueries** shows queries that have been received but are queued waiting for a thread to become available."
+  q3="What is the ObjectPool section?"
+  a3="The ObjectPool section reports statistics about FalkorDB's internal object pool, including the number of unique objects and average references per object. This is useful for monitoring memory efficiency."
+  q4="Can I use GRAPH.INFO to monitor query performance in production?"
+  a4="Yes. `GRAPH.INFO` is designed for real-time monitoring. You can poll it periodically to detect long-running queries, queue buildup, and resource utilization issues."
+%}

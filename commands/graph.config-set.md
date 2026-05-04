@@ -103,4 +103,14 @@ if let Err(e) = client.set_config("THREAD_COUNT", 10) {
 
 {% include code_tabs.html id="config_set_error_tabs" shell=shell_1 python=python_1 javascript=javascript_1 java=java_1 rust=rust_1 %}
 
-{% include faq_accordion.html title="Frequently Asked Questions" q1="Are configuration changes persisted after a server restart?" a1="No. Values set using `GRAPH.CONFIG SET` are **not persisted** after server restart. To make changes permanent, update the server configuration file or use startup arguments." q2="Can all configuration parameters be changed at runtime?" a2="No. Some parameters like `THREAD_COUNT` can only be set at server startup. Attempting to change them at runtime will return an error: 'This configuration parameter cannot be set at run-time'." q3="Can I set multiple configuration parameters in a single command?" a3="Yes. You can set multiple parameters at once: `GRAPH.CONFIG SET key1 val1 key2 val2 ...`" q4="What happens if I set an invalid value?" a4="The command will return an error and the configuration parameter will retain its previous value. No partial changes are applied." %}
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="Are configuration changes persisted after a server restart?"
+  a1="No. Values set using `GRAPH.CONFIG SET` are **not persisted** after server restart. To make changes permanent, update the server configuration file or use startup arguments."
+  q2="Can all configuration parameters be changed at runtime?"
+  a2="No. Some parameters like `THREAD_COUNT` can only be set at server startup. Attempting to change them at runtime will return an error: 'This configuration parameter cannot be set at run-time'."
+  q3="Can I set multiple configuration parameters in a single command?"
+  a3="Yes. You can set multiple parameters at once: `GRAPH.CONFIG SET key1 val1 key2 val2 ...`"
+  q4="What happens if I set an invalid value?"
+  a4="The command will return an error and the configuration parameter will retain its previous value. No partial changes are applied."
+%}

@@ -215,4 +215,16 @@ Railway provides built-in monitoring and logging:
 | Cluster client receives `MOVED` replies | Use a cluster-aware client or `redis-cli -c`. |
 | Data is missing after redeploy | Confirm the FalkorDB data directory is mounted on a Railway volume and review the service logs for startup errors. |
 
-{% include faq_accordion.html title="Frequently Asked Questions" q1="How long does it take to deploy FalkorDB on Railway?" a1="Deployment typically completes in under 2 minutes. Railway provisions the service, pulls the Docker image, and starts FalkorDB automatically from the verified template." q2="What is the difference between FALKORDB_PRIVATE_URL and FALKORDB_PUBLIC_URL?" a2="**Private URLs** only work within the same Railway project and environment (service-to-service). **Public URLs** use a Railway TCP Proxy and are reachable from your local machine or external clients." q3="Does my data persist across Railway redeployments?" a3="Yes, if the FalkorDB data directory is mounted on a Railway volume. Volumes persist across deployments and restarts. Without a volume, data is lost on redeploy." q4="Can I deploy a FalkorDB cluster on Railway?" a4="Yes. Use the [FalkorDB Cluster template](https://railway.com/deploy/falkordb-cluster) which provisions multiple nodes. You need a cluster-aware client to handle `MOVED` redirects." q5="How do I connect from my local machine to Railway FalkorDB?" a5="Use `FALKORDB_PUBLIC_URL` with `redis-cli -u`. If the public URL is not available, enable Railway TCP Proxy for the FalkorDB service and expose the internal FalkorDB protocol port." %}
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="How long does it take to deploy FalkorDB on Railway?"
+  a1="Deployment typically completes in under 2 minutes. Railway provisions the service, pulls the Docker image, and starts FalkorDB automatically from the verified template."
+  q2="What is the difference between FALKORDB_PRIVATE_URL and FALKORDB_PUBLIC_URL?"
+  a2="**Private URLs** only work within the same Railway project and environment (service-to-service). **Public URLs** use a Railway TCP Proxy and are reachable from your local machine or external clients."
+  q3="Does my data persist across Railway redeployments?"
+  a3="Yes, if the FalkorDB data directory is mounted on a Railway volume. Volumes persist across deployments and restarts. Without a volume, data is lost on redeploy."
+  q4="Can I deploy a FalkorDB cluster on Railway?"
+  a4="Yes. Use the [FalkorDB Cluster template](https://railway.com/deploy/falkordb-cluster) which provisions multiple nodes. You need a cluster-aware client to handle `MOVED` redirects."
+  q5="How do I connect from my local machine to Railway FalkorDB?"
+  a5="Use `FALKORDB_PUBLIC_URL` with `redis-cli -u`. If the public URL is not available, enable Railway TCP Proxy for the FalkorDB service and expose the internal FalkorDB protocol port."
+%}

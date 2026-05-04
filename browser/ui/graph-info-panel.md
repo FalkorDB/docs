@@ -30,5 +30,15 @@ It also provides “*” shortcuts:
 ## Style customization entrypoint
 Next to each label, a palette button opens the **Style Settings** panel for that label.
 
-{% include faq_accordion.html title="Frequently Asked Questions" q1="How do I explore nodes of a specific label?" a1="Click a **label name** in the Graph Info panel. This automatically runs `MATCH (n:Label) RETURN n` and displays the results on the canvas." q2="Can I see all edges of a specific relationship type?" a2="Yes. Click an **edge type** in the Graph Info panel to run `MATCH p=()-[:TYPE]-() RETURN p` and visualize all relationships of that type." q3="What does the memory usage indicator show?" a3="It shows the current **memory utilization** of the selected graph in MB. This can be toggled on/off in Browser Settings." q4="How do I change the visual style of a label?" a4="Click the **palette icon** next to a label in the Graph Info panel to open the Style Settings panel where you can change color and size." %}
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="How do I explore nodes of a specific label?"
+  a1="Click a **label name** in the Graph Info panel. This automatically runs `MATCH (n:Label) RETURN n` and displays the results on the canvas."
+  q2="Can I see all edges of a specific relationship type?"
+  a2="Yes. Click an **edge type** in the Graph Info panel to run `MATCH p=()-[:TYPE]-() RETURN p` and visualize all relationships of that type."
+  q3="What does the memory usage indicator show?"
+  a3="It shows the current **memory utilization** of the selected graph in MB. This can be toggled on/off in Browser Settings."
+  q4="How do I change the visual style of a label?"
+  a4="Click the **palette icon** next to a label in the Graph Info panel to open the Style Settings panel where you can change color and size."
+%}
 

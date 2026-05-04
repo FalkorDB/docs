@@ -93,4 +93,16 @@ The Pro Tier provides a robust environment to scale your application with confid
 ⚙️ Spin up your first FalkorDB Cloud instance: 
 [![Sign Up](https://img.shields.io/badge/Sign%20Up-8A2BE2?style=for-the-badge)](https://app.falkordb.cloud/signup)
 
-{% include faq_accordion.html title="Frequently Asked Questions" q1="What does High Availability mean in the Pro Tier?" a1="High Availability (HA) uses a **master-replica** architecture with automatic failover. If the primary node fails, the replica takes over, minimizing downtime for your application." q2="How is Pro Tier pricing calculated?" a2="Pro Tier charges are based on **$0.200 per Core/Hour** and **$0.01 per Memory GB/Hour**. The starting configuration (2 cores, 8GB RAM) costs approximately **$350/month**." q3="What is continuous persistence?" a3="Continuous persistence combines **AOF (Append-Only File) and Snapshots** to ensure every committed transaction is written to disk immediately. This provides maximum data durability even during unexpected crashes." q4="Does the Pro Tier include dedicated support?" a4="Yes, the Pro Tier includes **24/7 dedicated support**. For a dedicated account manager, you would need to upgrade to the Enterprise tier." q5="Can I deploy across multiple availability zones?" a5="Yes, the Pro Tier supports **multi-zone deployment**, distributing your database across multiple availability zones for resilience against zone-level failures on AWS or GCP." %}
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="What does High Availability mean in the Pro Tier?"
+  a1="High Availability (HA) uses a **master-replica** architecture with automatic failover. If the primary node fails, the replica takes over, minimizing downtime for your application."
+  q2="How is Pro Tier pricing calculated?"
+  a2="Pro Tier charges are based on **$0.200 per Core/Hour** and **$0.01 per Memory GB/Hour**. The starting configuration (2 cores, 8GB RAM) costs approximately **$350/month**."
+  q3="What is continuous persistence?"
+  a3="Continuous persistence combines **AOF (Append-Only File) and Snapshots** to ensure every committed transaction is written to disk immediately. This provides maximum data durability even during unexpected crashes."
+  q4="Does the Pro Tier include dedicated support?"
+  a4="Yes, the Pro Tier includes **24/7 dedicated support**. For a dedicated account manager, you would need to upgrade to the Enterprise tier."
+  q5="Can I deploy across multiple availability zones?"
+  a5="Yes, the Pro Tier supports **multi-zone deployment**, distributing your database across multiple availability zones for resilience against zone-level failures on AWS or GCP."
+%}

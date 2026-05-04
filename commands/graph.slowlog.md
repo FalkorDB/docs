@@ -77,4 +77,14 @@ graph.slowlog_reset()
 
 Once cleared the information is lost forever.
 
-{% include faq_accordion.html title="Frequently Asked Questions" q1="What is the minimum latency for a query to appear in the slowlog?" a1="Only queries with a latency of **10 milliseconds or more** are logged in the slowlog." q2="How many entries does the slowlog store?" a2="The slowlog stores up to **10** of the slowest queries issued against the given graph. Older entries are evicted when new slower queries are recorded." q3="Can I reset the slowlog?" a3="Yes. Use `GRAPH.SLOWLOG graph_name RESET` to clear all entries. Note that once cleared, the information is lost permanently." q4="What information is included in each slowlog entry?" a4="Each entry contains: (1) Unix timestamp, (2) the issued command, (3) the query string, (4) execution time in milliseconds, and (5) query parameters or nil if none were provided." %}
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="What is the minimum latency for a query to appear in the slowlog?"
+  a1="Only queries with a latency of **10 milliseconds or more** are logged in the slowlog."
+  q2="How many entries does the slowlog store?"
+  a2="The slowlog stores up to **10** of the slowest queries issued against the given graph. Older entries are evicted when new slower queries are recorded."
+  q3="Can I reset the slowlog?"
+  a3="Yes. Use `GRAPH.SLOWLOG graph_name RESET` to clear all entries. Note that once cleared, the information is lost permanently."
+  q4="What information is included in each slowlog entry?"
+  a4="Each entry contains: (1) Unix timestamp, (2) the issued command, (3) the query string, (4) execution time in milliseconds, and (5) query parameters or nil if none were provided."
+%}

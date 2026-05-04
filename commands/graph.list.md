@@ -65,4 +65,14 @@ println!("{:?}", graphs);
 4) players
 ```
 
-{% include faq_accordion.html title="Frequently Asked Questions" q1="Does GRAPH.LIST require a graph name argument?" a1="No. `GRAPH.LIST` takes no arguments. It scans the entire keyspace and returns all keys that contain graph data." q2="Does GRAPH.LIST return graphs from all databases?" a2="No. `GRAPH.LIST` only returns graph keys from the currently selected Redis database (the one selected with the `SELECT` command)." q3="What is returned if no graphs exist?" a3="An empty array is returned if no graph keys exist in the current keyspace." q4="Are internal telemetry graphs included in the output?" a4="Yes. Internal telemetry graphs (e.g., `telemetry{A}`) may appear in the list. These are automatically created by FalkorDB for internal tracking purposes." %}
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="Does GRAPH.LIST require a graph name argument?"
+  a1="No. `GRAPH.LIST` takes no arguments. It scans the entire keyspace and returns all keys that contain graph data."
+  q2="Does GRAPH.LIST return graphs from all databases?"
+  a2="No. `GRAPH.LIST` only returns graph keys from the currently selected Redis database (the one selected with the `SELECT` command)."
+  q3="What is returned if no graphs exist?"
+  a3="An empty array is returned if no graph keys exist in the current keyspace."
+  q4="Are internal telemetry graphs included in the output?"
+  a4="Yes. Internal telemetry graphs (e.g., `telemetry{A}`) may appear in the list. These are automatically created by FalkorDB for internal tracking purposes."
+%}

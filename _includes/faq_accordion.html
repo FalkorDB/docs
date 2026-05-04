@@ -128,7 +128,7 @@ summary.faq-accordion-title:hover {
 {%- endfor -%}
 
 {%- if include.title -%}
-<details class="faq-accordion">
+<details class="faq-accordion"{% if include.open == "true" %} open{% endif %}>
   <summary class="faq-accordion-title">
     {{ include.title | escape }}
     <span class="faq-count">{{ faq_count }}</span>

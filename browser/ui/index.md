@@ -33,4 +33,12 @@ This section breaks down FalkorDB Browser’s UI into focused pages so you can q
 - [Table view](./table-view.md)
 - [Metadata view (Explain/Profile/Metadata)](./metadata-view.md)
 
-{% include faq_accordion.html title="Frequently Asked Questions" q1="What are the main sections of the FalkorDB Browser UI?" a1="The UI is organized into **Authentication** (login), **Navigation & global controls**, **Settings**, **Graph workspace** (canvas, panels, toolbar, chat), and **Querying & results** (editor, history, table, metadata)." q2="Where do I find graph visualization controls?" a2="Graph visualization controls are on the **Graph page**. See the [Main graph canvas](./graph-canvas.md) and [Graph toolbar](./toolbar-actions.md) pages for details on pan/zoom, selection, and element actions." q3="How do I customize the appearance of nodes?" a3="Use the [Style panel](./style-panel.md) to change node colors and sizes per label. Open it from the Graph Info panel by clicking the palette icon next to a label." %}
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="What are the main sections of the FalkorDB Browser UI?"
+  a1="The UI is organized into **Authentication** (login), **Navigation & global controls**, **Settings**, **Graph workspace** (canvas, panels, toolbar, chat), and **Querying & results** (editor, history, table, metadata)."
+  q2="Where do I find graph visualization controls?"
+  a2="Graph visualization controls are on the **Graph page**. See the [Main graph canvas](./graph-canvas.md) and [Graph toolbar](./toolbar-actions.md) pages for details on pan/zoom, selection, and element actions."
+  q3="How do I customize the appearance of nodes?"
+  a3="Use the [Style panel](./style-panel.md) to change node colors and sizes per label. Open it from the Graph Info panel by clicking the palette icon next to a label."
+%}

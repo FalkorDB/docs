@@ -59,4 +59,10 @@ RETURN flex.text.decapitalize(field) AS jsonKey
 - [text.capitalize](./capitalize.md) - Uppercase the first character
 - [text.camelCase](./camelCase.md) - Convert to camelCase format
 
-{% include faq_accordion.html title="Frequently Asked Questions" q1="What does flex.text.decapitalize do?" a1="It converts only the **first** character of a string to lowercase, leaving all other characters unchanged." q2="When would I use decapitalize?" a2="It is useful for converting PascalCase identifiers to camelCase-style keys, e.g., turning `'FirstName'` into `'firstName'`." %}
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="What does flex.text.decapitalize do?"
+  a1="It converts only the **first** character of a string to lowercase, leaving all other characters unchanged."
+  q2="When would I use decapitalize?"
+  a2="It is useful for converting PascalCase identifiers to camelCase-style keys, e.g., turning `'FirstName'` into `'firstName'`."
+%}

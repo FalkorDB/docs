@@ -91,4 +91,14 @@ GRAPH.QUERY DEMO_GRAPH
  ON CREATE SET person.first_role = movie.name"
 ```
 
-{% include faq_accordion.html title="Frequently Asked Questions" q1="What is the difference between CREATE and MERGE?" a1="**CREATE** always creates new entities. **MERGE** first checks if a matching pattern already exists; if found it binds to existing entities, otherwise it creates them. MERGE prevents duplicates." q2="How do I avoid creating duplicate nodes with MERGE?" a2="Use separate MERGE clauses for each entity rather than merging a full path. For example: `MERGE (a {name: 'Alice'}) MERGE (b {name: 'Bob'}) MERGE (a)-[:KNOWS]->(b)` ensures no duplicate nodes." q3="What are ON CREATE SET and ON MATCH SET?" a3="These directives let you conditionally set properties depending on whether MERGE created a new entity or matched an existing one. For example, `ON CREATE SET n.created = timestamp()` only runs when a new node is created." q4="Can MERGE create relationships between previously matched nodes?" a4="Yes. Use MATCH to bind existing nodes, then MERGE the relationship: `MATCH (a {name: 'Alice'}) MATCH (b {name: 'Bob'}) MERGE (a)-[:KNOWS]->(b)`. This creates the relationship only if it does not already exist." %}
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="What is the difference between CREATE and MERGE?"
+  a1="**CREATE** always creates new entities. **MERGE** first checks if a matching pattern already exists; if found it binds to existing entities, otherwise it creates them. MERGE prevents duplicates."
+  q2="How do I avoid creating duplicate nodes with MERGE?"
+  a2="Use separate MERGE clauses for each entity rather than merging a full path. For example: `MERGE (a {name: 'Alice'}) MERGE (b {name: 'Bob'}) MERGE (a)-[:KNOWS]->(b)` ensures no duplicate nodes."
+  q3="What are ON CREATE SET and ON MATCH SET?"
+  a3="These directives let you conditionally set properties depending on whether MERGE created a new entity or matched an existing one. For example, `ON CREATE SET n.created = timestamp()` only runs when a new node is created."
+  q4="Can MERGE create relationships between previously matched nodes?"
+  a4="Yes. Use MATCH to bind existing nodes, then MERGE the relationship: `MATCH (a {name: 'Alice'}) MATCH (b {name: 'Bob'}) MERGE (a)-[:KNOWS]->(b)`. This creates the relationship only if it does not already exist."
+%}

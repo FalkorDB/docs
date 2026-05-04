@@ -48,4 +48,14 @@ CREATE (c)-[:NEW_RELATION]->(:NEW_NODE)"
 
 If `c` is null for any record, this query will emit an error. In this case, no changes to the graph are committed, even if some values for `c` were resolved.
 
-{% include faq_accordion.html title="Frequently Asked Questions" q1="What is the difference between MATCH and OPTIONAL MATCH?" a1="**MATCH** requires all patterns to be satisfied or the entire row is excluded. **OPTIONAL MATCH** returns null values for pattern elements that cannot be found, similar to a LEFT JOIN in SQL." q2="Can I chain multiple OPTIONAL MATCH clauses?" a2="Yes. You can chain multiple MATCH and OPTIONAL MATCH clauses together. However, a mandatory MATCH cannot follow an OPTIONAL MATCH in the same query." q3="How does FalkorDB handle null values from OPTIONAL MATCH?" a3="FalkorDB is lenient with nulls: property accesses and function calls on null values return null rather than errors. Clauses like SET, CREATE, and DELETE will ignore null inputs gracefully." q4="Can I use WHERE with OPTIONAL MATCH?" a4="Yes. OPTIONAL MATCH clauses accept the same WHERE predicates as standard MATCH clauses to further filter the optional pattern." %}
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="What is the difference between MATCH and OPTIONAL MATCH?"
+  a1="**MATCH** requires all patterns to be satisfied or the entire row is excluded. **OPTIONAL MATCH** returns null values for pattern elements that cannot be found, similar to a LEFT JOIN in SQL."
+  q2="Can I chain multiple OPTIONAL MATCH clauses?"
+  a2="Yes. You can chain multiple MATCH and OPTIONAL MATCH clauses together. However, a mandatory MATCH cannot follow an OPTIONAL MATCH in the same query."
+  q3="How does FalkorDB handle null values from OPTIONAL MATCH?"
+  a3="FalkorDB is lenient with nulls: property accesses and function calls on null values return null rather than errors. Clauses like SET, CREATE, and DELETE will ignore null inputs gracefully."
+  q4="Can I use WHERE with OPTIONAL MATCH?"
+  a4="Yes. OPTIONAL MATCH clauses accept the same WHERE predicates as standard MATCH clauses to further filter the optional pattern."
+%}

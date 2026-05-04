@@ -56,4 +56,14 @@ GRAPH.QUERY DEMO_GRAPH
 
 This query creates three nodes (Jim, Pam, and an Employer) and two relationships (FRIENDS and WORKS), establishing a complete graph pattern in one operation.
 
-{% include faq_accordion.html title="Frequently Asked Questions" q1="Can I create nodes and relationships in a single query?" a1="Yes. You can create entire graph patterns in one CREATE statement. All unbound entities in the pattern will be created as new nodes and relationships." q2="How do I create a relationship between existing nodes?" a2="Use MATCH to find the existing nodes first, then CREATE the relationship: `MATCH (a:Person {name: 'Alice'}), (b:Person {name: 'Bob'}) CREATE (a)-[:KNOWS]->(b)`." q3="What happens if I CREATE a node without a label?" a3="FalkorDB allows creating nodes without labels using `CREATE (n)`. The node will exist in the graph but cannot be efficiently queried by label-based index scans." q4="Can I set properties during CREATE?" a4="Yes. Include properties in curly braces: `CREATE (:Person {name: 'Alice', age: 30})`. Multiple properties are separated by commas." %}
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="Can I create nodes and relationships in a single query?"
+  a1="Yes. You can create entire graph patterns in one CREATE statement. All unbound entities in the pattern will be created as new nodes and relationships."
+  q2="How do I create a relationship between existing nodes?"
+  a2="Use MATCH to find the existing nodes first, then CREATE the relationship: `MATCH (a:Person {name: 'Alice'}), (b:Person {name: 'Bob'}) CREATE (a)-[:KNOWS]->(b)`."
+  q3="What happens if I CREATE a node without a label?"
+  a3="FalkorDB allows creating nodes without labels using `CREATE (n)`. The node will exist in the graph but cannot be efficiently queried by label-based index scans."
+  q4="Can I set properties during CREATE?"
+  a4="Yes. Include properties in curly braces: `CREATE (:Person {name: 'Alice', age: 30})`. Multiple properties are separated by commas."
+%}

@@ -86,4 +86,10 @@ home/user/documents/file.txt
 - [text.format](./format.md) - Format strings with placeholders
 - [coll.zip](../collections/zip.md) - Combine two lists
 
-{% include faq_accordion.html title="Frequently Asked Questions" q1="What happens if the array contains null elements?" a1="Null elements are included in the output as empty positions between delimiters." q2="Can the delimiter be an empty string?" a2="Yes. Using an empty string `''` as the delimiter concatenates all elements without any separator." %}
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="What happens if the array contains null elements?"
+  a1="Null elements are included in the output as empty positions between delimiters."
+  q2="Can the delimiter be an empty string?"
+  a2="Yes. Using an empty string `''` as the delimiter concatenates all elements without any separator."
+%}

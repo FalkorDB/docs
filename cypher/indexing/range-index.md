@@ -487,4 +487,16 @@ GRAPH.PROFILE DEMO_GRAPH "MATCH (p:Person) WHERE p.age > 30 RETURN p"
 
 This shows detailed timing information and confirms whether the index was used.
 
-{% include faq_accordion.html title="Frequently Asked Questions" q1="What data types can be range-indexed?" a1="Range indexes support **string**, **numeric**, and **geospatial** (point) data types. They handle equality checks, comparisons (<, >, <=, >=), and string prefix operations." q2="Are range indexes used automatically?" a2="Yes. When a WHERE clause filters on an indexed label-property pair, FalkorDB automatically introduces an index scan. Use `GRAPH.EXPLAIN` or `GRAPH.PROFILE` to verify index usage." q3="Can I have multiple range indexes on the same label?" a3="Yes. You can create separate range indexes on different properties of the same label. Each index covers a single property." q4="Do range indexes support not-equal (< >) filters?" a4="No. The current range index implementation does not optimize `<>` (not-equal) filters. These queries will still perform a full label scan." q5="What is the performance tradeoff of range indexes?" a5="Range indexes speed up read queries with filters but add overhead on writes (inserts and updates to indexed properties) and consume additional memory. Index properties that are frequently filtered in WHERE clauses." %}
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="What data types can be range-indexed?"
+  a1="Range indexes support **string**, **numeric**, and **geospatial** (point) data types. They handle equality checks, comparisons (<, >, <=, >=), and string prefix operations."
+  q2="Are range indexes used automatically?"
+  a2="Yes. When a WHERE clause filters on an indexed label-property pair, FalkorDB automatically introduces an index scan. Use `GRAPH.EXPLAIN` or `GRAPH.PROFILE` to verify index usage."
+  q3="Can I have multiple range indexes on the same label?"
+  a3="Yes. You can create separate range indexes on different properties of the same label. Each index covers a single property."
+  q4="Do range indexes support not-equal (< >) filters?"
+  a4="No. The current range index implementation does not optimize `<>` (not-equal) filters. These queries will still perform a full label scan."
+  q5="What is the performance tradeoff of range indexes?"
+  a5="Range indexes speed up read queries with filters but add overhead on writes (inserts and updates to indexed properties) and consume additional memory. Index properties that are frequently filtered in WHERE clauses."
+%}

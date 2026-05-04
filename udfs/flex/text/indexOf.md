@@ -76,4 +76,10 @@ RETURN p.name, p.description
 - [text.indexesOf](./indexesOf.md) - Find all occurrences of a substring
 - [text.replace](./replace.md) - Replace substring occurrences
 
-{% include faq_accordion.html title="Frequently Asked Questions" q1="What does flex.text.indexOf return if the substring is not found?" a1="It returns `-1` when the substring is not present in the search range." q2="Is the search case-sensitive?" a2="Yes. The search is case-sensitive. Use `toLower()` on both strings if you need case-insensitive matching." %}
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="What does flex.text.indexOf return if the substring is not found?"
+  a1="It returns `-1` when the substring is not present in the search range."
+  q2="Is the search case-sensitive?"
+  a2="Yes. The search is case-sensitive. Use `toLower()` on both strings if you need case-insensitive matching."
+%}

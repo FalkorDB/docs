@@ -121,4 +121,16 @@ This relies on Python's `faulthandler` module and is only available on platforms
 - [GitHub repository](https://github.com/falkordb/falkordb-bulk-loader) — full CLI reference, input constraints, and ID namespaces
 - [GRAPH.BULK specification](/design/bulk-spec) — technical wire-format specification for the underlying endpoint
 
-{% include faq_accordion.html title="Frequently Asked Questions" q1="How much faster is the bulk loader compared to individual CREATE queries?" a1="The bulk loader uses the `GRAPH.BULK` endpoint to import data in **binary batches**, which is orders of magnitude faster than issuing individual Cypher `CREATE` queries. For large datasets (millions of nodes/edges), expect 10-100x speed improvements." q2="What Python version is required for the bulk loader?" a2="The falkordb-bulk-loader requires **Python 3.10 or later**. Install it with `pip install falkordb-bulk-loader`." q3="How are node labels and relationship types determined from CSV files?" a3="By default, the **filename** determines the label or relationship type. For example, `Person.csv` creates nodes with label `Person`, and `KNOWS.csv` creates relationships of type `KNOWS`. Use `-N` or `-R` flags to specify explicit labels/types." q4="Can I update existing data with the bulk loader?" a4="Use `falkordb-bulk-update` for incremental updates. It reads a CSV in batches and executes a parameterized Cypher query for each row. Note that it commits changes incrementally, so sanitize your CSV inputs beforehand." q5="What data types are supported in schema-enforced mode?" a5="When using `--enforce-schema`, supported types include: `STRING`, `INT`/`INTEGER`/`LONG`, `DOUBLE`/`FLOAT`, `BOOL`/`BOOLEAN`, `ARRAY`, plus special types `ID`, `START_ID`, `END_ID`, and `IGNORE`." %}
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="How much faster is the bulk loader compared to individual CREATE queries?"
+  a1="The bulk loader uses the `GRAPH.BULK` endpoint to import data in **binary batches**, which is orders of magnitude faster than issuing individual Cypher `CREATE` queries. For large datasets (millions of nodes/edges), expect 10-100x speed improvements."
+  q2="What Python version is required for the bulk loader?"
+  a2="The falkordb-bulk-loader requires **Python 3.10 or later**. Install it with `pip install falkordb-bulk-loader`."
+  q3="How are node labels and relationship types determined from CSV files?"
+  a3="By default, the **filename** determines the label or relationship type. For example, `Person.csv` creates nodes with label `Person`, and `KNOWS.csv` creates relationships of type `KNOWS`. Use `-N` or `-R` flags to specify explicit labels/types."
+  q4="Can I update existing data with the bulk loader?"
+  a4="Use `falkordb-bulk-update` for incremental updates. It reads a CSV in batches and executes a parameterized Cypher query for each row. Note that it commits changes incrementally, so sanitize your CSV inputs beforehand."
+  q5="What data types are supported in schema-enforced mode?"
+  a5="When using `--enforce-schema`, supported types include: `STRING`, `INT`/`INTEGER`/`LONG`, `DOUBLE`/`FLOAT`, `BOOL`/`BOOLEAN`, `ARRAY`, plus special types `ID`, `START_ID`, `END_ID`, and `IGNORE`."
+%}

@@ -103,5 +103,15 @@ With persistence configured, FalkorDB is now set up for reliable data storage th
 
 For high availability and data redundancy, explore [Replication](/operations/replication) to set up multiple FalkorDB instances.
 
-{% include faq_accordion.html title="Frequently Asked Questions" q1="What directory does FalkorDB use for data inside the container?" a1="FalkorDB stores data in `/var/lib/falkordb/data` by default. Mount your Docker volume to this path: `-v falkordb_data:/var/lib/falkordb/data`." q2="Should I use named volumes or bind mounts?" a2="Named volumes are recommended for most cases as they are easier to manage and portable. Use bind mounts only when you need to map a specific host directory for backups or shared access." q3="How do I verify persistence is working after a restart?" a3="Create test data, stop and restart the container, then query the data again. If it returns your previously created nodes, persistence is configured correctly." q4="Does Docker volume persistence also save ACL users?" a4="No. ACL users are stored separately in memory by default. To persist ACL users, configure an ACL file with `--aclfile` and store it on the mounted volume. See [ACL Persistence](/operations/durability/acl-persistence)." %}
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="What directory does FalkorDB use for data inside the container?"
+  a1="FalkorDB stores data in `/var/lib/falkordb/data` by default. Mount your Docker volume to this path: `-v falkordb_data:/var/lib/falkordb/data`."
+  q2="Should I use named volumes or bind mounts?"
+  a2="Named volumes are recommended for most cases as they are easier to manage and portable. Use bind mounts only when you need to map a specific host directory for backups or shared access."
+  q3="How do I verify persistence is working after a restart?"
+  a3="Create test data, stop and restart the container, then query the data again. If it returns your previously created nodes, persistence is configured correctly."
+  q4="Does Docker volume persistence also save ACL users?"
+  a4="No. ACL users are stored separately in memory by default. To persist ACL users, configure an ACL file with `--aclfile` and store it on the mounted volume. See [ACL Persistence](/operations/durability/acl-persistence)."
+%}
 

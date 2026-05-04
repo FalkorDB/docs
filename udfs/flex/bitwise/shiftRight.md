@@ -101,4 +101,10 @@ upperNibble
 - [bitwise.and](./and.md) - Bitwise AND operation
 - [bitwise.or](./or.md) - Bitwise OR operation
 
-{% include faq_accordion.html title="Frequently Asked Questions" q1="What does flex.bitwise.shiftRight do?" a1="It shifts all bits in an integer to the right by the specified number of positions with sign extension — the sign bit is preserved for negative numbers." q2="Does shiftRight perform arithmetic or logical shift?" a2="It performs an **arithmetic** right shift (sign-extending). Negative numbers remain negative after shifting. Each right shift effectively divides the value by 2 (rounding toward negative infinity)." %}
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="What does flex.bitwise.shiftRight do?"
+  a1="It shifts all bits in an integer to the right by the specified number of positions with sign extension — the sign bit is preserved for negative numbers."
+  q2="Does shiftRight perform arithmetic or logical shift?"
+  a2="It performs an **arithmetic** right shift (sign-extending). Negative numbers remain negative after shifting. Each right shift effectively divides the value by 2 (rounding toward negative infinity)."
+%}

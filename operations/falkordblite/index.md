@@ -34,4 +34,14 @@ FalkorDBLite bundles Redis with the FalkorDB module into an embedded runtime tha
 
 For production workloads or multi-user deployments, move to [FalkorDB Cloud](https://app.falkordb.cloud) or self-hosted FalkorDB using [Docker](/operations/docker) or [Kubernetes](/operations/k8s-support).
 
-{% include faq_accordion.html title="Frequently Asked Questions" q1="What is FalkorDBLite?" a1="FalkorDBLite is an embedded FalkorDB runtime that bundles Redis with the FalkorDB module into a single process your application controls. No external server management is needed." q2="When should I use FalkorDBLite vs. a full FalkorDB server?" a2="Use FalkorDBLite for local development, prototyping, CI/CD pipelines, and demos. For production workloads, multi-user access, or high availability, use FalkorDB Cloud, Docker, or Kubernetes deployments." q3="Does FalkorDBLite support data persistence?" a3="Yes. Provide a database file path when creating the instance and data persists between sessions. Without a path, data is stored in a temporary directory and may be lost." q4="Can I migrate from FalkorDBLite to a remote FalkorDB server?" a4="Yes. Simply swap the connection line in your code from `FalkorDB(path)` (embedded) to connecting to a remote host. The graph API and Cypher queries remain identical." %}
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="What is FalkorDBLite?"
+  a1="FalkorDBLite is an embedded FalkorDB runtime that bundles Redis with the FalkorDB module into a single process your application controls. No external server management is needed."
+  q2="When should I use FalkorDBLite vs. a full FalkorDB server?"
+  a2="Use FalkorDBLite for local development, prototyping, CI/CD pipelines, and demos. For production workloads, multi-user access, or high availability, use FalkorDB Cloud, Docker, or Kubernetes deployments."
+  q3="Does FalkorDBLite support data persistence?"
+  a3="Yes. Provide a database file path when creating the instance and data persists between sessions. Without a path, data is stored in a temporary directory and may be lost."
+  q4="Can I migrate from FalkorDBLite to a remote FalkorDB server?"
+  a4="Yes. Simply swap the connection line in your code from `FalkorDB(path)` (embedded) to connecting to a remote host. The graph API and Cypher queries remain identical."
+%}

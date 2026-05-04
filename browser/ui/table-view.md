@@ -26,5 +26,15 @@ Notes:
 - Complex values (objects) are serialized as JSON.
 - The output filename includes the graph ID (e.g., `<graph>_table_export.csv`).
 
-{% include faq_accordion.html title="Frequently Asked Questions" q1="When does the Table tab appear?" a1="The Table tab is enabled when your query returns **tabular data** (non-empty `graph.Data` results). If the query only returns graph elements without tabular output, the tab may be disabled." q2="How do I export query results to CSV?" a2="Click the **Export** button in the Table view to download the current results as a CSV file. The filename includes the graph ID (e.g., `mygraph_table_export.csv`)." q3="How are complex or nested values displayed?" a3="Complex values such as objects are **serialized as JSON** in both the table display and the CSV export." q4="Can I search within the table results?" a4="Yes. The Table view includes a **search** feature that lets you filter through the displayed rows." %}
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="When does the Table tab appear?"
+  a1="The Table tab is enabled when your query returns **tabular data** (non-empty `graph.Data` results). If the query only returns graph elements without tabular output, the tab may be disabled."
+  q2="How do I export query results to CSV?"
+  a2="Click the **Export** button in the Table view to download the current results as a CSV file. The filename includes the graph ID (e.g., `mygraph_table_export.csv`)."
+  q3="How are complex or nested values displayed?"
+  a3="Complex values such as objects are **serialized as JSON** in both the table display and the CSV export."
+  q4="Can I search within the table results?"
+  a4="Yes. The Table view includes a **search** feature that lets you filter through the displayed rows."
+%}
 

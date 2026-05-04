@@ -108,4 +108,16 @@ const remote = await RemoteFalkorDB.connect({
 - [Package on npm](https://www.npmjs.com/package/falkordblite)
 - [Troubleshooting guide](https://github.com/FalkorDB/falkordblite-ts/blob/main/TROUBLESHOOTING.md)
 
-{% include faq_accordion.html title="Frequently Asked Questions" q1="What Node.js version does FalkorDBLite for TypeScript require?" a1="FalkorDBLite for TypeScript requires Node.js 20 or later. It supports Linux x64 and macOS arm64. Windows users should run under WSL2." q2="How do I enable data persistence in FalkorDBLite TypeScript?" a2="Pass a `path` option to `FalkorDB.open()`: `const db = await FalkorDB.open({ path: './my-data' })`. This enables periodic snapshots and data persists between application restarts." q3="Can I control memory usage of the embedded server?" a3="Yes. Use the `maxMemory` option: `FalkorDB.open({ maxMemory: '256mb' })`. This sets the Redis `maxmemory` configuration for the embedded instance." q4="How do I migrate from FalkorDBLite to a remote FalkorDB server?" a4="Swap the import and connection line. Change from `import { FalkorDB } from 'falkordblite'` with `FalkorDB.open()` to `import { FalkorDB } from 'falkordb'` with `FalkorDB.connect({ socket: { host, port } })`." q5="What happens if the FalkorDB module fails to download during npm install?" a5="Check your network connectivity and ensure the target platform is supported (Linux x64 or macOS arm64). You can also provide a custom module path via the `modulePath` option." %}
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="What Node.js version does FalkorDBLite for TypeScript require?"
+  a1="FalkorDBLite for TypeScript requires Node.js 20 or later. It supports Linux x64 and macOS arm64. Windows users should run under WSL2."
+  q2="How do I enable data persistence in FalkorDBLite TypeScript?"
+  a2="Pass a `path` option to `FalkorDB.open()`: `const db = await FalkorDB.open({ path: './my-data' })`. This enables periodic snapshots and data persists between application restarts."
+  q3="Can I control memory usage of the embedded server?"
+  a3="Yes. Use the `maxMemory` option: `FalkorDB.open({ maxMemory: '256mb' })`. This sets the Redis `maxmemory` configuration for the embedded instance."
+  q4="How do I migrate from FalkorDBLite to a remote FalkorDB server?"
+  a4="Swap the import and connection line. Change from `import { FalkorDB } from 'falkordblite'` with `FalkorDB.open()` to `import { FalkorDB } from 'falkordb'` with `FalkorDB.connect({ socket: { host, port } })`."
+  q5="What happens if the FalkorDB module fails to download during npm install?"
+  a5="Check your network connectivity and ensure the target platform is supported (Linux x64 or macOS arm64). You can also provide a custom module path via the `modulePath` option."
+%}

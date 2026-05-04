@@ -30,5 +30,15 @@ The editor provides:
 ## Maximize mode
 The maximize button opens a full-screen editor dialog with the same Run/Clear controls.
 
-{% include faq_accordion.html title="Frequently Asked Questions" q1="What keyboard shortcuts are available for running queries?" a1="Press **Enter** or **Cmd/Ctrl + Enter** to run a query. Use **Shift + Enter** to insert a newline without executing." q2="Does the editor support autocomplete?" a2="Yes. The Monaco-based editor provides **Cypher keyword suggestions**, **function suggestions**, and **graph-scoped suggestions** (labels, relationship types, property keys) fetched from the server." q3="How do I navigate through previous queries using the keyboard?" a3="Place your cursor on the **first line** and press **Up arrow** to go back through history, or on the **last line** and press **Down arrow** to go forward." q4="Can I expand the editor to full screen?" a4="Yes. Click the **maximize button** to open a full-screen editor dialog with the same Run and Clear controls." %}
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="What keyboard shortcuts are available for running queries?"
+  a1="Press **Enter** or **Cmd/Ctrl + Enter** to run a query. Use **Shift + Enter** to insert a newline without executing."
+  q2="Does the editor support autocomplete?"
+  a2="Yes. The Monaco-based editor provides **Cypher keyword suggestions**, **function suggestions**, and **graph-scoped suggestions** (labels, relationship types, property keys) fetched from the server."
+  q3="How do I navigate through previous queries using the keyboard?"
+  a3="Place your cursor on the **first line** and press **Up arrow** to go back through history, or on the **last line** and press **Down arrow** to go forward."
+  q4="Can I expand the editor to full screen?"
+  a4="Yes. Click the **maximize button** to open a full-screen editor dialog with the same Run and Clear controls."
+%}
 

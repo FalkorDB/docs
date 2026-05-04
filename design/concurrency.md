@@ -146,4 +146,16 @@ For most use cases, single-query atomicity combined with write serialization pro
 - **Write-heavy workloads** are bottlenecked by write serialization. Consider batching multiple changes into a single query where possible.
 - Tune [`THREAD_COUNT`](/configuration#thread_count) to match the parallelism your hardware supports and your workload requires.
 
-{% include faq_accordion.html title="Frequently Asked Questions" q1="Can multiple read queries run at the same time on the same graph?" a1="Yes. FalkorDB uses a **reader-writer concurrency model** where multiple read-only queries execute in parallel against the same graph without blocking each other." q2="What happens if a write query fails midway through execution?" a2="Every write query is **atomic** — it either succeeds completely or fails without applying any partial changes. If an error occurs (e.g., a constraint violation), all modifications from that query are rolled back, including any new labels or schema changes." q3="Do readers see partial state from an in-progress write?" a3="No. Readers always observe the graph state as it existed **before** the write began, providing snapshot isolation. Once the write completes, subsequent read queries see the updated state." q4="How are concurrent write queries handled?" a4="Write queries to the same graph are **serialized** — they are queued and executed one at a time in arrival order (FIFO). This prevents race conditions and ensures each write sees the most recent committed state." q5="How do I implement multi-query transactions in FalkorDB?" a5="FalkorDB does not natively support multi-query transactions. For cases where multiple independent queries must all succeed or fail together, use Redis `MULTI`/`EXEC` blocks. Note that this serializes all enclosed commands across all graphs." %}
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="Can multiple read queries run at the same time on the same graph?"
+  a1="Yes. FalkorDB uses a **reader-writer concurrency model** where multiple read-only queries execute in parallel against the same graph without blocking each other."
+  q2="What happens if a write query fails midway through execution?"
+  a2="Every write query is **atomic** — it either succeeds completely or fails without applying any partial changes. If an error occurs (e.g., a constraint violation), all modifications from that query are rolled back, including any new labels or schema changes."
+  q3="Do readers see partial state from an in-progress write?"
+  a3="No. Readers always observe the graph state as it existed **before** the write began, providing snapshot isolation. Once the write completes, subsequent read queries see the updated state."
+  q4="How are concurrent write queries handled?"
+  a4="Write queries to the same graph are **serialized** — they are queued and executed one at a time in arrival order (FIFO). This prevents race conditions and ensures each write sees the most recent committed state."
+  q5="How do I implement multi-query transactions in FalkorDB?"
+  a5="FalkorDB does not natively support multi-query transactions. For cases where multiple independent queries must all succeed or fail together, use Redis `MULTI`/`EXEC` blocks. Note that this serializes all enclosed commands across all graphs."
+%}

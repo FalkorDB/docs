@@ -71,4 +71,16 @@ Teams building complex systems benefit from architectural advice to avoid common
 
 Architecture consultations provide recommendations on graph schema design, query optimization strategies, and integration patterns that match your application requirements.
 
-{% include faq_accordion.html title="Frequently Asked Questions" q1="What is multi-tenancy in FalkorDB?" a1="Multi-tenancy lets you run multiple isolated graph databases within a single FalkorDB instance. Each tenant has its own data, queries, and access controls while sharing the underlying infrastructure — ideal for SaaS applications." q2="Is my data encrypted in transit?" a2="Yes, **TLS encryption** is available on Startup, Pro, and Enterprise tiers. TLS encrypts all communication between your application and FalkorDB, protecting queries and results from interception." q3="How does VPC peering work with FalkorDB?" a3="VPC peering creates an isolated network where your FalkorDB instance is accessible only through private IP addresses. This is available on the **Enterprise tier** and prevents unauthorized access from the public internet." q4="Which cloud providers are supported?" a4="FalkorDB supports **AWS** and **GCP** for most tiers. **Microsoft Azure** is available through a Bring-Your-Own-Cloud (BYOC) configuration on the Enterprise tier." q5="How does FalkorDB handle data persistence?" a5="FalkorDB persists data through regular snapshots and transaction logs. Pro and Enterprise tiers include **continuous persistence** (AOF + Snapshot), ensuring committed transactions survive crashes or restarts." %}
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="What is multi-tenancy in FalkorDB?"
+  a1="Multi-tenancy lets you run multiple isolated graph databases within a single FalkorDB instance. Each tenant has its own data, queries, and access controls while sharing the underlying infrastructure — ideal for SaaS applications."
+  q2="Is my data encrypted in transit?"
+  a2="Yes, **TLS encryption** is available on Startup, Pro, and Enterprise tiers. TLS encrypts all communication between your application and FalkorDB, protecting queries and results from interception."
+  q3="How does VPC peering work with FalkorDB?"
+  a3="VPC peering creates an isolated network where your FalkorDB instance is accessible only through private IP addresses. This is available on the **Enterprise tier** and prevents unauthorized access from the public internet."
+  q4="Which cloud providers are supported?"
+  a4="FalkorDB supports **AWS** and **GCP** for most tiers. **Microsoft Azure** is available through a Bring-Your-Own-Cloud (BYOC) configuration on the Enterprise tier."
+  q5="How does FalkorDB handle data persistence?"
+  a5="FalkorDB persists data through regular snapshots and transaction logs. Pro and Enterprise tiers include **continuous persistence** (AOF + Snapshot), ensuring committed transactions survive crashes or restarts."
+%}

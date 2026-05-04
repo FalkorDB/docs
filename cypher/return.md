@@ -62,4 +62,14 @@ This query groups data by movie title and, for each movie, returns the youngest 
 | `sum` | Calculate sum of numeric values |
 
 For detailed information on aggregation functions, see the [Functions documentation](/cypher/functions#aggregating-functions).
-{% include faq_accordion.html title="Frequently Asked Questions" q1="How do I remove duplicate results?" a1="Use `RETURN DISTINCT` followed by the expression or alias to eliminate duplicate rows from the result set." q2="How does GROUP BY work in FalkorDB?" a2="FalkorDB uses **implicit grouping**. When an aggregation function (like `count`, `sum`, `avg`) appears in RETURN, all non-aggregated expressions automatically become grouping keys, similar to SQL GROUP BY." q3="Can I return all properties of a node?" a3="Yes. Simply return the alias without a property accessor, e.g. `RETURN movie`. This returns the full entity including all labels and properties." q4="What aggregation functions are available?" a4="FalkorDB supports `avg`, `collect`, `count`, `max`, `min`, `percentileCont`, `percentileDisc`, `stDev`, and `sum`." %}
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="How do I remove duplicate results?"
+  a1="Use `RETURN DISTINCT` followed by the expression or alias to eliminate duplicate rows from the result set."
+  q2="How does GROUP BY work in FalkorDB?"
+  a2="FalkorDB uses **implicit grouping**. When an aggregation function (like `count`, `sum`, `avg`) appears in RETURN, all non-aggregated expressions automatically become grouping keys, similar to SQL GROUP BY."
+  q3="Can I return all properties of a node?"
+  a3="Yes. Simply return the alias without a property accessor, e.g. `RETURN movie`. This returns the full entity including all labels and properties."
+  q4="What aggregation functions are available?"
+  a4="FalkorDB supports `avg`, `collect`, `count`, `max`, `min`, `percentileCont`, `percentileDisc`, `stDev`, and `sum`."
+%}

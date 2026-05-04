@@ -82,4 +82,10 @@ result
 - [json.fromJsonList](./fromJsonList.md) - Parse JSON string to list
 - [json.toJson](./toJson.md) - Serialize value to JSON string
 
-{% include faq_accordion.html title="Frequently Asked Questions" q1="What does flex.json.fromJsonMap return for invalid JSON?" a1="It safely returns an empty map `{}` without throwing an exception, making it safe to use without error handling." q2="Can I access nested properties from the parsed map?" a2="Yes. Once parsed, you can use dot notation to access nested properties, e.g., `parsed.field1`." %}
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="What does flex.json.fromJsonMap return for invalid JSON?"
+  a1="It safely returns an empty map `{}` without throwing an exception, making it safe to use without error handling."
+  q2="Can I access nested properties from the parsed map?"
+  a2="Yes. Once parsed, you can use dot notation to access nested properties, e.g., `parsed.field1`."
+%}

@@ -290,4 +290,16 @@ The migration process preserves:
 - Learn about [FalkorDB Operations](/operations) for production deployments
 - Check out [FalkorDB Integration](/integration) options
 
-{% include faq_accordion.html title="Frequently Asked Questions" q1="How does the RDF to FalkorDB migration handle RDF triples?" a1="RDF subject-predicate-object triples are mapped to FalkorDB nodes and relationships. Property assignments become node properties, and relationship predicates become edges between nodes." q2="What RDF formats are supported?" a2="The migration tool primarily supports TTL (Turtle) format. Place your `.ttl` files in the import directory and run the extraction script." q3="Should I use the Python loader or the Rust loader?" a3="Use the Python loader for small to medium datasets. For large datasets (millions of triples), use the [FalkorDB Rust Loader](https://github.com/FalkorDB/FalkorDB-Loader-RS) for significantly better performance with async operations and streaming." q4="What does URI shortening do?" a4="URI shortening converts long RDF URIs to shorter, more readable representations. This reduces storage requirements, improves query readability, and simplifies Cypher queries. Use `--shorten-uris` to enable it." q5="Can I customize how RDF types map to FalkorDB labels?" a5="Yes. After extracting the ontology, review and edit the generated JSON configuration file to customize how RDF types, predicates, and properties map to FalkorDB node labels, edge types, and properties." %}
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="How does the RDF to FalkorDB migration handle RDF triples?"
+  a1="RDF subject-predicate-object triples are mapped to FalkorDB nodes and relationships. Property assignments become node properties, and relationship predicates become edges between nodes."
+  q2="What RDF formats are supported?"
+  a2="The migration tool primarily supports TTL (Turtle) format. Place your `.ttl` files in the import directory and run the extraction script."
+  q3="Should I use the Python loader or the Rust loader?"
+  a3="Use the Python loader for small to medium datasets. For large datasets (millions of triples), use the [FalkorDB Rust Loader](https://github.com/FalkorDB/FalkorDB-Loader-RS) for significantly better performance with async operations and streaming."
+  q4="What does URI shortening do?"
+  a4="URI shortening converts long RDF URIs to shorter, more readable representations. This reduces storage requirements, improves query readability, and simplifies Cypher queries. Use `--shorten-uris` to enable it."
+  q5="Can I customize how RDF types map to FalkorDB labels?"
+  a5="Yes. After extracting the ontology, review and edit the generated JSON configuration file to customize how RDF types, predicates, and properties map to FalkorDB node labels, edge types, and properties."
+%}

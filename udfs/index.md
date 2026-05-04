@@ -630,4 +630,14 @@ Contributions to extend this library with additional functionality are welcome.
 ## Limitations
 > Currently, UDFs are not allowed to modify the graph in any way. You cannot update graph entities within a UDF, nor can you add or delete entities.
 
-{% include faq_accordion.html title="Frequently Asked Questions" q1="What are UDFs in FalkorDB?" a1="UDFs (User Defined Functions) are custom extensions written in JavaScript that let you add new functions to FalkorDB without modifying its source code. They are loaded via the `udf_load` command and called in Cypher queries." q2="Can UDFs modify the graph?" a2="No. Currently, UDFs are read-only — they cannot update, add, or delete graph entities. They can only compute and return values." q3="How do I call a UDF in a Cypher query?" a3="UDFs are called using the format `LibraryName.FunctionName(args)`. For example: `RETURN StringUtils.UpperCaseOdd('hello')`. The library name is specified when loading the UDF." q4="What language are UDFs written in?" a4="UDFs are written in JavaScript. You define a function and register it using `falkor.register('FunctionName', fn)` to expose it to FalkorDB." %}
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="What are UDFs in FalkorDB?"
+  a1="UDFs (User Defined Functions) are custom extensions written in JavaScript that let you add new functions to FalkorDB without modifying its source code. They are loaded via the `udf_load` command and called in Cypher queries."
+  q2="Can UDFs modify the graph?"
+  a2="No. Currently, UDFs are read-only — they cannot update, add, or delete graph entities. They can only compute and return values."
+  q3="How do I call a UDF in a Cypher query?"
+  a3="UDFs are called using the format `LibraryName.FunctionName(args)`. For example: `RETURN StringUtils.UpperCaseOdd('hello')`. The library name is specified when loading the UDF."
+  q4="What language are UDFs written in?"
+  a4="UDFs are written in JavaScript. You define a function and register it using `falkor.register('FunctionName', fn)` to expose it to FalkorDB."
+%}

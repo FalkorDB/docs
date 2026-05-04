@@ -39,5 +39,15 @@ The sidebar may show connection “mode” badges (e.g. Single/Sentinel/Cluster)
 ## Logout
 The logout button signs out and redirects to `/login`.
 
-{% include faq_accordion.html title="Frequently Asked Questions" q1="How do I switch between Graphs and Settings?" a1="Use the **left sidebar** navigation buttons. Click **GRAPHS** to open `/graph` or **SETTINGS** to open `/settings`." q2="How do I change the theme (dark/light mode)?" a2="Click the **theme toggle** button in the sidebar. It cycles through Dark → Light → System → Dark." q3="What does the Offline indicator mean?" a3="The **Offline** badge appears in the sidebar when the Browser cannot reach the backend server. Check your network connection and ensure the FalkorDB server is running." q4="How do I open the Chat panel?" a4="On the Graphs page, click the **CHAT** toggle in the left sidebar. Note: Chat requires an API key and model to be configured in Settings first." %}
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="How do I switch between Graphs and Settings?"
+  a1="Use the **left sidebar** navigation buttons. Click **GRAPHS** to open `/graph` or **SETTINGS** to open `/settings`."
+  q2="How do I change the theme (dark/light mode)?"
+  a2="Click the **theme toggle** button in the sidebar. It cycles through Dark → Light → System → Dark."
+  q3="What does the Offline indicator mean?"
+  a3="The **Offline** badge appears in the sidebar when the Browser cannot reach the backend server. Check your network connection and ensure the FalkorDB server is running."
+  q4="How do I open the Chat panel?"
+  a4="On the Graphs page, click the **CHAT** toggle in the left sidebar. Note: Chat requires an API key and model to be configured in Settings first."
+%}
 

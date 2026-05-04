@@ -33,4 +33,14 @@ Vector indexes enable similarity search on vector embeddings. These indexes are 
 
 Choose an index type from the navigation menu to learn more about creating, querying, and managing that specific type of index.
 
-{% include faq_accordion.html title="Frequently Asked Questions" q1="What types of indexes does FalkorDB support?" a1="FalkorDB supports three index types: **Range indexes** for exact-match and comparison queries, **Full-text indexes** for text search with stemming and scoring, and **Vector indexes** for similarity search on embeddings." q2="When should I create an index?" a2="Create indexes on properties frequently used in WHERE clause filters. Indexes accelerate lookups but add write overhead, so avoid indexing properties that are rarely queried or have very high write frequency." q3="Can I index relationship properties?" a3="Yes. FalkorDB supports indexing both node label properties and relationship type properties with range and full-text indexes." q4="How do I check which indexes exist in my graph?" a4="Use the procedure `CALL db.indexes()` which yields all indexes with their label, properties, type (RANGE, FULLTEXT, or VECTOR), entity type, and status." %}
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="What types of indexes does FalkorDB support?"
+  a1="FalkorDB supports three index types: **Range indexes** for exact-match and comparison queries, **Full-text indexes** for text search with stemming and scoring, and **Vector indexes** for similarity search on embeddings."
+  q2="When should I create an index?"
+  a2="Create indexes on properties frequently used in WHERE clause filters. Indexes accelerate lookups but add write overhead, so avoid indexing properties that are rarely queried or have very high write frequency."
+  q3="Can I index relationship properties?"
+  a3="Yes. FalkorDB supports indexing both node label properties and relationship type properties with range and full-text indexes."
+  q4="How do I check which indexes exist in my graph?"
+  a4="Use the procedure `CALL db.indexes()` which yields all indexes with their label, properties, type (RANGE, FULLTEXT, or VECTOR), entity type, and status."
+%}

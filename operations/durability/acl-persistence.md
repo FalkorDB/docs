@@ -169,4 +169,16 @@ docker compose up -d
 - [ACL command reference](/commands/acl) — all ACL subcommands.
 - [Redis ACL documentation](https://redis.io/docs/latest/operate/oss_and_stack/management/security/acl/) — full rule syntax.
 
-{% include faq_accordion.html title="Frequently Asked Questions" q1="Why do my ACL users disappear after restarting the container?" a1="By default, ACL users live only in memory. You must configure `--aclfile /path/to/users.acl` via `REDIS_ARGS` and run `ACL SAVE` after creating users to persist them to disk." q2="Do I need to create the ACL file before starting the container?" a2="Yes. Redis will refuse to start if the `aclfile` directive points to a non-existent file. Create an empty file first: `touch ~/falkordb/data/users.acl`." q3="Can I mix inline ACL users in redis.conf with an ACL file?" a3="No. When `aclfile` is set, you cannot also define `user` directives in `redis.conf`. Choose one mechanism for managing ACL users." q4="How do I secure the ACL file on the host?" a4="Restrict filesystem permissions since the file contains password hashes: `chmod 600 ~/falkordb/data/users.acl`. Ensure only the Docker process and administrators can read it." q5="What happens if I forget to run ACL SAVE?" a5="Any users created with `ACL SETUSER` remain only in memory. They will be lost on the next container restart. Always run `ACL SAVE` after making ACL changes." %}
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="Why do my ACL users disappear after restarting the container?"
+  a1="By default, ACL users live only in memory. You must configure `--aclfile /path/to/users.acl` via `REDIS_ARGS` and run `ACL SAVE` after creating users to persist them to disk."
+  q2="Do I need to create the ACL file before starting the container?"
+  a2="Yes. Redis will refuse to start if the `aclfile` directive points to a non-existent file. Create an empty file first: `touch ~/falkordb/data/users.acl`."
+  q3="Can I mix inline ACL users in redis.conf with an ACL file?"
+  a3="No. When `aclfile` is set, you cannot also define `user` directives in `redis.conf`. Choose one mechanism for managing ACL users."
+  q4="How do I secure the ACL file on the host?"
+  a4="Restrict filesystem permissions since the file contains password hashes: `chmod 600 ~/falkordb/data/users.acl`. Ensure only the Docker process and administrators can read it."
+  q5="What happens if I forget to run ACL SAVE?"
+  a5="Any users created with `ACL SETUSER` remain only in memory. They will be lost on the next container restart. Always run `ACL SAVE` after making ACL changes."
+%}

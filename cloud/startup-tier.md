@@ -60,4 +60,16 @@ The Startup Tier includes essential features like **TLS** and **Automated Backup
 ⚙️ Spin up your first FalkorDB Cloud instance: 
 [![Sign Up](https://img.shields.io/badge/Sign%20Up-8A2BE2?style=for-the-badge)](https://app.falkordb.cloud/signup)
 
-{% include faq_accordion.html title="Frequently Asked Questions" q1="How much does the Startup Tier cost?" a1="The Startup Tier starts at **$73/month** for 1GB of RAM. Pricing is calculated at **$0.100 per Memory GB/Hour**. You can estimate costs by multiplying your memory allocation (in GB) by $73." q2="Does the Startup Tier include backups?" a2="Yes, the Startup Tier includes **automated backups every 12 hours**, ensuring your data is regularly protected without manual intervention." q3="Is TLS encryption included?" a3="Yes, **TLS** is included in the Startup Tier, encrypting all data transmitted between your application and FalkorDB for secure production workloads." q4="Can I run multiple graphs on the Startup Tier?" a4="Yes, the Startup Tier supports **Multi-Graph / Multi-Tenancy**, allowing you to run multiple isolated graph databases within a single instance." q5="What is the maximum dataset size I can store?" a5="The max graph dataset size is approximately **75% of your instance RAM**. For example, a 1GB instance supports ~0.75GB of graph data, and a 2GB instance supports ~1.5GB. Use the [graph size calculator](https://www.falkordb.com/graph-database-graph-size-calculator/) for estimates." %}
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="How much does the Startup Tier cost?"
+  a1="The Startup Tier starts at **$73/month** for 1GB of RAM. Pricing is calculated at **$0.100 per Memory GB/Hour**. You can estimate costs by multiplying your memory allocation (in GB) by $73."
+  q2="Does the Startup Tier include backups?"
+  a2="Yes, the Startup Tier includes **automated backups every 12 hours**, ensuring your data is regularly protected without manual intervention."
+  q3="Is TLS encryption included?"
+  a3="Yes, **TLS** is included in the Startup Tier, encrypting all data transmitted between your application and FalkorDB for secure production workloads."
+  q4="Can I run multiple graphs on the Startup Tier?"
+  a4="Yes, the Startup Tier supports **Multi-Graph / Multi-Tenancy**, allowing you to run multiple isolated graph databases within a single instance."
+  q5="What is the maximum dataset size I can store?"
+  a5="The max graph dataset size is approximately **75% of your instance RAM**. For example, a 1GB instance supports ~0.75GB of graph data, and a 2GB instance supports ~1.5GB. Use the [graph size calculator](https://www.falkordb.com/graph-database-graph-size-calculator/) for estimates."
+%}

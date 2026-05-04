@@ -268,4 +268,16 @@ redis-cli BGREWRITEAOF
 - [FalkorDB Docker Persistence Setup](/operations/durability/persistence)
 - [FalkorDB Replication](/operations/replication)
 
-{% include faq_accordion.html title="Frequently Asked Questions" q1="Should I use RDB or AOF for FalkorDB persistence?" a1="For most production use cases, use both. RDB provides fast restarts and compact backups, while AOF (`appendfsync everysec`) ensures at most 1 second of data loss. Combined, they offer maximum durability." q2="What is the recommended fsync policy for AOF?" a2="Use `appendfsync everysec` (the default). It provides a good balance between performance and durability with minimal overhead (~1-2%). Use `always` only for mission-critical data where zero data loss is required." q3="How do I back up a specific graph without snapshotting the entire database?" a3="Use the Redis `DUMP` command on the graph key: `redis-cli DUMP mygraph > mygraph.dump`. This serializes just that graph for selective backup, migration, or archival." q4="Does RDB snapshot creation affect query performance?" a4="Briefly, yes. RDB uses fork() which causes a short performance degradation (milliseconds to ~1 second) on very large datasets. Between snapshots, there is no impact on normal operations." q5="How do I verify my persistence configuration is working?" a5="Run `redis-cli INFO persistence` to check RDB and AOF status. Look for `rdb_last_save_time`, `aof_enabled`, and `aof_last_rewrite_status` fields to confirm both mechanisms are active." %}
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="Should I use RDB or AOF for FalkorDB persistence?"
+  a1="For most production use cases, use both. RDB provides fast restarts and compact backups, while AOF (`appendfsync everysec`) ensures at most 1 second of data loss. Combined, they offer maximum durability."
+  q2="What is the recommended fsync policy for AOF?"
+  a2="Use `appendfsync everysec` (the default). It provides a good balance between performance and durability with minimal overhead (~1-2%). Use `always` only for mission-critical data where zero data loss is required."
+  q3="How do I back up a specific graph without snapshotting the entire database?"
+  a3="Use the Redis `DUMP` command on the graph key: `redis-cli DUMP mygraph > mygraph.dump`. This serializes just that graph for selective backup, migration, or archival."
+  q4="Does RDB snapshot creation affect query performance?"
+  a4="Briefly, yes. RDB uses fork() which causes a short performance degradation (milliseconds to ~1 second) on very large datasets. Between snapshots, there is no impact on normal operations."
+  q5="How do I verify my persistence configuration is working?"
+  a5="Run `redis-cli INFO persistence` to check RDB and AOF status. Look for `rdb_last_save_time`, `aof_enabled`, and `aof_last_rewrite_status` fields to confirm both mechanisms are active."
+%}

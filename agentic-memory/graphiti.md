@@ -241,4 +241,16 @@ If you can't connect to FalkorDB:
 - Explore [Cognee](./cognee.md) for alternative memory management approaches
 - Learn about [GenAI Tools](/genai-tools) for graph reasoning and LLM integrations
 
-{% include faq_accordion.html title="Frequently Asked Questions" q1="What does 'temporally-aware' mean in the context of Graphiti?" a1="Temporally-aware means Graphiti tracks **how entities and relationships change over time**. Each episode includes a reference time, allowing you to query the state of knowledge at any point in history and understand the evolution of relationships." q2="How do I connect Graphiti to FalkorDB?" a2="Use the `falkor://` URI scheme when initializing Graphiti: `Graphiti(uri='falkor://localhost:6379')`. For FalkorDB Cloud, include credentials: `falkor://your-instance.falkordb.cloud:6379` with `username` and `password` parameters." q3="What is an 'episode' in Graphiti?" a3="An episode is a unit of information stored in the knowledge graph - it can be text, a message, or structured data with temporal context. Graphiti processes episodes to extract entities and relationships, building the graph incrementally over time." q4="How does multi-tenancy work in Graphiti with FalkorDB?" a4="Create isolated graphs for different users or agents by specifying a unique `graph_name` parameter: `Graphiti(uri='falkor://localhost:6379', graph_name='user1_memory')`. Each graph is completely isolated, leveraging FalkorDB's native multi-graph support." q5="Do I need to call build_indices_and_constraints every time I run my application?" a5="No. Call `await graphiti.build_indices_and_constraints()` **once during initial setup** to create necessary graph indices and constraints. Subsequent runs of your application can skip this step." %}
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="What does 'temporally-aware' mean in the context of Graphiti?"
+  a1="Temporally-aware means Graphiti tracks **how entities and relationships change over time**. Each episode includes a reference time, allowing you to query the state of knowledge at any point in history and understand the evolution of relationships."
+  q2="How do I connect Graphiti to FalkorDB?"
+  a2="Use the `falkor://` URI scheme when initializing Graphiti: `Graphiti(uri='falkor://localhost:6379')`. For FalkorDB Cloud, include credentials: `falkor://your-instance.falkordb.cloud:6379` with `username` and `password` parameters."
+  q3="What is an 'episode' in Graphiti?"
+  a3="An episode is a unit of information stored in the knowledge graph - it can be text, a message, or structured data with temporal context. Graphiti processes episodes to extract entities and relationships, building the graph incrementally over time."
+  q4="How does multi-tenancy work in Graphiti with FalkorDB?"
+  a4="Create isolated graphs for different users or agents by specifying a unique `graph_name` parameter: `Graphiti(uri='falkor://localhost:6379', graph_name='user1_memory')`. Each graph is completely isolated, leveraging FalkorDB's native multi-graph support."
+  q5="Do I need to call build_indices_and_constraints every time I run my application?"
+  a5="No. Call `await graphiti.build_indices_and_constraints()` **once during initial setup** to create necessary graph indices and constraints. Subsequent runs of your application can skip this step."
+%}

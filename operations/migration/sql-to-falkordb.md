@@ -338,4 +338,16 @@ Use `--metrics-port` (or each loader’s corresponding `*_TO_FALKORDB_METRICS_PO
 - DM-SQL-to-FalkorDB repository: https://github.com/FalkorDB/DM-SQL-to-FalkorDB
 - FalkorDB docs: [https://docs.falkordb.com/](/)
 
-{% include faq_accordion.html title="Frequently Asked Questions" q1="Which SQL sources are supported for migration to FalkorDB?" a1="BigQuery, ClickHouse, Databricks, MariaDB, MySQL, PostgreSQL, Snowflake, Spark SQL (via Livy), and SQL Server are all supported with dedicated Rust-based CLI loaders." q2="Can I run continuous sync from SQL to FalkorDB?" a2="Yes. Use `--daemon --interval-secs 60` to run in daemon mode for ongoing one-way sync. The loader tracks watermarks for incremental updates so FalkorDB stays current as source rows change." q3="How do I map SQL tables to a graph model?" a3="Use `--introspect-schema` to inspect your source schema, then `--generate-template` to scaffold a starter YAML mapping. Review the mapping to define nodes (from tables) and edges (from foreign keys or join tables)." q4="What is the control plane and do I need it?" a4="The control plane is an optional web UI + REST API for managing configurations, orchestrating runs, viewing logs, and tracking metrics. It is useful for production setups but not required for simple migrations." q5="Can I purge and reload data during migration?" a5="Yes. Use `--purge-graph` to clear the entire graph before loading, or `--purge-mapping <name>` to clear only specific mappings. This is useful for full refreshes of specific data segments." %}
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="Which SQL sources are supported for migration to FalkorDB?"
+  a1="BigQuery, ClickHouse, Databricks, MariaDB, MySQL, PostgreSQL, Snowflake, Spark SQL (via Livy), and SQL Server are all supported with dedicated Rust-based CLI loaders."
+  q2="Can I run continuous sync from SQL to FalkorDB?"
+  a2="Yes. Use `--daemon --interval-secs 60` to run in daemon mode for ongoing one-way sync. The loader tracks watermarks for incremental updates so FalkorDB stays current as source rows change."
+  q3="How do I map SQL tables to a graph model?"
+  a3="Use `--introspect-schema` to inspect your source schema, then `--generate-template` to scaffold a starter YAML mapping. Review the mapping to define nodes (from tables) and edges (from foreign keys or join tables)."
+  q4="What is the control plane and do I need it?"
+  a4="The control plane is an optional web UI + REST API for managing configurations, orchestrating runs, viewing logs, and tracking metrics. It is useful for production setups but not required for simple migrations."
+  q5="Can I purge and reload data during migration?"
+  a5="Yes. Use `--purge-graph` to clear the entire graph before loading, or `--purge-mapping <name>` to clear only specific mappings. This is useful for full refreshes of specific data segments."
+%}
