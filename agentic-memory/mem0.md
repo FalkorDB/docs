@@ -297,3 +297,17 @@ If you can't connect to FalkorDB:
 - Explore [Graphiti](./graphiti.md) for temporal knowledge graph capabilities
 - Learn about [Cognee](./cognee.md) for alternative memory management approaches
 - Review [GenAI Tools](/genai-tools) for graph reasoning and LLM integrations
+
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="How does mem0-falkordb differ from the default Mem0 graph store?"
+  a1="The mem0-falkordb plugin provides **per-user graph isolation** using FalkorDB's native multi-graph support. Each user gets their own separate graph (e.g., `mem0_alice`, `mem0_bob`), eliminating the need for user_id filtering in queries and enabling simpler, faster operations."
+  q2="Do I need to modify Mem0 source code to use FalkorDB?"
+  a2="No. The mem0-falkordb plugin uses **runtime patching** to register FalkorDB as a graph store provider. Simply call `register()` before creating a Mem0 Memory instance and configure `provider: 'falkordb'` in your config."
+  q3="What happens when I call delete_all for a user?"
+  a3="When you call `delete_all(user_id='alice')`, it simply **drops the entire user graph** (e.g., `mem0_alice`). This is much faster and cleaner than deleting individual records because each user has their own isolated graph."
+  q4="Can I use FalkorDB Cloud with Mem0?"
+  a4="Yes. Update your config with your FalkorDB Cloud connection details including `host`, `port`, `username`, and `password`. Sign up at [app.falkordb.cloud](https://app.falkordb.cloud) for a free account."
+  q5="Why am I getting no results from memory search?"
+  a5="Common causes include: not calling `register()` before creating the Memory instance, incorrect or missing `user_id` parameter, invalid LLM API key for entity extraction, or misconfigured embeddings. Verify memories exist with `get_all(user_id='...')`."
+%}

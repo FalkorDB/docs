@@ -76,3 +76,11 @@ LIMIT 5
 ## See Also
 - [sim.jaccard](../similarity/jaccard.md) - Set-based similarity for collections
 - [text.jaroWinkler](./jaroWinkler.md) - Alternative string similarity metric
+
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="What does a Levenshtein distance of 0 mean?"
+  a1="A distance of 0 means the two strings are identical — no edits are needed."
+  q2="Is flex.text.levenshtein case-sensitive?"
+  a2="Yes. Uppercase and lowercase characters are considered different. Wrap inputs with `toLower()` for case-insensitive comparison."
+%}

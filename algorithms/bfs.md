@@ -96,3 +96,18 @@ Common errors that may occur:
 - **Invalid Relationship Type:** If you specify a relationship type that doesn't exist in your graph, the traversal will only include the starting node
 - **Memory Limitations:** For large graphs with high connectivity, an out-of-memory error may occur if too many nodes are visited
 - **Result Size:** If the BFS traversal returns too many nodes, query execution may be slow or time out; in such cases, try reducing the max_depth or filtering by relationship types
+
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="What is the syntax for calling BFS in FalkorDB?"
+  a1="Use `CALL algo.bfs(start_node, max_depth, relationship) YIELD nodes, edges` where start_node is a matched node, max_depth is an integer, and relationship is an optional string filter."
+  q2="How do I limit BFS to only traverse specific relationship types?"
+  a2="Pass the relationship type as the third argument, e.g. `CALL algo.bfs(n, 3, 'FRIEND')`. Pass `null` to traverse all relationship types."
+  q3="What happens if my starting node is null?"
+  a3="The procedure will raise an error. Always ensure your `MATCH` clause successfully finds the starting node before calling `algo.bfs`."
+  q4="When should I use BFS instead of algo.SPpaths?"
+  a4="Use **BFS** when you want to explore or discover nodes layer by layer (e.g. friend recommendations). Use **[algo.SPpaths](./sppath.md)** when you need the *weighted* shortest path between two specific nodes."
+  q5="How can I avoid memory issues with BFS on large graphs?"
+  a5="Set a reasonable `max_depth` value, specify a relationship type filter, and ensure your starting node properties are **indexed** for fast lookup."
+%}
+

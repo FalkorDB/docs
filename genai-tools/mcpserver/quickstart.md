@@ -121,3 +121,17 @@ MATCH path = shortestPath((start:Person)-[*]-(end:Person))
 WHERE start.name = 'Alice' AND end.name = 'Charlie'
 RETURN path
 ```
+
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="What do I need to get started with the FalkorDB MCP Server?"
+  a1="You need **Node.js 18+**, a running FalkorDB instance (locally via Docker or FalkorDB Cloud), and an MCP-compatible AI client like Claude Desktop. No additional dependencies are required since the server runs via `npx`."
+  q2="How do I connect Claude Desktop to FalkorDB?"
+  a2="Add the MCP server configuration to your Claude Desktop config file (`claude_desktop_config.json`). Set the command to `npx` with args `['-y', '@falkordb/mcpserver@latest']` and provide your FalkorDB connection details as environment variables."
+  q3="Can I run the MCP Server without Claude Desktop?"
+  a3="Yes. Run it directly with `npx -y @falkordb/mcpserver` using stdio transport, or set `MCP_TRANSPORT=http` and `MCP_PORT=3005` for HTTP transport that any MCP-compatible client can connect to."
+  q4="How do I use Docker Compose for a full setup?"
+  a4="Clone the FalkorDB-MCPServer repository, copy `.env.example` to `.env`, configure your settings, and run `docker compose up -d`. This starts both FalkorDB and the MCP server with health checks and persistent volumes."
+  q5="What can I ask Claude once connected to FalkorDB?"
+  a5="You can ask Claude to query graphs ('Show me all people who know each other'), create data ('Create a person named Alice who knows Bob'), explore structure ('List all available graphs'), and run read-only queries on replica instances."
+%}

@@ -342,3 +342,17 @@ register_function(
 - 📝 [Blog: FalkorDB-AG2.ai Integration for Multi-Agent Systems](https://www.falkordb.com/news-updates/ag2-integration-multi-agent-systems/)
 - 📝 [Blog: Structured Knowledge with FalkorDB Graph RAG](https://docs.ag2.ai/latest/docs/blog/2024/12/06/FalkorDB-Structured/)
 - 📝 [Blog: Knowledgeable Agents with FalkorDB Graph RAG](https://dev.to/ag2ai/knowledgeable-agents-with-falkordb-graph-rag-9d)
+
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="What is AG2 and how does it integrate with FalkorDB?"
+  a1="AG2 (formerly AutoGen) is an open-source multi-agent AI framework developed from OpenAI and Microsoft Research. It integrates with FalkorDB through the GraphRAG-SDK, enabling agents to query structured knowledge graphs for more accurate, explainable, and context-aware responses."
+  q2="How do I install AG2 with FalkorDB support?"
+  a2="Install with pip: `pip install -U ag2[openai,graph-rag-falkor-db]`. This installs AG2 with OpenAI and FalkorDB GraphRAG capabilities. Alternatively, install `ag2` and `graphrag_sdk` separately."
+  q3="What is FalkorGraphRagCapability?"
+  a3="`FalkorGraphRagCapability` is the AG2 capability that attaches GraphRAG-powered knowledge retrieval to any AG2 agent. Once attached, the agent can automatically query the FalkorDB knowledge graph to ground its responses in factual data."
+  q4="Can multiple agents share the same knowledge graph?"
+  a4="Yes. You can create multi-agent systems where different agents (e.g., researcher, analyst, writer) all access the same FalkorDB knowledge graph through their own `FalkorGraphRagCapability` instances, enabling collaborative workflows grounded in shared knowledge."
+  q5="Does AG2 support human-in-the-loop workflows with FalkorDB?"
+  a5="Yes. Set `human_input_mode='ALWAYS'` on a supervisor agent to require human approval for critical decisions while AI agents use GraphRAG for data-driven recommendations. This enables safe, supervised multi-agent systems."
+%}

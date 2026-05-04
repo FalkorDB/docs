@@ -282,3 +282,17 @@ Use the built-in chat interface to ask natural-language questions about your cod
 - 💻 [Code-Graph GitHub Repository](https://github.com/FalkorDB/Code-Graph)
 - 🌐 [Live Demo](https://code-graph.falkordb.com/)
 - ☁️ [FalkorDB Cloud](https://app.falkordb.cloud)
+
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="What is Code-Graph?"
+  a1="Code-Graph is a FalkorDB-powered tool that indexes source code repositories into a knowledge graph. It provides an interactive web UI and CLI for exploring code structure, querying relationships between entities, and chatting with your codebase using GraphRAG."
+  q2="Which programming languages does Code-Graph support?"
+  a2="Code-Graph currently supports **Python** (`.py`), **Java** (`.java`), and **C#** (`.cs`). It analyzes classes, functions, files, and their relationships (calls, imports, inherits)."
+  q3="Can I ask questions about my codebase in natural language?"
+  a3="Yes. Code-Graph includes a GraphRAG chat feature powered by LiteLLM that lets you ask natural-language questions about your code. It translates your questions into graph queries and returns contextual answers about dependencies, structure, and relationships."
+  q4="How do I index a repository using the CLI?"
+  a4="Install with `pip install falkordb-code-graph` or `pipx install falkordb-code-graph`, then run `cgraph index . --ignore node_modules --ignore .git` for a local project, or `cgraph index-repo https://github.com/user/repo` for a remote repository."
+  q5="Do I need authentication to use Code-Graph?"
+  a5="Authentication depends on your configuration. Set `SECRET_TOKEN` to require Bearer token auth on mutating endpoints. Set `CODE_GRAPH_PUBLIC=1` to allow read-only access without auth. When no token is configured, requests are accepted without authorization."
+%}
