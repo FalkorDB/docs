@@ -28,6 +28,7 @@ Aldis
 algo
 alice
 alister
+allowInsecureImages
 allShortestPaths
 Analytics
 analytics
@@ -38,11 +39,14 @@ ApeCloud
 apecloud
 api
 APIs
+APOC
 APPDATA
 arccosine
 arcsine
 arctangent
 args
+artifactId
+ASC
 ascii
 asin
 asList
@@ -106,6 +110,7 @@ cli
 ClickHouse
 cloudserve
 ClusterDefinition
+CMake
 CMD
 Cmd
 codebase
@@ -127,6 +132,7 @@ compton
 conf
 config
 configurability
+ConsoleSpanExporter
 const
 ConversableAgent
 ConversationBufferMemory
@@ -156,6 +162,7 @@ Cypher
 cypher
 Dani
 Databricks
+Datadog
 datafile
 dataset
 datasets
@@ -310,6 +317,7 @@ GCP's
 Gemini
 GenAI
 genai
+Geometric's
 Geospatial
 geospatial
 getConfig
@@ -342,11 +350,13 @@ GrAPL
 Groq
 GroupChat
 GroupChatManager
+groupId
 h1
 HAS
 HashMap
 hasLabels
 haversin
+healthcheck
 hh
 highmem
 HNSW
@@ -378,6 +388,7 @@ Integrations
 integrations
 Interned
 io
+ioredis
 ioredisgraph
 IPDPS
 IPs
@@ -640,7 +651,9 @@ rdf
 reachability
 readme
 readOnlyQuery
+rebalancing
 recomputation
+redeployments
 redgraph
 Redhat
 Redis
@@ -719,6 +732,7 @@ slowLog
 slowlog
 snakeCase
 snake_case
+snapshotting
 sourceName
 sourceNode
 SPARQL
@@ -821,6 +835,7 @@ TXT
 txt
 typeOf
 TypeScript
+uber
 UDF
 UDFs
 UI
