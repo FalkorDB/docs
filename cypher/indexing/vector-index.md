@@ -9,6 +9,8 @@ grand_parent: "Cypher Language"
 
 # Vector indexing
 
+FalkorDB's vector index uses the HNSW (Hierarchical Navigable Small World) algorithm with cosine similarity or Euclidean distance, supporting 1–4096-dimensional vectors.
+
 With the introduction of the `vector` data-type a new type of index was introduced.
 A vector index is a dedicated index for indexing and searching through vectors.
 
@@ -90,6 +92,8 @@ graph.query("CREATE VECTOR INDEX FOR ()-[e:Call]->() ON (e.summary) OPTIONS {dim
   - `euclidean`: Euclidean distance (L2 norm). Best for embeddings where magnitude matters.
   - `cosine`: Cosine similarity. Best for normalized embeddings where direction matters more than magnitude.
 
+**Note:** The supported dimension range is 1–4096.
+
 ### Optional Parameters
 
 These parameters control the HNSW (Hierarchical Navigable Small World) index structure:
@@ -108,6 +112,13 @@ These parameters control the HNSW (Hierarchical Navigable Small World) index str
   - Higher values improve recall but slow down queries
   - Can be adjusted per-query for speed/accuracy tradeoffs
   - Recommended: Start with 10, increase if recall is insufficient
+
+### See Also
+
+- [Full-text Index](./fulltext-index.md) — for keyword and text-based search
+- [Range Index](./range-index.md) — for numeric and string range queries
+
+> **Tip:** Use a vector index for semantic similarity search, a full-text index for keyword search, and a range index for exact or range-based property lookups.
 
 ## Inserting vectors
 
