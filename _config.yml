@@ -39,6 +39,12 @@ plugins:
 mermaid:
   version: "10.9.1"
 
+exclude:
+  - README.md
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor
 
 # Footer last edited timestamp
 last_edit_timestamp: true
