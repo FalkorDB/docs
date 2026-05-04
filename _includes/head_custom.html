@@ -109,7 +109,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   overflow: hidden;
 }
 
-.faq-accordion-title {
+/* Group-level: <summary> title bar (when <details> wrapper is used) */
+summary.faq-accordion-title {
+  list-style: none;
   margin: 0;
   padding: 0.6rem 1rem;
   background: var(--code-background-color, #2d333b);
@@ -120,6 +122,28 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  cursor: pointer;
+  user-select: none;
+}
+
+summary.faq-accordion-title::-webkit-details-marker {
+  display: none;
+}
+
+/* Group-level collapse indicator (▶ rotates to ▼ when open) */
+summary.faq-accordion-title::before {
+  content: "▶";
+  font-size: 0.65rem;
+  transition: transform 0.2s ease;
+  flex-shrink: 0;
+}
+
+.faq-accordion[open] > summary.faq-accordion-title::before {
+  transform: rotate(90deg);
+}
+
+summary.faq-accordion-title:hover {
+  filter: brightness(1.1);
 }
 
 .faq-count {

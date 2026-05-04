@@ -1,18 +1,21 @@
-<div class="faq-accordion">
-  {%- if include.title -%}
-  {%- assign faq_count = 0 -%}
-  {%- for i in (1..10) -%}
-    {%- assign q_key = "q" | append: i -%}
-    {%- assign a_key = "a" | append: i -%}
-    {%- if include[q_key] and include[a_key] -%}
-      {%- assign faq_count = faq_count | plus: 1 -%}
-    {%- endif -%}
-  {%- endfor -%}
-  <p class="faq-accordion-title">
+{%- assign faq_count = 0 -%}
+{%- for i in (1..10) -%}
+  {%- assign q_key = "q" | append: i -%}
+  {%- assign a_key = "a" | append: i -%}
+  {%- if include[q_key] and include[a_key] -%}
+    {%- assign faq_count = faq_count | plus: 1 -%}
+  {%- endif -%}
+{%- endfor -%}
+
+{%- if include.title -%}
+<details class="faq-accordion" open>
+  <summary class="faq-accordion-title">
     {{ include.title }}
     <span class="faq-count">{{ faq_count }}</span>
-  </p>
-  {%- endif -%}
+  </summary>
+{%- else -%}
+<div class="faq-accordion">
+{%- endif -%}
 
   {%- for i in (1..10) -%}
     {%- assign q_key = "q" | append: i -%}
@@ -25,4 +28,9 @@
   </details>
     {%- endif -%}
   {%- endfor -%}
+
+{%- if include.title -%}
+</details>
+{%- else -%}
 </div>
+{%- endif -%}
