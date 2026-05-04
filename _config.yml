@@ -39,6 +39,12 @@ plugins:
 mermaid:
   version: "10.9.1"
 
+defaults:
+  - scope:
+      path: ""
+    values:
+      last_modified_at: true
+
 exclude:
   - README.md
   - Gemfile
