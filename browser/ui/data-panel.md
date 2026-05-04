@@ -36,3 +36,5 @@ Properties are managed via the embedded table component. Typical operations incl
 ## Keyboard shortcut
 - `Esc` closes the Data panel.
 
+{% include faq_accordion.html title="Frequently Asked Questions" q1="How do I open the Data panel?" a1="**Select a node or edge** on the graph canvas by clicking it. The Data panel opens automatically to show the element's properties." q2="Can I edit node labels from the Data panel?" a2="Yes. For nodes (when you are not a Read-Only user), you can **Add Label** or **Remove Label** directly from the Data panel. Changes are reflected immediately on the canvas." q3="How do I close the Data panel?" a3="Press **Esc** on your keyboard or click elsewhere on the canvas to deselect the element." q4="What information does the Data panel show?" a4="It displays the element's **ID**, **attributes count**, **labels** (for nodes) or **relationship type** (for edges), and a **properties table** with all key/value pairs." %}
+
