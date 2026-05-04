@@ -195,3 +195,5 @@ RETURN a
                2) 1) "birthyear"
                   2) "1979"
 ```
+
+{% include faq_accordion.html title="Frequently Asked Questions" q1="Where should I place CSV files for import?" a1="Local CSV files should be placed in the configured data directory (see the `IMPORT_FOLDER` configuration setting). All `file://` URIs are resolved relative to that directory." q2="How do I import a CSV with headers?" a2="Use `LOAD CSV WITH HEADERS FROM 'file://data.csv' AS row` — this makes `row` a map where you access columns by name (e.g. `row['name']`) instead of by index." q3="Can I import CSV files from remote URLs?" a3="Yes. FalkorDB supports importing via HTTPS: `LOAD CSV FROM 'https://example.com/data.csv' AS row`. Only HTTPS URLs are supported for remote imports." q4="How do I handle different column delimiters?" a4="Use the `FIELDTERMINATOR` option: `LOAD CSV FROM 'file://data.csv' AS row FIELDTERMINATOR ';'`. The default delimiter is a comma." q5="Are all CSV values loaded as strings?" a5="Yes. All parsed values are treated as strings. Use conversion functions like `toInteger()`, `toFloat()`, or `toBoolean()` to cast values to their correct types." %}
