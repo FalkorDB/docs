@@ -142,7 +142,7 @@ summary.faq-accordion-title:hover {
     {%- assign a_key = "a" | append: i -%}
     {%- assign open_key = "open" | append: i -%}
     {%- if include[q_key] and include[a_key] -%}
-  <details class="faq-item"{% if include[open_key] %} open{% endif %}>
+  <details class="faq-item"{% if include[open_key] == "true" %} open{% endif %}>
     <summary class="faq-question">{{ include[q_key] }}</summary>
     <div class="faq-answer">{{ include[a_key] | markdownify }}</div>
   </details>
