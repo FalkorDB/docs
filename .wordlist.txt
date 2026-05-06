@@ -789,3 +789,6 @@ Streamable
 
 ErBEqN
 gg
+Postgres
+Supabase
+kubectl
