@@ -106,7 +106,7 @@ cargo run --release -- --config clickhouse.incremental.yaml --daemon --interval-
 ```bash
 cd Databricks-to-FalkorDB/databricks-to-falkordb
 cargo build --release
-cargo run --release -- --config path/to/config.yaml
+cargo run --release -- --config ../databricks_sample_to_falkordb.yaml
 ```
 
 Note: Databricks currently supports one-shot runs only (no daemon/purge flags).
@@ -150,13 +150,14 @@ cd PostgreSQL-to-FalkorDB/postgres-to-falkordb
 cargo build --release
 
 # One-shot run
-cargo run --release -- --config path/to/config.yaml
+cargo run --release -- --config example.config.yaml
 
 # Continuous sync
-cargo run --release -- --config path/to/config.yaml --daemon --interval-secs 60
+cargo run --release -- --config example.config.yaml --daemon --interval-secs 60
 ```
 
 Note: PostgreSQL currently supports daemon mode but not purge flags.
+For Supabase-compatible Postgres endpoints, include `sslmode=require` (minimum) or `sslmode=verify-full` in `POSTGRES_URL`.
 
 ### Snowflake → FalkorDB
 
@@ -167,10 +168,10 @@ cd Snowflake-to-FalkorDB
 cargo build --release
 
 # One-shot run
-cargo run --release -- --config path/to/config.yaml
+cargo run --release -- --config snowflake_stream_example.yaml
 
 # Continuous sync
-cargo run --release -- --config path/to/config.yaml --daemon --interval-secs 300
+cargo run --release -- --config snowflake_stream_example.yaml --daemon --interval-secs 300
 ```
 
 ### Spark SQL (Livy) → FalkorDB
@@ -180,7 +181,7 @@ cargo run --release -- --config path/to/config.yaml --daemon --interval-secs 300
 ```bash
 cd Spark-to-FalkorDB/spark-to-falkordb
 cargo build --release
-cargo run --release -- --config path/to/config.yaml
+cargo run --release -- --config ../spark_to_falkordb_e2e.sample.yaml
 ```
 
 Note: Spark currently supports one-shot runs only (no daemon/purge flags).
@@ -206,10 +207,10 @@ Purge flags are supported by: BigQuery, ClickHouse, MariaDB, MySQL, Snowflake, S
 
 ```bash
 # Purge full graph before loading
-cargo run --release -- --config path/to/config.yaml --purge-graph
+cargo run --release -- --config ClickHouse-to-FalkorDB/clickhouse.incremental.yaml --purge-graph
 
 # Purge selected mappings
-cargo run --release -- --config path/to/config.yaml --purge-mapping customers
+cargo run --release -- --config ClickHouse-to-FalkorDB/clickhouse.incremental.yaml --purge-mapping customers
 ```
 
 ## Schema introspection + template scaffolding
@@ -218,10 +219,10 @@ Supported by: BigQuery, ClickHouse, Databricks, MariaDB, MySQL, PostgreSQL, Snow
 
 ```bash
 # Print normalized source schema summary
-cargo run --release -- --config path/to/config.yaml --introspect-schema
+cargo run --release -- --config PostgreSQL-to-FalkorDB/postgres-to-falkordb/example.config.yaml --introspect-schema
 
 # Generate starter mapping template
-cargo run --release -- --config path/to/config.yaml --generate-template --output scaffold.yaml
+cargo run --release -- --config PostgreSQL-to-FalkorDB/postgres-to-falkordb/example.config.yaml --generate-template --output PostgreSQL-to-FalkorDB/postgres.generated.template.yaml
 ```
 
 Notes:
@@ -237,7 +238,7 @@ The control plane discovers tools by scanning for `tool.manifest.json` and provi
 - Preview extracted source schema
 - Generate scaffold templates from source metadata
 - Visualize graph topology from mappings
-- Start runs (one-shot and daemon where supported)
+- Start runs (one-shot and daemon where supported) on local or Kubernetes execution backend
 - Stop active runs
 - Stream live logs (SSE) and view persisted logs for historical runs
 - Inspect and clear per-config incremental state/watermarks
@@ -263,6 +264,16 @@ Configuration (environment variables):
 - `CONTROL_PLANE_DATA_DIR` (default `control-plane/data/`)
 - `CONTROL_PLANE_UI_DIST` (default `control-plane/ui/dist/`)
 - `CONTROL_PLANE_API_KEY` (optional bearer token requirement)
+- `CONTROL_PLANE_ENABLED_TOOLS` (optional comma-separated allow-list, for example `postgres,snowflake`)
+- `CONTROL_PLANE_EXECUTION_BACKEND` (`local` or `kubernetes`, default `local`)
+- `CONTROL_PLANE_K8S_NAMESPACE` (namespace where Kubernetes run workloads are created)
+- `CONTROL_PLANE_K8S_RUNNER_IMAGE` (multi-tool runner image reference)
+- `CONTROL_PLANE_K8S_IMAGE_PULL_POLICY` (runner image pull policy)
+- `CONTROL_PLANE_K8S_SERVICE_ACCOUNT` (service account used for run workloads)
+- `CONTROL_PLANE_K8S_SHARED_PVC` (optional shared PVC for file-backed state)
+- `CONTROL_PLANE_K8S_ENV_SECRET` / `CONTROL_PLANE_K8S_ENV_CONFIGMAP` (optional env sources projected to run pods)
+- `CONTROL_PLANE_K8S_KUBECTL_BIN` (kubectl binary path; default `kubectl`)
+- `CONTROL_PLANE_K8S_BINARY_DIR` (tool binary directory in runner image; default `/opt/falkordb/bin`)
 
 Selected API endpoints:
 
@@ -282,7 +293,7 @@ Selected API endpoints:
 
 Notes:
 
-- Runs execute locally on the host machine running the control plane server.
+- Runs execute either locally on the control-plane host (`local`) or as Kubernetes workloads (`kubernetes`).
 - Runtime artifacts are persisted under `CONTROL_PLANE_DATA_DIR`, including a SQLite DB and per-run files.
 - SSE auth with API key may use query-string token fallback because browser `EventSource` does not support custom auth headers.
 
@@ -292,6 +303,38 @@ UI development (optional):
 cd control-plane/ui
 npm install
 npm run dev
+```
+
+## Container + Kubernetes single-deployment model
+
+The DM-SQL repository includes a single-release deployment path that pairs one control-plane instance with one multi-tool runner image:
+
+- `control-plane/Dockerfile` builds the control-plane API + UI image.
+- `docker/runner.Dockerfile` builds a runner image containing all SQL-to-FalkorDB binaries.
+- `docker/build-images.sh <version> [registry]` builds both images with one version tag.
+- `deploy/helm/dm-sql-to-falkordb/` provides a Helm chart for a unified deployment.
+
+Example image build:
+
+```bash
+./docker/build-images.sh v0.1.0 ghcr.io/falkordb
+```
+
+Example Helm install (single control plane with selected tools enabled):
+
+```bash
+helm upgrade --install dm-sql deploy/helm/dm-sql-to-falkordb \
+  --namespace dm-sql --create-namespace \
+  --set global.version=v0.1.0 \
+  --set tools.enabled.postgres=true \
+  --set tools.enabled.snowflake=true \
+  --set tools.enabled.mysql=false \
+  --set tools.enabled.mariadb=false \
+  --set tools.enabled.clickhouse=false \
+  --set tools.enabled.bigquery=false \
+  --set tools.enabled.databricks=false \
+  --set tools.enabled.spark=false \
+  --set tools.enabled.sqlserver=false
 ```
 
 ## Metrics feature
