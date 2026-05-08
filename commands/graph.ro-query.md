@@ -32,7 +32,7 @@ graph.ro_query("MATCH (p:president)-[:born]->(:state {name:'Hawaii'}) RETURN p")
 {% endcapture %}
 
 {% capture javascript_0 %}
-const result = await graph.ro_query("MATCH (p:president)-[:born]->(:state {name:'Hawaii'}) RETURN p");
+const result = await graph.roQuery("MATCH (p:president)-[:born]->(:state {name:'Hawaii'}) RETURN p");
 console.log(result);
 {% endcapture %}
 

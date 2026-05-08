@@ -55,7 +55,7 @@ cargo add falkordb
     <dependency>
       <groupId>com.falkordb</groupId>
       <artifactId>jfalkordb</artifactId>
-      <version>0.4.0</version>
+      <version>0.7.0</version>
     </dependency>
   </dependencies>
 {% endcapture %}
@@ -283,7 +283,7 @@ const query = `
 MATCH (alice:User {name: "Alice"})-[:FRIENDS_WITH]->(friend)
 RETURN friend.name AS Friend
 `;
-const result = await graph.ro_query(query);
+const result = await graph.roQuery(query);
 console.log("Alice's friends:");
 for (const record of result) {
   console.log(record["Friend"]);
@@ -338,7 +338,7 @@ const query = `
 MATCH (bob:User {name: "Bob"})-[:CREATED]->(post:Post)
 RETURN post.content AS PostContent
 `;
-const result = await graph.ro_query(query);
+const result = await graph.roQuery(query);
 console.log("Posts created by Bob:");
 for (const record of result) {
   console.log(record["PostContent"]);

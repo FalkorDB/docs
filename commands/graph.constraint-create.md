@@ -150,15 +150,22 @@ console.log(result);
 {% endcapture %}
 
 {% capture java_0 %}
-FalkorDB client = new FalkorDB();
-Graph graph = client.selectGraph("g");
+import com.falkordb.*;
+
+Driver driver = FalkorDB.driver("localhost", 6379);
+Graph graph = driver.graph("g");
 graph.query("CREATE INDEX FOR (p:Person) ON (p.first_name, p.last_name)");
-String result = client.createConstraint("g", "UNIQUE", "NODE", "Person", Arrays.asList("first_name", "last_name"));
-System.out.println(result);
+graph.constraintCreate("UNIQUE", "NODE", "Person", "first_name", "last_name");
 {% endcapture %}
 
 {% capture rust_0 %}
-let client = FalkorDB::connect_default();
+use falkordb::{FalkorClientBuilder, FalkorConnectionInfo};
+
+let connection_info: FalkorConnectionInfo = "falkor://127.0.0.1:6379"
+    .try_into().expect("Invalid connection info");
+let client = FalkorClientBuilder::new()
+    .with_connection_info(connection_info)
+    .build().expect("Failed to build client");
 let graph = client.select_graph("g");
 graph.query("CREATE INDEX FOR (p:Person) ON (p.first_name, p.last_name)")?;
 let result = client.create_constraint("g", "UNIQUE", "NODE", "Person", &["first_name", "last_name"])?;
@@ -187,8 +194,7 @@ console.log(result);
 {% endcapture %}
 
 {% capture java_1 %}
-String result = client.createConstraint("g", "MANDATORY", "RELATIONSHIP", "Visited", Arrays.asList("date"));
-System.out.println(result);
+graph.constraintCreate("MANDATORY", "RELATIONSHIP", "Visited", "date");
 {% endcapture %}
 
 {% capture rust_1 %}
@@ -213,12 +219,12 @@ print(result)
 {% endcapture %}
 
 {% capture javascript_2 %}
-const result = await graph.ro_query("call db.constraints()");
+const result = await graph.roQuery("call db.constraints()");
 console.log(result);
 {% endcapture %}
 
 {% capture java_2 %}
-ResultSet result = graph.ro_query("call db.constraints()");
+ResultSet result = graph.readOnlyQuery("call db.constraints()");
 System.out.println(result);
 {% endcapture %}
 
