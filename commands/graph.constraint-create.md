@@ -155,7 +155,8 @@ import com.falkordb.*;
 Driver driver = FalkorDB.driver("localhost", 6379);
 Graph graph = driver.graph("g");
 graph.query("CREATE INDEX FOR (p:Person) ON (p.first_name, p.last_name)");
-graph.constraintCreate("UNIQUE", "NODE", "Person", "first_name", "last_name");
+String result = graph.constraintCreate("UNIQUE", "NODE", "Person", "first_name", "last_name");
+System.out.println(result);
 {% endcapture %}
 
 {% capture rust_0 %}
@@ -194,7 +195,8 @@ console.log(result);
 {% endcapture %}
 
 {% capture java_1 %}
-graph.constraintCreate("MANDATORY", "RELATIONSHIP", "Visited", "date");
+String result = graph.constraintCreate("MANDATORY", "RELATIONSHIP", "Visited", "date");
+System.out.println(result);
 {% endcapture %}
 
 {% capture rust_1 %}

@@ -55,7 +55,7 @@ cargo add falkordb
     <dependency>
       <groupId>com.falkordb</groupId>
       <artifactId>jfalkordb</artifactId>
-      <version>0.7.0</version>
+      <version>0.8.0</version>
     </dependency>
   </dependencies>
 {% endcapture %}

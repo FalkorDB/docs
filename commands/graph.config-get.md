@@ -39,8 +39,8 @@ console.log(config);
 import com.falkordb.*;
 
 Driver driver = FalkorDB.driver("localhost", 6379);
-Graph graph = driver.graph("myGraph");
-// Use GRAPH.CONFIG GET via the underlying connection
+String config = driver.configGet("*");
+System.out.println(config);
 {% endcapture %}
 
 {% capture rust_0 %}
@@ -75,7 +75,8 @@ console.log(timeout);
 {% endcapture %}
 
 {% capture java_1 %}
-// Use GRAPH.CONFIG GET via the underlying connection
+String timeout = driver.configGet("TIMEOUT_DEFAULT");
+System.out.println(timeout);
 {% endcapture %}
 
 {% capture rust_1 %}

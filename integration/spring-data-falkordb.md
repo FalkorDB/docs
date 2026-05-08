@@ -42,7 +42,7 @@ Add the following dependencies to your project:
 <dependency>
     <groupId>com.falkordb</groupId>
     <artifactId>jfalkordb</artifactId>
-    <version>0.7.0</version>
+    <version>0.8.0</version>
 </dependency>
 ```
 
@@ -51,7 +51,7 @@ Add the following dependencies to your project:
 ```gradle
 dependencies {
     implementation 'org.springframework.data:spring-data-falkordb:1.0.8'
-    implementation 'com.falkordb:jfalkordb:0.7.0'
+    implementation 'com.falkordb:jfalkordb:0.8.0'
 }
 ```
 

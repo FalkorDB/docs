@@ -54,7 +54,9 @@ console.log(await client.configGet('TIMEOUT_DEFAULT'));
 import com.falkordb.*;
 
 Driver driver = FalkorDB.driver("localhost", 6379);
-// Use GRAPH.CONFIG GET / SET via the underlying connection
+System.out.println(driver.configGet("TIMEOUT_DEFAULT"));
+driver.configSet("TIMEOUT_DEFAULT", 10000);
+System.out.println(driver.configGet("TIMEOUT_DEFAULT"));
 {% endcapture %}
 
 {% capture rust_0 %}
@@ -94,8 +96,11 @@ try {
 {% endcapture %}
 
 {% capture java_1 %}
-// THREAD_COUNT cannot be set at run-time
-// Use GRAPH.CONFIG SET via the underlying connection
+try {
+    driver.configSet("THREAD_COUNT", 10);
+} catch (Exception e) {
+    System.out.println(e.getMessage());
+}
 {% endcapture %}
 
 {% capture rust_1 %}
