@@ -85,7 +85,7 @@ import com.falkordb.*;
 
 Driver driver = FalkorDB.driver("localhost", 6379);
 Graph graph = driver.graph("g");
-String result = graph.constraintDrop("UNIQUE", "NODE", "Person", "first_name", "last_name");
+String result = graph.dropConstraint("UNIQUE", "NODE", "Person", "first_name", "last_name");
 System.out.println(result);
 {% endcapture %}
 
