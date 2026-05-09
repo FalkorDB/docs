@@ -73,15 +73,17 @@ console.log(result);
 {% endcapture %}
 
 {% capture java_0 %}
-FalkorDB client = new FalkorDB();
+import com.falkordb.*;
+
+Driver driver = FalkorDB.driver("localhost", 6379);
 
 // Create Graph 'A'
-Graph graphA = client.selectGraph("A");
+Graph graphA = driver.graph("A");
 graphA.query("CREATE (:Account {number: 516637})");
 
 // Copy Graph 'A' to 'Z'
-client.copyGraph("A", "Z");
-Graph graphZ = client.selectGraph("Z");
+graphA.copyGraph("Z");
+Graph graphZ = driver.graph("Z");
 
 // Query Graph 'Z'
 ResultSet result = graphZ.query("MATCH (a:Account) RETURN a.number");
@@ -89,7 +91,13 @@ System.out.println(result);
 {% endcapture %}
 
 {% capture rust_0 %}
-let client = FalkorDB::connect_default();
+use falkordb::{FalkorClientBuilder, FalkorConnectionInfo};
+
+let connection_info: FalkorConnectionInfo = "falkor://127.0.0.1:6379"
+    .try_into().expect("Invalid connection info");
+let client = FalkorClientBuilder::new()
+    .with_connection_info(connection_info)
+    .build().expect("Failed to build client");
 let graph_a = client.select_graph("A");
 
 graph_a.query("CREATE (:Account {number: 516637})")?;

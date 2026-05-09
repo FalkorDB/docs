@@ -38,15 +38,23 @@ console.log(result);
 {% endcapture %}
 
 {% capture java_0 %}
-FalkorDB client = new FalkorDB();
-Graph graph = client.selectGraph("us_government");
+import com.falkordb.*;
+
+Driver driver = FalkorDB.driver("localhost", 6379);
+Graph graph = driver.graph("us_government");
 String query = "MATCH (p:President)-[:BORN]->(h:State {name:'Hawaii'}) RETURN p";
 String result = graph.explain(query);
 System.out.println(result);
 {% endcapture %}
 
 {% capture rust_0 %}
-let client = FalkorDB::connect_default();
+use falkordb::{FalkorClientBuilder, FalkorConnectionInfo};
+
+let connection_info: FalkorConnectionInfo = "falkor://127.0.0.1:6379"
+    .try_into().expect("Invalid connection info");
+let client = FalkorClientBuilder::new()
+    .with_connection_info(connection_info)
+    .build().expect("Failed to build client");
 let graph = client.select_graph("us_government");
 let query = r#"MATCH (p:President)-[:BORN]->(h:State {name:'Hawaii'}) RETURN p"#;
 let result = graph.explain(query)?;

@@ -24,26 +24,34 @@ graph.config get *
 {% capture python_0 %}
 from falkordb import FalkorDB
 client = FalkorDB()
-config = client.get_config('*')
+config = client.config_get('*')
 print(config)
 {% endcapture %}
 
 {% capture javascript_0 %}
 import { FalkorDB } from 'falkordb';
 const client = await FalkorDB.connect();
-const config = await client.getConfig('*');
+const config = await client.configGet('*');
 console.log(config);
 {% endcapture %}
 
 {% capture java_0 %}
-FalkorDB client = new FalkorDB();
-Map<String, Object> config = client.getConfig("*");
+import com.falkordb.*;
+
+Driver driver = FalkorDB.driver("localhost", 6379);
+String config = driver.configGet("*");
 System.out.println(config);
 {% endcapture %}
 
 {% capture rust_0 %}
-let client = FalkorDB::connect_default();
-let config = client.get_config("*")?;
+use falkordb::{FalkorClientBuilder, FalkorConnectionInfo};
+
+let connection_info: FalkorConnectionInfo = "falkor://127.0.0.1:6379"
+    .try_into().expect("Invalid connection info");
+let client = FalkorClientBuilder::new()
+    .with_connection_info(connection_info)
+    .build().expect("Failed to build client");
+let config = client.config_get("*")?;
 println!("{:?}", config);
 {% endcapture %}
 
@@ -57,22 +65,22 @@ graph.config get TIMEOUT_DEFAULT
 {% endcapture %}
 
 {% capture python_1 %}
-timeout = client.get_config('TIMEOUT_DEFAULT')
+timeout = client.config_get('TIMEOUT_DEFAULT')
 print(timeout)
 {% endcapture %}
 
 {% capture javascript_1 %}
-const timeout = await client.getConfig('TIMEOUT_DEFAULT');
+const timeout = await client.configGet('TIMEOUT_DEFAULT');
 console.log(timeout);
 {% endcapture %}
 
 {% capture java_1 %}
-Object timeout = client.getConfig("TIMEOUT_DEFAULT");
+String timeout = driver.configGet("TIMEOUT_DEFAULT");
 System.out.println(timeout);
 {% endcapture %}
 
 {% capture rust_1 %}
-let timeout = client.get_config("TIMEOUT_DEFAULT")?;
+let timeout = client.config_get("TIMEOUT_DEFAULT")?;
 println!("{:?}", timeout);
 {% endcapture %}
 

@@ -37,31 +37,39 @@ graph.config get TIMEOUT_DEFAULT
 {% capture python_0 %}
 from falkordb import FalkorDB
 client = FalkorDB()
-print(client.get_config('TIMEOUT_DEFAULT'))
-client.set_config('TIMEOUT_DEFAULT', 10000)
-print(client.get_config('TIMEOUT_DEFAULT'))
+print(client.config_get('TIMEOUT_DEFAULT'))
+client.config_set('TIMEOUT_DEFAULT', 10000)
+print(client.config_get('TIMEOUT_DEFAULT'))
 {% endcapture %}
 
 {% capture javascript_0 %}
 import { FalkorDB } from 'falkordb';
 const client = await FalkorDB.connect();
-console.log(await client.getConfig('TIMEOUT_DEFAULT'));
-await client.setConfig('TIMEOUT_DEFAULT', 10000);
-console.log(await client.getConfig('TIMEOUT_DEFAULT'));
+console.log(await client.configGet('TIMEOUT_DEFAULT'));
+await client.configSet('TIMEOUT_DEFAULT', 10000);
+console.log(await client.configGet('TIMEOUT_DEFAULT'));
 {% endcapture %}
 
 {% capture java_0 %}
-FalkorDB client = new FalkorDB();
-System.out.println(client.getConfig("TIMEOUT_DEFAULT"));
-client.setConfig("TIMEOUT_DEFAULT", 10000);
-System.out.println(client.getConfig("TIMEOUT_DEFAULT"));
+import com.falkordb.*;
+
+Driver driver = FalkorDB.driver("localhost", 6379);
+System.out.println(driver.configGet("TIMEOUT_DEFAULT"));
+driver.configSet("TIMEOUT_DEFAULT", 10000);
+System.out.println(driver.configGet("TIMEOUT_DEFAULT"));
 {% endcapture %}
 
 {% capture rust_0 %}
-let client = FalkorDB::connect_default();
-println!("{:?}", client.get_config("TIMEOUT_DEFAULT")?);
-client.set_config("TIMEOUT_DEFAULT", 10000)?;
-println!("{:?}", client.get_config("TIMEOUT_DEFAULT")?);
+use falkordb::{FalkorClientBuilder, FalkorConnectionInfo};
+
+let connection_info: FalkorConnectionInfo = "falkor://127.0.0.1:6379"
+    .try_into().expect("Invalid connection info");
+let client = FalkorClientBuilder::new()
+    .with_connection_info(connection_info)
+    .build().expect("Failed to build client");
+println!("{:?}", client.config_get("TIMEOUT_DEFAULT")?);
+client.config_set("TIMEOUT_DEFAULT", 10000)?;
+println!("{:?}", client.config_get("TIMEOUT_DEFAULT")?);
 {% endcapture %}
 
 {% include code_tabs.html id="config_set_tabs" shell=shell_0 python=python_0 javascript=javascript_0 java=java_0 rust=rust_0 %}
@@ -74,14 +82,14 @@ graph.config set THREAD_COUNT 10
 
 {% capture python_1 %}
 try:
-    client.set_config('THREAD_COUNT', 10)
+    client.config_set('THREAD_COUNT', 10)
 except Exception as e:
     print(e)
 {% endcapture %}
 
 {% capture javascript_1 %}
 try {
-  await client.setConfig('THREAD_COUNT', 10);
+  await client.configSet('THREAD_COUNT', 10);
 } catch (e) {
   console.error(e);
 }
@@ -89,14 +97,14 @@ try {
 
 {% capture java_1 %}
 try {
-    client.setConfig("THREAD_COUNT", 10);
+    driver.configSet("THREAD_COUNT", 10);
 } catch (Exception e) {
-    System.out.println(e);
+    System.out.println(e.getMessage());
 }
 {% endcapture %}
 
 {% capture rust_1 %}
-if let Err(e) = client.set_config("THREAD_COUNT", 10) {
+if let Err(e) = client.config_set("THREAD_COUNT", 10) {
     println!("{}", e);
 }
 {% endcapture %}

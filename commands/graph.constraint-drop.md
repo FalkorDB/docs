@@ -81,13 +81,22 @@ console.log(result);
 {% endcapture %}
 
 {% capture java_0 %}
-FalkorDB client = new FalkorDB();
-String result = client.dropConstraint("g", "UNIQUE", "NODE", "Person", Arrays.asList("first_name", "last_name"));
+import com.falkordb.*;
+
+Driver driver = FalkorDB.driver("localhost", 6379);
+Graph graph = driver.graph("g");
+String result = graph.dropConstraint("UNIQUE", "NODE", "Person", "first_name", "last_name");
 System.out.println(result);
 {% endcapture %}
 
 {% capture rust_0 %}
-let client = FalkorDB::connect_default();
+use falkordb::{FalkorClientBuilder, FalkorConnectionInfo};
+
+let connection_info: FalkorConnectionInfo = "falkor://127.0.0.1:6379"
+    .try_into().expect("Invalid connection info");
+let client = FalkorClientBuilder::new()
+    .with_connection_info(connection_info)
+    .build().expect("Failed to build client");
 let result = client.drop_constraint("g", "UNIQUE", "NODE", "Person", &["first_name", "last_name"])?;
 println!("{}", result);
 {% endcapture %}
