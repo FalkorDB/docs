@@ -845,7 +845,6 @@ UDFs
 UI
 unaliased
 undirected
-UNIQIE
 unnormalized
 unparseable
 unserializable
