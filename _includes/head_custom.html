@@ -253,6 +253,7 @@ document.addEventListener("DOMContentLoaded", function () {
 }
 </script>
 
+{%- if page.url == "/" -%}
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -277,6 +278,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 }
 </script>
+{%- endif -%}
 
 {%- comment -%}
   BreadcrumbList JSON-LD: emitted on inner pages where the URL has at least one path segment.
