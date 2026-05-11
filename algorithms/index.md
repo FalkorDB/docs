@@ -39,6 +39,9 @@ For path expressions like `shortestPath()` used directly in Cypher queries, refe
 - **[Betweenness Centrality](./betweenness-centrality.md)**  
   Calculates the number of shortest paths that pass through each node, indicating its importance as a connector in the graph.
 
+- **[Harmonic Centrality](./harmonic-centrality.md)**  
+  Measures node importance using the sum of inverse shortest-path distances to all reachable nodes, making it robust on disconnected graphs.
+
 ## Community Detection
 
 - **[WCC (Weakly Connected Components)](./wcc.md)**  

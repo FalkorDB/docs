@@ -362,6 +362,7 @@ haversin
 healthcheck
 hh
 highmem
+HarmonicCentrality
 HNSW
 Homebrew
 hostname
