@@ -215,6 +215,28 @@ document.addEventListener("DOMContentLoaded", function () {
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "headline": {{ page.title | jsonify }},
+  "dateModified": "{{ page.last_modified_at | default: site.time | date_to_xmlschema }}",
+  "publisher": {
+    "@type": "Organization",
+    "name": "FalkorDB",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "{{ '/images/falkor-logo.png' | absolute_url }}"
+    }
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "{{ page.url | absolute_url }}"
+  },
+  "description": {{ page.description | default: page.title | jsonify }}
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
   "@type": "Organization",
   "name": "FalkorDB",
   "url": "https://www.falkordb.com",
@@ -247,20 +269,6 @@ document.addEventListener("DOMContentLoaded", function () {
     "@type": "Offer",
     "price": "0",
     "priceCurrency": "USD"
-  },
-  "review": {
-    "@type": "Review",
-    "author": {
-      "@type": "Organization",
-      "name": "FalkorDB"
-    },
-    "datePublished": "2025-01-01",
-    "reviewBody": "FalkorDB is a high-performance graph database with OpenCypher support, vector and full-text indexing, and built-in GraphRAG capabilities for GenAI applications.",
-    "reviewRating": {
-      "@type": "Rating",
-      "ratingValue": "5",
-      "bestRating": "5"
-    }
   },
   "publisher": {
     "@type": "Organization",
