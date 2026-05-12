@@ -148,5 +148,5 @@ John is not given a score, and the connection to John does not affect the score 
 - **Score interpretation**: Higher scores indicate nodes that are, on average, closer to more nodes. A score of 0 means the node cannot reach any other node.
 - **`reachable` field**: The `reachable` yield provides an estimated count of nodes reachable from each node via HLL sketch. Yield it explicitly when you need this information.
 - **Label/type filtering**: When `nodeLabels` or `relationshipTypes` are provided, only matching nodes and edges participate in the computation. All named labels and types must exist in the graph, or an error is returned.
-- **Performance**: The algorithm uses sparse matrix operations (GraphBLAS/LAGraph) and scales well on large graphs.
+- **Performance**: The algorithm uses sparse matrix operations and scales well on large graphs.
 
