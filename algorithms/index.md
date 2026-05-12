@@ -15,6 +15,15 @@ These algorithms are accessible via the `CALL algo.<name>()` interface and are b
 
 This overview summarizes the available algorithms and links to their individual documentation.
 
+## Table of Contents
+
+- [Pathfinding Algorithms](#pathfinding-algorithms)
+- [Centrality Measures](#centrality-measures)
+- [Community Detection](#community-detection)
+- [Network Flow Algorithms](#network-flow-algorithms)
+
+---
+
 ## Pathfinding Algorithms
 
 - **[BFS](./bfs.md)**  
@@ -49,6 +58,11 @@ For path expressions like `shortestPath()` used directly in Cypher queries, refe
 
 - **[CDLP (Community Detection Label Propagation)](./cdlp.md)**
   Detects communities in a network, by propagating labels through the graph structure.
+
+## Network Flow Algorithms
+
+- **[MaxFlow](./maxflow.md)**
+  Computes the maximum amount of flow that can be routed through a directed, weighted graph from one or more **source** nodes to one or more **sink** (target) nodes.
 
 {% include faq_accordion.html
   title="Frequently Asked Questions"
