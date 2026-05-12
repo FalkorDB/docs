@@ -1,21 +1,16 @@
 # Incrementally updates the FalkorDB docs knowledge graph on PR merge.
 #
 # On merge to main of a PR touching .md files, this workflow:
-#   1. Checks out this repo (the content) and FalkorDB/GraphRAG-UI (the Python).
-#   2. Runs `python -m server.scripts.update_graph --graph-id docs_benchmark`
-#      from the GraphRAG-UI checkout. That script:
-#        - looks up the :Graph node for docs_benchmark in the org graph
-#        - reads ingestion config (LLM/embedder/chunker/extractor/resolver/globs)
-#          from the node, NOT from this workflow — the workflow stays generic
-#        - copies the live graph to docs_v{N+1}_pending via redis-cli GRAPH.COPY
-#        - SDK.apply_changes(added, modified, deleted) + SDK.finalize() on pending
-#        - smoke-tests the `questions` from the :Graph node against the pending
-#        - on success: atomic Cypher flip of active_graph; drops old previous
-#        - on failure: exits non-zero, leaves pending graph for inspection
+#   1. Computes the diff (added / modified / deleted .md files).
+#   2. Reads the content of added + modified files.
+#   3. POSTs the payload to GraphRAG-UI's /api/admin/update-graph endpoint.
+#   4. The endpoint does all the SDK / FalkorDB / smoke-test work server-side
+#      using its existing credentials. This workflow only needs ONE secret:
+#      ``UPDATE_GRAPH_TOKEN`` — a shared-secret bearer token.
 #
-# The only docs-specific input from this file is `--graph-id docs_benchmark`.
-# Everything else lives as data in the org graph so user-created widgets
-# share the same code path with no workflow changes.
+# No Azure OpenAI keys, no FalkorDB credentials, no PAT for cross-repo
+# checkout. Failures from the server come back as HTTP non-2xx with a
+# detail message; curl --fail-with-body bubbles them up as a CI failure.
 
 name: Update graph (incremental)
 
@@ -38,46 +33,83 @@ jobs:
     if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    env:
+      GRAPH_ID: docs_benchmark
+      # The base URL of the GraphRAG-UI deployment. Set this as a repo or
+      # environment variable so it can differ between staging and prod.
+      GRAPHRAG_UI_URL: ${{ vars.GRAPHRAG_UI_URL }}
     steps:
-      - name: Checkout docs (this repo)
+      - name: Checkout docs
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0    # need history for git diff against an arbitrary base
-          path: docs
+          fetch-depth: 0  # need history for diff against the PR base
 
-      - name: Checkout GraphRAG-UI (action code lives there)
-        uses: actions/checkout@v4
-        with:
-          repository: FalkorDB/GraphRAG-UI
-          # Required if GraphRAG-UI is private. Drop this line entirely
-          # when the repo becomes public.
-          token: ${{ secrets.GRAPHRAG_UI_CHECKOUT_PAT }}
-          path: graphrag-ui
-
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-
-      - name: Install GraphRAG-UI server deps
-        run: pip install -r graphrag-ui/server/requirements.txt
-
-      - name: Run incremental update
+      - name: Build diff payload
+        id: payload
         env:
-          # FalkorDB connection (the action talks via redis-cli AND via the SDK).
-          FALKORDB_HOST: ${{ secrets.FALKORDB_HOST }}
-          FALKORDB_PORT: ${{ secrets.FALKORDB_PORT }}
-          FALKORDB_PASSWORD: ${{ secrets.FALKORDB_PASSWORD }}
-
-          # Azure OpenAI credentials — read at factory time inside
-          # IngestionConfig.{LLM,Embedder}Config.to_*(). Never stored in
-          # the org graph alongside the rest of the config.
-          AZURE_OPENAI_API_KEY: ${{ secrets.AZURE_OPENAI_API_KEY }}
-          AZURE_OPENAI_ENDPOINT: ${{ secrets.AZURE_OPENAI_ENDPOINT }}
-          AZURE_OPENAI_DEPLOYMENT: ${{ secrets.AZURE_OPENAI_DEPLOYMENT }}
-        working-directory: graphrag-ui
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.sha }}
         run: |
-          python -m server.scripts.update_graph \
-            --graph-id docs_benchmark \
-            --source-root ../docs \
-            --base-sha ${{ github.event.pull_request.base.sha }} \
-            --head-sha ${{ github.sha }}
+          python3 - <<'PY'
+          import json, os, pathlib, subprocess, sys
+
+          base, head = os.environ["BASE_SHA"], os.environ["HEAD_SHA"]
+          out = subprocess.run(
+              ["git", "diff", "--name-status", base, head],
+              capture_output=True, text=True, check=True,
+          ).stdout
+
+          added, modified, deleted = {}, {}, []
+          for line in out.splitlines():
+              parts = line.split("\t")
+              if not parts:
+                  continue
+              status = parts[0][0]  # R100 -> R
+              if status == "R" and len(parts) >= 3:
+                  old, new = parts[1], parts[2]
+                  if old.endswith(".md"):
+                      deleted.append(old)
+                  if new.endswith(".md"):
+                      try:
+                          added[new] = pathlib.Path(new).read_text(encoding="utf-8")
+                      except FileNotFoundError:
+                          pass
+                  continue
+              if len(parts) < 2 or not parts[1].endswith(".md"):
+                  continue
+              path = parts[1]
+              if status == "A":
+                  added[path] = pathlib.Path(path).read_text(encoding="utf-8")
+              elif status == "M":
+                  modified[path] = pathlib.Path(path).read_text(encoding="utf-8")
+              elif status == "D":
+                  deleted.append(path)
+
+          payload = {
+              "graph_id": os.environ.get("GRAPH_ID", "docs_benchmark"),
+              "files": {"added": added, "modified": modified, "deleted": deleted},
+          }
+          if not (added or modified or deleted):
+              # Path filter on the workflow trigger should make this rare, but
+              # be explicit: no work to do, exit clean before the POST.
+              print("::notice::No .md changes after filtering — skipping graph update.", file=sys.stderr)
+              with open(os.environ["GITHUB_OUTPUT"], "a") as f:
+                  f.write("skip=true\n")
+              sys.exit(0)
+
+          pathlib.Path("payload.json").write_text(json.dumps(payload))
+          print(f"::notice::Diff: +{len(added)} ~{len(modified)} -{len(deleted)} files")
+          with open(os.environ["GITHUB_OUTPUT"], "a") as f:
+              f.write("skip=false\n")
+          PY
+
+      - name: Call admin update-graph endpoint
+        if: steps.payload.outputs.skip != 'true'
+        run: |
+          curl -X POST "$GRAPHRAG_UI_URL/api/admin/update-graph" \
+            -H "Authorization: Bearer ${{ secrets.UPDATE_GRAPH_TOKEN }}" \
+            -H "Content-Type: application/json" \
+            --data-binary @payload.json \
+            --fail-with-body \
+            --show-error \
+            --max-time 1800
