@@ -38,7 +38,7 @@ RETURN flex.text.lpad('5', 3, '0') AS result
 ```
 
 **Output:**
-```
+```text
 result
 ------
 005
@@ -51,7 +51,7 @@ RETURN flex.text.lpad(toString(o.id), 8, '0') AS orderId
 ```
 
 **Output:**
-```
+```text
 orderId
 --------
 00000123
@@ -66,7 +66,7 @@ RETURN flex.text.lpad(label, 12, ' ') AS aligned
 ```
 
 **Output:**
-```
+```text
 aligned
 --------------
       Total:
@@ -85,3 +85,11 @@ aligned
 - [text.rpad](./rpad.md) - Pad the end (right side) of a string
 - [text.repeat](./repeat.md) - Repeat a string multiple times
 - [text.format](./format.md) - Format strings with placeholders
+
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="What happens if the string is already longer than the target length?"
+  a1="The original string is returned unchanged — no truncation occurs."
+  q2="What is the default padding character?"
+  a2="The default padding character is a space `' '` if no `padChar` argument is provided."
+%}

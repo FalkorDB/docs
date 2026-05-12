@@ -216,3 +216,17 @@ If you encounter issues with FalkorDBLite:
 
 1. Check the [FalkorDBLite GitHub Issues](https://github.com/FalkorDB/falkordblite/issues)
 2. Review the [troubleshooting guide](https://github.com/FalkorDB/falkordblite/blob/master/TROUBLESHOOTING.md)
+
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="What Python version does FalkorDBLite require?"
+  a1="FalkorDBLite requires Python 3.12 or higher. The package automatically installs its dependencies including `redis>=4.5` and `psutil`."
+  q2="Why do I get a libomp error on macOS?"
+  a2="The FalkorDB module requires the OpenMP runtime library on macOS. Install it with Homebrew: `brew install libomp`. This resolves the 'Library not loaded: libomp.dylib' error."
+  q3="Can I use FalkorDBLite in CI/CD pipelines?"
+  a3="Yes. FalkorDBLite is ideal for CI/CD because it requires no external server setup. Install with `pip install falkordblite`, create a temporary database, run tests, and the process cleans up automatically."
+  q4="How do I work with multiple graphs in one database?"
+  a4="Call `db.select_graph('name')` for each graph. Each graph is independent within the same database instance. Use `db.list_graphs()` to see all available graphs."
+  q5="Is FalkorDBLite suitable for production?"
+  a5="No. FalkorDBLite is designed for development, testing, and prototyping. For production, use [FalkorDB Cloud](https://app.falkordb.cloud), Docker, or Kubernetes deployments with proper persistence and high availability."
+%}

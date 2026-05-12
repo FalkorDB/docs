@@ -348,7 +348,7 @@ redis-cli -h 127.0.0.1 -p 6379 -a <your-password>
 
 Execute a simple Cypher query to verify the connection:
 
-```
+```cypher
 GRAPH.QUERY social "CREATE (:Person {name: 'Alice', age: 30})-[:KNOWS]->(:Person {name: 'Bob', age: 25})"
 GRAPH.QUERY social "MATCH (p:Person) RETURN p.name, p.age"
 ```
@@ -841,10 +841,24 @@ kubectl delete cluster -n demo falkordb-replication
 
 - [KubeBlocks Official Documentation](https://kubeblocks.io/docs/preview/user_docs/overview/introduction)
 - [KubeBlocks FalkorDB Examples](https://github.com/apecloud/kubeblocks-addons/tree/main/examples/falkordb)
-- [FalkorDB Documentation](https://docs.falkordb.com)
+- [FalkorDB Documentation](/)
 - [Redis Sentinel Documentation](https://redis.io/docs/latest/operate/oss_and_stack/management/sentinel/)
 - [Kubernetes Operators](https://kubernetes.io/docs/concepts/extend-kubernetes/operator/)
 
 ## Summary
 
 KubeBlocks provides a powerful, production-ready solution for deploying and managing FalkorDB on Kubernetes. With support for multiple topologies, comprehensive Day-2 operations, and automated backup/restore capabilities, KubeBlocks simplifies the operational complexity of running FalkorDB in Kubernetes environments. Whether you need a simple standalone instance for development or a highly available sharded cluster for production, KubeBlocks has you covered.
+
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="What Kubernetes version does KubeBlocks require?"
+  a1="KubeBlocks requires Kubernetes >= v1.21. Ensure you also have `kubectl` and `helm` installed before deploying."
+  q2="What topologies does KubeBlocks support for FalkorDB?"
+  a2="KubeBlocks supports **standalone** (single instance for development), **replication** (master + replicas with Sentinel for HA), and **sharding** (Redis Cluster mode for horizontal scalability)."
+  q3="How do I scale my FalkorDB cluster with KubeBlocks?"
+  a3="Create an OpsRequest with `type: HorizontalScaling` to add or remove replicas, or `type: VerticalScaling` to change CPU and memory resources. KubeBlocks handles the operation automatically."
+  q4="Does KubeBlocks support automated backups?"
+  a4="Yes. KubeBlocks supports full backups via RDB (BGSAVE) and continuous backups via AOF for point-in-time recovery. Configure a BackupRepo (e.g., S3) and create Backup resources."
+  q5="How do I connect to FalkorDB deployed with KubeBlocks?"
+  a5="Retrieve the password from the Kubernetes secret (`falkordb-replication-conn-credential`), then use `kubectl port-forward` or expose via LoadBalancer/NodePort. Connect with `redis-cli -a <password>`."
+%}

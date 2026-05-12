@@ -39,7 +39,7 @@ RETURN flex.text.indexesOf('hello hello hello', 'hello') AS positions
 ```
 
 **Output:**
-```
+```text
 positions
 -----------
 [0, 6, 12]
@@ -51,7 +51,7 @@ RETURN flex.text.indexesOf('abcabcabc', 'abc', 1, 9) AS positions
 ```
 
 **Output:**
-```
+```text
 positions
 ---------
 [3, 6]
@@ -79,3 +79,11 @@ ORDER BY importanceScore DESC
 - [text.indexOf](./indexOf.md) - Find first occurrence only
 - [text.replace](./replace.md) - Replace substring occurrences
 - [text.regexGroups](./regexGroups.md) - Find matches using regex patterns
+
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="What does flex.text.indexesOf return if no matches are found?"
+  a1="It returns an empty list `[]`."
+  q2="Can I limit the search to a specific range?"
+  a2="Yes. Use the optional `from` and `to` parameters to restrict the search within a substring range."
+%}

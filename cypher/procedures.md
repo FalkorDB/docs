@@ -44,5 +44,24 @@ GRAPH.QUERY social "CALL db.labels() YIELD label"
 | db.idx.vector.queryRelationships | `relationshipType`, `attribute`, `k`, `query`  | `relationship`, `score`       | Retrieve up to k relationships with vectors most similar to the query vector using the specified relationship type and attribute. See [Vector Indexing](/cypher/indexing/vector-index) for details. |
 | algo.pageRank                   | `label`, `relationship-type`                    | `node`, `score`               | Runs the pagerank algorithm over nodes of given label, considering only edges of given relationship type.                                                                              |
 | algo.BFS                        | `source-node`, `max-level`, `relationship-type` | `nodes`, `edges`              | Performs BFS to find all nodes connected to the source. A `max level` of 0 indicates unlimited and a non-NULL `relationship-type` defines the relationship type that may be traversed. See [BFS Algorithm](/algorithms/bfs) for details. |
-| algo.MSF                        | `config`                                        | `src`, `dest`, `weight`, `relationshipType` | Computes the Minimum Spanning Forest of the graph. See [MSF Algorithm](/algorithms/msf) for details.                                                                                   |
+| algo.MSF                        | `config`                                        | `edges`, `nodes`              | Computes the Minimum Spanning Forest of the graph. Returns arrays of edges and nodes for each tree. See [MSF Algorithm](/algorithms/msf) for details.                                   |
+| algo.WCC                        | `config`                                        | `node`, `componentId`         | Finds weakly connected components in the graph. See [WCC Algorithm](/algorithms/wcc) for details.                                                                                       |
+| algo.betweenness                | `config`                                        | `node`, `score`               | Calculates the betweenness centrality of each node in the graph. See [Betweenness Centrality Algorithm](/algorithms/betweenness-centrality) for details.                                |
+| algo.labelPropagation           | `config`                                        | `node`, `communityId`         | Detects communities using label propagation. See [CDLP Algorithm](/algorithms/cdlp) for details.                                                                                        |
+| algo.SPpaths                    | `config`                                        | `path`, `pathWeight`, `pathCost` | Finds shortest paths between a source and a target node. See [SPpaths Algorithm](/algorithms/sppath) for details.                                                                    |
+| algo.SSpaths                    | `config`                                        | `path`, `pathWeight`, `pathCost` | Finds all shortest paths from a source node to multiple reachable nodes. See [SSpaths Algorithm](/algorithms/sspath) for details.                                                    |
 | dbms.procedures()               | none                                            | `name`, `mode`                | List all procedures in the DBMS, yields for every procedure its name and mode (read/write).                                                                                            |
+
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="How do I call a procedure in FalkorDB?"
+  a1="Use the `CALL` syntax: `CALL db.labels()`. Optionally add `YIELD` to select specific return columns: `CALL db.labels() YIELD label`."
+  q2="What is the YIELD clause?"
+  a2="YIELD specifies which columns to return from a procedure. When omitted, all columns defined by the procedure are returned automatically."
+  q3="What graph algorithms are available as procedures?"
+  a3="FalkorDB includes **PageRank** (`algo.pageRank`), **BFS** (`algo.BFS`), **Shortest Paths** (`algo.SPpaths`), **Single-Source Paths** (`algo.SSpaths`), **Weakly Connected Components** (`algo.WCC`), **Minimum Spanning Forest** (`algo.MSF`), **Betweenness Centrality** (`algo.betweenness`), and **Label Propagation** (`algo.labelPropagation`)."
+  q4="How do I perform full-text search?"
+  a4="First create an index with `CALL db.idx.fulltext.createNodeIndex('Label', 'property')`, then query with `CALL db.idx.fulltext.queryNodes('Label', 'search term') YIELD node, score`."
+  q5="How do I list all available procedures?"
+  a5="Use `CALL dbms.procedures()` which yields the name and mode (read/write) of every registered procedure."
+%}

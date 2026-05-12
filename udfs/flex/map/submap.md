@@ -38,7 +38,7 @@ RETURN flex.map.submap(user, ['name', 'email']) AS contact
 ```
 
 **Output:**
-```
+```text
 contact
 ---------------------------------
 {name: 'Alice', email: 'alice@example.com'}
@@ -64,7 +64,7 @@ RETURN flex.map.submap(map, ['a', 'c', 'd']) AS result
 ```
 
 **Output:**
-```
+```text
 result
 ------
 {a: 1}
@@ -90,3 +90,11 @@ RETURN flex.map.submap(properties(p), requestedFields) AS response
 - [map.removeKeys](./removeKeys.md) - Remove specific keys (inverse operation)
 - [map.removeKey](./removeKey.md) - Remove a single key
 - [map.merge](./merge.md) - Combine multiple maps
+
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="What does flex.map.submap do?"
+  a1="It extracts a subset of key-value pairs from a map, returning a new map containing only the specified keys."
+  q2="What happens if a requested key does not exist in the map?"
+  a2="Missing keys are simply omitted from the resulting submap — no error is thrown."
+%}

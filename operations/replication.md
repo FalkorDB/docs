@@ -12,6 +12,31 @@ redirect_from:
 
 FalkorDB supports advanced configurations to enable replication, ensuring that your data is available and synchronized across multiple instances. This guide will walk you through setting up FalkorDB in Docker with replication enabled, providing high availability and data redundancy.
 
+## Replication Architecture Overview
+
+FalkorDB replication follows a single-primary model: one master instance accepts all writes and asynchronously streams its changes to one or more replicas. Replicas serve read-only traffic, allowing read workloads to scale horizontally and providing a hot standby in case the master fails.
+
+```mermaid
+flowchart LR
+    W(["Write client"]) -- "GRAPH.QUERY" --> M
+    Rc(["Read client"]) -- "GRAPH.RO_QUERY" --> Rep1
+    Rc -- "GRAPH.RO_QUERY" --> Rep2
+
+    subgraph Primary["Primary"]
+        M["falkordb-master<br/>(read + write)"]
+    end
+
+    subgraph Replicas["Replicas (read-only)"]
+        Rep1["falkordb-replica1"]
+        Rep2["falkordb-replica2"]
+    end
+
+    M == "async replication stream" ==> Rep1
+    M == "async replication stream" ==> Rep2
+```
+
+Writes always flow through the master, while replicas mirror the master's state and absorb read traffic. Because replication is asynchronous, replicas may lag the master slightly under heavy write load — see the [Best Practices](#best-practices) section for tips on monitoring lag.
+
 ## Prerequisites
 
 Before you begin, ensure you have the following:
@@ -34,7 +59,7 @@ First, create a Docker network to allow communication between the FalkorDB nodes
 docker network create falkordb-network
 ```
 
-### 1.1 Setting up the Master Instance
+### 1.2 Setting up the Master Instance
 
 Start the master FalkorDB instance:
 
@@ -49,7 +74,7 @@ docker run -d \
 
 This instance runs in standalone mode and will serve as the primary (master) node.
 
-### 1.2 Setting up the Replica Instance
+### 1.3 Setting up the Replica Instance
 
 Next, start the replica instance:
 
@@ -61,7 +86,7 @@ docker run -d \
   falkordb/falkordb
 ```
 
-### 1.3 Configuring Replication
+### 1.4 Configuring Replication
 
 Connect to the replica instance and configure it to replicate data from the master:
 
@@ -126,3 +151,17 @@ If replication is not working:
 With replication configured, FalkorDB provides high availability and data redundancy. Your data is now synchronized across multiple instances, creating a robust and fault-tolerant environment.
 
 For horizontal scalability and distributed graph operations, explore [Clustering](/operations/cluster).
+
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="Can I write to a replica node?"
+  a1="No. Replicas are read-only. All write operations must go through the master. Use `GRAPH.RO_QUERY` for read operations on replicas to prevent accidental write attempts."
+  q2="How much replication lag should I expect?"
+  a2="Under normal load, replication lag is typically sub-millisecond. Under heavy write load, replicas may lag slightly. Monitor lag with the `INFO replication` command on the master."
+  q3="How many replicas can I configure?"
+  a3="There is no hard limit. You can add multiple replicas for better read scalability and redundancy. Each replica maintains a full copy of the master data."
+  q4="What happens if the master goes down?"
+  a4="Without a Sentinel or cluster setup, replicas will not automatically promote. Consider using Redis Sentinel or a cluster configuration for automatic failover in production."
+  q5="Do replicas increase write performance?"
+  a5="No. Replicas only serve read traffic. All writes still go through the single master. To scale writes, consider using a [cluster setup](/operations/cluster) to distribute graphs across multiple masters."
+%}

@@ -41,7 +41,7 @@ RETURN flex.text.jaroWinkler('Martha', 'Marhta') AS similarity
 ```
 
 **Output:**
-```
+```text
 similarity
 ----------
 0.961
@@ -79,3 +79,11 @@ ORDER BY similarity DESC
 ## See Also
 - [text.levenshtein](./levenshtein.md) - Edit distance metric for string comparison
 - [sim.jaccard](../similarity/jaccard.md) - Set-based similarity
+
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="When should I use Jaro-Winkler vs Levenshtein?"
+  a1="Use Jaro-Winkler for comparing **short strings** like names and addresses where prefix similarity matters. Use Levenshtein when you need an exact edit distance count."
+  q2="Is the comparison case-sensitive?"
+  a2="Yes. `flex.text.jaroWinkler` performs a case-sensitive comparison. Apply `toLower()` to both strings for case-insensitive matching."
+%}

@@ -37,7 +37,7 @@ RETURN flex.text.format('Hello {0}, you are {1} years old!', ['Alice', 30]) AS r
 ```
 
 **Output:**
-```
+```text
 result
 --------------------------------
 Hello Alice, you are 30 years old!
@@ -57,7 +57,7 @@ RETURN flex.text.format('/{0}/{1}/{2}', parts) AS path
 ```
 
 **Output:**
-```
+```text
 path
 ------------------------
 /users/profile/12345
@@ -73,3 +73,11 @@ path
 ## See Also
 - [text.replace](./replace.md) - Replace text using regex patterns
 - [text.join](./join.md) - Join array elements with delimiter
+
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="How are placeholders numbered in flex.text.format?"
+  a1="Placeholders are zero-indexed: `{0}` is replaced by the first element, `{1}` by the second, and so on."
+  q2="Can I reuse the same placeholder multiple times?"
+  a2="Yes. The same placeholder (e.g., `{0}`) can appear multiple times in the template and will be replaced with the same value each time."
+%}

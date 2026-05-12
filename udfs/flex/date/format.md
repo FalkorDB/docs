@@ -52,7 +52,7 @@ RETURN flex.date.format(dt, 'YYYY-MM-DD') AS date
 ```
 
 **Output:**
-```
+```text
 date
 ----------
 2024-03-15
@@ -65,7 +65,7 @@ RETURN flex.date.format(dt, 'YYYY-MM-DD HH:mm:ss') AS formatted
 ```
 
 **Output:**
-```
+```text
 formatted
 -------------------
 2024-03-15 14:30:45
@@ -78,7 +78,7 @@ RETURN flex.date.format(dt, 'DD/MM/YYYY HH:mm', '+02:00') AS localTime
 ```
 
 **Output:**
-```
+```text
 localTime
 -----------------
 15/03/2024 16:30
@@ -103,3 +103,11 @@ ORDER BY e.timestamp DESC
 - [date.parse](./parse.md) - Parse string to date
 - [date.truncate](./truncate.md) - Truncate date to specific unit
 - [date.toTimeZone](./toTimeZone.md) - Convert date to timezone
+
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="What format tokens does flex.date.format support?"
+  a1="Common tokens include `yyyy` (year), `MM` (month), `dd` (day), `HH` (hour), `mm` (minute), `ss` (second). The function uses token-based pattern formatting."
+  q2="Can I include a timezone offset in the format?"
+  a2="Yes. Pass an optional timezone offset parameter to adjust the output before formatting."
+%}

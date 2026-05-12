@@ -24,56 +24,76 @@ graph.config get *
 {% capture python_0 %}
 from falkordb import FalkorDB
 client = FalkorDB()
-config = client.get_config('*')
+config = client.config_get('*')
 print(config)
 {% endcapture %}
 
 {% capture javascript_0 %}
 import { FalkorDB } from 'falkordb';
 const client = await FalkorDB.connect();
-const config = await client.getConfig('*');
+const config = await client.configGet('*');
 console.log(config);
 {% endcapture %}
 
 {% capture java_0 %}
-FalkorDB client = new FalkorDB();
-Map<String, Object> config = client.getConfig("*");
+import com.falkordb.*;
+
+Driver driver = FalkorDB.driver("localhost", 6379);
+String config = driver.configGet("*");
 System.out.println(config);
 {% endcapture %}
 
 {% capture rust_0 %}
-let client = FalkorDB::connect_default();
-let config = client.get_config("*")?;
+use falkordb::{FalkorClientBuilder, FalkorConnectionInfo};
+
+let connection_info: FalkorConnectionInfo = "falkor://127.0.0.1:6379"
+    .try_into().expect("Invalid connection info");
+let client = FalkorClientBuilder::new()
+    .with_connection_info(connection_info)
+    .build().expect("Failed to build client");
+let config = client.config_get("*")?;
 println!("{:?}", config);
 {% endcapture %}
 
 {% include code_tabs.html id="config_get_tabs" shell=shell_0 python=python_0 javascript=javascript_0 java=java_0 rust=rust_0 %}
 
 {% capture shell_1 %}
-graph.config get TIMEOUT
+graph.config get TIMEOUT_DEFAULT
 # Output:
-# 1) "TIMEOUT"
+# 1) "TIMEOUT_DEFAULT"
 # 2) (integer) 0
 {% endcapture %}
 
 {% capture python_1 %}
-timeout = client.get_config('TIMEOUT')
+timeout = client.config_get('TIMEOUT_DEFAULT')
 print(timeout)
 {% endcapture %}
 
 {% capture javascript_1 %}
-const timeout = await client.getConfig('TIMEOUT');
+const timeout = await client.configGet('TIMEOUT_DEFAULT');
 console.log(timeout);
 {% endcapture %}
 
 {% capture java_1 %}
-Object timeout = client.getConfig("TIMEOUT");
+String timeout = driver.configGet("TIMEOUT_DEFAULT");
 System.out.println(timeout);
 {% endcapture %}
 
 {% capture rust_1 %}
-let timeout = client.get_config("TIMEOUT")?;
+let timeout = client.config_get("TIMEOUT_DEFAULT")?;
 println!("{:?}", timeout);
 {% endcapture %}
 
 {% include code_tabs.html id="config_get_timeout_tabs" shell=shell_1 python=python_1 javascript=javascript_1 java=java_1 rust=rust_1 %}
+
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="How do I retrieve all configuration parameters at once?"
+  a1="Use the wildcard `*` as the parameter name: `GRAPH.CONFIG GET *`. This returns all current FalkorDB configuration parameters and their values."
+  q2="What configuration parameters are available?"
+  a2="Common parameters include `TIMEOUT` (query timeout), `CACHE_SIZE` (execution plan cache size), `THREAD_COUNT` (worker threads), `RESULTSET_SIZE` (max result rows), and more. See the [configuration page](/configuration) for the full list."
+  q3="Does GRAPH.CONFIG GET require any special permissions?"
+  a3="Yes. The `GRAPH.CONFIG GET` command typically requires administrative privileges to execute."
+  q4="What format does the response use?"
+  a4="The response is a nested array containing the parameter name and its current value. For example: `1) 'TIMEOUT_DEFAULT' 2) (integer) 0`."
+%}

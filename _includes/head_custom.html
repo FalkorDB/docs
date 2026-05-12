@@ -1,5 +1,14 @@
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.10.0/styles/atom-one-dark.min.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.10.0/highlight.min.js"></script>
+<script
+  src="https://graphrag.falkordb.com/scripts/widget-chat.js?graph=docs_benchmark&title=FalkorDB%20Docs%20Assistant&accent=%237466FF&position=bottom-right"
+  defer
+></script>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/atom-one-dark.min.css"
+  integrity="sha512-Jk4AqjWsdSzSWCSuQTfYRIF84Rq/eV0G2+tu07byYwHcbTGfdmLrHjUSwvzp5HvbiqK4ibmNwdcG49Y5RGYPTg=="
+  crossorigin="anonymous">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"
+  integrity="sha512-EBLzUL8XLl+va/zAsmXwS7Z2B1F9HUHkZwyS/VKwh3S7T/U0nF4BaU29EP/ZSf6zgiIxYAnKLu6bJ8dqpmX5uw=="
+  crossorigin="anonymous"></script>
 <script>hljs.highlightAll();</script>
 
 {% if site.gtm_tracking != nil %}
@@ -11,3 +20,293 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 })(window,document,'script','dataLayer','{{ site.gtm_tracking }}');</script>
 <!-- End Google Tag Manager -->
 {% endif %}
+
+<!-- Sticky right-side Table of Contents -->
+<style>
+.toc-sidebar {
+  position: fixed;
+  top: 4rem;
+  right: 1rem;
+  width: 200px;
+  max-height: calc(100vh - 5rem);
+  overflow-y: auto;
+  padding: 0.75rem 1rem;
+  font-size: 0.75rem;
+  line-height: 1.4;
+  border-left: 1px solid var(--border-color, #44434d);
+  z-index: 100;
+}
+
+.toc-sidebar .toc-title {
+  font-weight: 600;
+  font-size: 0.8rem;
+  margin-bottom: 0.5rem;
+  color: var(--link-color, #7253ed);
+}
+
+.toc-sidebar ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.toc-sidebar ol ol {
+  padding-left: 0.75rem;
+}
+
+.toc-sidebar li {
+  margin: 0.2rem 0;
+}
+
+.toc-sidebar a {
+  color: var(--body-text-color, #c7c6cb);
+  text-decoration: none;
+  display: block;
+  padding: 0.1rem 0;
+  border-left: 2px solid transparent;
+  padding-left: 0.5rem;
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.toc-sidebar a:hover {
+  color: var(--link-color, #7253ed);
+}
+
+.toc-sidebar a.toc-active {
+  color: var(--link-color, #7253ed);
+  border-left-color: var(--link-color, #7253ed);
+  font-weight: 600;
+}
+
+/* Hide on narrow screens */
+@media (max-width: 1100px) {
+  .toc-sidebar {
+    display: none;
+  }
+}
+
+/* Reserve right margin for the TOC on the .main container.
+   This works with JtD's max-width: 50rem on .main so the content
+   stays full-width on large screens where the natural margin
+   already accommodates the TOC. */
+@media (min-width: 1101px) {
+  .side-bar + .main {
+    margin-right: 14rem;
+  }
+}
+
+/* Scrollbar styling */
+.toc-sidebar::-webkit-scrollbar {
+  width: 3px;
+}
+.toc-sidebar::-webkit-scrollbar-thumb {
+  background: var(--border-color, #44434d);
+  border-radius: 3px;
+}
+</style>
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  var mainContent = document.querySelector("#main-content main");
+  if (!mainContent) return;
+
+  var headings = mainContent.querySelectorAll("h2, h3");
+  // Only show TOC if there are enough headings
+  if (headings.length < 3) return;
+
+  var nav = document.createElement("nav");
+  nav.className = "toc-sidebar";
+  nav.setAttribute("aria-label", "Table of contents");
+
+  var title = document.createElement("div");
+  title.className = "toc-title";
+  title.textContent = "On this page";
+  nav.appendChild(title);
+
+  var rootList = document.createElement("ol");
+  var currentH2List = null;
+
+  headings.forEach(function (h) {
+    // Skip headings marked with no_toc class
+    if (h.classList.contains("no_toc")) return;
+
+    var id = h.id;
+    if (!id) {
+      id = h.textContent.trim().toLowerCase()
+        .replace(/[^\w\s-]/g, "")
+        .replace(/\s+/g, "-");
+      h.id = id;
+    }
+
+    var li = document.createElement("li");
+    var a = document.createElement("a");
+    a.href = "#" + id;
+    a.textContent = h.textContent.replace(/^#\s*/, "").replace(/\s*¶$/, "");
+    a.dataset.targetId = id;
+    li.appendChild(a);
+
+    if (h.tagName === "H2") {
+      rootList.appendChild(li);
+      currentH2List = document.createElement("ol");
+      li.appendChild(currentH2List);
+    } else if (h.tagName === "H3" && currentH2List) {
+      currentH2List.appendChild(li);
+    } else {
+      rootList.appendChild(li);
+    }
+  });
+
+  // Remove empty nested lists
+  rootList.querySelectorAll("ol").forEach(function (ol) {
+    if (ol.children.length === 0) ol.remove();
+  });
+
+  nav.appendChild(rootList);
+  document.body.appendChild(nav);
+
+  // Scroll-spy: highlight the current heading
+  var tocLinks = nav.querySelectorAll("a[data-target-id]");
+  var headingEls = Array.from(headings).filter(function (h) {
+    return !h.classList.contains("no_toc") && h.id;
+  });
+
+  function updateActive() {
+    var scrollY = window.scrollY || window.pageYOffset;
+    var current = null;
+
+    headingEls.forEach(function (h) {
+      if (h.getBoundingClientRect().top <= 80) {
+        current = h.id;
+      }
+    });
+
+    tocLinks.forEach(function (link) {
+      if (link.dataset.targetId === current) {
+        link.classList.add("toc-active");
+        // Scroll the TOC nav to keep active item visible
+        var navRect = nav.getBoundingClientRect();
+        var linkRect = link.getBoundingClientRect();
+        if (linkRect.top < navRect.top || linkRect.bottom > navRect.bottom) {
+          link.scrollIntoView({ block: "nearest", behavior: "smooth" });
+        }
+      } else {
+        link.classList.remove("toc-active");
+      }
+    });
+  }
+
+  var ticking = false;
+  window.addEventListener("scroll", function () {
+    if (!ticking) {
+      requestAnimationFrame(function () {
+        updateActive();
+        ticking = false;
+      });
+      ticking = true;
+    }
+  });
+
+  updateActive();
+});
+</script>
+
+<!-- Structured data for AI engines and search (JSON-LD) -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "headline": {{ page.title | jsonify }},
+  "dateModified": "{{ page.last_modified_at | default: site.time | date_to_xmlschema }}",
+  "publisher": {
+    "@type": "Organization",
+    "name": "FalkorDB",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "{{ '/images/falkor-logo.png' | absolute_url }}"
+    }
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "{{ page.url | absolute_url }}"
+  },
+  "description": {{ page.description | default: page.title | jsonify }}
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "FalkorDB",
+  "url": "https://www.falkordb.com",
+  "logo": "{{ '/images/falkor-logo.png' | absolute_url }}",
+  "description": "FalkorDB is a high-performance graph database optimized for GraphRAG and GenAI workloads, using GraphBLAS sparse matrix representation for low-latency, scalable graph operations.",
+  "foundingDate": "2023",
+  "sameAs": [
+    "https://github.com/FalkorDB",
+    "https://github.com/FalkorDB/FalkorDB",
+    "https://x.com/falkordb",
+    "https://www.linkedin.com/company/falkordb",
+    "https://discord.gg/ErBEqN9E"
+  ]
+}
+</script>
+
+{%- if page.url == "/" -%}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "FalkorDB",
+  "applicationCategory": "DatabaseApplication",
+  "operatingSystem": "Linux, macOS, Windows (via Docker)",
+  "description": "FalkorDB is a high-performance graph database with OpenCypher support, vector and full-text indexing, and built-in GraphRAG capabilities for GenAI applications.",
+  "url": "https://www.falkordb.com",
+  "downloadUrl": "https://hub.docker.com/r/falkordb/falkordb",
+  "softwareVersion": "latest",
+  "license": "https://github.com/FalkorDB/FalkorDB/blob/master/LICENSE.txt",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "FalkorDB",
+    "url": "https://www.falkordb.com"
+  }
+}
+</script>
+{%- endif -%}
+
+{%- comment -%}
+  BreadcrumbList JSON-LD: emitted on inner pages where the URL has at least one path segment.
+  Builds an ordered list from the URL path segments, matching the visual breadcrumbs.
+{%- endcomment -%}
+{%- assign url_path = page.url | remove_first: "/" | remove: ".html" -%}
+{%- if url_path != "" and url_path != "/" -%}
+  {%- assign segments = url_path | split: "/" -%}
+  {%- if segments.size > 0 -%}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": {{ site.url | append: "/" | jsonify }}
+    }{%- assign cumulative = "" -%}{%- assign pos = 1 -%}{%- assign last_seg = "" -%}{%- for seg in segments -%}{%- if seg != "" and seg != "index" -%}{%- assign last_seg = seg -%}{%- endif -%}{%- endfor -%}{%- for seg in segments -%}{%- if seg != "" and seg != "index" -%}{%- assign cumulative = cumulative | append: "/" | append: seg -%}{%- assign pos = pos | plus: 1 -%}{%- assign seg_words = seg | replace: '_', '-' | split: '-' -%}{%- assign seg_name = "" -%}{%- for w in seg_words -%}{%- assign cap_w = w | capitalize -%}{%- if forloop.first -%}{%- assign seg_name = cap_w -%}{%- else -%}{%- assign seg_name = seg_name | append: " " | append: cap_w -%}{%- endif -%}{%- endfor -%}{%- if seg == last_seg and page.title -%}{%- assign seg_name = page.title -%}{%- endif -%},
+    {
+      "@type": "ListItem",
+      "position": {{ pos }},
+      "name": {{ seg_name | jsonify }},
+      "item": {{ site.url | append: cumulative | jsonify }}
+    }{%- endif -%}{%- endfor -%}
+  ]
+}
+</script>
+  {%- endif -%}
+{%- endif -%}

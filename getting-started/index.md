@@ -18,9 +18,24 @@ This guide will walk you through setting up FalkorDB, modeling a social network 
 
 ## Prerequisites
 
-1. **FalkorDB Instance**: Set up FalkorDB (on-prem or cloud). 
-   - [Run FalkorDB Docker](https://hub.docker.com/r/falkordb/falkordb/)
-   - [Create a FalkorDB Cloud Instance](https://app.falkordb.cloud/signup)
+> **Minimum Redis version:** FalkorDB requires **Redis 8.0.0 or later**. Earlier versions (including the Redis 7.x series) are not supported. If you are self-hosting, make sure to upgrade Redis before installing or upgrading FalkorDB.
+
+1. **FalkorDB Instance**: Set up FalkorDB (on-prem or cloud).
+
+   **Option A — Docker (quickest)**
+
+    ```bash
+    docker run -p 6379:6379 -p 3000:3000 --rm falkordb/falkordb:latest
+    ```
+
+   This starts FalkorDB with no authentication. Open the built-in browser at
+   [http://localhost:3000](http://localhost:3000) to explore your graphs visually.
+   See [Docker & Docker Compose](/operations/docker) for additional options (persistence, auth, production images).
+
+   **Option B — FalkorDB Cloud**
+
+   [Create a free FalkorDB Cloud Instance](https://app.falkordb.cloud/signup) and skip local setup entirely.
+
 2. **Install FalkorDB Client**:
    
 {% capture pypi_0 %}
@@ -40,7 +55,7 @@ cargo add falkordb
     <dependency>
       <groupId>com.falkordb</groupId>
       <artifactId>jfalkordb</artifactId>
-      <version>0.4.0</version>
+      <version>0.8.0</version>
     </dependency>
   </dependencies>
 {% endcapture %}
@@ -103,21 +118,24 @@ You can execute these commands using the FalkorDB Python client or any supported
 
 ### Connect to FalkorDB
 
+The examples below connect to a local FalkorDB instance started with the
+`docker run` command above, which requires no password.
+
 {% capture python_0 %}
 from falkordb import FalkorDB
 
-# Connect to FalkorDB
-client = FalkorDB(host="localhost", port=6379, password="your-password")
+# Connect to FalkorDB (no authentication — default Docker setup)
+client = FalkorDB(host="localhost", port=6379)
 graph = client.select_graph('social')
 {% endcapture %}
 
 {% capture javascript_0 %}
 import { FalkorDB } from 'falkordb';
 
+// Connect to FalkorDB (no authentication — default Docker setup)
 const client = await FalkorDB.connect({
   host: "localhost",
-  port: 6379,
-  password: "your-password"
+  port: 6379
 });
 const graph = client.selectGraph('social');
 {% endcapture %}
@@ -127,6 +145,7 @@ package com.myproject;
 
 import com.falkordb.*;
 
+// Connect to FalkorDB (no authentication — default Docker setup)
 Driver driver = FalkorDB.driver("localhost", 6379);
 Graph graph = driver.graph("social");
 {% endcapture %}
@@ -134,7 +153,7 @@ Graph graph = driver.graph("social");
 {% capture rust_0 %}
 use falkordb::{FalkorClientBuilder, FalkorConnectionInfo};
 
-// Connect to FalkorDB
+// Connect to FalkorDB (no authentication — default Docker setup)
 let connection_info: FalkorConnectionInfo = "falkor://127.0.0.1:6379".try_into()
             .expect("Invalid connection info");
 
@@ -148,6 +167,17 @@ let mut graph = client.select_graph("social");
 {% endcapture %}
 
 {% include code_tabs.html id="connect_tabs" python=python_0 javascript=javascript_0 java=java_0 rust=rust_0 %}
+
+> **Using authentication?** Start FalkorDB with a password:
+> ```bash
+> docker run -p 6379:6379 -p 3000:3000 --rm \
+>   -e REDIS_ARGS="--requirepass yourpassword" \
+>   falkordb/falkordb:latest
+> ```
+> Then pass your password in the client configuration, for example
+> `password="yourpassword"` in Python or `password: 'yourpassword'` in JavaScript,
+> or use the equivalent credential option in your client library. See
+> [Docker & Docker Compose](/operations/docker) for details.
 
 ### Execute Cypher Queries
 
@@ -253,7 +283,7 @@ const query = `
 MATCH (alice:User {name: "Alice"})-[:FRIENDS_WITH]->(friend)
 RETURN friend.name AS Friend
 `;
-const result = await graph.ro_query(query);
+const result = await graph.roQuery(query);
 console.log("Alice's friends:");
 for (const record of result) {
   console.log(record["Friend"]);
@@ -308,7 +338,7 @@ const query = `
 MATCH (bob:User {name: "Bob"})-[:CREATED]->(post:Post)
 RETURN post.content AS PostContent
 `;
-const result = await graph.ro_query(query);
+const result = await graph.roQuery(query);
 console.log("Posts created by Bob:");
 for (const record of result) {
   console.log(record["PostContent"]);
@@ -348,9 +378,25 @@ for record in result.data.by_ref() {
 Congratulations! 🎉 You have successfully modeled, loaded, and queried a social network graph with FalkorDB.
 
 Next, dive deeper into FalkorDB's powerful features:
+- [FalkorDB Browser](/browser) — Explore your graph visually
 - [Advanced Cypher](/cypher)
+- [Data Types](/datatypes) — Nodes, relationships, scalars, temporal types, and collections
 - [Database Operations](/operations)
 - [GenAI Tools](/genai-tools)
 - [Agentic Memory](/agentic-memory)
 
 For questions or support, visit our [community forums](https://www.falkordb.com/contact-us/)
+
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="What are the minimum requirements to run FalkorDB?"
+  a1="FalkorDB requires **Redis 8.0.0 or later**. The quickest setup is via Docker: `docker run -p 6379:6379 -p 3000:3000 --rm falkordb/falkordb:latest`. Alternatively, use [FalkorDB Cloud](https://app.falkordb.cloud) to skip local setup entirely."
+  q2="Do I need to install Redis separately?"
+  a2="No. The official FalkorDB Docker images include everything needed. If you are self-hosting without Docker, you must install Redis 8.0.0+ separately and load the FalkorDB module. Earlier Redis versions (including 7.x) are **not supported**."
+  q3="Which client libraries can I use with FalkorDB?"
+  a3="FalkorDB has official clients for **Python**, **Node.js**, **Java**, **Rust**, **Go**, **PHP**, and **C#**. Install them via pip, npm, Maven, Cargo, or the respective package managers. See the [Client Libraries](/getting-started/clients) page for full details."
+  q4="What is the FalkorDB Browser at port 3000?"
+  a4="The FalkorDB Browser is a built-in web UI for visually exploring your graphs. When running the `falkordb/falkordb:latest` Docker image, open http://localhost:3000 to create, visualize, and query graphs interactively. For production, use `falkordb/falkordb-server` which excludes the browser."
+  q5="How do I model data in FalkorDB?"
+  a5="FalkorDB uses the **Property Graph Model**. Data is modeled as **nodes** (entities with labels and properties) connected by **relationships** (directed edges with a type and properties). Use the Cypher query language to create and query your graph structure."
+%}

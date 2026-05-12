@@ -37,7 +37,7 @@ RETURN flex.json.fromJsonList(json) AS numbers
 ```
 
 **Output:**
-```
+```text
 numbers
 -----------
 [1, 2, 3, 4, 5]
@@ -67,7 +67,7 @@ RETURN flex.json.fromJsonList(badJson) AS result
 ```
 
 **Output:**
-```
+```text
 result
 ------
 []
@@ -83,3 +83,11 @@ result
 ## See Also
 - [json.fromJsonMap](./fromJsonMap.md) - Parse JSON string to map
 - [json.toJson](./toJson.md) - Serialize value to JSON string
+
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="What does flex.json.fromJsonList return for invalid JSON?"
+  a1="It safely returns an empty list `[]` without throwing an exception, making it safe to use without error handling."
+  q2="Can I parse nested JSON arrays?"
+  a2="Yes. The function parses the full JSON structure including nested arrays and objects within the list elements."
+%}

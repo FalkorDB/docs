@@ -30,7 +30,7 @@ This section contains information on all supported functions from the Cypher que
 | --------------------------------------------------------------------------------- | :----------|
 | [all(_var_ IN _list_ WHERE _predicate_)](#existential-comprehension-functions)    | Returns true when _predicate_ holds true for all elements in _list_         |
 | [any(_var_ IN _list_ WHERE _predicate_)](#existential-comprehension-functions)    | Returns true when _predicate_ holds true for at least one element in _list_ |
-| exists(_pattern_)                                                                 | Returns true when at least one match for _pattern_ exists                   |
+| exists(_entity.property_)                                                         | Returns true when the specified property exists on a given node or relationship <br> **Note:** Graph patterns such as `exists((n)-[]->())` are not supported. To filter by graph patterns, use [pattern predicates](/cypher/where#pattern-predicates) directly in the `WHERE` clause instead |
 | isEmpty(_list_&#124;_map_&#124;_string_)                                          | Returns true if the input list or map contains no elements or if the input string contains no characters <br> Returns null when the input evaluates to null |
 | [none(_var_ IN _list_ WHERE _predicate_)](#existential-comprehension-functions)   | Returns true when _predicate_ holds false for all elements in _list_        |
 | [single(_var_ IN _list_ WHERE _predicate_)](#existential-comprehension-functions) | Returns true when _predicate_ holds true for exactly one element in _list_  |
@@ -445,3 +445,17 @@ RETURN p
   Ensures that priority never decreases along the route.
 * `RETURN p`
   Returns valid paths where shipments maintain or increase priority.
+
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="What categories of functions does FalkorDB support?"
+  a1="FalkorDB supports **predicate**, **scalar**, **aggregating**, **list**, **mathematical**, **trigonometric**, **string**, **point**, **type conversion**, **node**, **path**, and **vector** functions."
+  q2="How do I check if a property exists on a node?"
+  a2="Use the `exists()` predicate function: `WHERE exists(n.email)`. Note that graph pattern existence checks like `exists((n)-[]->())` are not supported — use pattern predicates in WHERE instead."
+  q3="How do I convert data types in Cypher?"
+  a3="Use type conversion functions like `toInteger()`, `toFloat()`, `toString()`, and `toBoolean()`. These are especially useful when importing data from CSV where all values start as strings."
+  q4="What is the collect() function?"
+  a4="The `collect()` aggregation function gathers values into a list. It is the inverse of UNWIND and is useful for grouping related values: `RETURN person.city, collect(person.name) AS residents`."
+  q5="Does FalkorDB support vector operations?"
+  a5="Yes. FalkorDB provides `vecf32()` for creating 32-bit float vectors and `vecf64()` for 64-bit float vectors. These are used with vector indexes for similarity search operations."
+%}

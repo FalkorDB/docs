@@ -4,6 +4,9 @@ nav_order: 1
 description: "Configure persistent data storage for FalkorDB in Docker using volumes to ensure your graph data remains intact across container restarts and system reboots."
 parent: "Durability"
 grand_parent: "Operations"
+redirect_from:
+  - /operations/persistence
+  - /operations/persistence.html
 ---
 
 # Configuring FalkorDB Docker for Persistence
@@ -90,9 +93,25 @@ Docker volume configuration ensures your data persists across container restarts
 
 For a comprehensive guide on configuring RDB, AOF, and graph-specific backup options, see [Data Durability](/operations/durability).
 
+## ACL User Persistence
+
+Docker volume configuration persists your graph data, but ACL users created with `ACL SETUSER` are stored separately in an ACL file. To persist users, passwords, and permissions across restarts, see [ACL Persistence on Docker](/operations/durability/acl-persistence).
+
 ## Next Steps
 
 With persistence configured, FalkorDB is now set up for reliable data storage that remains intact across container restarts. 
 
 For high availability and data redundancy, explore [Replication](/operations/replication) to set up multiple FalkorDB instances.
+
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="What directory does FalkorDB use for data inside the container?"
+  a1="FalkorDB stores data in `/var/lib/falkordb/data` by default. Mount your Docker volume to this path: `-v falkordb_data:/var/lib/falkordb/data`."
+  q2="Should I use named volumes or bind mounts?"
+  a2="Named volumes are recommended for most cases as they are easier to manage and portable. Use bind mounts only when you need to map a specific host directory for backups or shared access."
+  q3="How do I verify persistence is working after a restart?"
+  a3="Create test data, stop and restart the container, then query the data again. If it returns your previously created nodes, persistence is configured correctly."
+  q4="Does Docker volume persistence also save ACL users?"
+  a4="No. ACL users are stored separately in memory by default. To persist ACL users, configure an ACL file with `--aclfile` and store it on the mounted volume. See [ACL Persistence](/operations/durability/acl-persistence)."
+%}
 

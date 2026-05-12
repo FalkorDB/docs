@@ -62,7 +62,7 @@ falkor.url=redis://localhost:6379
 
 ## Kafka Message Format
 
-#### JSON Structure Overview
+### JSON Structure Overview
 
 The message is an array containing multiple objects, each representing a command to be executed on the graph database.
 Below is a breakdown of the key components of each message object.
@@ -95,7 +95,7 @@ Example:
 
 ```
 
-#### Key Components
+### Key Components
 
 The table below explains essential properties for executing commands in FalkorDB through Kafka messages.
 
@@ -105,4 +105,18 @@ The table below explains essential properties for executing commands in FalkorDB
 | `command`         | Indicates the type of operation being performed. `"GRAPH_QUERY"` means a query will be executed against the graph database. | `"GRAPH_QUERY"`                                                                                          |                                                   |
 | `cypherCommand`   | Contains the actual Cypher query to be executed. Cypher is a query language for graph databases.                           | ```cypher CREATE (p:Person {name: $name_param, age: $age_param, location: $location_param}) RETURN p ``` | Creates a `Person` node with `name`, `age`, and `location` properties.                                |
 | `parameters`      | Holds key-value pairs for placeholders in the `cypherCommand`.                                                             | ```json {"name_param": "Person 0", "age_param": 20, "location_param": "Location 0"} ```                  | Used to define properties for the new node.                                                           |
+
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="How do I get the FalkorDB Kafka Connect sink connector?"
+  a1="You can either build it from [source](https://github.com/FalkorDB/falkordb-kafka-connect) or download the pre-built uber JAR from the [GitHub releases](https://github.com/FalkorDB/falkordb-kafka-connect/releases)."
+  q2="What message format does the connector expect?"
+  a2="Messages must be JSON arrays where each object contains `graphName`, `command` (e.g., `GRAPH_QUERY`), `cypherCommand` (the Cypher query), and `parameters` (key-value pairs for query parameters)."
+  q3="Can the connector write to multiple graphs from a single topic?"
+  a3="Yes, each message object includes a `graphName` field, so messages within the same Kafka topic can target **different FalkorDB graphs**."
+  q4="What converters should I use for key and value serialization?"
+  a4="Use `org.apache.kafka.connect.storage.StringConverter` for both `key.converter` and `value.converter`. Set `value.converter.schemas.enable=false` to exclude schema information from message values."
+  q5="How do I scale the connector for higher throughput?"
+  a5="Increase the `tasks.max` property to run multiple parallel tasks. Each task will consume from the topic partition(s) independently. Ensure your FalkorDB instance can handle the additional concurrent connections."
+%}
 

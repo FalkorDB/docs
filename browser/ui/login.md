@@ -45,3 +45,15 @@ On success, the browser navigates to the **Graphs** workspace (`/graph`).
 - If login fails, you’ll see an “Invalid credentials” error.
 - If you enabled TLS, make sure the server actually supports TLS and (if needed) upload the correct CA.
 
+
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="What URL formats can I use to connect?"
+  a1="You can use `falkor://`, `falkors://`, `redis://`, or `rediss://` URLs. The format is `falkor[s]://[[username][:password]@][host][:port][/db-number]`."
+  q2="Do I need a username and password for local development?"
+  a2="No. When using a local FalkorDB instance with default credentials, username and password can typically be left blank."
+  q3="What happens if I enable TLS but my server does not support it?"
+  a3="The connection will fail. Make sure your FalkorDB server actually supports TLS and upload the correct **CA certificate** if required."
+  q4="What is the default port for FalkorDB?"
+  a4="The default port is **6379**. The login form uses this as a placeholder value."
+%}

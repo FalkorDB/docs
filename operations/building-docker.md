@@ -30,7 +30,7 @@ If manually installing packages, please ensure all commands are run via sudo, or
 
 In addition to the above-mentioned requirements, it is assumed that epel repositories have been enabled.
 
-```
+```bash
 yum install -q -y ca-certificates
 yum install -q -y curl wget unzip
 /usr/bin/python3 -m pip install --disable-pip-version-check wheel virtualenv
@@ -64,7 +64,7 @@ yum install -q -y git
 
 ### Ubuntu Bionic (18.04)
 
-```
+```bash
 apt-get -qq update -y
 apt-get -qq install -y ca-certificates
 apt-get -qq install -y curl wget unzip
@@ -98,7 +98,7 @@ apt-get -qq install -y git
 
 ### Debian Buster (10)
 
-```
+```bash
 apt-get -qq update -y
 apt-get -qq install -y ca-certificates
 apt-get -qq install -y curl wget unzip
@@ -130,7 +130,7 @@ apt-get -qq install -y git
 
 ### Alpine 3
 
-```
+```bash
 apk add bash busybox python3
 apk add -q ca-certificates
 apk add -q curl wget unzip
@@ -154,3 +154,15 @@ apk add -q git
 /usr/bin/python3 -m pip install --disable-pip-version-check --no-cache-dir --ignore-installed git+https://github.com/RedisLabs/RAMP@master
 /usr/bin/python3 -m pip install --disable-pip-version-check -r tests/requirements.txt
 ```
+
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="Which platforms are supported for building FalkorDB from source?"
+  a1="FalkorDB can be built on CentOS 7, Ubuntu Bionic (18.04), Debian Buster (10), and Alpine 3. Each platform has specific dependency requirements documented in this guide."
+  q2="What are the minimum requirements to generate a Dockerfile?"
+  a2="You need Python > 3.6, the Jinja2 template engine (`pip install jinja2`), and Docker installed on your system."
+  q3="Do I need to run the build commands as root?"
+  a3="Yes. All package installation commands should be run via `sudo` or similar privilege escalation to ensure package installation succeeds."
+  q4="Can I build FalkorDB for ARM architectures?"
+  a4="Yes. The CMake installation step uses `uname -m` to detect the architecture automatically. Ensure your base Docker image supports your target architecture (e.g., arm64)."
+%}

@@ -36,13 +36,13 @@ Add the following dependencies to your project:
 <dependency>
     <groupId>org.springframework.data</groupId>
     <artifactId>spring-data-falkordb</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.8</version>
 </dependency>
 
 <dependency>
     <groupId>com.falkordb</groupId>
     <artifactId>jfalkordb</artifactId>
-    <version>0.5.1</version>
+    <version>0.8.0</version>
 </dependency>
 ```
 
@@ -50,8 +50,8 @@ Add the following dependencies to your project:
 
 ```gradle
 dependencies {
-    implementation 'org.springframework.data:spring-data-falkordb:1.0.0-SNAPSHOT'
-    implementation 'com.falkordb:jfalkordb:0.5.1'
+    implementation 'org.springframework.data:spring-data-falkordb:1.0.8'
+    implementation 'com.falkordb:jfalkordb:0.8.0'
 }
 ```
 
@@ -504,3 +504,17 @@ public class FalkorDBTransactionConfig {
 - [GitHub Repository](https://github.com/FalkorDB/spring-data-falkordb)
 - [Spring Data Documentation](https://spring.io/projects/spring-data)
 - [JFalkorDB Java Client](https://github.com/falkordb/jfalkordb)
+
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="What annotations does Spring Data FalkorDB support?"
+  a1="It supports JPA-style annotations including `@Node`, `@Relationship`, `@Id`, `@Property`, and `@Query` for custom Cypher queries. Use `@EnableFalkorDBRepositories` to activate auto-configuration."
+  q2="How do I define a repository for my graph entities?"
+  a2="Create an interface extending `FalkorDBRepository<T, ID>` where T is your entity class annotated with `@Node` and ID is the identifier type. Spring Data automatically provides CRUD operations."
+  q3="Does Spring Data FalkorDB support derived query methods?"
+  a3="Yes, it fully supports Spring Data derived query methods like `findByName`, `findByAgeGreaterThan`, `findByNameContaining`, etc. The framework automatically generates the appropriate Cypher queries."
+  q4="What dependencies do I need in my Maven project?"
+  a4="Add `spring-data-falkordb` (groupId: `org.springframework.data`) and `jfalkordb` (groupId: `com.falkordb`) to your `pom.xml`. Check the repository for the latest versions."
+  q5="Does it support transactions?"
+  a5="Yes, Spring Data FalkorDB includes built-in **transaction support** via `FalkorDBTransactionManager`. Enable it with `@EnableTransactionManagement` and use `@Transactional` annotations on your service methods."
+%}

@@ -38,7 +38,7 @@ RETURN flex.text.replace('hello world', 'world', 'universe') AS result
 ```
 
 **Output:**
-```
+```text
 result
 --------------
 hello universe
@@ -51,7 +51,7 @@ RETURN flex.text.replace(phone, '[^0-9]', '') AS cleaned
 ```
 
 **Output:**
-```
+```text
 cleaned
 -----------
 5551234567
@@ -71,7 +71,7 @@ RETURN flex.text.replace(text, '\\s+', ' ') AS normalized
 ```
 
 **Output:**
-```
+```text
 normalized
 -------------------------
  Multiple spaces here
@@ -88,3 +88,11 @@ normalized
 - [text.regexGroups](./regexGroups.md) - Extract matches with capture groups
 - [text.indexOf](./indexOf.md) - Find substring position
 - [text.format](./format.md) - Format strings with placeholders
+
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="Does flex.text.replace use regex or literal matching?"
+  a1="It uses **regex** pattern matching. If you want a literal match, escape any special regex characters in your pattern."
+  q2="Does it replace all occurrences or just the first?"
+  a2="It replaces **all** occurrences (global replacement)."
+%}

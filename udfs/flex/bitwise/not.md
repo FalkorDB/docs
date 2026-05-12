@@ -36,7 +36,7 @@ RETURN flex.bitwise.not(5) AS result
 ```
 
 **Output:**
-```
+```text
 result
 ------
 -6
@@ -49,7 +49,7 @@ RETURN flex.bitwise.not(0) AS result
 ```
 
 **Output:**
-```
+```text
 result
 ------
 -1
@@ -63,7 +63,7 @@ RETURN flex.bitwise.not(flex.bitwise.not(value)) AS restored
 ```
 
 **Output:**
-```
+```text
 restored
 --------
 42
@@ -80,3 +80,11 @@ restored
 - [bitwise.and](./and.md) - Bitwise AND operation
 - [bitwise.or](./or.md) - Bitwise OR operation
 - [bitwise.xor](./xor.md) - Bitwise XOR operation
+
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="What does flex.bitwise.not do?"
+  a1="It performs a bitwise NOT (one's complement) operation, flipping every bit in the integer — 0s become 1s and 1s become 0s."
+  q2="Why does bitwise.not return a negative number?"
+  a2="Because integers use two's complement representation. Flipping all bits of a positive number produces its negative complement minus one. For example, `flex.bitwise.not(5)` returns `-6`."
+%}

@@ -37,7 +37,7 @@ RETURN flex.text.join(['apple', 'banana', 'cherry'], ', ') AS result
 ```
 
 **Output:**
-```
+```text
 result
 ----------------------
 apple, banana, cherry
@@ -57,7 +57,7 @@ RETURN p.title, flex.text.join(p.tags, ' #') AS hashtags
 ```
 
 **Output:**
-```
+```text
 title           | hashtags
 ----------------|------------------
 My First Post   | tech #coding #js
@@ -70,7 +70,7 @@ RETURN flex.text.join(parts, '/') AS path
 ```
 
 **Output:**
-```
+```text
 path
 --------------------------
 home/user/documents/file.txt
@@ -85,3 +85,11 @@ home/user/documents/file.txt
 ## See Also
 - [text.format](./format.md) - Format strings with placeholders
 - [coll.zip](../collections/zip.md) - Combine two lists
+
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="What happens if the array contains null elements?"
+  a1="Null elements are included in the output as empty positions between delimiters."
+  q2="Can the delimiter be an empty string?"
+  a2="Yes. Using an empty string `''` as the delimiter concatenates all elements without any separator."
+%}

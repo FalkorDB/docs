@@ -40,7 +40,7 @@ loadmodule ./falkordb.so [OPT VAL]...
 From the [Redis CLI](https://redis.io/docs/manual/cli/), using the [MODULE LOAD](https://redis.io/commands/module-load/) command:
 
 ```sh
-127.0.0.6379> MODULE LOAD falkordb.so [OPT VAL]...
+127.0.0.1:6379> MODULE LOAD falkordb.so [OPT VAL]...
 ```
 
 From the command line:
@@ -91,6 +91,9 @@ The following table summarizes which configuration parameters can be set at modu
 | [OMP_THREAD_COUNT](#omp_thread_count)                        | V     | X     |
 | [NODE_CREATION_BUFFER](#node_creation_buffer)                | V     | X     |
 | [BOLT_PORT](#bolt_port)                                      | V     | X     |
+| [IMPORT_FOLDER](#import_folder)                              | V     | X     |
+| [TEMP_FOLDER](#temp_folder)                                  | V     | X     |
+| [ASYNC_DELETE](#async_delete)                                | V     | V     |
 | [MAX_QUEUED_QUERIES](#max_queued_queries)                    | V     | V     |
 | [TIMEOUT](#timeout)                                          | V     | V     |
 | [TIMEOUT_MAX](#timeout_max)                                  | V     | V     |
@@ -102,7 +105,9 @@ The following table summarizes which configuration parameters can be set at modu
 | [CMD_INFO](#cmd_info)                                        | V     | V     |
 | [MAX_INFO_QUERIES](#max_info_queries)                        | V     | V     |
 | [DELTA_MAX_PENDING_CHANGES](#delta_max_pending_changes)      | V     | V     |
-| [IMPORT_FOLDER](#import_folder)                              | V     | X     |
+| [DELAY_INDEXING](#delay_indexing)                            | V     | V     |
+| [JS_HEAP_SIZE](#js_heap_size)                                | V     | V     |
+| [JS_STACK_SIZE](#js_stack_size)                              | V     | V     |
 
 ---
 
@@ -194,6 +199,26 @@ $ redis-server --loadmodule ./falkordb.so BOLT_PORT 7687
 
 ---
 
+
+### ASYNC_DELETE
+
+When enabled, graph deletion (via `GRAPH.DELETE`) is performed asynchronously in a background thread. This prevents the server from blocking on large graph deletions.
+
+Its valid values are `yes` and `no` (i.e., on and off).
+
+#### Default
+
+`ASYNC_DELETE` is `yes`.
+
+#### Example
+
+```sh
+$ redis-server --loadmodule ./falkordb.so ASYNC_DELETE yes
+
+$ redis-cli GRAPH.CONFIG SET ASYNC_DELETE yes
+```
+
+---
 
 ### MAX_QUEUED_QUERIES
 
@@ -433,6 +458,83 @@ $ redis-cli GRAPH.CONFIG SET DELTA_MAX_PENDING_CHANGES 20000
 The import folder configuration specifies an absolute path to a folder from which
 FalkorDB is allowed to load CSV files.
 
-Defaults to: `/var/lib/FalkorDB/import/`
+#### Default
+
+`IMPORT_FOLDER` defaults to `/var/lib/FalkorDB/import/`
 
 ---
+
+### TEMP_FOLDER
+
+Path to the directory FalkorDB uses for temporary files (currently used by operations like GRAPH.COPY dump files).  
+It must be an existing, writable directory.  
+  
+#### Default
+  
+`TEMP_FOLDER` defaults to `/tmp`  
+
+---
+
+### DELAY_INDEXING
+
+When enabled, index construction is deferred during graph decoding (e.g., when loading data from RDB). Indices are built after the full graph has been decoded rather than during the decode process.
+
+Its valid values are `yes` and `no` (i.e., on and off).
+
+#### Default
+
+`DELAY_INDEXING` is `no`.
+
+#### Example
+
+```sh
+$ redis-server --loadmodule ./falkordb.so DELAY_INDEXING yes
+
+$ redis-cli GRAPH.CONFIG SET DELAY_INDEXING yes
+```
+
+---
+
+### JS_HEAP_SIZE
+
+Maximum QuickJS heap memory (in bytes) available to JavaScript UDF execution/runtime.  
+Helps prevent unbounded JS memory growth.  
+
+#### Default
+
+`JS_HEAP_SIZE` defaults to 268435456 (256 MB)  
+
+#### Minimum
+
+1048576 (1 MB)  
+
+---
+
+### JS_STACK_SIZE  
+
+Maximum QuickJS stack size (in bytes) for JavaScript UDF runtime (affects recursion/call depth limits).  
+Helps prevent excessive JS stack usage. 
+
+#### Default
+
+`JS_STACK_SIZE` defaults to 1048576 (1 MB)  
+
+#### Minimum
+
+1048576 (1 MB)  
+
+---
+
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="What is the difference between load-time and run-time configuration?"
+  a1="**Load-time** parameters can only be set when the FalkorDB module is loaded (via Docker env vars, redis.conf, or MODULE LOAD command). **Run-time** parameters can also be changed while the server is running using `GRAPH.CONFIG SET`. Note that run-time changes are not persisted after server restart."
+  q2="How do I set configuration parameters with Docker?"
+  a2="Use the `FALKORDB_ARGS` environment variable: `docker run -p 6379:6379 -e FALKORDB_ARGS='THREAD_COUNT 4 CACHE_SIZE 50' --rm falkordb/falkordb:latest`. For Redis settings like authentication, use the `REDIS_ARGS` variable: `-e REDIS_ARGS='--requirepass mypassword'`."
+  q3="How many threads should I configure for FalkorDB?"
+  a3="The `THREAD_COUNT` parameter defaults to your system's logical core count. This controls the maximum concurrent queries. For production workloads, tune this based on your query patterns and available CPU cores. Note that `OMP_THREAD_COUNT` separately controls parallelism *within* individual queries for GraphBLAS computations."
+  q4="How do I limit query memory usage and execution time?"
+  a4="Use `QUERY_MEM_CAPACITY` to set a memory limit (in bytes) per query, and `TIMEOUT_DEFAULT`/`TIMEOUT_MAX` to set execution time limits (in milliseconds). Both can be changed at runtime with `GRAPH.CONFIG SET`. A value of 0 means unlimited. Note: the older `TIMEOUT` parameter is deprecated since v2.10."
+  q5="How can I check the current configuration values?"
+  a5="Use `GRAPH.CONFIG GET *` to retrieve all current configuration values, or `GRAPH.CONFIG GET PARAMETER_NAME` for a specific parameter. These commands work from any Redis client or redis-cli."
+%}

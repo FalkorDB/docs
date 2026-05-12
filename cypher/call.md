@@ -93,3 +93,14 @@ We can comfortably perform side-effects using non-returning subqueries. For exam
   }
   RETURN item
   ```
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="What is a CALL {} subquery?"
+  a1="CALL {} allows local execution of a subquery for each input row. It enables post-UNION processing, isolated aggregations, and side-effects within a larger query."
+  q2="How do I import variables into a CALL {} subquery?"
+  a2="Variables from the outer scope must be imported via an opening `WITH` clause inside the subquery, e.g. `CALL { WITH n MATCH (n)-[r]->() RETURN count(r) AS rels }`. You can also use `WITH *` to import all bound variables."
+  q3="Can CALL {} change the number of result rows?"
+  a3="A **returning subquery** (with RETURN) can change the row count. A **non-returning subquery** (without RETURN) preserves the same number of rows, making it ideal for side-effects."
+  q4="Can I use UNION inside CALL {}?"
+  a4="Yes. CALL {} supports post-UNION processing, allowing you to combine results from multiple MATCH patterns and then apply further operations like aggregation or SET on the unified results."
+%}

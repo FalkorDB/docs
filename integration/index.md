@@ -21,5 +21,16 @@ Learn how to leverage FalkorDB's flexible APIs and SDKs to build high-performanc
 - [Spring Data FalkorDB](./spring-data-falkordb.md): Learn how to use FalkorDB with Spring Data for JPA-style object-graph mapping.
 - [Snowflake Integration](./snowflake.md): Learn how to run graph database operations directly within your Snowflake environment using the FalkorDB Native App.
 - [PyTorch Geometric](./pyg.md): Train Graph Neural Networks directly on graphs stored in FalkorDB using PyG's remote backend interface.
+- [Bulk Loader](./bulk-loader.md): Import large graphs from CSV files using the falkordb-bulk-loader Python utility.
 
-
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="What integration options does FalkorDB support?"
+  a1="FalkorDB supports multiple integration paths including a **REST API**, **Bolt protocol** (experimental), **Kafka Connect** sink, **Apache Jena** for RDF/SPARQL, **Spring Data** for Java applications, **Snowflake** native app, **PyTorch Geometric** for GNNs, and a **bulk loader** for CSV imports."
+  q2="Which integration should I use for my application?"
+  a2="For web applications, use the **REST API** or official client libraries. For Java/Spring apps, use **Spring Data FalkorDB**. For streaming pipelines, use **Kafka Connect**. For machine learning on graphs, use **PyTorch Geometric**. For RDF/SPARQL workloads, use the **Apache Jena** adapter."
+  q3="Can I use FalkorDB with Neo4j drivers?"
+  a3="Yes, FalkorDB provides experimental **Bolt protocol support**, allowing you to connect using standard Neo4j drivers. However, for production use cases, the official FalkorDB client libraries are recommended."
+  q4="How do I load large datasets into FalkorDB?"
+  a4="Use the **falkordb-bulk-loader** tool to import nodes and relationships from CSV files in efficient binary batches. This is significantly faster than issuing individual `CREATE` queries."
+%}

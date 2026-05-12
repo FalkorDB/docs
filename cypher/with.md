@@ -48,3 +48,15 @@ This query:
 - Variables not included in `WITH` are not available in subsequent parts
 - You can rename variables using `AS` in the `WITH` clause
 - Aggregations in `WITH` cause implicit grouping (like `RETURN`)
+- `WHERE` filters placed after a `WITH` boundary are evaluated **after** any write operations that preceded the `WITH`. This means the filter sees the post-write graph state — for example, it will not see edges that were deleted earlier in the same query.
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="What does the WITH clause do?"
+  a1="WITH acts as a pipeline between query parts, passing results from one section to the next. It enables intermediate aggregations, filtering, sorting, and variable scoping within a single query."
+  q2="Do variables carry over after WITH?"
+  a2="Only variables explicitly listed in the WITH clause are available in subsequent query parts. Any variable not included is dropped from scope."
+  q3="Can I use ORDER BY and LIMIT with WITH?"
+  a3="Yes. WITH supports all query modifiers including DISTINCT, ORDER BY, SKIP, and LIMIT. This lets you filter and sort intermediate results before continuing the query."
+  q4="How does aggregation work in WITH?"
+  a4="Aggregation functions in WITH cause implicit grouping, just like in RETURN. Non-aggregated expressions become grouping keys automatically."
+%}

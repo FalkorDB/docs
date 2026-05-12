@@ -21,3 +21,14 @@ The Migration section provides comprehensive guides for migrating your data to F
 - [RDF to FalkorDB](./rdf-to-falkordb.md): Migrate RDF (TTL) data to FalkorDB with schema extraction and CSV export.
 - [SQL Sources to FalkorDB (Online Migration)](./sql-to-falkordb.md): Online migration and incremental sync from SQL sources (PostgreSQL, Snowflake, Databricks) into FalkorDB.
 
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="Which migration path should I choose for my existing database?"
+  a1="Use the RedisGraph guide for RDB file migration, Neo4j guide for CSV-based export/import, Kuzu guide for automated schema discovery, RDF guide for TTL files, and SQL guide for online sync from relational databases."
+  q2="Will my queries work the same after migration?"
+  a2="FalkorDB uses Cypher query language. Queries from Neo4j and RedisGraph should work with minimal changes. For SQL and RDF sources, you will need to write new Cypher queries suited to the graph model."
+  q3="Can I migrate incrementally without downtime?"
+  a3="Yes, for SQL sources. The DM-SQL-to-FalkorDB loaders support daemon mode for continuous incremental sync. For other sources (Neo4j, Kuzu, RDF), migration is typically a one-time batch operation."
+  q4="What tool should I use for loading large datasets?"
+  a4="Use the [FalkorDB Rust Loader](https://github.com/FalkorDB/FalkorDB-Loader-RS) for best performance. It uses async operations, batch processing, and memory-efficient streaming from CSV files."
+%}

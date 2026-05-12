@@ -37,7 +37,7 @@ RETURN flex.map.fromPairs(pairs) AS result
 ```
 
 **Output:**
-```
+```text
 result
 ------------------------------------
 {name: 'Alice', age: 30, city: 'NYC'}
@@ -52,7 +52,7 @@ RETURN flex.map.fromPairs(pairs) AS user
 ```
 
 **Output:**
-```
+```text
 user
 ------------------------------------------
 {name: 'Bob', age: 25, email: 'bob@example.com'}
@@ -83,3 +83,11 @@ RETURN lookup['US'] AS usaName, lookup['UK'] AS ukName
 ## See Also
 - [coll.zip](../collections/zip.md) - Create pairs from two lists
 - [map.submap](./submap.md) - Extract subset of keys from a map
+
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="What format does flex.map.fromPairs expect?"
+  a1="It expects a list of two-element lists (pairs) where the first element is the key and the second is the value: `[['key1', 'val1'], ['key2', 'val2']]`."
+  q2="What happens with duplicate keys in the pairs list?"
+  a2="Later pairs overwrite earlier ones — the last value for a given key wins."
+%}

@@ -37,7 +37,7 @@ RETURN flex.bitwise.shiftLeft(5, 2) AS result
 ```
 
 **Output:**
-```
+```text
 result
 ------
 20
@@ -54,7 +54,7 @@ RETURN
 ```
 
 **Output:**
-```
+```text
 times2 | times4 | times8
 -------|--------|-------
 14     | 28     | 56
@@ -67,7 +67,7 @@ RETURN flex.bitwise.shiftLeft(1, 3) AS mask
 ```
 
 **Output:**
-```
+```text
 mask
 ----
 8
@@ -85,3 +85,11 @@ mask
 - [bitwise.shiftRight](./shiftRight.md) - Shift bits to the right
 - [bitwise.and](./and.md) - Bitwise AND operation
 - [bitwise.or](./or.md) - Bitwise OR operation
+
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="What does flex.bitwise.shiftLeft do?"
+  a1="It shifts all bits in an integer to the left by the specified number of positions, filling vacated bits with zeros. Each left shift effectively multiplies the value by 2."
+  q2="What happens if I shift by a negative number?"
+  a2="The behavior is undefined for negative shift amounts. Always use non-negative integer values for the shift count."
+%}

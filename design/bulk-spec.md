@@ -22,7 +22,7 @@ The FalkorDB team will do their best to ensure that future updates to this logic
 
 ## Query Format
 
-```
+```text
 GRAPH.BULK [graph name] ["BEGIN"] [node count] [edge count] ([binary blob] * N)
 ```
 
@@ -101,6 +101,20 @@ BI_ARRAY = 5,
 
 ## Redis Reply
 Redis will reply with a string of the format:
-```
+```text
 [N] nodes created, [M] edges created
 ```
+
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="What is the GRAPH.BULK endpoint used for?"
+  a1="The GRAPH.BULK endpoint is used to **import large datasets** into FalkorDB. It accepts binary data blobs that are unpacked to create nodes, edges, and their properties, making it ideal for building custom import tools."
+  q2="Can GRAPH.BULK update an existing graph?"
+  a2="No. The GRAPH.BULK endpoint can only **create new graphs**, not update existing ones. The first query in a sequence must include the `BEGIN` token, which verifies that the graph key is unused."
+  q3="Why do large imports need to be sent incrementally?"
+  a3="Redis has a maximum string length of **512 megabytes** and a default maximum query size of **1 gigabyte**. Large datasets must be split across multiple GRAPH.BULK calls to stay within these limits."
+  q4="How are node IDs assigned during bulk import?"
+  a4="Nodes do not specify their own IDs. Each node receives an **8-byte unsigned integer ID** corresponding to the node creation count — the first node gets ID 0, the second gets ID 1, and so on."
+  q5="What property types are supported in the binary blob format?"
+  a5="The bulk format supports: `BI_NULL` (0), `BI_BOOL` (1), `BI_DOUBLE` (2), `BI_STRING` (3), `BI_LONG` (4), and `BI_ARRAY` (5). Arrays contain N values of the same type-property pair format."
+%}

@@ -150,15 +150,23 @@ console.log(result);
 {% endcapture %}
 
 {% capture java_0 %}
-FalkorDB client = new FalkorDB();
-Graph graph = client.selectGraph("g");
+import com.falkordb.*;
+
+Driver driver = FalkorDB.driver("localhost", 6379);
+Graph graph = driver.graph("g");
 graph.query("CREATE INDEX FOR (p:Person) ON (p.first_name, p.last_name)");
-String result = client.createConstraint("g", "UNIQUE", "NODE", "Person", Arrays.asList("first_name", "last_name"));
+String result = graph.createConstraint("UNIQUE", "NODE", "Person", "first_name", "last_name");
 System.out.println(result);
 {% endcapture %}
 
 {% capture rust_0 %}
-let client = FalkorDB::connect_default();
+use falkordb::{FalkorClientBuilder, FalkorConnectionInfo};
+
+let connection_info: FalkorConnectionInfo = "falkor://127.0.0.1:6379"
+    .try_into().expect("Invalid connection info");
+let client = FalkorClientBuilder::new()
+    .with_connection_info(connection_info)
+    .build().expect("Failed to build client");
 let graph = client.select_graph("g");
 graph.query("CREATE INDEX FOR (p:Person) ON (p.first_name, p.last_name)")?;
 let result = client.create_constraint("g", "UNIQUE", "NODE", "Person", &["first_name", "last_name"])?;
@@ -187,7 +195,7 @@ console.log(result);
 {% endcapture %}
 
 {% capture java_1 %}
-String result = client.createConstraint("g", "MANDATORY", "RELATIONSHIP", "Visited", Arrays.asList("date"));
+String result = graph.createConstraint("MANDATORY", "RELATIONSHIP", "Visited", "date");
 System.out.println(result);
 {% endcapture %}
 
@@ -213,12 +221,12 @@ print(result)
 {% endcapture %}
 
 {% capture javascript_2 %}
-const result = await graph.ro_query("call db.constraints()");
+const result = await graph.roQuery("call db.constraints()");
 console.log(result);
 {% endcapture %}
 
 {% capture java_2 %}
-ResultSet result = graph.ro_query("call db.constraints()");
+ResultSet result = graph.readOnlyQuery("call db.constraints()");
 System.out.println(result);
 {% endcapture %}
 
@@ -232,3 +240,17 @@ println!("{:?}", result);
 ## Deleting a constraint
 
 See [GRAPH.CONSTRAINT DROP](/commands/graph.constraint-drop)
+
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="Are constraints created synchronously or asynchronously?"
+  a1="Constraints are created **asynchronously**. The command returns `PENDING` immediately, and the constraint is enforced gradually. Use the `db.constraints()` procedure to check the constraint status."
+  q2="Do I need an index before creating a unique constraint?"
+  a2="Yes. A unique constraint requires an **exact-match index** on the same properties to exist before creation. Without the index, the constraint creation will fail."
+  q3="What happens if existing data violates the constraint?"
+  a3="If the graph already contains data that violates the constraint, the constraint status will be set to `FAILED` and it will not be enforced. You must resolve the conflicting data and recreate the constraint."
+  q4="Can I create constraints on relationships?"
+  a4="Yes. Both mandatory and unique constraints can be applied to relationships using the `RELATIONSHIP reltype` syntax instead of `NODE label`."
+  q5="Are unique constraints enforced on NULL properties?"
+  a5="No. A unique constraint is only enforced for a node or edge when **all** constrained properties are defined (non-null). Entities with missing constrained properties are not subject to uniqueness checks."
+%}

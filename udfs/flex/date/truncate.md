@@ -50,7 +50,7 @@ RETURN flex.date.truncate(dt, 'day') AS truncated
 ```
 
 **Output:**
-```
+```text
 truncated
 --------------------------
 2024-03-15T00:00:00.000Z
@@ -63,7 +63,7 @@ RETURN flex.date.truncate(dt, 'month') AS truncated
 ```
 
 **Output:**
-```
+```text
 truncated
 --------------------------
 2024-03-01T00:00:00.000Z
@@ -105,3 +105,11 @@ ORDER BY quarter DESC
 - [date.format](./format.md) - Format date to string
 - [date.parse](./parse.md) - Parse string to date
 - [date.toTimeZone](./toTimeZone.md) - Convert date to timezone
+
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="What does flex.date.truncate do?"
+  a1="It truncates a date/time value to a specific unit (e.g., day, month, year), zeroing out all smaller components."
+  q2="What units can I truncate to?"
+  a2="You can truncate to units such as `year`, `month`, `day`, `hour`, `minute`, and `second`."
+%}

@@ -159,7 +159,7 @@ The first element is the [ColumnType enum](https://github.com/FalkorDB/FalkorDB/
 
 ### Reading result rows
 
-The entity representations in this section will closely resemble those found in [Result Set Graph Entities](result-structure#graph-entities).
+The entity representations in this section will closely resemble those found in [Result Set Graph Entities](result-structure.md#graph-entities).
 
 Our query produced one row of results with 3 columns (as described by the header):
 
@@ -298,3 +298,17 @@ In the case of an IndexError, it issues a procedure call to fully refresh its la
 
 All the logic described in this document has been implemented in most of the clients listed in [Client Libraries](/getting-started/clients). 
 Among these, the official FalkorDB clients for Python, Node.js, and Java are currently the most sophisticated.
+
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="What is the compact result set format and why should I use it?"
+  a1="The compact format returns node labels, relationship types, and property keys as **integer IDs** instead of strings. This reduces data transfer overhead and improves performance. Enable it by appending `--compact` to GRAPH.QUERY calls."
+  q2="How do I resolve integer IDs back to their string names?"
+  a2="Use the procedure calls `db.labels()`, `db.relationshipTypes()`, and `db.propertyKeys()` to retrieve string-ID mappings. Clients should cache these locally and only refresh when encountering an unknown ID."
+  q3="What is the ValueType enum used for in compact results?"
+  a3="The ValueType enum indicates the data type of each returned value (e.g., node, edge, integer, string). Each value in compact results is emitted as a 2-array: `[ValueType, value]`. This enum may be extended in future versions but existing values will not change."
+  q4="Do I need to build a Redis protocol parser for my client?"
+  a4="No. FalkorDB clients should rely on an existing stable Redis client library in the same language (e.g., redis-py for Python, ioredis for Node.js) that handles RESP protocol decoding. Your client only needs to interpret the FalkorDB-specific result structure."
+  q5="What happens when a query has no RETURN clause?"
+  a5="Queries without a RETURN clause produce only **one top-level array element** containing execution statistics (nodes created, relationships created, execution time, etc.), rather than the usual three elements (header, results, statistics)."
+%}

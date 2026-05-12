@@ -233,21 +233,157 @@ function stringify_path(p) {
 
 ## Global objects
 
+> **Breaking change (v4.16):** The `falkor.traverse()` function has been removed. If your UDF scripts call `falkor.traverse(...)`, migrate them to use `graph.traverse(...)` instead — the API accepts the same arguments. The `graph` object is the new unified interface for all graph-level operations.
+
 ### Graph
 
 UDFs have access to a global `graph` object which represents the current graph executing the UDF.
-The object exposes a single function `traverse` which is similar to the node's `getNeighbors` function (see docs above)
-but can perform multi-source traversal, which can be faster than performing multiple individual calls to getNeighbors.
+The object exposes the following functions:
+
+#### graph.traverse
+
+Similar to the node's `getNeighbors` function (see docs above), `graph.traverse` can perform multi-source traversal, which can be faster than performing multiple individual calls to `getNeighbors`.
 
 ```javascript
 function multi_source_bfs(sources, config) {
-    const targets = graph.traverse(sources, config) ;
+    const targets = graph.traverse(sources, config);
     // source i neighbors are in targets[i], which is an array of node or edge objects
     // depending on the optional config map passed to graph.traverse
     const s0_neighbors = targets[0];
     ...
 }
 ```
+
+---
+
+#### graph.getNodeById
+
+##### Description
+
+Looks up and returns a single node by its internal graph ID. Returns `null` if no node with the given ID exists.
+
+##### Syntax
+
+```javascript
+graph.getNodeById(id)
+```
+
+##### Parameters
+
+| Parameter | Type     | Required | Description                      |
+|-----------|----------|----------|----------------------------------|
+| `id`      | integer  | Yes      | The internal ID of the node to retrieve |
+
+##### Return value
+
+A **Node** object if the node exists, otherwise `null`.
+
+##### Example
+
+```javascript
+function getNode(id) {
+    let node = graph.getNodeById(id);
+    return node;
+}
+falkor.register('getNode', getNode);
+```
+
+```cypher
+// Retrieve the node with internal ID 0
+RETURN MyLib.getNode(0)
+```
+
+---
+
+#### graph.iterateNodes
+
+##### Description
+
+Returns an iterator over all nodes in the graph that carry the specified label.
+The iterator is consumed with a standard `for...of` loop and yields **Node** objects one at a time.
+If no nodes with the given label exist, the iterator is empty and the loop body never executes.
+
+##### Syntax
+
+```javascript
+graph.iterateNodes(label)
+```
+
+##### Parameters
+
+| Parameter | Type   | Required | Description                              |
+|-----------|--------|----------|------------------------------------------|
+| `label`   | string | Yes      | The node label to filter by              |
+
+##### Return value
+
+An **iterator** of **Node** objects matching the given label.
+
+##### Example
+
+```javascript
+function getNamesByLabel(label) {
+    let names = [];
+    let it = graph.iterateNodes(label);
+    for (let node of it) {
+        names.push(node.name);
+    }
+    return names;
+}
+falkor.register('getNamesByLabel', getNamesByLabel);
+```
+
+```cypher
+// Collect the names of all Person nodes
+RETURN MyLib.getNamesByLabel('Person')
+```
+
+---
+
+#### graph.iterateEdges
+
+##### Description
+
+Returns an iterator over all edges in the graph that have the specified relationship type.
+The iterator is consumed with a standard `for...of` loop and yields **Edge** objects one at a time.
+If no edges with the given relationship type exist, the iterator is empty and the loop body never executes.
+
+##### Syntax
+
+```javascript
+graph.iterateEdges(relType)
+```
+
+##### Parameters
+
+| Parameter | Type   | Required | Description                                      |
+|-----------|--------|----------|--------------------------------------------------|
+| `relType` | string | Yes      | The relationship type to filter by               |
+
+##### Return value
+
+An **iterator** of **Edge** objects matching the given relationship type.
+
+##### Example
+
+```javascript
+function getEdgesByType(relType) {
+    let edges = [];
+    let it = graph.iterateEdges(relType);
+    for (let edge of it) {
+        edges.push(edge);
+    }
+    return edges;
+}
+falkor.register('getEdgesByType', getEdgesByType);
+```
+
+```cypher
+// Collect all KNOWS edges in the graph
+RETURN MyLib.getEdgesByType('KNOWS')
+```
+
+---
 
 ### Falkor
 
@@ -494,3 +630,14 @@ Contributions to extend this library with additional functionality are welcome.
 ## Limitations
 > Currently, UDFs are not allowed to modify the graph in any way. You cannot update graph entities within a UDF, nor can you add or delete entities.
 
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="What are UDFs in FalkorDB?"
+  a1="UDFs (User Defined Functions) are custom extensions written in JavaScript that let you add new functions to FalkorDB without modifying its source code. They are loaded via the `udf_load` command and called in Cypher queries."
+  q2="Can UDFs modify the graph?"
+  a2="No. Currently, UDFs are read-only — they cannot update, add, or delete graph entities. They can only compute and return values."
+  q3="How do I call a UDF in a Cypher query?"
+  a3="UDFs are called using the format `LibraryName.FunctionName(args)`. For example: `RETURN StringUtils.UpperCaseOdd('hello')`. The library name is specified when loading the UDF."
+  q4="What language are UDFs written in?"
+  a4="UDFs are written in JavaScript. You define a function and register it using `falkor.register('FunctionName', fn)` to expose it to FalkorDB."
+%}

@@ -141,13 +141,13 @@ REDISCLI_AUTH="$REDIS_PASSWORD" redis-cli -h 127.0.0.1 -p 6379
 
 To test your FalkorDB installation, run a simple Cypher query:
 
-```
+```cypher
 GRAPH.QUERY mygraph "UNWIND range(1, 10) AS i RETURN i"
 ```
 
 The output should resemble the following:
 
-```
+```cypher
 127.0.0.1:6379> GRAPH.QUERY mygraph "UNWIND range(1, 10) AS i RETURN i"
 1) 1) "i"
 2)  1) 1) (integer) 1
@@ -165,3 +165,17 @@ The output should resemble the following:
 ```
 
 In summary, this guide provides steps for deploying FalkorDB on Kubernetes using Helm charts and Docker images. It covers the creation of a values.yaml file for configuration, Helm chart installation, password retrieval, enabling external connections, connecting to FalkorDB with redis-cli, and running a basic Cypher query for verification. We hope this documentation helped you to set up FalkorDB in your Kubernetes environment. If you have any questions or encounter any issues during the process, please don't hesitate to reach out for assistance. Thank you for choosing FalkorDB!
+
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="Which Helm chart should I use for FalkorDB on Kubernetes?"
+  a1="Use the Bitnami Redis Helm chart (`oci://registry-1.docker.io/bitnamicharts/redis`) for Sentinel-based HA deployments, or the Redis Cluster chart (`bitnamicharts/redis-cluster`) for sharded deployments."
+  q2="Why is allowInsecureImages required in the values.yaml?"
+  a2="The FalkorDB Docker image may use non-standard base configurations. Setting `global.security.allowInsecureImages: true` allows the Bitnami Helm chart to accept the FalkorDB image without strict security validation."
+  q3="How do I scale replicas in Kubernetes?"
+  a3="Modify the `replica.replicaCount` value in your `values.yaml` and run `helm upgrade`. For cluster deployments, adjust the node count in the Redis Cluster chart values."
+  q4="Can I use persistent volumes with FalkorDB on Kubernetes?"
+  a4="Yes. The Bitnami Helm charts enable persistent volume claims by default. Configure `master.persistence.size` and `replica.persistence.size` in your `values.yaml` to set storage sizes."
+  q5="How do I expose FalkorDB outside the Kubernetes cluster?"
+  a5="Use `kubectl port-forward` for development, or configure a LoadBalancer or NodePort service type in your Helm values for production external access."
+%}

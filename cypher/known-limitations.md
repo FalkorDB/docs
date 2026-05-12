@@ -67,3 +67,34 @@ $ redis-cli GRAPH.EXPLAIN social "MATCH (p:person) WHERE p.id < 5 RETURN p"
 2) "    Project"
 3) "        Index Scan | (p:person)"
 ```
+
+## Aggregation functions inside pattern comprehensions
+
+Aggregation functions (e.g., `count()`, `sum()`, `avg()`) are **not allowed** inside pattern comprehensions — neither in the eval expression nor in the embedded `WHERE` predicate. Attempting to use them there returns an error:
+
+```cypher
+// This will return an error:
+RETURN [(n)-[r:REL]->(m) WHERE n IS NOT NULL | count(n)] AS v
+// Error: Invalid use of aggregating function 'count'
+```
+
+As a workaround, compute the aggregation in a preceding `WITH` or `RETURN` clause, or use list comprehension followed by `size()`:
+
+```cypher
+// Collect matching nodes first, then aggregate outside the comprehension
+MATCH (n:Paper)
+WITH [(n)-[:REL]->(m:Paper) | m] AS connected
+RETURN size(connected) AS count
+```
+
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="Why does my query return unexpected counts with unnamed relationships?"
+  a1="Due to relationship uniqueness optimization, when a relationship is not referenced elsewhere in the query, FalkorDB only verifies that at least one matching relationship exists. Reference the relationship alias explicitly (e.g. in WHERE or RETURN) to get accurate counts."
+  q2="Does LIMIT prevent eager operations from executing fully?"
+  a2="No. This is a known limitation. Eager operations (CREATE, SET, DELETE, MERGE, and aggregating projections) execute fully before LIMIT is applied. For example, `CREATE (n) RETURN n LIMIT 1` still creates all nodes."
+  q3="Can indexes optimize not-equal filters?"
+  a3="No. The current index implementation does not handle `<>` (not-equal) filters. Indexes are used for equality, range comparisons, and string prefix operations."
+  q4="Can I use aggregation functions inside pattern comprehensions?"
+  a4="No. Aggregation functions like `count()`, `sum()`, and `avg()` are not allowed inside pattern comprehensions. As a workaround, compute aggregations in a preceding WITH or RETURN clause, or use `size()` on the list result."
+%}

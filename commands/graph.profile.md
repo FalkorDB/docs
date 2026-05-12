@@ -59,8 +59,10 @@ result.forEach(line => console.log(line));
 {% endcapture %}
 
 {% capture java_0 %}
-FalkorDB client = new FalkorDB();
-Graph graph = client.selectGraph("imdb");
+import com.falkordb.*;
+
+Driver driver = FalkorDB.driver("localhost", 6379);
+Graph graph = driver.graph("imdb");
 String query = """
 MATCH (actor_a:Actor)-[:ACT]->(:Movie)<-[:ACT]-(actor_b:Actor)
 WHERE actor_a <> actor_b
@@ -73,7 +75,13 @@ for (String line : result) {
 {% endcapture %}
 
 {% capture rust_0 %}
-let client = FalkorDB::connect_default();
+use falkordb::{FalkorClientBuilder, FalkorConnectionInfo};
+
+let connection_info: FalkorConnectionInfo = "falkor://127.0.0.1:6379"
+    .try_into().expect("Invalid connection info");
+let client = FalkorClientBuilder::new()
+    .with_connection_info(connection_info)
+    .build().expect("Failed to build client");
 let graph = client.select_graph("imdb");
 let query = r#"
 MATCH (actor_a:Actor)-[:ACT]->(:Movie)<-[:ACT]-(actor_b:Actor)
@@ -88,3 +96,14 @@ for line in result {
 
 {% include code_tabs.html id="profile_tabs" shell=shell_0 python=python_0 javascript=javascript_0 java=java_0 rust=rust_0 %}
 
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="Does GRAPH.PROFILE modify data in the graph?"
+  a1="Yes. Unlike `GRAPH.EXPLAIN`, `GRAPH.PROFILE` **actually executes** the query including any write operations (CREATE, DELETE, SET). It simply suppresses the RETURN output and instead shows execution metrics."
+  q2="What metrics does GRAPH.PROFILE show?"
+  a2="For each operation in the execution plan, it shows the number of **records produced** and the **execution time** in milliseconds. This helps identify which operations are the most expensive."
+  q3="What is the difference between GRAPH.EXPLAIN and GRAPH.PROFILE?"
+  a3="`GRAPH.EXPLAIN` shows the planned execution without running the query. `GRAPH.PROFILE` actually runs the query and reports real execution metrics (records produced, time per operation) but does not return query results."
+  q4="Will GRAPH.PROFILE return results from a RETURN clause?"
+  a4="No. `GRAPH.PROFILE` suppresses the result set that would normally be produced by a `RETURN` clause. It only outputs the execution plan with runtime statistics."
+%}

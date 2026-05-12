@@ -263,6 +263,16 @@ $ redis-cli GRAPH.QUERY G "MATCH (n) RETURN n {.name, .age} AS projection"
 2) 1) 1) "{name: Jeff, age: 32}"
 ```
 
+> **Null entity projection:** Following the openCypher specification, a map projection on a `null` entity evaluates to `null` — not a map of `null` values. This matters most when combining `OPTIONAL MATCH` with map projections and `collect()`:
+>
+> ```cypher
+> OPTIONAL MATCH (p)-[:WORKS_FOR]->(o:Organization)
+> RETURN collect(DISTINCT o { .name, .uuid }) AS orgs
+> // If o is unmatched (null): orgs = []   (not [{name: null, uuid: null}])
+> ```
+>
+> Because the projection itself is `null`, `collect()` skips it, producing an empty list rather than a list containing a map of nulls.
+
 #### Map merging
 
 You can combine two maps, where values in the second map will override corresponding values in the first map.
@@ -297,3 +307,26 @@ RETURN u {.name, follower_count: count} AS user"
 2) 1) 1) "{name: Jeff, follower_count: 12}"
    2) 1) "{name: Roi, follower_count: 18}"
 ```
+
+---
+
+## Next Steps
+
+- [Getting Started](/getting-started) — Build and query your first graph
+- [Cypher Language](/cypher) — Learn the query language for working with these data types
+- [Indexing](/cypher/indexing) — Create indexes on properties to speed up queries
+- [Commands](/commands) — Full command reference for GRAPH.QUERY and more
+
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="What data types can be stored as node or relationship properties?"
+  a1="You can store **strings**, **booleans**, **integers** (64-bit signed), **floating-point values** (64-bit doubles), **geospatial points**, and **temporal types** (Date, Time, DateTime, Duration) as property values. Lists and maps can also be returned by queries. Note that `null` and graph structural types (nodes, relationships, paths) cannot be stored as properties."
+  q2="How does FalkorDB handle null values?"
+  a2="FalkorDB uses three-valued logic for `null`. Since `null` represents an unknown value, comparisons like `null = null` evaluate to `null` (not true). Similarly, `null in [1,2,3]` evaluates to `null`. The `null` value cannot be stored as a property value."
+  q3="Are boolean values and integers interchangeable in FalkorDB?"
+  a3="No. While booleans are stored internally as numerics (1 for true, 0 for false), FalkorDB considers types in comparisons. The expression `1 = true` evaluates to **false** because they are different types."
+  q4="What temporal types does FalkorDB support?"
+  a4="FalkorDB supports four temporal types following ISO 8601: **Date** (YYYY-MM-DD), **Time** (HH:MM:SS with timezone), **DateTime** (combined date and time), and **Duration** (time intervals). You can compare them with standard operators and extract components like `.year`, `.month`, `.day`."
+  q5="Can I use lists and maps in FalkorDB?"
+  a5="Yes. **Lists** are ordered collections that can contain mixed types including nested lists. **Maps** are key-value pairs that can be constructed in queries or used as map projections from nodes. Both can be returned by queries but have some restrictions when used in property storage."
+%}

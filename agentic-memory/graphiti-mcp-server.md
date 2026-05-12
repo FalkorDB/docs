@@ -282,7 +282,7 @@ Once configured, test the connection with these steps:
 2. **Look for the MCP indicator** in your client's interface
 3. **Test with a simple prompt**:
 
-   ```
+   ```text
    "Remember that my favorite programming language is Python"
    ```
    
@@ -290,7 +290,7 @@ Once configured, test the connection with these steps:
 
 4. **Verify the memory**:
 
-   ```
+   ```text
    "What do you remember about my programming language preferences?"
    ```
    
@@ -565,14 +565,14 @@ MATCH (n) RETURN n LIMIT 25
 - 📚 [Model Context Protocol Documentation](https://modelcontextprotocol.io/)
 - 📖 [Graphiti Documentation](https://help.getzep.com/graphiti/)
 - 💻 [Graphiti GitHub Repository](https://github.com/getzep/graphiti)
-- 🔗 [FalkorDB Documentation](https://docs.falkordb.com/)
+- 🔗 [FalkorDB Documentation](/)
 - 📝 [MCP Integration Blog Post](https://www.falkordb.com/blog/mcp-integration-falkordb-graphrag/)
 
 ## Next Steps
 
 - Explore [Graphiti Python Library](./graphiti.md) for direct integration
 - Learn about [Cognee](./cognee.md) for flexible memory management
-- Check out [GraphRAG SDK](/graphrag-sdk) for advanced reasoning
+- Check out [GraphRAG SDK](/genai-tools/graphrag-sdk) for advanced reasoning
 - Review [Cypher Query Language](/cypher) for custom graph queries
 
 ## Example Use Cases
@@ -581,7 +581,7 @@ MATCH (n) RETURN n LIMIT 25
 
 Store personal preferences, tasks, and information:
 
-```
+```text
 You: "Remember that I prefer Python over JavaScript"
 AI: "I'll remember that you prefer Python over JavaScript."
 
@@ -593,7 +593,7 @@ AI: "You prefer Python over JavaScript."
 
 Build a knowledge base about your projects:
 
-```
+```text
 You: "Store this: MyApp is a web application built with React and FastAPI"
 AI: "I've stored that MyApp is a web application built with React and FastAPI."
 
@@ -605,10 +605,24 @@ AI: "MyApp uses React and FastAPI."
 
 Remember meeting discussions and action items:
 
-```
+```text
 You: "In today's meeting, we decided to migrate to FalkorDB for the knowledge graph backend"
 AI: "I'll remember that decision from today's meeting."
 
 You: "What did we decide about the knowledge graph backend?"
 AI: "You decided to migrate to FalkorDB for the knowledge graph backend."
 ```
+
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="What is the Model Context Protocol (MCP) and why use it with Graphiti?"
+  a1="MCP is an **open standard** that enables AI applications to connect to external data sources and tools. The Graphiti MCP Server implements this protocol so AI clients like Claude Desktop and Cursor IDE can store and retrieve persistent memory in a FalkorDB-powered knowledge graph."
+  q2="Which AI clients are compatible with the Graphiti MCP Server?"
+  a2="Any MCP-compatible client works, including **Claude Desktop**, **Cursor IDE**, **VS Code with GitHub Copilot**, and other applications that support the Model Context Protocol. The server uses HTTP transport at `http://localhost:8000/mcp/`."
+  q3="What is the difference between the combined and separate container Docker setups?"
+  a3="The **combined image** runs both FalkorDB and the MCP server in a single container for simplicity. The **separate containers** setup runs them independently, offering more flexibility for connecting to external FalkorDB instances like FalkorDB Cloud."
+  q4="How do I fix 429 rate limit errors from the LLM provider?"
+  a4="Reduce the `SEMAPHORE_LIMIT` environment variable. For OpenAI Tier 1 (free), use 1-2. For Tier 2, use 5-8. For Tier 3, use 10-15. Monitor your LLM provider dashboard for actual request rates."
+  q5="Is the knowledge graph data persisted between Docker restarts?"
+  a5="By default, Docker containers lose data on restart. For persistence, use `docker-compose` with properly configured **volumes** for FalkorDB data storage, or use FalkorDB Cloud for managed persistent hosting."
+%}

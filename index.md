@@ -1,32 +1,33 @@
 ---
 layout: default
-title: Home
 nav_order: 1
-description: "The fastest way to your knowledge"
+nav_exclude: true
+description: "Official FalkorDB documentation — the high-performance graph database for GraphRAG, Cypher queries, and knowledge graphs powering accurate GenAI applications."
 permalink: /
 ---
-
 
 
 [![Trendshift](https://trendshift.io/api/badge/repositories/14787)](https://trendshift.io/repositories/14787)
 
 [![Docker Hub](https://img.shields.io/docker/pulls/falkordb/falkordb?label=Docker&style=flat-square)](https://hub.docker.com/r/falkordb/falkordb/)
-[![Discord](https://img.shields.io/discord/1146782921294884966?style=flat-square)](https://discord.gg/ErBEqN9E) 
+[![Discord](https://img.shields.io/discord/1146782921294884966?style=flat-square)](https://discord.gg/ErBEqN9E)
 [![Try Free](https://img.shields.io/badge/Try%20Free-FalkorDB%20Cloud-FF8101?labelColor=FDE900&style=flat-square)](https://app.falkordb.cloud)
 
 ![FalkorDB Docs Readme Banner](https://github.com/user-attachments/assets/201b07e1-ac6d-4593-98cf-e58946d7766c)
 
 # FalkorDB
-### The Graph platform developers use to achieve accurate GraphRAG for enterprise GenAI
+## The Graph platform developers use to achieve accurate GraphRAG for enterprise GenAI
 
-### About FalkorDB
-FalkorDB delivers an **accurate, multi-tenant RAG solution powered by a low-latency, scalable graph database technology.** 
+## About FalkorDB
 
-* Our solution is purpose-built for development teams working with complex, interconnected data—whether structured or unstructured—in real-time or interactive user environments.
+FalkorDB delivers an **accurate, multi-tenant RAG solution powered by a low-latency, scalable graph database technology.**
 
-* The system supports the OpenCypher query language with proprietary enhancements that streamline interactions with graph data. Its efficient graph traversal and query capabilities make it well-suited for production environments.
+* Purpose-built for development teams working with complex, interconnected data—whether structured or unstructured—in real-time or interactive user environments.
 
-### Choose Your Path
+* Supports the OpenCypher query language with proprietary enhancements that streamline interactions with graph data. Its efficient graph traversal and query capabilities make it well-suited for production environments.
+
+## Choose Your Path
+
 *   **Graph Database Path:** If you're interested in using FalkorDB as a property graph database with OpenCypher support, continue with the sections below.
 *   **GraphRAG Path:** If you're aiming to implement advanced graph reasoning and generative AI tasks, explore our [GenAI Tools](/genai-tools) section, starting with the [GraphRAG SDK](/genai-tools/graphrag-sdk).
 
@@ -58,6 +59,8 @@ docker run -p 6379:6379 -p 3000:3000 -it --rm falkordb/falkordb:latest
 
 
 Once loaded, you can interact with FalkorDB using any of the supported [client libraries](/getting-started/clients)
+
+> **📖 New to FalkorDB?** Follow the step-by-step [Getting Started guide](/getting-started) for a complete walkthrough — from setup to modeling, loading, and querying your first graph.
 
 Here we'll use [FalkorDB Python client](https://pypi.org/project/FalkorDB/) to create a small graph representing a subset of motorcycle riders and teams taking part in the MotoGP league, once created we'll start querying our data.
 
@@ -257,7 +260,14 @@ The full list and links can be found on the [Client Libraries](/getting-started/
 
 ## Data import
 
-When loading large graphs from CSV files, we recommend using [falkordb-bulk-loader](https://github.com/falkordb/falkordb-bulk-loader)
+When loading large graphs from CSV files, use the [falkordb-bulk-loader](https://github.com/falkordb/falkordb-bulk-loader):
+
+```sh
+pip install falkordb-bulk-loader
+falkordb-bulk-insert GRAPHNAME -n nodes.csv -r edges.csv
+```
+
+See the [Bulk Loader documentation](/integration/bulk-loader) for the full reference.
 
 ## GitHub Discussions
 
@@ -266,3 +276,17 @@ Got questions? Please contact us at the [FalkorDB forum](https://github.com/Falk
 ## License
 
 FalkorDB is licensed under the [the Server Side Public License v1 (SSPLv1)](https://github.com/FalkorDB/FalkorDB/blob/master/LICENSE.txt).
+
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="What is FalkorDB and how does it differ from other graph databases?"
+  a1="FalkorDB is a high-performance graph database built as a Redis module. Unlike traditional graph databases, it uses a sparse adjacency matrix representation (based on GraphBLAS) for efficient storage and fast traversals. It supports **OpenCypher** queries, both RESP and Bolt protocols, and provides built-in GraphRAG capabilities for GenAI applications."
+  q2="What are the main use cases for FalkorDB?"
+  a2="FalkorDB excels at use cases involving complex, interconnected data: social networks, recommendation engines, knowledge graphs, fraud detection, and **GraphRAG for GenAI applications**. Its low-latency design makes it ideal for real-time and interactive user environments."
+  q3="How do I get started with FalkorDB?"
+  a3="The quickest way is Docker: `docker run -p 6379:6379 -p 3000:3000 -it --rm falkordb/falkordb:latest`. This starts the server and a browser UI at http://localhost:3000. Then install a [client library](/getting-started/clients) and follow the [Getting Started guide](/getting-started)."
+  q4="Does FalkorDB support cloud deployment?"
+  a4="Yes. [FalkorDB Cloud](https://app.falkordb.cloud) provides a fully managed, multi-tenant graph database service. You can create a free instance and skip local setup entirely."
+  q5="What query language does FalkorDB use?"
+  a5="FalkorDB uses **OpenCypher** with proprietary extensions. It supports full-text search, vector similarity search, and range indexing. See the [Cypher documentation](/cypher) for the complete query language reference."
+%}

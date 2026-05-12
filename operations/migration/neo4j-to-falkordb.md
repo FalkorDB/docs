@@ -74,7 +74,7 @@ python3 neo4j_to_csv_extractor.py [-h] [--uri URI] [--username USERNAME] --passw
 
 When analyzing a database, you'll see output similar to:
 
-```
+```text
 Connecting to Neo4j at bolt://localhost:7687 with username 'neo4j'...
 ✅ Loaded configuration from migrate_config.json
 ✅ Successfully connected to Neo4j!
@@ -155,7 +155,7 @@ The extraction creates the following files in the `csv_output` directory:
 
 ### Setting Up FalkorDB
 
-Set up FalkorDB on your local machine following the [Getting Started guide](https://docs.falkordb.com/getting_started.html).
+Set up FalkorDB on your local machine following the [Getting Started guide](/getting-started/).
 
 You can use either:
 - The full deployment with browser (port 3000)
@@ -196,7 +196,7 @@ This will:
 - Provide detailed progress reporting per tenant
 
 Example output:
-```
+```text
 🗂️  Found 3 tenant directories: ['tenant_cloudserve', 'tenant_learnhub', 'tenant_shopfast']
    Each will be loaded into a separate graph
 
@@ -285,7 +285,7 @@ For more details, see the [FalkorDB-Loader-RS repository](https://github.com/Fal
 
 ### Example Output
 
-```
+```text
 Connecting to FalkorDB at localhost:6379...
 ✅ Connected to FalkorDB graph 'MOVIES'
 Found 2 node files and 6 edge files
@@ -348,3 +348,16 @@ You can visualize and compare the results in both the Neo4j Browser and FalkorDB
 - Learn about [FalkorDB Operations](/operations) for production deployments
 - Check out [FalkorDB Integration](/integration) options
 
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="Is FalkorDB fully compatible with Neo4j Cypher queries?"
+  a1="FalkorDB supports a large subset of the Cypher query language. Most standard queries will work, but some Neo4j-specific functions or APOC procedures may need alternatives. Test queries after migration."
+  q2="How long does the Neo4j to FalkorDB migration take?"
+  a2="Migration time depends on dataset size. The CSV export from Neo4j and the Rust loader import into FalkorDB are both highly optimized. Datasets with millions of nodes typically complete in minutes."
+  q3="Do indexes and constraints transfer from Neo4j?"
+  a3="Yes. The migration tool extracts Neo4j indexes and constraints and recreates them in FalkorDB during the loading step. Verify with `GRAPH.QUERY mygraph 'CALL db.indexes()'` after migration."
+  q4="Can I migrate only specific labels or relationships?"
+  a4="Yes. Use the `migrate_config.json` configuration file to customize which labels and properties are included. Generate a template with `--generate-template` and edit it before running the export."
+  q5="What is the recommended batch size for loading?"
+  a5="The default batch size of 5000 works well for most datasets. For very large datasets, increase to 10000. For memory-constrained environments, reduce to 1000. Use `--progress-interval` to monitor throughput."
+%}

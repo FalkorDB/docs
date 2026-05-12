@@ -38,7 +38,7 @@ RETURN flex.map.removeKeys(user, ['password', 'email']) AS sanitized
 ```
 
 **Output:**
-```
+```text
 sanitized
 -----------------------
 {name: 'Alice', age: 30}
@@ -66,7 +66,7 @@ RETURN flex.map.removeKeys(map, ['d', 'e']) AS result
 ```
 
 **Output:**
-```
+```text
 result
 -----------------
 {a: 1, b: 2, c: 3}
@@ -85,3 +85,11 @@ result
 - [map.removeKey](./removeKey.md) - Remove a single key
 - [map.submap](./submap.md) - Keep only specific keys (inverse operation)
 - [map.merge](./merge.md) - Combine multiple maps
+
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="How does flex.map.removeKeys differ from removeKey?"
+  a1="`removeKeys` accepts a **list** of keys to remove in a single call, while `removeKey` removes only one key at a time."
+  q2="What happens if some keys in the list do not exist?"
+  a2="Non-existent keys are silently ignored. Only keys present in the map are removed from the result."
+%}

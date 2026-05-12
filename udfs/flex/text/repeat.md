@@ -37,7 +37,7 @@ RETURN flex.text.repeat('Ha', 3) AS result
 ```
 
 **Output:**
-```
+```text
 result
 ------
 HaHaHa
@@ -49,7 +49,7 @@ RETURN flex.text.repeat('-', 40) AS separator
 ```
 
 **Output:**
-```
+```text
 separator
 ----------------------------------------
 ----------------------------------------
@@ -62,7 +62,7 @@ RETURN r.product, flex.text.repeat('★', r.rating) AS stars
 ```
 
 **Output:**
-```
+```text
 product     | stars
 ------------|-------
 Laptop      | ★★★★★
@@ -77,7 +77,7 @@ RETURN flex.text.repeat('  ', level) + 'Nested Item' AS indented
 ```
 
 **Output:**
-```
+```text
 indented
 ----------------
     Nested Item
@@ -93,3 +93,11 @@ indented
 - [text.lpad](./lpad.md) - Pad the start of a string
 - [text.rpad](./rpad.md) - Pad the end of a string
 - [text.format](./format.md) - Format strings with placeholders
+
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="What does flex.text.repeat return if count is 0?"
+  a1="It returns an empty string `''`."
+  q2="Can I repeat multi-character strings?"
+  a2="Yes. The function repeats the entire input string, not just a single character. For example, `flex.text.repeat('Ha', 3)` returns `'HaHaHa'`."
+%}

@@ -384,7 +384,7 @@ services:
 1. **Use Environment Variables**: Store sensitive information like passwords in `.env` files or environment variables:
 
    Create a `.env` file:
-   ```
+   ```text
    FALKORDB_PASSWORD=your-secure-password
    FALKORDB_THREADS=8
    ```
@@ -481,8 +481,22 @@ docker-compose config
 
 ## Next Steps
 
-- Learn about [Persistence](/operations/persistence) for data durability
+- Learn about [Persistence](/operations/durability/persistence) for data durability
 - Set up [Replication](/operations/replication) for high availability
 - Configure a [Cluster](/operations/cluster) for scalability
 - Review [Configuration](/getting-started/configuration) options
 - Deploy to [Kubernetes](/operations/k8s-support) for orchestration
+
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="What is the difference between falkordb/falkordb and falkordb/falkordb-server images?"
+  a1="The `falkordb/falkordb` image includes both the FalkorDB server and the Browser UI (ports 6379 and 3000). The `falkordb/falkordb-server` image includes only the server (port 6379), making it lighter for production use."
+  q2="How do I set a password for FalkorDB in Docker?"
+  a2="Pass `--requirepass <password>` via the `REDIS_ARGS` environment variable: `-e REDIS_ARGS='--requirepass mypassword'`. For Docker Compose, add it to the environment section."
+  q3="How do I configure FalkorDB module parameters like thread count?"
+  a3="Use the `FALKORDB_ARGS` environment variable: `-e FALKORDB_ARGS='THREAD_COUNT 8 CACHE_SIZE 50 TIMEOUT_MAX 60000'`. See the Configuration page for all available parameters."
+  q4="Why is my data lost when I restart the container?"
+  a4="You need to mount a persistent volume. Use `-v falkordb_data:/var/lib/falkordb/data` to attach a Docker volume to the default data directory, and enable AOF for durability."
+  q5="How do I check if FalkorDB is healthy in Docker Compose?"
+  a5="Add a healthcheck using `redis-cli ping`: `test: ['CMD', 'redis-cli', 'ping']`. With authentication, include `-a yourpassword` in the test command."
+%}

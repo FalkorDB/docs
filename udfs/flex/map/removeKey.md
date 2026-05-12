@@ -38,7 +38,7 @@ RETURN flex.map.removeKey(user, 'email') AS sanitized
 ```
 
 **Output:**
-```
+```text
 sanitized
 -----------------------
 {name: 'Alice', age: 30}
@@ -66,7 +66,7 @@ RETURN flex.map.removeKey(map, 'c') AS result
 ```
 
 **Output:**
-```
+```text
 result
 ---------
 {a: 1, b: 2}
@@ -84,3 +84,11 @@ result
 - [map.removeKeys](./removeKeys.md) - Remove multiple keys at once
 - [map.submap](./submap.md) - Keep only specific keys (inverse operation)
 - [map.merge](./merge.md) - Combine multiple maps
+
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="Does flex.map.removeKey modify the original map?"
+  a1="No. It returns a new map with the specified key removed, leaving the original unchanged."
+  q2="What happens if the key does not exist?"
+  a2="The function returns a copy of the original map unchanged — no error is thrown."
+%}

@@ -38,7 +38,7 @@ RETURN flex.coll.intersection(a, b) AS result
 ```
 
 **Output:**
-```
+```text
 result
 -------
 [3, 4]
@@ -79,3 +79,11 @@ RETURN u.name, validPerms
 ## See Also
 - [coll.union](./union.md) - Combine all unique elements from both lists
 - [sim.jaccard](../similarity/jaccard.md) - Calculate similarity coefficient using intersection
+
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="What does flex.coll.intersection return?"
+  a1="It returns a list containing only the elements that appear in **all** of the input lists."
+  q2="Does intersection preserve duplicates?"
+  a2="No. The result contains each common element only once, treating the inputs as sets."
+%}

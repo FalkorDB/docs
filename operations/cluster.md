@@ -9,6 +9,46 @@ parent: "Operations"
 
 Setting up a FalkorDB cluster enables you to distribute your data across multiple nodes, providing horizontal scalability and improved fault tolerance. This guide will walk you through the steps to configure a FalkorDB cluster with 3 masters and 1 replica for each, using Docker.
 
+## Cluster Architecture Overview
+
+A FalkorDB cluster shards the keyspace across multiple master nodes using Redis Cluster's hash-slot mechanism (16,384 slots distributed across the masters). Each graph is a single Redis key, so it lives entirely on the shard whose slot range covers the hash of its name — different graphs typically land on different shards, and each shard ends up hosting many graphs. A cluster-aware client computes the slot for the target graph and routes the command directly to the master that owns it (or follows a `MOVED` redirect if it guesses wrong). Each master can have one or more replicas that asynchronously copy its data for failover and read scaling.
+
+```mermaid
+flowchart TB
+    Client(["Cluster-aware client<br/>(routes by graph name to slot)"])
+
+    subgraph Cluster["FalkorDB Cluster: 16,384 hash slots, gossiping masters"]
+        direction LR
+
+        subgraph S1["Shard 1: slots 0-5460"]
+            direction TB
+            M1["Master node1:6379<br/>────────────────<br/>social<br/>fraud<br/>catalog<br/>..."]
+            R1["Replica node4:6382"]
+            M1 -. "async replication" .-> R1
+        end
+
+        subgraph S2["Shard 2: slots 5461-10922"]
+            direction TB
+            M2["Master node2:6380<br/>────────────────<br/>movies<br/>recommendations<br/>iot<br/>..."]
+            R2["Replica node5:6383"]
+            M2 -. "async replication" .-> R2
+        end
+
+        subgraph S3["Shard 3: slots 10923-16383"]
+            direction TB
+            M3["Master node3:6381<br/>────────────────<br/>knowledge<br/>supply_chain<br/>logs<br/>..."]
+            R3["Replica node6:6384"]
+            M3 -. "async replication" .-> R3
+        end
+    end
+
+    Client == "GRAPH.QUERY social ..." ==> M1
+    Client == "GRAPH.QUERY movies ..." ==> M2
+    Client == "GRAPH.QUERY knowledge ..." ==> M3
+```
+
+The diagram shows the deployment built in this guide: three master shards laid out side by side, each owning a slice of the slot range and hosting many graph keys. The client sends each query to the shard that owns the graph being queried — `social` lives on shard 1, `movies` on shard 2, `knowledge` on shard 3 — while every master also asynchronously replicates its data to one replica for failover and read scaling.
+
 ## Prerequisites
 
 Before you begin, ensure you have the following:
@@ -120,4 +160,18 @@ sudo echo "127.0.0.1 node7" | sudo tee -a /etc/hosts
 
 ## Conclusion
 
-With your FalkorDB cluster set up, you now have a scalable, distributed environment that can handle increased loads and provide higher availability. 
+With your FalkorDB cluster set up, you now have a scalable, distributed environment that can handle increased loads and provide higher availability.
+
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="Does a FalkorDB cluster split a single graph across multiple shards?"
+  a1="No. Each graph is a single Redis key and resides entirely on the shard whose hash-slot range covers the hash of its name. Clustering distributes *different* graphs across shards, not a single graph."
+  q2="How many master nodes should I use?"
+  a2="A minimum of 3 master nodes is recommended for fault tolerance. The 16,384 hash slots are distributed evenly across masters. Add more masters to scale throughput across many graphs."
+  q3="Do I need a cluster-aware client?"
+  a3="Yes. A cluster-aware client computes the hash slot for the target graph and routes commands to the correct master. If it guesses wrong, the cluster returns a `MOVED` redirect. Use `redis-cli -c` or a cluster-enabled SDK."
+  q4="How do I add a new node to an existing cluster?"
+  a4="Start a new FalkorDB container with `--cluster-enabled yes`, then run `redis-cli --cluster add-node <new-node> <existing-node>`. The cluster will begin rebalancing hash slots to include the new node."
+  q5="What happens if a master node goes down?"
+  a5="Its replica is automatically promoted to master by the cluster. The failover is handled by Redis Cluster consensus. Ensure each master has at least one replica configured for this to work."
+%}
