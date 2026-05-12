@@ -1,0 +1,83 @@
+# Incrementally updates the FalkorDB docs knowledge graph on PR merge.
+#
+# On merge to main of a PR touching .md files, this workflow:
+#   1. Checks out this repo (the content) and FalkorDB/GraphRAG-UI (the Python).
+#   2. Runs `python -m server.scripts.update_graph --graph-id docs_benchmark`
+#      from the GraphRAG-UI checkout. That script:
+#        - looks up the :Graph node for docs_benchmark in the org graph
+#        - reads ingestion config (LLM/embedder/chunker/extractor/resolver/globs)
+#          from the node, NOT from this workflow — the workflow stays generic
+#        - copies the live graph to docs_v{N+1}_pending via redis-cli GRAPH.COPY
+#        - SDK.apply_changes(added, modified, deleted) + SDK.finalize() on pending
+#        - smoke-tests the `questions` from the :Graph node against the pending
+#        - on success: atomic Cypher flip of active_graph; drops old previous
+#        - on failure: exits non-zero, leaves pending graph for inspection
+#
+# The only docs-specific input from this file is `--graph-id docs_benchmark`.
+# Everything else lives as data in the org graph so user-created widgets
+# share the same code path with no workflow changes.
+
+name: Update graph (incremental)
+
+on:
+  pull_request:
+    types: [closed]
+    branches: [main]
+    paths:
+      - "**/*.md"
+
+# Merge target is always main, so all runs share one group. Bursts of PR
+# merges queue rather than race. cancel-in-progress: false because each
+# run consumes LLM credit and we'd rather pay the wait than re-do work.
+concurrency:
+  group: update-graph-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  update-graph:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout docs (this repo)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0    # need history for git diff against an arbitrary base
+          path: docs
+
+      - name: Checkout GraphRAG-UI (action code lives there)
+        uses: actions/checkout@v4
+        with:
+          repository: FalkorDB/GraphRAG-UI
+          # Required if GraphRAG-UI is private. Drop this line entirely
+          # when the repo becomes public.
+          token: ${{ secrets.GRAPHRAG_UI_CHECKOUT_PAT }}
+          path: graphrag-ui
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install GraphRAG-UI server deps
+        run: pip install -r graphrag-ui/server/requirements.txt
+
+      - name: Run incremental update
+        env:
+          # FalkorDB connection (the action talks via redis-cli AND via the SDK).
+          FALKORDB_HOST: ${{ secrets.FALKORDB_HOST }}
+          FALKORDB_PORT: ${{ secrets.FALKORDB_PORT }}
+          FALKORDB_PASSWORD: ${{ secrets.FALKORDB_PASSWORD }}
+
+          # Azure OpenAI credentials — read at factory time inside
+          # IngestionConfig.{LLM,Embedder}Config.to_*(). Never stored in
+          # the org graph alongside the rest of the config.
+          AZURE_OPENAI_API_KEY: ${{ secrets.AZURE_OPENAI_API_KEY }}
+          AZURE_OPENAI_ENDPOINT: ${{ secrets.AZURE_OPENAI_ENDPOINT }}
+          AZURE_OPENAI_DEPLOYMENT: ${{ secrets.AZURE_OPENAI_DEPLOYMENT }}
+        working-directory: graphrag-ui
+        run: |
+          python -m server.scripts.update_graph \
+            --graph-id docs_benchmark \
+            --source-root ../docs \
+            --base-sha ${{ github.event.pull_request.base.sha }} \
+            --head-sha ${{ github.sha }}
