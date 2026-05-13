@@ -58,8 +58,14 @@ jobs:
       - name: Build diff payload
         id: payload
         env:
+          # ``github.sha`` in a pull_request event resolves to the temporary
+          # test-merge commit (``refs/pull/<N>/merge``) GitHub creates for CI,
+          # NOT the commit that actually lands on the target branch when the
+          # merge button is clicked. Use ``merge_commit_sha`` so the diff
+          # reflects what really landed — critical for squash/rebase merges
+          # and for PRs updated between the last test-merge and merge.
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
-          HEAD_SHA: ${{ github.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.merge_commit_sha }}
         run: |
           python3 - <<'PY'
           import json, os, pathlib, subprocess, sys
