@@ -25,7 +25,7 @@ jobs:
       contents: read
     env:
       GRAPH_ID: docs_benchmark
-      GRAPHRAG_UI_URL: ${{ vars.GRAPHRAG_UI_URL }}
+      GRAPHRAG_UI_URL: ${{ secrets.GRAPHRAG_UI_URL }}
     steps:
       - name: Checkout docs
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
