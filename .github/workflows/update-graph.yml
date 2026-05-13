@@ -24,8 +24,13 @@ on:
 # Merge target is always main, so all runs share one group. Bursts of PR
 # merges queue rather than race. cancel-in-progress: false because each
 # run consumes LLM credit and we'd rather pay the wait than re-do work.
+#
+# IMPORTANT: ``github.ref`` resolves to ``refs/pull/<N>/merge`` in a
+# pull_request event — a different value per PR. Using it here would
+# defeat the queue (each PR would get its own group). Use the target
+# branch ref instead so all merges to main share one group.
 concurrency:
-  group: update-graph-${{ github.ref }}
+  group: update-graph-${{ github.event.pull_request.base.ref }}
   cancel-in-progress: false
 
 jobs:
@@ -33,6 +38,12 @@ jobs:
     if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    # Least-privilege GITHUB_TOKEN: this job only needs to read repo
+    # source to compute the diff. No writes back to the repo, no comments,
+    # no status updates. Closes CodeQL "workflow does not contain
+    # permissions" alerts.
+    permissions:
+      contents: read
     env:
       GRAPH_ID: docs_benchmark
       # The base URL of the GraphRAG-UI deployment. Set this as a repo or
