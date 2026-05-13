@@ -1,7 +1,15 @@
-# Incrementally updates the FalkorDB docs knowledge graph on PR merge.
+# Incrementally updates the FalkorDB docs knowledge graph on push to main.
 #
-# On merge to main of a PR touching .md files, this workflow:
-#   1. Computes the diff (added / modified / deleted .md files).
+# Fires whenever a commit lands on main and at least one .md file changed.
+# Covers PR merges (squash/rebase/merge-commit) and direct pushes alike —
+# the trigger is "main moved," not "a PR closed."
+#
+# On each push the workflow:
+#   1. Computes the diff (added / modified / deleted .md files) between the
+#      previous main HEAD (``github.event.before``) and the new HEAD
+#      (``github.sha``). On push events both values point at real commits
+#      on main, unlike pull_request where ``github.sha`` is the synthetic
+#      test-merge commit.
 #   2. Reads the content of added + modified files.
 #   3. POSTs the payload to GraphRAG-UI's /api/admin/update-graph endpoint.
 #   4. The endpoint does all the SDK / FalkorDB / smoke-test work server-side
@@ -15,27 +23,21 @@
 name: Update graph (incremental)
 
 on:
-  pull_request:
-    types: [closed]
-    branches: [main]
+  push:
+    branches:
+      - main
     paths:
       - "**/*.md"
 
-# Merge target is always main, so all runs share one group. Bursts of PR
-# merges queue rather than race. cancel-in-progress: false because each
-# run consumes LLM credit and we'd rather pay the wait than re-do work.
-#
-# IMPORTANT: ``github.ref`` resolves to ``refs/pull/<N>/merge`` in a
-# pull_request event — a different value per PR. Using it here would
-# defeat the queue (each PR would get its own group). Use the target
-# branch ref instead so all merges to main share one group.
+# All pushes to main share one queue. Bursts of merges process in order
+# rather than racing. cancel-in-progress: false because each run consumes
+# LLM credit and we'd rather pay the wait than re-do work.
 concurrency:
-  group: update-graph-${{ github.event.pull_request.base.ref }}
+  group: update-graph-${{ github.ref_name }}
   cancel-in-progress: false
 
 jobs:
   update-graph:
-    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     timeout-minutes: 30
     # Least-privilege GITHUB_TOKEN: this job only needs to read repo
@@ -53,24 +55,39 @@ jobs:
       - name: Checkout docs
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # need history for diff against the PR base
+          fetch-depth: 0  # need history for diff against the previous HEAD
 
       - name: Build diff payload
         id: payload
         env:
-          # ``github.sha`` in a pull_request event resolves to the temporary
-          # test-merge commit (``refs/pull/<N>/merge``) GitHub creates for CI,
-          # NOT the commit that actually lands on the target branch when the
-          # merge button is clicked. Use ``merge_commit_sha`` so the diff
-          # reflects what really landed — critical for squash/rebase merges
-          # and for PRs updated between the last test-merge and merge.
-          BASE_SHA: ${{ github.event.pull_request.base.sha }}
-          HEAD_SHA: ${{ github.event.pull_request.merge_commit_sha }}
+          # On push events:
+          #   ``github.event.before`` = parent of the new HEAD on main
+          #   ``github.sha``          = the new HEAD (what just landed)
+          # ``git diff $before $sha`` is exactly what this push introduced —
+          # the merge/rebase/direct-push contribution. No test-merge quirks.
+          BASE_SHA: ${{ github.event.before }}
+          HEAD_SHA: ${{ github.sha }}
         run: |
           python3 - <<'PY'
           import json, os, pathlib, subprocess, sys
 
           base, head = os.environ["BASE_SHA"], os.environ["HEAD_SHA"]
+
+          # First push to a newly-created branch carries an all-zero
+          # ``before`` SHA. main already exists in this repo so this is
+          # a safety net, not an expected path. Treat it as "no prior
+          # history — diff the whole tree against the empty tree."
+          if set(base) == {"0"}:
+              print(
+                  "::notice::No prior HEAD on main (all-zero before); "
+                  "diffing against the empty tree.",
+                  file=sys.stderr,
+              )
+              # 4b825dc642cb6eb9a060e54bf8d69288fbee4904 is the well-known
+              # SHA of git's empty tree object — diff against it yields
+              # every file as added.
+              base = "4b825dc642cb6eb9a060e54bf8d69288fbee4904"
+
           out = subprocess.run(
               ["git", "diff", "--name-status", base, head],
               capture_output=True, text=True, check=True,
@@ -107,8 +124,8 @@ jobs:
               "files": {"added": added, "modified": modified, "deleted": deleted},
           }
           if not (added or modified or deleted):
-              # Path filter on the workflow trigger should make this rare, but
-              # be explicit: no work to do, exit clean before the POST.
+              # Path filter on the workflow trigger should make this rare,
+              # but be explicit: no work to do, exit clean before the POST.
               print("::notice::No .md changes after filtering — skipping graph update.", file=sys.stderr)
               with open(os.environ["GITHUB_OUTPUT"], "a") as f:
                   f.write("skip=true\n")
