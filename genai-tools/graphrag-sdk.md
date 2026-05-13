@@ -14,131 +14,142 @@ redirect_from:
 
 ## Build intelligent GraphRAG applications with FalkorDB and LLMs
 
-- Automatically converts natural language questions into high-quality [Cypher](/cypher/) queries.
-- Automatically generates contextually relevant answers from knowledge graph data.
-- Supports streaming responses and conversational sessions.
-- Integrates with multiple language model providers (OpenAI, Gemini, Groq, etc.).
+- Ingest raw documents (text, PDF, Markdown) directly into a FalkorDB knowledge graph with schema-guided entity extraction.
+- Retrieve cited answers via a hybrid pipeline that combines vector search, full-text search, Cypher generation, and relationship expansion.
+- Update the graph **incrementally** on PR merges with `apply_changes()` — re-sync individual documents without rebuilding.
+- Plug in any LLM or embedder via LiteLLM (OpenAI, Azure, Anthropic, Gemini, Groq, Cohere, local models, etc.).
 
 **Resources:**
 - [GraphRAG-SDK GitHub Repository](https://github.com/FalkorDB/GraphRAG-SDK)
-- [Documentation and Examples](https://github.com/FalkorDB/GraphRAG-SDK#readme)
+- [Examples](https://github.com/FalkorDB/GraphRAG-SDK/tree/main/graphrag_sdk/examples) — runnable starters covering quick start, schemas, custom strategies, and incremental updates
+- [API Reference](https://github.com/FalkorDB/GraphRAG-SDK/blob/main/docs/api-reference.md)
 
 ## Quick Start
 
-### Start FalkorDB Graph Instance
-```bash
-docker run -p 6379:6379 -p 3000:3000 -it --rm falkordb/falkordb:edge
-```
-
-Or sign up for [FalkorDB Cloud](https://app.falkordb.cloud)
-
-### Install SDK & Environment Configuration
+### Install and start FalkorDB
 
 ```bash
-pip install graphrag_sdk
-
-# FalkorDB Connection (defaults are for on-premises)
-export FALKORDB_HOST="localhost" 
-export FALKORDB_PORT=6379 
-export FALKORDB_USERNAME="your-username"  # optional for on-premises
-export FALKORDB_PASSWORD="your-password"  # optional for on-premises
-
-# LLM Provider (choose one)
-export OPENAI_API_KEY="your-key"  # or GOOGLE_API_KEY, GROQ_API_KEY, etc.
+pip install graphrag-sdk[litellm]
+docker run -d -p 6379:6379 -p 3000:3000 --name falkordb falkordb/falkordb:latest
+export OPENAI_API_KEY="sk-..."
 ```
 
-### Basic Usage
+For PDF ingestion, install the `pdf` extra instead: `pip install graphrag-sdk[litellm,pdf]`.
+
+Or sign up for [FalkorDB Cloud](https://app.falkordb.cloud).
+
+### Ingest and query
 
 ```python
-import os
-from falkordb import FalkorDB
-from graphrag_sdk import KnowledgeGraph
-from graphrag_sdk.ontology import Ontology
-from graphrag_sdk.models.litellm import LiteModel
-from graphrag_sdk.model_config import KnowledgeGraphModelConfig
+import asyncio
+from graphrag_sdk import GraphRAG, ConnectionConfig, LiteLLM, LiteLLMEmbedder
 
-graph_name = "my_existing_graph"
+async def main():
+    async with GraphRAG(
+        connection=ConnectionConfig(host="localhost", graph_name="my_graph"),
+        llm=LiteLLM(model="openai/gpt-4o-mini"),
+        embedder=LiteLLMEmbedder(model="openai/text-embedding-3-large", dimensions=256),
+    ) as rag:
+        # Ingest raw text (or pass a file path for .md / .txt / .pdf)
+        result = await rag.ingest(
+            text="Alice Johnson is a software engineer at Acme Corp in London.",
+            document_id="my_doc",
+        )
+        print(f"Nodes: {result.nodes_created}, Edges: {result.relationships_created}")
 
-# Connect to FalkorDB using environment variables
-db = FalkorDB(
-    host=os.getenv("FALKORDB_HOST", "localhost"),
-    port=os.getenv("FALKORDB_PORT", 6379),
-    username=os.getenv("FALKORDB_USERNAME"),  # optional for on-premises
-    password=os.getenv("FALKORDB_PASSWORD")   # optional for on-premises
-)
+        # Finalize: deduplicate entities, backfill embeddings, build indexes
+        await rag.finalize()
 
-# Select graph
-graph = db.select_graph(graph_name)
+        # Full RAG: retrieve + generate with provenance
+        answer = await rag.completion("Where does Alice work?")
+        print(answer.answer)
 
-# Extract ontology from existing knowledge graph
-ontology = Ontology.from_kg_graph(graph)
-
-# Configure model and create GraphRAG instance
-model = LiteModel()  # Default is OpenAI GPT-4o, can specify different model
-model_config = KnowledgeGraphModelConfig.with_model(model)
-
-# Create KnowledgeGraph instance
-kg = KnowledgeGraph(
-    name=graph_name,
-    model_config=model_config,
-    ontology=ontology,
-    host=os.getenv("FALKORDB_HOST", "localhost"),
-    port=os.getenv("FALKORDB_PORT", 6379),
-    username=os.getenv("FALKORDB_USERNAME"),
-    password=os.getenv("FALKORDB_PASSWORD")
-)
-
-# Start chat session
-chat = kg.chat_session()
-
-# Ask questions
-response = chat.send_message("What products are available?")
-print(response["response"])
-
-# Ask follow-up questions
-response = chat.send_message("Tell me which one of them is the most expensive")
-print(response["response"])
+asyncio.run(main())
 ```
+
+### Define a schema (optional)
+
+A schema constrains which entity and relation types the extractor produces. Without one the SDK runs open-world extraction; with one you get a tighter, more queryable graph.
+
+```python
+from graphrag_sdk import GraphSchema, EntityType, RelationType
+
+schema = GraphSchema(
+    entities=[
+        EntityType(label="Person", description="A human being"),
+        EntityType(label="Organization", description="A company or institution"),
+        EntityType(label="Location", description="A geographic location"),
+    ],
+    relations=[
+        RelationType(label="WORKS_AT", description="Is employed by", patterns=[("Person", "Organization")]),
+        RelationType(label="LOCATED_IN", description="Is situated in", patterns=[("Organization", "Location")]),
+    ],
+)
+
+async with GraphRAG(
+    connection=ConnectionConfig(host="localhost", graph_name="my_graph"),
+    llm=LiteLLM(model="openai/gpt-4o-mini"),
+    embedder=LiteLLMEmbedder(model="openai/text-embedding-3-large", dimensions=256),
+    schema=schema,
+) as rag:
+    ...  # ingest / completion as above
+```
+
+## Incremental Updates
+
+Re-sync individual documents without rebuilding the graph. The canonical CI use case is updating the graph on PR merge — added, modified, and deleted files in one batch:
+
+```python
+async with GraphRAG(connection=ConnectionConfig(...), llm=..., embedder=...) as graph:
+    result = await graph.apply_changes(
+        added=["docs/new_feature.md"],
+        modified=["docs/api.md"],
+        deleted=["docs/removed_page.md"],
+    )
+    await graph.finalize()  # once per batch — finalize is O(graph size)
+
+    # Per-file outcomes are wrapped in BatchEntry — the batch never raises.
+    for entry in result.added + result.modified + result.deleted:
+        if not entry.is_success:
+            print(f"failed: {entry.error_type}: {entry.error}")
+```
+
+The three primitives behind the wrapper:
+
+| Method | When to use |
+|---|---|
+| `update(source, document_id=...)` | Document content changed. A SHA-256 content hash short-circuits no-op updates (touch-only PRs cost ~1 Cypher query). Pass `if_missing="ingest"` for upsert semantics. |
+| `delete_document(document_id)` | Document removed. Cleans up entities orphaned by the deletion; preserves entities still referenced by other documents. |
+| `apply_changes(added=..., modified=..., deleted=...)` | Heterogeneous batch. Per-file errors are collected, not raised. Does not call `finalize()` — caller drives that cadence. |
+
+**Cost model.** `finalize()` runs cross-document deduplication, which scans the full entity table — its cost is **O(graph size)**, not O(change size). For CI use cases, batch all PR changes through `apply_changes` and call `finalize` **once** at the end of the run, not per file.
 
 ## Key Features
 
-- **Ontology Extraction**: Automatically extract schema and attributes from existing knowledge graphs
-- **Smart Query Generation**: Convert natural language questions to optimized Cypher queries
-- **Conversational Context**: Maintain chat history for contextual follow-up questions  
-- **Streaming Support**: Real-time response chunks for better user experience
-- **Flexible Sources**: Create ontologies from JSON, existing graphs, or data sources
-- **Schema Management**: Build ontologies from graph schemas or knowledge graphs with sampling
+- **Schema-guided extraction** — Constrain the entity and relation types the LLM produces, or run open-world if you don't have a schema yet.
+- **Hybrid retrieval** — Vector search, full-text search, Cypher generation, and relationship expansion combined in one pipeline.
+- **Cited answers** — Every answer is traceable to its source chunks via `MENTIONS` edges; pass `return_context=True` to `completion()` to get the retrieval trail.
+- **Incremental updates** — `apply_changes()` handles added/modified/deleted documents in one call, with crash-safe rollforward cutover.
+- **Multi-tenant** — `graph_name` on the connection provides per-tenant isolation in a single FalkorDB instance.
+- **Provider-agnostic** — Any LLM or embedder reachable via LiteLLM works out of the box; custom providers plug in behind clean ABCs.
 
 ## How it works
 
-### 1️⃣ Extract and Build Ontologies from Multiple Sources
-- **From Existing Graphs**: Automatically extract schema and attributes from knowledge graphs using `Ontology.from_kg_graph()`
-- **From Data Sources**: Generate ontologies from diverse formats (PDF, CSV, HTML, TXT, JSON, URLs) using AI
-- **From Schema Graphs**: Import ontologies directly from graph schemas with `Ontology.from_schema_graph()`
-- **From JSON**: Load pre-defined ontologies from JSON configurations
+### 1️⃣ Ingest documents into a knowledge graph
+- **Document loading**: Markdown, plain text, and (with the `pdf` extra) PDF inputs go through structural-aware chunkers.
+- **Entity extraction**: An LLM-driven extractor reads each chunk, optionally constrained by your schema.
+- **Resolution**: Surface forms of the same entity are merged via exact-match plus optional LLM-verified resolution.
+- **Provenance**: Chunks, entities, and relationships are connected by `PART_OF`, `NEXT_CHUNK`, and `MENTIONS` edges so every answer can be traced back to its source text.
 
-### 2️⃣ Intelligent Query Generation and Execution
-- **Natural Language Processing**: Convert user questions into optimized Cypher queries using LLMs
-- **Context-Aware Generation**: Leverage ontology schema to ensure accurate and relevant queries
-- **Multi-Step Pipeline**: Execute graph queries and synthesize natural language responses
+### 2️⃣ Retrieve relevant context
+- **Vector search** ranks chunks and entities by embedding similarity.
+- **Full-text search** complements vectors with keyword precision.
+- **Cypher generation** (experimental) lets the LLM emit graph queries directly for aggregate or structural questions.
+- **Relationship expansion** traverses the graph from the seed hits to surface multi-hop context.
+- **Reranking** orders the final passages by cosine similarity to the question.
 
-### 3️⃣ Interactive Chat Sessions with Graph Context
-- **Conversational Interface**: Maintain chat history for contextual follow-up questions
-- **Streaming Responses**: Real-time response chunks for better user experience
-- **Flexible Model Support**: Compatible with multiple LLM providers (OpenAI, Gemini, Groq)
+### 3️⃣ Generate cited answers
+- **Retrieval-grounded completion** combines the retrieved context with the user's question and feeds it to the LLM.
+- **Source attribution** is built into the response — every answer points back to the chunks that supported it.
 
 > 📓  [Understanding Ontologies and Knowledge Graphs](https://www.falkordb.com/blog/understanding-ontologies-knowledge-graph-schemas/)
-
-{% include faq_accordion.html
-  title="Frequently Asked Questions"
-  q1="What is the GraphRAG-SDK?"
-  a1="The GraphRAG-SDK is FalkorDB's native Python SDK for building intelligent GraphRAG applications. It automatically converts natural language questions into Cypher queries, generates contextual answers from knowledge graph data, and supports streaming responses with multiple LLM providers."
-  q2="How do I create an ontology for my existing graph?"
-  a2="You can extract an ontology from an existing FalkorDB graph using `Ontology.from_kg_graph(graph)`. You can also create ontologies from JSON configurations, data sources (PDF, CSV, HTML, URLs), or schema graphs using `Ontology.from_schema_graph()`."
-  q3="Which LLM providers does the GraphRAG-SDK support?"
-  a3="The SDK supports multiple providers through LiteLLM including **OpenAI** (GPT-4o default), **Google Gemini**, **Groq**, and others. Set the appropriate API key environment variable (e.g., `OPENAI_API_KEY`, `GOOGLE_API_KEY`, `GROQ_API_KEY`)."
-  q4="Can I maintain conversation context across multiple questions?"
-  a4="Yes. Use `kg.chat_session()` to create a chat session that maintains conversation history. Follow-up questions are answered in context, so you can ask things like 'Tell me more about the most expensive one' after an initial query."
-  q5="Do I need to write Cypher queries manually?"
-  a5="No. The GraphRAG-SDK automatically generates optimized Cypher queries from your natural language questions using the ontology schema and LLM. You just call `chat.send_message()` with a plain-English question."
-%}
