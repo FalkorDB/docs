@@ -37,63 +37,7 @@ jobs:
         env:
           BASE_SHA: ${{ github.event.before }}
           HEAD_SHA: ${{ github.sha }}
-        run: |
-          python3 - <<'PY'
-          import json, os, pathlib, subprocess, sys
-
-          base, head = os.environ["BASE_SHA"], os.environ["HEAD_SHA"]
-
-          # All-zero "before" = first push to a newly-created branch.
-          # Fall back to git's empty-tree SHA so every file shows as added.
-          if set(base) == {"0"}:
-              base = "4b825dc642cb6eb9a060e54bf8d69288fbee4904"
-
-          out = subprocess.run(
-              ["git", "diff", "--name-status", base, head],
-              capture_output=True, text=True, check=True,
-          ).stdout
-
-          added, modified, deleted = {}, {}, []
-          for line in out.splitlines():
-              parts = line.split("\t")
-              if not parts:
-                  continue
-              status = parts[0][0]  # strip rename similarity score
-              if status == "R" and len(parts) >= 3:
-                  old, new = parts[1], parts[2]
-                  if old.endswith(".md"):
-                      deleted.append(old)
-                  if new.endswith(".md"):
-                      try:
-                          added[new] = pathlib.Path(new).read_text(encoding="utf-8")
-                      except FileNotFoundError:
-                          pass
-                  continue
-              if len(parts) < 2 or not parts[1].endswith(".md"):
-                  continue
-              path = parts[1]
-              if status == "A":
-                  added[path] = pathlib.Path(path).read_text(encoding="utf-8")
-              elif status == "M":
-                  modified[path] = pathlib.Path(path).read_text(encoding="utf-8")
-              elif status == "D":
-                  deleted.append(path)
-
-          payload = {
-              "graph_id": os.environ.get("GRAPH_ID", "docs_benchmark"),
-              "files": {"added": added, "modified": modified, "deleted": deleted},
-          }
-          if not (added or modified or deleted):
-              print("::notice::No .md changes — skipping graph update.", file=sys.stderr)
-              with open(os.environ["GITHUB_OUTPUT"], "a") as f:
-                  f.write("skip=true\n")
-              sys.exit(0)
-
-          pathlib.Path("payload.json").write_text(json.dumps(payload))
-          print(f"::notice::Diff: +{len(added)} ~{len(modified)} -{len(deleted)} files")
-          with open(os.environ["GITHUB_OUTPUT"], "a") as f:
-              f.write("skip=false\n")
-          PY
+        run: python3 .github/scripts/build_diff_payload.py
 
       - name: Call admin update-graph endpoint
         if: steps.payload.outputs.skip != 'true'
