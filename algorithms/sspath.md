@@ -2,6 +2,7 @@
 title: "algo.SSpaths"
 description: "Explore all shortest paths from a single source node with weight, cost, and length constraints."
 parent: "Algorithms"
+nav_order: 6
 ---
 
 # `algo.SSpaths` - Single Source Paths
@@ -47,8 +48,9 @@ YIELD path, pathWeight, pathCost
 | `pathCost`   | Integer | Sum of the costProp across the path (if used)  |
 
 
-## Examples:
-Lets take this Road Network Graph as an example:
+## Examples
+
+Let's take this Road Network Graph as an example:
 
 ![Road network](../images/road_network.png)
 
@@ -105,4 +107,18 @@ ORDER BY pathWeight
 | `6`        | `2`      |  [A, D, C] | 
 | `7`        | `2`      |  [A, D, E] | 
 | `8`        | `1`      |  [A, C]    | 
+
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="How does algo.SSpaths differ from algo.SPpaths?"
+  a1="**algo.SSpaths** finds paths from a single source to *multiple* destinations (all reachable nodes). **[algo.SPpaths](./sppath.md)** finds paths between a specific source-target pair. Use SSpaths for exploration and SPpaths for point-to-point routing."
+  q2="Can I limit how many paths are returned?"
+  a2="Yes. Use the `pathCount` parameter. Set it to a specific number (e.g. `pathCount: 5`) for the top results, or `0` to return all shortest paths."
+  q3="How do I constrain path results by distance or cost?"
+  a3="Use `maxCost` with `costProp` to set an upper bound. For example, `costProp: 'dist', maxCost: 10` returns only paths with total distance ≤ 10."
+  q4="What does the maxLen parameter do?"
+  a4="It limits the maximum number of *relationships* (hops) in any returned path. This prevents very long paths from being explored, improving performance on dense graphs."
+  q5="Is weightProp required?"
+  a5="No. If omitted, all edges are treated as having equal weight. The algorithm then finds paths with the fewest hops rather than minimal weighted distance."
+%}
 

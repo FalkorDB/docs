@@ -1,0 +1,103 @@
+---
+layout: default
+title: text.repeat
+description: "Returns a string repeated a specified number of times."
+parent: Text Functions
+grand_parent: FLEX Function Reference
+nav_order: 12
+---
+
+# text.repeat
+
+## Description
+Repeats a string a specified number of times.
+
+## Syntax
+```cypher
+flex.text.repeat(string, count)
+```
+
+## Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `string` | string | Yes | The string to repeat |
+| `count` | number | Yes | The number of times to repeat the string |
+
+## Returns
+**Type:** string
+
+A new string consisting of the input string repeated the specified number of times. Returns `null` if input is `null`.
+
+## Examples
+
+### Example 1: Basic Repetition
+```cypher
+RETURN flex.text.repeat('Ha', 3) AS result
+```
+
+**Output:**
+```text
+result
+------
+HaHaHa
+```
+
+### Example 2: Creating Separators
+```cypher
+RETURN flex.text.repeat('-', 40) AS separator
+```
+
+**Output:**
+```text
+separator
+----------------------------------------
+----------------------------------------
+```
+
+### Example 3: Building Star Ratings
+```cypher
+MATCH (r:Review)
+RETURN r.product, flex.text.repeat('★', r.rating) AS stars
+```
+
+**Output:**
+```text
+product     | stars
+------------|-------
+Laptop      | ★★★★★
+Mouse       | ★★★★
+Keyboard    | ★★★
+```
+
+### Example 4: Indentation
+```cypher
+WITH 2 AS level
+RETURN flex.text.repeat('  ', level) + 'Nested Item' AS indented
+```
+
+**Output:**
+```text
+indented
+----------------
+    Nested Item
+```
+
+## Notes
+- Returns `null` if input is `null`
+- Count must be a non-negative integer
+- Useful for creating visual elements, separators, or formatting
+- Can be combined with other text functions for complex formatting
+
+## See Also
+- [text.lpad](./lpad.md) - Pad the start of a string
+- [text.rpad](./rpad.md) - Pad the end of a string
+- [text.format](./format.md) - Format strings with placeholders
+
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="What does flex.text.repeat return if count is 0?"
+  a1="It returns an empty string `''`."
+  q2="Can I repeat multi-character strings?"
+  a2="Yes. The function repeats the entire input string, not just a single character. For example, `flex.text.repeat('Ha', 3)` returns `'HaHaHa'`."
+%}

@@ -2,31 +2,37 @@
 title: "CREATE"
 nav_order: 8
 description: >
-    CREATE is used to introduce new nodes and relationships.
+    Use the CREATE clause to add new nodes and relationships to FalkorDB graphs. Create single or multiple entities, set properties and labels, and build complete graph patterns.
 parent: "Cypher Language"
 ---
 
 # CREATE
 
-CREATE is used to introduce new nodes and relationships.
+The `CREATE` clause is used to introduce new nodes and relationships into the graph.
 
-The simplest example of CREATE would be a single node creation:
+## Creating Nodes
+
+The simplest example creates a single node without any labels or properties:
 
 ```sh
 CREATE (n)
 ```
 
-It's possible to create multiple entities by separating them with a comma.
+You can create multiple entities by separating them with commas:
 
 ```sh
 CREATE (n),(m)
 ```
 
+Create a node with a label and properties:
+
 ```sh
 CREATE (:Person {name: 'Kurt', age: 27})
 ```
 
-To add relations between nodes, in the following example we first find an existing source node. After it's found, we create a new relationship and destination node.
+## Creating Relationships
+
+To add relationships between nodes, you typically match existing nodes first, then create the relationship. In this example, we find an existing source node and create a new relationship with a new destination node:
 
 ```sh
 GRAPH.QUERY DEMO_GRAPH
@@ -35,17 +41,29 @@ WHERE a.name = 'Kurt'
 CREATE (a)-[:MEMBER]->(:Band {name:'Nirvana'})"
 ```
 
-Here the source node is a bounded node, while the destination node is unbounded.
+Here the source node `(a:Person)` is matched (bound), while the destination node `(:Band)` is unbound and will be created.
 
-As a result, a new node is created representing the band Nirvana and a new relation connects Kurt to the band.
+This query creates a new node representing the band Nirvana and a new `MEMBER` relationship connecting Kurt to the band.
 
-Lastly we create a complete pattern.
+## Creating Complete Patterns
 
-All entities within the pattern which are not bounded will be created.
+You can create entire graph patterns in a single statement. All entities within the pattern that are not bound (matched) will be created:
 
 ```sh
 GRAPH.QUERY DEMO_GRAPH
 "CREATE (jim:Person{name:'Jim', age:29})-[:FRIENDS]->(pam:Person {name:'Pam', age:27})-[:WORKS]->(:Employer {name:'Dunder Mifflin'})"
 ```
 
-This query will create three nodes and two relationships.
+This query creates three nodes (Jim, Pam, and an Employer) and two relationships (FRIENDS and WORKS), establishing a complete graph pattern in one operation.
+
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="Can I create nodes and relationships in a single query?"
+  a1="Yes. You can create entire graph patterns in one CREATE statement. All unbound entities in the pattern will be created as new nodes and relationships."
+  q2="How do I create a relationship between existing nodes?"
+  a2="Use MATCH to find the existing nodes first, then CREATE the relationship: `MATCH (a:Person {name: 'Alice'}), (b:Person {name: 'Bob'}) CREATE (a)-[:KNOWS]->(b)`."
+  q3="What happens if I CREATE a node without a label?"
+  a3="FalkorDB allows creating nodes without labels using `CREATE (n)`. The node will exist in the graph but cannot be efficiently queried by label-based index scans."
+  q4="Can I set properties during CREATE?"
+  a4="Yes. Include properties in curly braces: `CREATE (:Person {name: 'Alice', age: 30})`. Multiple properties are separated by commas."
+%}

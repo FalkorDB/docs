@@ -2,6 +2,7 @@
 title: "Weakly Connected Components (WCC)"
 description: "Weakly Connected Components (WCC)"
 parent: "Algorithms"
+nav_order: 7
 ---
 
 # Weakly Connected Components (WCC)
@@ -51,9 +52,9 @@ The procedure returns a stream of records with the following fields:
 | `node`        | Node    | The node entity included in the component                           |
 | `componentId` | Integer | Identifier of the weakly connected component the node belongs to    |
 
-## Examples:
+## Examples
 
-Lets take this Social Graph as an example:
+Let's take this Social Graph as an example:
 
 ![Graph WCC](../images/wcc.png)
 
@@ -112,4 +113,18 @@ CALL algo.WCC(null) yield node, componentId return collect(node.name), component
 | `[David, Emma]`            | 3           |
 | `[Frank]`                  | 5           |
 | `[Alice, Bob, Charlie]`    | 0           |
-```
+
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="What is the syntax for calling WCC?"
+  a1="Use `CALL algo.WCC(null) YIELD node, componentId` or pass a configuration map like `CALL algo.WCC({nodeLabels: ['User']}) YIELD node, componentId`."
+  q2="Does WCC consider edge direction?"
+  a2="No. WCC treats all relationships as **undirected** — it finds components where nodes are reachable through any path regardless of edge direction."
+  q3="How can I count the number of connected components?"
+  a3="Run `CALL algo.WCC(null) YIELD node, componentId RETURN count(DISTINCT componentId) AS numComponents`."
+  q4="When should I use WCC vs CDLP?"
+  a4="Use **WCC** to find *disconnected* subgraphs (nodes with no path between them). Use **[CDLP](./cdlp.md)** to detect *densely connected communities* within a connected graph."
+  q5="What is the performance of WCC?"
+  a5="WCC runs in **O(V + E)** linear time, making it very efficient even on large graphs with millions of nodes and edges."
+%}
+

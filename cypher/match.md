@@ -8,16 +8,19 @@ parent: "Cypher Language"
 
 # MATCH
 
-Match describes the relationship between queried entities, using ascii art to represent pattern(s) to match against.
+The `MATCH` clause describes the relationship between queried entities using ASCII art to represent pattern(s) to match against.
 
-Nodes are represented by parentheses `()`,
-and Relationships are represented by brackets `[]`.
+**Syntax Overview:**
+- Nodes are represented by parentheses `()`
+- Relationships are represented by brackets `[]`
+- Each graph entity (node/relationship) can contain an alias, a label/relationship type, and filters, but all are optional
 
-Each graph entity node/relationship can contain an alias and a label/relationship type, but both can be left empty if necessary.
+**Entity Structure:** `alias:label {filters}`
 
-Entity structure: `alias:label {filters}`.
-
-Alias, label/relationship type, and filters are all optional.
+Where:
+- `alias` - Optional variable name to reference the entity
+- `label` - Optional label for nodes or type for relationships  
+- `{filters}` - Optional property filters
 
 Example:
 
@@ -35,10 +38,9 @@ Example:
 
 `Movie` destination node is of "type" movie.
 
-`{title:"straight outta compton"}` requires the node's title attribute to equal "straight outta compton".
+`{title:"straight outta compton"}` filters for nodes where the title property equals "straight outta compton".
 
-In this example, we're interested in actor entities which have the relation "act" with **the** entity representing the
-"straight outta compton" movie.
+In this example, we're querying for actor entities that have an "ACT" relationship with the movie entity "straight outta compton".
 
 It is possible to describe broader relationships by composing a multi-hop query such as:
 
@@ -116,3 +118,17 @@ RETURN nodes(p) as actors"
 ```
 
 This query will produce all the paths matching the pattern contained in the named path `p`. All of these paths will share the same starting point, the actor node representing Charlie Sheen, but will otherwise vary in length and contents. Though the variable-length traversal and `(:Actor)` endpoint are not explicitly aliased, all nodes and edges traversed along the path will be included in `p`. In this case, we are only interested in the nodes of each path, which we'll collect using the built-in function `nodes()`. The returned value will contain, in order, Charlie Sheen, between 0 and 2 intermediate nodes, and the unaliased endpoint.
+
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="What does the MATCH clause do in FalkorDB?"
+  a1="The `MATCH` clause uses ASCII-art pattern syntax to find nodes and relationships in the graph that satisfy the specified pattern. It is the primary read operation in Cypher."
+  q2="Can I traverse variable-length paths with MATCH?"
+  a2="Yes. Use the syntax `-[:TYPE*minHops..maxHops]->` to match paths of varying length. Both bounds are optional and default to 1 and infinity respectively."
+  q3="What is a bidirectional relationship pattern?"
+  a3="A relationship pattern without a direction arrow (e.g. `-[:KNOWS]-`) matches regardless of which node is source or destination. The shorthand `<-[:KNOWS]->` produces the same result."
+  q4="How do named paths work?"
+  a4="Assign a MATCH pattern to a variable with `p = (a)-[r]->(b)`. The path variable `p` includes all nodes and relationships in the matched pattern and can be used with built-in functions like `nodes(p)` and `relationships(p)`."
+  q5="Do I need to specify labels and aliases in MATCH?"
+  a5="No. All parts of the entity structure (`alias:label {filters}`) are optional. However, specifying labels improves query performance by narrowing the search scope, especially when indexes exist on those labels."
+%}

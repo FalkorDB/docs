@@ -4,7 +4,9 @@ description: "FalkorDB supports a number of distinct data types, some of which c
 nav_order: 5
 ---
 
-# Graph types
+# Data types
+
+## Graph types
 
 All graph types are either structural elements of the graph or projections thereof. None can be stored as a property value.
 
@@ -32,10 +34,10 @@ Relationships are always directed, connecting a source node to its destination.
 
 Like nodes, relationships have sets of properties to describe all of their salient characteristics.
 
-When querying relationships, multiple types can be specified when separated by types. Relationships that hold any of the specified types will be matched:
+When querying relationships, multiple types can be specified by separating them with a pipe (`|`). Relationships that hold any of the specified types will be matched:
 
 ```sh
-$ redis-cli GRAPH.QUERY G "MATCH (:Person)-[r:RESIDENT_OF|:VISITOR_TO]->(:Place {name: 'London'}) RETURN r"
+$ redis-cli GRAPH.QUERY G "MATCH (:Person)-[r:RESIDENT_OF|VISITOR_TO]->(:Place {name: 'London'}) RETURN r"
 ```
 
 ## Paths
@@ -50,7 +52,7 @@ For example, the following query returns all paths of any length connecting the 
 $ redis-cli GRAPH.QUERY G "MATCH p=(:City {name: 'London'})-[*]->(:City {name: 'New York'}) RETURN p"
 ```
 
-## Scalar types
+## Scalar Types
 
 All scalar types may be provided by queries or stored as property values on node and relationship objects.
 
@@ -102,7 +104,132 @@ Since we cannot reason broadly about unknown values, `null` is an important part
 
 Unlike all other scalars, `null` cannot be stored as a property value.
 
-## Collection types
+## Temporal Types
+
+FalkorDB supports the following temporal types that allow modeling and querying time-related data:
+
+1. [Date](#date) - Calendar dates (YYYY-MM-DD)
+2. [Time](#time) - Time of day (HH:MM:SS)
+3. [DateTime](#datetime) - Combined date and time
+4. [Duration](#duration) - Time intervals
+
+These types follow the ISO 8601 standard and can be used in properties, parameters, and expressions.
+
+### Date
+
+Represents a calendar date in the format YYYY-MM-DD.
+
+**Purpose:**  
+Use `Date` to store and compare dates without time information, such as birth dates, due dates, or deadlines.
+
+**Example:**
+
+```cypher
+CREATE (:Event { name: "Conference", date: date("2025-09-15") })
+```
+
+**Interactions:**
+* Compare using operators (`=`, `<`, `>`, etc.)
+* Extract components using functions:
+
+```cypher
+RETURN date("2025-09-15").year      // 2025
+RETURN date("2025-09-15").month     // 9
+RETURN date("2025-09-15").day       // 15
+```
+
+### Time
+
+Represents a time of day in the format HH:MM:SS.
+
+**Purpose:**  
+Use `Time` to store specific times (e.g., store hours, alarm times) without date context.
+
+**Example:**
+
+```cypher
+CREATE (:Reminder { msg: "Wake up!", at: localtime("07:00:00") })
+```
+
+**Interactions:**
+
+* Compare time values:
+
+```cypher
+RETURN localtime("07:00:00") < localtime("09:30:00")  // true
+```
+
+* Extract parts:
+
+```cypher
+RETURN localtime("15:45:20").hour      // 15
+RETURN localtime("15:45:20").minute    // 45
+RETURN localtime("15:45:20").second    // 20
+```
+
+### DateTime
+
+Represents a point in time, combining both date and time. Format: YYYY-MM-DDTHH:MM:SS.
+
+**Purpose:**  
+Use `DateTime` when both date and time are relevant, such as logging events, scheduling, or timestamps.
+
+**Example:**
+```cypher
+CREATE (:Log { message: "System rebooted", at: localdatetime("2025-06-29T13:45:00") })
+```
+
+**Interactions:**
+
+* Compare with other `DateTime` values
+* Extract parts:
+
+```cypher
+RETURN localdatetime("2025-06-29T13:45:00").year     // 2025
+RETURN localdatetime("2025-06-29T13:45:00").hour     // 13
+```
+
+* Use `localdatetime()` with no arguments to get the current system time:
+
+```cypher
+RETURN localdatetime()
+```
+
+### Duration
+
+Represents a span of time in ISO 8601 Duration format: `P[n]Y[n]M[n]DT[n]H[n]M[n]S`
+
+**Purpose:**  
+Use `Duration` to represent time intervals, such as "3 days", "2 hours", or "1 year and 6 months".
+
+**Example:**
+```cypher
+CREATE (:Cooldown { period: duration("P3DT12H") })
+```
+
+**Interactions:**
+
+* Add/subtract durations with dates or datetimes:
+
+```cypher
+RETURN date("2025-01-01") + duration("P1M")  // 2025-02-01
+RETURN localdatetime("2025-06-29T13:00:00") - duration("PT30M") // 2025-06-29T12:30:00
+```
+
+* Add durations together:
+
+```cypher
+RETURN duration("P1D") + duration("PT12H")   // P1DT12H
+```
+
+* Extract fields:
+
+```cypher
+RETURN duration("P1Y2M3DT4H5M6S").years      // 1
+RETURN duration("P1Y2M3DT4H5M6S").hours      // 4
+```
+
+## Collection Types
 
 ### Arrays
 
@@ -135,6 +262,16 @@ $ redis-cli GRAPH.QUERY G "MATCH (n) RETURN n {.name, .age} AS projection"
 1) 1) "projection"
 2) 1) 1) "{name: Jeff, age: 32}"
 ```
+
+> **Null entity projection:** Following the openCypher specification, a map projection on a `null` entity evaluates to `null` — not a map of `null` values. This matters most when combining `OPTIONAL MATCH` with map projections and `collect()`:
+>
+> ```cypher
+> OPTIONAL MATCH (p)-[:WORKS_FOR]->(o:Organization)
+> RETURN collect(DISTINCT o { .name, .uuid }) AS orgs
+> // If o is unmatched (null): orgs = []   (not [{name: null, uuid: null}])
+> ```
+>
+> Because the projection itself is `null`, `collect()` skips it, producing an empty list rather than a list containing a map of nulls.
 
 #### Map merging
 
@@ -170,3 +307,26 @@ RETURN u {.name, follower_count: count} AS user"
 2) 1) 1) "{name: Jeff, follower_count: 12}"
    2) 1) "{name: Roi, follower_count: 18}"
 ```
+
+---
+
+## Next Steps
+
+- [Getting Started](/getting-started) — Build and query your first graph
+- [Cypher Language](/cypher) — Learn the query language for working with these data types
+- [Indexing](/cypher/indexing) — Create indexes on properties to speed up queries
+- [Commands](/commands) — Full command reference for GRAPH.QUERY and more
+
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="What data types can be stored as node or relationship properties?"
+  a1="You can store **strings**, **booleans**, **integers** (64-bit signed), **floating-point values** (64-bit doubles), **geospatial points**, and **temporal types** (Date, Time, DateTime, Duration) as property values. Lists and maps can also be returned by queries. Note that `null` and graph structural types (nodes, relationships, paths) cannot be stored as properties."
+  q2="How does FalkorDB handle null values?"
+  a2="FalkorDB uses three-valued logic for `null`. Since `null` represents an unknown value, comparisons like `null = null` evaluate to `null` (not true). Similarly, `null in [1,2,3]` evaluates to `null`. The `null` value cannot be stored as a property value."
+  q3="Are boolean values and integers interchangeable in FalkorDB?"
+  a3="No. While booleans are stored internally as numerics (1 for true, 0 for false), FalkorDB considers types in comparisons. The expression `1 = true` evaluates to **false** because they are different types."
+  q4="What temporal types does FalkorDB support?"
+  a4="FalkorDB supports four temporal types following ISO 8601: **Date** (YYYY-MM-DD), **Time** (HH:MM:SS with timezone), **DateTime** (combined date and time), and **Duration** (time intervals). You can compare them with standard operators and extract components like `.year`, `.month`, `.day`."
+  q5="Can I use lists and maps in FalkorDB?"
+  a5="Yes. **Lists** are ordered collections that can contain mixed types including nested lists. **Maps** are key-value pairs that can be constructed in queries or used as map projections from nodes. Both can be returned by queries but have some restrictions when used in property storage."
+%}

@@ -1,0 +1,95 @@
+---
+layout: default
+title: bitwise.shiftLeft
+description: "Shifts all bits of an integer to the left by a specified number of positions, filling vacated positions with zeros."
+parent: Bitwise Functions
+grand_parent: FLEX Function Reference
+nav_order: 4
+---
+
+# bitwise.shiftLeft
+
+## Description
+Performs a left bit shift operation, moving all bits to the left by the specified number of positions. Zero bits are shifted in from the right.
+
+## Syntax
+```cypher
+flex.bitwise.shiftLeft(a, positions)
+```
+
+## Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `a` | number (integer) | Yes | The value to shift |
+| `positions` | number (integer) | Yes | Number of positions to shift left |
+
+## Returns
+**Type:** number (integer)
+
+The result of shifting the bits left by the specified positions.
+
+## Examples
+
+### Example 1: Basic Left Shift
+```cypher
+RETURN flex.bitwise.shiftLeft(5, 2) AS result
+```
+
+**Output:**
+```text
+result
+------
+20
+```
+(Binary: 0101 << 2 = 10100 = 20)
+
+### Example 2: Multiply by Power of Two
+```cypher
+WITH 7 AS value
+RETURN 
+    flex.bitwise.shiftLeft(value, 1) AS times2,
+    flex.bitwise.shiftLeft(value, 2) AS times4,
+    flex.bitwise.shiftLeft(value, 3) AS times8
+```
+
+**Output:**
+```text
+times2 | times4 | times8
+-------|--------|-------
+14     | 28     | 56
+```
+(Left shift by n is equivalent to multiplying by 2^n)
+
+### Example 3: Creating Bit Masks
+```cypher
+RETURN flex.bitwise.shiftLeft(1, 3) AS mask
+```
+
+**Output:**
+```text
+mask
+----
+8
+```
+(Creates mask with bit 3 set: 1000)
+
+## Notes
+- Operates on 32-bit signed integers in JavaScript
+- Left shift by n is equivalent to multiplying by 2^n
+- Bits shifted off the left are discarded
+- Zero bits are shifted in from the right
+- Useful for multiplication by powers of 2 and creating bit masks
+
+## See Also
+- [bitwise.shiftRight](./shiftRight.md) - Shift bits to the right
+- [bitwise.and](./and.md) - Bitwise AND operation
+- [bitwise.or](./or.md) - Bitwise OR operation
+
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="What does flex.bitwise.shiftLeft do?"
+  a1="It shifts all bits in an integer to the left by the specified number of positions, filling vacated bits with zeros. Each left shift effectively multiplies the value by 2."
+  q2="What happens if I shift by a negative number?"
+  a2="The behavior is undefined for negative shift amounts. Always use non-negative integer values for the shift count."
+%}

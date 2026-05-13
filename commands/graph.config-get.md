@@ -1,7 +1,7 @@
 ---
 title: "GRAPH.CONFIG-GET"
 description: >
-    Retrieves a FalkorDB configuration
+    Retrieve FalkorDB configuration parameters with GRAPH.CONFIG-GET command. Query specific settings or use '*' to get all configuration values for threads, timeouts, and limits.
 parent: "Commands"
 ---
 
@@ -13,34 +13,87 @@ FalkorDB configuration parameters are detailed [here](/configuration).
 
 `*` can be used to retrieve the value of all FalkorDB configuration parameters.
 
-```
-127.0.0.1:6379> graph.config get *
- 1) 1) "TIMEOUT"
-    2) (integer) 0
- 2) 1) "CACHE_SIZE"
-    2) (integer) 25
- 3) 1) "ASYNC_DELETE"
-    2) (integer) 1
- 4) 1) "OMP_THREAD_COUNT"
-    2) (integer) 8
- 5) 1) "THREAD_COUNT"
-    2) (integer) 8
- 6) 1) "RESULTSET_SIZE"
-    2) (integer) -1
- 7) 1) "VKEY_MAX_ENTITY_COUNT"
-    2) (integer) 100000
- 8) 1) "MAX_QUEUED_QUERIES"
-    2) (integer) 4294967295
- 9) 1) "QUERY_MEM_CAPACITY"
-    2) (integer) 0
-10) 1) "DELTA_MAX_PENDING_CHANGES"
-    2) (integer) 10000
-11) 1) "NODE_CREATION_BUFFER"
-    2) (integer) 16384
-```
+{% capture shell_0 %}
+graph.config get *
+# Output:
+# 1) 1) "TIMEOUT"
+#    2) (integer) 0
+# ...
+{% endcapture %}
 
-```
-127.0.0.1:6379> graph.config get TIMEOUT
-1) "TIMEOUT"
-2) (integer) 0
-```
+{% capture python_0 %}
+from falkordb import FalkorDB
+client = FalkorDB()
+config = client.config_get('*')
+print(config)
+{% endcapture %}
+
+{% capture javascript_0 %}
+import { FalkorDB } from 'falkordb';
+const client = await FalkorDB.connect();
+const config = await client.configGet('*');
+console.log(config);
+{% endcapture %}
+
+{% capture java_0 %}
+import com.falkordb.*;
+
+Driver driver = FalkorDB.driver("localhost", 6379);
+String config = driver.configGet("*");
+System.out.println(config);
+{% endcapture %}
+
+{% capture rust_0 %}
+use falkordb::{FalkorClientBuilder, FalkorConnectionInfo};
+
+let connection_info: FalkorConnectionInfo = "falkor://127.0.0.1:6379"
+    .try_into().expect("Invalid connection info");
+let client = FalkorClientBuilder::new()
+    .with_connection_info(connection_info)
+    .build().expect("Failed to build client");
+let config = client.config_get("*")?;
+println!("{:?}", config);
+{% endcapture %}
+
+{% include code_tabs.html id="config_get_tabs" shell=shell_0 python=python_0 javascript=javascript_0 java=java_0 rust=rust_0 %}
+
+{% capture shell_1 %}
+graph.config get TIMEOUT_DEFAULT
+# Output:
+# 1) "TIMEOUT_DEFAULT"
+# 2) (integer) 0
+{% endcapture %}
+
+{% capture python_1 %}
+timeout = client.config_get('TIMEOUT_DEFAULT')
+print(timeout)
+{% endcapture %}
+
+{% capture javascript_1 %}
+const timeout = await client.configGet('TIMEOUT_DEFAULT');
+console.log(timeout);
+{% endcapture %}
+
+{% capture java_1 %}
+String timeout = driver.configGet("TIMEOUT_DEFAULT");
+System.out.println(timeout);
+{% endcapture %}
+
+{% capture rust_1 %}
+let timeout = client.config_get("TIMEOUT_DEFAULT")?;
+println!("{:?}", timeout);
+{% endcapture %}
+
+{% include code_tabs.html id="config_get_timeout_tabs" shell=shell_1 python=python_1 javascript=javascript_1 java=java_1 rust=rust_1 %}
+
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="How do I retrieve all configuration parameters at once?"
+  a1="Use the wildcard `*` as the parameter name: `GRAPH.CONFIG GET *`. This returns all current FalkorDB configuration parameters and their values."
+  q2="What configuration parameters are available?"
+  a2="Common parameters include `TIMEOUT` (query timeout), `CACHE_SIZE` (execution plan cache size), `THREAD_COUNT` (worker threads), `RESULTSET_SIZE` (max result rows), and more. See the [configuration page](/configuration) for the full list."
+  q3="Does GRAPH.CONFIG GET require any special permissions?"
+  a3="Yes. The `GRAPH.CONFIG GET` command typically requires administrative privileges to execute."
+  q4="What format does the response use?"
+  a4="The response is a nested array containing the parameter name and its current value. For example: `1) 'TIMEOUT_DEFAULT' 2) (integer) 0`."
+%}

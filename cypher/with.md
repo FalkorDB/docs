@@ -8,20 +8,55 @@ parent: "Cypher Language"
 
 # WITH
 
-The WITH clause allows parts of queries to be independently executed and have their results handled uniquely.
+The `WITH` clause allows you to chain query parts together, passing results from one part to the next. This enables complex query composition and data manipulations.
 
-This allows for more flexible query composition as well as data manipulations that would otherwise not be possible in a single query.
+## Use Cases
 
-If, for example, we wanted to find all children in our graph who are above the average age of all people:
+`WITH` is useful for:
+- Chaining multiple query parts together
+- Performing intermediate aggregations
+- Filtering or transforming results before the next query part
+- Using query modifiers (`DISTINCT`, `ORDER BY`, `LIMIT`, `SKIP`) mid-query
+
+## Example: Filtering by Aggregated Values
+
+Find all children above the average age of all people:
 
 ```sh
 GRAPH.QUERY DEMO_GRAPH
-"MATCH (p:Person) WITH AVG(p.age) AS average_age MATCH (:Person)-[:PARENT_OF]->(child:Person) WHERE child.age > average_age return child
+"MATCH (p:Person) WITH AVG(p.age) AS average_age MATCH (:Person)-[:PARENT_OF]->(child:Person) WHERE child.age > average_age return child"
 ```
 
-This also allows us to use modifiers like `DISTINCT`, `SKIP`, `LIMIT`, and `ORDER` that otherwise require `RETURN` clauses.
+## Example: Using Modifiers Mid-Query
+
+You can use query modifiers with `WITH` to filter or sort before continuing:
 
 ```sh
 GRAPH.QUERY DEMO_GRAPH
 "MATCH (u:User)  WITH u AS nonrecent ORDER BY u.lastVisit LIMIT 3 SET nonrecent.should_contact = true"
 ```
+
+This query:
+1. Matches all users
+2. Orders them by last visit (oldest first)
+3. Limits to the 3 least recent visitors
+4. Sets a flag on those users
+
+## Key Points
+
+- `WITH` acts like a pipeline between query parts
+- Variables not included in `WITH` are not available in subsequent parts
+- You can rename variables using `AS` in the `WITH` clause
+- Aggregations in `WITH` cause implicit grouping (like `RETURN`)
+- `WHERE` filters placed after a `WITH` boundary are evaluated **after** any write operations that preceded the `WITH`. This means the filter sees the post-write graph state — for example, it will not see edges that were deleted earlier in the same query.
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="What does the WITH clause do?"
+  a1="WITH acts as a pipeline between query parts, passing results from one section to the next. It enables intermediate aggregations, filtering, sorting, and variable scoping within a single query."
+  q2="Do variables carry over after WITH?"
+  a2="Only variables explicitly listed in the WITH clause are available in subsequent query parts. Any variable not included is dropped from scope."
+  q3="Can I use ORDER BY and LIMIT with WITH?"
+  a3="Yes. WITH supports all query modifiers including DISTINCT, ORDER BY, SKIP, and LIMIT. This lets you filter and sort intermediate results before continuing the query."
+  q4="How does aggregation work in WITH?"
+  a4="Aggregation functions in WITH cause implicit grouping, just like in RETURN. Non-aggregated expressions become grouping keys automatically."
+%}

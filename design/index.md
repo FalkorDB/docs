@@ -2,7 +2,7 @@
 title: "The FalkorDB Design"
 description: "FalkorDB: A High Performance In-Memory Graph Database"
 has_children: true
-nav_order: 999
+nav_order: 998
 ---
 
 # The FalkorDB Design
@@ -219,3 +219,17 @@ Although FalkorDB is still a young project, it can be an alternative to other gr
 operations, you can use it to analyze and explore graph data. Being a Redis Module, this project is accessible from
 every Redis client without adjustments. It's our intention to keep on improving and extending
 FalkorDB with the help of the open source community.
+
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="What is the underlying data structure FalkorDB uses to represent graphs?"
+  a1="FalkorDB uses **sparse adjacency matrices** to represent graphs. Each relationship type gets its own dedicated matrix, plus one global adjacency matrix that marks all connections regardless of type. Node labels are represented as symmetric matrices with ones along the diagonal."
+  q2="What query language does FalkorDB support?"
+  a2="FalkorDB implements a subset of **openCypher**, one of the most popular graph query languages. It uses a custom parser built with Lex (tokenizer) and Lemon (C parser generator) rather than the openCypher project's reference parser."
+  q3="How does FalkorDB perform graph traversals?"
+  a3="Graph traversal is performed via **matrix multiplication**. For example, finding friends-of-friends is computed as F^2 where F is the friendship matrix. This algebraic approach enables optimizations like choosing multiplication order and parallelizing independent sub-expressions."
+  q4="What is GraphBLAS and why does FalkorDB use it?"
+  a4="GraphBLAS is a standard API (similar to BLAS for linear algebra) for operations on sparse matrices. FalkorDB uses it to efficiently perform matrix operations required for graph traversal, currently using the CSC (compressed sparse columns) format."
+  q5="How does FalkorDB achieve high performance for graph operations?"
+  a5="FalkorDB stores all data in RAM using memory-efficient custom data structures, leverages sparse matrix algebra for traversals, and runs as a native C implementation within Redis. It can create over 1 million nodes in under half a second."
+%}

@@ -1,0 +1,100 @@
+---
+title: "Known limitations"
+description: "FalkorDB Known limitations"
+nav_order: 1000
+parent: "Cypher Language"
+redirect_from:
+  - /cypher/known_limitations.html
+  - /cypher/known_limitations
+---
+
+# Known limitations
+
+## Relationship uniqueness in patterns
+
+When a relation in a match pattern is not referenced elsewhere in the query, FalkorDB will only verify that at least one matching relation exists (rather than operating on every matching relation).
+
+In some queries, this will cause unexpected behaviors. Consider a graph with 2 nodes and 2 relations between them:
+
+```cypher
+CREATE (a)-[:e {val: '1'}]->(b), (a)-[:e {val: '2'}]->(b)
+```
+
+Counting the number of explicit edges returns 2, as expected.
+
+```cypher
+MATCH (a)-[e]->(b) RETURN COUNT(e)
+```
+
+However, if we count the nodes in this pattern without explicitly referencing the relation, we receive a value of 1.
+
+```cypher
+MATCH (a)-[e]->(b) RETURN COUNT(b)
+```
+
+As a temporary workaround, queries that must operate on every relation matching a pattern should explicitly refer to that relation's alias elsewhere in the query. Two options for this are:
+
+```cypher
+MATCH (a)-[e]->(b) WHERE ID(e) >= 0 RETURN COUNT(b)
+MATCH (a)-[e]->(b) RETURN COUNT(b), e.dummyval
+```
+
+## LIMIT clause does not affect eager operations
+
+When a WITH or RETURN clause introduces a LIMIT value, this value ought to be respected by all preceding operations.
+
+For example, given the query:
+
+```cypher
+UNWIND [1,2,3] AS value CREATE (a {property: value}) RETURN a LIMIT 1
+```
+
+One node should be created with its 'property' set to 1. FalkorDB will currently create three nodes, and only return the first.
+
+This limitation affects all eager operations: CREATE, SET, DELETE, MERGE, and projections with aggregate functions.
+
+## Indexing limitations
+
+One way in which FalkorDB will optimize queries is by introducing index scans when a filter is specified on an indexed label-property pair.
+
+The current index implementation, however, does not handle not-equal (`<>`) filters.
+
+To profile a query and see whether index optimizations have been introduced, use the `GRAPH.EXPLAIN` endpoint:
+
+```sh
+$ redis-cli GRAPH.EXPLAIN social "MATCH (p:person) WHERE p.id < 5 RETURN p"
+1) "Results"
+2) "    Project"
+3) "        Index Scan | (p:person)"
+```
+
+## Aggregation functions inside pattern comprehensions
+
+Aggregation functions (e.g., `count()`, `sum()`, `avg()`) are **not allowed** inside pattern comprehensions — neither in the eval expression nor in the embedded `WHERE` predicate. Attempting to use them there returns an error:
+
+```cypher
+// This will return an error:
+RETURN [(n)-[r:REL]->(m) WHERE n IS NOT NULL | count(n)] AS v
+// Error: Invalid use of aggregating function 'count'
+```
+
+As a workaround, compute the aggregation in a preceding `WITH` or `RETURN` clause, or use list comprehension followed by `size()`:
+
+```cypher
+// Collect matching nodes first, then aggregate outside the comprehension
+MATCH (n:Paper)
+WITH [(n)-[:REL]->(m:Paper) | m] AS connected
+RETURN size(connected) AS count
+```
+
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="Why does my query return unexpected counts with unnamed relationships?"
+  a1="Due to relationship uniqueness optimization, when a relationship is not referenced elsewhere in the query, FalkorDB only verifies that at least one matching relationship exists. Reference the relationship alias explicitly (e.g. in WHERE or RETURN) to get accurate counts."
+  q2="Does LIMIT prevent eager operations from executing fully?"
+  a2="No. This is a known limitation. Eager operations (CREATE, SET, DELETE, MERGE, and aggregating projections) execute fully before LIMIT is applied. For example, `CREATE (n) RETURN n LIMIT 1` still creates all nodes."
+  q3="Can indexes optimize not-equal filters?"
+  a3="No. The current index implementation does not handle `<>` (not-equal) filters. Indexes are used for equality, range comparisons, and string prefix operations."
+  q4="Can I use aggregation functions inside pattern comprehensions?"
+  a4="No. Aggregation functions like `count()`, `sum()`, and `avg()` are not allowed inside pattern comprehensions. As a workaround, compute aggregations in a preceding WITH or RETURN clause, or use `size()` on the list result."
+%}

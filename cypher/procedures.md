@@ -2,36 +2,66 @@
 title: "Procedures"
 nav_order: 19
 description: >
-    Procedures calling using with CALL and YIELD.
+    Calling procedures using CALL and YIELD.
 parent: "Cypher Language"
 ---
 
 # Procedures
 
-Procedures are invoked using the syntax:
+Procedures are functions that can be called from within Cypher queries using the `CALL` syntax.
+
+## Syntax
+
+Basic procedure call:
 
 ```sh
 GRAPH.QUERY social "CALL db.labels()"
 ```
 
-Or the variant:
+With explicit `YIELD` to select specific return values:
 
 ```sh
 GRAPH.QUERY social "CALL db.labels() YIELD label"
 ```
 
-YIELD modifiers are only required if explicitly specified; by default the value in the 'Yields' column will be emitted automatically.
+**Note:** The `YIELD` clause is optional. When omitted, all values listed in the 'Yields' column are returned automatically.
+
+## Available Procedures
 
 | Procedure                       | Arguments                                       | Yields                        | Description                                                                                                                                                                            |
 | -------                         | :-------                                        | :-------                      | :-----------                                                                                                                                                                           |
 | db.labels                       | none                                            | `label`                       | Yields all node labels in the graph.                                                                                                                                                   |
 | db.relationshipTypes            | none                                            | `relationshipType`            | Yields all relationship types in the graph.                                                                                                                                            |
 | db.propertyKeys                 | none                                            | `propertyKey`                 | Yields all property keys in the graph.                                                                                                                                                 |
-| db.indexes                      | none                                            | `label`, `properties`, `types`, `options`, `language`, `stopwords`, `entitytype`, `status`, `info` | Yield all indexes in the graph, denoting whether they are exact-match or full-text and which label and properties each covers and whether they are indexing node or relationship attributes. |
-| db.constraints                  | none                                            | `type`, `label`, `properties`, `entitytype`, `status` | Yield all constraints in the graph, denoting constraint type (UNIQIE/MANDATORY), which label/relationship-type and properties each enforces. |
+| db.meta.stats                   | none                                            | `labels`, `relTypes`, `relCount`, `nodeCount`, `labelCount`, `relTypeCount`, `propertyKeyCount` | Yield comprehensive graph statistics including maps of labels and relationship types with their counts, total node/relationship counts, and schema metadata counts. |
+| db.indexes                      | none                                            | `label`, `properties`, `types`, `options`, `language`, `stopwords`, `entitytype`, `status`, `info` | Yield all indexes in the graph, denoting whether they are of the type of exact-match ("RANGE"), full-text ("FULLTEXT") or vector ("VECTOR") and which label and properties each covers and whether they are indexing node or relationship attributes. |
+| db.constraints                  | none                                            | `type`, `label`, `properties`, `entitytype`, `status` | Yield all constraints in the graph, denoting constraint type (UNIQUE/MANDATORY), which label/relationship-type and properties each enforces. |
 | db.idx.fulltext.createNodeIndex | `label`, `property` [, `property` ...]          | none                          | Builds a full-text searchable index on a label and the 1 or more specified properties.                                                                                                 |
 | db.idx.fulltext.drop            | `label`                                         | none                          | Deletes the full-text index associated with the given label.                                                                                                                           |
 | db.idx.fulltext.queryNodes      | `label`, `string`                               | `node`, `score`               | Retrieve all nodes that contain the specified string in the full-text indexes on the given label.                                                                                      |
+| db.idx.fulltext.queryRelationships | `relationshipType`, `string`                 | `relationship`, `score`       | Retrieve all relationships that contain the specified string in the full-text indexes on the given relationship type. See [Full-Text Indexing](/cypher/indexing/fulltext-index) for details. |
+| db.idx.vector.queryNodes        | `label`, `attribute`, `k`, `query`              | `node`, `score`               | Retrieve up to k nodes with vectors most similar to the query vector using the specified label and attribute. See [Vector Indexing](/cypher/indexing/vector-index) for details.     |
+| db.idx.vector.queryRelationships | `relationshipType`, `attribute`, `k`, `query`  | `relationship`, `score`       | Retrieve up to k relationships with vectors most similar to the query vector using the specified relationship type and attribute. See [Vector Indexing](/cypher/indexing/vector-index) for details. |
 | algo.pageRank                   | `label`, `relationship-type`                    | `node`, `score`               | Runs the pagerank algorithm over nodes of given label, considering only edges of given relationship type.                                                                              |
-| [algo.BFS](#BFS)                | `source-node`, `max-level`, `relationship-type` | `nodes`, `edges`              | Performs BFS to find all nodes connected to the source. A `max level` of 0 indicates unlimited and a non-NULL `relationship-type` defines the relationship type that may be traversed. |
+| algo.BFS                        | `source-node`, `max-level`, `relationship-type` | `nodes`, `edges`              | Performs BFS to find all nodes connected to the source. A `max level` of 0 indicates unlimited and a non-NULL `relationship-type` defines the relationship type that may be traversed. See [BFS Algorithm](/algorithms/bfs) for details. |
+| algo.MSF                        | `config`                                        | `edges`, `nodes`              | Computes the Minimum Spanning Forest of the graph. Returns arrays of edges and nodes for each tree. See [MSF Algorithm](/algorithms/msf) for details.                                   |
+| algo.WCC                        | `config`                                        | `node`, `componentId`         | Finds weakly connected components in the graph. See [WCC Algorithm](/algorithms/wcc) for details.                                                                                       |
+| algo.betweenness                | `config`                                        | `node`, `score`               | Calculates the betweenness centrality of each node in the graph. See [Betweenness Centrality Algorithm](/algorithms/betweenness-centrality) for details.                                |
+| algo.labelPropagation           | `config`                                        | `node`, `communityId`         | Detects communities using label propagation. See [CDLP Algorithm](/algorithms/cdlp) for details.                                                                                        |
+| algo.SPpaths                    | `config`                                        | `path`, `pathWeight`, `pathCost` | Finds shortest paths between a source and a target node. See [SPpaths Algorithm](/algorithms/sppath) for details.                                                                    |
+| algo.SSpaths                    | `config`                                        | `path`, `pathWeight`, `pathCost` | Finds all shortest paths from a source node to multiple reachable nodes. See [SSpaths Algorithm](/algorithms/sspath) for details.                                                    |
 | dbms.procedures()               | none                                            | `name`, `mode`                | List all procedures in the DBMS, yields for every procedure its name and mode (read/write).                                                                                            |
+
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="How do I call a procedure in FalkorDB?"
+  a1="Use the `CALL` syntax: `CALL db.labels()`. Optionally add `YIELD` to select specific return columns: `CALL db.labels() YIELD label`."
+  q2="What is the YIELD clause?"
+  a2="YIELD specifies which columns to return from a procedure. When omitted, all columns defined by the procedure are returned automatically."
+  q3="What graph algorithms are available as procedures?"
+  a3="FalkorDB includes **PageRank** (`algo.pageRank`), **BFS** (`algo.BFS`), **Shortest Paths** (`algo.SPpaths`), **Single-Source Paths** (`algo.SSpaths`), **Weakly Connected Components** (`algo.WCC`), **Minimum Spanning Forest** (`algo.MSF`), **Betweenness Centrality** (`algo.betweenness`), and **Label Propagation** (`algo.labelPropagation`)."
+  q4="How do I perform full-text search?"
+  a4="First create an index with `CALL db.idx.fulltext.createNodeIndex('Label', 'property')`, then query with `CALL db.idx.fulltext.queryNodes('Label', 'search term') YIELD node, score`."
+  q5="How do I list all available procedures?"
+  a5="Use `CALL dbms.procedures()` which yields the name and mode (read/write) of every registered procedure."
+%}

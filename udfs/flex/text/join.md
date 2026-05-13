@@ -1,0 +1,95 @@
+---
+layout: default
+title: text.join
+description: "Joins an array of strings into a single string using a specified delimiter."
+parent: Text Functions
+grand_parent: FLEX Function Reference
+nav_order: 8
+---
+
+# text.join
+
+## Description
+Joins an array of strings into a single string using a specified delimiter.
+
+## Syntax
+```cypher
+flex.text.join(array, delimiter)
+```
+
+## Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `array` | list | Yes | The array of strings to join |
+| `delimiter` | string | Yes | The separator to insert between elements |
+
+## Returns
+**Type:** string
+
+A single string with all array elements concatenated, separated by the delimiter. Returns `null` if the array is `null` or undefined.
+
+## Examples
+
+### Example 1: Basic String Joining
+```cypher
+RETURN flex.text.join(['apple', 'banana', 'cherry'], ', ') AS result
+```
+
+**Output:**
+```text
+result
+----------------------
+apple, banana, cherry
+```
+
+### Example 2: Building CSV Lines
+```cypher
+MATCH (u:User)
+WITH [u.id, u.name, u.email] AS fields
+RETURN flex.text.join(fields, ',') AS csvLine
+```
+
+### Example 3: Creating Tags String
+```cypher
+MATCH (p:Post)
+RETURN p.title, flex.text.join(p.tags, ' #') AS hashtags
+```
+
+**Output:**
+```text
+title           | hashtags
+----------------|------------------
+My First Post   | tech #coding #js
+```
+
+### Example 4: Building Paths
+```cypher
+WITH ['home', 'user', 'documents', 'file.txt'] AS parts
+RETURN flex.text.join(parts, '/') AS path
+```
+
+**Output:**
+```text
+path
+--------------------------
+home/user/documents/file.txt
+```
+
+## Notes
+- Returns `null` if input array is `null`
+- Empty strings in the array are included in the output
+- Delimiter can be any string, including empty string
+- Commonly used for CSV generation, path building, or tag formatting
+
+## See Also
+- [text.format](./format.md) - Format strings with placeholders
+- [coll.zip](../collections/zip.md) - Combine two lists
+
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="What happens if the array contains null elements?"
+  a1="Null elements are included in the output as empty positions between delimiters."
+  q2="Can the delimiter be an empty string?"
+  a2="Yes. Using an empty string `''` as the delimiter concatenates all elements without any separator."
+%}

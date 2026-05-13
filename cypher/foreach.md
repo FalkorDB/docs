@@ -16,7 +16,7 @@ The `FOREACH` clause can be used for numerous purposes, such as: Updating and cr
 
 We show examples of queries performing the above 3 use-cases.
 
-The following query will create 5 nodes, each with property `v` with the values from 0 to 4 corresponding to the appropriate index in the list.
+The following query will create 4 nodes, each with property `v` with the values from 1 to 4 corresponding to the elements in the list.
 
 ```sh
 GRAPH.QUERY DEMO_GRAPH
@@ -36,5 +36,16 @@ The following query searches for all the hotels, checks whether they buy directl
 ```sh
 GRAPH.QUERY DEMO_GRAPH
 "MATCH (h:HOTEL) OPTIONAL MATCH (h)-[b:BUYS_FROM]->(bakery:BAKERY)
-FOREACH(do_perform IN CASE WHEN b = NULL THEN [1] ELSE [] END | MERGE (h)-[b2:BUYS_FROM]->(s:SUPPLIER {supplies_bread: true}) SET b2.direct = false)"
+FOREACH(do_perform IN CASE WHEN b IS NULL THEN [1] ELSE [] END | MERGE (h)-[b2:BUYS_FROM]->(s:SUPPLIER {supplies_bread: true}) SET b2.direct = false)"
 ```
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="What clauses can I use inside FOREACH?"
+  a1="FOREACH only supports **updating clauses**: CREATE, MERGE, SET, REMOVE, DELETE, and nested FOREACH. Read clauses like MATCH and RETURN are not allowed inside FOREACH."
+  q2="Can FOREACH access variables from the outer query?"
+  a2="Yes. The sub-query inside FOREACH can read variables defined before the FOREACH clause. However, variables created inside FOREACH are local and not visible to later clauses."
+  q3="How is FOREACH different from UNWIND?"
+  a3="**UNWIND** creates new rows for each list element and allows any clause. **FOREACH** iterates over a list to perform side-effect updates without changing the number of result rows."
+  q4="Can I use FOREACH for conditional updates?"
+  a4="Yes. Use a CASE expression to produce a list with one element (execute) or empty list (skip): `FOREACH(x IN CASE WHEN condition THEN [1] ELSE [] END | SET n.flag = true)`."
+%}
