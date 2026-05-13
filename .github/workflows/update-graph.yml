@@ -1,25 +1,3 @@
-# Incrementally updates the FalkorDB docs knowledge graph on push to main.
-#
-# Fires whenever a commit lands on main and at least one .md file changed.
-# Covers PR merges (squash/rebase/merge-commit) and direct pushes alike —
-# the trigger is "main moved," not "a PR closed."
-#
-# On each push the workflow:
-#   1. Computes the diff (added / modified / deleted .md files) between the
-#      previous main HEAD (``github.event.before``) and the new HEAD
-#      (``github.sha``). On push events both values point at real commits
-#      on main, unlike pull_request where ``github.sha`` is the synthetic
-#      test-merge commit.
-#   2. Reads the content of added + modified files.
-#   3. POSTs the payload to GraphRAG-UI's /api/admin/update-graph endpoint.
-#   4. The endpoint does all the SDK / FalkorDB / smoke-test work server-side
-#      using its existing credentials. This workflow only needs ONE secret:
-#      ``UPDATE_GRAPH_TOKEN`` — a shared-secret bearer token.
-#
-# No Azure OpenAI keys, no FalkorDB credentials, no PAT for cross-repo
-# checkout. Failures from the server come back as HTTP non-2xx with a
-# detail message; curl --fail-with-body bubbles them up as a CI failure.
-
 name: Update graph (incremental)
 
 on:
@@ -29,9 +7,7 @@ on:
     paths:
       - "**/*.md"
 
-# All pushes to main share one queue. Bursts of merges process in order
-# rather than racing. cancel-in-progress: false because each run consumes
-# LLM credit and we'd rather pay the wait than re-do work.
+# `github.ref_name` is "main"; all pushes to main share one queue.
 concurrency:
   group: update-graph-${{ github.ref_name }}
   cancel-in-progress: false
@@ -40,31 +16,20 @@ jobs:
   update-graph:
     runs-on: ubuntu-latest
     timeout-minutes: 30
-    # Least-privilege GITHUB_TOKEN: this job only needs to read repo
-    # source to compute the diff. No writes back to the repo, no comments,
-    # no status updates. Closes CodeQL "workflow does not contain
-    # permissions" alerts.
     permissions:
       contents: read
     env:
       GRAPH_ID: docs_benchmark
-      # The base URL of the GraphRAG-UI deployment. Set this as a repo or
-      # environment variable so it can differ between staging and prod.
       GRAPHRAG_UI_URL: ${{ vars.GRAPHRAG_UI_URL }}
     steps:
       - name: Checkout docs
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # need history for diff against the previous HEAD
+          fetch-depth: 0  # full history needed for the diff below
 
       - name: Build diff payload
         id: payload
         env:
-          # On push events:
-          #   ``github.event.before`` = parent of the new HEAD on main
-          #   ``github.sha``          = the new HEAD (what just landed)
-          # ``git diff $before $sha`` is exactly what this push introduced —
-          # the merge/rebase/direct-push contribution. No test-merge quirks.
           BASE_SHA: ${{ github.event.before }}
           HEAD_SHA: ${{ github.sha }}
         run: |
@@ -73,19 +38,9 @@ jobs:
 
           base, head = os.environ["BASE_SHA"], os.environ["HEAD_SHA"]
 
-          # First push to a newly-created branch carries an all-zero
-          # ``before`` SHA. main already exists in this repo so this is
-          # a safety net, not an expected path. Treat it as "no prior
-          # history — diff the whole tree against the empty tree."
+          # All-zero "before" = first push to a newly-created branch.
+          # Fall back to git's empty-tree SHA so every file shows as added.
           if set(base) == {"0"}:
-              print(
-                  "::notice::No prior HEAD on main (all-zero before); "
-                  "diffing against the empty tree.",
-                  file=sys.stderr,
-              )
-              # 4b825dc642cb6eb9a060e54bf8d69288fbee4904 is the well-known
-              # SHA of git's empty tree object — diff against it yields
-              # every file as added.
               base = "4b825dc642cb6eb9a060e54bf8d69288fbee4904"
 
           out = subprocess.run(
@@ -98,7 +53,7 @@ jobs:
               parts = line.split("\t")
               if not parts:
                   continue
-              status = parts[0][0]  # R100 -> R
+              status = parts[0][0]  # strip rename similarity score
               if status == "R" and len(parts) >= 3:
                   old, new = parts[1], parts[2]
                   if old.endswith(".md"):
@@ -124,9 +79,7 @@ jobs:
               "files": {"added": added, "modified": modified, "deleted": deleted},
           }
           if not (added or modified or deleted):
-              # Path filter on the workflow trigger should make this rare,
-              # but be explicit: no work to do, exit clean before the POST.
-              print("::notice::No .md changes after filtering — skipping graph update.", file=sys.stderr)
+              print("::notice::No .md changes — skipping graph update.", file=sys.stderr)
               with open(os.environ["GITHUB_OUTPUT"], "a") as f:
                   f.write("skip=true\n")
               sys.exit(0)
