@@ -1,0 +1,51 @@
+# Incrementally updates the FalkorDB docs knowledge graph whenever .md
+# files change on main. Computes the diff against the previous HEAD,
+# POSTs it to GraphRAG-UI's /api/admin/update-graph endpoint, which does
+# the SDK ingestion + smoke test + atomic alias flip server-side.
+
+name: Update graph (incremental)
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "**/*.md"
+
+# `github.ref_name` is "main"; all pushes to main share one queue.
+concurrency:
+  group: update-graph-${{ github.ref_name }}
+  cancel-in-progress: false
+
+jobs:
+  update-graph:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+    env:
+      GRAPH_ID: docs_benchmark
+      GRAPHRAG_UI_URL: ${{ vars.GRAPHRAG_UI_URL }}
+    steps:
+      - name: Checkout docs
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+        with:
+          fetch-depth: 0  # full history needed for the diff below
+
+      - name: Build diff payload
+        id: payload
+        env:
+          BASE_SHA: ${{ github.event.before }}
+          HEAD_SHA: ${{ github.sha }}
+        run: python3 .github/scripts/build_diff_payload.py
+
+      - name: Call admin update-graph endpoint
+        if: steps.payload.outputs.skip != 'true'
+        run: |
+          curl -X POST "$GRAPHRAG_UI_URL/api/admin/update-graph" \
+            -H "Authorization: Bearer ${{ secrets.UPDATE_GRAPH_TOKEN }}" \
+            -H "Content-Type: application/json" \
+            --data-binary @payload.json \
+            --fail-with-body \
+            --show-error \
+            --max-time 1800
