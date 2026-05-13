@@ -28,14 +28,35 @@ def _git_diff_name_status(base: str, head: str) -> str:
     ).stdout
 
 
+def _read_at(head: str, path: str) -> str | None:
+    """Read a file's content at a specific commit, regardless of what's
+    currently checked out in the working tree.
+
+    Uses ``git show <head>:<path>``, which pulls the blob from the
+    object store. Reading from disk via ``pathlib`` would only work if
+    the runner had already checked out ``head``; this is more robust
+    and lets the script be exercised locally against historical
+    commits without checking them out first. Returns None if the path
+    doesn't exist at ``head`` (e.g. rare rename edge cases).
+    """
+    proc = subprocess.run(
+        ["git", "show", f"{head}:{path}"],
+        capture_output=True, text=True, check=False,
+    )
+    if proc.returncode != 0:
+        return None
+    return proc.stdout
+
+
 def _collect_md_changes(
-    diff_output: str,
+    diff_output: str, head: str,
 ) -> tuple[dict[str, str], dict[str, str], list[str]]:
     """Parse ``git diff --name-status`` and bucket .md changes.
 
     Renames (``R``) are split into delete-old + add-new so the SDK
     re-extracts the content under the new path. Non-.md files are
-    skipped.
+    skipped. File content for added/modified entries is read from
+    the git object store at ``head``, not from disk.
     """
     added: dict[str, str] = {}
     modified: dict[str, str] = {}
@@ -52,19 +73,22 @@ def _collect_md_changes(
             if old.endswith(".md"):
                 deleted.append(old)
             if new.endswith(".md"):
-                try:
-                    added[new] = pathlib.Path(new).read_text(encoding="utf-8")
-                except FileNotFoundError:
-                    pass
+                content = _read_at(head, new)
+                if content is not None:
+                    added[new] = content
             continue
 
         if len(parts) < 2 or not parts[1].endswith(".md"):
             continue
         path = parts[1]
         if status == "A":
-            added[path] = pathlib.Path(path).read_text(encoding="utf-8")
+            content = _read_at(head, path)
+            if content is not None:
+                added[path] = content
         elif status == "M":
-            modified[path] = pathlib.Path(path).read_text(encoding="utf-8")
+            content = _read_at(head, path)
+            if content is not None:
+                modified[path] = content
         elif status == "D":
             deleted.append(path)
 
@@ -87,7 +111,7 @@ def main() -> int:
         base = EMPTY_TREE_SHA
 
     diff = _git_diff_name_status(base, head)
-    added, modified, deleted = _collect_md_changes(diff)
+    added, modified, deleted = _collect_md_changes(diff, head)
 
     if not (added or modified or deleted):
         print("::notice::No .md changes — skipping graph update.", file=sys.stderr)
