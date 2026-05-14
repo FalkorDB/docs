@@ -40,10 +40,12 @@ The Startup Tier includes essential features like **TLS** and **Automated Backup
 >
 > The table below shows approximate monthly costs for different instance sizes (based on 730 hours/month), along with max graph dataset size (75% of RAM):
 >
-> | Instance Size (RAM) | Max Graph Dataset (GB) | Monthly Cost |
-> | :--- | ---: | ---: |
-> | 1 GB | 0.75 | $73/month* |
-> | 2 GB | 1.5 | $146/month* |
+> | Instance Size (RAM) | Max Graph Dataset (GB) | Hourly Cost | Monthly Cost |
+> | :--- | ---: | ---: | ---: |
+> | 1 GB | 0.75 | $0.100/hr | $73/month* |
+> | 2 GB | 1.5 | $0.200/hr | $146/month* |
+>
+> Monthly Cost = Hourly Cost × 730 hours/month.
 >
 > You can estimate your monthly costs by multiplying your instance's memory allocation (in GB) by **$73**.
 >
