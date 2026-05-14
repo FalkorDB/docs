@@ -74,7 +74,11 @@ db = FalkorDB(host='localhost', port=6379)
 # Create the 'MotoGP' graph
 g = db.select_graph('MotoGP')
 # Clear out this graph in case you've run this script before.
-g.delete()
+try:
+    g.delete()
+except Exception:
+    # Graph doesn't exist yet, which is fine
+    pass
 g.query("""CREATE
            (:Rider {name:'Valentino Rossi'})-[:rides]->(:Team {name:'Yamaha'}),
            (:Rider {name:'Dani Pedrosa'})-[:rides]->(:Team {name:'Honda'}),
