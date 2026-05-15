@@ -51,6 +51,10 @@ The Enterprise Tier is fully optimized for mission-critical applications, provid
 ⚙️ To begin your Enterprise journey, schedule a consultation: 
 [![Contact Us](https://img.shields.io/badge/Contact%20Us-8A2BE2?style=for-the-badge)](mailto:info@falkordb.com)
 
+## Getting Support
+
+Enterprise customers receive **dedicated support**. Open a support ticket by emailing **[support@falkordb.com](mailto:support@falkordb.com)**, or contact your dedicated account manager directly. See the [Support page]({{ site.baseurl }}/support/) for what to include in your request.
+
 {% include faq_accordion.html
   title="Frequently Asked Questions"
   q1="How is Enterprise Tier pricing determined?"

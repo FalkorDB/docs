@@ -93,6 +93,10 @@ The Pro Tier provides a robust environment to scale your application with confid
 ⚙️ Spin up your first FalkorDB Cloud instance: 
 [![Sign Up](https://img.shields.io/badge/Sign%20Up-8A2BE2?style=for-the-badge)](https://app.falkordb.cloud/signup)
 
+## Getting Support
+
+Pro Tier customers receive **24/7 support**. Open a support ticket by emailing **[support@falkordb.com](mailto:support@falkordb.com)**. See the [Support page]({{ site.baseurl }}/support/) for what to include in your request.
+
 {% include faq_accordion.html
   title="Frequently Asked Questions"
   q1="What does High Availability mean in the Pro Tier?"

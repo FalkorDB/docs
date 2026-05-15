@@ -60,6 +60,10 @@ The Startup Tier includes essential features like **TLS** and **Automated Backup
 ⚙️ Spin up your first FalkorDB Cloud instance: 
 [![Sign Up](https://img.shields.io/badge/Sign%20Up-8A2BE2?style=for-the-badge)](https://app.falkordb.cloud/signup)
 
+## Getting Support
+
+Need help? Email **[support@falkordb.com](mailto:support@falkordb.com)** to open a support ticket, or join the community on **[Discord](https://discord.gg/ErBEqN9E)**. See the [Support page]({{ site.baseurl }}/support/) for more details.
+
 {% include faq_accordion.html
   title="Frequently Asked Questions"
   q1="How much does the Startup Tier cost?"
