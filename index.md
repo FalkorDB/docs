@@ -76,7 +76,7 @@ g = db.select_graph('MotoGP')
 # Clear out this graph in case you've run this script before.
 try:
     g.delete()
-except Exception:
+except redis.exceptions.ResponseError:
     # Graph doesn't exist yet, which is fine
     pass
 g.query("""CREATE
