@@ -13,26 +13,7 @@ FalkorDB's **Pro Tier** is your solution for high-performance, production-ready 
 
 The Pro Tier provides a robust environment to scale your application with confidence. When your needs extend to features like VPC Peering, Advanced Monitoring, or a Dedicated Account Manager, you can easily upgrade to the Enterprise plan.
 
-## FalkorDB Pricing Plans Comparison
-
-| Feature | FREE | STARTUP | PRO | ENTERPRISE |
-| :--- | :---: | :---: | :---: | :---: |
-| **Monthly Cost (from)** | **Free** | **$73** | **$350** | **Custom** |
-| Multi-Graph / Multi-Tenancy | ✓ | ✓ | **🟢** | ✓ |
-| Graph Access Control | ✓ | ✓ | **🟢** | ✓ |
-| **TLS** | ✗ | ✓ | **🟢** | ✓ |
-| VPC | ✗ | ✗ | **🔴** | ✓ |
-| Cluster Deployment | ✗ | ✗ | **🟢** | ✓ |
-| High Availability | ✗ | ✗ | **🟢** | ✓ |
-| Multi-zone Deployment | ✗ | ✗ | **🟢** | ✓ |
-| Scalability | ✗ | ✗ | **🟢** | ✓ |
-| Continuous Persistence | ✗ | ✗ | **🟢** | ✓ |
-| **Automated Backups** | ✗ | Every 12 Hours | **Every 12 Hours** | Every Hour |
-| Advanced Monitoring | ✗ | ✗ | **🔴** | ✓ |
-| **Support** | Community | Community | **24/7** | Dedicated |
-| Dedicated Account Manager | ✗ | ✗ | **🔴** | ✓ |
-| **Cloud Providers** | AWS, GCP | AWS, GCP | **AWS, GCP** | AWS, GCP, Azure (BYOC) |
-| **Get started** | [Sign up](https://app.falkordb.cloud/signup) | [Sign up](https://app.falkordb.cloud/signup) | [Sign up](https://app.falkordb.cloud/signup) | [Contact Us](mailto:info@falkordb.com) |
+> **📊 Compare all plans:** See the [full pricing comparison](/cloud#pricing-plans-comparison) on the Cloud overview page.
 
 ## Terms
 ### Pricing Calculation

@@ -13,25 +13,7 @@ FalkorDB's **Enterprise Tier** is designed for the most demanding workloads, off
 
 The Enterprise Tier is fully optimized for mission-critical applications, providing the highest levels of security, availability, and dedicated operational support. Deployment configurations are tailored to your specific infrastructure, scale, and compliance requirements.
 
-## FalkorDB Pricing Plans Comparison
-
-| Feature | FREE | STARTUP | PRO | ENTERPRISE |
-| :--- | :---: | :---: | :---: | :---: |
-| **Monthly Cost (from)** | **Free** | **$73** | **$350** | **Custom** |
-| Multi-Graph / Multi-Tenancy | ✓ | ✓ | ✓ | **🟢** |
-| Graph Access Control | ✓ | ✓ | ✓ | **🟢** |
-| **TLS** | ✗ | ✓ | ✓ | **🟢** |
-| **VPC** | ✗ | ✗ | ✗ | **🟢** |
-| Cluster Deployment | ✗ | ✗ | ✓ | **🟢** |
-| High Availability | ✗ | ✗ | ✓ | **🟢** |
-| Multi-zone Deployment | ✗ | ✗ | ✓ | **🟢** |
-| Scalability | ✗ | ✗ | ✓ | **🟢** |
-| Continuous Persistence | ✗ | ✗ | ✓ | **🟢** |
-| **Automated Backups** | ✗ | Every 12 Hours | Every 12 Hours | **Every Hour** |
-| **Advanced Monitoring** | ✗ | ✗ | ✗ | **🟢** |
-| **Support** | Community | Community | 24/7 | **Dedicated** |
-| **Dedicated Account Manager** | ✗ | ✗ | ✗ | **🟢** |
-| **Cloud Providers** | AWS, GCP, Azure | AWS, GCP, Azure | AWS, GCP, Azure | **AWS, GCP, Azure** |
+> **📊 Compare all plans:** See the [full pricing comparison](/cloud#pricing-plans-comparison) on the Cloud overview page.
 
 ## Terms
 ### Consultation and Pricing

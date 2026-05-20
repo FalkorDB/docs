@@ -12,26 +12,7 @@ FalkorDB's free cloud tier gives you instant access to a graph database with mul
 
 The free tier provides everything you need to explore FalkorDB and build initial prototypes. When your application grows and requires TLS security, VPC networking, high availability, automated backups, or dedicated support, you can upgrade to a paid plan that includes these enterprise features.
 
-## FalkorDB Pricing Plans Comparison
-
-| Feature | FREE | STARTUP | PRO | ENTERPRISE |
-| :--- | :---: | :---: | :---: | :---: |
-| **Monthly Cost (from)** | **Free** | **$73** | **$350** | **Custom** |
-| Multi-Graph / Multi-Tenancy | **✓** | **✓** | **✓** | **✓** |
-| Graph Access Control | **✓** | **✓** | **✓** | **✓** |
-| TLS | ✗ | **✓** | **✓** | **✓** |
-| VPC | ✗ | ✗ | ✗ | **✓** |
-| Cluster Deployment | ✗ | ✗ | **✓** | **✓** |
-| High Availability | ✗ | ✗ | **✓** | **✓** |
-| Multi-zone Deployment | ✗ | ✗ | **✓** | **✓** |
-| Scalability | ✗ | ✗ | **✓** | **✓** |
-| Continuous Persistence | ✗ | ✗ | **✓** | **✓** |
-| Automated Backups | ✗ | Every 12 Hours | Every 12 Hours | Every Hour |
-| Advanced Monitoring | ✗ | ✗ | ✗ | **✓** |
-| **Support** | Community | Community | 24/7 | Dedicated |
-| Dedicated Account Manager | ✗ | ✗ | ✗ | **✓** |
-| **Cloud Providers** | AWS, GCP | AWS, GCP | AWS, GCP | AWS, GCP, Azure |
-| **Call-to-Action** | [Sign up](https://app.falkordb.cloud/signup) | [Sign up](https://app.falkordb.cloud/signup) | [Sign up](https://app.falkordb.cloud/signup) | [Contact Us](mailto:info@falkordb.com) |
+> **📊 Compare all plans:** See the [full pricing comparison](/cloud#pricing-plans-comparison) on the Cloud overview page.
 
 ## Terms
 > ⚠️ Free instances that aren't utilized for 1 day will be stopped, and deleted after 7 days.

@@ -27,6 +27,29 @@ Get started with FalkorDB's cloud offering. The platform provides several enterp
 
 ---
 
+## Pricing Plans Comparison
+
+| Feature | FREE | STARTUP | PRO | ENTERPRISE |
+| :--- | :---: | :---: | :---: | :---: |
+| **Monthly Cost (from)** | **Free** | **$73** | **$350** | **Custom** |
+| Multi-Graph / Multi-Tenancy | ✓ | ✓ | ✓ | ✓ |
+| Graph Access Control | ✓ | ✓ | ✓ | ✓ |
+| TLS | ✗ | ✓ | ✓ | ✓ |
+| VPC | ✗ | ✗ | ✗ | ✓ |
+| Cluster Deployment | ✗ | ✗ | ✓ | ✓ |
+| High Availability | ✗ | ✗ | ✓ | ✓ |
+| Multi-zone Deployment | ✗ | ✗ | ✓ | ✓ |
+| Scalability | ✗ | ✗ | ✓ | ✓ |
+| Continuous Persistence | ✗ | ✗ | ✓ | ✓ |
+| Automated Backups | ✗ | Every 12 Hours | Every 12 Hours | Every Hour |
+| Advanced Monitoring | ✗ | ✗ | ✗ | ✓ |
+| **Support** | Community | Community | 24/7 | Dedicated |
+| Dedicated Account Manager | ✗ | ✗ | ✗ | ✓ |
+| **Cloud Providers** | AWS, GCP | AWS, GCP | AWS, GCP | AWS, GCP, Azure (BYOC) |
+| **Call-to-Action** | [Sign up](https://app.falkordb.cloud/signup) | [Sign up](https://app.falkordb.cloud/signup) | [Sign up](https://app.falkordb.cloud/signup) | [Contact Us](mailto:info@falkordb.com) |
+
+---
+
 ### Billing & Setup
 ℹ️ Prior to subscribing to any of FalkorDB's paid cloud tiers, please set up your billing information here:
 > Adding your billing information is an easy, 2-step process:
