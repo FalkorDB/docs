@@ -63,7 +63,7 @@ The Pro Tier provides a robust environment to scale your application with confid
 ## Replicated (High Availability, Master (x1), Replica (x1))
 
 
-| Instances Type                                 | Cores | Memory (GB) | Max Graph Dataset (GB) | Hourly Cost  | Monthly Cost |
+| Instance Type                                  | Cores | Memory (GB) | Max Graph Dataset (GB) | Hourly Cost  | Monthly Cost |
 | :--------------------------------------------- | :---: | :---------: | :--------------------: | -----------: | -----------: |
 | E2-medium                                      |   1   |      4      |           2            |   \$0.900/hr |     \$657.00 |
 | t2.medium                                      |   2   |      4      |           2            |   \$1.300/hr |     \$949.00 |
