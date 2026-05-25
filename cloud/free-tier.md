@@ -8,7 +8,7 @@ description: "FalkorDB DBaaS Free Tier"
 ![FalkorDB Cloud Free Tier Banner](https://github.com/user-attachments/assets/062cb5c5-d969-4481-ab1b-1802fea0732a)
 
 # Free Tier
-FalkorDB's free cloud tier gives you instant access to a graph database with multi-graph support and multi-tenancy capabilities. You can deploy on AWS or GCP with 100MB of storage and rely on community support to get started.
+FalkorDB's free cloud tier gives you instant access to a graph database with multi-graph support and multi-tenancy capabilities. You can deploy on AWS or GCP with **100MB of RAM** (max graph dataset size: 100MB) and rely on community support to get started.
 
 The free tier provides everything you need to explore FalkorDB and build initial prototypes. When your application grows and requires TLS security, VPC networking, high availability, automated backups, or dedicated support, you can upgrade to a paid plan that includes these enterprise features.
 
@@ -17,6 +17,8 @@ The free tier provides everything you need to explore FalkorDB and build initial
 | Feature | FREE | STARTUP | PRO | ENTERPRISE |
 | :--- | :---: | :---: | :---: | :---: |
 | **Monthly Cost (from)** | **Free** | **$73** | **$350** | **Custom** |
+| **Memory (RAM)** | 100 MB | From 1 GB | From 8 GB | Custom |
+| **Max Graph Dataset** | 100 MB | ~75% of RAM | ~75% of RAM | Custom |
 | Multi-Graph / Multi-Tenancy | **✓** | **✓** | **✓** | **✓** |
 | Graph Access Control | **✓** | **✓** | **✓** | **✓** |
 | TLS | ✗ | **✓** | **✓** | **✓** |
@@ -46,8 +48,8 @@ Need an extension? Speak to [sales](https://www.falkordb.com/get-a-demo/)
 
 {% include faq_accordion.html
   title="Frequently Asked Questions"
-  q1="How much storage does the Free Tier include?"
-  a1="The Free Tier includes **100MB** of storage, which is sufficient for evaluation, prototyping, and learning FalkorDB's graph database capabilities."
+  q1="How much memory does the Free Tier include?"
+  a1="The Free Tier includes **100MB of RAM**, which is also the maximum size of your graph dataset. FalkorDB is an in-memory graph database, so this 100MB is the total working memory available for your graphs. It's sufficient for evaluation, prototyping, and learning FalkorDB's graph database capabilities."
   q2="Do I need a credit card to sign up?"
   a2="No, the Free Tier requires no credit card. You can sign up and start using FalkorDB immediately at [app.falkordb.cloud/signup](https://app.falkordb.cloud/signup)."
   q3="What happens if my Free Tier instance is inactive?"
