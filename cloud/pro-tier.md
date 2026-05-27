@@ -40,7 +40,7 @@ The Pro Tier provides a robust environment to scale your application with confid
 
 ## Standalone
 
-| Instance Type | <div style="width: 50px">Cores</div> | <div style="width: 70px">Memory<br>(GB)</div> | <div style="width: 80px">Max Graph Dataset<br>(GB)</div> | Hourly Cost | Monthly Cost |
+| Instance Type | Cores | Memory<br>(GB) | Max Graph<br>Dataset<br>(GB) | Hourly Cost | Monthly Cost |
 | :--- | :---: | :---: | :---: | ---: | ---: |
 | E2-medium | 1 | 4 | 2 | $0.240/hr | $175.20 |
 | t2.medium | 2 | 4 | 2 | $0.440/hr | $321.20 |
@@ -63,7 +63,7 @@ The Pro Tier provides a robust environment to scale your application with confid
 ## Replicated (High Availability, Master (x1), Replica (x1))
 
 
-| Instance Type                                  | <div style="width: 50px">Cores</div> | <div style="width: 70px">Memory<br>(GB)</div> | <div style="width: 80px">Max Graph Dataset<br>(GB)</div> | Hourly Cost  | Monthly Cost |
+| Instance Type                                  | Cores | Memory<br>(GB) | Max Graph<br>Dataset<br>(GB) | Hourly Cost  | Monthly Cost |
 | :--------------------------------------------- | :---: | :---------: | :--------------------: | -----------: | -----------: |
 | E2-medium                                      |   1   |      4      |           2            |   \$0.900/hr |     \$657.00 |
 | t2.medium                                      |   2   |      4      |           2            |   \$1.300/hr |     \$949.00 |
