@@ -95,7 +95,7 @@ The Pro Tier provides a robust environment to scale your application with confid
 
 ## Getting Support
 
-Pro Tier customers receive **24/7 support**. Open a support ticket by emailing **[support@falkordb.com](mailto:support@falkordb.com)**. See the [Support page]({{ site.baseurl }}/support/) for what to include in your request.
+Pro Tier customers receive **24/7 support**. Open a support ticket by emailing **[support@falkordb.com](mailto:support@falkordb.com)**. See the [Support page](/support/) for what to include in your request.
 
 {% include faq_accordion.html
   title="Frequently Asked Questions"
