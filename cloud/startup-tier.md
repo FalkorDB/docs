@@ -62,7 +62,7 @@ The Startup Tier includes essential features like **TLS** and **Automated Backup
 
 ## Getting Support
 
-Need help? Email **[support@falkordb.com](mailto:support@falkordb.com)** to open a support ticket, or join the community on **[Discord](https://discord.gg/ErBEqN9E)**. See the [Support page]({{ site.baseurl }}/support/) for more details.
+Need help? Email **[support@falkordb.com](mailto:support@falkordb.com)** to open a support ticket, or join the community on **[Discord](https://discord.gg/ErBEqN9E)**. See the [Support page](/support/) for more details.
 
 {% include faq_accordion.html
   title="Frequently Asked Questions"
