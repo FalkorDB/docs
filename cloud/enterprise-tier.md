@@ -53,7 +53,7 @@ The Enterprise Tier is fully optimized for mission-critical applications, provid
 
 ## Getting Support
 
-Enterprise customers receive **dedicated support**. Open a support ticket by emailing **[support@falkordb.com](mailto:support@falkordb.com)**, or contact your dedicated account manager directly. See the [Support page]({{ site.baseurl }}/support/) for what to include in your request.
+Enterprise customers receive **dedicated support**. Open a support ticket by emailing **[support@falkordb.com](mailto:support@falkordb.com)**, or contact your dedicated account manager directly. See the [Support page](/support/) for what to include in your request.
 
 {% include faq_accordion.html
   title="Frequently Asked Questions"
