@@ -74,5 +74,5 @@ The Enterprise Tier is fully optimized for mission-critical applications, provid
   q4="What features are available across all tiers?"
   a4="All tiers include **Multi-Graph / Multi-Tenancy** and **Graph Access Control**. Higher tiers add TLS, VPC, high availability, automated backups, and dedicated support."
   q5="Is there a free trial available?"
-  a5="FalkorDB offers a **Free Tier** that provides a fully functional graph database instance with 100MB storage on AWS or GCP — no credit card required."
+  a5="FalkorDB offers a **Free Tier** that provides a fully functional graph database instance with 100MB of RAM (max graph dataset size) on AWS or GCP — no credit card required."
 %}

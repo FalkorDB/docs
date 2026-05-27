@@ -35,7 +35,7 @@ The Enterprise Tier is fully optimized for mission-critical applications, provid
 
 ## Terms
 ### Consultation and Pricing
-> The Enterprise Tier is customized to your specific needs, leveraging dedicated resources, tailored support SLAs, and private deployment options. Pricing is calculated based on the custom configuration of cores, memory, and additional enterprise components.
+> The Enterprise Tier is customized to your specific needs, leveraging dedicated resources, tailored support SLAs, and private deployment options. Pricing is calculated on a per-hour basis (Core/Hour and Memory GB/Hour) based on the custom configuration of cores, memory, and additional enterprise components.
 >
 > **For precise pricing, deployment details, and a dedicated consultation:**
 > **[Contact our Sales Team](https://www.falkordb.com/get-a-demo/)**
