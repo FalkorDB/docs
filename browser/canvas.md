@@ -86,7 +86,7 @@ import '@falkordb/canvas';
 import type { FalkorDBCanvas, Data, GraphNode } from '@falkordb/canvas';
 
 function GraphVisualization() {
-  const canvasRef = useRef<FalkorDBCanvas>(null);
+  const canvasRef = useRef<FalkorDBCanvas | null>(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
