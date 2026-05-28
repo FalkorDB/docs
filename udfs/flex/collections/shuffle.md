@@ -77,3 +77,11 @@ RETURN shuffled[0..5] AS team1, shuffled[5..10] AS team2
 ## See Also
 - [coll.zip](./zip.md) - Combine two lists element-by-element
 - [coll.union](./union.md) - Combine unique elements from lists
+
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="Is the shuffle result deterministic?"
+  a1="No. `flex.coll.shuffle` produces a random permutation each time it is called, so results will vary between executions."
+  q2="Does shuffle modify the original list?"
+  a2="No. It returns a new shuffled list; the original remains unchanged."
+%}

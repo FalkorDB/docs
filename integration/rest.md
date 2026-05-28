@@ -1535,3 +1535,17 @@ Example:
 ```json
 ["STRING", "default_name", "false", "true"]
 ```
+
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="How do I authenticate with the FalkorDB REST API?"
+  a1="Use **Bearer Token (JWT)** authentication. First, call the `/api/auth/tokens/credentials` endpoint with your credentials to obtain a token, then include it as `Authorization: Bearer <token>` in subsequent requests."
+  q2="What is the ENCRYPTION_KEY and why is it required?"
+  a2="The `ENCRYPTION_KEY` is a hex string (generated via `openssl rand -hex 32`) stored in your `.env.local` file. It is required for the authentication system to function — without it, auth endpoints will return server configuration errors."
+  q3="What operations can I perform through the REST API?"
+  a3="The REST API supports **graph management** (create, delete, list graphs), **query execution** (run Cypher queries), **node and edge operations** (CRUD), **schema management**, and **authentication** (token generation and validation)."
+  q4="What data types are supported for node/edge attributes?"
+  a4="Supported data types include `STRING`, `INTEGER`, `FLOAT`, and `BOOLEAN`. Attributes are configured with type, default value, uniqueness constraint, and required flag."
+  q5="Can I use the REST API for production workloads?"
+  a5="Yes, the REST API is the primary interface for the FalkorDB Browser and supports full graph database operations. For high-throughput scenarios, consider using the native client libraries which communicate over the Redis protocol."
+%}

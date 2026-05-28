@@ -346,3 +346,17 @@ logging.basicConfig(level=logging.DEBUG)
 ## Conclusion
 
 By integrating OpenTelemetry with FalkorDB-py, you gain powerful observability capabilities that help you monitor, debug, and optimize your graph database applications. Start with the basic setup and gradually add more sophisticated tracing as your application grows in complexity.
+
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="Which OpenTelemetry packages do I need for FalkorDB tracing?"
+  a1="Install `opentelemetry-distro`, `opentelemetry-instrumentation-redis`, `opentelemetry-exporter-otlp`, and `opentelemetry-sdk` alongside the `falkordb` package."
+  q2="Can I use OpenTelemetry with FalkorDB in production?"
+  a2="Yes. Use the OTLP exporter (`OTLPSpanExporter`) to send traces to observability platforms like Jaeger, Grafana Tempo, or Datadog. Avoid the ConsoleSpanExporter in production as it is for development only."
+  q3="Does OpenTelemetry add performance overhead to FalkorDB queries?"
+  a3="The overhead is minimal when using `BatchSpanProcessor` with async exporters. The `everysec` batch approach ensures traces are exported in the background without blocking query execution."
+  q4="How do I avoid logging sensitive data in spans?"
+  a4="Log query structure with placeholders instead of actual values. For example, use `MATCH (u:User {email: ?}) RETURN u` as the `db.statement` attribute instead of including real email addresses."
+  q5="Can I trace FalkorDB queries across multiple services?"
+  a5="Yes. OpenTelemetry supports distributed tracing. When you propagate trace context between services, FalkorDB query spans will appear as children of the calling service spans in your trace viewer."
+%}

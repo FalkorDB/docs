@@ -144,3 +144,17 @@ and is described in their documentation.
 + FalkorDB provides the `GRAPH.EXPLAIN` command to print the execution plan of a provided query.
 + `GRAPH.DELETE` will remove a graph and all Redis keys associated with it.
 - We do not currently provide support for queries that retrieve schemas, though the LABELS and TYPE scalar functions may be used to get a graph overview.
+
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="What Cypher specification does FalkorDB follow?"
+  a1="FalkorDB is based on the **OpenCypher Query Language Reference version 9**, available at opencypher.org. It implements a growing subset of the specification with proprietary extensions."
+  q2="Does FalkorDB support regular expressions?"
+  a2="No. The regex operator is not currently supported. Use the string operators `STARTS WITH`, `ENDS WITH`, and `CONTAINS` for pattern matching on strings."
+  q3="Are user-defined functions supported?"
+  a3="Yes. FalkorDB supports user-defined functions through the **Flex UDF library**, which provides functions for text manipulation, collections, date/time, JSON, maps, bitwise operations, and similarity. See the [UDFs documentation](/udfs) for the full list of available functions."
+  q4="How do I use query parameters?"
+  a4="Use the CYPHER prefix: `CYPHER name='Alice' MATCH (n {name: $name}) RETURN n`. Each FalkorDB client library also provides its own method for passing parameters."
+  q5="What data types are supported?"
+  a5="FalkorDB supports 64-bit doubles, 64-bit signed integers, strings, booleans, NULL, lists, maps, and temporal types (Date, DateTime, LocalDateTime, Time, LocalTime, Duration). Hexadecimal and octal numerics are not supported."
+%}

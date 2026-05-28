@@ -9,6 +9,8 @@ grand_parent: "Cypher Language"
 
 # Vector indexing
 
+FalkorDB's vector index uses the HNSW (Hierarchical Navigable Small World) algorithm with cosine similarity or Euclidean distance, supporting 1–4096-dimensional vectors.
+
 With the introduction of the `vector` data-type a new type of index was introduced.
 A vector index is a dedicated index for indexing and searching through vectors.
 
@@ -90,6 +92,8 @@ graph.query("CREATE VECTOR INDEX FOR ()-[e:Call]->() ON (e.summary) OPTIONS {dim
   - `euclidean`: Euclidean distance (L2 norm). Best for embeddings where magnitude matters.
   - `cosine`: Cosine similarity. Best for normalized embeddings where direction matters more than magnitude.
 
+**Note:** The supported dimension range is 1–4096.
+
 ### Optional Parameters
 
 These parameters control the HNSW (Hierarchical Navigable Small World) index structure:
@@ -108,6 +112,13 @@ These parameters control the HNSW (Hierarchical Navigable Small World) index str
   - Higher values improve recall but slow down queries
   - Can be adjusted per-query for speed/accuracy tradeoffs
   - Recommended: Start with 10, increase if recall is insufficient
+
+### See Also
+
+- [Full-text Index](./fulltext-index.md) — for keyword and text-based search
+- [Range Index](./range-index.md) — for numeric and string range queries
+
+> **Tip:** Use a vector index for semantic similarity search, a full-text index for keyword search, and a range index for exact or range-based property lookups.
 
 ## Inserting vectors
 
@@ -419,3 +430,17 @@ for record in result.data() {
 3. **Poor recall**: Increase efRuntime or efConstruction parameters
 4. **Slow queries**: Decrease efRuntime or reduce k (number of results)
 5. **High memory usage**: Reduce M parameter or use lower-dimensional embeddings
+
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="What similarity functions are supported for vector indexes?"
+  a1="FalkorDB supports **euclidean** distance and **cosine** similarity. Use cosine for normalized vectors (e.g., from embedding models) and euclidean for unnormalized vectors."
+  q2="How do I query a vector index?"
+  a2="Use `CALL db.idx.vector.queryNodes('Label', 'attribute', k, vecf32([...]))` where k is the number of nearest neighbors to return and the last argument is your query vector."
+  q3="What vector dimensions are supported?"
+  a3="Vector indexes support any dimension, but all vectors for a given index must have the **same dimension** as specified during index creation. Mismatched dimensions will cause errors."
+  q4="Can I create vector indexes on relationships?"
+  a4="Yes. Use `CALL db.idx.vector.queryRelationships('RelType', 'attribute', k, query_vector)` to perform similarity search on relationship vector properties."
+  q5="How do I improve vector search recall?"
+  a5="Increase the `efRuntime` parameter for higher recall at the cost of query latency. For build-time quality, increase `efConstruction` and `M` parameters when creating the index."
+%}

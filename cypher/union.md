@@ -24,3 +24,13 @@ GRAPH.QUERY DEMO_GRAPH
 UNION ALL
 MATCH (n:Movie) RETURN n.title AS name"
 ```
+
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="What is the difference between UNION and UNION ALL?"
+  a1="**UNION** combines results and removes duplicates. **UNION ALL** keeps all rows including duplicates, which is typically faster since no deduplication is needed."
+  q2="Do column names need to match in UNION queries?"
+  a2="Yes. The number and names of columns must be identical across all queries combined with UNION. Use `AS` aliases to ensure column names match."
+  q3="Can I use ORDER BY with UNION?"
+  a3="ORDER BY can be applied to the final combined result set after the UNION. Each individual query in the union cannot have its own ORDER BY unless wrapped in a CALL {} subquery."
+%}

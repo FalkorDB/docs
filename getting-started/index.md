@@ -55,7 +55,7 @@ cargo add falkordb
     <dependency>
       <groupId>com.falkordb</groupId>
       <artifactId>jfalkordb</artifactId>
-      <version>0.4.0</version>
+      <version>0.8.0</version>
     </dependency>
   </dependencies>
 {% endcapture %}
@@ -283,7 +283,7 @@ const query = `
 MATCH (alice:User {name: "Alice"})-[:FRIENDS_WITH]->(friend)
 RETURN friend.name AS Friend
 `;
-const result = await graph.ro_query(query);
+const result = await graph.roQuery(query);
 console.log("Alice's friends:");
 for (const record of result) {
   console.log(record["Friend"]);
@@ -338,7 +338,7 @@ const query = `
 MATCH (bob:User {name: "Bob"})-[:CREATED]->(post:Post)
 RETURN post.content AS PostContent
 `;
-const result = await graph.ro_query(query);
+const result = await graph.roQuery(query);
 console.log("Posts created by Bob:");
 for (const record of result) {
   console.log(record["PostContent"]);
@@ -378,9 +378,25 @@ for record in result.data.by_ref() {
 Congratulations! 🎉 You have successfully modeled, loaded, and queried a social network graph with FalkorDB.
 
 Next, dive deeper into FalkorDB's powerful features:
+- [FalkorDB Browser](/browser) — Explore your graph visually
 - [Advanced Cypher](/cypher)
+- [Data Types](/datatypes) — Nodes, relationships, scalars, temporal types, and collections
 - [Database Operations](/operations)
 - [GenAI Tools](/genai-tools)
 - [Agentic Memory](/agentic-memory)
 
 For questions or support, visit our [community forums](https://www.falkordb.com/contact-us/)
+
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="What are the minimum requirements to run FalkorDB?"
+  a1="FalkorDB requires **Redis 8.0.0 or later**. The quickest setup is via Docker: `docker run -p 6379:6379 -p 3000:3000 --rm falkordb/falkordb:latest`. Alternatively, use [FalkorDB Cloud](https://app.falkordb.cloud) to skip local setup entirely."
+  q2="Do I need to install Redis separately?"
+  a2="No. The official FalkorDB Docker images include everything needed. If you are self-hosting without Docker, you must install Redis 8.0.0+ separately and load the FalkorDB module. Earlier Redis versions (including 7.x) are **not supported**."
+  q3="Which client libraries can I use with FalkorDB?"
+  a3="FalkorDB has official clients for **Python**, **Node.js**, **Java**, **Rust**, **Go**, **PHP**, and **C#**. Install them via pip, npm, Maven, Cargo, or the respective package managers. See the [Client Libraries](/getting-started/clients) page for full details."
+  q4="What is the FalkorDB Browser at port 3000?"
+  a4="The FalkorDB Browser is a built-in web UI for visually exploring your graphs. When running the `falkordb/falkordb:latest` Docker image, open http://localhost:3000 to create, visualize, and query graphs interactively. For production, use `falkordb/falkordb-server` which excludes the browser."
+  q5="How do I model data in FalkorDB?"
+  a5="FalkorDB uses the **Property Graph Model**. Data is modeled as **nodes** (entities with labels and properties) connected by **relationships** (directed edges with a type and properties). Use the Cypher query language to create and query your graph structure."
+%}

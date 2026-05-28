@@ -445,3 +445,17 @@ RETURN p
   Ensures that priority never decreases along the route.
 * `RETURN p`
   Returns valid paths where shipments maintain or increase priority.
+
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="What categories of functions does FalkorDB support?"
+  a1="FalkorDB supports **predicate**, **scalar**, **aggregating**, **list**, **mathematical**, **trigonometric**, **string**, **point**, **type conversion**, **node**, **path**, and **vector** functions."
+  q2="How do I check if a property exists on a node?"
+  a2="Use the `exists()` predicate function: `WHERE exists(n.email)`. Note that graph pattern existence checks like `exists((n)-[]->())` are not supported — use pattern predicates in WHERE instead."
+  q3="How do I convert data types in Cypher?"
+  a3="Use type conversion functions like `toInteger()`, `toFloat()`, `toString()`, and `toBoolean()`. These are especially useful when importing data from CSV where all values start as strings."
+  q4="What is the collect() function?"
+  a4="The `collect()` aggregation function gathers values into a list. It is the inverse of UNWIND and is useful for grouping related values: `RETURN person.city, collect(person.name) AS residents`."
+  q5="Does FalkorDB support vector operations?"
+  a5="Yes. FalkorDB provides `vecf32()` for creating 32-bit float vectors and `vecf64()` for 64-bit float vectors. These are used with vector indexes for similarity search operations."
+%}

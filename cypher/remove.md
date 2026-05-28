@@ -69,3 +69,15 @@ Result:
 |n.name|labels(n)|
 |------|--------|
 |"Lori"|[]      |
+
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="What is the difference between REMOVE and DELETE?"
+  a1="**DELETE** removes entire nodes or relationships from the graph. **REMOVE** removes properties from entities or labels from nodes without deleting the entity itself."
+  q2="How do I remove a property from a node?"
+  a2="Use `MATCH (n {name: 'Andy'}) REMOVE n.score` to remove the `score` property. The property will return null after removal."
+  q3="Can I remove multiple labels at once?"
+  a3="Yes. Use the syntax `REMOVE n:Label1:Label2` to remove multiple labels from a node in a single operation."
+  q4="What is the difference between REMOVE and SET property = NULL?"
+  a4="Both achieve the same result — they remove the property from the entity. `REMOVE n.prop` and `SET n.prop = NULL` are functionally equivalent."
+%}

@@ -85,3 +85,11 @@ ORDER BY frequency DESC
 ## See Also
 - [coll.union](./union.md) - Get unique elements (keys would give unique items)
 - [coll.intersection](./intersection.md) - Find common elements
+
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="What does flex.coll.frequencies return?"
+  a1="It returns a map where each key is a unique element from the input list and each value is the number of times that element appears."
+  q2="Can I use frequencies with non-string elements?"
+  a2="Yes. The function works with any comparable data types including strings, numbers, and booleans."
+%}

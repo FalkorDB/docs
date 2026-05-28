@@ -1,5 +1,5 @@
 [![Workflow](https://github.com/FalkorDB/docs/actions/workflows/pages/pages-build-deployment/badge.svg?branch=main)](https://github.com/FalkorDB/docs/actions/workflows/pages/pages-build-deployment)
-[![Discord](https://img.shields.io/discord/1146782921294884966?style=flat-square)](https://discord.gg/ErBEqN9E)
+[![Discord](https://img.shields.io/discord/1146782921294884966?style=flat-square)](https://discord.gg/6M4QwDXn2w)
 [![Try Free](https://img.shields.io/badge/Try%20Free-FalkorDB%20Cloud-FF8101?labelColor=FDE900&style=flat-square)](https://app.falkordb.cloud)
 
 [![Trendshift](https://trendshift.io/api/badge/repositories/14787)](https://trendshift.io/repositories/14787)
@@ -95,6 +95,41 @@ When adding code examples:
 - Include comments for complex operations
 - Use realistic, meaningful variable names
 
+### Reusable Components
+
+The `_includes/` directory contains reusable Jekyll include components:
+
+#### `code_tabs.html` — Multi-language code tabs
+
+Renders tabbed code blocks for Python, JavaScript, C++, Rust, Java, and Shell.
+
+```liquid
+{% include code_tabs.html id="unique_id" python=python_var shell=shell_var %}
+```
+
+#### `faq_accordion.html` — FAQ accordion
+
+Renders an accessible, no-JavaScript FAQ accordion using native `<details>`/`<summary>` elements.
+Accepts up to 10 question/answer pairs via `q1`/`a1` … `q10`/`a10` parameters.
+An optional `title` parameter adds a header bar with the title and a count badge showing the total number of items.
+Set `open1="true"` … `open10="true"` on any item to render it expanded by default.
+
+```liquid
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="What is FalkorDB?"
+  a1="FalkorDB is a high-performance graph database."
+  open1="true"
+  q2="How do I get started?"
+  a2="See the [Getting Started](/getting-started) guide."
+%}
+```
+
+Answers are passed through the `markdownify` filter, so standard Markdown syntax
+(bold, links, code spans, etc.) is supported within answer strings.
+
+See `References/license.md` for a full example using this component.
+
 ## Project Structure
 
 ```text
@@ -121,5 +156,5 @@ FalkorDB itself is licensed under the [Server Side Public License v1 (SSPLv1)](h
 
 - **Documentation**: [https://docs.falkordb.com](https://docs.falkordb.com)
 - **GitHub Discussions**: [https://github.com/FalkorDB/FalkorDB/discussions](https://github.com/FalkorDB/FalkorDB/discussions)
-- **Discord**: [https://discord.gg/ErBEqN9E](https://discord.gg/ErBEqN9E)
+- **Discord**: [https://discord.gg/6M4QwDXn2w](https://discord.gg/6M4QwDXn2w)
 - **Website**: [https://www.falkordb.com](https://www.falkordb.com)

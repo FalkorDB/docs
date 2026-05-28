@@ -73,15 +73,17 @@ console.log(result);
 {% endcapture %}
 
 {% capture java_0 %}
-FalkorDB client = new FalkorDB();
+import com.falkordb.*;
+
+Driver driver = FalkorDB.driver("localhost", 6379);
 
 // Create Graph 'A'
-Graph graphA = client.selectGraph("A");
+Graph graphA = driver.graph("A");
 graphA.query("CREATE (:Account {number: 516637})");
 
 // Copy Graph 'A' to 'Z'
-client.copyGraph("A", "Z");
-Graph graphZ = client.selectGraph("Z");
+graphA.copyGraph("Z");
+Graph graphZ = driver.graph("Z");
 
 // Query Graph 'Z'
 ResultSet result = graphZ.query("MATCH (a:Account) RETURN a.number");
@@ -89,7 +91,13 @@ System.out.println(result);
 {% endcapture %}
 
 {% capture rust_0 %}
-let client = FalkorDB::connect_default();
+use falkordb::{FalkorClientBuilder, FalkorConnectionInfo};
+
+let connection_info: FalkorConnectionInfo = "falkor://127.0.0.1:6379"
+    .try_into().expect("Invalid connection info");
+let client = FalkorClientBuilder::new()
+    .with_connection_info(connection_info)
+    .build().expect("Failed to build client");
 let graph_a = client.select_graph("A");
 
 graph_a.query("CREATE (:Account {number: 516637})")?;
@@ -101,3 +109,15 @@ println!("{:?}", result);
 {% endcapture %}
 
 {% include code_tabs.html id="copy_tabs" shell=shell_0 python=python_0 javascript=javascript_0 java=java_0 rust=rust_0 %}
+
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="Can I still query the source graph while GRAPH.COPY is running?"
+  a1="Yes. The source graph remains **fully accessible** for both reads and writes during the copy operation."
+  q2="Does GRAPH.COPY also copy indexes and constraints?"
+  a2="Yes. `GRAPH.COPY` creates a complete clone of the source graph including all nodes, relationships, properties, indexes, and constraints."
+  q3="What happens if the destination graph already exists?"
+  a3="The command will return an error. You must delete the destination graph first using `GRAPH.DELETE` before copying to that key name."
+  q4="Is GRAPH.COPY atomic?"
+  a4="The copy reflects a consistent snapshot of the source graph at the time the command begins. Modifications to the source graph during the copy will not affect the destination."
+%}

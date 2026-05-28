@@ -88,3 +88,11 @@ normalized
 - [text.regexGroups](./regexGroups.md) - Extract matches with capture groups
 - [text.indexOf](./indexOf.md) - Find substring position
 - [text.format](./format.md) - Format strings with placeholders
+
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="Does flex.text.replace use regex or literal matching?"
+  a1="It uses **regex** pattern matching. If you want a literal match, escape any special regex characters in your pattern."
+  q2="Does it replace all occurrences or just the first?"
+  a2="It replaces **all** occurrences (global replacement)."
+%}

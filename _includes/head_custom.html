@@ -1,3 +1,8 @@
+<script
+  src="https://graphrag.falkordb.com/scripts/widget-chat.js?graph=docs_benchmark&title=FalkorDB%20Docs%20Assistant&accent=%237466FF&position=bottom-right"
+  defer
+></script>
+
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/atom-one-dark.min.css"
   integrity="sha512-Jk4AqjWsdSzSWCSuQTfYRIF84Rq/eV0G2+tu07byYwHcbTGfdmLrHjUSwvzp5HvbiqK4ibmNwdcG49Y5RGYPTg=="
   crossorigin="anonymous">
@@ -99,6 +104,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   border-radius: 3px;
 }
 </style>
+
 
 <script>
 document.addEventListener("DOMContentLoaded", function () {
@@ -209,6 +215,28 @@ document.addEventListener("DOMContentLoaded", function () {
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "headline": {{ page.title | jsonify }},
+  "dateModified": "{{ page.last_modified_at | default: site.time | date_to_xmlschema }}",
+  "publisher": {
+    "@type": "Organization",
+    "name": "FalkorDB",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "{{ '/images/falkor-logo.png' | absolute_url }}"
+    }
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "{{ page.url | absolute_url }}"
+  },
+  "description": {{ page.description | default: page.title | jsonify }}
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
   "@type": "Organization",
   "name": "FalkorDB",
   "url": "https://www.falkordb.com",
@@ -220,11 +248,12 @@ document.addEventListener("DOMContentLoaded", function () {
     "https://github.com/FalkorDB/FalkorDB",
     "https://x.com/falkordb",
     "https://www.linkedin.com/company/falkordb",
-    "https://discord.gg/ErBEqN9E"
+    "https://discord.gg/6M4QwDXn2w"
   ]
 }
 </script>
 
+{%- if page.url == "/" -%}
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -249,6 +278,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 }
 </script>
+{%- endif -%}
 
 {%- comment -%}
   BreadcrumbList JSON-LD: emitted on inner pages where the URL has at least one path segment.

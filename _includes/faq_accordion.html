@@ -1,0 +1,156 @@
+<style>
+.faq-accordion {
+  margin: 1.5rem 0;
+  border: 1px solid var(--border-color, #3d434b);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+/* Group-level: <summary> title bar (when <details> wrapper is used) */
+summary.faq-accordion-title {
+  list-style: none;
+  margin: 0;
+  padding: 0.6rem 1rem;
+  background: var(--code-background-color, #2d333b);
+  font-weight: 700;
+  font-size: 1rem;
+  border-bottom: 1px solid var(--border-color, #3d434b);
+  color: var(--body-text-color, #e0e0e0);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  user-select: none;
+}
+
+summary.faq-accordion-title::-webkit-details-marker {
+  display: none;
+}
+
+/* Group-level collapse indicator (rotates when open) */
+summary.faq-accordion-title::before {
+  content: "▶";
+  font-size: 0.65rem;
+  transition: transform 0.2s ease;
+  flex-shrink: 0;
+}
+
+.faq-accordion[open] > summary.faq-accordion-title::before {
+  transform: rotate(90deg);
+}
+
+summary.faq-accordion-title:hover {
+  filter: brightness(1.1);
+}
+
+.faq-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.4em;
+  height: 1.4em;
+  padding: 0 0.3em;
+  border-radius: 9999px;
+  background: var(--link-color, #a78bfa);
+  color: #1b1f23;
+  font-size: 0.7rem;
+  font-weight: 700;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.faq-item {
+  border-bottom: 1px solid var(--border-color, #3d434b);
+}
+
+.faq-item:last-child {
+  border-bottom: none;
+}
+
+.faq-item summary.faq-question {
+  list-style: none;
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--link-color, #a78bfa);
+  background: var(--body-background-color, #1b1f23);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  user-select: none;
+}
+
+.faq-item summary.faq-question::-webkit-details-marker {
+  display: none;
+}
+
+/* Question-level collapse indicator (rotates when open) */
+.faq-item summary.faq-question::before {
+  content: "▶";
+  font-size: 0.65rem;
+  transition: transform 0.2s ease;
+  flex-shrink: 0;
+}
+
+.faq-item[open] > summary.faq-question::before {
+  transform: rotate(90deg);
+}
+
+.faq-item summary.faq-question:hover {
+  background: var(--code-background-color, #2d333b);
+  color: var(--link-color, #a78bfa);
+  filter: brightness(1.15);
+}
+
+.faq-item > .faq-answer {
+  padding: 0.75rem 1rem 0.75rem 2rem;
+  background: var(--sidebar-color, #161a1f);
+  color: var(--body-text-color, #e0e0e0);
+  line-height: 1.65;
+}
+
+.faq-item > .faq-answer > *:first-child {
+  margin-top: 0;
+}
+
+.faq-item > .faq-answer > *:last-child {
+  margin-bottom: 0;
+}
+</style>
+
+{%- assign faq_count = 0 -%}
+{%- for i in (1..10) -%}
+  {%- assign q_key = "q" | append: i -%}
+  {%- assign a_key = "a" | append: i -%}
+  {%- if include[q_key] and include[a_key] -%}
+    {%- assign faq_count = faq_count | plus: 1 -%}
+  {%- endif -%}
+{%- endfor -%}
+
+{%- if include.title -%}
+<details class="faq-accordion"{% if include.open == "true" %} open{% endif %}>
+  <summary class="faq-accordion-title">
+    {{ include.title | escape }}
+    <span class="faq-count">{{ faq_count }}</span>
+  </summary>
+{%- else -%}
+<div class="faq-accordion">
+{%- endif -%}
+
+  {%- for i in (1..10) -%}
+    {%- assign q_key = "q" | append: i -%}
+    {%- assign a_key = "a" | append: i -%}
+    {%- assign open_key = "open" | append: i -%}
+    {%- if include[q_key] and include[a_key] -%}
+  <details class="faq-item"{% if include[open_key] == "true" %} open{% endif %}>
+    <summary class="faq-question">{{ include[q_key] }}</summary>
+    <div class="faq-answer">{{ include[a_key] | markdownify }}</div>
+  </details>
+    {%- endif -%}
+  {%- endfor -%}
+
+{%- if include.title -%}
+</details>
+{%- else -%}
+</div>
+{%- endif -%}

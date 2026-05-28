@@ -100,3 +100,18 @@ Expected result:
 - Betweenness Centrality can be computationally expensive on large, dense graphs.
 - Use `samplingSize` to trade accuracy for performance (larger samples are slower but usually more accurate).
 - Set `samplingSeed` to a fixed value to make runs reproducible; if you omit it, results may vary between runs due to random sampling.
+
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="What is the call syntax for Betweenness Centrality?"
+  a1="Use `CALL algo.betweenness({nodeLabels: ['Label'], relationshipTypes: ['TYPE']}) YIELD node, score`. All configuration parameters are optional."
+  q2="Why do my results change between runs?"
+  a2="By default, the algorithm uses random sampling with a time-based seed. Set `samplingSeed` to a fixed integer value (e.g. `samplingSeed: 42`) for **reproducible** results."
+  q3="How does samplingSize affect accuracy?"
+  a3="The `samplingSize` parameter controls how many source nodes are sampled for approximation. Larger values yield more accurate results but increase computation time. The default is 32."
+  q4="When should I use Betweenness Centrality vs PageRank?"
+  a4="Use **Betweenness Centrality** to find *bridge* or *broker* nodes connecting different clusters. Use **[PageRank](./pagerank.md)** to measure overall node *influence* based on incoming link quantity and quality."
+  q5="Can Betweenness Centrality run on large graphs?"
+  a5="Yes, but it can be expensive on very large, dense graphs. Use the `samplingSize` parameter to trade accuracy for speed, and filter with `nodeLabels`/`relationshipTypes` to reduce the computation scope."
+%}
+

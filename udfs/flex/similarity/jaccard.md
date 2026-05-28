@@ -84,3 +84,13 @@ ORDER BY match_score DESC
 - [text.levenshtein](../text/levenshtein.md) - Edit distance for string comparison
 - [coll.intersection](../collections/intersection.md) - Get common elements between sets
 - [coll.union](../collections/union.md) - Combine sets
+
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="What does a Jaccard score of 0.5 mean?"
+  a1="It means half of the combined unique elements are shared between the two sets. The formula is `|intersection| / |union|`."
+  q2="Does the order of elements matter?"
+  a2="No. Jaccard treats inputs as sets, so element order and duplicates within a single list do not affect the result."
+  q3="What types of elements can I compare?"
+  a3="Any comparable data types including strings, numbers, and booleans. Both lists should contain the same type of elements for meaningful comparison."
+%}

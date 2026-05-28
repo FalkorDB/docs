@@ -66,3 +66,14 @@ WITH collect(p.name) AS names
 UNWIND names AS name
 RETURN name ORDER BY name"
 ```
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="What does UNWIND do?"
+  a1="UNWIND transforms a list into individual rows, creating one row per element. It is the inverse of the `collect()` aggregation function."
+  q2="Can I UNWIND a literal list?"
+  a2="Yes. You can unwind inline lists directly: `UNWIND ['Alice', 'Bob'] AS name CREATE (:Person {name: name})`. This is useful for batch operations."
+  q3="What happens if I UNWIND an empty list?"
+  a3="If the list is empty, UNWIND produces zero rows, effectively eliminating that record from the result stream. No subsequent clauses will execute for that record."
+  q4="Can I UNWIND nested lists or maps?"
+  a4="Yes. You can unwind lists of maps and access their properties: `UNWIND [{name: 'Alice'}, {name: 'Bob'}] AS person CREATE (:Person {name: person.name})`."
+%}

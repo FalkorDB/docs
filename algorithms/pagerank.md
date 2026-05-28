@@ -98,3 +98,18 @@ Expected results:
    - PageRank scores are relative, not absolute measures
    - The sum of all scores in a graph equals 1.0
    - Scores typically follow a power-law distribution
+
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="What is the syntax for running PageRank in FalkorDB?"
+  a1="Use `CALL algo.pageRank(label, relationship_type) YIELD node, score`. Both parameters are optional — pass `null` to include all nodes or all relationship types."
+  q2="How do I interpret PageRank scores?"
+  a2="Scores are **relative** values that sum to 1.0 across all nodes. Higher scores indicate greater importance based on incoming link structure. Scores follow a power-law distribution."
+  q3="Can I run PageRank on a subset of nodes?"
+  a3="Yes. Pass a node label as the first argument, e.g. `CALL algo.pageRank('Paper', 'CITES')` to only compute scores for nodes with that label."
+  q4="When should I use PageRank vs Betweenness Centrality?"
+  a4="Use **PageRank** to measure overall *influence* based on incoming connections. Use **[Betweenness Centrality](./betweenness-centrality.md)** to find *bridge* nodes that connect different parts of the graph."
+  q5="Does PageRank consider edge direction?"
+  a5="Yes. PageRank is designed for directed graphs and scores are based on **incoming** relationships. Nodes with many high-scoring inbound connections receive higher scores."
+%}
+

@@ -63,3 +63,11 @@ AbC123xYz
 - [text.capitalize](./capitalize.md) - Uppercase the first character
 - [text.camelCase](./camelCase.md) - Convert to camelCase format
 - [text.snakeCase](./snakeCase.md) - Convert to snake_case format
+
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="Does flex.text.swapCase affect non-alphabetic characters?"
+  a1="No. Numbers, punctuation, and other non-alphabetic characters remain unchanged."
+  q2="Is swapCase applied to all characters or just the first?"
+  a2="It is applied to **every** character in the string — each uppercase letter becomes lowercase and vice versa."
+%}

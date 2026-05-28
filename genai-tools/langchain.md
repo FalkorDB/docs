@@ -368,3 +368,17 @@ For more examples and source code, see the [@falkordb/langchain-ts repository](h
 - [LangChain Documentation](https://python.langchain.com/)
 - [FalkorDBQAChain API Reference](https://python.langchain.com/docs/integrations/graphs/falkordb)
 - [Blog: Build AI Agents with Memory](https://www.falkordb.com/blog/building-ai-agents-with-memory-langchain/)
+
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="What languages does the FalkorDB LangChain integration support?"
+  a1="The FalkorDB LangChain integration supports both **Python** (via `langchain-community`) and **JavaScript/TypeScript** (via the `@falkordb/langchain-ts` npm package)."
+  q2="How do I connect LangChain to FalkorDB?"
+  a2="In Python, use `FalkorDBGraph(database='my_graph', host='localhost', port=6379)` from `langchain_community.graphs`. In TypeScript, use `FalkorDBGraph.initialize({ host: 'localhost', port: 6379, graph: 'my_graph' })` from `@falkordb/langchain-ts`."
+  q3="Can I use FalkorDB as a vector store with LangChain?"
+  a3="Yes. Use `FalkorDBVector` from `langchain_community.vectorstores.falkordb_vector` to store and retrieve document embeddings. It supports similarity search and can be used as a retriever in RAG chains."
+  q4="What is GraphCypherQAChain?"
+  a4="GraphCypherQAChain is a LangChain chain that converts natural language questions into Cypher queries, executes them against FalkorDB, and returns natural language answers. It uses an LLM to generate the Cypher and synthesize responses."
+  q5="Can I give agents persistent memory with FalkorDB?"
+  a5="Yes. Use `ConversationGraphMemory` with a FalkorDB graph to store conversation context as graph relationships. This allows AI agents to remember information across sessions and make connections between previously discussed topics."
+%}

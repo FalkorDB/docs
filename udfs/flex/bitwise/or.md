@@ -73,3 +73,11 @@ SET u.permissions = flex.bitwise.or(u.permissions, 4)  // Add execute permission
 - [bitwise.and](./and.md) - Bitwise AND operation
 - [bitwise.xor](./xor.md) - Bitwise XOR operation
 - [bitwise.not](./not.md) - Bitwise NOT operation
+
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="What does flex.bitwise.or return?"
+  a1="It returns an integer where each bit is 1 if the corresponding bit in **either** (or both) input operands is 1. For example, `flex.bitwise.or(5, 3)` returns `7`."
+  q2="How can I combine permission flags with bitwise.or?"
+  a2="Use `flex.bitwise.or(existingFlags, newFlag)` to add a permission bit. For example, `flex.bitwise.or(permissions, 4)` sets the third bit."
+%}

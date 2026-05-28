@@ -58,3 +58,11 @@ RETURN p.id, flex.text.capitalize(p.name) AS capitalizedName
 - [text.decapitalize](./decapitalize.md) - Lowercase the first character
 - [text.camelCase](./camelCase.md) - Convert to camelCase format
 - [text.upperCamelCase](./upperCamelCase.md) - Convert to UpperCamelCase format
+
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="Does flex.text.capitalize change the rest of the string?"
+  a1="No. It only converts the **first** character to uppercase — all other characters remain exactly as they are."
+  q2="What happens with an empty string input?"
+  a2="It returns an empty string. For `null` input, it returns `null`."
+%}

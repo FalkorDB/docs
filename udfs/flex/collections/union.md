@@ -77,3 +77,11 @@ RETURN flex.coll.union(p.categories, similar.categories) AS combinedCategories
 ## See Also
 - [coll.intersection](./intersection.md) - Find common elements between lists
 - [sim.jaccard](../similarity/jaccard.md) - Calculate similarity between sets
+
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="Does flex.coll.union remove duplicates?"
+  a1="Yes. The union function combines all input lists and returns only unique elements."
+  q2="Can I pass more than two lists to union?"
+  a2="Yes. You can pass multiple lists as arguments to combine them all into a single deduplicated result."
+%}

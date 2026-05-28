@@ -78,3 +78,15 @@ See the [Main.java](https://github.com/FalkorDB/jena-falkordb-adapter/blob/main/
 - [Adapter README](https://github.com/FalkorDB/jena-falkordb-adapter/blob/main/README.md)
 - [Getting Started](https://github.com/FalkorDB/jena-falkordb-adapter/blob/main/GETTING_STARTED.md)
 - [Sample Main.java](https://github.com/FalkorDB/jena-falkordb-adapter/blob/main/src/main/java/com/falkordb/jena/Main.java)
+
+{% include faq_accordion.html
+  title="Frequently Asked Questions"
+  q1="What is the jena-falkordb-adapter used for?"
+  a1="The adapter allows applications built on **Apache Jena** to use FalkorDB as a backend for RDF data storage and SPARQL query execution, enabling seamless graph data management with Jena's API."
+  q2="How do I install the Jena FalkorDB adapter?"
+  a2="Add the Maven dependency with groupId `com.falkordb` and artifactId `jena-falkordb-adapter` to your `pom.xml`. Check the [adapter repository](https://github.com/FalkorDB/jena-falkordb-adapter) for the latest version."
+  q3="Can I run SPARQL queries against FalkorDB using Jena?"
+  a3="Yes, once the adapter is configured, you can run standard **SPARQL SELECT, CONSTRUCT, and ASK** queries using Jena's `QueryExecutionFactory` against data stored in FalkorDB."
+  q4="What Java version is required?"
+  a4="Check the adapter's README for the exact Java version requirement. The adapter is built as a standard Maven project and typically requires **Java 11 or later**."
+%}
