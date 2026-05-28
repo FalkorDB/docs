@@ -216,7 +216,7 @@ This allows you to use tools like Neo4j Desktop, Neo4j Browser, or any Bolt-comp
 | `Authentication failed` | Double-check username and password; reset credentials in the dashboard if needed |
 | `Timeout` | Check network connectivity; ensure your firewall allows outbound connections on port 6379 |
 
-For more help, see the [Troubleshooting guide](/operations/troubleshooting) or contact [FalkorDB Support](https://www.falkordb.com/contact-us/).
+For more help, see the [Troubleshooting guide](/operations/docker#troubleshooting) or contact [FalkorDB Support](https://www.falkordb.com/contact-us/).
 
 ---
 
