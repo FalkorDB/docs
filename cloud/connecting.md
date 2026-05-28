@@ -22,7 +22,7 @@ After creating a FalkorDB Cloud instance:
 Your connection URL follows this format:
 
 ```
-falkordb://<username>:<password>@<host>:<port>
+falkor[s]://<username>:<password>@<host>:<port>
 ```
 
 **Key details:**
