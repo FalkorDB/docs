@@ -312,12 +312,11 @@ The `node-mode` and `link-mode` HTML attributes control how custom rendering com
 
 ## Large-Graph Optimizations
 
-For graphs with thousands of nodes and links, enable viewport culling and low-zoom draw skipping:
+For graphs with thousands of nodes and links, configure viewport culling and low-zoom draw skipping:
 
 ```typescript
 canvas.setConfig({
   largeGraph: {
-    enabled: true,
     viewportPadding: 100,
     lowZoomThreshold: 0.4,
     skipLabelsAtLowZoom: true,
