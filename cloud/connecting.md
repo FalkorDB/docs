@@ -109,18 +109,12 @@ await db.close();
 ```
 
 ```java
+import com.falkordb.Driver;
 import com.falkordb.FalkorDB;
 import com.falkordb.Graph;
 
-FalkorDB db = FalkorDB.driver()
-    .host("my-instance.falkordb.cloud")
-    .port(6379)
-    .user("default")
-    .password("your-password")
-    .ssl(true)
-    .build();
-
-Graph graph = db.selectGraph("myGraph");
+Driver driver = FalkorDB.driver("my-instance.falkordb.cloud", 6379);
+Graph graph = driver.graph("myGraph");
 var result = graph.query("MATCH (n) RETURN n LIMIT 5");
 ```
 
