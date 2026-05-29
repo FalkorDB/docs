@@ -14,7 +14,7 @@ redirect_from:
 * [FalkorDB Blog](https://www.falkordb.com/blog)
 * [FalkorDB GitHub](https://github.com/FalkorDB/FalkorDB)
 * [FalkorDB Demos](https://github.com/FalkorDB/demos)
-* [FalkorDB Discord Community](https://discord.gg/ErBEqN9E)
+* [FalkorDB Discord Community](https://discord.gg/6M4QwDXn2w)
 
 ## Videos
 
@@ -50,7 +50,7 @@ Cailliau, Pieter & Davis, Tim & Gadepally, Vijay & Kepner, Jeremy & Lipman, Roi 
   q1="Where can I find the FalkorDB source code?"
   a1="The FalkorDB source code is available on GitHub at [https://github.com/FalkorDB/FalkorDB](https://github.com/FalkorDB/FalkorDB). You can also find demo projects at [https://github.com/FalkorDB/demos](https://github.com/FalkorDB/demos)."
   q2="Is there a community forum or chat for FalkorDB?"
-  a2="Yes! FalkorDB has an active **Discord community** where you can ask questions, share projects, and connect with other users and the development team. Join at [https://discord.gg/ErBEqN9E](https://discord.gg/ErBEqN9E)."
+  a2="Yes! FalkorDB has an active **Discord community** where you can ask questions, share projects, and connect with other users and the development team. Join at [https://discord.gg/6M4QwDXn2w](https://discord.gg/6M4QwDXn2w)."
   q3="What is the relationship between FalkorDB and RedisGraph?"
   a3="FalkorDB **originated from the RedisGraph project**. Many older resources reference RedisGraph but remain relevant to understanding FalkorDB's architecture, query language, and design principles."
   q4="Are there academic papers about FalkorDB's architecture?"
