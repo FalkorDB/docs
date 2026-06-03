@@ -20,7 +20,7 @@ GraphRAG Server is the fastest way to turn your own documents into a smart, sear
 
 ## Why GraphRAG?
 
-Ordinary RAG (Retrieval-Augmented Generation) finds text snippets that look similar to your question and hands them to an LLM. That works for simple lookups, but it struggles when the answer depends on how facts connect across different documents.
+Vanilla RAG (Retrieval-Augmented Generation) finds text snippets that look similar to your question and hands them to an LLM. That works for simple lookups, but it struggles when the answer depends on how facts connect across different documents.
 
 GraphRAG first organizes your documents into a **knowledge graph**: the people, places, products, and concepts in your content, and the relationships between them. Asking questions against that graph gives you:
 
