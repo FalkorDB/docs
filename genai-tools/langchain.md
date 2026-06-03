@@ -1,6 +1,6 @@
 ---
 title: "LangChain"
-nav_order: 3
+nav_order: 4
 description: "Build AI agents with memory using FalkorDB and LangChain. Python and JavaScript/TypeScript integration for conversational AI, GraphRAG, and knowledge graph question answering."
 parent: "GenAI Tools"
 ---

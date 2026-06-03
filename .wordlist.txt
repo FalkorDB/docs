@@ -234,6 +234,7 @@ euclideanDistance
 eval
 everysec
 existsByEmail
+explainability
 Explainer
 expr
 exprList
@@ -479,6 +480,7 @@ lTrim
 macOS
 malte
 MariaDB
+Markdown
 matchRegEx
 maxAge
 maxCost

@@ -19,6 +19,7 @@ FalkorDB provides powerful tools and integrations for building intelligent GenAI
 ## Topics in This Section
 
 - [GraphRAG-SDK](./graphrag-sdk.md): Build intelligent GraphRAG applications with FalkorDB and LLMs.
+- [GraphRAG Server](./graphrag-server.md): The hosted, no-code GraphRAG app. Upload your documents and chat with them at [graphrag.falkordb.com](https://graphrag.falkordb.com/).
 - [AG2](./ag2.md): Build multi-agent AI systems with AG2 (formerly AutoGen) and FalkorDB GraphRAG.
 - [LangChain](./langchain.md): Integration with LangChain for AI agents with memory (Python and JavaScript/TypeScript).
 - [LangGraph](./langgraph.md): Build stateful, multi-actor agentic applications with LangGraph.

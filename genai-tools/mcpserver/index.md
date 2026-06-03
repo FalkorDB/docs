@@ -1,6 +1,6 @@
 ---
 title: "MCP Server"
-nav_order: 7
+nav_order: 8
 description: "Enable AI assistants like Claude to interact with FalkorDB graph databases using the Model Context Protocol (MCP)"
 parent: "GenAI Tools"
 has_children: true
