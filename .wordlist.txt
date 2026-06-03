@@ -479,8 +479,8 @@ LRU
 lTrim
 macOS
 malte
-Markdown
 MariaDB
+Markdown
 matchRegEx
 maxAge
 maxCost

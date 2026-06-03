@@ -1,7 +1,7 @@
 ---
 title: "Code-Graph"
 description: "Visualize codebases as knowledge graphs with FalkorDB Code-Graph. Analyze dependencies, detect bottlenecks, and query code structure using GraphRAG and an interactive web UI or CLI."
-nav_order: 9
+nav_order: 10
 parent: "GenAI Tools"
 redirect_from:
   - /code-graph.html
