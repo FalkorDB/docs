@@ -234,6 +234,7 @@ euclideanDistance
 eval
 everysec
 existsByEmail
+explainability
 Explainer
 expr
 exprList
@@ -478,6 +479,7 @@ LRU
 lTrim
 macOS
 malte
+Markdown
 MariaDB
 matchRegEx
 maxAge

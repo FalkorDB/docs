@@ -1,6 +1,6 @@
 ---
 title: "GraphRAG Toolkit"
-nav_order: 6
+nav_order: 7
 description: "AWS GraphRAG Toolkit integration with FalkorDB for building knowledge graph applications. Semantic-guided search, LLM-powered retrieval, and FalkorDB Cloud support for RAG systems."
 parent: "GenAI Tools"
 ---
