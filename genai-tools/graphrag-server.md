@@ -11,6 +11,8 @@ parent: "GenAI Tools"
 
 GraphRAG Server is the fastest way to turn your own documents into a smart, searchable assistant. It's fully hosted with no code required: upload your files and it automatically builds a [knowledge graph](https://www.falkordb.com/blog/what-is-graphrag/) behind the scenes, so you can ask questions in plain language and get accurate, cited answers. You get the power of a knowledge graph in seconds.
 
+[![GraphRAG Server: turn your documents into a knowledge graph you can question](/images/graphrag-server-hero.png)](https://graphrag.falkordb.com/)
+
 **Resources:**
 - 🚀 [Try GraphRAG Server](https://graphrag.falkordb.com/)
 - 🔗 [FalkorDB](https://www.falkordb.com)
