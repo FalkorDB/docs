@@ -14,6 +14,7 @@ GraphRAG Server is the hosted, no-code way to use [GraphRAG](https://www.falkord
 **Resources:**
 - 🚀 [Try GraphRAG Server](https://graphrag.falkordb.com/)
 - 🔗 [FalkorDB](https://www.falkordb.com)
+- 💻 [GraphRAG-SDK GitHub Repository](https://github.com/FalkorDB/GraphRAG-SDK)
 
 ---
 
