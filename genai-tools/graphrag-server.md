@@ -38,7 +38,7 @@ GraphRAG first organizes your documents into a **knowledge graph**: the people, 
 3. **Ask questions** in plain language. You get an answer with citations to your sources, plus a small "explainability" graph showing the facts behind it.
 4. **Explore visually**: browse the entities and relationships extracted from your documents in an interactive graph view.
 
-That's it. No setup, no configuration, no Cypher or graph knowledge needed.
+That's it. Nothing to install, no Cypher to write, and no graph knowledge needed to get started. Settings are there if you want them, but the defaults work out of the box.
 
 ---
 
