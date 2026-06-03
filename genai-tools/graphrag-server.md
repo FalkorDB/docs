@@ -7,7 +7,7 @@ parent: "GenAI Tools"
 
 # GraphRAG Server
 
-## Turn your documents into an accurate, explainable AI assistant — no coding and no knowledge-graph expertise required
+## Turn your documents into an accurate, explainable AI assistant
 
 GraphRAG Server is the hosted, no-code way to use [GraphRAG](https://www.falkordb.com/blog/what-is-graphrag/). You upload your documents, and it automatically builds a knowledge graph behind the scenes and lets you chat with your content in plain language. There is nothing to install and you don't need to know anything about graphs or databases.
 
