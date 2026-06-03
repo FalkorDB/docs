@@ -50,7 +50,6 @@ That's it. Nothing to install, no Cypher to write, and no graph knowledge needed
 - **Explainability subgraphs**: see the entities and relationships behind each answer.
 - **Interactive graph visualization**: explore your knowledge as a graph you can click through.
 - **AI-suggested questions**: get starter questions tailored to your own content.
-- **Private to your account**: your documents and graph belong to you and aren't shared with other users.
 
 ---
 
@@ -66,8 +65,6 @@ Once you've built a knowledge graph, you can publish it as a **chat widget** and
   a1="No. GraphRAG Server builds the knowledge graph for you automatically when you upload your documents. You only ever interact with it by uploading files and asking questions in plain language."
   q2="What kinds of files can I upload?"
   a2="PDF, plain text (TXT), and Markdown (.md) files."
-  q3="Is my data private?"
-  a3="Yes. Each account's documents and knowledge graph are isolated to that account and are not shared with other users."
-  q4="I'm a developer and want to build GraphRAG in my own code. Where do I start?"
-  a4="Use the [GraphRAG-SDK](https://docs.falkordb.com/genai-tools/graphrag-sdk.html), a Python library for building GraphRAG applications directly against FalkorDB."
+  q3="I'm a developer and want to build GraphRAG in my own code. Where do I start?"
+  a3="Use the [GraphRAG-SDK](https://docs.falkordb.com/genai-tools/graphrag-sdk.html), a Python library for building GraphRAG applications directly against FalkorDB."
 %}
