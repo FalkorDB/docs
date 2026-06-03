@@ -56,15 +56,3 @@ That's it. Nothing to install, no Cypher to write, and no graph knowledge needed
 ## Embed it on your site
 
 Once you've built a knowledge graph, you can publish it as a **chat widget** and embed it on your own website or documentation so your visitors can ask questions about your content too, without leaving your site.
-
----
-
-{% include faq_accordion.html
-  title="Frequently Asked Questions"
-  q1="Do I need to know anything about graphs or knowledge graphs?"
-  a1="No. GraphRAG Server builds the knowledge graph for you automatically when you upload your documents. You only ever interact with it by uploading files and asking questions in plain language."
-  q2="What kinds of files can I upload?"
-  a2="PDF, plain text (TXT), and Markdown (.md) files."
-  q3="I'm a developer and want to build GraphRAG in my own code. Where do I start?"
-  a3="Use the [GraphRAG-SDK](https://docs.falkordb.com/genai-tools/graphrag-sdk.html), a Python library for building GraphRAG applications directly against FalkorDB."
-%}
