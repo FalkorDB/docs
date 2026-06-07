@@ -67,6 +67,14 @@ Each loader uses JSON/YAML configuration to define:
 - Index handling: loaders apply explicit `falkordb.indexes` plus inferred indexes for node keys and edge endpoint matches.
 - Observability: loaders expose Prometheus-style metrics with global and per-mapping counters.
 
+### Change Data Capture (CDC)
+
+Certain loaders natively support real-time Change Data Capture beyond traditional timestamp polling:
+
+- **PostgreSQL**: Supports native logical replication CDC (via `pgoutput` plugin), seamlessly capturing inserts, updates, and hard deletes while maintaining LSN positions.
+- **MySQL & MariaDB**: Support true CDC via binary log (Binlog) streaming, pushing precise ROW-level DML events directly to the graph.
+- **Snowflake**: Supports zero-loss native CDC via **Snowflake Streams**, natively processing `METADATA$ACTION` events and managing offsets using transactional boundaries without the need for manual `updated_at` watermarks.
+
 ## Option A: Run a loader directly (CLI)
 
 ### BigQuery → FalkorDB
