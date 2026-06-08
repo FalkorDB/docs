@@ -18,6 +18,10 @@ FalkorDB's Browser provides a web UI for exploring, querying, and managing Falko
 For detailed documentation of each major UI element (login, settings, graph canvas, panels, query editor/history, table view, etc.), see:
 - [UI Elements](./ui/)
 
+## Canvas Component
+FalkorDB Canvas is the standalone web component that powers the graph visualization in FalkorDB Browser. It can also be used independently in any web application.
+- [Canvas](./canvas)
+
 ---
 
 ## Main Features
