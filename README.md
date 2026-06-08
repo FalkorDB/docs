@@ -1,5 +1,5 @@
 [![Workflow](https://github.com/FalkorDB/docs/actions/workflows/pages/pages-build-deployment/badge.svg?branch=main)](https://github.com/FalkorDB/docs/actions/workflows/pages/pages-build-deployment)
-[![Discord](https://img.shields.io/discord/1146782921294884966?style=flat-square)](https://discord.gg/6M4QwDXn2w)
+[![Discord](https://img.shields.io/discord/1146782921294884966?style=flat-square)](https://discord.com/invite/Y2mMT9VdMy)
 [![Try Free](https://img.shields.io/badge/Try%20Free-FalkorDB%20Cloud-FF8101?labelColor=FDE900&style=flat-square)](https://app.falkordb.cloud)
 
 [![Trendshift](https://trendshift.io/api/badge/repositories/14787)](https://trendshift.io/repositories/14787)
@@ -156,5 +156,5 @@ FalkorDB itself is licensed under the [Server Side Public License v1 (SSPLv1)](h
 
 - **Documentation**: [https://docs.falkordb.com](https://docs.falkordb.com)
 - **GitHub Discussions**: [https://github.com/FalkorDB/FalkorDB/discussions](https://github.com/FalkorDB/FalkorDB/discussions)
-- **Discord**: [https://discord.gg/6M4QwDXn2w](https://discord.gg/6M4QwDXn2w)
+- **Discord**: [https://discord.com/invite/Y2mMT9VdMy](https://discord.com/invite/Y2mMT9VdMy)
 - **Website**: [https://www.falkordb.com](https://www.falkordb.com)
