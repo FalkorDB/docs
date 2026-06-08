@@ -23,7 +23,7 @@ To help us respond faster, please include:
 
 ## Community Support
 
-For general questions, usage help, and discussion, join the FalkorDB community on **[Discord](https://discord.gg/ErBEqN9E)**.
+For general questions, usage help, and discussion, join the FalkorDB community on **[Discord](https://discord.com/invite/Y2mMT9VdMy)**.
 
 ## Sales and General Inquiries
 
