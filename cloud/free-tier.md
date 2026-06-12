@@ -37,7 +37,7 @@ The free tier provides everything you need to explore FalkorDB and build initial
 
 ## Getting Support
 
-Need help? Email **[support@falkordb.com](mailto:support@falkordb.com)** to open a support ticket, or join the community on **[Discord](https://discord.com/invite/Y2mMT9VdMy)**. See the [Support page]({{ site.baseurl }}/support/) for more details.
+Need help? Email **[support@falkordb.com](mailto:support@falkordb.com)** to open a support ticket, or join the community on **[Discord](https://discord.com/invite/Y2mMT9VdMy)**. See the [Support page](/support/) for more details.
 
 ## Terms
 > ⚠️ Free instances that aren't utilized for 1 day will be stopped, and deleted after 7 days.
