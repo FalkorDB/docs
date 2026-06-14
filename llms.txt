@@ -94,5 +94,5 @@ FalkorDB runs as a Redis module (RESP and Bolt protocols) and is purpose-built f
 
 - [GitHub: FalkorDB](https://github.com/FalkorDB/FalkorDB): Source code and issue tracker.
 - [Docker Hub: falkordb/falkordb](https://hub.docker.com/r/falkordb/falkordb): Official Docker images.
-- [Discord Community](https://discord.gg/ErBEqN9E): Community chat and support.
+- [Discord Community](https://discord.gg/6M4QwDXn2w): Community chat and support.
 - [License: SSPLv1](https://github.com/FalkorDB/FalkorDB/blob/master/LICENSE.txt): Server Side Public License v1.
