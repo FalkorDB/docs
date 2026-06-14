@@ -1,6 +1,6 @@
 ---
 title: "QueryWeaver"
-nav_order: 8
+nav_order: 9
 description: "Open-source Text2SQL tool that converts plain-English questions into SQL using graph-powered schema understanding. Supports PostgreSQL, MySQL, and Snowflake."
 parent: "GenAI Tools"
 ---
