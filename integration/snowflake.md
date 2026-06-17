@@ -20,6 +20,19 @@ FalkorDB is available as a [Snowflake Native App](https://app.snowflake.com/mark
 
 The Native App runs FalkorDB inside Snowpark Container Services (SPCS). Snowflake SQL procedures manage service startup, data staging, graph loading, Cypher execution, write-back to Snowflake tables, and Agent tool setup. Your data remains inside your Snowflake account boundary: source tables are accessed through explicit Native App references, and Cortex text-to-Cypher requires permissions that the customer grants.
 
+## Table of Contents
+
+- [Quick Start](#quick-start)
+- [Which interface should I use?](#which-interface-should-i-use)
+- [Installation](#installation)
+- [Prepare and load Snowflake data](#loading-data-from-snowflake-tables)
+- [Querying graphs](#querying-graphs)
+- [Writing query results back to Snowflake](#writing-query-results-back-to-snowflake)
+- [Air Routes example](#practical-example-air-routes-graph)
+- [FalkorDB Browser](#open-the-falkordb-browser)
+- [Snowflake Cortex Agent](#snowflake-cortex-agent)
+- [Troubleshooting](#troubleshooting)
+
 ## Quick Start
 
 Use this path when you want to install FalkorDB, load your first Snowflake table, and run your first graph query.
