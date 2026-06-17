@@ -449,6 +449,7 @@ learnhub
 len
 Levenshtein
 levenshtein
+lexicographically
 Lex
 libcypher
 libomp
@@ -756,6 +757,8 @@ Spring
 sprintf
 SQL's
 SQLServer
+SPCS
+Snowpark
 sqrt
 ss
 SSE
