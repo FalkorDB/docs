@@ -238,6 +238,8 @@ You have two common options:
 | Use an existing Snowflake table | Your data is already in Snowflake, or you created a table with SQL | Bind that table to `consumer_data_table` |
 | Upload a CSV into a Snowflake table | You have a local CSV file and are starting from a new Snowflake account | In Snowflake UI, use **Data / Ingestion -> Add Data -> Load data into table**, then bind the created table |
 
+![Snowflake Add Data screen showing the Load data into a Table option](../images/snowflake-add-data-load-table.png)
+
 For the standard FalkorDB Native App workflow, choose **Load data into table**, not **Load files into stage**. The app reference points to a Snowflake table. If you load files into a stage, create a table from those staged files first, then bind the table to `consumer_data_table`.
 
 After the table exists, check its column order. `load_csv()` maps values by position, so `row[0]` means the first column in the bound table, `row[1]` means the second column, and so on.
@@ -254,10 +256,12 @@ LIMIT 1;
 
 1. In Snowflake UI, go to **Data Products** → **Apps**
 2. Find and click on **FalkorDB**
-3. Go to **Security** → **References**
+3. Go to **Permissions** and find **Object access privileges**
 4. Click **+ Add** next to "Consumer Data Table"
 5. Select your database, schema, and table
 6. Click **Save**
+
+![Snowflake Native App Permissions screen showing the Consumer Data Table Add button](../images/snowflake-bind-consumer-data-table.png)
 
 **Important**: `load_csv()` reads the bound Snowflake table by column position, not by column name. Use `DESCRIBE TABLE <database.schema.table>` or `SELECT * FROM <database.schema.table> LIMIT 1` to confirm column order before writing the `row[0]`, `row[1]`, etc. mapping.
 
@@ -864,6 +868,8 @@ CALL <app_instance_name>.app_public.create_agent('falkordb_agent');
 ```
 
 After the Agent is created, open Snowflake Cortex Agents and select the generated FalkorDB Agent.
+
+![Snowflake AI and ML Agents screen showing the FalkorDB Graph Agent](../images/snowflake-falkordb-agent.png)
 
 If you install an app patch that changes Agent tools, run `start_app()` again and recreate the Agent so Snowflake receives the updated tool spec.
 
