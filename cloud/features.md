@@ -2,6 +2,7 @@
 title: "Features"
 parent: "Cloud DBaaS"
 nav_order: 5
+has_children: true
 description: "FalkorDB DBaaS Features"
 ---
 
@@ -70,6 +71,16 @@ Solution architecture support helps you design how FalkorDB integrates with your
 Teams building complex systems benefit from architectural advice to avoid common pitfalls and optimize their graph database implementation. Poor architectural decisions early in development create technical debt that becomes expensive to fix later.
 
 Architecture consultations provide recommendations on graph schema design, query optimization strategies, and integration patterns that match your application requirements.
+
+## Import/Export RDB
+
+FalkorDB Cloud lets you export and import RDB snapshots directly from the dashboard. Manual one-time operations and scheduled recurring jobs are both supported.
+
+- **Export**: Generate a temporary download URL, or export directly to GCS or S3.
+- **Import**: Upload an RDB file (up to 2 GB), or import from GCS, S3, or another FalkorDB Cloud instance.
+- **Scheduled jobs** (Pro & Enterprise): Automate recurring exports or imports with a configurable period and start time.
+
+[![Learn More](https://img.shields.io/badge/Learn%20More-8A2BE2?style=for-the-badge)](/cloud/import-export-rdb)
 
 {% include faq_accordion.html
   title="Frequently Asked Questions"
