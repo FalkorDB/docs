@@ -87,12 +87,10 @@ The Pro Tier provides a robust environment to scale your application with confid
 > ⚠️ Prices are subject to change
 
 ### Stopped Instances
-> An instance that is stopped will be removed after 14 days. Resume it within 14 days to keep it.
+> An instance that is stopped will be removed after 14 days. Before removal, a snapshot will be taken containing its data, allowing it to be restored for the next 14 days.
 
-### Snapshot Retention
-> Once an instance is removed we keep a snapshot for an additional 14 days.\*
->
-> \* We recommend backing up your database on a frequent basis.
+### Backups
+> Backups are taken automatically every 12h and retained for 7 days.
 
 ## Getting Started
 
