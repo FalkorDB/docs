@@ -53,6 +53,12 @@ The Startup Tier includes essential features like **TLS** and **Automated Backup
 > 
 > ⚠️ Prices are subject to change
 
+### Stopped Instances
+> An instance that is stopped will be removed after 14 days. Resume it within 14 days to keep it.
+
+### Snapshot Retention
+> Once an instance is removed we keep a snapshot for an additional 14 days.
+
 ## Getting Started
 
 <a href="https://www.youtube.com/watch?v=z0XO4pb2t5Y" target="_blank">
