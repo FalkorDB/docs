@@ -77,7 +77,7 @@ Architecture consultations provide recommendations on graph schema design, query
 FalkorDB Cloud lets you export and import RDB snapshots directly from the dashboard. Manual one-time operations and scheduled recurring jobs are both supported.
 
 - **Export**: Generate a temporary download URL, or export directly to GCS or S3.
-- **Import**: Upload an RDB file (up to 2 GB), or import from GCS, S3, or another FalkorDB Cloud instance.
+- **Import**: Upload an RDB file (up to 2 GB), import from a URL, GCS, S3, or another FalkorDB Cloud instance.
 - **Scheduled jobs** (Pro & Enterprise): Automate recurring exports or imports with a configurable period and start time.
 
 [![Learn More](https://img.shields.io/badge/Learn%20More-8A2BE2?style=for-the-badge)](/cloud/import-export-rdb)

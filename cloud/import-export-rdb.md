@@ -2,7 +2,7 @@
 title: "Import/Export RDB"
 parent: "Features"
 nav_order: 1
-description: "Import and export RDB snapshots for FalkorDB Cloud instances — supports S3, GCS, file upload, and scheduled jobs for Pro and Enterprise tiers."
+description: "Import and export RDB snapshots for FalkorDB Cloud instances — supports S3, GCS, URL, file upload, and scheduled jobs for Pro and Enterprise tiers."
 ---
 
 # Import/Export RDB
@@ -46,6 +46,10 @@ Import an RDB snapshot into your instance from a file or an external source.
 ### Upload File
 
 Upload an RDB file directly from your local machine. Files up to **2 GB** are supported.
+
+### URL
+
+Provide a publicly accessible URL pointing to an RDB file. The URL can be any direct download link — including the **temporary export URL** generated from the Export section. This method is not available for scheduled imports.
 
 ### Google Cloud Storage (GCS)
 
