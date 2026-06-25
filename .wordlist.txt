@@ -21,6 +21,8 @@ Aldis
 algo
 alice
 alister
+Allocator
+allocator
 allowInsecureImages
 allShortestPaths
 Analytics
@@ -165,6 +167,7 @@ Datadog
 datafile
 dataset
 datasets
+datasource
 DateTime
 datetime
 datetimes
@@ -199,7 +202,6 @@ dotenv
 Dovizioso
 drivine
 dropConstraint
-dropdowns
 Dropzone
 DT
 Ducati
@@ -235,7 +237,6 @@ euclideanDistance
 eval
 everysec
 existsByEmail
-expirations
 explainability
 Explainer
 expr
@@ -558,6 +559,7 @@ Ollama
 OMP
 onboarding
 oniguruma
+OOM
 Ontologies
 ontologies
 ontology
@@ -700,6 +702,7 @@ roQuery
 Rossi
 rpad
 RSALv
+RSS
 rTrim
 Rueian
 rueidis
@@ -713,7 +716,6 @@ Saldana
 samplingSeed
 samplingSize
 sanitization
-sawtooth
 sbin
 scalability
 scalable
@@ -850,7 +852,6 @@ transactional
 Trendshift
 TTL
 ttl
-TTLs
 TTY
 TwitterUser
 TXT
