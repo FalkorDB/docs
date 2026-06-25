@@ -914,3 +914,12 @@ yourSourceName
 YYYY
 Zep's
 zepai
+datasource
+vl
+defrag
+defragmentation
+tooltip
+uptime
+allocator
+RSS
+OOM
