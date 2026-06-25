@@ -20,7 +20,7 @@ FalkorDB Cloud lets you back up and restore an instance from the **Import/Export
 
 ## Export a backup
 
-An export saves a snapshot of your instance to a destination you choose.
+An export writes a copy of your instance data to a destination you choose.
 
 1. Open the **Import/Export RDB** tab on your instance.
 2. Select **Export RDB**.
