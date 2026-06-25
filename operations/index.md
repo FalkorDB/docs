@@ -45,19 +45,23 @@ Deploy FalkorDB quickly using verified templates on Railway, a modern platform-a
 
 Comprehensive guide for setting up OpenTelemetry observability and tracing with FalkorDB Python applications.
 
-## 9. [FalkorDBLite](/operations/falkordblite)
+## 9. [Grafana Dashboard Panels](/operations/grafana-dashboard)
+
+Understand the FalkorDB Cloud Grafana monitoring dashboard. Learn what each panel shows, the metric behind it, and how to read it to keep your graph database healthy.
+
+## 10. [FalkorDBLite](/operations/falkordblite)
 
 Embedded FalkorDB runtime for local development with guides for [Python](/operations/falkordblite/falkordblite-py) and [TypeScript](/operations/falkordblite/falkordblite-ts).
 
-## 10. [Deploy FalkorDB on Lightning.AI](/operations/lightning-ai)
+## 11. [Deploy FalkorDB on Lightning.AI](/operations/lightning-ai)
 
 Deploy FalkorDB on Lightning.AI to build fast, accurate GenAI applications using advanced RAG with graph databases.
 
-## 11. [Migration Guides](/operations/migration)
+## 12. [Migration Guides](/operations/migration)
 
 Comprehensive guides for migrating your data to FalkorDB from RedisGraph, Neo4j, Kuzu, RDF-based systems, and SQL sources.
 
-## 12. [Building Docker](/operations/building-docker)
+## 13. [Building Docker](/operations/building-docker)
 
 Build custom FalkorDB Docker containers from source with platform-specific examples.
 

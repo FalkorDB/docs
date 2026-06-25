@@ -199,6 +199,7 @@ dotenv
 Dovizioso
 drivine
 dropConstraint
+dropdowns
 Dropzone
 DT
 Ducati
@@ -234,6 +235,7 @@ euclideanDistance
 eval
 everysec
 existsByEmail
+expirations
 explainability
 Explainer
 expr
@@ -336,6 +338,7 @@ GPL
 gpt
 gradle
 Grafana
+grafana
 graphA
 GraphBLAS
 GraphBlas
@@ -710,6 +713,7 @@ Saldana
 samplingSeed
 samplingSize
 sanitization
+sawtooth
 sbin
 scalability
 scalable
@@ -846,6 +850,7 @@ transactional
 Trendshift
 TTL
 ttl
+TTLs
 TTY
 TwitterUser
 TXT
@@ -868,6 +873,8 @@ upperCamelCase
 UpperCaseOdd
 upsert
 Upserts
+Uptime
+uptime
 uri
 URIs
 url
