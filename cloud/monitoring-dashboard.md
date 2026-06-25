@@ -83,7 +83,7 @@ This row helps you diagnose memory health and fragmentation.
 The ratio of memory allocated by the OS to memory actually used by FalkorDB (`redis_mem_fragmentation_ratio`). The green line is the actual ratio; a red reference line marks the 1.5 alert threshold.
 
 - **Around 1.0–1.5** — healthy.
-- **Above 1.5 (the red threshold line)** — fragmentation is high; the alert `FalkorDBMemoryFragmentationHigh` fires if it stays there for more than 10 minutes.
+- **Above 1.5 (the red threshold line)** — fragmentation is high; worth investigating if it stays there.
 - **Below 1.0** — more memory is reported as used than the allocator holds as active, which is common for small or memory-efficient datasets; it only signals a problem (swap usage) when paired with low available system memory.
 
 > **A high ratio doesn't always mean a problem.** The ratio is `RSS / used_memory`, and RSS includes fixed overhead (code pages, stacks, allocator arenas) that doesn't shrink with your data. On a small instance this overhead can push the ratio well above 1.5 even though only a few MB are actually reclaimable.
@@ -173,7 +173,7 @@ The number of keys per logical database, per pod (`redis_db_keys`). Use it to tr
 ## Logs
 
 ### Logs (service container)
-Streams logs from the FalkorDB service container via the logs datasource, filtered to the selected namespace and pod. Routine TLS handshake noise (`error:0A000126:SSL`) is filtered out. Use this panel to correlate metric anomalies with what the instance was logging at the same moment.
+Streams logs from the FalkorDB service container via the logs datasource, filtered to the selected namespace and pod. Use this panel to correlate metric anomalies with what the instance was logging at the same moment.
 
 ---
 
