@@ -225,6 +225,31 @@ As such, the complete representation is as follows:
 
 The `ValueType` for the third entry is `VALUE_STRING`, and the other element in the array is the actual value, "Apple".
 
+#### Maps (VALUE_MAP = 10)
+
+A map is emitted as a flat array of key-value pairs, where each key is a string and each value is a 2-array of [`ValueType`, value]. For example, the map `{name: 'John', age: 30}` is serialized as:
+
+```sh
+[
+    key (string), [ValueType (enum), value (scalar)],
+    key (string), [ValueType (enum), value (scalar)],
+    ...
+]
+```
+
+The total array length is `2 * key_count` (one entry for the key string, one entry for the typed value).
+
+#### Points (VALUE_POINT = 11)
+
+A point is emitted as a 2-array containing the latitude and longitude as double-precision floating-point values:
+
+```sh
+[
+    latitude (double),
+    longitude (double)
+]
+```
+
 ### Reading statistics
 
 The final top-level member of the GRAPH.QUERY reply is the execution statistics. This element is identical between the compact and standard response formats.
