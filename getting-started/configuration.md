@@ -363,46 +363,52 @@ This configuration can be set when the module loads or at runtime.
 
 `VKEY_MAX_ENTITY_COUNT` is 100,000.
 
+#### Example
+
+```sh
+$ redis-server --loadmodule ./falkordb.so VKEY_MAX_ENTITY_COUNT 50000
+
+$ redis-cli GRAPH.CONFIG SET VKEY_MAX_ENTITY_COUNT 50000
+```
+
+---
+
 ### CMD_INFO
 
 An on/off toggle for the `GRAPH.INFO` command. Disabling this command may increase performance and lower the memory usage and these are the main reasons for it to be disabled.
 
-It's valid values are 'yes' and 'no' (i.e., on and off).
+Its valid values are `yes` and `no` (i.e., on and off).
 
 #### Default
 
 `CMD_INFO` is `yes`.
 
+#### Example
+
+```sh
+$ redis-server --loadmodule ./falkordb.so CMD_INFO no
+
+$ redis-cli GRAPH.CONFIG SET CMD_INFO no
+```
+
+---
+
 ### MAX_INFO_QUERIES
 
 A limit for the number of previously executed queries stored in the telemetry stream.
 
-A number within the range [0, 1000]
+A number within the range [0, 1000].
 
 #### Default
 
 `MAX_INFO_QUERIES` is 1000.
 
----
-
-## Query Configurations
-
-### Query Timeout
-
-- Before v2.10, or if `TIMEOUT_DEFAULT` and `TIMEOUT_MAX` are not specified:
-
-  `TIMEOUT` allows overriding the `TIMEOUT` configuration parameter for a single read query. Write queries do not timeout.
-
-- Since v2.10, if either `TIMEOUT_DEFAULT` or `TIMEOUT_MAX` are specified:
-
-  `TIMEOUT` allows overriding the `TIMEOUT_DEFAULT` configuration parameter value for a single `GRAPH.QUERY`, `GRAPH.RO_QUERY`, or `GRAPH.PROFILE` command. The `TIMEOUT` value cannot exceed the `TIMEOUT_MAX` value (the command would abort with a `(error) The query TIMEOUT parameter value cannot exceed the TIMEOUT_MAX configuration parameter value` reply).
-
 #### Example
 
-Retrieve all paths in a graph with a timeout of 500 milliseconds.
-
 ```sh
-GRAPH.QUERY wikipedia "MATCH p=()-[*]->() RETURN p" TIMEOUT 500
+$ redis-server --loadmodule ./falkordb.so MAX_INFO_QUERIES 500
+
+$ redis-cli GRAPH.CONFIG SET MAX_INFO_QUERIES 500
 ```
 
 ---
@@ -462,6 +468,21 @@ FalkorDB is allowed to load CSV files.
 
 `IMPORT_FOLDER` defaults to `/var/lib/FalkorDB/import/`
 
+> **Docker note:** When running FalkorDB in Docker, you must mount a host directory into the container at this path for `LOAD CSV` to access your CSV files. For example:
+> ```sh
+> docker run -p 6379:6379 -it \
+>   -v /host/path/to/csvs:/var/lib/FalkorDB/import \
+>   -e FALKORDB_ARGS="IMPORT_FOLDER /var/lib/FalkorDB/import" \
+>   --rm falkordb/falkordb:latest
+> ```
+> Without this volume mount, `LOAD CSV` will fail silently or return a "failed to open CSV file" error.
+
+#### Example
+
+```sh
+$ redis-server --loadmodule ./falkordb.so IMPORT_FOLDER /data/csv
+```
+
 ---
 
 ### TEMP_FOLDER
@@ -470,8 +491,14 @@ Path to the directory FalkorDB uses for temporary files (currently used by opera
 It must be an existing, writable directory.  
   
 #### Default
-  
-`TEMP_FOLDER` defaults to `/tmp`  
+
+`TEMP_FOLDER` defaults to `/tmp`
+
+#### Example
+
+```sh
+$ redis-server --loadmodule ./falkordb.so TEMP_FOLDER /var/lib/falkordb/tmp
+```
 
 ---
 
@@ -502,26 +529,64 @@ Helps prevent unbounded JS memory growth.
 
 #### Default
 
-`JS_HEAP_SIZE` defaults to 268435456 (256 MB)  
+`JS_HEAP_SIZE` defaults to 268435456 (256 MB)
 
 #### Minimum
 
-1048576 (1 MB)  
+1048576 (1 MB)
+
+#### Example
+
+```sh
+$ redis-server --loadmodule ./falkordb.so JS_HEAP_SIZE 134217728  # 128 MB
+
+$ redis-cli GRAPH.CONFIG SET JS_HEAP_SIZE 134217728
+```
 
 ---
 
-### JS_STACK_SIZE  
+### JS_STACK_SIZE
 
-Maximum QuickJS stack size (in bytes) for JavaScript UDF runtime (affects recursion/call depth limits).  
-Helps prevent excessive JS stack usage. 
+Maximum QuickJS stack size (in bytes) for JavaScript UDF runtime (affects recursion/call depth limits).
+Helps prevent excessive JS stack usage.
 
 #### Default
 
-`JS_STACK_SIZE` defaults to 1048576 (1 MB)  
+`JS_STACK_SIZE` defaults to 1048576 (1 MB)
 
 #### Minimum
 
-1048576 (1 MB)  
+1048576 (1 MB)
+
+#### Example
+
+```sh
+$ redis-server --loadmodule ./falkordb.so JS_STACK_SIZE 2097152  # 2 MB
+
+$ redis-cli GRAPH.CONFIG SET JS_STACK_SIZE 2097152
+```
+
+---
+
+## Query Configurations
+
+### Query Timeout
+
+- Before v2.10, or if `TIMEOUT_DEFAULT` and `TIMEOUT_MAX` are not specified:
+
+  `TIMEOUT` allows overriding the `TIMEOUT` configuration parameter for a single read query. Write queries do not timeout.
+
+- Since v2.10, if either `TIMEOUT_DEFAULT` or `TIMEOUT_MAX` are specified:
+
+  `TIMEOUT` allows overriding the `TIMEOUT_DEFAULT` configuration parameter value for a single `GRAPH.QUERY`, `GRAPH.RO_QUERY`, or `GRAPH.PROFILE` command. The `TIMEOUT` value cannot exceed the `TIMEOUT_MAX` value (the command would abort with a `(error) The query TIMEOUT parameter value cannot exceed the TIMEOUT_MAX configuration parameter value` reply).
+
+#### Example
+
+Retrieve all paths in a graph with a timeout of 500 milliseconds.
+
+```sh
+GRAPH.QUERY wikipedia "MATCH p=()-[*]->() RETURN p" TIMEOUT 500
+```
 
 ---
 
