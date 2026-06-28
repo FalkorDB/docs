@@ -428,6 +428,7 @@ LocalDateTimeToStringConverter
 localhost
 localStorage
 LocalTime
+LogMiner
 lon
 lookups
 Lovitz
@@ -652,6 +653,7 @@ scalable
 Sceat
 schemaName
 schemas
+SCN
 scranton
 sdist
 SDK
