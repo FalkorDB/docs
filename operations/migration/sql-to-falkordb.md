@@ -18,6 +18,7 @@ It also includes an optional control plane (web UI + REST API) for config author
 - Databricks (Databricks SQL / warehouses)
 - MariaDB
 - MySQL
+- Oracle
 - PostgreSQL
 - Snowflake
 - Spark SQL (via Livy sessions)
@@ -66,6 +67,15 @@ Each loader uses JSON/YAML configuration to define:
 - Restart safety: failed runs can resume from persisted state.
 - Index handling: loaders apply explicit `falkordb.indexes` plus inferred indexes for node keys and edge endpoint matches.
 - Observability: loaders expose Prometheus-style metrics with global and per-mapping counters.
+
+### Change Data Capture (CDC)
+
+Certain loaders natively support real-time Change Data Capture beyond traditional timestamp polling:
+
+- **MySQL & MariaDB**: Support true CDC via binary log (Binlog) streaming, pushing precise ROW-level DML events directly to the graph.
+- **Oracle**: Supports real-time CDC by polling Oracle LogMiner for System Change Number (SCN) updates.
+- **PostgreSQL**: Supports native logical replication CDC (via `pgoutput` plugin), seamlessly capturing inserts, updates, and hard deletes while maintaining LSN positions.
+- **Snowflake**: Supports zero-loss native CDC via **Snowflake Streams**, natively processing `METADATA$ACTION` events and managing offsets using transactional boundaries without the need for manual `updated_at` watermarks.
 
 ## Option A: Run a loader directly (CLI)
 
@@ -141,6 +151,24 @@ cargo run --release -- --config mysql.incremental.yaml
 cargo run --release -- --config mysql.incremental.yaml --daemon --interval-secs 60
 ```
 
+### Oracle → FalkorDB
+
+- Docs: [Oracle-to-FalkorDB/readme.md](https://github.com/FalkorDB/DM-SQL-to-FalkorDB/tree/main/Oracle-to-FalkorDB)
+
+```bash
+cd Oracle-to-FalkorDB
+cargo build --release
+
+# One-shot run
+cargo run --release -- --config oracle.incremental.yaml
+
+# Continuous sync
+cargo run --release -- --config oracle.incremental.yaml --daemon --interval-secs 60
+
+# CDC mode (LogMiner)
+cargo run --release -- --config oracle.cdc.yaml
+```
+
 ### PostgreSQL → FalkorDB
 
 - Docs: [PostgreSQL-to-FalkorDB/README.md](https://github.com/FalkorDB/DM-SQL-to-FalkorDB/tree/main/PostgreSQL-to-FalkorDB)
@@ -202,7 +230,7 @@ cargo run --release -- --config sqlserver.incremental.yaml --daemon --interval-s
 
 ### Optional purge modes
 
-Purge flags are supported by: BigQuery, ClickHouse, MariaDB, MySQL, Snowflake, SQL Server.
+Purge flags are supported by: BigQuery, ClickHouse, MariaDB, MySQL, Oracle, Snowflake, SQL Server.
 
 ```bash
 # Purge full graph before loading
@@ -214,7 +242,7 @@ cargo run --release -- --config path/to/config.yaml --purge-mapping customers
 
 ## Schema introspection + template scaffolding
 
-Supported by: BigQuery, ClickHouse, Databricks, MariaDB, MySQL, PostgreSQL, Snowflake, Spark, SQL Server.
+Supported by: BigQuery, ClickHouse, Databricks, MariaDB, MySQL, Oracle, PostgreSQL, Snowflake, Spark, SQL Server.
 
 ```bash
 # Print normalized source schema summary
@@ -318,6 +346,7 @@ Default metrics ports:
 - Databricks: `9994`
 - MariaDB: `9997`
 - MySQL: `9995`
+- Oracle: `9998`
 - PostgreSQL: `9993`
 - Snowflake: `9992`
 - Spark: `9997`
@@ -335,13 +364,14 @@ Use `--metrics-port` (or each loader’s corresponding `*_TO_FALKORDB_METRICS_PO
 
 ## Additional resources
 
-- DM-SQL-to-FalkorDB repository: https://github.com/FalkorDB/DM-SQL-to-FalkorDB
-- FalkorDB docs: [https://docs.falkordb.com/](/)
+DM-SQL-to-FalkorDB repository: [GitHub repository](https://github.com/FalkorDB/DM-SQL-to-FalkorDB)
+
+FalkorDB docs: [Documentation home](https://docs.falkordb.com/)
 
 {% include faq_accordion.html
   title="Frequently Asked Questions"
   q1="Which SQL sources are supported for migration to FalkorDB?"
-  a1="BigQuery, ClickHouse, Databricks, MariaDB, MySQL, PostgreSQL, Snowflake, Spark SQL (via Livy), and SQL Server are all supported with dedicated Rust-based CLI loaders."
+  a1="BigQuery, ClickHouse, Databricks, MariaDB, MySQL, Oracle, PostgreSQL, Snowflake, Spark SQL (via Livy), and SQL Server are all supported with dedicated Rust-based CLI loaders."
   q2="Can I run continuous sync from SQL to FalkorDB?"
   a2="Yes. Use `--daemon --interval-secs 60` to run in daemon mode for ongoing one-way sync. The loader tracks watermarks for incremental updates so FalkorDB stays current as source rows change."
   q3="How do I map SQL tables to a graph model?"

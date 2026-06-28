@@ -65,6 +65,7 @@ betweenness
 BFS
 BGSAVE
 bigmac
+Binlog
 birthyear
 bitmasks
 Bitnami
@@ -173,6 +174,7 @@ dbms
 DDL
 ddl
 DDTHH
+DML
 decapitalize
 dedup
 Deduplicate
@@ -470,6 +472,7 @@ LocalDateTimeToStringConverter
 localhost
 localStorage
 LocalTime
+LogMiner
 lon
 lookups
 Lovitz
@@ -477,6 +480,7 @@ lowercased
 lowercasing
 lpad
 LRU
+LSN
 lTrim
 macOS
 malte
@@ -713,6 +717,7 @@ sanitization
 sbin
 scalability
 scalable
+SCN
 Sceat
 schemaName
 schemas
