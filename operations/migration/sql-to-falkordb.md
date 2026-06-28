@@ -364,8 +364,9 @@ Use `--metrics-port` (or each loader’s corresponding `*_TO_FALKORDB_METRICS_PO
 
 ## Additional resources
 
-- DM-SQL-to-FalkorDB repository: [GitHub repository](https://github.com/FalkorDB/DM-SQL-to-FalkorDB)
-- FalkorDB docs: [Documentation home](/)
+DM-SQL-to-FalkorDB repository: [GitHub repository](https://github.com/FalkorDB/DM-SQL-to-FalkorDB)
+
+FalkorDB docs: [Documentation home](https://docs.falkordb.com/)
 
 {% include faq_accordion.html
   title="Frequently Asked Questions"

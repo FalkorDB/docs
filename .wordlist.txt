@@ -65,6 +65,7 @@ betweenness
 BFS
 BGSAVE
 bigmac
+Binlog
 birthyear
 bitmasks
 Bitnami
@@ -173,6 +174,7 @@ dbms
 DDL
 ddl
 DDTHH
+DML
 decapitalize
 dedup
 Deduplicate
