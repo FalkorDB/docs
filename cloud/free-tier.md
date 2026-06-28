@@ -35,8 +35,12 @@ The free tier provides everything you need to explore FalkorDB and build initial
 | **Cloud Providers** | AWS, GCP | AWS, GCP | AWS, GCP | AWS, GCP, Azure |
 | **Call-to-Action** | [Sign up](https://app.falkordb.cloud/signup) | [Sign up](https://app.falkordb.cloud/signup) | [Sign up](https://app.falkordb.cloud/signup) | [Contact Us](mailto:info@falkordb.com) |
 
+## Getting Support
+
+Need help? Email **[support@falkordb.com](mailto:support@falkordb.com)** to open a support ticket, or join the community on **[Discord](https://discord.com/invite/Y2mMT9VdMy)**. See the [Support page](/support/) for more details.
+
 ## Terms
-> ⚠️ Free instances that aren't utilized for 1 day will be stopped, and deleted after 7 days.
+> ⚠️ Free instances that aren't utilized for 1 day will be stopped, and deleted after 7 days. The Free Tier has no persistence and no backups. A deleted instance and its data cannot be recovered.
 Need an extension? Speak to [sales](https://www.falkordb.com/get-a-demo/)
 
 ## Getting Started
@@ -53,7 +57,7 @@ Need an extension? Speak to [sales](https://www.falkordb.com/get-a-demo/)
   q2="Do I need a credit card to sign up?"
   a2="No, the Free Tier requires no credit card. You can sign up and start using FalkorDB immediately at [app.falkordb.cloud/signup](https://app.falkordb.cloud/signup)."
   q3="What happens if my Free Tier instance is inactive?"
-  a3="Free instances that are not utilized for **1 day will be stopped**, and **deleted after 7 days** of inactivity. Contact [sales](https://www.falkordb.com/get-a-demo/) if you need an extension."
+  a3="Free instances that are not utilized for **1 day will be stopped**, and **deleted after 7 days** of inactivity. The Free Tier keeps **no snapshots and no backups**. Once an instance is deleted its data is permanently lost and cannot be recovered. Contact [sales](https://www.falkordb.com/get-a-demo/) if you need an extension."
   q4="Which cloud providers are available for the Free Tier?"
   a4="The Free Tier is available on both **AWS** and **GCP**. You choose your preferred provider during deployment."
   q5="What features are NOT included in the Free Tier?"
