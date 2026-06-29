@@ -53,6 +53,15 @@ The Startup Tier includes essential features like **TLS** and **Automated Backup
 > 
 > ⚠️ Prices are subject to change
 
+### Stopped Instances
+> An instance that is stopped will be removed after 14 days. Before removal, a snapshot will be taken containing its data, allowing it to be restored for the next 14 days.
+
+### Snapshots
+> All snapshots are automatically deleted after 14 days. This applies to every snapshot, including the one taken before a stopped instance is removed.
+
+### Backups
+> Backups are taken automatically every 12h and retained for 7 days.
+
 ## Getting Started
 
 <a href="https://www.youtube.com/watch?v=z0XO4pb2t5Y" target="_blank">
