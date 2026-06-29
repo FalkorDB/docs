@@ -25,7 +25,7 @@ The tab shows a table of all users configured on the instance, along with their 
 
 ## Default User
 
-Every instance has a **default user** that is created automatically during deployment. This user cannot be created or deleted from the **User Access** tab — its credentials can only be changed by modifying the instance configuration.
+Every instance has a **default user** that is created automatically during deployment. This user cannot be deleted — its credentials can only be changed by modifying the instance configuration.
 
 ---
 
@@ -60,14 +60,14 @@ Every instance has a **default user** that is created automatically during deplo
 2. Click the **Delete** (trash) icon next to the user.
 3. Confirm the deletion in the dialog that appears.
 
-> The **default user** cannot be deleted from this tab. To remove or replace the default credentials, modify the instance directly.
+> The **default user** cannot be deleted.
 
 ---
 
 {% include faq_accordion.html
   title="Frequently Asked Questions"
   q1="Can I delete the default user?"
-  a1="No. The default user is created during deployment and can only be modified by updating the instance configuration — it cannot be created or deleted from the User Access tab."
+  a1="No. The default user is created during deployment and cannot be deleted. Its credentials can only be changed by modifying the instance configuration."
   q2="What predefined roles are available?"
   a2="Three predefined roles are available: **Admin** (full access including user management), **Read-Write** (full graph read/write), and **Read-Only** (graph read access only)."
   q3="How do I apply fine-grained access control?"
