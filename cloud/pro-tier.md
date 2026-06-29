@@ -86,6 +86,15 @@ The Pro Tier provides a robust environment to scale your application with confid
 > Use our **[graph size calculator](https://www.falkordb.com/graph-database-graph-size-calculator/)** to further estimate your cost.
 > ⚠️ Prices are subject to change
 
+### Stopped Instances
+> An instance that is stopped will be removed after 14 days. Before removal, a snapshot will be taken containing its data, allowing it to be restored for the next 14 days.
+
+### Snapshots
+> All snapshots are automatically deleted after 14 days. This applies to every snapshot, including the one taken before a stopped instance is removed.
+
+### Backups
+> Backups are taken automatically every 12h and retained for 7 days.
+
 ## Getting Started
 
 <a href="https://www.youtube.com/watch?v=UIzrW9otvYM" target="_blank">
