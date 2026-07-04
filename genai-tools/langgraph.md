@@ -19,8 +19,17 @@ parent: "GenAI Tools"
 Install LangGraph with required dependencies:
 
 ```bash
-pip install langgraph langchain langchain-community falkordb langchain-openai
+pip install langgraph langgraph-checkpoint-sqlite langchain langchain-community falkordb langchain-openai
 ```
+
+{: .warning }
+> **`langchain-community` maintenance status**: `FalkorDBGraph` currently lives in the
+> [`langchain-community`](https://github.com/langchain-ai/langchain-community) package, which has been
+> archived and is no longer actively maintained. The examples below still work with the last published
+> release, but there is currently no drop-in successor package for the graph/schema wrapper (the standalone
+> `langchain-falkordb` package only covers chat message history and vector stores). Pin your
+> `langchain-community` version and monitor the [FalkorDB LangChain integration](./langchain.md)
+> page for updates.
 
 ## Quick Start
 
@@ -134,7 +143,6 @@ print(result["answer"])
 
 ```python
 from langgraph.graph import StateGraph, END
-from langgraph.prebuilt import ToolExecutor, ToolInvocation
 
 class RAGState(TypedDict):
     question: str
@@ -247,6 +255,15 @@ def should_continue(state: GraphState) -> str:
     else:
         return "continue"
 
+def handle_no_results(state: GraphState) -> GraphState:
+    """Handle the case where the query returned no data"""
+    state["answer"] = "No matching data was found in the graph for this question."
+    return state
+
+# handle_no_results must be registered before it can be used as a conditional edge target
+workflow.add_node("handle_no_results", handle_no_results)
+workflow.add_edge("handle_no_results", END)
+
 # Add conditional edges
 workflow.add_conditional_edges(
     "execute_query",
@@ -261,32 +278,47 @@ workflow.add_conditional_edges(
 
 ### Memory Integration
 
+Requires the `langgraph-checkpoint-sqlite` package (`pip install langgraph-checkpoint-sqlite`).
+`SqliteSaver.from_conn_string` is a context manager, so it must be used with `with`
+rather than assigned directly — otherwise `workflow.compile(checkpointer=...)` will
+raise a `TypeError` because it receives a context manager instead of a saver instance.
+
 ```python
 from langgraph.checkpoint.sqlite import SqliteSaver
-
-# Add persistence
-memory = SqliteSaver.from_conn_string(":memory:")
-
-# Compile with checkpointing
-app = workflow.compile(checkpointer=memory)
 
 # Use with thread ID for conversation memory
 config = {"configurable": {"thread_id": "user_123"}}
 
-result1 = app.invoke({
-    "question": "Who is the CEO?",
-    "cypher_query": "",
-    "graph_data": "",
-    "answer": "",
-}, config)
+# Add persistence (SqliteSaver must be used as a context manager)
+with SqliteSaver.from_conn_string(":memory:") as memory:
+    # Compile with checkpointing
+    app = workflow.compile(checkpointer=memory)
 
-result2 = app.invoke({
-    "question": "What companies do they lead?",
-    "cypher_query": "",
-    "graph_data": "",
-    "answer": "",
-}, config)
+    result1 = app.invoke({
+        "question": "Who is the CEO?",
+        "cypher_query": "",
+        "graph_data": "",
+        "answer": "",
+    }, config)
+
+    result2 = app.invoke({
+        "question": "What companies do they lead?",
+        "cypher_query": "",
+        "graph_data": "",
+        "answer": "",
+    }, config)
 ```
+
+{: .note }
+> For simple in-process memory that doesn't need to survive past the current run, you can skip
+> the extra dependency and use `InMemorySaver` from `langgraph.checkpoint.memory` instead, which
+> ships with `langgraph` itself:
+>
+> ```python
+> from langgraph.checkpoint.memory import InMemorySaver
+>
+> app = workflow.compile(checkpointer=InMemorySaver())
+> ```
 
 ## Use Cases
 
