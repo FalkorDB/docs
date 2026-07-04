@@ -21,6 +21,30 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <!-- End Google Tag Manager -->
 {% endif %}
 
+<!-- Mobile menu: keep the search box visible near the top -->
+<style>
+/*
+ * On mobile (< 50rem, matching Just the Docs' own nav breakpoint) the search
+ * box normally renders after the full nav list, so on pages with a long menu
+ * it gets pushed off-screen and is easy to miss. Pin it right below the site
+ * header instead, and reserve the same amount of space at the top of the nav
+ * list so its first item isn't hidden underneath the pinned search box.
+ */
+@media (max-width: 49.9375rem) {
+  .main-header.nav-open {
+    position: fixed;
+    top: 3.75rem;
+    left: 0;
+    z-index: 3;
+    width: 100%;
+  }
+
+  .site-nav.nav-open {
+    padding-top: 7.5rem;
+  }
+}
+</style>
+
 <!-- Sticky right-side Table of Contents -->
 <style>
 .toc-sidebar {
