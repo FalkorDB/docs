@@ -42,6 +42,14 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   .site-nav.nav-open {
     padding-top: 7.5rem;
   }
+
+  /* Keep aux nav links on a single line (scrolling horizontally via the
+     theme's existing overflow-x: auto) instead of wrapping. Otherwise
+     #main-header grows taller on narrow screens or with more aux_links,
+     and the padding-top reserved above would no longer match its height. */
+  .aux-nav .site-button {
+    white-space: nowrap;
+  }
 }
 </style>
 
