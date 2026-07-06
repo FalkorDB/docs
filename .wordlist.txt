@@ -95,6 +95,7 @@ Centos
 cgraph
 chatbots
 checkpointed
+checkpointer
 Checkpointing
 checkpointing
 checksums
@@ -510,6 +511,7 @@ Miesha
 Mifflin
 minAge
 misconfigured
+MMR
 modelled
 MotoGP
 MSF

@@ -16,10 +16,10 @@ parent: "GenAI Tools"
 
 ## Installation
 
-Install LangGraph with required dependencies:
+Install LangGraph with required dependencies. The [`langchain-falkordb`](https://pypi.org/project/langchain-falkordb/) package provides the FalkorDB integration, including a LangGraph checkpointer (`FalkorDBSaver`) via the `langgraph` extra:
 
 ```bash
-pip install langgraph langchain langchain-community falkordb langchain-openai
+pip install langgraph "langchain-falkordb[langgraph]" langchain-openai
 ```
 
 ## Quick Start
@@ -29,7 +29,7 @@ pip install langgraph langchain langchain-community falkordb langchain-openai
 ```python
 from typing import TypedDict, Annotated
 from langgraph.graph import StateGraph, END
-from langchain_community.graphs import FalkorDBGraph
+from langchain_falkordb import FalkorDBGraph
 from langchain_openai import ChatOpenAI
 
 # Define state
@@ -41,13 +41,13 @@ class GraphState(TypedDict):
 
 # Initialize FalkorDB
 graph_db = FalkorDBGraph(
-    database="knowledge_graph",
+    "knowledge_graph",
     host="localhost",
     port=6379,
 )
 
 # Initialize LLM
-llm = ChatOpenAI(model="gpt-4", temperature=0)
+llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
 ```
 
 ### 2. Create Agent Nodes
@@ -134,7 +134,6 @@ print(result["answer"])
 
 ```python
 from langgraph.graph import StateGraph, END
-from langgraph.prebuilt import ToolExecutor, ToolInvocation
 
 class RAGState(TypedDict):
     question: str
@@ -261,11 +260,13 @@ workflow.add_conditional_edges(
 
 ### Memory Integration
 
-```python
-from langgraph.checkpoint.sqlite import SqliteSaver
+`FalkorDBSaver` (from `langchain-falkordb`) is a LangGraph checkpointer that persists agent state in FalkorDB, so threads survive restarts and can be shared between processes:
 
-# Add persistence
-memory = SqliteSaver.from_conn_string(":memory:")
+```python
+from langchain_falkordb.checkpoint import FalkorDBSaver
+
+# Add persistence backed by FalkorDB
+memory = FalkorDBSaver(host="localhost", port=6379)
 
 # Compile with checkpointing
 app = workflow.compile(checkpointer=memory)
@@ -307,6 +308,8 @@ result2 = app.invoke({
 ## Resources
 
 - [LangGraph Documentation](https://langchain-ai.github.io/langgraph/)
+- [langchain-falkordb on PyPI](https://pypi.org/project/langchain-falkordb/)
+- [langchain-falkordb Repository](https://github.com/FalkorDB/langchain-falkordb)
 - [Blog: Implementing GraphRAG with FalkorDB, LangChain & LangGraph](https://www.falkordb.com/blog/graphrag-workflow-falkordb-langchain/)
 - [LangGraph GitHub Repository](https://github.com/langchain-ai/langgraph)
 
@@ -315,11 +318,11 @@ result2 = app.invoke({
   q1="What is LangGraph and how does it work with FalkorDB?"
   a1="LangGraph is an open-source framework for building stateful, multi-actor agentic applications using LLMs. With FalkorDB, you can create graph-based workflows where nodes represent tasks (like Cypher generation and query execution) and edges define information flow between them."
   q2="How does LangGraph differ from LangChain for FalkorDB?"
-  a2="LangChain provides pre-built chains like `GraphCypherQAChain` for simple query-answer flows. LangGraph gives you fine-grained control to build custom directed-graph workflows with conditional routing, error recovery, multi-step reasoning, and checkpointed state."
+  a2="LangChain provides pre-built chains like `FalkorDBQAChain` for simple query-answer flows. LangGraph gives you fine-grained control to build custom directed-graph workflows with conditional routing, error recovery, multi-step reasoning, and checkpointed state."
   q3="Can I add error recovery to my graph queries?"
   a3="Yes. Use conditional edges to route failed queries back to a regeneration node. For example, if `execute_query` returns an error, a `should_continue` function can route back to `generate_cypher` for retry with adjusted parameters."
   q4="Does LangGraph support conversation memory with FalkorDB?"
-  a4="Yes. Use LangGraph's checkpointing (e.g., `SqliteSaver`) with a `thread_id` config to maintain conversation state across multiple invocations. Combined with FalkorDB's graph context, agents can handle follow-up questions that reference previous answers."
+  a4="Yes. Use `FalkorDBSaver` from `langchain-falkordb` (install with `pip install langchain-falkordb[langgraph]`) as a LangGraph checkpointer with a `thread_id` config to persist conversation state in FalkorDB across multiple invocations and restarts. Agents can then handle follow-up questions that reference previous answers."
   q5="What are good use cases for LangGraph with FalkorDB?"
   a5="Key use cases include complex query decomposition (breaking questions into multiple graph queries), multi-step reasoning, agentic RAG with retrieval-reasoning-generation pipelines, error recovery workflows, and conversational GraphRAG with multi-turn context."
 %}
