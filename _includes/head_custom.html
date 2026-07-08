@@ -53,6 +53,38 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 }
 </style>
 
+<!-- Mobile menu: move focus to search when the menu opens. The search box
+     now appears visually at the top of the mobile menu (see above), but
+     keyboard/screen-reader focus order still follows the unchanged DOM
+     order (nav links, then search). Moving focus to the search input on
+     open keeps focus order consistent with what's visually first, without
+     changing tab order for anyone not using the menu button.
+
+     Ordering notes for future maintainers:
+     - This listener is attached after Just the Docs' own (head_custom.html
+       is included after just-the-docs.js, see theme's _includes/head.html),
+       so nav-open has already been toggled by the time it runs.
+     - The check is intentionally synchronous (no setTimeout/microtask
+       deferral): iOS Safari only shows the on-screen keyboard for a
+       programmatic focus() call made synchronously within the original
+       click handler. Deferring the check would move focus silently
+       without opening the keyboard on iOS Safari, defeating the point of
+       this fix for a large share of mobile users. -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  var menuButton = document.getElementById("menu-button");
+  var mainHeader = document.getElementById("main-header");
+  var searchInput = document.getElementById("search-input");
+  if (!menuButton || !mainHeader || !searchInput) return;
+
+  menuButton.addEventListener("click", function () {
+    if (mainHeader.classList.contains("nav-open")) {
+      searchInput.focus();
+    }
+  });
+});
+</script>
+
 <!-- Sticky right-side Table of Contents -->
 <style>
 .toc-sidebar {
