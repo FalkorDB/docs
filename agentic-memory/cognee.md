@@ -51,14 +51,14 @@ docker run -p 6379:6379 -p 3000:3000 -it --rm falkordb/falkordb:latest
 
 ### Installation
 
-Install Cognee with the FalkorDB community adapter:
+Install Cognee with the FalkorDB community adapter. We recommend Cognee 1.2 or later:
 
 ```bash
-pip install cognee
+pip install "cognee>=1.2,<2.0"
 pip install cognee-community-hybrid-adapter-falkor
 ```
 
-The adapter is a [community-maintained package](https://github.com/topoteretes/cognee-community/tree/main/packages/hybrid/falkordb) that requires `cognee >= 1.0.3` and `falkordb >= 1.0.9`.
+The adapter is a [community-maintained package](https://github.com/topoteretes/cognee-community/tree/main/packages/hybrid/falkordb) that requires `cognee >= 1.0.3` and `falkordb >= 1.0.9`. Cognee 1.2 is the latest release and is recommended for new projects.
 
 ### Quick Start Example
 
