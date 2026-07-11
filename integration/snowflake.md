@@ -601,6 +601,22 @@ Repeat for the routes file:
 
 ![Snowflake Add Data screen showing the Load data into a Table option](../images/snowflake-add-data-load-table.png)
 
+### Step 3: Install FalkorDB from the Marketplace
+
+1. In the Snowflake sidebar, click **Marketplace** → **Snowflake Marketplace**.
+2. Search for **FalkorDB** and select the FalkorDB Native App listing.
+3. Click **Get** and follow the [installation steps](#installation), granting the required privileges.
+
+### Step 4: Start the service
+
+```sql
+CALL <app_instance_name>.app_public.start_app('FALKORDB_POOL', 'FALKORDB_WH');
+
+CALL <app_instance_name>.app_public.get_service_status();
+```
+
+Remember: an empty status result (`[]`) means the service is still starting. Re-run `get_service_status()` until the result shows `"status":"READY"`.
+
 ## Complete Example: Social Network
 
 ### Step 1: Create Sample Data Table
