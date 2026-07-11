@@ -154,7 +154,14 @@ CALL <app_instance_name>.app_public.get_service_status();
 
 **Note**: Replace `<app_instance_name>` with the name you chose during installation.
 
-Wait for the service status to show `READY` before proceeding (typically 2-3 minutes).
+Wait for the service status to show `READY` before proceeding (typically 2-3 minutes). Interpreting the `get_service_status()` output:
+
+- An empty result (`[]`) means the service is still starting. This is not an error; wait a bit and call the procedure again.
+- When the service is ready, the result contains a container entry with `"status":"READY"`:
+
+```json
+[{"status":"READY","message":"Running","containerName":"falkordb-server","instanceId":"0","serviceName":"ST_SPCS","restartCount":0,"startTime":"2026-07-07T12:48:02Z"}]
+```
 
 Default resources use a `CPU_X64_S` compute pool with FalkorDB container resources of 1 CPU / 2GB RAM requested and 2 CPU / 4GB RAM limit. For larger graph loads, start the app with explicit resource options:
 
