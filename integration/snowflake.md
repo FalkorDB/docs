@@ -639,6 +639,37 @@ CALL <app_instance_name>.app_public.graph_query(
 );
 ```
 
+### Step 6: Load airports
+
+Bind `ROUTES_DEMO.PUBLIC.AIRPORTS` to `consumer_data_table` (see [Bind Your Table](#step-1-bind-your-table)), then load the airport nodes and count them:
+
+```sql
+CALL <app_instance_name>.app_public.load_csv(
+  'airroutes',
+  'LOAD CSV FROM ''file://consumer_data.csv'' AS row
+   MERGE (a:Airport {id: toInteger(row[0])})
+   SET
+     a.ident = row[1],
+     a.type = row[2],
+     a.name = row[3],
+     a.latitude = toFloat(row[4]),
+     a.longitude = toFloat(row[5]),
+     a.elevation_ft = toInteger(row[6]),
+     a.continent = row[7],
+     a.iso_country = row[8],
+     a.iso_region = row[9],
+     a.municipality = row[10],
+     a.scheduled_service = row[11],
+     a.icao_code = row[12],
+     a.iata_code = row[13]'
+);
+
+CALL <app_instance_name>.app_public.graph_query(
+  'airroutes',
+  'MATCH (a:Airport) RETURN count(a) AS airport_count'
+);
+```
+
 ## Complete Example: Social Network
 
 ### Step 1: Create Sample Data Table
