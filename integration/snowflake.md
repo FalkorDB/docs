@@ -718,6 +718,40 @@ RETURN path
 LIMIT 20
 ```
 
+### The same question in SQL
+
+For comparison, the equivalent recursive SQL over the `ROUTES` table. The Cypher above expresses the traversal in three lines; the SQL needs a recursive CTE with manual cycle protection:
+
+```sql
+WITH RECURSIVE trip AS (
+  SELECT
+    source_airport,
+    destination_airport,
+    1 AS hops,
+    source_airport || ' -> ' || destination_airport AS path
+  FROM ROUTES_DEMO.PUBLIC.ROUTES
+  WHERE source_airport = 'SYD'
+
+  UNION ALL
+
+  SELECT
+    t.source_airport,
+    r.destination_airport,
+    t.hops + 1,
+    t.path || ' -> ' || r.destination_airport
+  FROM trip t
+  JOIN ROUTES_DEMO.PUBLIC.ROUTES r
+    ON t.destination_airport = r.source_airport
+  WHERE t.hops < 5
+    AND POSITION(r.destination_airport IN t.path) = 0
+)
+SELECT hops, path
+FROM trip
+WHERE destination_airport = 'JFK'
+  AND hops = 5
+LIMIT 20;
+```
+
 ## Complete Example: Social Network
 
 ### Step 1: Create Sample Data Table
