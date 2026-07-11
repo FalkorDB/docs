@@ -680,7 +680,7 @@ CALL <app_instance_name>.app_public.load_csv(
   'LOAD CSV FROM ''file://consumer_data.csv'' AS row
    MATCH (src:Airport {iata_code: row[2]})
    MATCH (dst:Airport {iata_code: row[4]})
-   MERGE (src)-[r:ROUTE]->(dst)
+   CREATE (src)-[r:ROUTE]->(dst)
    SET
      r.airline = row[0],
      r.airline_id = row[1],
@@ -748,7 +748,7 @@ WITH RECURSIVE trip AS (
 SELECT hops, path
 FROM trip
 WHERE destination_airport = 'JFK'
-  AND hops = 5
+  AND hops <= 5
 LIMIT 20;
 ```
 
