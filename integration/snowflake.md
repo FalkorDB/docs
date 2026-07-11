@@ -617,6 +617,28 @@ CALL <app_instance_name>.app_public.get_service_status();
 
 Remember: an empty status result (`[]`) means the service is still starting. Re-run `get_service_status()` until the result shows `"status":"READY"`.
 
+### Step 5: Create indexes
+
+Create indexes before loading so the route load (which uses `MATCH` on `iata_code`) stays fast, then verify they exist:
+
+```sql
+CALL <app_instance_name>.app_public.graph_query(
+  'airroutes',
+  'CREATE INDEX FOR (a:Airport) ON (a.id)'
+);
+
+CALL <app_instance_name>.app_public.graph_query(
+  'airroutes',
+  'CREATE INDEX FOR (a:Airport) ON (a.iata_code)'
+);
+
+-- Verify all indexes were created
+CALL <app_instance_name>.app_public.graph_query(
+  'airroutes',
+  'CALL db.indexes()'
+);
+```
+
 ## Complete Example: Social Network
 
 ### Step 1: Create Sample Data Table
