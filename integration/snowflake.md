@@ -670,6 +670,32 @@ CALL <app_instance_name>.app_public.graph_query(
 );
 ```
 
+### Step 7: Load routes
+
+Rebind `consumer_data_table` to `ROUTES_DEMO.PUBLIC.ROUTES`, then load the relationships and count them:
+
+```sql
+CALL <app_instance_name>.app_public.load_csv(
+  'airroutes',
+  'LOAD CSV FROM ''file://consumer_data.csv'' AS row
+   MATCH (src:Airport {iata_code: row[2]})
+   MATCH (dst:Airport {iata_code: row[4]})
+   MERGE (src)-[r:ROUTE]->(dst)
+   SET
+     r.airline = row[0],
+     r.airline_id = row[1],
+     r.source_airport = row[2],
+     r.destination_airport = row[4],
+     r.stops = toInteger(row[7]),
+     r.equipment = row[8]'
+);
+
+CALL <app_instance_name>.app_public.graph_query(
+  'airroutes',
+  'MATCH ()-[r:ROUTE]->() RETURN count(r) AS route_count'
+);
+```
+
 ## Complete Example: Social Network
 
 ### Step 1: Create Sample Data Table
