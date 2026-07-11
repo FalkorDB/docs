@@ -29,6 +29,7 @@ The Native App runs FalkorDB inside Snowpark Container Services (SPCS). Snowflak
 - [Querying graphs](#querying-graphs)
 - [Writing query results back to Snowflake](#writing-query-results-back-to-snowflake)
 - [Air Routes example](#practical-example-air-routes-graph)
+- [Webinar demo: Air Routes end to end](#webinar-demo-air-routes-end-to-end)
 - [FalkorDB Browser](#open-the-falkordb-browser)
 - [Snowflake Cortex Agent](#snowflake-cortex-agent)
 - [Troubleshooting](#troubleshooting)
@@ -566,6 +567,19 @@ SELECT row_index, row_data
 FROM FALKORDB_FLIGHTS_DEMO.PUBLIC.COUNTRY_WRITEBACK_TEST
 ORDER BY row_index;
 ```
+
+## Webinar Demo: Air Routes End to End
+
+This is the complete, copy-paste flow shown in the FalkorDB Snowflake webinar: download two CSV files, load them into Snowflake tables through the UI, install the Native App, build the `airroutes` graph, and compare a multi-hop Cypher query with its SQL equivalent.
+
+### Step 1: Download the demo data
+
+Download the two demo files:
+
+- [airports.csv](../data/airports.csv) (about 8 MB, one row per airport)
+- [routes.csv](../data/routes.csv) (about 2.7 MB, one row per airline route)
+
+The column order in these files matches the `row[n]` mappings used below.
 
 ## Complete Example: Social Network
 
