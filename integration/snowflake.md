@@ -581,6 +581,26 @@ Download the two demo files:
 
 The column order in these files matches the `row[n]` mappings used below.
 
+### Step 2: Load the CSVs into Snowflake tables
+
+Create the demo database and both tables from the Snowflake UI (no SQL needed):
+
+1. In the Snowflake sidebar, go to **Ingestion** → **Add Data** → **Load data into a table**.
+2. Click **Browse** and select the downloaded `airports.csv`.
+3. Under database, click **+ Database** and name the new database `ROUTES_DEMO`.
+4. Choose **Create new table**, name it `AIRPORTS`, then click **Next**.
+5. Review the detected columns, click **Next**, then **Load**. Wait for the success message.
+
+Repeat for the routes file:
+
+1. Go to **Ingestion** → **Add Data** → **Load data into a table** again.
+2. Click **Browse** and select `routes.csv`.
+3. This time select the existing `ROUTES_DEMO` database instead of creating a new one.
+4. Choose **Create new table** from the dropdown, name it `ROUTES`, then click **Next**.
+5. Click **Next**, then **Load**, and wait for the success message.
+
+![Snowflake Add Data screen showing the Load data into a Table option](../images/snowflake-add-data-load-table.png)
+
 ## Complete Example: Social Network
 
 ### Step 1: Create Sample Data Table
