@@ -696,6 +696,28 @@ CALL <app_instance_name>.app_public.graph_query(
 );
 ```
 
+### Step 8: Ask a multi-hop question
+
+Find flight paths from Sydney to New York JFK in up to 5 hops:
+
+```sql
+CALL <app_instance_name>.app_public.graph_query(
+  'airroutes',
+  'MATCH path = (:Airport {iata_code:"SYD"})-[:ROUTE*1..5]->(:Airport {iata_code:"JFK"})
+   RETURN length(path) AS hops,
+          [airport IN nodes(path) | airport.iata_code] AS route_path
+   LIMIT 20'
+);
+```
+
+To see the same result as a visual graph instead of a table, run this variant in the [FalkorDB Browser](#open-the-falkordb-browser):
+
+```cypher
+MATCH path = (:Airport {iata_code:"SYD"})-[:ROUTE*1..5]->(:Airport {iata_code:"JFK"})
+RETURN path
+LIMIT 20
+```
+
 ## Complete Example: Social Network
 
 ### Step 1: Create Sample Data Table
