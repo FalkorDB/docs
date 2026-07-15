@@ -6,6 +6,7 @@ accordion
 ACL
 ACLs
 acos
+airroutes
 acyclic
 Addon
 addon
@@ -65,6 +66,7 @@ betweenness
 BFS
 BGSAVE
 bigmac
+Binlog
 birthyear
 bitmasks
 Bitnami
@@ -94,6 +96,7 @@ Centos
 cgraph
 chatbots
 checkpointed
+checkpointer
 Checkpointing
 checkpointing
 checksums
@@ -152,6 +155,7 @@ csrfToken
 CSV
 csv
 CSVs
+CTE
 Ctrl
 Cursor
 Customizable
@@ -174,6 +178,7 @@ DDL
 ddl
 DDTHH
 DeepSeek
+DML
 decapitalize
 dedup
 Deduplicate
@@ -200,6 +205,7 @@ dotenv
 Dovizioso
 drivine
 dropConstraint
+dropdown
 Dropzone
 DT
 Ducati
@@ -472,6 +478,7 @@ LocalDateTimeToStringConverter
 localhost
 localStorage
 LocalTime
+LogMiner
 lon
 lookups
 Lovitz
@@ -479,6 +486,7 @@ lowercased
 lowercasing
 lpad
 LRU
+LSN
 lTrim
 macOS
 malte
@@ -508,6 +516,7 @@ Miesha
 Mifflin
 minAge
 misconfigured
+MMR
 modelled
 MotoGP
 MSF
@@ -715,6 +724,7 @@ sanitization
 sbin
 scalability
 scalable
+SCN
 Sceat
 schemaName
 schemas
@@ -917,3 +927,12 @@ yourSourceName
 YYYY
 Zep's
 zepai
+datasource
+vl
+defrag
+defragmentation
+tooltip
+uptime
+allocator
+RSS
+OOM

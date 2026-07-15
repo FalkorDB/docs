@@ -21,6 +21,70 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <!-- End Google Tag Manager -->
 {% endif %}
 
+<!-- Mobile menu: keep the search box visible near the top -->
+<style>
+/*
+ * On mobile (< 50rem, matching Just the Docs' own nav breakpoint) the search
+ * box normally renders after the full nav list, so on pages with a long menu
+ * it gets pushed off-screen and is easy to miss. Pin it right below the site
+ * header instead, and reserve the same amount of space at the top of the nav
+ * list so its first item isn't hidden underneath the pinned search box.
+ */
+@media (max-width: 49.9375rem) {
+  .main-header.nav-open {
+    position: fixed;
+    top: 3.75rem;
+    left: 0;
+    z-index: 3;
+    width: 100%;
+  }
+
+  .site-nav.nav-open {
+    padding-top: 7.5rem;
+  }
+
+  /* Keep aux nav links on a single line (scrolling horizontally via the
+     theme's existing overflow-x: auto) instead of wrapping. Otherwise
+     #main-header grows taller on narrow screens or with more aux_links,
+     and the padding-top reserved above would no longer match its height. */
+  .aux-nav .site-button {
+    white-space: nowrap;
+  }
+}
+</style>
+
+<!-- Mobile menu: move focus to search when the menu opens. The search box
+     now appears visually at the top of the mobile menu (see above), but
+     keyboard/screen-reader focus order still follows the unchanged DOM
+     order (nav links, then search). Moving focus to the search input on
+     open keeps focus order consistent with what's visually first, without
+     changing tab order for anyone not using the menu button.
+
+     Ordering notes for future maintainers:
+     - This listener is attached after Just the Docs' own (head_custom.html
+       is included after just-the-docs.js, see theme's _includes/head.html),
+       so nav-open has already been toggled by the time it runs.
+     - The check is intentionally synchronous (no setTimeout/microtask
+       deferral): iOS Safari only shows the on-screen keyboard for a
+       programmatic focus() call made synchronously within the original
+       click handler. Deferring the check would move focus silently
+       without opening the keyboard on iOS Safari, defeating the point of
+       this fix for a large share of mobile users. -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  var menuButton = document.getElementById("menu-button");
+  var mainHeader = document.getElementById("main-header");
+  var searchInput = document.getElementById("search-input");
+  if (!menuButton || !mainHeader || !searchInput) return;
+
+  menuButton.addEventListener("click", function () {
+    if (mainHeader.classList.contains("nav-open")) {
+      searchInput.focus();
+    }
+  });
+});
+</script>
+
 <!-- Sticky right-side Table of Contents -->
 <style>
 .toc-sidebar {
