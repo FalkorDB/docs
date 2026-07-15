@@ -572,12 +572,16 @@ ORDER BY row_index;
 
 This is the complete, copy-paste flow shown in the FalkorDB Snowflake webinar: download two CSV files, load them into Snowflake tables through the UI, install the Native App, build the `airroutes` graph, and compare a multi-hop Cypher query with its SQL equivalent.
 
+Watch the full walkthrough:
+
+[![Snowflake Native App with FalkorDB](https://img.youtube.com/vi/a_Nnf_1vH_w/0.jpg)](https://www.youtube.com/watch?v=a_Nnf_1vH_w)
+
 ### Step 1: Download the demo data
 
-Download the two demo files:
+Download the two demo files from the [airroutes example folder](https://github.com/FalkorDB/snowflake-integration/tree/main/examples/airroutes):
 
-- [airports.csv](../data/airports.csv) (about 8 MB, one row per airport)
-- [routes.csv](../data/routes.csv) (about 2.7 MB, one row per airline route)
+- [airports.csv](https://github.com/FalkorDB/snowflake-integration/blob/main/examples/airroutes/airports.csv) (about 8 MB, one row per airport)
+- [routes.csv](https://github.com/FalkorDB/snowflake-integration/blob/main/examples/airroutes/routes.csv) (about 2.7 MB, one row per airline route)
 
 The column order in these files matches the `row[n]` mappings used below.
 
@@ -1025,6 +1029,10 @@ ORDER BY friend_count DESC
 ## Snowflake Cortex Agent
 
 The Native App can create a Snowflake Cortex Agent that uses FalkorDB tools. This gives business users and analysts a guided natural-language interface for graph workflows while still executing through app-owned Snowflake procedures.
+
+Watch how to get started:
+
+[![Start your FalkorDB Cortex Agent](https://img.youtube.com/vi/9GdItrMyjzo/0.jpg)](https://www.youtube.com/watch?v=9GdItrMyjzo)
 
 The Agent can:
 
