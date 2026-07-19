@@ -442,6 +442,7 @@ KNOWS
 Kruskal's
 KubeBlocks
 kubeblocks
+kubectl
 Kubernetes
 Kuzu
 labelPropagation
@@ -621,6 +622,7 @@ pipx
 PodMonitor
 pom
 PostContent
+Postgres
 pre
 prem
 preprocessing
@@ -798,6 +800,7 @@ subgraph
 subgraphs
 sublist
 Submap
+Supabase
 submap
 subqueries
 subquery
