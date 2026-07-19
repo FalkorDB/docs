@@ -781,7 +781,7 @@ Returns the total distance (`pathWeight`) and the ordered list of airports on th
 
 ### PageRank
 
-An airline is planning a new route. Which airport gives the best connectivity for onward flights? PageRank scores airports by how well they connect to other well-connected hubs, so passengers landing there can reach anywhere in one hop. The same ranking works for risk analysis: whose closure would disrupt the network most?
+An airline is planning a new route. Which airport gives the best connectivity for onward flights? PageRank scores airports by how well they connect to other well-connected hubs, making it a strong signal for where onward connections are richest. The same ranking can feed risk analysis, highlighting airports whose closure would likely disrupt the network most.
 
 ```sql
 CALL <app_instance_name>.app_public.page_rank(
