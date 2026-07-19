@@ -30,6 +30,7 @@ The Native App runs FalkorDB inside Snowpark Container Services (SPCS). Snowflak
 - [Writing query results back to Snowflake](#writing-query-results-back-to-snowflake)
 - [Air Routes example](#practical-example-air-routes-graph)
 - [Webinar demo: Air Routes end to end](#webinar-demo-air-routes-end-to-end)
+- [Graph Algorithms](#graph-algorithms)
 - [FalkorDB Browser](#open-the-falkordb-browser)
 - [Snowflake Cortex Agent](#snowflake-cortex-agent)
 - [Troubleshooting](#troubleshooting)
@@ -756,6 +757,44 @@ WHERE destination_airport = 'JFK'
 LIMIT 20;
 ```
 
+## Graph Algorithms
+
+The app ships SQL wrappers for two FalkorDB graph algorithms, shown here on the air routes demo.
+
+### Weighted Shortest Path
+
+A passenger flies Sydney (SYD) to New York (JFK). What is the route with the fewest total kilometers, including every stop along the way? `shortest_path` uses FalkorDB's `algo.SPpaths` to minimize a numeric relationship property:
+
+```sql
+CALL <app_instance_name>.app_public.shortest_path(
+  'airroutes',      -- graph name
+  'Airport',        -- node label
+  'iata_code',      -- node property
+  'SYD',            -- source
+  'JFK',            -- target
+  'ROUTE',          -- relationship type
+  'distance_km'     -- property to minimize
+);
+```
+
+Returns the total distance (`pathWeight`) and the ordered list of airports on the cheapest path.
+
+### PageRank
+
+An airline is planning a new route. Which airport gives the best connectivity for onward flights? PageRank scores airports by how well they connect to other well-connected hubs, so passengers landing there can reach anywhere in one hop. The same ranking works for risk analysis: whose closure would disrupt the network most?
+
+```sql
+CALL <app_instance_name>.app_public.page_rank(
+  'airroutes',   -- graph name
+  'Airport',     -- node label
+  'ROUTE',       -- relationship type
+  'iata_code',   -- property to show per node
+  10             -- top N results
+);
+```
+
+Returns the 10 highest-ranked airports with their scores, most important first.
+
 ## Complete Example: Social Network
 
 ### Step 1: Create Sample Data Table
@@ -1136,6 +1175,8 @@ SHOW GRANTS TO APPLICATION <app_instance_name>;
 | `graph_query(graph_name, cypher)` | Runs Cypher against a graph |
 | `graph_query(graph_name, cypher, options)` | Runs Cypher and optionally writes results to a Snowflake table |
 | `load_csv(graph_name, cypher)` | Loads the currently bound Snowflake table into FalkorDB using `LOAD CSV` Cypher |
+| `shortest_path(graph_name, node_label, node_prop, source_value, target_value, rel_type, weight_prop)` | Finds the path minimizing a numeric relationship property between two nodes (`algo.SPpaths`) |
+| `page_rank(graph_name, node_label, rel_type, node_prop, limit_count)` | Ranks nodes by connectivity importance and returns the top `limit_count` (`algo.pageRank`) |
 | `create_agent(agent_name)` | Creates or refreshes the Cortex Agent definition |
 | `register_callback(ref_name, operation, ref_or_alias)` | Handles Native App reference binding callbacks |
 
