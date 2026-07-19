@@ -31,9 +31,36 @@ The Browser Settings panel is a page that can be scrolled, with grouped sections
 - **Graph Info**
   - Refresh interval (how often graph info refreshes)
 - **Chat**
-  - LLM provider API key
+  - LLM connection source: cloud/API key or local LLM
+  - Saved cloud API keys
+  - Local provider: Ollama or LM Studio
+  - Local endpoint URL
   - Model selection
+  - Current LLM connection indicator
   - How many interactions to store locally
+
+## Chat and LLM connection
+Use **Settings → Browser Settings → Chat** to choose what powers the Chat panel.
+
+You can use either:
+
+| Option | What it means | What you need |
+| :--- | :--- | :--- |
+| **Cloud/API key** | Chat uses a hosted LLM provider such as OpenAI, Anthropic, Gemini, Groq, Cohere, xAI, or DeepSeek. | Add a provider API key, select the saved key, then select a model. |
+| **Local LLM** | Chat uses a model running on your own machine. | Start Ollama or LM Studio locally, choose the provider, confirm the endpoint, then select a model. |
+
+The **LLM connection** area shows what Chat is currently configured to use. The status badge shows:
+- **Saved** when the displayed source, key/provider, endpoint, and model are already saved.
+- **Pending** when you changed something and still need to click **Save Settings**.
+
+For local LLMs, the default endpoints are:
+
+| Provider | Default endpoint |
+| :--- | :--- |
+| **Ollama** | `http://localhost:11434` |
+| **LM Studio** | `http://localhost:1234/v1` |
+
+If models do not appear, make sure the local server is running and the endpoint is correct.
 
 ### Replay Tutorial
 Browser Settings includes a **Replay Tutorial** action, which re-runs the guided tour overlay.
@@ -59,7 +86,7 @@ Allows:
 {% include faq_accordion.html
   title="Frequently Asked Questions"
   q1="How do I configure the Chat/LLM feature?"
-  a1="Go to **Settings → Browser Settings → Chat** and enter your LLM provider API key, select a model, and configure how many interactions to store locally."
+  a1="Go to **Settings → Browser Settings → Chat**. Choose **Cloud/API key** to use a hosted provider key, or **Local LLM** to use Ollama or LM Studio. Then select the key/provider, endpoint if local, and model, and click **Save Settings**."
   q2="What can Admin users do that regular users cannot?"
   a2="Admin users can access **DB Configurations** (view/update server config) and **Users** management (add/remove users, change roles). These sections require an online connection."
   q3="How do I create a Personal Access Token?"
@@ -69,4 +96,3 @@ Allows:
   q5="How do I replay the onboarding tutorial?"
   a5="Go to **Settings → Browser Settings** and click the **Replay Tutorial** action to re-run the guided tour overlay."
 %}
-

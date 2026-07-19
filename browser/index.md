@@ -102,7 +102,7 @@ FalkorDB Canvas is the standalone web component that powers the graph visualizat
 
 | Section | Description |
 | :--- | :--- |
-| Browser settings | Query timeouts, result limits, content persistence (auto-save), and display-text priority for node captions. |
+| Browser settings | Query timeouts, result limits, content persistence (auto-save), Chat LLM connection setup, and display-text priority for node captions. |
 | DB configurations (Admin) | View and update server configuration values. |
 | Users (Admin) | List users, adjust roles, add or delete users. |
 | Personal Access Tokens | Generate tokens with optional expiration and revocation management. |

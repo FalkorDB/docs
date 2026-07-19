@@ -17,7 +17,7 @@ Located in the sidebar under the user name/version block:
 ## Contextual graph controls (Graphs page)
 When you are on **Graphs** (`/graph`) and a graph is selected:
 - **Graph Info toggle** (database icon) opens/closes the Graph Info panel.
-- **CHAT** toggle opens/closes the Chat side panel (requires API key/model configured in Settings).
+- **CHAT** toggle opens/closes the Chat side panel (requires an LLM connection and model configured in Settings).
 
 ## Create graph
 For non–Read-Only users, the sidebar can expose **Create Graph** (depending on the current route).
@@ -48,6 +48,5 @@ The logout button signs out and redirects to `/login`.
   q3="What does the Offline indicator mean?"
   a3="The **Offline** badge appears in the sidebar when the Browser cannot reach the backend server. Check your network connection and ensure the FalkorDB server is running."
   q4="How do I open the Chat panel?"
-  a4="On the Graphs page, click the **CHAT** toggle in the left sidebar. Note: Chat requires an API key and model to be configured in Settings first."
+  a4="On the Graphs page, click the **CHAT** toggle in the left sidebar. Note: Chat requires an LLM connection and model to be configured in Settings first. You can use either a cloud API key or a local Ollama/LM Studio connection."
 %}
-

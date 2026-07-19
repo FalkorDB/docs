@@ -177,6 +177,7 @@ dbms
 DDL
 ddl
 DDTHH
+DeepSeek
 DML
 decapitalize
 dedup
@@ -467,6 +468,7 @@ list_graphs
 LiteLLM
 LlamaIndex
 LLM
+LM
 llm
 LLMs
 LoadBalancer
@@ -916,6 +918,7 @@ WSL
 www
 XCode
 xcode
+xAI
 xlarge
 xml
 xxHash
