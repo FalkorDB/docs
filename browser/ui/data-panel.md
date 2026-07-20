@@ -7,44 +7,25 @@ nav_order: 8
 ---
 
 # Data / Property Panel
-The Data panel opens when you select a node or edge in the graph. It’s used to inspect properties and perform edit operations.
 
-## What it shows
-For the selected element:
-- **ID**
-- **Attributes count**
-- **Labels** (nodes) or **Relationship type** (edges)
-- A **properties table** (key/value) for viewing and editing attributes
+Data panel appears when selecting a node or edge.
 
-## Node label management
-For nodes (and when the user role is not Read-Only):
-- **Add Label**
-- **Remove Label** (except the “default” empty label)
+## Shows
 
-Label changes are immediately reflected in:
-- The in-app graph model
-- The visible canvas node styling
-- The graph info panel counts/listing
+- Element ID
+- Labels (node) or type (edge)
+- Property table
 
-## Editing properties
-Properties are managed via the embedded table component. Typical operations include:
-- Editing existing values
-- Adding/removing properties
+## Node label actions
 
-(Exact editing options depend on the table component implementation.)
+- Add label
+- Remove label
 
-## Keyboard shortcut
-- `Esc` closes the Data panel.
+## Editing behavior
 
-{% include faq_accordion.html
-  title="Frequently Asked Questions"
-  q1="How do I open the Data panel?"
-  a1="**Select a node or edge** on the graph canvas by clicking it. The Data panel opens automatically to show the element's properties."
-  q2="Can I edit node labels from the Data panel?"
-  a2="Yes. For nodes (when you are not a Read-Only user), you can **Add Label** or **Remove Label** directly from the Data panel. Changes are reflected immediately on the canvas."
-  q3="How do I close the Data panel?"
-  a3="Press **Esc** on your keyboard or click elsewhere on the canvas to deselect the element."
-  q4="What information does the Data panel show?"
-  a4="It displays the element's **ID**, **attributes count**, **labels** (for nodes) or **relationship type** (for edges), and a **properties table** with all key/value pairs."
-%}
+Property and label edits call graph APIs and update graph/canvas state.
 
+## Close behavior
+
+- Close button
+- Escape key

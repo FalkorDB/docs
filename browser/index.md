@@ -6,151 +6,81 @@ permalink: /browser/
 has_children: true
 ---
 
-# FalkorDB Graph Visualization Tool (Browser)
+# FalkorDB Browser
 
-FalkorDB's Browser provides a web UI for exploring, querying, and managing FalkorDB graphs. It allows developers to interact with graphs loaded to FalkorDB, explore how specific queries behave, and review the current data model. FalkorDB Browser integrates within the main FalkorDB Docker container and through the Cloud service.
+FalkorDB Browser is the web UI for working with FalkorDB graphs. It includes graph visualization, Cypher querying, graph management, role-aware administration, and built-in API docs.
 
-![FalkorDB Browser GIF_01-26(1)](https://github.com/user-attachments/assets/af4f4d1c-111a-46a4-8442-8c08c037014f)
+## Run Browser with Docker
 
----
+Run FalkorDB and Browser together:
 
-## UI elements
-For detailed documentation of each major UI element (login, settings, graph canvas, panels, query editor/history, table view, etc.), see:
-- [UI Elements](./ui/)
+```bash
+docker run -p 6379:6379 -p 3000:3000 -it --rm falkordb/falkordb:latest
+```
 
-## Canvas Component
-FalkorDB Canvas is the standalone web component that powers the graph visualization in FalkorDB Browser. It can also be used independently in any web application.
-- [Canvas](./canvas)
+Open Browser at `http://localhost:3000`.
 
----
+## LOAD CSV Storage Configuration
+
+Browser CSV import (`Upload Data -> Load CSV`) stores a temporary CSV and then executes a server-built `LOAD CSV` query.
+
+### Storage mode selection
+
+| Setting | Behavior |
+| :--- | :--- |
+| `CSV_STORAGE=local` | Local filesystem storage for temp CSV files. |
+| `CSV_STORAGE=s3` | S3/S3-compatible storage (presigned read URL). Requires `S3_BUCKET`. |
+| `CSV_STORAGE=blob` | Vercel Blob storage. Requires `BLOB_READ_WRITE_TOKEN`. |
+| `CSV_STORAGE` unset | Auto-select: S3 first, then Blob, else local. |
+
+### Local mode notes
+
+| Setting | Purpose |
+| :--- | :--- |
+| `CSV_LOCAL_LOAD_URI_MODE=file` | Recommended local/dev mode. Emits `file://` URI. |
+| `IMPORT_FOLDER` | FalkorDB import root; must align with Browser temp path for `file://` mode. |
+| `CSV_LOCAL_TEMP_DIR` | Optional Browser temp directory override. |
+| `CSV_SERVE_BASE_URL` | Used only for served mode; must be `https://`. |
+
+### URI requirement
+
+FalkorDB `LOAD CSV` accepts only `https://` and `file://`. Plain `http://` URLs are rejected.
+
+### Related limits
+
+- `CSV_MAX_FILE_SIZE_MB`
+- `CSV_TEMP_TTL_SECONDS`
+- `CSV_TEMP_CLEANUP_SECRET`
 
 ## Main Features
 
-### Graph exploration (Graph page)
+### Graph workspace
 
-| Feature | Description |
-| :--- | :--- |
-| Interactive graph canvas | Visualizes query results containing nodes and edges as an interactive graph. Supports pan, zoom, and interaction with nodes and relationships. Toggles visibility by labels and relationship types. |
-| Element search (in-canvas search) | Search nodes and edges by node properties (string prefix match), IDs, relationship type, and labels. |
-| Data and inspection panel | Selecting an element opens a side panel for inspecting its properties. This panel supports editing workflows (see "Data manipulation"). |
-| Entity Creation Tools | Add a node, an edge, or both to the current graph from the canvas view. |
+- Graph selector and graph management
+- Cypher editor with suggestions and diagnostics
+- Graph, Table, and Metadata tabs
+- Side panels for Graph Info, Data editing, Create element, and Chat
 
-### Querying
+### Data operations
 
-| Feature | Description |
-| :--- | :--- |
-| Cypher query editor (Monaco) | Includes keyboard shortcuts: Run (Enter and Cmd/Ctrl + Enter) and Insert newline (Shift + Enter). Includes Cypher keyword and function completion. |
-| Results views | Graph view for node and edge results. Table view for tabular results. |
-| Query metadata | The Metadata tab shows query metadata text, explain plan (nested tree), and profile output (nested tree). |
+- Create, duplicate, and delete graphs
+- Export graph as `.dump`
+- Upload Cypher batch files (`.txt`, `.cql`, `.cypher`)
+- Upload CSV and run `LOAD CSV`
 
-### Query history
+### Security and access
 
-| Feature | Description |
-| :--- | :--- |
-| Persistent query history | Stores in browser localStorage. |
-| History browser dialog | Search and filter previous queries by graph name; supports single or multi-select delete. |
-| Per-query metadata | Review metadata, explain, and profile for past queries. |
+- Login via manual host/port fields or URL mode
+- Optional TLS with CA upload
+- Role-aware features (`Admin`, `Read-Write`, `Read-Only`)
+- Personal access token management
 
-<img width="1419" height="825" alt="query-history-eye-candy" src="https://github.com/user-attachments/assets/be000961-f456-4b04-adf0-96f754b7447a" />
+### API docs
 
-### Data manipulation (nodes/relationships)
+- Swagger UI at `/docs`
+- OpenAPI JSON at `/api/swagger`
 
-| Feature | Description |
-| :--- | :--- |
-| Create and delete operations | Create node and create relationship flows from the Graph UI. Delete elements (node or relationship) from the Graph UI. |
-| Edit labels | Edit labels through API routes (the UI provides label management components). |
+## Browser UI Reference
 
-### Graph management
-
-| Feature | Description |
-| :--- | :--- |
-| Create graphs | Create graphs from the UI. |
-| Delete graphs | Delete graphs (supports deleting multiple selected graphs). |
-| Duplicate graphs | Create a copy of an existing graph (including data). |
-| Export graphs | Download a .dump file via the Browser (/api/graph/:graph/export). |
-| Upload data | Upload data through the "Upload Data" dialog, which supports drag-and-drop file selection. |
-
-### Graph Info panel
-
-| Feature | Description |
-| :--- | :--- |
-| Memory Usage tracking | Exposes current memory utilization of the graph in MB. |
-| Node Label tracking | Displays all node labels and controls style visualization. Click a label to trigger a query for those nodes. |
-| Edge Type tracking | Displays all edge types. Click an edge type to trigger a query showing connected nodes. |
-| Property Keys tracking | Displays all property keys. Click a key to see nodes and edges where the property exists. |
-
-<img width="1419" height="825" alt="falkordb-browser-eye-candy" src="https://github.com/user-attachments/assets/74375cd1-c704-40a9-9339-f1f885135a75" />
-
----
-
-### API Documentation
-
-| Feature | Description |
-| :--- | :--- |
-| Built-in Swagger UI | Available at `/docs`. Loads the OpenAPI spec from `/api/swagger`. Supports "Try it out" with `X-JWT-Only: true` headers. |
-
-<img width="1419" height="825" alt="browser-api-doc-eye-candy" src="https://github.com/user-attachments/assets/35b0ca72-83f7-4f16-927c-413bf5f65593" />
-
-### Authentication & access control
-
-| Feature | Description |
-| :--- | :--- |
-| Authentication | Uses NextAuth (credentials-backed) for authentication. |
-| Role-aware UI capabilities | Read-Only users cannot create graphs. Admins can access DB config and user management. |
-
-### Settings
-
-| Section | Description |
-| :--- | :--- |
-| Browser settings | Query timeouts, result limits, content persistence (auto-save), Chat LLM connection setup, and display-text priority for node captions. |
-| DB configurations (Admin) | View and update server configuration values. |
-| Users (Admin) | List users, adjust roles, add or delete users. |
-| Personal Access Tokens | Generate tokens with optional expiration and revocation management. |
-
----
-
-## Common Workflows
-
-### Running and visualizing queries
-
-| Step | Action |
-| :--- | :--- |
-| 1 | Go to Graphs and select a graph. |
-| 2 | Write a Cypher query in the editor and run it. |
-| 3 | Inspect results in the Graph tab (canvas) or Table tab (rows). |
-| 4 | Use Labels and Relationships toggles to focus the canvas. |
-
-### Inspecting and editing elements
-
-| Step | Action |
-| :--- | :--- |
-| 1 | Click a node or edge in the canvas. |
-| 2 | Use the Data panel to inspect properties and apply actions. |
-
-### Working with query history
-
-| Step | Action |
-| :--- | :--- |
-| 1 | Open Query History and filter by graph or search text. |
-| 2 | Select a query and review Metadata, Explain, or Profile. |
-
-### Exporting graph data
-
-| Step | Action |
-| :--- | :--- |
-| 1 | Open graph management and select a graph. |
-| 2 | Click Export Data to download a `.dump` file. |
-
-{% include faq_accordion.html
-  title="Frequently Asked Questions"
-  q1="How do I access FalkorDB Browser?"
-  a1="FalkorDB Browser is a web UI accessible at **port 3000** by default. It is included in the main FalkorDB Docker container and is also available through the Cloud service."
-  q2="What connection URLs does FalkorDB Browser support?"
-  a2="The Browser supports `falkor://`, `falkors://`, `redis://`, and `rediss://` URL formats for connecting to a FalkorDB server."
-  q3="Can I export my graph data from the Browser?"
-  a3="Yes. Navigate to graph management, select a graph, and click **Export Data** to download a `.dump` file via the `/api/graph/:graph/export` endpoint."
-  q4="What query language does FalkorDB Browser use?"
-  a4="FalkorDB Browser uses **Cypher** as its query language. The built-in Monaco editor provides keyword autocompletion and syntax highlighting."
-  q5="Is there an API documentation page built into the Browser?"
-  a5="Yes. A built-in Swagger UI is available at `/docs` which loads the OpenAPI spec from `/api/swagger` and supports interactive 'Try it out' requests."
-%}
+- [UI Elements](./ui/)
+- [Canvas](./canvas)
