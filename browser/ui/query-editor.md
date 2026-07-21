@@ -9,6 +9,8 @@ nav_order: 9
 # Query Editor
 The query editor is a Monaco-based Cypher editor used to run queries against the selected graph.
 
+![Query editor](../../images/browser/query-editor.png)
+
 ## Running queries
 - Click **RUN** to execute.
 - Keyboard shortcuts:
