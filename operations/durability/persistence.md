@@ -91,7 +91,7 @@ redis-cli GRAPH.QUERY mygraph "MATCH (n) RETURN n"
 
 Docker volume configuration ensures your data persists across container restarts, but FalkorDB also provides multiple durability mechanisms (RDB snapshots, AOF logging) to protect against data loss and optimize for different use cases.
 
-For a comprehensive guide on configuring RDB, AOF, and graph-specific backup options, see [Data Durability](/operations/durability).
+For a comprehensive guide on configuring RDB, AOF, and graph-specific backup options, see [Data Durability](/operations/durability/).
 
 ## ACL User Persistence
 

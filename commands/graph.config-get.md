@@ -9,7 +9,7 @@ parent: "Commands"
 
 Retrieves the current value of a FalkorDB configuration parameter.
 
-FalkorDB configuration parameters are detailed [here](/configuration).
+FalkorDB configuration parameters are detailed [here](/getting-started/configuration).
 
 `*` can be used to retrieve the value of all FalkorDB configuration parameters.
 
@@ -91,7 +91,7 @@ println!("{:?}", timeout);
   q1="How do I retrieve all configuration parameters at once?"
   a1="Use the wildcard `*` as the parameter name: `GRAPH.CONFIG GET *`. This returns all current FalkorDB configuration parameters and their values."
   q2="What configuration parameters are available?"
-  a2="Common parameters include `TIMEOUT` (query timeout), `CACHE_SIZE` (execution plan cache size), `THREAD_COUNT` (worker threads), `RESULTSET_SIZE` (max result rows), and more. See the [configuration page](/configuration) for the full list."
+  a2="Common parameters include `TIMEOUT` (query timeout), `CACHE_SIZE` (execution plan cache size), `THREAD_COUNT` (worker threads), `RESULTSET_SIZE` (max result rows), and more. See the [configuration page](/getting-started/configuration) for the full list."
   q3="Does GRAPH.CONFIG GET require any special permissions?"
   a3="Yes. The `GRAPH.CONFIG GET` command typically requires administrative privileges to execute."
   q4="What format does the response use?"
