@@ -471,6 +471,7 @@ LLM
 LM
 llm
 LLMs
+Libs
 LoadBalancer
 loadmodule
 LocalDateTime
@@ -870,6 +871,7 @@ TypeScript
 uber
 UDF
 UDFs
+udf
 UI
 unaliased
 undirected
