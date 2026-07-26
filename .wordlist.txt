@@ -461,6 +461,7 @@ lexicographically
 Lex
 libcypher
 libomp
+Libs
 Lightning
 Lipman
 listGraphs
@@ -471,7 +472,6 @@ LLM
 LM
 llm
 LLMs
-Libs
 LoadBalancer
 loadmodule
 LocalDateTime
