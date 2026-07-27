@@ -313,9 +313,9 @@ RETURN u {.name, follower_count: count} AS user"
 ## Next Steps
 
 - [Getting Started](/getting-started/) — Build and query your first graph
-- [Cypher Language](/cypher) — Learn the query language for working with these data types
+- [Cypher Language](/cypher/) — Learn the query language for working with these data types
 - [Indexing](/cypher/indexing/) — Create indexes on properties to speed up queries
-- [Commands](/commands) — Full command reference for GRAPH.QUERY and more
+- [Commands](/commands/) — Full command reference for GRAPH.QUERY and more
 
 {% include faq_accordion.html
   title="Frequently Asked Questions"
