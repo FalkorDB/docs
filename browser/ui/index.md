@@ -14,6 +14,9 @@ The screenshots across this section use the same demo graph so the pages line up
 ## Screenshot set
 - [Login screen](../../images/browser/login-screen.png)
 - [Main graph overview](../../images/browser/overview.png)
+- [Read-only user connected](../../images/browser/read-only-user-connected.png)
+- [Manage Graphs dialog](../../images/browser/manage-graphs.png)
+- [API docs (light mode)](../../images/browser/api-docs-light.png)
 - [Graph info panel](../../images/browser/graph-info.png)
 - [Query editor](../../images/browser/query-editor.png)
 - [Query history](../../images/browser/query-history.png)
@@ -36,6 +39,7 @@ The screenshots across this section use the same demo graph so the pages line up
 
 ## Settings
 - [Settings page (Browser settings, admin tools, tokens, tutorial)](./settings.md)
+- [Roles & Access](./auth-access-control.md)
 
 ## UDF management
 - [UDF Libraries page](./udf-libraries.md)
@@ -47,6 +51,7 @@ The screenshots across this section use the same demo graph so the pages line up
 - [Style panel (Customize label styles)](./style-panel.md)
 - [Data / Property panel](./data-panel.md)
 - [Graph toolbar & element actions](./toolbar-actions.md)
+- [Graphs Manager](./graph-management.md)
 - [Chat panel (natural-language to Cypher)](./chat-panel.md)
 
 ## Querying & results
@@ -55,6 +60,9 @@ The screenshots across this section use the same demo graph so the pages line up
 - [Upload Data dialog](./upload-data.md)
 - [Table view](./table-view.md)
 - [Metadata view (Explain/Profile/Metadata)](./metadata-view.md)
+
+## Developer tooling
+- [API Docs (Swagger)](./api-documentation.md)
 
 {% include faq_accordion.html
   title="Frequently Asked Questions"
