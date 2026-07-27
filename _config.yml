@@ -30,6 +30,15 @@ aux_links_new_tab: true
 # Enable the side/mobile menu globally
 nav_enabled: true
 
+# Social preview image for jekyll-seo-tag (og:image / twitter:image). The
+# plugin only reads it from page front matter, so it is set as a site-wide
+# default here; individual pages can override it with their own `image` key.
+defaults:
+  - scope:
+      path: ""
+    values:
+      image: "/images/falkor-logo.png"
+
 plugins:
   - jekyll-sitemap
   - jekyll-redirect-from
