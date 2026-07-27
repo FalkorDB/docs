@@ -317,13 +317,6 @@ document.addEventListener("DOMContentLoaded", function () {
 }
 </script>
 
-{%- comment -%}
-  SoftwareApplication JSON-LD for the homepage. Google's rich-results snippet
-  for this type additionally requires `aggregateRating` or `review`; there is no
-  legitimate rating data to publish, so those properties are intentionally
-  omitted and can be added here if genuine ratings become available. The rest of
-  the product metadata below is still valid structured data and is emitted.
-{%- endcomment -%}
 {%- if page.url == "/" -%}
 <script type="application/ld+json">
 {
