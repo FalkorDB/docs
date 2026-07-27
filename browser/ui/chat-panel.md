@@ -9,6 +9,8 @@ nav_order: 14
 # Chat Panel
 The Chat panel lets you use English (natural language) to query the graph.
 
+![Chat panel](../../images/browser/chat-panel.png)
+
 ## Prerequisites
 Chat requires configuring an LLM connection and a model.
 

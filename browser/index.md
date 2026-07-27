@@ -10,13 +10,17 @@ has_children: true
 
 FalkorDB's Browser provides a web UI for exploring, querying, and managing FalkorDB graphs. It allows developers to interact with graphs loaded to FalkorDB, explore how specific queries behave, and review the current data model. FalkorDB Browser integrates within the main FalkorDB Docker container and through the Cloud service.
 
-![FalkorDB Browser GIF_01-26(1)](https://github.com/user-attachments/assets/af4f4d1c-111a-46a4-8442-8c08c037014f)
+![Browser overview](../images/browser/overview.png)
+
+The screenshots in this section use a realistic demo graph so the UI reads like a working product environment instead of a toy fixture.
 
 ---
 
 ## UI elements
 For detailed documentation of each major UI element (login, settings, graph canvas, panels, query editor/history, table view, etc.), see:
 - [UI Elements](./ui/)
+- [Upload Data dialog](./ui/upload-data.md)
+- [UDF Libraries page](./ui/udf-libraries.md)
 
 ## Canvas Component
 FalkorDB Canvas is the standalone web component that powers the graph visualization in FalkorDB Browser. It can also be used independently in any web application.
@@ -51,7 +55,7 @@ FalkorDB Canvas is the standalone web component that powers the graph visualizat
 | History browser dialog | Search and filter previous queries by graph name; supports single or multi-select delete. |
 | Per-query metadata | Review metadata, explain, and profile for past queries. |
 
-<img width="1419" height="825" alt="query-history-eye-candy" src="https://github.com/user-attachments/assets/be000961-f456-4b04-adf0-96f754b7447a" />
+![Query history dialog](../images/browser/query-history.png)
 
 ### Data manipulation (nodes/relationships)
 
@@ -69,6 +73,7 @@ FalkorDB Canvas is the standalone web component that powers the graph visualizat
 | Duplicate graphs | Create a copy of an existing graph (including data). |
 | Export graphs | Download a .dump file via the Browser (/api/graph/:graph/export). |
 | Upload data | Upload data through the "Upload Data" dialog, which supports drag-and-drop file selection. |
+| UDF Libraries | Load, inspect, flush, and export JavaScript UDF libraries from the `/udf` page. |
 
 ### Graph Info panel
 
@@ -79,7 +84,7 @@ FalkorDB Canvas is the standalone web component that powers the graph visualizat
 | Edge Type tracking | Displays all edge types. Click an edge type to trigger a query showing connected nodes. |
 | Property Keys tracking | Displays all property keys. Click a key to see nodes and edges where the property exists. |
 
-<img width="1419" height="825" alt="falkordb-browser-eye-candy" src="https://github.com/user-attachments/assets/74375cd1-c704-40a9-9339-f1f885135a75" />
+![Graph info panel](../images/browser/graph-info.png)
 
 ---
 
@@ -88,8 +93,6 @@ FalkorDB Canvas is the standalone web component that powers the graph visualizat
 | Feature | Description |
 | :--- | :--- |
 | Built-in Swagger UI | Available at `/docs`. Loads the OpenAPI spec from `/api/swagger`. Supports "Try it out" with `X-JWT-Only: true` headers. |
-
-<img width="1419" height="825" alt="browser-api-doc-eye-candy" src="https://github.com/user-attachments/assets/35b0ca72-83f7-4f16-927c-413bf5f65593" />
 
 ### Authentication & access control
 

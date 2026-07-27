@@ -9,6 +9,8 @@ nav_order: 5
 # Main Graph Canvas
 The **Graph** results tab renders your query results as an interactive node/edge visualization.
 
+![Graph canvas](../../images/browser/overview.png)
+
 ## Core interactions
 - **Pan/zoom** the canvas to explore results.
 - **Select** nodes/edges to inspect them (opens the Data panel).

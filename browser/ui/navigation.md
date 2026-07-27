@@ -9,6 +9,8 @@ nav_order: 2
 # Navigation & Header
 FalkorDB Browser uses a left sidebar (header) for navigation and global actions.
 
+![Navigation and graph workspace](../../images/browser/overview.png)
+
 ## Main navigation buttons
 Located in the sidebar under the user name/version block:
 - **SETTINGS** → opens `/settings`

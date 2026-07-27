@@ -9,6 +9,25 @@ has_children: true
 # UI Elements
 This section breaks down FalkorDB Browser’s UI into focused pages so you can quickly learn what each screen/panel does and how to use it.
 
+The screenshots across this section use the same demo graph so the pages line up with one another.
+
+## Screenshot set
+- [Login screen](../../images/browser/login-screen.png)
+- [Main graph overview](../../images/browser/overview.png)
+- [Graph info panel](../../images/browser/graph-info.png)
+- [Query editor](../../images/browser/query-editor.png)
+- [Query history](../../images/browser/query-history.png)
+- [Upload Data (Load CSV - step 1)](../../images/browser/upload-data-load-csv-step1.png)
+- [Upload Data (Load CSV - step 2)](../../images/browser/upload-data-load-csv-step2.png)
+- [Upload Data (Cypher batch)](../../images/browser/upload-data-cypher-batch.png)
+- [Table view](../../images/browser/table-view.png)
+- [Metadata view](../../images/browser/metadata-view.png)
+- [Data / property panel](../../images/browser/data-panel.png)
+- [Style panel](../../images/browser/style-panel.png)
+- [Chat panel](../../images/browser/chat-panel.png)
+- [Settings page](../../images/browser/settings-page.png)
+- [UDF Libraries page](../../images/browser/udf-libraries.png)
+
 ## Authentication
 - [Login Screen](./login.md)
 
@@ -17,6 +36,9 @@ This section breaks down FalkorDB Browser’s UI into focused pages so you can q
 
 ## Settings
 - [Settings page (Browser settings, admin tools, tokens, tutorial)](./settings.md)
+
+## UDF management
+- [UDF Libraries page](./udf-libraries.md)
 
 ## Graph workspace
 - [Graph page (overall layout)](./graph-page.md)
@@ -30,6 +52,7 @@ This section breaks down FalkorDB Browser’s UI into focused pages so you can q
 ## Querying & results
 - [Query editor](./query-editor.md)
 - [Query history](./query-history.md)
+- [Upload Data dialog](./upload-data.md)
 - [Table view](./table-view.md)
 - [Metadata view (Explain/Profile/Metadata)](./metadata-view.md)
 

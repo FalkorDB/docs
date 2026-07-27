@@ -9,6 +9,8 @@ nav_order: 7
 # Style Panel
 The Style panel ("Style Settings") customizes how nodes of a specific label appear in the graph.
 
+![Style panel](../../images/browser/style-panel.png)
+
 ## How to open
 1. Open **Graph Info**.
 2. Click the palette icon next to a node label.
