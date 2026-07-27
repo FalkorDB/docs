@@ -318,12 +318,38 @@ document.addEventListener("DOMContentLoaded", function () {
 </script>
 
 {%- comment -%}
-  A SoftwareApplication JSON-LD block used to be emitted here for the homepage.
-  Google's rich-results validation requires `aggregateRating` or `review` on
-  that type, and there is no legitimate rating data to publish, so the block
-  was removed rather than populated with fabricated ratings. If genuine
-  aggregate ratings become available, the schema can be restored with them.
+  SoftwareApplication JSON-LD for the homepage. Google's rich-results snippet
+  for this type additionally requires `aggregateRating` or `review`; there is no
+  legitimate rating data to publish, so those properties are intentionally
+  omitted and can be added here if genuine ratings become available. The rest of
+  the product metadata below is still valid structured data and is emitted.
 {%- endcomment -%}
+{%- if page.url == "/" -%}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "FalkorDB",
+  "applicationCategory": "DatabaseApplication",
+  "operatingSystem": "Linux, macOS, Windows (via Docker)",
+  "description": "FalkorDB is a high-performance graph database with OpenCypher support, vector and full-text indexing, and built-in GraphRAG capabilities for GenAI applications.",
+  "url": "https://www.falkordb.com",
+  "downloadUrl": "https://hub.docker.com/r/falkordb/falkordb",
+  "softwareVersion": "latest",
+  "license": "https://github.com/FalkorDB/FalkorDB/blob/master/LICENSE.txt",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "FalkorDB",
+    "url": "https://www.falkordb.com"
+  }
+}
+</script>
+{%- endif -%}
 
 {%- comment -%}
   BreadcrumbList JSON-LD: emitted on inner pages where the URL has at least one path segment.
