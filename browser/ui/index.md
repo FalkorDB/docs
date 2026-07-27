@@ -14,9 +14,6 @@ The screenshots across this section use the same demo graph so the pages line up
 ## Screenshot set
 - [Login screen](../../images/browser/login-screen.png)
 - [Main graph overview](../../images/browser/overview.png)
-- [Read-only user connected](../../images/browser/read-only-user-connected.png)
-- [Manage Graphs dialog](../../images/browser/manage-graphs.png)
-- [API docs (light mode)](../../images/browser/api-docs-light.png)
 - [Graph info panel](../../images/browser/graph-info.png)
 - [Query editor](../../images/browser/query-editor.png)
 - [Query history](../../images/browser/query-history.png)
@@ -67,7 +64,7 @@ The screenshots across this section use the same demo graph so the pages line up
 {% include faq_accordion.html
   title="Frequently Asked Questions"
   q1="What are the main sections of the FalkorDB Browser UI?"
-  a1="The UI is organized into **Authentication** (login), **Navigation & global controls**, **Settings**, **Graph workspace** (canvas, panels, toolbar, chat), and **Querying & results** (editor, history, table, metadata)."
+  a1="The UI is organized into **Authentication** (login), **Navigation & global controls**, **Settings**, **Graph workspace** (canvas, panels, toolbar, chat), **Querying & results** (editor, history, table, metadata), and **Developer tooling** (API Docs)."
   q2="Where do I find graph visualization controls?"
   a2="Graph visualization controls are on the **Graph page**. See the [Main graph canvas](./graph-canvas.md) and [Graph toolbar](./toolbar-actions.md) pages for details on pan/zoom, selection, and element actions."
   q3="How do I customize the appearance of nodes?"

@@ -3,13 +3,11 @@ title: "API Docs (Swagger)"
 description: "Use the built-in Swagger UI in FalkorDB Browser to explore and test REST API endpoints."
 parent: "UI Elements"
 grand_parent: "Browser"
-nav_order: 15
+nav_order: 18
 ---
 
 # API Docs (Swagger)
 FalkorDB Browser includes built-in API documentation at `/docs`.
-
-![API docs (light mode)](../../images/browser/api-docs-light.png)
 
 Use the Authorize flow before running protected endpoints.
 

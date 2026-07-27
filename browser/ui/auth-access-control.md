@@ -3,13 +3,11 @@ title: "Roles & Access"
 description: "How authentication and role-based permissions affect FalkorDB Browser features."
 parent: "UI Elements"
 grand_parent: "Browser"
-nav_order: 16
+nav_order: 19
 ---
 
 # Roles & Access
 Browser authentication and authorization control which actions are available to each user.
-
-![Read-only user connected](../../images/browser/read-only-user-connected.png)
 
 ## Authentication model
 
