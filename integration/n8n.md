@@ -66,7 +66,7 @@ The screenshots below are stored in `docs/images/n8n/`.
 
 ### Tool workflow
 
-![AI Agent workflow canvas using the FalkorDB GraphRAG Tool](../images/n8n/n8n-agent-workflow.png)
+![AI Agent workflow canvas using the FalkorDB GraphRAG Tool](../images/n8n/n8n-tool-workflow.png)
 
 ### Retrieve only workflow
 
