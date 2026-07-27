@@ -17,7 +17,7 @@ Choose **Load CSV**, then select your CSV file.
 ![Upload Data - Load CSV step 1](../../images/browser/upload-data-load-csv-step1.png)
 
 ### Step 2: Review and run
-After upload, review the generated `LOAD CSV` query, adjust it if needed, then click **Run**.
+After upload, review the generated `LOAD CSV` query, adjust it if needed, then click **RUN**.
 
 ![Upload Data - Load CSV step 2](../../images/browser/upload-data-load-csv-step2.png)
 
