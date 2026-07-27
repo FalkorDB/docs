@@ -36,6 +36,7 @@ The screenshots across this section use the same demo graph so the pages line up
 
 ## Settings
 - [Settings page (Browser settings, admin tools, tokens, tutorial)](./settings.md)
+- [Roles & Access](./auth-access-control.md)
 
 ## UDF management
 - [UDF Libraries page](./udf-libraries.md)
@@ -47,6 +48,7 @@ The screenshots across this section use the same demo graph so the pages line up
 - [Style panel (Customize label styles)](./style-panel.md)
 - [Data / Property panel](./data-panel.md)
 - [Graph toolbar & element actions](./toolbar-actions.md)
+- [Graphs Manager](./graph-management.md)
 - [Chat panel (natural-language to Cypher)](./chat-panel.md)
 
 ## Querying & results
@@ -56,10 +58,13 @@ The screenshots across this section use the same demo graph so the pages line up
 - [Table view](./table-view.md)
 - [Metadata view (Explain/Profile/Metadata)](./metadata-view.md)
 
+## Developer tooling
+- [API Docs (Swagger)](./api-documentation.md)
+
 {% include faq_accordion.html
   title="Frequently Asked Questions"
   q1="What are the main sections of the FalkorDB Browser UI?"
-  a1="The UI is organized into **Authentication** (login), **Navigation & global controls**, **Settings**, **Graph workspace** (canvas, panels, toolbar, chat), and **Querying & results** (editor, history, table, metadata)."
+  a1="The UI is organized into **Authentication** (login), **Navigation & global controls**, **Settings**, **Graph workspace** (canvas, panels, toolbar, chat), **Querying & results** (editor, history, table, metadata), and **Developer tooling** (API Docs)."
   q2="Where do I find graph visualization controls?"
   a2="Graph visualization controls are on the **Graph page**. See the [Main graph canvas](./graph-canvas.md) and [Graph toolbar](./toolbar-actions.md) pages for details on pan/zoom, selection, and element actions."
   q3="How do I customize the appearance of nodes?"
