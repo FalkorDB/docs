@@ -44,9 +44,29 @@ Create one credential under **Credentials -> New -> FalkorDB GraphRAG Server API
 | **API Token** | no | Sent as `Authorization: Bearer ...` when the server requires authentication. |
 | **Request Timeout (Seconds)** | yes | Per-request timeout for GraphRAG-Server calls. |
 
-## Screenshots
+## How to get an API token
 
-The screenshots below are stored in `docs/images/n8n/`.
+Use these steps in GraphRAG-Server before configuring the n8n credential.
+
+### 1. Open Settings and API Access
+
+Open your graph in GraphRAG-Server, then go to **Settings** and keep the **API Access** tab selected.
+
+![GraphRAG-Server Settings page with API Access selected](../images/n8n/n8n-graphrag-settings-overview.png)
+
+### 2. Add your LLM key
+
+In **Your LLM Keys**, add a provider key if one is not already present. API tokens run on your own LLM key, so this step is required first.
+
+![LLM key section in GraphRAG-Server Settings](../images/n8n/n8n-graphrag-llm-key.png)
+
+### 3. Generate the client API token
+
+In **API Tokens**, enter a token name (for example, `n8n production`), choose expiration, and click **Generate**. Copy the raw token value when shown and paste it into the n8n credential **API Token** field.
+
+![API Tokens panel showing token generation controls](../images/n8n/n8n-graphrag-api-token.png)
+
+## Screenshots
 
 ### Node picker
 
