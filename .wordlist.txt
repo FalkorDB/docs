@@ -192,6 +192,7 @@ DELUSER
 DESC
 destinationGraphName
 dev
+n8n
 dimensionality
 directionality
 discoverability
@@ -461,6 +462,8 @@ lexicographically
 Lex
 libcypher
 libomp
+lifecycle
+Libs
 Lightning
 Lipman
 listGraphs
@@ -870,6 +873,7 @@ TypeScript
 uber
 UDF
 UDFs
+udf
 UI
 unaliased
 undirected

@@ -199,8 +199,8 @@ FalkorDBLite is ideal for:
 
 For production environments, consider using:
 - [FalkorDB Cloud](https://app.falkordb.cloud) - Managed cloud service
-- [FalkorDB Docker](/getting-started) - Self-hosted server deployment
-- [FalkorDB Kubernetes](/operations/k8s_support) - Kubernetes deployment
+- [FalkorDB Docker](/getting-started/) - Self-hosted server deployment
+- [FalkorDB Kubernetes](/operations/k8s-support) - Kubernetes deployment
 
 ## Additional Resources
 

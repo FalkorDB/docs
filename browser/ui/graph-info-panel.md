@@ -9,6 +9,8 @@ nav_order: 6
 # Graph Info Panel
 The Graph Info panel provides quick, clickable insights into the selected graph’s structure.
 
+![Graph info panel](../../images/browser/graph-info.png)
+
 ## What it shows
 - **Graph name**
 - **Memory usage** (optional; can be toggled via settings)

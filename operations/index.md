@@ -17,7 +17,7 @@ The Operations chapter provides essential guides for configuring and managing Fa
 
 Learn how to run FalkorDB using Docker and Docker Compose, with examples for development and production environments including persistence, networking, and configuration options.
 
-## 2. [Data Durability](/operations/durability)
+## 2. [Data Durability](/operations/durability/)
 
 Understand FalkorDB's durability mechanisms including RDB snapshots, AOF logging, and graph-specific backup options to balance performance and data safety.
 
@@ -45,7 +45,7 @@ Deploy FalkorDB quickly using verified templates on Railway, a modern platform-a
 
 Comprehensive guide for setting up OpenTelemetry observability and tracing with FalkorDB Python applications.
 
-## 9. [FalkorDBLite](/operations/falkordblite)
+## 9. [FalkorDBLite](/operations/falkordblite/)
 
 Embedded FalkorDB runtime for local development with guides for [Python](/operations/falkordblite/falkordblite-py) and [TypeScript](/operations/falkordblite/falkordblite-ts).
 
@@ -66,7 +66,7 @@ Build custom FalkorDB Docker containers from source with platform-specific examp
   q1="What Docker image should I use for production?"
   a1="Use `falkordb/falkordb-server` for production deployments. It excludes the browser UI, making it lighter and more efficient. Use `falkordb/falkordb` for development when you need the built-in browser."
   q2="How do I ensure my data survives container restarts?"
-  a2="Mount a persistent volume to `/var/lib/falkordb/data` using Docker volumes or bind mounts, and enable AOF persistence. See the [Data Durability](/operations/durability) guide for full details."
+  a2="Mount a persistent volume to `/var/lib/falkordb/data` using Docker volumes or bind mounts, and enable AOF persistence. See the [Data Durability](/operations/durability/) guide for full details."
   q3="Can FalkorDB scale horizontally?"
   a3="Yes. FalkorDB supports clustering via Redis Cluster, distributing graphs across multiple shards using hash slots. Each graph resides on one shard. See [Setting Up a Cluster](/operations/cluster) for setup instructions."
   q4="What is the easiest way to deploy FalkorDB to the cloud?"

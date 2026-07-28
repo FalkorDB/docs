@@ -9,6 +9,8 @@ nav_order: 13
 # Graph Toolbar & Element Actions
 The Graph toolbar is an overlay shown on the Graph canvas. It’s focused on searching, selecting, and modifying graph elements.
 
+![Graph toolbar and overlay controls](../../images/browser/overview.png)
+
 ## In-canvas element search
 The search input supports matching against:
 - Node/edge **property values** (string prefix match)
