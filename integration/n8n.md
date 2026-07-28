@@ -46,7 +46,7 @@ Create one credential under **Credentials -> New -> FalkorDB GraphRAG Server API
 
 ## Screenshots
 
-The screenshots below are stored in `images/n8n/`.
+The screenshots below are stored in `docs/images/n8n/`.
 
 ### Node picker
 
