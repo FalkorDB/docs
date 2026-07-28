@@ -84,10 +84,6 @@ In **API Tokens**, enter a token name (for example, `n8n production`), choose ex
 
 ![FalkorDB GraphRAG Server API credential screen](../images/n8n/n8n-credential-settings.png)
 
-### Tool workflow
-
-![AI Agent workflow canvas using the FalkorDB GraphRAG Tool](../images/n8n/n8n-tool-workflow.png)
-
 ### Retrieve only workflow
 
 ![Retrieve-only workflow canvas with Manual Trigger, Set Question, and FalkorDB GraphRAG](../images/n8n/n8n-retrieve-only-workflow.png)
