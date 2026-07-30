@@ -28,13 +28,14 @@ A column in the result set can be populated with graph entities (nodes or relati
 
 FalkorDB replies are formatted using the [RESP protocol](https://redis.io/topics/protocol). The current RESP iteration provides fewer data types than FalkorDB supports internally, so displayed results are mapped as follows:
 
-| FalkorDB type | Display format              |
-|-----------------|-----------------------------|
-| Integer         | Integer                     |
-| NULL            | NULL (nil)                  |
-| String          | String                      |
-| Boolean         | String ("true"/"false")     |
-| Double          | String (15-digit precision) |
+| FalkorDB type | Display format                                      |
+|---------------|-----------------------------------------------------|
+| Integer       | Integer                                             |
+| NULL          | NULL (nil)                                          |
+| String        | String                                              |
+| Boolean       | String ("true"/"false")                             |
+| Double        | String (15-digit precision)                         |
+| Point         | String ("point({latitude:%f, longitude:%f})")       |
 
 ### Graph Entities
 
@@ -94,6 +95,30 @@ The string representation of an array which contains graph entities, will print 
 #### Paths
 
 Returned path value is the string representation of an array with the path's nodes and edges, interleaved.
+
+#### Maps
+
+When a map value is returned, the verbose representation is the string representation of the map's key-value pairs. For example:
+
+```sh
+"RETURN {name: 'John', age: 30} AS map"
+1) 1) "map"
+2) 1) 1) "{name: John, age: 30}"
+3) 1) "Query internal execution time: 0.5 milliseconds"
+```
+
+Maps cannot be stored as property values.
+
+#### Points
+
+When a point value is returned, the verbose representation is a string in the format `point({latitude:<lat>, longitude:<lon>})`. For example:
+
+```sh
+"RETURN point({latitude: 51.5074, longitude: -0.1278}) AS p"
+1) 1) "p"
+2) 1) 1) "point({latitude:51.507400, longitude:-0.127800})"
+3) 1) "Query internal execution time: 0.5 milliseconds"
+```
 
 ## Example
 
