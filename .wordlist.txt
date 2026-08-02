@@ -6,6 +6,7 @@ accordion
 ACL
 ACLs
 acos
+airroutes
 acyclic
 Addon
 addon
@@ -154,6 +155,7 @@ csrfToken
 CSV
 csv
 CSVs
+CTE
 Ctrl
 Cursor
 Customizable
@@ -175,6 +177,7 @@ dbms
 DDL
 ddl
 DDTHH
+DeepSeek
 DML
 decapitalize
 dedup
@@ -189,6 +192,7 @@ DELUSER
 DESC
 destinationGraphName
 dev
+n8n
 dimensionality
 directionality
 discoverability
@@ -202,6 +206,7 @@ dotenv
 Dovizioso
 drivine
 dropConstraint
+dropdown
 Dropzone
 DT
 Ducati
@@ -439,6 +444,7 @@ KNOWS
 Kruskal's
 KubeBlocks
 kubeblocks
+kubectl
 Kubernetes
 Kuzu
 labelPropagation
@@ -456,6 +462,8 @@ lexicographically
 Lex
 libcypher
 libomp
+lifecycle
+Libs
 Lightning
 Lipman
 listGraphs
@@ -463,6 +471,7 @@ list_graphs
 LiteLLM
 LlamaIndex
 LLM
+LM
 llm
 LLMs
 LoadBalancer
@@ -618,6 +627,7 @@ pipx
 PodMonitor
 pom
 PostContent
+Postgres
 pre
 prem
 preprocessing
@@ -795,6 +805,7 @@ subgraph
 subgraphs
 sublist
 Submap
+Supabase
 submap
 subqueries
 subquery
@@ -862,6 +873,7 @@ TypeScript
 uber
 UDF
 UDFs
+udf
 UI
 unaliased
 undirected
@@ -910,6 +922,7 @@ WSL
 www
 XCode
 xcode
+xAI
 xlarge
 xml
 xxHash

@@ -193,7 +193,7 @@ For production deployments:
 
 1. Confirm the FalkorDB data directory is backed by a Railway volume
 2. Configure manual or automated Railway volume backups
-3. Review FalkorDB durability settings for RDB snapshots and AOF logging in [Data Durability](/operations/durability)
+3. Review FalkorDB durability settings for RDB snapshots and AOF logging in [Data Durability](/operations/durability/)
 
 ## Monitoring and Logs
 

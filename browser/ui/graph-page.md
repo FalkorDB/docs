@@ -9,6 +9,8 @@ nav_order: 4
 # Graph Page (Layout)
 The Graph page (`/graph`) is the primary workspace for querying and visualizing data.
 
+![Graph workspace overview](../../images/browser/overview.png)
+
 ## High-level layout
 The page is composed of:
 1. **Left sidebar** (navigation, theme, graph info/chat toggles)

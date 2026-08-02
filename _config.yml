@@ -3,7 +3,7 @@ title: FalkorDB Docs
 tagline: "Graph Database for GraphRAG, Cypher & Knowledge Graphs"
 description: "Official FalkorDB documentation — the high-performance graph database for GraphRAG, Cypher queries, and knowledge graphs powering accurate GenAI applications."
 url: "https://docs.falkordb.com"
-logo: "/images/falkor-logo.png"
+logo: "/images/falkordb-logo.svg"
 logo_link: "/"
 favicon_ico: "/images/favicon.ico"
 gtm_tracking: GTM-MBWB627H
@@ -29,6 +29,15 @@ aux_links_new_tab: true
 
 # Enable the side/mobile menu globally
 nav_enabled: true
+
+# Social preview image for jekyll-seo-tag (og:image / twitter:image). The
+# plugin only reads it from page front matter, so it is set as a site-wide
+# default here; individual pages can override it with their own `image` key.
+defaults:
+  - scope:
+      path: ""
+    values:
+      image: "/images/falkor-logo.png"
 
 plugins:
   - jekyll-sitemap

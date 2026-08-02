@@ -280,7 +280,7 @@ document.addEventListener("DOMContentLoaded", function () {
 {
   "@context": "https://schema.org",
   "@type": "TechArticle",
-  "headline": {{ page.title | jsonify }},
+  "headline": {{ page.title | default: site.title | jsonify }},
   "dateModified": "{{ page.last_modified_at | default: site.time | date_to_xmlschema }}",
   "publisher": {
     "@type": "Organization",

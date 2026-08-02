@@ -9,6 +9,8 @@ nav_order: 12
 # Metadata View
 The Metadata tab provides query execution details for the current query.
 
+![Metadata view](../../images/browser/metadata-view.png)
+
 ## Sections
 The UI is split into three main panels:
 - **Profile**

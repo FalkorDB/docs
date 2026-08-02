@@ -136,8 +136,8 @@ While Lightning.AI provides an excellent platform for AI applications, FalkorDB 
 
 * [FalkorDB Cloud](https://app.falkordb.cloud) - Managed cloud service
 * [Railway Deployment](/operations/railway) - Quick deployment on Railway
-* [Kubernetes](/operations/k8s_support) - Production-grade orchestration
-* [Docker](/getting-started) - Local or self-hosted deployment
+* [Kubernetes](/operations/k8s-support) - Production-grade orchestration
+* [Docker](/getting-started/) - Local or self-hosted deployment
 
 {% include faq_accordion.html
   title="Frequently Asked Questions"
