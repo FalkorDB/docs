@@ -15,24 +15,26 @@
   var searchDataUrl = {{ "assets/js/search-data.json" | relative_url | jsonify }};
   var nativeOpen = XMLHttpRequest.prototype.open;
   var nativeSend = XMLHttpRequest.prototype.send;
+  var intercepting = true;
   var deferredRequest = null;
 
-  // Requests other than the search index are passed straight through, and the
-  // patch is removed again once the theme has initialised (see below), so it
-  // is only in place for the initial page setup.
-  XMLHttpRequest.prototype.open = function (method, url) {
-    if (url === searchDataUrl) {
-      this.isSearchIndexRequest = true;
-    }
+  // Requests other than the search index are passed straight through, and
+  // interception is switched off once the theme has initialised (see below),
+  // so this is only in effect during the initial page setup.
+  function patchedOpen(method, url) {
+    this.isSearchIndexRequest = url === searchDataUrl;
     return nativeOpen.apply(this, arguments);
-  };
+  }
 
-  XMLHttpRequest.prototype.send = function () {
-    if (!this.isSearchIndexRequest) {
+  function patchedSend() {
+    if (!intercepting || !this.isSearchIndexRequest) {
       return nativeSend.apply(this, arguments);
     }
     deferredRequest = { xhr: this, args: arguments };
-  };
+  }
+
+  XMLHttpRequest.prototype.open = patchedOpen;
+  XMLHttpRequest.prototype.send = patchedSend;
 
   function loadSearchIndex() {
     if (!deferredRequest) return;
@@ -59,9 +61,16 @@
 
   function themeReady() {
     // initSearch() has run by now - the theme registered its DOMContentLoaded
-    // handler before this one - so stop intercepting requests.
-    XMLHttpRequest.prototype.open = nativeOpen;
-    XMLHttpRequest.prototype.send = nativeSend;
+    // handler before this one - so stop intercepting requests. Only unwrap
+    // methods that are still the ones installed above, in case another script
+    // has wrapped them in the meantime; those wrappers now pass through.
+    intercepting = false;
+    if (XMLHttpRequest.prototype.open === patchedOpen) {
+      XMLHttpRequest.prototype.open = nativeOpen;
+    }
+    if (XMLHttpRequest.prototype.send === patchedSend) {
+      XMLHttpRequest.prototype.send = nativeSend;
+    }
 
     var searchInput = document.getElementById('search-input');
     if (!searchInput) {
