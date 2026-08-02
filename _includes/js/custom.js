@@ -75,13 +75,19 @@
     ['focus', 'mouseenter', 'touchstart'].forEach(function (type) {
       searchInput.addEventListener(type, loadSearchIndex, { once: true, passive: true });
     });
+
+    // On a slow connection the search box can be reached while the rest of
+    // the page is still parsing, i.e. before the listener above exists.
+    if (document.activeElement === searchInput) {
+      loadSearchIndex();
+    }
     {%- if site.search.focus_shortcut_key %}
 
     // The theme's focus shortcut only starts working once the index has
     // loaded, which now requires focusing the search box first. Focus it here
     // too, so the shortcut keeps working from the first key press.
     document.addEventListener('keydown', function (e) {
-      if ((e.ctrlKey || e.metaKey) && e.key === '{{ site.search.focus_shortcut_key }}') {
+      if ((e.ctrlKey || e.metaKey) && e.key === {{ site.search.focus_shortcut_key | jsonify }}) {
         e.preventDefault();
 
         var mainHeader = document.getElementById('main-header');
