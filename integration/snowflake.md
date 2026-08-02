@@ -29,6 +29,7 @@ The Native App runs FalkorDB inside Snowpark Container Services (SPCS). Snowflak
 - [Querying graphs](#querying-graphs)
 - [Writing query results back to Snowflake](#writing-query-results-back-to-snowflake)
 - [Air Routes example](#practical-example-air-routes-graph)
+- [Webinar demo: Air Routes end to end](#webinar-demo-air-routes-end-to-end)
 - [FalkorDB Browser](#open-the-falkordb-browser)
 - [Snowflake Cortex Agent](#snowflake-cortex-agent)
 - [Troubleshooting](#troubleshooting)
@@ -154,7 +155,14 @@ CALL <app_instance_name>.app_public.get_service_status();
 
 **Note**: Replace `<app_instance_name>` with the name you chose during installation.
 
-Wait for the service status to show `READY` before proceeding (typically 2-3 minutes).
+Wait for the service status to show `READY` before proceeding (typically 2-3 minutes). Interpreting the `get_service_status()` output:
+
+- An empty result (`[]`) means the service is still starting. This is not an error; wait a bit and call the procedure again.
+- When the service is ready, the result contains a container entry with `"status":"READY"`:
+
+```json
+[{"status":"READY","message":"Running","containerName":"falkordb-server","instanceId":"0","serviceName":"ST_SPCS","restartCount":0,"startTime":"2026-07-07T12:48:02Z"}]
+```
 
 Default resources use a `CPU_X64_S` compute pool with FalkorDB container resources of 1 CPU / 2GB RAM requested and 2 CPU / 4GB RAM limit. For larger graph loads, start the app with explicit resource options:
 
@@ -560,6 +568,194 @@ FROM FALKORDB_FLIGHTS_DEMO.PUBLIC.COUNTRY_WRITEBACK_TEST
 ORDER BY row_index;
 ```
 
+## Webinar Demo: Air Routes End to End
+
+This is the complete, copy-paste flow shown in the FalkorDB Snowflake webinar: download two CSV files, load them into Snowflake tables through the UI, install the Native App, build the `airroutes` graph, and compare a multi-hop Cypher query with its SQL equivalent.
+
+Watch the full walkthrough:
+
+[![Snowflake Native App with FalkorDB](https://img.youtube.com/vi/a_Nnf_1vH_w/0.jpg)](https://www.youtube.com/watch?v=a_Nnf_1vH_w)
+
+### Step 1: Download the demo data
+
+Download the two demo files from the [airroutes example folder](https://github.com/FalkorDB/snowflake-integration/tree/main/examples/airroutes):
+
+- [airports.csv](https://github.com/FalkorDB/snowflake-integration/blob/main/examples/airroutes/airports.csv) (about 8 MB, one row per airport)
+- [routes.csv](https://github.com/FalkorDB/snowflake-integration/blob/main/examples/airroutes/routes.csv) (about 2.7 MB, one row per airline route)
+
+The column order in these files matches the `row[n]` mappings used below.
+
+### Step 2: Load the CSVs into Snowflake tables
+
+Create the demo database and both tables from the Snowflake UI (no SQL needed):
+
+1. In the Snowflake sidebar, go to **Ingestion** → **Add Data** → **Load data into a table**.
+2. Click **Browse** and select the downloaded `airports.csv`.
+3. Under database, click **+ Database** and name the new database `ROUTES_DEMO`.
+4. Choose **Create new table**, name it `AIRPORTS`, then click **Next**.
+5. Review the detected columns, click **Next**, then **Load**. Wait for the success message.
+
+Repeat for the routes file:
+
+1. Go to **Ingestion** → **Add Data** → **Load data into a table** again.
+2. Click **Browse** and select `routes.csv`.
+3. This time select the existing `ROUTES_DEMO` database instead of creating a new one.
+4. Choose **Create new table** from the dropdown, name it `ROUTES`, then click **Next**.
+5. Click **Next**, then **Load**, and wait for the success message.
+
+![Snowflake Add Data screen showing the Load data into a Table option](../images/snowflake-add-data-load-table.png)
+
+### Step 3: Install FalkorDB from the Marketplace
+
+1. In the Snowflake sidebar, click **Marketplace** → **Snowflake Marketplace**.
+2. Search for **FalkorDB** and select the FalkorDB Native App listing.
+3. Click **Get** and follow the [installation steps](#installation), granting the required privileges.
+
+### Step 4: Start the service
+
+```sql
+CALL <app_instance_name>.app_public.start_app('FALKORDB_POOL', 'FALKORDB_WH');
+
+CALL <app_instance_name>.app_public.get_service_status();
+```
+
+Remember: an empty status result (`[]`) means the service is still starting. Re-run `get_service_status()` until the result shows `"status":"READY"`.
+
+### Step 5: Create indexes
+
+Create indexes before loading so the route load (which uses `MATCH` on `iata_code`) stays fast, then verify they exist:
+
+```sql
+CALL <app_instance_name>.app_public.graph_query(
+  'airroutes',
+  'CREATE INDEX FOR (a:Airport) ON (a.id)'
+);
+
+CALL <app_instance_name>.app_public.graph_query(
+  'airroutes',
+  'CREATE INDEX FOR (a:Airport) ON (a.iata_code)'
+);
+
+-- Verify all indexes were created
+CALL <app_instance_name>.app_public.graph_query(
+  'airroutes',
+  'CALL db.indexes()'
+);
+```
+
+### Step 6: Load airports
+
+Bind `ROUTES_DEMO.PUBLIC.AIRPORTS` to `consumer_data_table` (see [Bind Your Table](#step-1-bind-your-table)), then load the airport nodes and count them:
+
+```sql
+CALL <app_instance_name>.app_public.load_csv(
+  'airroutes',
+  'LOAD CSV FROM ''file://consumer_data.csv'' AS row
+   MERGE (a:Airport {id: toInteger(row[0])})
+   SET
+     a.ident = row[1],
+     a.type = row[2],
+     a.name = row[3],
+     a.latitude = toFloat(row[4]),
+     a.longitude = toFloat(row[5]),
+     a.elevation_ft = toInteger(row[6]),
+     a.continent = row[7],
+     a.iso_country = row[8],
+     a.iso_region = row[9],
+     a.municipality = row[10],
+     a.scheduled_service = row[11],
+     a.icao_code = row[12],
+     a.iata_code = row[13]'
+);
+
+CALL <app_instance_name>.app_public.graph_query(
+  'airroutes',
+  'MATCH (a:Airport) RETURN count(a) AS airport_count'
+);
+```
+
+### Step 7: Load routes
+
+Rebind `consumer_data_table` to `ROUTES_DEMO.PUBLIC.ROUTES`, then load the relationships and count them:
+
+```sql
+CALL <app_instance_name>.app_public.load_csv(
+  'airroutes',
+  'LOAD CSV FROM ''file://consumer_data.csv'' AS row
+   MATCH (src:Airport {iata_code: row[2]})
+   MATCH (dst:Airport {iata_code: row[4]})
+   CREATE (src)-[r:ROUTE]->(dst)
+   SET
+     r.airline = row[0],
+     r.airline_id = row[1],
+     r.source_airport = row[2],
+     r.destination_airport = row[4],
+     r.stops = toInteger(row[7]),
+     r.equipment = row[8]'
+);
+
+CALL <app_instance_name>.app_public.graph_query(
+  'airroutes',
+  'MATCH ()-[r:ROUTE]->() RETURN count(r) AS route_count'
+);
+```
+
+### Step 8: Ask a multi-hop question
+
+Find flight paths from Sydney to New York JFK in up to 5 hops:
+
+```sql
+CALL <app_instance_name>.app_public.graph_query(
+  'airroutes',
+  'MATCH path = (:Airport {iata_code:"SYD"})-[:ROUTE*1..5]->(:Airport {iata_code:"JFK"})
+   RETURN length(path) AS hops,
+          [airport IN nodes(path) | airport.iata_code] AS route_path
+   LIMIT 20'
+);
+```
+
+To see the same result as a visual graph instead of a table, run this variant in the [FalkorDB Browser](#open-the-falkordb-browser):
+
+```cypher
+MATCH path = (:Airport {iata_code:"SYD"})-[:ROUTE*1..5]->(:Airport {iata_code:"JFK"})
+RETURN path
+LIMIT 20
+```
+
+### The same question in SQL
+
+For comparison, the equivalent recursive SQL over the `ROUTES` table. The Cypher above expresses the traversal in three lines; the SQL needs a recursive CTE with manual cycle protection:
+
+```sql
+WITH RECURSIVE trip AS (
+  SELECT
+    source_airport,
+    destination_airport,
+    1 AS hops,
+    source_airport || ' -> ' || destination_airport AS path
+  FROM ROUTES_DEMO.PUBLIC.ROUTES
+  WHERE source_airport = 'SYD'
+
+  UNION ALL
+
+  SELECT
+    t.source_airport,
+    r.destination_airport,
+    t.hops + 1,
+    t.path || ' -> ' || r.destination_airport
+  FROM trip t
+  JOIN ROUTES_DEMO.PUBLIC.ROUTES r
+    ON t.destination_airport = r.source_airport
+  WHERE t.hops < 5
+    AND POSITION(r.destination_airport IN t.path) = 0
+)
+SELECT hops, path
+FROM trip
+WHERE destination_airport = 'JFK'
+  AND hops <= 5
+LIMIT 20;
+```
+
 ## Complete Example: Social Network
 
 ### Step 1: Create Sample Data Table
@@ -833,6 +1029,10 @@ ORDER BY friend_count DESC
 ## Snowflake Cortex Agent
 
 The Native App can create a Snowflake Cortex Agent that uses FalkorDB tools. This gives business users and analysts a guided natural-language interface for graph workflows while still executing through app-owned Snowflake procedures.
+
+Watch how to get started:
+
+[![Start your FalkorDB Cortex Agent](https://img.youtube.com/vi/9GdItrMyjzo/0.jpg)](https://www.youtube.com/watch?v=9GdItrMyjzo)
 
 The Agent can:
 

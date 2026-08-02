@@ -9,6 +9,8 @@ nav_order: 8
 # Data / Property Panel
 The Data panel opens when you select a node or edge in the graph. It’s used to inspect properties and perform edit operations.
 
+![Data panel](../../images/browser/data-panel.png)
+
 ## What it shows
 For the selected element:
 - **ID**

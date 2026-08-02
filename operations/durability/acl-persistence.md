@@ -52,7 +52,7 @@ docker run -d --name falkordb \
 
 - `-v ~/falkordb/data:/var/lib/falkordb/data` bind-mounts the host directory into FalkorDB's default data directory, so both the AOF/RDB files and `users.acl` live on the host.
 - `--aclfile /var/lib/falkordb/data/users.acl` tells Redis to load users from — and `ACL SAVE` to write users to — that file.
-- `--appendonly yes` enables AOF so that the graph data is also durable. See [Data Durability](/operations/durability) for the full set of options.
+- `--appendonly yes` enables AOF so that the graph data is also durable. See [Data Durability](/operations/durability/) for the full set of options.
 
 Verify the container picked up the configuration:
 
@@ -165,7 +165,7 @@ docker compose up -d
 ## Related
 
 - [Persistence on Docker](/operations/durability/persistence) — persisting graph data with volumes and verifying data durability.
-- [Data Durability](/operations/durability) — RDB/AOF configuration.
+- [Data Durability](/operations/durability/) — RDB/AOF configuration.
 - [ACL command reference](/commands/acl) — all ACL subcommands.
 - [Redis ACL documentation](https://redis.io/docs/latest/operate/oss_and_stack/management/security/acl/) — full rule syntax.
 
