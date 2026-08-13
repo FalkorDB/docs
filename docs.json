@@ -304,7 +304,6 @@
                 "group": "GenAI Tools",
                 "pages": [
                   "genai-tools/graphrag-sdk",
-                  "genai-tools/graphrag-server",
                   "genai-tools/ag2",
                   "genai-tools/langchain",
                   "genai-tools/langgraph",
@@ -628,46 +627,6 @@
       "destination": "/getting-started/clients"
     },
     {
-      "source": "/cloud/enterprise-tier.html",
-      "destination": "/cloud/enterprise-tier"
-    },
-    {
-      "source": "/cloud/features.html",
-      "destination": "/cloud/features"
-    },
-    {
-      "source": "/cloud/free-tier.html",
-      "destination": "/cloud/free-tier"
-    },
-    {
-      "source": "/cloud/index.html",
-      "destination": "/cloud"
-    },
-    {
-      "source": "/cloud/maintenance-windows.html",
-      "destination": "/cloud/maintenance-windows"
-    },
-    {
-      "source": "/cloud/monitoring-dashboard.html",
-      "destination": "/cloud/monitoring-dashboard"
-    },
-    {
-      "source": "/cloud/operations/export-import.html",
-      "destination": "/cloud/operations/export-import"
-    },
-    {
-      "source": "/cloud/operations/index.html",
-      "destination": "/cloud/operations"
-    },
-    {
-      "source": "/cloud/pro-tier.html",
-      "destination": "/cloud/pro-tier"
-    },
-    {
-      "source": "/cloud/startup-tier.html",
-      "destination": "/cloud/startup-tier"
-    },
-    {
       "source": "/code-graph",
       "destination": "/genai-tools/code-graph"
     },
@@ -988,8 +947,12 @@
       "destination": "/genai-tools/graphrag-sdk"
     },
     {
+      "source": "/genai-tools/graphrag-server",
+      "destination": "/genai-tools/graphrag-sdk"
+    },
+    {
       "source": "/genai-tools/graphrag-server.html",
-      "destination": "/genai-tools/graphrag-server"
+      "destination": "/genai-tools/graphrag-sdk"
     },
     {
       "source": "/genai-tools/graphrag-toolkit.html",
