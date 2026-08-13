@@ -23,332 +23,356 @@
         "product": "FalkorDB",
         "description": "The open source graph database, Cypher language, and tooling.",
         "icon": "database",
-        "groups": [
+        "anchors": [
           {
-            "group": "Home",
-            "pages": [
-              "index",
-              "datatypes",
-              "support"
+            "anchor": "Documentation",
+            "icon": "book-open",
+            "groups": [
+              {
+                "group": "Home",
+                "pages": [
+                  "index",
+                  "datatypes",
+                  "support"
+                ]
+              },
+              {
+                "group": "Getting Started",
+                "pages": [
+                  "getting-started/configuration",
+                  "getting-started/clients"
+                ],
+                "root": "getting-started/index"
+              },
+              {
+                "group": "Cypher Language",
+                "pages": [
+                  "cypher/match",
+                  "cypher/optional-match",
+                  "cypher/where",
+                  "cypher/return",
+                  "cypher/order-by",
+                  "cypher/skip",
+                  "cypher/limit",
+                  "cypher/create",
+                  "cypher/delete",
+                  "cypher/set",
+                  "cypher/merge",
+                  "cypher/with",
+                  "cypher/union",
+                  "cypher/unwind",
+                  "cypher/foreach",
+                  "cypher/call",
+                  "cypher/load-csv",
+                  "cypher/functions",
+                  "cypher/procedures",
+                  {
+                    "group": "Indexing",
+                    "pages": [
+                      "cypher/indexing/range-index",
+                      "cypher/indexing/fulltext-index",
+                      "cypher/indexing/vector-index"
+                    ],
+                    "root": "cypher/indexing/index"
+                  },
+                  "cypher/cypher-support",
+                  "cypher/remove",
+                  "cypher/known-limitations"
+                ],
+                "root": "cypher/index"
+              },
+              {
+                "group": "Algorithms",
+                "pages": [
+                  "algorithms/bfs",
+                  "algorithms/betweenness-centrality",
+                  "algorithms/cdlp",
+                  "algorithms/pagerank",
+                  "algorithms/sppath",
+                  "algorithms/sspath",
+                  "algorithms/wcc",
+                  "algorithms/harmonic-centrality",
+                  "algorithms/maxflow",
+                  "algorithms/msf"
+                ],
+                "root": "algorithms/index"
+              },
+              {
+                "group": "UDFs",
+                "pages": [
+                  {
+                    "group": "FLEX Function Reference",
+                    "pages": [
+                      {
+                        "group": "Bitwise Functions",
+                        "pages": [
+                          "udfs/flex/bitwise/and",
+                          "udfs/flex/bitwise/not",
+                          "udfs/flex/bitwise/or",
+                          "udfs/flex/bitwise/shiftLeft",
+                          "udfs/flex/bitwise/shiftRight",
+                          "udfs/flex/bitwise/xor"
+                        ],
+                        "root": "udfs/flex/bitwise/index"
+                      },
+                      {
+                        "group": "Collection Functions",
+                        "pages": [
+                          "udfs/flex/collections/frequencies",
+                          "udfs/flex/collections/intersection",
+                          "udfs/flex/collections/shuffle",
+                          "udfs/flex/collections/union",
+                          "udfs/flex/collections/zip"
+                        ],
+                        "root": "udfs/flex/collections/index"
+                      },
+                      {
+                        "group": "Date Functions",
+                        "pages": [
+                          "udfs/flex/date/format",
+                          "udfs/flex/date/parse",
+                          "udfs/flex/date/toTimeZone",
+                          "udfs/flex/date/truncate"
+                        ],
+                        "root": "udfs/flex/date/index"
+                      },
+                      {
+                        "group": "JSON Functions",
+                        "pages": [
+                          "udfs/flex/json/fromJsonList",
+                          "udfs/flex/json/fromJsonMap",
+                          "udfs/flex/json/toJson"
+                        ],
+                        "root": "udfs/flex/json/index"
+                      },
+                      {
+                        "group": "Map Functions",
+                        "pages": [
+                          "udfs/flex/map/fromPairs",
+                          "udfs/flex/map/merge",
+                          "udfs/flex/map/removeKey",
+                          "udfs/flex/map/removeKeys",
+                          "udfs/flex/map/submap"
+                        ],
+                        "root": "udfs/flex/map/index"
+                      },
+                      {
+                        "group": "Similarity Functions",
+                        "pages": [
+                          "udfs/flex/similarity/jaccard"
+                        ],
+                        "root": "udfs/flex/similarity/index"
+                      },
+                      {
+                        "group": "Text Functions",
+                        "pages": [
+                          "udfs/flex/text/camelCase",
+                          "udfs/flex/text/capitalize",
+                          "udfs/flex/text/decapitalize",
+                          "udfs/flex/text/format",
+                          "udfs/flex/text/indexOf",
+                          "udfs/flex/text/indexesOf",
+                          "udfs/flex/text/jaroWinkler",
+                          "udfs/flex/text/join",
+                          "udfs/flex/text/levenshtein",
+                          "udfs/flex/text/lpad",
+                          "udfs/flex/text/regexGroups",
+                          "udfs/flex/text/repeat",
+                          "udfs/flex/text/replace",
+                          "udfs/flex/text/rpad",
+                          "udfs/flex/text/snakeCase",
+                          "udfs/flex/text/swapCase",
+                          "udfs/flex/text/upperCamelCase"
+                        ],
+                        "root": "udfs/flex/text/index"
+                      }
+                    ],
+                    "root": "udfs/flex/index"
+                  }
+                ],
+                "root": "udfs/index"
+              },
+              {
+                "group": "Commands",
+                "pages": [
+                  "commands/graph.query",
+                  "commands/graph.ro-query",
+                  "commands/graph.delete",
+                  "commands/graph.explain",
+                  "commands/graph.list",
+                  "commands/graph.profile",
+                  "commands/graph.config-set",
+                  "commands/graph.constraint-drop",
+                  "commands/graph.copy",
+                  "commands/graph.info",
+                  "commands/graph.memory",
+                  "commands/acl",
+                  "commands/graph.config-get",
+                  "commands/graph.constraint-create",
+                  "commands/graph.slowlog"
+                ],
+                "root": "commands/index"
+              },
+              {
+                "group": "Operations",
+                "pages": [
+                  {
+                    "group": "Migration",
+                    "pages": [
+                      "operations/migration/redisgraph-to-falkordb",
+                      "operations/migration/neo4j-to-falkordb",
+                      "operations/migration/kuzu-to-falkordb",
+                      "operations/migration/rdf-to-falkordb",
+                      "operations/migration/sql-to-falkordb"
+                    ],
+                    "root": "operations/migration/index"
+                  },
+                  {
+                    "group": "Durability",
+                    "pages": [
+                      "operations/durability/persistence",
+                      "operations/durability/acl-persistence"
+                    ],
+                    "root": "operations/durability/index"
+                  },
+                  "operations/replication",
+                  "operations/cluster",
+                  "operations/k8s-support",
+                  "operations/opentelemetry",
+                  "operations/railway",
+                  {
+                    "group": "FalkorDBLite",
+                    "pages": [
+                      "operations/falkordblite/falkordblite-py",
+                      "operations/falkordblite/falkordblite-ts"
+                    ],
+                    "root": "operations/falkordblite/index"
+                  },
+                  "operations/lightning-ai",
+                  "operations/building-docker",
+                  "operations/kubeblocks",
+                  "operations/docker"
+                ],
+                "root": "operations/index"
+              },
+              {
+                "group": "The FalkorDB Design",
+                "pages": [
+                  "design/client-spec",
+                  "design/result-structure",
+                  "design/bulk-spec",
+                  "design/third-party",
+                  "design/concurrency"
+                ],
+                "root": "design/index"
+              },
+              {
+                "group": "References",
+                "pages": [
+                  "references/license"
+                ],
+                "root": "references/index"
+              }
             ]
           },
           {
-            "group": "Getting Started",
-            "pages": [
-              "getting-started/configuration",
-              "getting-started/clients"
-            ],
-            "root": "getting-started/index"
-          },
-          {
-            "group": "Algorithms",
-            "pages": [
-              "algorithms/bfs",
-              "algorithms/betweenness-centrality",
-              "algorithms/cdlp",
-              "algorithms/pagerank",
-              "algorithms/sppath",
-              "algorithms/sspath",
-              "algorithms/wcc",
-              "algorithms/harmonic-centrality",
-              "algorithms/maxflow",
-              "algorithms/msf"
-            ],
-            "root": "algorithms/index"
-          },
-          {
-            "group": "Commands",
-            "pages": [
-              "commands/graph.query",
-              "commands/graph.ro-query",
-              "commands/graph.delete",
-              "commands/graph.explain",
-              "commands/graph.list",
-              "commands/graph.profile",
-              "commands/graph.config-set",
-              "commands/graph.constraint-drop",
-              "commands/graph.copy",
-              "commands/graph.info",
-              "commands/graph.memory",
-              "commands/acl",
-              "commands/graph.config-get",
-              "commands/graph.constraint-create",
-              "commands/graph.slowlog"
-            ],
-            "root": "commands/index"
-          },
-          {
-            "group": "Integration",
-            "pages": [
-              "integration/rest",
-              "integration/kafka-connect",
-              "integration/jena",
-              "integration/bolt-support",
-              "integration/spring-data-falkordb",
-              "integration/snowflake",
-              "integration/pyg",
-              "integration/bulk-loader",
-              "integration/n8n"
-            ],
-            "root": "integration/index"
-          },
-          {
-            "group": "UDFs",
-            "pages": [
+            "anchor": "Integrations",
+            "icon": "plug",
+            "groups": [
               {
-                "group": "FLEX Function Reference",
+                "group": "Integration",
                 "pages": [
-                  {
-                    "group": "Bitwise Functions",
-                    "pages": [
-                      "udfs/flex/bitwise/and",
-                      "udfs/flex/bitwise/not",
-                      "udfs/flex/bitwise/or",
-                      "udfs/flex/bitwise/shiftLeft",
-                      "udfs/flex/bitwise/shiftRight",
-                      "udfs/flex/bitwise/xor"
-                    ],
-                    "root": "udfs/flex/bitwise/index"
-                  },
-                  {
-                    "group": "Collection Functions",
-                    "pages": [
-                      "udfs/flex/collections/frequencies",
-                      "udfs/flex/collections/intersection",
-                      "udfs/flex/collections/shuffle",
-                      "udfs/flex/collections/union",
-                      "udfs/flex/collections/zip"
-                    ],
-                    "root": "udfs/flex/collections/index"
-                  },
-                  {
-                    "group": "Date Functions",
-                    "pages": [
-                      "udfs/flex/date/format",
-                      "udfs/flex/date/parse",
-                      "udfs/flex/date/toTimeZone",
-                      "udfs/flex/date/truncate"
-                    ],
-                    "root": "udfs/flex/date/index"
-                  },
-                  {
-                    "group": "JSON Functions",
-                    "pages": [
-                      "udfs/flex/json/fromJsonList",
-                      "udfs/flex/json/fromJsonMap",
-                      "udfs/flex/json/toJson"
-                    ],
-                    "root": "udfs/flex/json/index"
-                  },
-                  {
-                    "group": "Map Functions",
-                    "pages": [
-                      "udfs/flex/map/fromPairs",
-                      "udfs/flex/map/merge",
-                      "udfs/flex/map/removeKey",
-                      "udfs/flex/map/removeKeys",
-                      "udfs/flex/map/submap"
-                    ],
-                    "root": "udfs/flex/map/index"
-                  },
-                  {
-                    "group": "Similarity Functions",
-                    "pages": [
-                      "udfs/flex/similarity/jaccard"
-                    ],
-                    "root": "udfs/flex/similarity/index"
-                  },
-                  {
-                    "group": "Text Functions",
-                    "pages": [
-                      "udfs/flex/text/camelCase",
-                      "udfs/flex/text/capitalize",
-                      "udfs/flex/text/decapitalize",
-                      "udfs/flex/text/format",
-                      "udfs/flex/text/indexOf",
-                      "udfs/flex/text/indexesOf",
-                      "udfs/flex/text/jaroWinkler",
-                      "udfs/flex/text/join",
-                      "udfs/flex/text/levenshtein",
-                      "udfs/flex/text/lpad",
-                      "udfs/flex/text/regexGroups",
-                      "udfs/flex/text/repeat",
-                      "udfs/flex/text/replace",
-                      "udfs/flex/text/rpad",
-                      "udfs/flex/text/snakeCase",
-                      "udfs/flex/text/swapCase",
-                      "udfs/flex/text/upperCamelCase"
-                    ],
-                    "root": "udfs/flex/text/index"
-                  }
+                  "integration/rest",
+                  "integration/kafka-connect",
+                  "integration/jena",
+                  "integration/bolt-support",
+                  "integration/spring-data-falkordb",
+                  "integration/snowflake",
+                  "integration/pyg",
+                  "integration/bulk-loader",
+                  "integration/n8n"
                 ],
-                "root": "udfs/flex/index"
+                "root": "integration/index"
               }
-            ],
-            "root": "udfs/index"
+            ]
           },
           {
-            "group": "Cypher Language",
-            "pages": [
-              "cypher/match",
-              "cypher/optional-match",
-              "cypher/where",
-              "cypher/return",
-              "cypher/order-by",
-              "cypher/skip",
-              "cypher/limit",
-              "cypher/create",
-              "cypher/delete",
-              "cypher/set",
-              "cypher/merge",
-              "cypher/with",
-              "cypher/union",
-              "cypher/unwind",
-              "cypher/foreach",
-              "cypher/call",
-              "cypher/load-csv",
-              "cypher/functions",
-              "cypher/procedures",
+            "anchor": "AI Tools",
+            "icon": "robot",
+            "groups": [
               {
-                "group": "Indexing",
+                "group": "GenAI Tools",
                 "pages": [
-                  "cypher/indexing/range-index",
-                  "cypher/indexing/fulltext-index",
-                  "cypher/indexing/vector-index"
+                  "genai-tools/graphrag-sdk",
+                  "genai-tools/graphrag-server",
+                  "genai-tools/ag2",
+                  "genai-tools/langchain",
+                  "genai-tools/langgraph",
+                  "genai-tools/llamaindex",
+                  "genai-tools/graphrag-toolkit",
+                  {
+                    "group": "MCP Server",
+                    "pages": [
+                      "genai-tools/mcpserver/quickstart",
+                      "genai-tools/mcpserver/configuration",
+                      "genai-tools/mcpserver/docker"
+                    ],
+                    "root": "genai-tools/mcpserver/index"
+                  },
+                  "genai-tools/queryweaver",
+                  "genai-tools/code-graph"
                 ],
-                "root": "cypher/indexing/index"
-              },
-              "cypher/cypher-support",
-              "cypher/remove",
-              "cypher/known-limitations"
-            ],
-            "root": "cypher/index"
-          },
-          {
-            "group": "GenAI Tools",
-            "pages": [
-              "genai-tools/graphrag-sdk",
-              "genai-tools/graphrag-server",
-              "genai-tools/ag2",
-              "genai-tools/langchain",
-              "genai-tools/langgraph",
-              "genai-tools/llamaindex",
-              "genai-tools/graphrag-toolkit",
-              {
-                "group": "MCP Server",
-                "pages": [
-                  "genai-tools/mcpserver/quickstart",
-                  "genai-tools/mcpserver/configuration",
-                  "genai-tools/mcpserver/docker"
-                ],
-                "root": "genai-tools/mcpserver/index"
-              },
-              "genai-tools/queryweaver",
-              "genai-tools/code-graph"
-            ],
-            "root": "genai-tools/index"
-          },
-          {
-            "group": "Browser",
-            "pages": [
-              {
-                "group": "UI Elements",
-                "pages": [
-                  "browser/ui/login",
-                  "browser/ui/navigation",
-                  "browser/ui/settings",
-                  "browser/ui/graph-page",
-                  "browser/ui/graph-canvas",
-                  "browser/ui/graph-info-panel",
-                  "browser/ui/style-panel",
-                  "browser/ui/data-panel",
-                  "browser/ui/query-editor",
-                  "browser/ui/query-history",
-                  "browser/ui/table-view",
-                  "browser/ui/metadata-view",
-                  "browser/ui/toolbar-actions",
-                  "browser/ui/chat-panel",
-                  "browser/ui/udf-libraries",
-                  "browser/ui/upload-data",
-                  "browser/ui/graph-management",
-                  "browser/ui/api-documentation",
-                  "browser/ui/auth-access-control"
-                ],
-                "root": "browser/ui/index"
-              },
-              "browser/canvas"
-            ],
-            "root": "browser/index"
-          },
-          {
-            "group": "Operations",
-            "pages": [
-              {
-                "group": "Migration",
-                "pages": [
-                  "operations/migration/redisgraph-to-falkordb",
-                  "operations/migration/neo4j-to-falkordb",
-                  "operations/migration/kuzu-to-falkordb",
-                  "operations/migration/rdf-to-falkordb",
-                  "operations/migration/sql-to-falkordb"
-                ],
-                "root": "operations/migration/index"
+                "root": "genai-tools/index"
               },
               {
-                "group": "Durability",
+                "group": "Agentic Memory",
                 "pages": [
-                  "operations/durability/persistence",
-                  "operations/durability/acl-persistence"
+                  "agentic-memory/graphiti",
+                  "agentic-memory/cognee",
+                  "agentic-memory/graphiti-mcp-server",
+                  "agentic-memory/mem0"
                 ],
-                "root": "operations/durability/index"
-              },
-              "operations/replication",
-              "operations/cluster",
-              "operations/k8s-support",
-              "operations/opentelemetry",
-              "operations/railway",
+                "root": "agentic-memory/index"
+              }
+            ]
+          },
+          {
+            "anchor": "Browser",
+            "icon": "desktop",
+            "groups": [
               {
-                "group": "FalkorDBLite",
+                "group": "Browser",
                 "pages": [
-                  "operations/falkordblite/falkordblite-py",
-                  "operations/falkordblite/falkordblite-ts"
+                  {
+                    "group": "UI Elements",
+                    "pages": [
+                      "browser/ui/login",
+                      "browser/ui/navigation",
+                      "browser/ui/settings",
+                      "browser/ui/graph-page",
+                      "browser/ui/graph-canvas",
+                      "browser/ui/graph-info-panel",
+                      "browser/ui/style-panel",
+                      "browser/ui/data-panel",
+                      "browser/ui/query-editor",
+                      "browser/ui/query-history",
+                      "browser/ui/table-view",
+                      "browser/ui/metadata-view",
+                      "browser/ui/toolbar-actions",
+                      "browser/ui/chat-panel",
+                      "browser/ui/udf-libraries",
+                      "browser/ui/upload-data",
+                      "browser/ui/graph-management",
+                      "browser/ui/api-documentation",
+                      "browser/ui/auth-access-control"
+                    ],
+                    "root": "browser/ui/index"
+                  },
+                  "browser/canvas"
                 ],
-                "root": "operations/falkordblite/index"
-              },
-              "operations/lightning-ai",
-              "operations/building-docker",
-              "operations/kubeblocks",
-              "operations/docker"
-            ],
-            "root": "operations/index"
-          },
-          {
-            "group": "Agentic Memory",
-            "pages": [
-              "agentic-memory/graphiti",
-              "agentic-memory/cognee",
-              "agentic-memory/graphiti-mcp-server",
-              "agentic-memory/mem0"
-            ],
-            "root": "agentic-memory/index"
-          },
-          {
-            "group": "The FalkorDB Design",
-            "pages": [
-              "design/client-spec",
-              "design/result-structure",
-              "design/bulk-spec",
-              "design/third-party",
-              "design/concurrency"
-            ],
-            "root": "design/index"
-          },
-          {
-            "group": "References",
-            "pages": [
-              "references/license"
-            ],
-            "root": "references/index"
+                "root": "browser/index"
+              }
+            ]
           }
         ]
       },
