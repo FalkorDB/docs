@@ -393,8 +393,12 @@
   "navbar": {
     "links": [
       {
+        "label": "Github",
+        "href": "https://github.com/FalkorDB/FalkorDB"
+      },
+      {
         "label": "Support",
-        "href": "https://github.com/FalkorDB/FalkorDB/issues"
+        "href": "https://support.falkordb.com"
       },
       {
         "label": "Discord",
