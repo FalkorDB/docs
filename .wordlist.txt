@@ -946,3 +946,4 @@ RSS
 OOM
 Embeddable
 reranking
+Swappable
