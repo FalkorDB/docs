@@ -333,26 +333,6 @@
             "root": "agentic-memory/index"
           },
           {
-            "group": "Cloud DBaaS",
-            "pages": [
-              "cloud/free-tier",
-              "cloud/startup-tier",
-              "cloud/pro-tier",
-              "cloud/enterprise-tier",
-              "cloud/features",
-              "cloud/maintenance-windows",
-              "cloud/monitoring-dashboard",
-              {
-                "group": "Cloud Operations",
-                "pages": [
-                  "cloud/operations/export-import"
-                ],
-                "root": "cloud/operations/index"
-              }
-            ],
-            "root": "cloud/index"
-          },
-          {
             "group": "The FalkorDB Design",
             "pages": [
               "design/client-spec",
