@@ -387,6 +387,12 @@
         "description": "Self-managed FalkorDB on your own Kubernetes clusters.",
         "icon": "building",
         "href": "https://docs.enterprise.falkordb.com"
+      },
+      {
+        "product": "GraphRAG SDK",
+        "description": "Build knowledge graphs from documents and query them with natural language.",
+        "icon": "share-nodes",
+        "href": "https://docs.graphrag.falkordb.com"
       }
     ]
   },
