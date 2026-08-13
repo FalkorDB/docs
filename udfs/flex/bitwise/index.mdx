@@ -1,0 +1,20 @@
+---
+title: "Bitwise Functions"
+description: "FLEX bitwise functions for performing AND, OR, XOR, NOT, and bit shift operations on integers in Cypher queries."
+---
+
+FLEX bitwise utilities.
+
+## Frequently Asked Questions
+
+<AccordionGroup>
+  <Accordion title="What are FLEX bitwise functions used for?">
+    Bitwise functions perform low-level binary operations on integers. Common use cases include managing permission flags, toggling feature bits, and performing binary arithmetic in Cypher queries.
+  </Accordion>
+  <Accordion title="What data type do bitwise functions operate on?">
+    All FLEX bitwise functions operate on integer values and return integer results. Non-integer inputs will produce unexpected results.
+  </Accordion>
+  <Accordion title="How do I call a bitwise function?">
+    Use the namespace `flex.bitwise.<function>()`. For example: `flex.bitwise.and(5, 3)` returns `1`.
+  </Accordion>
+</AccordionGroup>

@@ -1,4 +1,4 @@
-# Incrementally updates the FalkorDB docs knowledge graph whenever .md
+# Incrementally updates the FalkorDB docs knowledge graph whenever .mdx
 # files change on main. Computes the diff against the previous HEAD,
 # POSTs it to GraphRAG-UI's /api/admin/update-graph endpoint, which does
 # the SDK ingestion + smoke test + atomic alias flip server-side.
@@ -10,7 +10,7 @@ on:
     branches:
       - main
     paths:
-      - "**/*.md"
+      - "**/*.mdx"
 
 # `github.ref_name` is "main"; all pushes to main share one queue.
 concurrency:

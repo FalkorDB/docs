@@ -1,0 +1,128 @@
+---
+title: "GRAPH.CONFIG-SET"
+description: "Updates a FalkorDB configuration"
+---
+
+Set the value of a FalkorDB configuration parameter.
+
+Values set using `GRAPH.CONFIG SET` are not persisted after server restart.
+
+FalkorDB configuration parameters are detailed [here](/getting-started/configuration).
+
+Note: As detailed in the link above, not all FalkorDB configuration parameters can be set at run-time.
+
+Multiple parameters can be set in a single command:
+
+```sh
+GRAPH.CONFIG SET key1 val1 key2 val2 ...
+```
+
+<CodeGroup>
+
+```python Python
+from falkordb import FalkorDB
+client = FalkorDB()
+print(client.config_get('TIMEOUT_DEFAULT'))
+client.config_set('TIMEOUT_DEFAULT', 10000)
+print(client.config_get('TIMEOUT_DEFAULT'))
+```
+
+```javascript JavaScript
+import { FalkorDB } from 'falkordb';
+const client = await FalkorDB.connect();
+console.log(await client.configGet('TIMEOUT_DEFAULT'));
+await client.configSet('TIMEOUT_DEFAULT', 10000);
+console.log(await client.configGet('TIMEOUT_DEFAULT'));
+```
+
+```java Java
+import com.falkordb.*;
+
+Driver driver = FalkorDB.driver("localhost", 6379);
+System.out.println(driver.configGet("TIMEOUT_DEFAULT"));
+driver.configSet("TIMEOUT_DEFAULT", 10000);
+System.out.println(driver.configGet("TIMEOUT_DEFAULT"));
+```
+
+```rust Rust
+use falkordb::{FalkorClientBuilder, FalkorConnectionInfo};
+
+let connection_info: FalkorConnectionInfo = "falkor://127.0.0.1:6379"
+    .try_into().expect("Invalid connection info");
+let client = FalkorClientBuilder::new()
+    .with_connection_info(connection_info)
+    .build().expect("Failed to build client");
+println!("{:?}", client.config_get("TIMEOUT_DEFAULT")?);
+client.config_set("TIMEOUT_DEFAULT", 10000)?;
+println!("{:?}", client.config_get("TIMEOUT_DEFAULT")?);
+```
+
+```bash Shell
+graph.config get TIMEOUT_DEFAULT
+graph.config set TIMEOUT_DEFAULT 10000
+graph.config get TIMEOUT_DEFAULT
+# Output:
+# 1) "TIMEOUT_DEFAULT"
+# 2) (integer) 0
+# OK
+# 1) "TIMEOUT_DEFAULT"
+# 2) (integer) 10000
+```
+
+</CodeGroup>
+
+<CodeGroup>
+
+```python Python
+try:
+    client.config_set('THREAD_COUNT', 10)
+except Exception as e:
+    print(e)
+```
+
+```javascript JavaScript
+try {
+  await client.configSet('THREAD_COUNT', 10);
+} catch (e) {
+  console.error(e);
+}
+```
+
+```java Java
+try {
+    driver.configSet("THREAD_COUNT", 10);
+} catch (Exception e) {
+    System.out.println(e.getMessage());
+}
+```
+
+```rust Rust
+if let Err(e) = client.config_set("THREAD_COUNT", 10) {
+    println!("{}", e);
+}
+```
+
+```bash Shell
+graph.config set THREAD_COUNT 10
+# Output:
+# (error) This configuration parameter cannot be set at run-time
+```
+
+</CodeGroup>
+
+## Frequently Asked Questions
+
+<AccordionGroup>
+  <Accordion title="Are configuration changes persisted after a server restart?">
+    No. Values set using `GRAPH.CONFIG SET` are **not persisted** after server restart. To make changes permanent, update the server configuration file or use startup arguments.
+  </Accordion>
+  <Accordion title="Can all configuration parameters be changed at runtime?">
+    No. Some parameters like `THREAD_COUNT` can only be set at server startup. Attempting to change them at runtime will return an error: 'This configuration parameter cannot be set at run-time'.
+  </Accordion>
+  <Accordion title="Can I set multiple configuration parameters in a single command?">
+    Yes. You can set multiple parameters at once: `GRAPH.CONFIG SET key1 val1 key2 val2 ...`
+  </Accordion>
+  <Accordion title="What happens if I set an invalid value?">
+    The command will return an error and the configuration parameter will retain its previous value. No partial changes are applied.
+  </Accordion>
+</AccordionGroup>

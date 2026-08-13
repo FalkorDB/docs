@@ -1,4 +1,3 @@
-[![Workflow](https://github.com/FalkorDB/docs/actions/workflows/pages/pages-build-deployment/badge.svg?branch=main)](https://github.com/FalkorDB/docs/actions/workflows/pages/pages-build-deployment)
 [![Discord](https://img.shields.io/discord/1146782921294884966?style=flat-square)](https://discord.gg/6M4QwDXn2w)
 [![Try Free](https://img.shields.io/badge/Try%20Free-FalkorDB%20Cloud-FF8101?labelColor=FDE900&style=flat-square)](https://app.falkordb.cloud)
 
@@ -6,7 +5,17 @@
 
 # FalkorDB Documentation
 
-Welcome to the FalkorDB documentation repository. This repository contains the source files for [https://docs.falkordb.com](https://docs.falkordb.com).
+Welcome to the FalkorDB documentation repository. This repository contains the source files for [https://docs.falkordb.com](https://docs.falkordb.com), published with [Mintlify](https://mintlify.com).
+
+FalkorDB documentation spans three repositories, presented to readers as three products in a single site:
+
+| Product | Repository |
+| --- | --- |
+| FalkorDB (this repo) | [FalkorDB/docs](https://github.com/FalkorDB/docs) |
+| FalkorDB Cloud | [FalkorDB/falkordb-cloud-docs](https://github.com/FalkorDB/falkordb-cloud-docs) |
+| FalkorDB Enterprise | [FalkorDB/FalkorDB-Enterprise](https://github.com/FalkorDB/FalkorDB-Enterprise) |
+
+The product switcher is configured under `navigation.products` in `docs.json`.
 
 ## About FalkorDB
 
@@ -24,32 +33,31 @@ FalkorDB is a low-latency, scalable graph database with OpenCypher support. It p
 
 ## Prerequisites
 
-To build and run the documentation locally, you need:
-
-- Ruby (2.7 or later)
-- Bundler gem
+To preview the documentation locally you need an LTS release of [Node.js](https://nodejs.org).
 
 ## Local Development
 
-### Install Dependencies
+### Install the Mintlify CLI
 
 ```bash
-bundle install
+npm i -g mint
 ```
 
-### Build the Documentation
+### Run the Local Preview
 
 ```bash
-bundle exec jekyll build
+mint dev
 ```
 
-### Run Local Server
+The documentation will be available at `http://localhost:3000`.
+
+### Validate
 
 ```bash
-bundle exec jekyll serve
+mint broken-links                              # every internal link resolves
+npm install --no-save @mdx-js/mdx remark-gfm   # one-time
+node scripts/check_mdx.mjs                     # every page parses as MDX
 ```
-
-The documentation will be available at `http://localhost:4000`.
 
 ## Contributing
 
@@ -70,7 +78,7 @@ If you find errors, typos, or unclear explanations:
 1. Fork the repository
 2. Create a feature branch (`git checkout -b improve-documentation`)
 3. Make your changes
-4. Test locally with `bundle exec jekyll serve`
+4. Test locally with `mint dev`
 5. Commit your changes with clear, descriptive messages
 6. Push to your fork
 7. Open a Pull Request with:
@@ -84,8 +92,9 @@ If you find errors, typos, or unclear explanations:
 - Include code examples where appropriate
 - Follow existing formatting and structure
 - Test all code examples
-- Use proper Markdown syntax
+- Use proper MDX syntax
 - Keep line length reasonable (under 120 characters when possible)
+- Do not write an H1 in the page body; Mintlify renders the front matter `title` as the H1
 
 ### Code Examples
 
@@ -95,40 +104,42 @@ When adding code examples:
 - Include comments for complex operations
 - Use realistic, meaningful variable names
 
-### Reusable Components
+### Components
 
-The `_includes/` directory contains reusable Jekyll include components:
+Use [Mintlify components](https://mintlify.com/docs/components) instead of raw HTML.
 
-#### `code_tabs.html` — Multi-language code tabs
+#### `<CodeGroup>` — multi-language code tabs
 
-Renders tabbed code blocks for Python, JavaScript, C++, Rust, Java, and Shell.
+````mdx
+<CodeGroup>
 
-```liquid
-{% include code_tabs.html id="unique_id" python=python_var shell=shell_var %}
+```python Python
+from falkordb import FalkorDB
 ```
 
-#### `faq_accordion.html` — FAQ accordion
-
-Renders an accessible, no-JavaScript FAQ accordion using native `<details>`/`<summary>` elements.
-Accepts up to 10 question/answer pairs via `q1`/`a1` … `q10`/`a10` parameters.
-An optional `title` parameter adds a header bar with the title and a count badge showing the total number of items.
-Set `open1="true"` … `open10="true"` on any item to render it expanded by default.
-
-```liquid
-{% include faq_accordion.html
-  title="Frequently Asked Questions"
-  q1="What is FalkorDB?"
-  a1="FalkorDB is a high-performance graph database."
-  open1="true"
-  q2="How do I get started?"
-  a2="See the [Getting Started](/getting-started) guide."
-%}
+```javascript JavaScript
+import { FalkorDB } from 'falkordb';
 ```
 
-Answers are passed through the `markdownify` filter, so standard Markdown syntax
-(bold, links, code spans, etc.) is supported within answer strings.
+</CodeGroup>
+````
 
-See `References/license.md` for a full example using this component.
+#### `<AccordionGroup>` — FAQs and collapsible sections
+
+```mdx
+<AccordionGroup>
+  <Accordion title="What is FalkorDB?">
+    FalkorDB is a high-performance graph database.
+  </Accordion>
+  <Accordion title="How do I get started?">
+    See the [Getting Started](/getting-started) guide.
+  </Accordion>
+</AccordionGroup>
+```
+
+Callouts use `<Note>`, `<Tip>`, `<Warning>` and `<Info>`.
+
+See `AGENTS.md` for the full authoring rules, including MDX escaping gotchas.
 
 ## Project Structure
 
@@ -136,14 +147,15 @@ See `References/license.md` for a full example using this component.
 docs/
 ├── algorithms/          # Graph algorithms documentation
 ├── commands/            # Command reference
-├── cypher/             # Cypher query language docs
-├── genai-tools/        # AI/ML integrations
-├── getting-started/    # Installation and setup
-├── integration/        # Third-party integrations
-├── operations/         # Deployment and operations
-├── udfs/              # User-defined functions
-├── _config.yml        # Jekyll configuration
-└── index.md           # Homepage
+├── cypher/              # Cypher query language docs
+├── genai-tools/         # AI/ML integrations
+├── getting-started/     # Installation and setup
+├── integration/         # Third-party integrations
+├── operations/          # Deployment and operations
+├── udfs/                # User-defined functions
+├── scripts/             # Documentation tooling
+├── docs.json            # Mintlify configuration and navigation
+└── index.mdx            # Homepage
 ```
 
 ## License

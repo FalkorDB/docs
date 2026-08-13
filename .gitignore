@@ -1,2 +1,6 @@
 _site/
 *.dic
+node_modules/
+.mintlify/
+.mint/
+package-lock.json

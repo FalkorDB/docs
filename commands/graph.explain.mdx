@@ -1,0 +1,78 @@
+---
+title: "GRAPH.EXPLAIN"
+description: "Returns a query execution plan without running the query"
+---
+
+Constructs a query execution plan but does not run it. Inspect this execution plan to better
+understand how your query will get executed.
+
+Arguments: `Graph name, Query`
+
+Returns: `String representation of a query execution plan`
+
+<CodeGroup>
+
+```python Python
+from falkordb import FalkorDB
+client = FalkorDB()
+graph = client.select_graph('us_government')
+query = "MATCH (p:President)-[:BORN]->(h:State {name:'Hawaii'}) RETURN p"
+result = graph.explain(query)
+print(result)
+```
+
+```javascript JavaScript
+import { FalkorDB } from 'falkordb';
+const client = await FalkorDB.connect();
+const graph = client.selectGraph('us_government');
+const query = "MATCH (p:President)-[:BORN]->(h:State {name:'Hawaii'}) RETURN p";
+const result = await graph.explain(query);
+console.log(result);
+```
+
+```java Java
+import com.falkordb.*;
+
+Driver driver = FalkorDB.driver("localhost", 6379);
+Graph graph = driver.graph("us_government");
+String query = "MATCH (p:President)-[:BORN]->(h:State {name:'Hawaii'}) RETURN p";
+String result = graph.explain(query);
+System.out.println(result);
+```
+
+```rust Rust
+use falkordb::{FalkorClientBuilder, FalkorConnectionInfo};
+
+let connection_info: FalkorConnectionInfo = "falkor://127.0.0.1:6379"
+    .try_into().expect("Invalid connection info");
+let client = FalkorClientBuilder::new()
+    .with_connection_info(connection_info)
+    .build().expect("Failed to build client");
+let graph = client.select_graph("us_government");
+let query = r#"MATCH (p:President)-[:BORN]->(h:State {name:'Hawaii'}) RETURN p"#;
+let result = graph.explain(query)?;
+println!("{}", result);
+```
+
+```bash Shell
+GRAPH.EXPLAIN us_government "MATCH (p:President)-[:BORN]->(h:State {name:'Hawaii'}) RETURN p"
+```
+
+</CodeGroup>
+
+## Frequently Asked Questions
+
+<AccordionGroup>
+  <Accordion title="Does GRAPH.EXPLAIN actually execute the query?">
+    No. `GRAPH.EXPLAIN` only constructs the execution plan without running the query. No data is read or modified. Use `GRAPH.PROFILE` if you want to execute the query and see runtime metrics.
+  </Accordion>
+  <Accordion title="What can I learn from the execution plan?">
+    The execution plan shows the sequence of operations (scans, filters, traversals, projections) the engine will perform. This helps you understand whether indexes are being used and identify potential performance bottlenecks.
+  </Accordion>
+  <Accordion title="How do I know if my query is using an index?">
+    In the execution plan output, look for operations like `Index Scan` instead of `Node By Label Scan`. An index scan indicates the query is leveraging an index for faster lookups.
+  </Accordion>
+  <Accordion title="Can I use GRAPH.EXPLAIN with parameterized queries?">
+    Yes. You can pass parameterized queries to `GRAPH.EXPLAIN` using the same `CYPHER param=val` syntax as `GRAPH.QUERY`.
+  </Accordion>
+</AccordionGroup>

@@ -1,0 +1,70 @@
+---
+title: "text.swapCase"
+description: "Swaps the case of every character in a string — uppercase becomes lowercase and vice versa."
+---
+
+## Description
+Swaps the case of each character in a string - uppercase characters become lowercase and vice versa.
+
+## Syntax
+```cypher
+flex.text.swapCase(string)
+```
+
+## Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `string` | string | Yes | The string to swap case |
+
+## Returns
+**Type:** string
+
+A new string with all uppercase characters converted to lowercase and all lowercase characters converted to uppercase. Returns `null` if input is `null`.
+
+## Examples
+
+### Example 1: Basic Usage
+```cypher
+RETURN flex.text.swapCase('Hello World') AS result
+```
+
+**Output:**
+```text
+result
+-------------
+hELLO wORLD
+```
+
+### Example 2: Swapping Mixed Case
+```cypher
+RETURN flex.text.swapCase('aBc123XyZ') AS result
+```
+
+**Output:**
+```text
+result
+----------
+AbC123xYz
+```
+
+## Notes
+- Returns `null` for `null` input
+- Non-alphabetic characters remain unchanged
+- Applies to all characters in the string, not just the first
+
+## See Also
+- [text.capitalize](/udfs/flex/text/capitalize) - Uppercase the first character
+- [text.camelCase](/udfs/flex/text/camelCase) - Convert to camelCase format
+- [text.snakeCase](/udfs/flex/text/snakeCase) - Convert to snake_case format
+
+## Frequently Asked Questions
+
+<AccordionGroup>
+  <Accordion title="Does flex.text.swapCase affect non-alphabetic characters?">
+    No. Numbers, punctuation, and other non-alphabetic characters remain unchanged.
+  </Accordion>
+  <Accordion title="Is swapCase applied to all characters or just the first?">
+    It is applied to **every** character in the string — each uppercase letter becomes lowercase and vice versa.
+  </Accordion>
+</AccordionGroup>

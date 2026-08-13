@@ -1,0 +1,20 @@
+---
+title: "Collection Functions"
+description: "FLEX collection functions for set operations, frequency analysis, and list manipulation in Cypher queries."
+---
+
+FLEX collections utilities.
+
+## Frequently Asked Questions
+
+<AccordionGroup>
+  <Accordion title="What are FLEX collection functions?">
+    FLEX collection functions provide set operations and list transformations including union, intersection, shuffling, frequency counting, and zipping lists together.
+  </Accordion>
+  <Accordion title="How do I call a collection function?">
+    Use the namespace `flex.coll.<function>()`. For example: `flex.coll.union([1,2,3], [3,4,5])` returns `[1,2,3,4,5]`.
+  </Accordion>
+  <Accordion title="Do collection functions modify the original list?">
+    No. All FLEX collection functions return new lists and do not mutate the input values.
+  </Accordion>
+</AccordionGroup>

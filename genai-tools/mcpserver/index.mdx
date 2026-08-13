@@ -1,0 +1,53 @@
+---
+title: "MCP Server"
+description: "Enable AI assistants like Claude to interact with FalkorDB graph databases using the Model Context Protocol (MCP)"
+---
+
+Enable AI assistants to query and interact with FalkorDB graph databases
+
+A Model Context Protocol (MCP) server that allows AI models like Claude to interact with FalkorDB using natural language. Query your graph data, create relationships, and manage your knowledge graph through conversational AI.
+
+- Query graph databases using OpenCypher (with read-only mode support)
+- Create and manage nodes and relationships
+- List and explore multiple graphs
+- Delete graphs when needed
+- Support for replica instances with read-only queries
+
+## What is the Model Context Protocol?
+
+The [Model Context Protocol (MCP)](https://modelcontextprotocol.io) is an open protocol that standardizes how AI applications provide context to Large Language Models (LLMs). It enables AI assistants to securely connect to external data sources and tools, making them more powerful and context-aware.
+
+## Topics in This Section
+
+- [Quick Start](/genai-tools/mcpserver/quickstart): Install and connect the MCP server to Claude Desktop in minutes.
+- [Configuration](/genai-tools/mcpserver/configuration): Environment variables, transport modes, and multi-instance setup.
+- [Docker Deployment](/genai-tools/mcpserver/docker): Run the MCP server using Docker Hub images.
+
+## Resources
+
+- 📦 [npm Package](https://www.npmjs.com/package/@falkordb/mcpserver)
+- 💻 [GitHub Repository](https://github.com/FalkorDB/FalkorDB-MCPServer)
+- 🐳 [Docker Hub](https://hub.docker.com/r/falkordb/mcpserver)
+- 📖 [MCP Specification](https://modelcontextprotocol.io/docs)
+- 📚 [FalkorDB Documentation](/)
+- 🔍 [OpenCypher Query Language](https://opencypher.org/)
+
+## Frequently Asked Questions
+
+<AccordionGroup>
+  <Accordion title="What is the FalkorDB MCP Server?">
+    The FalkorDB MCP Server is a Model Context Protocol server that allows AI assistants like Claude to interact with FalkorDB graph databases using natural language. It enables querying, creating nodes/relationships, listing graphs, and managing data through conversational AI.
+  </Accordion>
+  <Accordion title="What is the Model Context Protocol (MCP)?">
+    MCP is an open protocol that standardizes how AI applications provide context to Large Language Models. It enables AI assistants to securely connect to external data sources and tools, making them more powerful and context-aware.
+  </Accordion>
+  <Accordion title="Which AI assistants work with the FalkorDB MCP Server?">
+    The MCP Server works with any MCP-compatible client including **Claude Desktop**, **Cursor IDE**, **VS Code with GitHub Copilot**, and other AI tools that support the Model Context Protocol.
+  </Accordion>
+  <Accordion title="Can I use the MCP Server in read-only mode?">
+    Yes. Set `FALKORDB_DEFAULT_READONLY=true` to prevent write operations. This is ideal for replica instances, production safety, reporting dashboards, and multi-tenant environments where certain users should only have read access.
+  </Accordion>
+  <Accordion title="What transport modes are available?">
+    The MCP Server supports two transport modes: **stdio** (default) for direct integration with AI clients like Claude Desktop via standard input/output, and **HTTP** for remote or networked access with optional API key authentication.
+  </Accordion>
+</AccordionGroup>

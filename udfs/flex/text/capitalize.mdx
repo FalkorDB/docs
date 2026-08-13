@@ -1,0 +1,65 @@
+---
+title: "text.capitalize"
+description: "Converts the first character of a string to uppercase, leaving the remainder unchanged."
+---
+
+## Description
+Capitalizes the first character of a string, converting it to uppercase while leaving the rest of the string unchanged.
+
+## Syntax
+```cypher
+flex.text.capitalize(string)
+```
+
+## Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `string` | string | Yes | The string to capitalize |
+
+## Returns
+**Type:** string
+
+The input string with its first character converted to uppercase. Returns `null` if the input is `null`, and empty string if input is empty.
+
+## Examples
+
+### Example 1: Basic Usage
+```cypher
+RETURN flex.text.capitalize('hello world') AS result
+```
+
+**Output:**
+```text
+result
+-------------
+Hello world
+```
+
+### Example 2: Capitalizing Node Properties
+```cypher
+MATCH (p:Person)
+RETURN p.id, flex.text.capitalize(p.name) AS capitalizedName
+```
+
+## Notes
+- Returns `null` for `null` input
+- Returns empty string for empty string input
+- Only affects the first character
+- Does not change the case of subsequent characters
+
+## See Also
+- [text.decapitalize](/udfs/flex/text/decapitalize) - Lowercase the first character
+- [text.camelCase](/udfs/flex/text/camelCase) - Convert to camelCase format
+- [text.upperCamelCase](/udfs/flex/text/upperCamelCase) - Convert to UpperCamelCase format
+
+## Frequently Asked Questions
+
+<AccordionGroup>
+  <Accordion title="Does flex.text.capitalize change the rest of the string?">
+    No. It only converts the **first** character to uppercase — all other characters remain exactly as they are.
+  </Accordion>
+  <Accordion title="What happens with an empty string input?">
+    It returns an empty string. For `null` input, it returns `null`.
+  </Accordion>
+</AccordionGroup>
