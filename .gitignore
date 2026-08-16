@@ -1,4 +1,5 @@
 _site/
+build/
 *.dic
 node_modules/
 .mintlify/

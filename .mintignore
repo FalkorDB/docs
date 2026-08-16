@@ -2,4 +2,5 @@ README.md
 AGENTS.md
 existing_routes.txt
 scripts/
+build/
 node_modules/

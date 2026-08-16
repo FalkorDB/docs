@@ -1,0 +1,29 @@
+[
+  {
+    "product": "FalkorDB Cloud",
+    "owner": "FalkorDB",
+    "repo": "falkordb-cloud-docs",
+    "ref": "main",
+    "subdirectory": ".",
+    "mount": "cloud",
+    "site": "https://docs.falkordb.cloud"
+  },
+  {
+    "product": "FalkorDB Enterprise",
+    "owner": "FalkorDB",
+    "repo": "FalkorDB-Enterprise",
+    "ref": "main",
+    "subdirectory": "docs",
+    "mount": "enterprise",
+    "site": "https://docs.enterprise.falkordb.com"
+  },
+  {
+    "product": "GraphRAG SDK",
+    "owner": "FalkorDB",
+    "repo": "GraphRAG-SDK",
+    "ref": "main",
+    "subdirectory": "docs",
+    "mount": "graphrag",
+    "site": "https://docs.graphrag.falkordb.com"
+  }
+]

@@ -3,17 +3,45 @@
 This repository holds the **FalkorDB core documentation**, published with
 [Mintlify](https://mintlify.com) at <https://docs.falkordb.com>.
 
-FalkorDB documentation is split across three repositories, surfaced to readers
-as three products in one site (see `navigation.products` in `docs.json`):
+FalkorDB documentation is split across four repositories and aggregated into a
+single Mintlify deployment, so search and the AI assistant index every product
+together. Each repository owns one entry in `navigation.products`:
 
-| Product | Repository |
-| --- | --- |
-| FalkorDB (this repo) | `FalkorDB/docs` |
-| FalkorDB Cloud | `FalkorDB/falkordb-cloud-docs` |
-| FalkorDB Enterprise | `FalkorDB/FalkorDB-Enterprise` (`docs/`) |
+| Product | Repository | Mounted at |
+| --- | --- | --- |
+| FalkorDB (this repo) | `FalkorDB/docs` | `/` |
+| FalkorDB Cloud | `FalkorDB/mintlify-docs` | `/cloud` |
+| FalkorDB Enterprise | `FalkorDB/FalkorDB-Enterprise` (`docs/`) | `/enterprise` |
+| GraphRAG SDK | `FalkorDB/GraphRAG-SDK` (`docs/`) | `/graphrag` |
 
-Only edit FalkorDB core content here. Cloud and Enterprise pages live in their
-own repositories and are linked from the product switcher.
+Only edit FalkorDB core content here. The other products live in their own
+repositories.
+
+## Aggregation
+
+Each repository keeps the full `navigation.products` list and populates only its
+own product, linking to the others with `href`. That way every repository still
+builds and previews on its own.
+
+`scripts/aggregate_docs.py` turns those four repositories into one site: it
+clones each source listed in `scripts/sources.json`, copies its content under
+the mount point, prefixes every path in its product entry, rewrites the repo's
+own absolute links and assets, namespaces its snippets under
+`/snippets/<mount>/`, and substitutes the result for the `href` placeholder in
+this repository's `docs.json`. Redirects and links that point at a standalone
+product site become internal paths.
+
+```bash
+python3 scripts/aggregate_docs.py --output build --use-local ..   # sibling checkouts
+python3 scripts/aggregate_docs.py --output build                  # clone the sources
+```
+
+`.github/workflows/aggregate-docs.yml` runs this on every push to `main`, on a
+`docs-updated` repository dispatch from a source repository, and nightly. It
+publishes to the `docs-site` branch, which is the branch Mintlify deploys.
+
+Adding a product means adding it to `navigation.products` here as an `href`
+placeholder and appending an entry to `scripts/sources.json`.
 
 ## Authoring rules
 
@@ -61,6 +89,8 @@ node scripts/check_mdx.mjs
 
 ## Scripts
 
+- `scripts/aggregate_docs.py` — builds the combined multi-product site.
+- `scripts/sources.json` — the repositories that get aggregated.
 - `scripts/check_mdx.mjs` — compiles every `.mdx` page and reports all syntax
   errors at once.
 - `scripts/migrate_to_mintlify.py` — the one-shot Jekyll to Mintlify conversion.
