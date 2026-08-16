@@ -431,8 +431,20 @@
   },
   "redirects": [
     {
+      "source": "/References",
+      "destination": "/references"
+    },
+    {
       "source": "/References.html",
       "destination": "/references"
+    },
+    {
+      "source": "/References/index.html",
+      "destination": "/references"
+    },
+    {
+      "source": "/References/license.html",
+      "destination": "/references/license"
     },
     {
       "source": "/agentic-memory/cognee.html",
@@ -625,6 +637,90 @@
     {
       "source": "/clients.html",
       "destination": "/getting-started/clients"
+    },
+    {
+      "source": "/cloud",
+      "destination": "https://docs.falkordb.cloud"
+    },
+    {
+      "source": "/cloud/enterprise-tier",
+      "destination": "https://docs.falkordb.cloud/tiers/enterprise"
+    },
+    {
+      "source": "/cloud/enterprise-tier.html",
+      "destination": "https://docs.falkordb.cloud/tiers/enterprise"
+    },
+    {
+      "source": "/cloud/features",
+      "destination": "https://docs.falkordb.cloud/features"
+    },
+    {
+      "source": "/cloud/features.html",
+      "destination": "https://docs.falkordb.cloud/features"
+    },
+    {
+      "source": "/cloud/free-tier",
+      "destination": "https://docs.falkordb.cloud/tiers/free"
+    },
+    {
+      "source": "/cloud/free-tier.html",
+      "destination": "https://docs.falkordb.cloud/tiers/free"
+    },
+    {
+      "source": "/cloud/index.html",
+      "destination": "https://docs.falkordb.cloud"
+    },
+    {
+      "source": "/cloud/maintenance-windows",
+      "destination": "https://docs.falkordb.cloud/operations/maintenance-windows"
+    },
+    {
+      "source": "/cloud/maintenance-windows.html",
+      "destination": "https://docs.falkordb.cloud/operations/maintenance-windows"
+    },
+    {
+      "source": "/cloud/monitoring-dashboard",
+      "destination": "https://docs.falkordb.cloud/operations/monitoring-dashboard"
+    },
+    {
+      "source": "/cloud/monitoring-dashboard.html",
+      "destination": "https://docs.falkordb.cloud/operations/monitoring-dashboard"
+    },
+    {
+      "source": "/cloud/operations",
+      "destination": "https://docs.falkordb.cloud"
+    },
+    {
+      "source": "/cloud/operations/export-import",
+      "destination": "https://docs.falkordb.cloud/operations/export-import"
+    },
+    {
+      "source": "/cloud/operations/export-import.html",
+      "destination": "https://docs.falkordb.cloud/operations/export-import"
+    },
+    {
+      "source": "/cloud/operations/index.html",
+      "destination": "https://docs.falkordb.cloud"
+    },
+    {
+      "source": "/cloud/pro-tier",
+      "destination": "https://docs.falkordb.cloud/tiers/pro"
+    },
+    {
+      "source": "/cloud/pro-tier.html",
+      "destination": "https://docs.falkordb.cloud/tiers/pro"
+    },
+    {
+      "source": "/cloud/startup-tier",
+      "destination": "https://docs.falkordb.cloud/tiers/startup"
+    },
+    {
+      "source": "/cloud/startup-tier.html",
+      "destination": "https://docs.falkordb.cloud/tiers/startup"
+    },
+    {
+      "source": "/cloud/user-management",
+      "destination": "https://docs.falkordb.cloud/operations/user-management"
     },
     {
       "source": "/code-graph",
@@ -945,6 +1041,106 @@
     {
       "source": "/genai-tools/graphrag-sdk.html",
       "destination": "/genai-tools/graphrag-sdk"
+    },
+    {
+      "source": "/genai-tools/graphrag-sdk/api-reference",
+      "destination": "https://docs.graphrag.falkordb.com/api-reference"
+    },
+    {
+      "source": "/genai-tools/graphrag-sdk/api-reference/connection.html",
+      "destination": "https://docs.graphrag.falkordb.com/api-reference"
+    },
+    {
+      "source": "/genai-tools/graphrag-sdk/api-reference/discovery.html",
+      "destination": "https://docs.graphrag.falkordb.com/api-reference"
+    },
+    {
+      "source": "/genai-tools/graphrag-sdk/api-reference/exceptions.html",
+      "destination": "https://docs.graphrag.falkordb.com/api-reference"
+    },
+    {
+      "source": "/genai-tools/graphrag-sdk/api-reference/graphrag.html",
+      "destination": "https://docs.graphrag.falkordb.com/api-reference"
+    },
+    {
+      "source": "/genai-tools/graphrag-sdk/api-reference/ingestion-strategies.html",
+      "destination": "https://docs.graphrag.falkordb.com/api-reference"
+    },
+    {
+      "source": "/genai-tools/graphrag-sdk/api-reference/ontology.html",
+      "destination": "https://docs.graphrag.falkordb.com/api-reference"
+    },
+    {
+      "source": "/genai-tools/graphrag-sdk/api-reference/providers.html",
+      "destination": "https://docs.graphrag.falkordb.com/api-reference"
+    },
+    {
+      "source": "/genai-tools/graphrag-sdk/api-reference/retrieval-strategies.html",
+      "destination": "https://docs.graphrag.falkordb.com/api-reference"
+    },
+    {
+      "source": "/genai-tools/graphrag-sdk/changelog.html",
+      "destination": "https://docs.graphrag.falkordb.com"
+    },
+    {
+      "source": "/genai-tools/graphrag-sdk/concepts",
+      "destination": "https://docs.graphrag.falkordb.com/architecture"
+    },
+    {
+      "source": "/genai-tools/graphrag-sdk/concepts/incremental-updates.html",
+      "destination": "https://docs.graphrag.falkordb.com/incremental-updates"
+    },
+    {
+      "source": "/genai-tools/graphrag-sdk/concepts/ingestion-pipeline.html",
+      "destination": "https://docs.graphrag.falkordb.com/ingestion"
+    },
+    {
+      "source": "/genai-tools/graphrag-sdk/concepts/knowledge-graph.html",
+      "destination": "https://docs.graphrag.falkordb.com/architecture"
+    },
+    {
+      "source": "/genai-tools/graphrag-sdk/concepts/ontology-discovery.html",
+      "destination": "https://docs.graphrag.falkordb.com/ontology-discovery"
+    },
+    {
+      "source": "/genai-tools/graphrag-sdk/concepts/ontology.html",
+      "destination": "https://docs.graphrag.falkordb.com/graph-schema"
+    },
+    {
+      "source": "/genai-tools/graphrag-sdk/concepts/retrieval-pipeline.html",
+      "destination": "https://docs.graphrag.falkordb.com/retrieval"
+    },
+    {
+      "source": "/genai-tools/graphrag-sdk/guides",
+      "destination": "https://docs.graphrag.falkordb.com/getting-started"
+    },
+    {
+      "source": "/genai-tools/graphrag-sdk/guides/auto-discover-schema.html",
+      "destination": "https://docs.graphrag.falkordb.com/ontology-discovery"
+    },
+    {
+      "source": "/genai-tools/graphrag-sdk/guides/ci-pr-merge-pattern.html",
+      "destination": "https://docs.graphrag.falkordb.com/incremental-updates"
+    },
+    {
+      "source": "/genai-tools/graphrag-sdk/guides/define-custom-schema.html",
+      "destination": "https://docs.graphrag.falkordb.com/graph-schema"
+    },
+    {
+      "source": "/genai-tools/graphrag-sdk/guides/ingest-pdf-and-markdown.html",
+      "destination": "https://docs.graphrag.falkordb.com/ingestion"
+    },
+    {
+      "source": "/genai-tools/graphrag-sdk/guides/suggest-extensions-from-new-docs.html",
+      "destination": "https://docs.graphrag.falkordb.com/ontology-evolution"
+    },
+    {
+      "source": "/genai-tools/graphrag-sdk/guides/swap-llm-provider.html",
+      "destination": "https://docs.graphrag.falkordb.com/providers"
+    },
+    {
+      "source": "/genai-tools/graphrag-sdk/quickstart.html",
+      "destination": "https://docs.graphrag.falkordb.com/getting-started"
     },
     {
       "source": "/genai-tools/graphrag-server",
