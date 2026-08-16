@@ -1307,6 +1307,10 @@
       "destination": "/genai-tools"
     },
     {
+      "source": "/migration",
+      "destination": "/operations/migration"
+    },
+    {
       "source": "/migration.html",
       "destination": "/operations/migration"
     },
