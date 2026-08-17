@@ -30,6 +30,7 @@ The Native App runs FalkorDB inside Snowpark Container Services (SPCS). Snowflak
 - [Writing query results back to Snowflake](#writing-query-results-back-to-snowflake)
 - [Air Routes example](#practical-example-air-routes-graph)
 - [Webinar demo: Air Routes end to end](#webinar-demo-air-routes-end-to-end)
+- [Graph Algorithms](#graph-algorithms)
 - [FalkorDB Browser](#open-the-falkordb-browser)
 - [Snowflake Cortex Agent](#snowflake-cortex-agent)
 - [Troubleshooting](#troubleshooting)
@@ -155,14 +156,17 @@ CALL <app_instance_name>.app_public.get_service_status();
 
 **Note**: Replace `<app_instance_name>` with the name you chose during installation.
 
-Wait for the service status to show `READY` before proceeding (typically 2-3 minutes). Interpreting the `get_service_status()` output:
+Wait for `get_service_status()` to report `"serving": true` before proceeding (typically 3-5 minutes). Interpreting the output:
 
-- An empty result (`[]`) means the service is still starting. This is not an error; wait a bit and call the procedure again.
-- When the service is ready, the result contains a container entry with `"status":"READY"`:
+- `serving` is the only signal that FalkorDB is reachable. Snowflake marks a container `READY` as soon as its process starts, which happens well before the database accepts connections, so querying a merely-`READY` service can fail with `503 ... Connection refused`.
+- `"containers": null` means the service is still starting. This is not an error; wait and call the procedure again.
+- When the service is ready to use:
 
 ```json
-[{"status":"READY","message":"Running","containerName":"falkordb-server","instanceId":"0","serviceName":"ST_SPCS","restartCount":0,"startTime":"2026-07-07T12:48:02Z"}]
+{"containers":[{"status":"READY","message":"Running","containerName":"falkordb-server","instanceId":"0","serviceName":"ST_SPCS","restartCount":0,"startTime":"2026-07-07T12:48:02Z"}],"serving":true}
 ```
+
+The pool and warehouse names you pass to `start_app()` must be plain unquoted identifiers, such as `FALKORDB_POOL`. Names needing quotes, such as `my-pool`, are rejected before any compute is created.
 
 Default resources use a `CPU_X64_S` compute pool with FalkorDB container resources of 1 CPU / 2GB RAM requested and 2 CPU / 4GB RAM limit. For larger graph loads, start the app with explicit resource options:
 
@@ -194,7 +198,7 @@ Requests must fit on the selected compute pool node. If the requested CPU/memory
 
 FalkorDB Browser is a web UI for exploring your graphs visually, inspecting nodes and relationships, and running Cypher queries interactively against the FalkorDB service.
 
-After `get_service_status()` shows the service is ready, get the public browser URL:
+After `get_service_status()` reports `"serving": true`, get the public browser URL:
 
 ```sql
 SHOW ENDPOINTS IN SERVICE <app_instance_name>.app_public.st_spcs;
@@ -204,7 +208,7 @@ FROM TABLE(RESULT_SCAN(LAST_QUERY_ID()))
 WHERE "name" = 'falkordb-browser';
 ```
 
-Open the returned `browser_url` in your web browser. If the endpoint is not ready yet, wait for the service status to become `READY` and run the endpoint query again.
+Open the returned `browser_url` in your web browser. If the endpoint is not ready yet, wait for `get_service_status()` to report `"serving": true` and run the endpoint query again.
 
 ## Basic Usage
 
@@ -619,7 +623,7 @@ CALL <app_instance_name>.app_public.start_app('FALKORDB_POOL', 'FALKORDB_WH');
 CALL <app_instance_name>.app_public.get_service_status();
 ```
 
-Remember: an empty status result (`[]`) means the service is still starting. Re-run `get_service_status()` until the result shows `"status":"READY"`.
+Remember: `"containers": null` means the service is still starting. Re-run `get_service_status()` until it reports `"serving": true`.
 
 ### Step 5: Create indexes
 
@@ -755,6 +759,44 @@ WHERE destination_airport = 'JFK'
   AND hops <= 5
 LIMIT 20;
 ```
+
+## Graph Algorithms
+
+The app ships SQL wrappers for two FalkorDB graph algorithms, shown here on the air routes demo.
+
+### Weighted Shortest Path
+
+A passenger flies Sydney (SYD) to New York (JFK). What is the route with the fewest total kilometers, including every stop along the way? `shortest_path` uses FalkorDB's `algo.SPpaths` to minimize a numeric relationship property:
+
+```sql
+CALL <app_instance_name>.app_public.shortest_path(
+  'airroutes',      -- graph name
+  'Airport',        -- node label
+  'iata_code',      -- node property
+  'SYD',            -- source
+  'JFK',            -- target
+  'ROUTE',          -- relationship type
+  'distance_km'     -- property to minimize
+);
+```
+
+Returns the total distance (`pathWeight`) and the ordered list of airports on the cheapest path.
+
+### PageRank
+
+An airline is planning a new route. Which airport gives the best connectivity for onward flights? PageRank scores airports by how well they connect to other well-connected hubs, making it a strong signal for where onward connections are richest. The same ranking can feed risk analysis, highlighting airports whose closure would likely disrupt the network most.
+
+```sql
+CALL <app_instance_name>.app_public.page_rank(
+  'airroutes',   -- graph name
+  'Airport',     -- node label
+  'ROUTE',       -- relationship type
+  'iata_code',   -- property to show per node
+  10             -- top N results
+);
+```
+
+Returns the 10 highest-ranked airports with their scores, most important first.
 
 ## Complete Example: Social Network
 
@@ -934,25 +976,36 @@ The CSV data comes from your bound table (configured in the app's Permissions ta
 
 FalkorDB runs on Snowflake Compute Pools, which charge based on usage:
 
-- **ACTIVE** pools charge continuously (even when idle)
+- **ACTIVE** and **IDLE** pools charge continuously, even with no service running on them
 - **SUSPENDED** pools don't charge
 
-**Always suspend when not in use:**
+The app manages this for you. `stop_app()` drops the service and suspends the compute pool it created, so no separate `ALTER COMPUTE POOL` step is needed. Use `suspend_app()` to pause without dropping the service, and `resume_app()` to bring it back:
 
 ```sql
--- Outside the app, using ACCOUNTADMIN
+-- Pause: suspends the service and its compute pool, keeping the service definition
+CALL <app_instance_name>.app_public.suspend_app();
+
+-- Resume, then poll until the service is serving again
+CALL <app_instance_name>.app_public.resume_app();
+CALL <app_instance_name>.app_public.get_service_status();
+
+-- Confirm what the app is currently paying for
+CALL <app_instance_name>.app_public.get_compute_status();
+```
+
+Graph data is held in memory only, so it does not survive a `stop_app()` or `suspend_app()`. Reload your data once the service reports `"serving": true`.
+
+To confirm the pool state outside the app:
+
+```sql
 USE ROLE ACCOUNTADMIN;
 SHOW COMPUTE POOLS;
-ALTER COMPUTE POOL falkordb_pool SUSPEND;
-
--- Resume when needed
-ALTER COMPUTE POOL falkordb_pool RESUME;
 ```
 
 ### Service Management
 
 ```sql
--- Stop the service (doesn't delete compute pool)
+-- Stop the service and suspend its compute pool
 CALL <app_instance_name>.app_public.stop_app();
 
 -- Restart the service
@@ -1127,8 +1180,11 @@ SHOW GRANTS TO APPLICATION <app_instance_name>;
 |---|---|
 | `start_app(pool_name, warehouse_name)` | Creates or refreshes the FalkorDB service, compute pool, warehouse, SQL wrappers, and Agent tool objects |
 | `start_app(pool_name, warehouse_name, options)` | Starts the app with custom container CPU/memory resource options |
-| `stop_app()` | Stops the FalkorDB service |
-| `get_service_status()` | Returns Snowflake service status |
+| `stop_app()` | Stops the FalkorDB service and suspends the compute pool it created |
+| `suspend_app()` | Suspends the service and its compute pool without dropping the service |
+| `resume_app()` | Resumes a suspended compute pool and its service |
+| `get_compute_status()` | Reports the state of the compute pool and warehouse the app created |
+| `get_service_status()` | Returns `{ "containers": [...], "serving": true\|false }`; `serving` is true only once FalkorDB accepts connections |
 | `get_service_containers()` | Returns container status details |
 | `get_service_logs(instance_id, container_name, line_count)` | Reads recent service logs |
 | `graph_list()` | Lists FalkorDB graphs |
@@ -1136,6 +1192,8 @@ SHOW GRANTS TO APPLICATION <app_instance_name>;
 | `graph_query(graph_name, cypher)` | Runs Cypher against a graph |
 | `graph_query(graph_name, cypher, options)` | Runs Cypher and optionally writes results to a Snowflake table |
 | `load_csv(graph_name, cypher)` | Loads the currently bound Snowflake table into FalkorDB using `LOAD CSV` Cypher |
+| `shortest_path(graph_name, node_label, node_prop, source_value, target_value, rel_type, weight_prop)` | Finds the path minimizing a numeric relationship property between two nodes (`algo.SPpaths`) |
+| `page_rank(graph_name, node_label, rel_type, node_prop, limit_count)` | Ranks nodes by connectivity importance and returns the top `limit_count` (`algo.pageRank`) |
 | `create_agent(agent_name)` | Creates or refreshes the Cortex Agent definition |
 | `register_callback(ref_name, operation, ref_or_alias)` | Handles Native App reference binding callbacks |
 
@@ -1151,7 +1209,7 @@ SHOW GRANTS TO APPLICATION <app_instance_name>;
 
 **Problem**: `get_service_status()` shows an error state, or a query briefly returns `503 Connection refused`.
 
-**Solution**: Check container status and logs. A container can become `READY` before the internal API is fully accepting requests, so retry once after a short wait if status is otherwise healthy.
+**Solution**: A container becomes `READY` before FalkorDB accepts connections, so a query sent at that point fails with `503`. Poll `get_service_status()` until it reports `"serving": true` rather than acting on `READY`. If it never turns true, check the containers and logs.
 
 ```sql
 CALL <app_instance_name>.app_public.get_service_status();
@@ -1238,7 +1296,7 @@ For issues, questions, or feature requests:
   q2="Does data leave Snowflake when using FalkorDB?"
   a2="No, FalkorDB runs **directly within your Snowflake environment** as a Native App. Your data stays within Snowflake's security perimeter - no external data movement is required."
   q3="How long does the initial setup take?"
-  a3="After installation, call the `start_app` procedure to create the compute pool and warehouse. The service typically reaches `READY` status within **2-3 minutes**."
+  a3="After installation, call the `start_app` procedure to create the compute pool and warehouse. Poll `get_service_status()` until it reports `serving` as true, which typically takes **3-5 minutes**."
   q4="What query language does FalkorDB use in Snowflake?"
   a4="FalkorDB uses the **Cypher** query language for all graph operations, including creating nodes and relationships, querying patterns, and running graph algorithms."
   q5="How can I optimize query performance in the Snowflake integration?"
