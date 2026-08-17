@@ -77,7 +77,7 @@ Suppose you are an urban planner tasked with designing a new transportation netw
 
 Your goal is to connect every major building with the lowest total cost, even if travel between some buildings requires multiple stops and different modes of transport. The Minimum Spanning Forest algorithm helps you achieve this by identifying the most cost-effective network.
 
-![City Graph](/images/city_plan.png)
+![City Graph](/images/city_plan.webp)
 
 ```cypher
 CALL algo.MSF({weightAttribute: 'cost'}) YIELD edges, nodes RETURN edges, nodes
@@ -86,7 +86,7 @@ CALL algo.MSF({weightAttribute: 'cost'}) YIELD edges, nodes RETURN edges, nodes
 ### Expected Results
 The algorithm would yield a single tree containing the following edge and node objects:
 
-![City MSF Graph](/images/city_msf.png)
+![City MSF Graph](/images/city_msf.webp)
 
 ## Algorithm Details
 
