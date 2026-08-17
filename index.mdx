@@ -3,37 +3,61 @@ title: "FalkorDB"
 description: "Official FalkorDB documentation — the high-performance graph database for GraphRAG, Cypher queries, and knowledge graphs powering accurate GenAI applications."
 ---
 
-[![Trendshift](https://trendshift.io/api/badge/repositories/14787)](https://trendshift.io/repositories/14787)
+<img src="/images/falkordb-docs-banner.svg" alt="FalkorDB Docs Banner" width="1000" height="320" style={{"width": "100%", "height": "auto", "borderRadius": "0.75rem"}} />
 
-[![Docker Hub](https://img.shields.io/docker/pulls/falkordb/falkordb?label=Docker&style=flat-square)](https://hub.docker.com/r/falkordb/falkordb/)
-[![Discord](https://img.shields.io/discord/1146782921294884966?style=flat-square)](https://discord.gg/6M4QwDXn2w)
-[![Try Free](https://img.shields.io/badge/Try%20Free-FalkorDB%20Cloud-FF8101?labelColor=FDE900&style=flat-square)](https://app.falkordb.cloud)
+<div style={{"textAlign": "center", "marginTop": "1.5rem"}}>
+  <a href="https://trendshift.io/repositories/14787" style={{"display": "inline-block", "textDecoration": "none", "borderBottom": "none"}}>
+    <img src="https://trendshift.io/api/badge/repositories/14787" alt="FalkorDB is the #1 GitHub repository of the day on Trendshift" style={{"height": "72px", "width": "auto", "margin": "0", "filter": "drop-shadow(0 0 22px rgba(255, 129, 1, 0.55))"}} />
+  </a>
+</div>
 
-<img src="/images/falkordb-docs-banner.svg" alt="FalkorDB Docs Banner" width="1000" height="320" style={{"width": "100%", "height": "auto"}} />
+<div style={{"display": "flex", "flexWrap": "wrap", "alignItems": "center", "justifyContent": "center", "gap": "0.5rem", "marginTop": "1.25rem"}}>
+  <a href="https://github.com/FalkorDB/FalkorDB" style={{"display": "inline-flex", "textDecoration": "none", "borderBottom": "none"}}><img src="https://img.shields.io/github/stars/FalkorDB/FalkorDB?style=flat-square&label=Star%20FalkorDB&labelColor=1c1c1c&color=FF8101" alt="Star FalkorDB on GitHub" style={{"height": "24px", "width": "auto", "margin": "0"}} /></a>
+  <a href="https://hub.docker.com/r/falkordb/falkordb/" style={{"display": "inline-flex", "textDecoration": "none", "borderBottom": "none"}}><img src="https://img.shields.io/docker/pulls/falkordb/falkordb?style=flat-square&label=Docker&labelColor=1c1c1c&color=FF8101" alt="Docker pulls" style={{"height": "24px", "width": "auto", "margin": "0"}} /></a>
+  <a href="https://discord.gg/6M4QwDXn2w" style={{"display": "inline-flex", "textDecoration": "none", "borderBottom": "none"}}><img src="https://img.shields.io/discord/1146782921294884966?style=flat-square&label=Discord&labelColor=1c1c1c&color=FF8101" alt="Join the FalkorDB Discord" style={{"height": "24px", "width": "auto", "margin": "0"}} /></a>
+</div>
 
-## The Graph platform developers use to achieve accurate GraphRAG for enterprise GenAI
+## The graph platform developers use to achieve accurate GraphRAG for enterprise GenAI
 
-## About FalkorDB
+FalkorDB delivers an **accurate, multi-tenant RAG solution powered by a low-latency, scalable graph database technology.** It is purpose-built for teams working with complex, interconnected data — structured or unstructured — in real-time and interactive environments, and it speaks [OpenCypher](https://www.opencypher.org/) with proprietary extensions that make graph traversal and querying practical in production.
 
-FalkorDB delivers an **accurate, multi-tenant RAG solution powered by a low-latency, scalable graph database technology.**
+<CardGroup cols={2}>
+  <Card title="Get started" icon="rocket" href="/getting-started">
+    Run FalkorDB locally, model your first graph, and query it in a few minutes.
+  </Card>
+  <Card title="Star us on GitHub" icon="star" href="https://github.com/FalkorDB/FalkorDB">
+    FalkorDB is open source. A star helps other developers find the project.
+  </Card>
+  <Card title="Try FalkorDB Cloud" icon="cloud" href="https://app.falkordb.cloud">
+    Spin up a fully managed instance for free, with no local setup at all.
+  </Card>
+  <Card title="Build GraphRAG" icon="robot" href="/genai-tools/graphrag-sdk">
+    Ground your GenAI application in a knowledge graph with the GraphRAG SDK.
+  </Card>
+</CardGroup>
 
-* Purpose-built for development teams working with complex, interconnected data—whether structured or unstructured—in real-time or interactive user environments.
+## Primary features
 
-* Supports the OpenCypher query language with proprietary enhancements that streamline interactions with graph data. Its efficient graph traversal and query capabilities make it well-suited for production environments.
-
-## Choose Your Path
-
-*   **Graph Database Path:** If you're interested in using FalkorDB as a property graph database with OpenCypher support, continue with the sections below.
-*   **GraphRAG Path:** If you're aiming to implement advanced graph reasoning and generative AI tasks, explore our [GenAI Tools](/genai-tools) section, starting with the [GraphRAG SDK](/genai-tools/graphrag-sdk).
-
-## Primary Features
-
-* Adopts the [Property Graph Model](https://github.com/opencypher/openCypher/blob/master/docs/property-graph-model.adoc)
-* Supports [OpenCypher](https://www.opencypher.org/) query language with proprietary extensions
-* Offers [Full-Text Search](/cypher/indexing/fulltext-index), [Vector Similarity](/cypher/indexing/vector-index), and [Range indexing](/cypher/indexing/range-index) for efficient querying
-* Supports both [RESP](https://redis.io/docs/reference/protocol-spec/) and [Bolt](https://en.wikipedia.org/wiki/Bolt_(network_protocol)) protocols for flexible connectivity
-* Uses sparse adjacency matrix representation for efficient graph storage
-* Provides GraphRAG capabilities through the [GraphRAG SDK](/genai-tools/graphrag-sdk) for advanced graph reasoning and generative AI tasks
+<CardGroup cols={2}>
+  <Card title="Property graph model" icon="diagram-project" href="https://github.com/opencypher/openCypher/blob/master/docs/property-graph-model.adoc">
+    Nodes, relationships, labels, and properties, following the openCypher property graph model.
+  </Card>
+  <Card title="OpenCypher query language" icon="code" href="/cypher">
+    Declarative pattern matching, plus proprietary extensions layered on top of OpenCypher.
+  </Card>
+  <Card title="Full-text, vector, and range indexes" icon="magnifying-glass" href="/cypher/indexing">
+    Combine [full-text search](/cypher/indexing/fulltext-index), [vector similarity](/cypher/indexing/vector-index), and [range indexing](/cypher/indexing/range-index) in one engine.
+  </Card>
+  <Card title="RESP and Bolt protocols" icon="plug" href="/integration/bolt-support">
+    Connect over the [RESP](https://redis.io/docs/reference/protocol-spec/) protocol or over Bolt, whichever your stack already speaks.
+  </Card>
+  <Card title="Sparse matrix storage" icon="bolt" href="/design">
+    Graphs are held as sparse adjacency matrices for compact storage and fast traversal.
+  </Card>
+  <Card title="GraphRAG built in" icon="share-nodes" href="/genai-tools">
+    Turn unstructured sources into a knowledge graph and query it from your GenAI app.
+  </Card>
+</CardGroup>
 
 ## Get Started
 
@@ -262,9 +286,19 @@ falkordb-bulk-insert GRAPHNAME -n nodes.csv -r edges.csv
 
 See the [Bulk Loader documentation](/integration/bulk-loader) for the full reference.
 
-## GitHub Discussions
+## Community and support
 
-Got questions? Please contact us at the [FalkorDB forum](https://github.com/FalkorDB/FalkorDB/discussions).
+<CardGroup cols={3}>
+  <Card title="Star FalkorDB" icon="star" href="https://github.com/FalkorDB/FalkorDB">
+    Star the repository to follow releases and help other developers discover the project.
+  </Card>
+  <Card title="Join the Discord" icon="discord" href="https://discord.gg/6M4QwDXn2w">
+    Ask questions and share what you are building with the team and the community.
+  </Card>
+  <Card title="Open a discussion" icon="comments" href="https://github.com/FalkorDB/FalkorDB/discussions">
+    Propose ideas, report rough edges, and search past answers on the FalkorDB forum.
+  </Card>
+</CardGroup>
 
 ## License
 
