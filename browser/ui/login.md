@@ -9,6 +9,8 @@ nav_order: 1
 # Login Screen
 The login screen configures the connection to a FalkorDB server and authenticates the user.
 
+![Login screen](../../images/browser/login-screen.png)
+
 ## Login modes
 The UI supports two ways to provide connection details:
 

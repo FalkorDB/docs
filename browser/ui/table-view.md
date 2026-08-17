@@ -9,6 +9,8 @@ nav_order: 11
 # Table View
 The Table tab displays query results as rows/columns when the query returns tabular data.
 
+![Table view](../../images/browser/table-view.png)
+
 ## When it appears
 The **Table** tab is enabled when the current query produced `graph.Data` (i.e., non-empty tabular results).
 

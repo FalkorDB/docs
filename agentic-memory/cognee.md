@@ -39,18 +39,26 @@ Cognee provides a comprehensive memory layer that:
 
 ### Prerequisites
 
-- Python 3.10 or higher
+- Python 3.11–3.13 (the adapter does not support Python 3.10 or 3.14)
 - FalkorDB instance (Cloud or self-hosted)
 - API keys for LLM and embedding providers (if using those features)
 
-### Installation
-
-Install Cognee with the FalkorDB community adapter:
+To run FalkorDB locally with Docker:
 
 ```bash
-pip install cognee
+docker run -p 6379:6379 -p 3000:3000 -it --rm falkordb/falkordb:latest
+```
+
+### Installation
+
+Install Cognee with the FalkorDB community adapter. We recommend Cognee 1.2 or later:
+
+```bash
+pip install "cognee>=1.2,<2.0"
 pip install cognee-community-hybrid-adapter-falkor
 ```
+
+The adapter is a [community-maintained package](https://github.com/topoteretes/cognee-community/tree/main/packages/hybrid/falkordb) that requires `cognee >= 1.0.3` and `falkordb >= 1.0.9`. Cognee 1.2 is the latest release and is recommended for new projects.
 
 ### Quick Start Example
 
@@ -64,35 +72,35 @@ from os import path
 from cognee import config, prune, add, cognify, search, SearchType
 
 # Import the register module to enable FalkorDB support
-import cognee_community_hybrid_adapter_falkor.register
+from cognee_community_hybrid_adapter_falkor import register  # noqa: F401
 
 async def main():
     # Set up local directories
     system_path = pathlib.Path(__file__).parent
     config.system_root_directory(path.join(system_path, ".cognee_system"))
     config.data_root_directory(path.join(system_path, ".cognee_data"))
-    
+
     # Configure relational database
     config.set_relational_db_config({
         "db_provider": "sqlite",
     })
-    
+
     # Configure FalkorDB as both vector and graph database
     config.set_vector_db_config({
-        "vector_db_provider": "falkordb",
+        "vector_db_provider": "falkor",
         "vector_db_url": os.getenv("GRAPH_DB_URL", "localhost"),
         "vector_db_port": int(os.getenv("GRAPH_DB_PORT", "6379")),
     })
     config.set_graph_db_config({
-        "graph_database_provider": "falkordb",
+        "graph_database_provider": "falkor",
         "graph_database_url": os.getenv("GRAPH_DB_URL", "localhost"),
         "graph_database_port": int(os.getenv("GRAPH_DB_PORT", "6379")),
     })
-    
+
     # Optional: Clean previous data
     await prune.prune_data()
-    await prune.prune_system()
-    
+    await prune.prune_system(metadata=True)
+
     # Add and process your content
     text_data = """
     Sarah is a software engineer at TechCorp. She specializes in machine learning
@@ -100,16 +108,16 @@ async def main():
     Sarah recently collaborated with Mike on a new project using FalkorDB.
     Mike is the lead data scientist at TechCorp.
     """
-    
+
     await add(text_data)
     await cognify()
-    
+
     # Search using graph completion
     search_results = await search(
         query_type=SearchType.GRAPH_COMPLETION,
         query_text="What does Sarah work on?"
     )
-    
+
     print("Search Results:")
     for result in search_results:
         print("\n" + result)
@@ -120,12 +128,12 @@ asyncio.run(main())
 
 ### Understanding the Code
 
-1. **Import the FalkorDB Adapter**: Import `cognee_community_hybrid_adapter_falkor.register` to enable FalkorDB support
+1. **Import the FalkorDB Adapter**: Import `register` from `cognee_community_hybrid_adapter_falkor` to register FalkorDB with Cognee's provider system. Note that the provider name is `"falkor"`.
 2. **Configure Directories**: Set up local directories for Cognee's system and data storage
 3. **Configure Databases**: Set FalkorDB as both the vector and graph database for hybrid capabilities
 4. **Add Data**: Provide text or structured data to be processed
 5. **Cognify**: Process the data to extract entities and relationships
-6. **Search**: Query the knowledge using different search types (graph completion, similarity, etc.)
+6. **Search**: Query the knowledge using different search types (graph completion, chunk retrieval, etc.)
 
 ## Advanced Features
 
@@ -142,18 +150,20 @@ graph_results = await search(
     query_text="machine learning projects"
 )
 
-# Similarity search - semantic vector search
-similarity_results = await search(
-    query_type=SearchType.SIMILARITY,
+# Chunk search - semantic vector search over raw text chunks
+chunk_results = await search(
+    query_type=SearchType.CHUNKS,
     query_text="machine learning projects"
 )
 
-# Insights search - combines multiple approaches
-insights_results = await search(
-    query_type=SearchType.INSIGHTS,
+# RAG completion - classic retrieval-augmented generation over chunks
+rag_results = await search(
+    query_type=SearchType.RAG_COMPLETION,
     query_text="machine learning projects"
 )
 ```
+
+Other available search types include `SUMMARIES`, `TEMPORAL`, `CYPHER` (run raw Cypher against the graph), `NATURAL_LANGUAGE`, `GRAPH_COMPLETION_COT` (chain-of-thought), and `HYBRID_COMPLETION`. See the [Cognee search documentation](https://docs.cognee.ai) for the full list.
 
 ### LLM Configuration
 
@@ -169,7 +179,7 @@ os.environ["LLM_API_KEY"] = "your-openai-api-key"
 # Configure LLM provider
 config.set_llm_config({
     "llm_provider": "openai",
-    "llm_model": "gpt-4",
+    "llm_model": "gpt-4o-mini",
     "llm_temperature": 0.7
 })
 ```
@@ -193,7 +203,7 @@ await cognify()
 
 # Reset memory (clear all data)
 await prune.prune_data()
-await prune.prune_system()
+await prune.prune_system(metadata=True)
 ```
 
 ### Environment Variables
@@ -203,17 +213,21 @@ You can use environment variables for configuration:
 ```bash
 export GRAPH_DB_URL="localhost"
 export GRAPH_DB_PORT="6379"
+export GRAPH_DATASET_DATABASE_HANDLER="falkor_graph_local"
+export VECTOR_DATASET_DATABASE_HANDLER="falkor_vector_local"
 export LLM_API_KEY="your-openai-api-key"
 ```
 
-Then access them in your code:
+The `GRAPH_DATASET_DATABASE_HANDLER` and `VECTOR_DATASET_DATABASE_HANDLER` variables tell Cognee's dataset system to use the FalkorDB handlers registered by the adapter.
+
+Then access the connection variables in your code:
 
 ```python
 import os
 from cognee import config
 
 config.set_graph_db_config({
-    "graph_database_provider": "falkordb",
+    "graph_database_provider": "falkor",
     "graph_database_url": os.getenv("GRAPH_DB_URL", "localhost"),
     "graph_database_port": int(os.getenv("GRAPH_DB_PORT", "6379")),
 })
@@ -233,14 +247,14 @@ config.set_relational_db_config({
 
 # FalkorDB as graph database
 config.set_graph_db_config({
-    "graph_database_provider": "falkordb",
+    "graph_database_provider": "falkor",
     "graph_database_url": "localhost",
     "graph_database_port": 6379,
 })
 
 # FalkorDB as vector database (hybrid mode)
 config.set_vector_db_config({
-    "vector_db_provider": "falkordb",
+    "vector_db_provider": "falkor",
     "vector_db_url": "localhost",
     "vector_db_port": 6379,
 })
@@ -258,17 +272,17 @@ os.environ["LLM_API_KEY"] = "your-openai-api-key"
 # Configure LLM
 config.set_llm_config({
     "llm_provider": "openai",
-    "llm_model": "gpt-4",
+    "llm_model": "gpt-4o-mini",
     "llm_temperature": 0.7
 })
 ```
 
 ## Best Practices
 
-1. **Import Registration First**: Always import `cognee_community_hybrid_adapter_falkor.register` before configuring Cognee
+1. **Import Registration First**: Always import `register` from `cognee_community_hybrid_adapter_falkor` before configuring Cognee
 2. **Use Environment Variables**: Store connection details and API keys in environment variables
 3. **Batch Processing**: Add multiple documents before calling `cognify()` for better performance
-4. **Clean Up**: Use `prune.prune_data()` and `prune.prune_system()` to reset when needed
+4. **Clean Up**: Use `prune.prune_data()` and `prune.prune_system(metadata=True)` to reset when needed
 5. **Hybrid Mode**: Configure FalkorDB as both vector and graph database for optimal search capabilities
 6. **Monitor Resources**: Track FalkorDB memory usage and query performance as your knowledge base grows
 
@@ -315,8 +329,14 @@ await cognify()
 
 If you have trouble installing the community adapter:
 - Ensure you have the correct package name: `cognee-community-hybrid-adapter-falkor`
-- Check that you're using Python 3.10 or higher
+- Check that you're using Python 3.11–3.13 (3.10 and 3.14 are not supported)
 - Try installing in a fresh virtual environment
+
+### "Unsupported provider" Errors
+
+If Cognee rejects your database configuration:
+- Use `"falkor"` as the provider name, not `"falkordb"` — the adapter registers itself under `"falkor"`
+- Make sure you imported `register` from `cognee_community_hybrid_adapter_falkor` before calling any `config.set_*` functions
 
 ### Connection Issues
 
@@ -327,7 +347,7 @@ If you experience connection problems:
 
 ### Data Not Appearing in Graph
 
-- Make sure to import `cognee_community_hybrid_adapter_falkor.register` before using Cognee
+- Make sure to import `register` from `cognee_community_hybrid_adapter_falkor` before using Cognee
 - Call `await cognify()` after adding data to process and extract entities
 - Check that your LLM API key is set correctly
 - Verify the graph is being populated using FalkorDB CLI or Browser
@@ -340,10 +360,11 @@ If you experience connection problems:
 
 ## Resources
 
-- 📚 [Cognee Documentation](https://github.com/topoteretes/cognee-community)
+- 📚 [Cognee Documentation](https://docs.cognee.ai)
+- 🔌 [Cognee's FalkorDB Setup Guide](https://docs.cognee.ai/setup-configuration/community-maintained/falkordb)
 - 💻 [Cognee GitHub Repository](https://github.com/topoteretes/cognee)
-- 🔗 [FalkorDB Integration Guide](https://github.com/topoteretes/cognee-community/blob/main/packages/hybrid/falkordb/README.md)
-- 📖 [Cognee Examples](https://github.com/topoteretes/cognee/tree/main/examples)
+- 🔗 [FalkorDB Adapter Source & README](https://github.com/topoteretes/cognee-community/tree/main/packages/hybrid/falkordb)
+- 📖 [Adapter Example](https://github.com/topoteretes/cognee-community/blob/main/packages/hybrid/falkordb/examples/example.py)
 
 ## Next Steps
 
@@ -354,13 +375,13 @@ If you experience connection problems:
 {% include faq_accordion.html
   title="Frequently Asked Questions"
   q1="What is the difference between Cognee and Graphiti for agentic memory?"
-  a1="Cognee focuses on **flexible hybrid storage** combining graph and vector databases with multiple search types (graph completion, similarity, insights). Graphiti specializes in **temporally-aware knowledge graphs** with built-in multi-tenancy. Choose Cognee for flexible memory structures and Graphiti for temporal reasoning."
+  a1="Cognee focuses on **flexible hybrid storage** combining graph and vector databases with multiple search types (graph completion, chunk retrieval, RAG completion, temporal). Graphiti specializes in **temporally-aware knowledge graphs** with built-in multi-tenancy. Choose Cognee for flexible memory structures and Graphiti for temporal reasoning."
   q2="Why do I need to import the register module before configuring Cognee?"
-  a2="Importing `cognee_community_hybrid_adapter_falkor.register` patches Cognee to recognize FalkorDB as a supported database provider. Without this import, Cognee won't recognize `falkordb` as a valid option for graph or vector database configuration."
+  a2="Importing `register` from `cognee_community_hybrid_adapter_falkor` patches Cognee to recognize FalkorDB as a supported database provider. Without this import, Cognee won't recognize `falkor` as a valid option for graph or vector database configuration."
   q3="Can FalkorDB serve as both the graph and vector database for Cognee?"
-  a3="Yes. FalkorDB supports **hybrid mode** where it acts as both the graph database and vector database. Configure both `set_graph_db_config` and `set_vector_db_config` with `falkordb` as the provider for optimal search capabilities combining semantic similarity with graph traversal."
+  a3="Yes. FalkorDB supports **hybrid mode** where it acts as both the graph database and vector database. Configure both `set_graph_db_config` and `set_vector_db_config` with `falkor` as the provider for optimal search capabilities combining semantic similarity with graph traversal."
   q4="What does the cognify() function do?"
   a4="The `cognify()` function processes all added data to **extract entities and relationships** using the configured LLM. It builds the knowledge graph structure from unstructured text. Always call `cognify()` after adding data with `add()` to populate the graph."
   q5="How do I reset all Cognee data in FalkorDB?"
-  a5="Use `await prune.prune_data()` to clear the knowledge data and `await prune.prune_system()` to reset system state. Both functions are available from `from cognee import prune`."
+  a5="Use `await prune.prune_data()` to clear the knowledge data and `await prune.prune_system(metadata=True)` to reset system state, including stored metadata. Both functions are available from `from cognee import prune`."
 %}

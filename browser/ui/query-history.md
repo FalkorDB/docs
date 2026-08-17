@@ -9,6 +9,8 @@ nav_order: 10
 # Query History
 Query History stores previously executed queries in the browser (localStorage) and exposes a dialog to browse them.
 
+![Query history dialog](../../images/browser/query-history.png)
+
 ## Opening Query History
 Click the history button (clock icon) in the selector bar.
 

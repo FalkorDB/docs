@@ -9,6 +9,8 @@ nav_order: 3
 # Settings Page
 The Settings page (`/settings`) is where you configure Browser behavior and manage security/admin features.
 
+![Settings page](../../images/browser/settings-page.png)
+
 ## Tabs / sections
 The Settings page is organized into these sections:
 - **Browser Settings** (all users)

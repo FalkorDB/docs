@@ -13,7 +13,7 @@ permalink: /
 [![Discord](https://img.shields.io/discord/1146782921294884966?style=flat-square)](https://discord.gg/6M4QwDXn2w)
 [![Try Free](https://img.shields.io/badge/Try%20Free-FalkorDB%20Cloud-FF8101?labelColor=FDE900&style=flat-square)](https://app.falkordb.cloud)
 
-![FalkorDB Docs Readme Banner](https://github.com/user-attachments/assets/201b07e1-ac6d-4593-98cf-e58946d7766c)
+<img src="/images/falkordb-docs-banner.svg" alt="FalkorDB Docs Banner" width="1000" height="320" style="width: 100%; height: auto;"/>
 
 # FalkorDB
 ## The Graph platform developers use to achieve accurate GraphRAG for enterprise GenAI
@@ -60,7 +60,7 @@ docker run -p 6379:6379 -p 3000:3000 -it --rm falkordb/falkordb:latest
 
 Once loaded, you can interact with FalkorDB using any of the supported [client libraries](/getting-started/clients)
 
-> **📖 New to FalkorDB?** Follow the step-by-step [Getting Started guide](/getting-started) for a complete walkthrough — from setup to modeling, loading, and querying your first graph.
+> **📖 New to FalkorDB?** Follow the step-by-step [Getting Started guide](/getting-started/) for a complete walkthrough — from setup to modeling, loading, and querying your first graph.
 
 Here we'll use [FalkorDB Python client](https://pypi.org/project/FalkorDB/) to create a small graph representing a subset of motorcycle riders and teams taking part in the MotoGP league, once created we'll start querying our data.
 
@@ -284,7 +284,7 @@ FalkorDB is licensed under the [the Server Side Public License v1 (SSPLv1)](http
   q2="What are the main use cases for FalkorDB?"
   a2="FalkorDB excels at use cases involving complex, interconnected data: social networks, recommendation engines, knowledge graphs, fraud detection, and **GraphRAG for GenAI applications**. Its low-latency design makes it ideal for real-time and interactive user environments."
   q3="How do I get started with FalkorDB?"
-  a3="The quickest way is Docker: `docker run -p 6379:6379 -p 3000:3000 -it --rm falkordb/falkordb:latest`. This starts the server and a browser UI at http://localhost:3000. Then install a [client library](/getting-started/clients) and follow the [Getting Started guide](/getting-started)."
+  a3="The quickest way is Docker: `docker run -p 6379:6379 -p 3000:3000 -it --rm falkordb/falkordb:latest`. This starts the server and a browser UI at http://localhost:3000. Then install a [client library](/getting-started/clients) and follow the [Getting Started guide](/getting-started/)."
   q4="Does FalkorDB support cloud deployment?"
   a4="Yes. [FalkorDB Cloud](https://app.falkordb.cloud) provides a fully managed, multi-tenant graph database service. You can create a free instance and skip local setup entirely."
   q5="What query language does FalkorDB use?"
