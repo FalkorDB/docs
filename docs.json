@@ -10,7 +10,7 @@
   },
   "favicon": "/images/favicon.ico",
   "logo": {
-    "light": "/images/falkordb-logo.svg",
+    "light": "/images/falkordb-logo-color.svg",
     "dark": "/images/falkordb-logo.svg",
     "href": "https://www.falkordb.com"
   },
