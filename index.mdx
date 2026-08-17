@@ -1,0 +1,325 @@
+---
+title: "FalkorDB"
+description: "Official FalkorDB documentation — the high-performance graph database for GraphRAG, Cypher queries, and knowledge graphs powering accurate GenAI applications."
+---
+
+<img src="/images/falkordb-docs-banner.svg" alt="FalkorDB Docs Banner" width="1000" height="320" style={{"width": "100%", "height": "auto", "borderRadius": "0.75rem"}} />
+
+<div style={{"textAlign": "center", "marginTop": "1.5rem"}}>
+  <a href="https://trendshift.io/repositories/14787" style={{"display": "inline-block", "textDecoration": "none", "borderBottom": "none"}}>
+    <img src="/images/trendshift-badge.svg" alt="FalkorDB is the #1 GitHub repository of the day on Trendshift" width="327" height="72" style={{"height": "72px", "width": "327px", "margin": "0", "filter": "drop-shadow(0 0 22px rgba(255, 129, 1, 0.55))"}} />
+  </a>
+</div>
+
+<div style={{"display": "flex", "flexWrap": "wrap", "alignItems": "center", "justifyContent": "center", "gap": "0.5rem", "marginTop": "1.25rem", "minHeight": "24px"}}>
+  <a href="https://github.com/FalkorDB/FalkorDB" style={{"display": "inline-flex", "textDecoration": "none", "borderBottom": "none"}}><img src="https://img.shields.io/github/stars/FalkorDB/FalkorDB?style=flat-square&label=Star%20FalkorDB&labelColor=1c1c1c&color=FF8101" alt="Star FalkorDB on GitHub" decoding="async" style={{"height": "24px", "width": "auto", "margin": "0"}} /></a>
+  <a href="https://hub.docker.com/r/falkordb/falkordb/" style={{"display": "inline-flex", "textDecoration": "none", "borderBottom": "none"}}><img src="https://img.shields.io/docker/pulls/falkordb/falkordb?style=flat-square&label=Docker&labelColor=1c1c1c&color=FF8101" alt="Docker pulls" decoding="async" style={{"height": "24px", "width": "auto", "margin": "0"}} /></a>
+  <a href="https://discord.gg/6M4QwDXn2w" style={{"display": "inline-flex", "textDecoration": "none", "borderBottom": "none"}}><img src="https://img.shields.io/discord/1146782921294884966?style=flat-square&label=Discord&labelColor=1c1c1c&color=FF8101" alt="Join the FalkorDB Discord" decoding="async" style={{"height": "24px", "width": "auto", "margin": "0"}} /></a>
+</div>
+
+## The graph platform developers use to achieve accurate GraphRAG for enterprise GenAI
+
+FalkorDB delivers an **accurate, multi-tenant RAG solution powered by a low-latency, scalable graph database technology.** It is purpose-built for teams working with complex, interconnected data — structured or unstructured — in real-time and interactive environments, and it speaks [OpenCypher](https://www.opencypher.org/) with proprietary extensions that make graph traversal and querying practical in production.
+
+<CardGroup cols={2}>
+  <Card title="Get started" icon="rocket" href="/getting-started">
+    Run FalkorDB locally, model your first graph, and query it in a few minutes.
+  </Card>
+  <Card title="Star us on GitHub" icon="star" href="https://github.com/FalkorDB/FalkorDB">
+    FalkorDB is open source. A star helps other developers find the project.
+  </Card>
+  <Card title="Try FalkorDB Cloud" icon="cloud" href="https://app.falkordb.cloud">
+    Spin up a fully managed instance for free, with no local setup at all.
+  </Card>
+  <Card title="Build GraphRAG" icon="robot" href="/genai-tools/graphrag-sdk">
+    Ground your GenAI application in a knowledge graph with the GraphRAG SDK.
+  </Card>
+</CardGroup>
+
+## Primary features
+
+<CardGroup cols={2}>
+  <Card title="Property graph model" icon="diagram-project" href="https://github.com/opencypher/openCypher/blob/master/docs/property-graph-model.adoc">
+    Nodes, relationships, labels, and properties, following the openCypher property graph model.
+  </Card>
+  <Card title="OpenCypher query language" icon="code" href="/cypher">
+    Declarative pattern matching, plus proprietary extensions layered on top of OpenCypher.
+  </Card>
+  <Card title="Full-text, vector, and range indexes" icon="magnifying-glass" href="/cypher/indexing">
+    Combine [full-text search](/cypher/indexing/fulltext-index), [vector similarity](/cypher/indexing/vector-index), and [range indexing](/cypher/indexing/range-index) in one engine.
+  </Card>
+  <Card title="RESP and Bolt protocols" icon="plug" href="/integration/bolt-support">
+    Connect over the [RESP](https://redis.io/docs/reference/protocol-spec/) protocol or over Bolt, whichever your stack already speaks.
+  </Card>
+  <Card title="Sparse matrix storage" icon="bolt" href="/design">
+    Graphs are held as sparse adjacency matrices for compact storage and fast traversal.
+  </Card>
+  <Card title="GraphRAG built in" icon="share-nodes" href="/genai-tools">
+    Turn unstructured sources into a knowledge graph and query it from your GenAI app.
+  </Card>
+</CardGroup>
+
+## Get Started
+
+Launch an instance using Docker, or use [FalkorDB Cloud](https://app.falkordb.cloud)
+
+```sh
+docker run -p 6379:6379 -p 3000:3000 -it --rm falkordb/falkordb:latest
+```
+
+### Ports Exposed
+
+- **6379 (FalkorDB Server)**  
+  Use this port to connect via the CLI or any FalkorDB-compatible client.
+
+- **3000 (FalkorDB Browser)**  
+  Access the FalkorDB web UI by opening your browser at: http://localhost:3000
+
+Once loaded, you can interact with FalkorDB using any of the supported [client libraries](/getting-started/clients)
+
+> **📖 New to FalkorDB?** Follow the step-by-step [Getting Started guide](/getting-started) for a complete walkthrough — from setup to modeling, loading, and querying your first graph.
+
+Here we'll use [FalkorDB Python client](https://pypi.org/project/FalkorDB/) to create a small graph representing a subset of motorcycle riders and teams taking part in the MotoGP league, once created we'll start querying our data.
+
+<CodeGroup>
+
+```python Python
+from falkordb import FalkorDB
+
+# Connect to FalkorDB
+db = FalkorDB(host='localhost', port=6379)
+
+# Create the 'MotoGP' graph
+g = db.select_graph('MotoGP')
+# Clear out this graph in case you've run this script before.
+g.delete()
+g.query("""CREATE
+           (:Rider {name:'Valentino Rossi'})-[:rides]->(:Team {name:'Yamaha'}),
+           (:Rider {name:'Dani Pedrosa'})-[:rides]->(:Team {name:'Honda'}),
+           (:Rider {name:'Andrea Dovizioso'})-[:rides]->(:Team {name:'Ducati'})""")
+
+# Query which riders represent Yamaha?
+res = g.query("""MATCH (r:Rider)-[:rides]->(t:Team)
+                 WHERE t.name = 'Yamaha'
+                 RETURN r.name""")
+
+for row in res.result_set:
+    print(row[0]) # Prints: "Valentino Rossi"
+
+# Query how many riders represent team Ducati ?
+res = g.query("""MATCH (r:Rider)-[:rides]->(t:Team {name:'Ducati'}) RETURN count(r)""")
+
+print(res.result_set[0][0]) # Prints: 1
+```
+
+```javascript JavaScript
+import { FalkorDB } from 'falkordb';
+
+const db = await FalkorDB.connect({
+    // username: 'myUsername',
+    // password: 'myPassword',
+    socket: {
+        host: 'localhost',
+        port: 6379
+    }
+})
+
+console.log('Connected to FalkorDB')
+
+const graph = db.selectGraph('MotoGP')
+
+await graph.query(`CREATE (:Rider {name:'Valentino Rossi'})-[:rides]->(:Team {name:'Yamaha'}),
+        (:Rider {name:'Dani Pedrosa'})-[:rides]->(:Team {name:'Honda'}),
+        (:Rider {name:'Andrea Dovizioso'})-[:rides]->(:Team {name:'Ducati'})`)
+
+const result = await graph.query(`MATCH (r:Rider)-[:rides]->(t:Team)
+                            WHERE t.name = $name RETURN r.name`, 
+                            {params: {name: 'Yamaha'}})
+
+console.log(result) // Valentino Rossi
+
+console.log(await db.list())
+console.log(await db.info())
+
+db.close()
+```
+
+```java Java
+package com.falkordb;
+
+import com.falkordb.*;
+import java.util.*;
+
+public class FalkorDBExample {
+    public static void main(String[] args) {
+        // Connect to FalkorDB
+        Driver driver = FalkorDB.driver("localhost", 6379);
+
+        // Select the graph
+        Graph graph = driver.graph("MotoGP");
+
+        // Create graph data
+        graph.query("CREATE (:Rider {name:'Valentino Rossi'})-[:rides]->(:Team {name:'Yamaha'}), " +
+                    "(:Rider {name:'Dani Pedrosa'})-[:rides]->(:Team {name:'Honda'}), " +
+                    "(:Rider {name:'Andrea Dovizioso'})-[:rides]->(:Team {name:'Ducati'})");
+
+        // Query with parameters
+        Map<String, Object> params = new HashMap<>();
+        params.put("name", "Yamaha");
+
+        ResultSet resultSet = graph.query(
+            "MATCH (r:Rider)-[:rides]->(t:Team) " +
+            "WHERE t.name = $name RETURN r.name", params);
+
+        // Process query results
+        for (Record record : resultSet) {
+            String riderName = record.getValue("r.name").toString();
+            System.out.println(riderName); // Valentino Rossi
+        }
+
+        // Close the connection
+        driver.close();
+    }
+}
+```
+
+```rust Rust
+use falkordb::{FalkorClientBuilder, FalkorConnectionInfo};
+
+#[tokio::main]
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    // Connect to FalkorDB
+    let connection_info: FalkorConnectionInfo = "falkor://127.0.0.1:6379"
+        .try_into()
+        .expect("Invalid connection info");
+
+    let client = FalkorClientBuilder::new_async()
+        .with_connection_info(connection_info)
+        .build()
+        .await?;
+
+    // Select the 'MotoGP' graph
+    let mut graph = client.select_graph("MotoGP");
+
+    // Clear out this graph in case you've run this script before.
+    graph.delete().await?;
+
+    graph
+        .query(
+            r#"CREATE
+           (:Rider {name:'Valentino Rossi'})-[:rides]->(:Team {name:'Yamaha'}),
+           (:Rider {name:'Dani Pedrosa'})-[:rides]->(:Team {name:'Honda'}),
+           (:Rider {name:'Andrea Dovizioso'})-[:rides]->(:Team {name:'Ducati'})"#,
+        )
+        .execute()
+        .await?;
+
+    // Query which riders represent Yamaha?
+    let mut nodes = graph
+        .query(
+            r#"MATCH (r:Rider)-[:rides]->(t:Team)
+                 WHERE t.name = 'Yamaha'
+                 RETURN r.name"#,
+        )
+        .execute()
+        .await?;
+
+    for node in nodes.data.by_ref() {
+        println!("{:?}", node);
+    }
+
+    // Query how many riders represent team Ducati?
+    let mut nodes = graph
+        .query(r#"MATCH (r:Rider)-[:rides]->(t:Team {name:'Ducati'}) RETURN count(r)"#)
+        .execute()
+        .await?;
+
+    for node in nodes.data.by_ref() {
+        println!("{:?}", node);
+    }
+
+    Ok(())
+}
+```
+
+```bash Shell
+$ redis-cli -h localhost -p 6379
+
+127.0.0.1:6379> GRAPH.QUERY MotoGP "CREATE (:Rider {name:'Valentino Rossi'})-[:rides]->(:Team {name:'Yamaha'}), (:Rider {name:'Dani Pedrosa'})-[:rides]->(:Team {name:'Honda'}), (:Rider {name:'Andrea Dovizioso'})-[:rides]->(:Team {name:'Ducati'})"
+1) 1) "Labels added: 2"
+   2) "Nodes created: 6"
+   3) "Properties set: 6"
+   4) "Relationships created: 3"
+   5) "Cached execution: 0"
+   6) "Query internal execution time: 9.155705 milliseconds"
+
+127.0.0.1:6379> GRAPH.QUERY MotoGP "MATCH (r:Rider)-[:rides]->(t:Team) WHERE t.name = 'Yamaha' RETURN r.name"
+1) 1) "r.name"
+2) 1) 1) "Valentino Rossi"
+3) 1) "Cached execution: 0"
+   2) "Query internal execution time: 5.389149 milliseconds"
+
+127.0.0.1:6379> GRAPH.QUERY MotoGP "MATCH (r:Rider)-[:rides]->(t:Team {name:'Ducati'}) RETURN count(r)"
+1) 1) "count(r)"
+2) 1) 1) (integer) 1
+3) 1) "Cached execution: 0"
+   2) "Query internal execution time: 1.153678 milliseconds"
+```
+
+</CodeGroup>
+
+For additional demos please visit [Demos](https://github.com/FalkorDB/demos).
+
+## Client libraries
+
+Language-specific clients have been written by the community and the FalkorDB team.
+The full list and links can be found on the [Client Libraries](/getting-started/clients) page.
+
+## Data import
+
+When loading large graphs from CSV files, use the [falkordb-bulk-loader](https://github.com/falkordb/falkordb-bulk-loader):
+
+```sh
+pip install falkordb-bulk-loader
+falkordb-bulk-insert GRAPHNAME -n nodes.csv -r edges.csv
+```
+
+See the [Bulk Loader documentation](/integration/bulk-loader) for the full reference.
+
+## Community and support
+
+<CardGroup cols={3}>
+  <Card title="Star FalkorDB" icon="star" href="https://github.com/FalkorDB/FalkorDB">
+    Star the repository to follow releases and help other developers discover the project.
+  </Card>
+  <Card title="Join the Discord" icon="discord" href="https://discord.gg/6M4QwDXn2w">
+    Ask questions and share what you are building with the team and the community.
+  </Card>
+  <Card title="Open a discussion" icon="comments" href="https://github.com/FalkorDB/FalkorDB/discussions">
+    Propose ideas, report rough edges, and search past answers on the FalkorDB forum.
+  </Card>
+</CardGroup>
+
+## License
+
+FalkorDB is licensed under the [the Server Side Public License v1 (SSPLv1)](https://github.com/FalkorDB/FalkorDB/blob/master/LICENSE.txt).
+
+## Frequently Asked Questions
+
+<AccordionGroup>
+  <Accordion title="What is FalkorDB and how does it differ from other graph databases?">
+    FalkorDB is a high-performance graph database built as a Redis module. Unlike traditional graph databases, it uses a sparse adjacency matrix representation (based on GraphBLAS) for efficient storage and fast traversals. It supports **OpenCypher** queries, both RESP and Bolt protocols, and provides built-in GraphRAG capabilities for GenAI applications.
+  </Accordion>
+  <Accordion title="What are the main use cases for FalkorDB?">
+    FalkorDB excels at use cases involving complex, interconnected data: social networks, recommendation engines, knowledge graphs, fraud detection, and **GraphRAG for GenAI applications**. Its low-latency design makes it ideal for real-time and interactive user environments.
+  </Accordion>
+  <Accordion title="How do I get started with FalkorDB?">
+    The quickest way is Docker: `docker run -p 6379:6379 -p 3000:3000 -it --rm falkordb/falkordb:latest`. This starts the server and a browser UI at http://localhost:3000. Then install a [client library](/getting-started/clients) and follow the [Getting Started guide](/getting-started).
+  </Accordion>
+  <Accordion title="Does FalkorDB support cloud deployment?">
+    Yes. [FalkorDB Cloud](https://app.falkordb.cloud) provides a fully managed, multi-tenant graph database service. You can create a free instance and skip local setup entirely.
+  </Accordion>
+  <Accordion title="What query language does FalkorDB use?">
+    FalkorDB uses **OpenCypher** with proprietary extensions. It supports full-text search, vector similarity search, and range indexing. See the [Cypher documentation](/cypher) for the complete query language reference.
+  </Accordion>
+</AccordionGroup>

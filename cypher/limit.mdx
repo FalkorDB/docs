@@ -1,0 +1,26 @@
+---
+title: "LIMIT"
+description: "Can use the limit clause to limit the number of records returned by a query"
+---
+
+Although not mandatory, you can use the limit clause
+to limit the number of records returned by a query:
+
+```sql
+LIMIT <max records to return>
+```
+
+If not specified, there's no limit to the number of records returned by a query.
+## Frequently Asked Questions
+
+<AccordionGroup>
+  <Accordion title="Is there a default limit on query results?">
+    No. If you do not specify a LIMIT clause, FalkorDB returns all matching records with no upper bound.
+  </Accordion>
+  <Accordion title="Does LIMIT improve query performance?">
+    LIMIT can reduce the amount of data transferred to the client, but due to a known limitation, it does not currently short-circuit eager operations like CREATE, SET, or DELETE. The full operation executes before LIMIT is applied.
+  </Accordion>
+  <Accordion title="Can I use LIMIT without ORDER BY?">
+    Yes, but the subset of results returned will be non-deterministic. Combine LIMIT with ORDER BY for predictable, repeatable results.
+  </Accordion>
+</AccordionGroup>

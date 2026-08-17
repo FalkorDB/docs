@@ -1,0 +1,35 @@
+---
+title: "UNION"
+description: "Combine results from multiple Cypher queries using the UNION clause. Use UNION ALL to keep all rows or UNION to remove duplicates from the combined result set."
+---
+
+The UNION clause is used to combine the result of multiple queries.
+
+UNION combines the results of two or more queries into a single result set that includes all the rows that belong to all queries in the union.
+
+The number and the names of the columns must be identical in all queries combined by using UNION.
+
+To keep all the result rows, use UNION ALL.
+
+Using just UNION will combine and remove duplicates from the result set.
+
+```sh
+GRAPH.QUERY DEMO_GRAPH
+"MATCH (n:Actor) RETURN n.name AS name
+UNION ALL
+MATCH (n:Movie) RETURN n.title AS name"
+```
+
+## Frequently Asked Questions
+
+<AccordionGroup>
+  <Accordion title="What is the difference between UNION and UNION ALL?">
+    **UNION** combines results and removes duplicates. **UNION ALL** keeps all rows including duplicates, which is typically faster since no deduplication is needed.
+  </Accordion>
+  <Accordion title="Do column names need to match in UNION queries?">
+    Yes. The number and names of columns must be identical across all queries combined with UNION. Use `AS` aliases to ensure column names match.
+  </Accordion>
+  <Accordion title="Can I use ORDER BY with UNION?">
+    ORDER BY can be applied to the final combined result set after the UNION. Each individual query in the union cannot have its own ORDER BY unless wrapped in a CALL \{\} subquery.
+  </Accordion>
+</AccordionGroup>

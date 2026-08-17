@@ -1,7 +1,7 @@
 """Build the JSON payload sent to GraphRAG-UI's /api/admin/update-graph.
 
 Invoked from .github/workflows/update-graph.yml after a push to main:
-reads BASE_SHA + HEAD_SHA from env, computes the .md diff, reads file
+reads BASE_SHA + HEAD_SHA from env, computes the .mdx diff, reads file
 content for added+modified entries, and writes payload.json. Sets the
 ``skip`` step output to ``true`` when nothing ingestable changed so the
 workflow can short-circuit before the network call.
@@ -51,10 +51,10 @@ def _read_at(head: str, path: str) -> str | None:
 def _collect_md_changes(
     diff_output: str, head: str,
 ) -> tuple[dict[str, str], dict[str, str], list[str]]:
-    """Parse ``git diff --name-status`` and bucket .md changes.
+    """Parse ``git diff --name-status`` and bucket .mdx changes.
 
     Renames (``R``) are split into delete-old + add-new so the SDK
-    re-extracts the content under the new path. Non-.md files are
+    re-extracts the content under the new path. Non-.mdx files are
     skipped. File content for added/modified entries is read from
     the git object store at ``head``, not from disk.
     """
@@ -70,15 +70,15 @@ def _collect_md_changes(
 
         if status == "R" and len(parts) >= 3:
             old, new = parts[1], parts[2]
-            if old.endswith(".md"):
+            if old.endswith(".mdx"):
                 deleted.append(old)
-            if new.endswith(".md"):
+            if new.endswith(".mdx"):
                 content = _read_at(head, new)
                 if content is not None:
                     added[new] = content
             continue
 
-        if len(parts) < 2 or not parts[1].endswith(".md"):
+        if len(parts) < 2 or not parts[1].endswith(".mdx"):
             continue
         path = parts[1]
         if status == "A":
@@ -114,7 +114,7 @@ def main() -> int:
     added, modified, deleted = _collect_md_changes(diff, head)
 
     if not (added or modified or deleted):
-        print("::notice::No .md changes — skipping graph update.", file=sys.stderr)
+        print("::notice::No .mdx changes — skipping graph update.", file=sys.stderr)
         _set_output("skip", "true")
         return 0
 

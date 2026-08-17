@@ -1,0 +1,63 @@
+name: aggregate docs
+
+# Builds one Mintlify site from every FalkorDB documentation repository and
+# publishes it to the `docs-site` branch, which is what Mintlify deploys. A
+# single deployment means search and the AI assistant index all products
+# together instead of once per product.
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+  repository_dispatch:
+    types: [ docs-updated ]
+  schedule:
+    # Safety net in case a source repository never sends a dispatch.
+    - cron: "0 4 * * *"
+
+permissions:
+  # Pushing the built site to docs-site.
+  contents: write
+
+concurrency:
+  group: aggregate-docs
+  cancel-in-progress: true
+
+jobs:
+  aggregate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Setup Node
+        uses: actions/setup-node@2028fbc5c25fe9cf00d9f06a71cc4710d4507903 # v6.0.0
+        with:
+          node-version: lts/*
+
+      - name: Build aggregated site
+        env:
+          # Read-only access to the source repositories.
+          DOCS_TOKEN: ${{ secrets.DOCS_AGGREGATE_TOKEN }}
+        run: python3 scripts/aggregate_docs.py --output build
+
+      - name: Validate
+        working-directory: build
+        run: |
+          npx --yes mint@latest validate
+          npx --yes mint@latest broken-links
+
+      - name: Publish to docs-site
+        env:
+          # Write access to this repository only. The built-in token is enough
+          # unless the org caps workflow permissions at read-only.
+          DOCS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        working-directory: build
+        run: |
+          git init -q -b docs-site
+          git add -A
+          git -c user.name="FalkorDB Docs Bot" \
+              -c user.email="docs-bot@falkordb.com" \
+              commit -q -m "Aggregate docs from ${GITHUB_SHA::7} (run ${GITHUB_RUN_NUMBER})"
+          git push --force --quiet \
+            "https://x-access-token:${DOCS_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" docs-site

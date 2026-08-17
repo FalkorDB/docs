@@ -1,0 +1,38 @@
+---
+title: "GenAI Tools"
+description: "Build intelligent GenAI applications with FalkorDB and LLMs using popular GraphRAG and agent frameworks like LangChain and LlamaIndex."
+---
+
+FalkorDB provides powerful tools and integrations for building intelligent GenAI applications with graph databases and Large Language Models (LLMs).
+
+## Topics in This Section
+
+- [GraphRAG SDK](/genai-tools/graphrag-sdk): Build intelligent GraphRAG applications with FalkorDB and LLMs, self-hosted with the SDK or fully hosted with [GraphRAG Server](https://graphrag.falkordb.com/). Full documentation at [docs.graphrag.falkordb.com](https://docs.graphrag.falkordb.com).
+- [AG2](/genai-tools/ag2): Build multi-agent AI systems with AG2 (formerly AutoGen) and FalkorDB GraphRAG.
+- [LangChain](/genai-tools/langchain): Integration with LangChain for AI agents with memory (Python and JavaScript/TypeScript).
+- [LangGraph](/genai-tools/langgraph): Build stateful, multi-actor agentic applications with LangGraph.
+- [LlamaIndex](/genai-tools/llamaindex): Simplify development of LLM-powered applications with LlamaIndex.
+- [GraphRAG Toolkit](/genai-tools/graphrag-toolkit): AWS GraphRAG Toolkit integration for building knowledge graph applications.
+- [FalkorDB MCP Server](/genai-tools/mcpserver): Enable AI assistants like Claude to interact with FalkorDB using the Model Context Protocol.
+- [QueryWeaver](/genai-tools/queryweaver): Open-source Text2SQL tool that converts plain-English questions into SQL using graph-powered schema understanding.
+- [Code-Graph](/genai-tools/code-graph): Visualize codebases as knowledge graphs to analyze dependencies, detect bottlenecks, and query code structure.
+
+## Frequently Asked Questions
+
+<AccordionGroup>
+  <Accordion title="What are FalkorDB GenAI Tools?">
+    FalkorDB GenAI Tools are a collection of integrations and SDKs that enable developers to build intelligent AI applications using graph-based knowledge retrieval. They include GraphRAG SDK, LangChain/LlamaIndex integrations, AG2 multi-agent framework, LangGraph, MCP Server, QueryWeaver, and Code-Graph.
+  </Accordion>
+  <Accordion title="Which LLM providers are supported?">
+    FalkorDB GenAI Tools support multiple LLM providers including **OpenAI**, **Google Gemini**, **Anthropic**, **Groq**, **Cohere**, and **Azure OpenAI**. The specific providers available depend on the tool you are using.
+  </Accordion>
+  <Accordion title="Do I need a running FalkorDB instance to use these tools?">
+    Yes, all GenAI Tools require a FalkorDB instance. You can run one locally with `docker run -p 6379:6379 -it --rm falkordb/falkordb:edge` or use [FalkorDB Cloud](https://app.falkordb.cloud) for a managed solution.
+  </Accordion>
+  <Accordion title="What is GraphRAG and how does FalkorDB implement it?">
+    GraphRAG (Graph Retrieval-Augmented Generation) combines knowledge graphs with LLMs to provide more accurate, contextual, and explainable AI responses. FalkorDB implements GraphRAG by storing data as a graph, converting natural language to Cypher queries, and using the retrieved graph data to generate answers.
+  </Accordion>
+  <Accordion title="Which programming languages are supported?">
+    Most FalkorDB GenAI Tools support **Python** as the primary language. The LangChain integration also supports **JavaScript/TypeScript**. The MCP Server is built with Node.js. Code-Graph analyzes Python, Java, and C# codebases.
+  </Accordion>
+</AccordionGroup>

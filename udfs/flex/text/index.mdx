@@ -1,0 +1,20 @@
+---
+title: "Text Functions"
+description: "FLEX text functions for case conversion, string formatting, padding, searching, and similarity metrics in Cypher queries."
+---
+
+FLEX text utilities.
+
+## Frequently Asked Questions
+
+<AccordionGroup>
+  <Accordion title="What are FLEX text functions?">
+    FLEX text functions provide string manipulation utilities including case conversion, formatting, padding, searching, regex matching, and string similarity metrics.
+  </Accordion>
+  <Accordion title="How do I call a text function?">
+    Use the namespace `flex.text.<function>()`. For example: `flex.text.camelCase('hello world')` returns `'helloWorld'`.
+  </Accordion>
+  <Accordion title="Do text functions handle null input?">
+    Yes. All FLEX text functions return `null` when given `null` input, making them safe to use with optional properties.
+  </Accordion>
+</AccordionGroup>

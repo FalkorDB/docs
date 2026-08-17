@@ -945,3 +945,6 @@ uptime
 allocator
 RSS
 OOM
+Embeddable
+reranking
+Swappable

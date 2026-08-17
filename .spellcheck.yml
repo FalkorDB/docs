@@ -22,5 +22,5 @@ matrix:
       - 'pre'
       - 'blockquote'
   sources:
-  - '*.md'
-  - '**/*.md'
+  - '*.mdx'
+  - '**/*.mdx'

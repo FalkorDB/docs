@@ -1,0 +1,104 @@
+---
+title: "GraphRAG-SDK"
+description: "Build intelligent GraphRAG applications with FalkorDB and LLMs — self-hosted with the SDK, or fully hosted with GraphRAG Server."
+---
+
+<Note>
+  GraphRAG-SDK has its own documentation at [docs.falkordb.com/graphrag](https://docs.falkordb.com/graphrag). This page is a short overview — the full guides, API reference, and runnable examples live there.
+</Note>
+
+## Build intelligent GraphRAG applications with FalkorDB and LLMs
+
+GraphRAG-SDK builds knowledge graphs from your documents and answers questions over them using graph-based retrieval-augmented generation, on FalkorDB. It ingests text, Markdown, and PDF with schema-guided entity extraction, retrieves cited answers through a hybrid pipeline that combines vector search, full-text search, Cypher generation, and relationship expansion, and re-syncs individual documents incrementally without rebuilding the graph.
+
+It holds the top score on [GraphRAG-Bench](https://graphrag-bench.github.io) across both the multi-document and single-document question sets, and works with any LLM or embedder reachable through LiteLLM.
+
+## Quick start
+
+```bash
+pip install graphrag-sdk[litellm]
+docker run -p 6379:6379 falkordb/falkordb
+```
+
+```python
+import asyncio
+from graphrag_sdk import GraphRAG, ConnectionConfig, LiteLLM, LiteLLMEmbedder
+
+async def main():
+    async with GraphRAG(
+        connection=ConnectionConfig(host="localhost", graph_name="my_graph"),
+        llm=LiteLLM(model="openai/gpt-4o"),
+        embedder=LiteLLMEmbedder(model="openai/text-embedding-3-small"),
+    ) as rag:
+        await rag.ingest("my_document.pdf")
+        await rag.finalize()
+        answer = await rag.completion("What is the main topic?")
+        print(answer.answer)
+
+asyncio.run(main())
+```
+
+Or skip the local instance and connect to [FalkorDB Cloud](https://app.falkordb.cloud).
+
+## Documentation
+
+| Guide | Description |
+|-------|-------------|
+| [Getting Started](https://docs.graphrag.falkordb.com/getting-started) | Full tutorial from install to first query |
+| [Architecture](https://docs.graphrag.falkordb.com/architecture) | How the ingestion and retrieval pipeline works |
+| [Configuration](https://docs.graphrag.falkordb.com/configuration) | Connection, providers, and tuning reference |
+| [Graph Schema](https://docs.graphrag.falkordb.com/graph-schema) | Constrain the entity and relation types the extractor produces |
+| [Ingestion](https://docs.graphrag.falkordb.com/ingestion) | Document loading, chunking, extraction, and resolution |
+| [Retrieval](https://docs.graphrag.falkordb.com/retrieval) | Hybrid retrieval, expansion, and reranking |
+| [Strategies](https://docs.graphrag.falkordb.com/strategies) | Swappable strategy interfaces and built-in implementations |
+| [Providers](https://docs.graphrag.falkordb.com/providers) | LLM and embedder configuration |
+| [Storage](https://docs.graphrag.falkordb.com/storage) | How the graph is laid out in FalkorDB |
+| [Extraction](https://docs.graphrag.falkordb.com/extraction) | Entity and relation extraction internals |
+| [Incremental Updates](https://docs.graphrag.falkordb.com/incremental-updates) | `update()`, `delete_document()`, and `apply_changes()` for CI-driven syncs |
+| [Ontology Discovery](https://docs.graphrag.falkordb.com/ontology-discovery) | Auto-draft a schema from a corpus |
+| [Ontology Evolution](https://docs.graphrag.falkordb.com/ontology-evolution) | Safely change a schema on a populated graph |
+| [Benchmark](https://docs.graphrag.falkordb.com/benchmark) | Methodology, results, and reproduction instructions |
+| [API Reference](https://docs.graphrag.falkordb.com/api-reference) | Full API documentation |
+
+## GraphRAG Server — the hosted, no-code option
+
+If you'd rather not run the pipeline yourself, **GraphRAG Server** is the fully hosted version. Upload your files and it builds the knowledge graph for you, so you can ask questions in plain language and get accurate, cited answers — no code, no Cypher, and no graph expertise required.
+
+[![GraphRAG Server: turn your documents into a knowledge graph you can question](/images/graphrag-server-hero.webp)](https://graphrag.falkordb.com/)
+
+### How it works
+
+1. **Sign in** at [graphrag.falkordb.com](https://graphrag.falkordb.com/) with your Google account.
+2. **Upload your documents**: PDF, plain text, or Markdown. GraphRAG Server reads them and builds your knowledge graph automatically, showing live progress as it goes.
+3. **Ask questions** in plain language. You get an answer with citations to your sources, plus a small "explainability" graph showing the facts behind it.
+4. **Explore visually**: browse the entities and relationships extracted from your documents in an interactive graph view.
+
+Settings are there if you want them, but the defaults work out of the box.
+
+### Key features
+
+- **Document upload**: bring your own PDF, TXT, or Markdown files.
+- **Natural-language Q&A**: ask in plain English and get grounded answers.
+- **Citations**: every answer links back to the source documents it used.
+- **Explainability subgraphs**: see the entities and relationships behind each answer.
+- **Interactive graph visualization**: explore your knowledge as a graph you can click through.
+- **AI-suggested questions**: get starter questions tailored to your own content.
+- **Embeddable chat widget**: publish a finished graph and embed it on your own website or documentation so visitors can ask questions without leaving your site.
+
+## Why GraphRAG?
+
+Vanilla RAG (Retrieval-Augmented Generation) finds text snippets that look similar to your question and hands them to an LLM. That works for simple lookups, but it struggles when the answer depends on how facts connect across different documents.
+
+GraphRAG first organizes your documents into a [knowledge graph](https://www.falkordb.com/blog/what-is-graphrag/): the people, places, products, and concepts in your content, and the relationships between them. Asking questions against that graph gives you:
+
+- **More accurate answers**: it connects related facts *across* your documents instead of matching keywords in isolation.
+- **Cited answers**: every response points back to the source documents it came from, so you can trust and verify it.
+- **Explainability**: see the small graph of entities and relationships behind each answer, so you understand *why* you got it.
+- **A view of your knowledge**: explore everything the system learned from your documents as an interactive graph.
+
+**Resources:**
+- [GraphRAG-SDK documentation](https://docs.graphrag.falkordb.com)
+- [GraphRAG-SDK GitHub repository](https://github.com/FalkorDB/GraphRAG-SDK)
+- [Runnable examples](https://github.com/FalkorDB/GraphRAG-SDK/tree/main/graphrag_sdk/examples)
+- [Try GraphRAG Server](https://graphrag.falkordb.com/) — the hosted, no-code version
+- [Understanding Ontologies and Knowledge Graphs](https://www.falkordb.com/blog/understanding-ontologies-knowledge-graph-schemas/)

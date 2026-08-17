@@ -1,0 +1,90 @@
+---
+title: "GRAPH.DELETE"
+description: "Completely remove a graph and all its entities (nodes and relationships) from FalkorDB using the GRAPH.DELETE command with examples for multiple programming languages."
+---
+
+Completely removes a graph and all of its entities (nodes and relationships).
+
+## Syntax
+
+```text
+GRAPH.DELETE graph_name
+```
+
+**Arguments:**
+- `graph_name` - Name of the graph to delete
+
+**Returns:** String indicating if the operation succeeded or failed.
+
+## Examples
+
+<CodeGroup>
+
+```python Python
+graph.delete()
+```
+
+```javascript JavaScript
+await graph.delete();
+```
+
+```java Java
+graph.delete();
+```
+
+```rust Rust
+graph.delete()?;
+```
+
+```bash Shell
+GRAPH.DELETE us_government
+```
+
+</CodeGroup>
+
+## Deleting Individual Nodes
+
+**Note:** To delete specific nodes or relationships (not the entire graph), use the Cypher `DELETE` clause with a `MATCH` query:
+
+<CodeGroup>
+
+```python Python
+graph.query("MATCH (x:Y {propname: propvalue}) DELETE x")
+```
+
+```javascript JavaScript
+await graph.query("MATCH (x:Y {propname: propvalue}) DELETE x");
+```
+
+```java Java
+graph.query("MATCH (x:Y {propname: propvalue}) DELETE x");
+```
+
+```rust Rust
+graph.query("MATCH (x:Y {propname: propvalue}) DELETE x")?;
+```
+
+```bash Shell
+GRAPH.QUERY DEMO_GRAPH "MATCH (x:Y {propname: propvalue}) DELETE x"
+```
+
+</CodeGroup>
+
+**⚠️ Warning:** When you delete a node using the Cypher `DELETE` clause, all of the node's incoming and outgoing relationships are also automatically removed.
+
+## Frequently Asked Questions
+
+<AccordionGroup>
+  <Accordion title="Can I undo a GRAPH.DELETE operation?">
+    No. `GRAPH.DELETE` permanently removes the entire graph and all its data. There is no undo. Make sure to back up your data before deleting a graph.
+  </Accordion>
+  <Accordion title="What is the difference between GRAPH.DELETE and the Cypher DELETE clause?">
+    `GRAPH.DELETE` removes the **entire graph** key and all its entities. The Cypher `DELETE` clause within a `GRAPH.QUERY` removes specific nodes or relationships matched by a pattern.
+  </Accordion>
+  <Accordion title="Does GRAPH.DELETE block other operations?">
+    The delete operation acquires a write lock on the graph. Any queries running against the graph will complete before the deletion proceeds, but new queries will be blocked until the deletion finishes.
+  </Accordion>
+  <Accordion title="What happens to relationships when I delete a node with Cypher DELETE?">
+    All incoming and outgoing relationships connected to the deleted node are automatically removed. You do not need to delete them separately.
+  </Accordion>
+</AccordionGroup>
