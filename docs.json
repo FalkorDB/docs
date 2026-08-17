@@ -32,6 +32,8 @@
                 "group": "Home",
                 "pages": [
                   "index",
+                  "cloud",
+                  "enterprise",
                   "datatypes",
                   "support"
                 ]
