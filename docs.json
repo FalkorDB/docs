@@ -429,6 +429,31 @@
       "tagId": "GTM-MBWB627H"
     }
   },
+  "contextual": {
+    "options": [
+      "copy",
+      "view",
+      "assistant",
+      "chatgpt",
+      "claude",
+      "perplexity",
+      "mcp",
+      "add-mcp",
+      "cursor",
+      "vscode",
+      "download-spec"
+    ]
+  },
+  "markdown": {
+    "instructions": [
+      "FalkorDB is a graph database that speaks the Redis protocol. Queries are issued as OpenCypher through the GRAPH.QUERY and GRAPH.RO_QUERY commands, not over Bolt or a SQL connection.",
+      "FalkorDB implements a subset of OpenCypher with proprietary extensions. Do not assume Neo4j-only syntax or procedures are available — check /cypher/cypher-support and /cypher/known-limitations before using a clause.",
+      "FalkorDB is the successor to RedisGraph, but they are separate products. Do not present RedisGraph commands, versions, or limitations as current FalkorDB behavior.",
+      "Use the official clients listed in /getting-started/clients rather than generic Redis or Neo4j drivers, and prefer the language the user is already working in.",
+      "Configuration parameters are set with GRAPH.CONFIG SET or at startup; cite the exact parameter name from /getting-started/configuration rather than inventing one.",
+      "This site covers four products: FalkorDB (core), FalkorDB Cloud, FalkorDB Enterprise, and the GraphRAG SDK. Name which one an answer applies to, since setup and operations differ."
+    ]
+  },
   "redirects": [
     {
       "source": "/References",
