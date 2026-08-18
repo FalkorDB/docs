@@ -252,3 +252,55 @@ def test_an_oversized_payload_fails_the_step(repo, run_main, monkeypatch):
 
     assert code == 1
     assert payload is None, "an oversized payload must not be written"
+
+
+# ── base resolution ─────────────────────────────────────────────────────────
+#
+# The workflow now diffs from the commit the graph actually published, not
+# from the push event's parent. That is what stops a failed run's files
+# falling out of the stream: #545's one-file change is missing from the live
+# graph because the next push diffed from the failed run's head.
+
+# ``_commit_exists`` asks git about the *current* directory, so these run
+# inside the temp repo like the workflow runs inside the checkout.
+
+def test_the_published_sha_is_preferred(repo, monkeypatch):
+    base = _git(repo, "rev-parse", "HEAD")
+    (repo / "guides" / "new.mdx").write_text("new\n", encoding="utf-8")
+    head = _commit(repo, "add a page")
+    monkeypatch.chdir(repo)
+
+    assert bdp._resolve_base(base, head) == base
+
+
+def test_an_unreachable_published_sha_falls_back_to_the_push_parent(repo, monkeypatch):
+    """A graph whose published commit was rewritten out of history."""
+    parent = _git(repo, "rev-parse", "HEAD")
+    (repo / "guides" / "new.mdx").write_text("new\n", encoding="utf-8")
+    _commit(repo, "add a page")
+    monkeypatch.chdir(repo)
+
+    assert bdp._resolve_base("0" * 39 + "1", parent) == parent
+
+
+def test_an_empty_published_sha_falls_back(repo, monkeypatch):
+    """A graph that has never published has no sha to offer."""
+    parent = _git(repo, "rev-parse", "HEAD")
+    monkeypatch.chdir(repo)
+
+    assert bdp._resolve_base("", parent) == parent
+
+
+def test_neither_base_usable_is_refused(repo, monkeypatch):
+    """Diffing from the empty tree here would re-send the entire repo as
+    additions — a full re-ingest nobody asked for."""
+    monkeypatch.chdir(repo)
+
+    assert bdp._resolve_base("0" * 39 + "1", "0" * 39 + "2") is None
+
+
+def test_an_all_zero_base_still_means_the_empty_tree(repo, monkeypatch):
+    """First push to a brand-new branch."""
+    monkeypatch.chdir(repo)
+
+    assert bdp._resolve_base("0" * 40, "") == bdp.EMPTY_TREE_SHA
