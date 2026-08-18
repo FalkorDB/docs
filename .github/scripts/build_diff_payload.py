@@ -191,20 +191,45 @@ def _set_output(name: str, value: str) -> None:
         f.write(f"{name}={value}\n")
 
 
-def main() -> int:
-    base = os.environ["BASE_SHA"]
-    head = os.environ["HEAD_SHA"]
+def _resolve_base(base: str, fallback: str) -> str | None:
+    """Pick the commit to diff from, or None when there isn't a usable one.
 
-    if set(base) == {"0"}:
-        # First push to a brand-new branch: everything in the tree is new.
-        base = EMPTY_TREE_SHA
-    elif not _commit_exists(base):
+    ``BASE_SHA`` is normally the commit the graph last published
+    (``last_ingested_sha``), which is what makes a failed run recoverable: a
+    push event's ``before`` only says what main used to be, so when a run
+    fails the next push diffs from the failed run's head and the files in
+    between are never sent again.
+
+    The published sha can be unusable — a graph that has never published, or
+    a history rewrite that removed the commit. ``BASE_SHA_FALLBACK`` (the
+    push event's ``before``) covers that. If neither is usable, this returns
+    None rather than guessing: diffing from the empty tree would re-send the
+    entire repo as additions.
+    """
+    for candidate, label in ((base, "BASE_SHA"), (fallback, "BASE_SHA_FALLBACK")):
+        if not candidate:
+            continue
+        if set(candidate) == {"0"}:
+            # First push to a brand-new branch: everything in the tree is new.
+            return EMPTY_TREE_SHA
+        if _commit_exists(candidate):
+            return candidate
+        _log("warning", f"{label} {candidate} is not in this clone; ignoring it")
+    return None
+
+
+def main() -> int:
+    head = os.environ["HEAD_SHA"]
+    base = _resolve_base(
+        os.environ.get("BASE_SHA", ""), os.environ.get("BASE_SHA_FALLBACK", ""),
+    )
+    if base is None:
         _log(
             "error",
-            f"Base commit {base} is not in this clone — main was probably "
-            "force-pushed. Refusing to guess a diff: re-run the workflow "
-            "with a base that exists, or reconcile the graph with a full "
-            "rebuild.",
+            "No usable base commit. Neither the graph's last published commit "
+            "nor the push event's parent is in this clone — main was probably "
+            "force-pushed. Refusing to guess a diff: reconcile the graph with a "
+            "manifest-only run or a full rebuild.",
         )
         return 1
 

@@ -1,7 +1,13 @@
 # Incrementally updates the FalkorDB docs knowledge graph whenever a
-# document changes on main. Computes the diff against the previous HEAD,
-# POSTs it to GraphRAG-UI's /api/admin/update-graph endpoint, which does
-# the SDK ingestion + smoke test + atomic alias flip server-side.
+# document changes on main. Asks the server which commit is currently
+# published, diffs against that, POSTs the changes, and follows the run to
+# completion.
+#
+# The run is a job, not a request. A 190-file diff took 2h23m on 17 Aug 2026
+# while the platform closed the connection at 300s: CI recorded a failure and
+# the work published two hours later with nobody watching. So the endpoint is
+# called with `?wait=false`, which returns a job id, and this workflow polls
+# it.
 
 name: Update graph (incremental)
 
@@ -18,10 +24,9 @@ on:
       - "**/*.md"
       - ".github/scripts/build_diff_payload.py"
 
-# `github.ref_name` is "main"; all pushes to main share one queue. Note
-# this only serialises the *CI jobs*: the server keeps working after this
-# job exits, so two runs can still overlap server-side. The real guard has
-# to live in the endpoint.
+# `github.ref_name` is "main"; all pushes to main share one queue. This only
+# serialises the CI jobs — the server takes a lease on the graph for the life
+# of the run, which is what actually stops two runs overlapping.
 concurrency:
   group: update-graph-${{ github.ref_name }}
   cancel-in-progress: false
@@ -29,36 +34,24 @@ concurrency:
 jobs:
   update-graph:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    # Long enough to follow a large ingest to the end. Normal incremental runs
+    # finish in minutes; the migration-sized one took 2h23m.
+    timeout-minutes: 60
     permissions:
       contents: read
     env:
       GRAPH_ID: docs_benchmark
       GRAPHRAG_UI_URL: ${{ vars.GRAPHRAG_UI_URL }}
+      UPDATE_GRAPH_TOKEN: ${{ secrets.UPDATE_GRAPH_TOKEN }}
     steps:
       - name: Checkout docs
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0  # full history needed for the diff below
 
-      - name: Build diff payload
-        id: payload
-        env:
-          BASE_SHA: ${{ github.event.before }}
-          HEAD_SHA: ${{ github.sha }}
-        run: python3 .github/scripts/build_diff_payload.py
-
-      - name: Call admin update-graph endpoint
-        id: call
-        if: steps.payload.outputs.skip != 'true'
-        env:
-          # Via env rather than inline `${{ secrets... }}`: interpolating a
-          # secret into the script text puts it in the process table and in
-          # anything that echoes the command.
-          UPDATE_GRAPH_TOKEN: ${{ secrets.UPDATE_GRAPH_TOKEN }}
+      - name: Check configuration
         run: |
           set -euo pipefail
-
           if [ -z "${GRAPHRAG_UI_URL:-}" ]; then
             echo "::error::GRAPHRAG_UI_URL repository variable is not set" >&2
             exit 1
@@ -68,57 +61,135 @@ jobs:
             exit 1
           fi
 
-          # --max-time is not the real ceiling: the platform closes this
-          # connection at ~300s while the server keeps ingesting, so a
-          # timeout here means "outcome unknown", not "did not run". A 190
-          # file diff took 2h23m server-side and published long after this
-          # job had gone red. Do not add --retry: without an idempotency
-          # key on the endpoint, a retry starts a second full ingest.
-          code=$(curl -X POST "$GRAPHRAG_UI_URL/api/admin/update-graph" \
+      - name: Ask which commit is published
+        id: state
+        run: |
+          set -uo pipefail
+          # The push event's `before` is only "what main used to be" — it says
+          # nothing about whether the run for that commit succeeded. Diffing
+          # from what actually published is what stops a failed run's files
+          # falling out of the stream entirely.
+          published=$(curl -sS \
+            -H "Authorization: Bearer $UPDATE_GRAPH_TOKEN" \
+            --max-time 30 \
+            "$GRAPHRAG_UI_URL/api/admin/update-graph/state?graph_id=$GRAPH_ID" \
+            | jq -r '.last_ingested_sha // empty' || true)
+          if [ -n "$published" ]; then
+            echo "::notice::Diffing from the published commit $published"
+          else
+            echo "::notice::No published commit recorded; falling back to the push parent"
+          fi
+          echo "published=$published" >> "$GITHUB_OUTPUT"
+
+      - name: Build diff payload
+        id: payload
+        env:
+          BASE_SHA: ${{ steps.state.outputs.published }}
+          BASE_SHA_FALLBACK: ${{ github.event.before }}
+          HEAD_SHA: ${{ github.sha }}
+        run: python3 .github/scripts/build_diff_payload.py
+
+      - name: Start the update
+        id: start
+        if: steps.payload.outputs.skip != 'true'
+        run: |
+          set -euo pipefail
+          code=$(curl -X POST "$GRAPHRAG_UI_URL/api/admin/update-graph?wait=false" \
             -H "Authorization: Bearer $UPDATE_GRAPH_TOKEN" \
             -H "Content-Type: application/json" \
             --data-binary @payload.json \
             --no-progress-meter \
             --show-error \
-            --max-time 1800 \
-            -o response.json -w '%{http_code}') || code=000
+            --max-time 600 \
+            -o start.json -w '%{http_code}') || code=000
 
-          echo "http_code=$code" >> "$GITHUB_OUTPUT"
-          echo "$code" > http_code.txt
-          if [ "$code" != "200" ]; then
-            echo "::error::update-graph returned HTTP $code" >&2
+          if [ "$code" != "202" ]; then
+            echo "::error::update-graph refused the payload (HTTP $code)" >&2
+            cat start.json 2>/dev/null || true
+            # 409 is a different run holding the graph's lease. Its result
+            # changes what this diff should have been computed against, so
+            # this push has to be re-driven after it, not retried now.
             exit 1
           fi
+
+          job=$(jq -r '.job_id' start.json)
+          attached=$(jq -r '.attached' start.json)
+          echo "job=$job" >> "$GITHUB_OUTPUT"
+          if [ "$attached" = "true" ]; then
+            echo "::notice::Attached to in-flight job $job for this same commit"
+          else
+            echo "::notice::Started job $job"
+          fi
+
+      - name: Follow the run
+        id: follow
+        if: steps.payload.outputs.skip != 'true'
+        run: |
+          set -uo pipefail
+          job="${{ steps.start.outputs.job }}"
+          # Every 30s. A short diff finishes in a poll or two; a long one
+          # gains nothing from being asked more often.
+          deadline=$(( $(date +%s) + 55 * 60 ))
+          phase=""
+          while [ "$(date +%s)" -lt "$deadline" ]; do
+            snap=$(curl -sS \
+              -H "Authorization: Bearer $UPDATE_GRAPH_TOKEN" \
+              --max-time 30 \
+              "$GRAPHRAG_UI_URL/api/admin/update-graph/jobs/$job" || echo '{}')
+            status=$(echo "$snap" | jq -r '.status // "unknown"')
+            new_phase=$(echo "$snap" | jq -r '.phase // ""')
+            if [ "$new_phase" != "$phase" ] && [ -n "$new_phase" ]; then
+              echo "$(date -u +%H:%M:%S) $new_phase"
+              phase="$new_phase"
+            fi
+            case "$status" in
+              complete)
+                echo "$snap" > result.json
+                echo "outcome=complete" >> "$GITHUB_OUTPUT"
+                exit 0
+                ;;
+              failed)
+                echo "$snap" > result.json
+                echo "outcome=failed" >> "$GITHUB_OUTPUT"
+                echo "::error::$(echo "$snap" | jq -r '.error // "update failed"')" >&2
+                exit 1
+                ;;
+            esac
+            sleep 30
+          done
+
+          echo "outcome=timeout" >> "$GITHUB_OUTPUT"
+          echo "::error::Still running after 55 minutes. Not a failure: the run continues server-side and publishes atomically. Follow job $job — a new push is refused while it holds the lease." >&2
+          exit 1
 
       - name: Report outcome
         if: always() && steps.payload.outputs.skip != 'true'
         run: |
           set -uo pipefail
-          code=$(cat http_code.txt 2>/dev/null || echo "000")
+          outcome="${{ steps.follow.outputs.outcome }}"
+          job="${{ steps.start.outputs.job }}"
           {
             echo "### Docs graph update"
             echo
             echo "| | |"
             echo "|---|---|"
             echo "| Commit | \`${GITHUB_SHA}\` |"
+            echo "| Diffed from | \`${{ steps.state.outputs.published }}\` |"
             echo "| Diff | +${{ steps.payload.outputs.added }} ~${{ steps.payload.outputs.modified }} -${{ steps.payload.outputs.deleted }} |"
             echo "| Manifest | ${{ steps.payload.outputs.manifest }} files |"
-            echo "| Payload | ${{ steps.payload.outputs.bytes }} bytes |"
-            echo "| HTTP | \`${code}\` |"
+            echo "| Job | \`${job:-not started}\` |"
             echo
-            if [ "$code" = "200" ]; then
-              echo "Published:"
-            elif [ "$code" = "000" ]; then
-              echo "**No response.** The connection closed before the server answered."
-              echo "The run may still be in progress or may have published — check the"
-              echo "server log for \`Alias flipped\` before re-running, because a re-run"
-              echo "starts a second full ingest."
-            else
-              echo "**Failed.** Server said:"
+            case "${outcome:-none}" in
+              complete) echo "**Published.**" ;;
+              failed)   echo "**Failed.** The live graph is untouched." ;;
+              timeout)  echo "**Still running.** Not a failure — follow job \`$job\`." ;;
+              *)        echo "**Did not start.** See the step log." ;;
+            esac
+            echo
+            if [ -s result.json ]; then
+              echo '```json'
+              jq -c '{status, phase, error, result}' result.json 2>/dev/null || head -c 1500 result.json
+              echo
+              echo '```'
             fi
-            echo
-            echo '```json'
-            head -c 2000 response.json 2>/dev/null || echo '(no response body)'
-            echo
-            echo '```'
           } >> "$GITHUB_STEP_SUMMARY"
