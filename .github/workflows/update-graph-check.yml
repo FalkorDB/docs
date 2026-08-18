@@ -1,0 +1,69 @@
+# Validates the graph-update payload on the pull request, before merge.
+#
+# update-graph.yml only runs after a push to main, so until now the first
+# time anyone saw what would be sent was after it had already been sent.
+# The Mintlify migration is the case in point: its payload was
+# "+190 ~0 -0" — 190 additions and not one of the 151 renamed or 112
+# deleted pages — and that number existed nowhere a reviewer could see it.
+# This job builds the same payload and prints those counts on the PR.
+#
+# It never calls the server. No secrets, no side effects.
+
+name: Update graph (payload check)
+
+on:
+  pull_request:
+    paths:
+      - "**/*.mdx"
+      - "**/*.md"
+      - ".github/scripts/build_diff_payload.py"
+      - ".github/workflows/update-graph.yml"
+      - ".github/workflows/update-graph-check.yml"
+
+jobs:
+  check-payload:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout docs
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0  # base and head both need to be present
+
+      - name: Test the payload builder
+        run: |
+          set -euo pipefail
+          python3 -m pip install --quiet --user pytest
+          python3 -m pytest .github/scripts/test_build_diff_payload.py -q
+
+      - name: Build the payload this PR would send
+        id: payload
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: python3 .github/scripts/build_diff_payload.py
+
+      - name: Summarise
+        if: always()
+        run: |
+          set -uo pipefail
+          {
+            echo "### Payload this PR would send to the docs graph"
+            echo
+            if [ "${{ steps.payload.outputs.skip }}" = "true" ]; then
+              echo "No ingestable changes — the update would be skipped."
+            else
+              echo "| | |"
+              echo "|---|---|"
+              echo "| Added | ${{ steps.payload.outputs.added }} |"
+              echo "| Modified | ${{ steps.payload.outputs.modified }} |"
+              echo "| Deleted | ${{ steps.payload.outputs.deleted }} |"
+              echo "| Manifest | ${{ steps.payload.outputs.manifest }} files at head |"
+              echo "| Payload size | ${{ steps.payload.outputs.bytes }} bytes |"
+              echo
+              echo "Renamed or removed pages should appear under **Deleted**."
+              echo "A large **Added** count with **Deleted** at 0 means the old"
+              echo "documents will stay in the graph."
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
