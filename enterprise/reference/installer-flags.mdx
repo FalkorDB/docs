@@ -1,0 +1,141 @@
+---
+title: "Installer reference"
+description: "Command-line options and environment variables for install.sh and uninstall.sh."
+icon: "terminal"
+---
+
+`install.sh` installs or updates FalkorDB Enterprise on any Kubernetes cluster reachable by `kubectl`. It prints an install plan and asks for confirmation before changing the cluster. Both scripts are published at `https://falkordb.github.io/FalkorDB-Enterprise/`, so no repository checkout is needed.
+
+```bash
+curl -fsSL https://falkordb.github.io/FalkorDB-Enterprise/install.sh | bash
+```
+
+<Note>
+  Confirmation prompts are read from `/dev/tty`, so the piped form above stays interactive.
+</Note>
+
+<Note>
+  Every long option has an environment variable equivalent in uppercase with underscores. For example, `--kube-context` maps to `KUBE_CONTEXT` and `--namespace` maps to `NAMESPACE`.
+</Note>
+
+## Release and namespace options
+
+| Option | Default | Description |
+| --- | --- | --- |
+| `--release NAME` | `falkordb-enterprise` | Helm release name. |
+| `--namespace NAME` | `falkordb-system` | FalkorDB Enterprise namespace. |
+| `--pod-security-enforce LEVEL` | `baseline` | Pod Security Admission enforce level for the FalkorDB namespace. One of `privileged`, `baseline`, `restricted`. Pass an empty value to leave the label unset. |
+| `--pod-security-audit LEVEL` | `restricted` | Pod Security Admission audit level. |
+| `--pod-security-warn LEVEL` | `restricted` | Pod Security Admission warn level. |
+| `--kube-context NAME` | current context | kubeconfig context to target. |
+| `--kubeblocks-namespace NAME` | `kb-system` | KubeBlocks namespace. |
+| `--kubeblocks-release NAME` | `kubeblocks` | KubeBlocks Helm release name. |
+| `--kubeblocks-chart REF` | `kubeblocks/kubeblocks` | KubeBlocks Helm chart reference. |
+
+## Chart options
+
+| Option | Default | Description |
+| --- | --- | --- |
+| `--chart REF` | local checkout, otherwise `oci://registry.falkordb.cloud/falkordb/falkordb-enterprise` | Helm chart path or reference. |
+| `--version VERSION` | latest published | FalkorDB Enterprise chart version, for example `0.4.1`. A leading `v` is accepted. Re-running the installer with a different value upgrades or downgrades the release. Overrides a local checkout chart. |
+| `--chart-version VERSION` | latest published | Alias for `--version`. |
+| `--channel CHANNEL` | `stable` | Release channel to resolve the latest version from: `stable` or `beta`. Beta releases are published as prerelease versions, so a stable install never picks one up. Ignored when `--version` is given. |
+| `--kubeblocks-version VERSION` | auto-detected | KubeBlocks CRD version. Detected from the chart when omitted. |
+| `--snapshotter-version VERSION` | `v6.3.3` | External snapshotter CRD version. |
+| `-f`, `--values FILE` | — | Helm values file. Repeatable. |
+| `--set KEY=VALUE` | — | Helm `--set` override. Repeatable. |
+| `--set-string KEY=VALUE` | — | Helm `--set-string` override. Repeatable. |
+| `--helm-arg VALUE` | — | Raw argument appended to the Enterprise `helm install`/`upgrade` command. Repeatable. |
+
+## Secrets and registry options
+
+| Option | Default | Description |
+| --- | --- | --- |
+| `--jwt-secret VALUE` | generated | Admin Server JWT secret. Generated on first install when omitted. |
+| `--image-pull-secret NAME` | `falkordb-registry-pull-secret` | Image pull Secret to create or reuse. |
+| `--registry-server URL` | `registry.falkordb.cloud` | Registry server for the image pull Secret. |
+| `--registry-username NAME` | — | Registry username. |
+| `--registry-password VALUE` | — | Registry password or token. |
+| `--image-registry PREFIX` | unset | Registry prefix, including the namespace, for the images this chart templates and the FalkorDB addon. Sets `global.imageRegistry`. Vendored subcharts (KubeBlocks, CSI drivers, the browser) do not read it — retarget those with `examples/mirror-registry-values.yaml`. Left unset, the chart's own default (`registry.falkordb.cloud/falkordb`) applies. |
+
+<Warning>
+  Prefer environment variables over inline flags for credentials so secrets do not land in your shell history. Place them on the `bash` side of the pipe, not the `curl` side: `... | JWT_SECRET='...' REGISTRY_PASSWORD='...' bash -s -- --yes`.
+</Warning>
+
+## Platform dependency options
+
+| Option | Description |
+| --- | --- |
+| `--skip-crds` | Do not apply KubeBlocks CRDs. |
+| `--install-snapshot-crds` | Pre-apply VolumeSnapshot CRDs and disable chart CRD ownership. |
+| `--skip-kubeblocks` | Do not install or upgrade the KubeBlocks Helm release. |
+| `--skip-snapshot-controller` | Do not install or upgrade the Snapshot Controller Helm release. |
+| `--skip-dependency-update` | Do not run `helm dependency update` for local chart directories. |
+
+## Networking options
+
+| Option | Description |
+| --- | --- |
+| `--no-ingress` | Expose the Admin UI and Admin Server with two `LoadBalancer` services instead of a single gateway Ingress. Also sets `adminServer.env.cookieSameSite=none`. |
+| `--kubernetes-service-host HOST` | Point every in-cluster Kubernetes client at this API server address instead of the ClusterIP the kubelet injects. Sets `global.kubernetesServiceHost` and the equivalent `extraEnvs` on the KubeBlocks release. |
+| `--kubernetes-service-port PORT` | Port to pair with `--kubernetes-service-host`. Omit to keep the kubelet's port. |
+
+Leave the last two unset on a normal cluster. They are only needed where the ClusterIP route fails — a managed or public API endpoint that requires SNI (connecting by IP sends no SNI, so TLS fails mid-handshake), or a firewall that rejects the ClusterIP. Use a DNS name covered by a SAN on the API server's certificate, such as `kubernetes.default.svc.cluster.local`; an uncovered name fails certificate verification instead. See [Helm values](/enterprise/reference/helm-values) for the underlying keys.
+
+## Execution options
+
+| Option | Default | Description |
+| --- | --- | --- |
+| `--timeout DURATION` | `15m` | Helm and `kubectl wait` timeout. |
+| `--skip-auth-check` | `false` | Do not verify Kubernetes RBAC permissions before installing. |
+| `--no-wait` | — | Do not wait for Helm resources. |
+| `--no-enterprise-wait` | — | Do not wait for the FalkorDB Enterprise Helm release. |
+| `--dry-run` | `false` | Render and validate Helm output without changing cluster resources. |
+| `-y`, `--yes` | `false` | Skip confirmation prompts. |
+| `--debug` | `false` | Enable shell tracing and Helm debug output. |
+| `-h`, `--help` | — | Show the built-in help text. |
+
+## Examples
+
+<CodeGroup>
+
+```bash Non-interactive install
+curl -fsSL https://falkordb.github.io/FalkorDB-Enterprise/install.sh | \
+  bash -s -- --yes
+```
+
+```bash Target a specific context
+curl -fsSL https://falkordb.github.io/FalkorDB-Enterprise/install.sh | \
+  bash -s -- \
+    --kube-context my-cluster \
+    --namespace falkordb-system \
+    --kubeblocks-namespace kb-system
+```
+
+```bash Production values file
+curl -fsSL https://falkordb.github.io/FalkorDB-Enterprise/install.sh | \
+  JWT_SECRET="$(openssl rand -hex 32)" bash -s -- \
+    --kube-context production-cluster \
+    --values production-values.yaml \
+    --yes
+```
+
+```bash Dry run
+curl -fsSL https://falkordb.github.io/FalkorDB-Enterprise/install.sh | \
+  bash -s -- --dry-run
+```
+
+</CodeGroup>
+
+## Uninstall
+
+`uninstall.sh` removes the Enterprise release and, optionally, the platform components the installer added. See the [uninstall playbook](/enterprise/upgrades/uninstall) for the full procedure and data-retention considerations.
+
+## Source of truth
+
+The installer help text is authoritative. Run it to see the exact options for your version:
+
+```bash
+curl -fsSL https://falkordb.github.io/FalkorDB-Enterprise/install.sh | \
+  bash -s -- --help
+```

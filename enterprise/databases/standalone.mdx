@@ -1,0 +1,75 @@
+---
+title: "Standalone deployment"
+description: "Create a single-node FalkorDB deployment from the Admin UI."
+icon: "database"
+---
+
+## When to use this
+
+Use standalone topology for development, demos, and workloads that do not need high availability.
+
+The Admin UI maps this flow to a cluster request with:
+
+- `spec.topology: standalone`
+- `spec.replicas: 1` for the Dev quick template, or the configured replica count when using full setup
+- `spec.persistence.enabled: true`
+- Optional ACL auth, TLS, networking, backup, and FalkorDB config
+
+## Create with quick create
+
+1. Open the Admin UI.
+2. Go to **Deployments**.
+3. Select **Create Deployment**.
+4. Choose **Standalone**.
+5. Choose **Dev** for the smallest default profile.
+6. Choose **Quick Create**.
+7. Enter or select:
+   - Deployment name, optional for Dev; the UI can auto-generate a `dev-db-*` name.
+   - Namespace, default `default`; the Admin Server can create a missing namespace if RBAC allows it.
+   - FalkorDB version.
+8. Select **Create 1-Click Dev DB**.
+
+## Create with full setup
+
+Use full setup when you need to control resources, auth, TLS, networking, backup, or FalkorDB parameters.
+
+1. Open **Deployments** > **Create Deployment**.
+2. Choose **Standalone**.
+3. Choose **Full Setup**.
+4. Complete the wizard:
+   - **General**: name, namespace, FalkorDB version, termination policy, labels.
+   - **FalkorDB**: replicas, CPU, memory, storage class, storage size, node affinity.
+   - **Sentinel**: keep disabled for a true standalone database.
+   - **Configuration**: optional FalkorDB runtime parameters.
+   - **Authentication**: ACL username/password or LDAP where supported.
+   - **Encryption**: optional TLS configuration.
+   - **Networking**: optional ClusterIP, NodePort, or LoadBalancer service, and an optional external domain for stable per-pod DNS names outside the cluster. See [Networking](/enterprise/databases/networking).
+   - **Backup**: optional backup repository and cron schedule.
+   - **Review**: submit.
+
+## Verified defaults
+
+The standalone wizard defaults come from the UI code:
+
+| Field | Default |
+| --- | --- |
+| Namespace | `default` |
+| Termination policy | `Delete` |
+| Replicas | `2` in full setup, `1` for Dev template |
+| CPU | `1` |
+| Memory | `2Gi` |
+| Storage | `10Gi` |
+| Auth method | `acl` |
+| ACL username | `default` |
+| Backup schedule | `0 2 * * *` when backup is enabled |
+
+## Validate
+
+In the Admin UI, the deployment should appear in the deployment list and eventually move to a running/healthy state.
+
+From the cluster:
+
+```bash
+kubectl get clusters.apps.kubeblocks.io -n <namespace>
+kubectl get pods -n <namespace>
+```

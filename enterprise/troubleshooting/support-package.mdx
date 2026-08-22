@@ -1,0 +1,138 @@
+---
+title: "Support packages"
+description: "Collect a diagnostics bundle and inspect its contents for support triage."
+icon: "life-ring"
+---
+
+## Current implementation status
+
+The product has a Diagnostics page, legacy JSON export, full support package zip export, and a standalone internal support package viewer application.
+
+The implemented diagnostics endpoints are:
+
+```text
+GET /api/admin/diagnostics
+GET /api/admin/diagnostics/export
+GET /api/admin/diagnostics/health
+POST /api/admin/diagnostics/support-package
+```
+
+All endpoints require authentication and `admin:read` permission.
+
+## Export diagnostics from Admin UI
+
+1. Open **Diagnostics**.
+2. Review health checks and system cards.
+3. Select **Export JSON**.
+4. Attach the downloaded `diagnostics-<timestamp>.json` file to the support ticket.
+
+The UI downloads a JSON file from `/api/admin/diagnostics/export`.
+
+## Generate a support package from Admin UI
+
+1. Open **Diagnostics**.
+2. Select **Support Package**.
+3. Select the affected clusters. If no cluster is selected, the server collects all clusters.
+4. Add a short issue summary with what failed, when it started, and visible symptoms.
+5. Optionally set a contact email, log tail line count, and whether to include pod logs and metrics.
+6. Select **Download package**.
+7. Send the downloaded `falkordb-support-<timestamp>.zip` file to the support team.
+
+The UI sends the request to `/api/admin/diagnostics/support-package` and downloads a zip archive.
+
+## Generate a support package from API
+
+Use an authenticated Admin Server session or token appropriate for the environment.
+
+```bash
+curl -f -X POST http://localhost:3000/api/admin/diagnostics/support-package \
+	-H 'Content-Type: application/json' \
+	-d '{
+		"clusters": [{ "name": "demo", "namespace": "demo" }],
+		"issueDescription": "Cluster is degraded after upgrade",
+		"includeLogs": true,
+		"includeMetrics": true,
+		"logTailLines": 500
+	}' \
+	-o falkordb-support.zip
+```
+
+Omit `clusters` or send an empty array to collect all clusters.
+
+## What the JSON export contains
+
+The current diagnostics export includes:
+
+- Export timestamp.
+- Server uptime, package version, Node.js version, platform, architecture, CPU count, and memory summary.
+- Health status for Kubernetes API access, KubeBlocks/version catalog access, and audit database access.
+- Resource summary with total cluster count.
+- Recent audit activity count.
+- Recent errors only if the audit service provides them.
+
+## What the support package contains
+
+The support package is a zip archive with a redacted `manifest.json`, issue context, and navigable folders. Current collectors include:
+
+- `issue.json`: user-provided issue description and optional contact email.
+- `manifest.json`: schema version, generation metadata, installed versions and release channel, selected scope, content list, warnings, and redaction strategy.
+- `system/`: runtime, settings, namespaces, storage classes, and FalkorDB version catalog.
+- `kubernetes/`: nodes, pods, persistent volumes, and persistent volume claims in selected namespaces.
+- `platform/kubeblocks/crds.json`: KubeBlocks CRD definitions installed in the cluster.
+- `platform/kubeblocks/resources/`: known KubeBlocks custom resources, split by cluster-scoped resources and namespace-scoped resources for selected cluster namespaces and platform namespaces.
+- `platform/kubeblocks/logs/`: KubeBlocks controller and data protection controller logs from platform namespaces when log collection is enabled.
+- `backups/`: backup repository metadata.
+- `audit/`: recent audit entries.
+- `clusters/<namespace>__<name>/`: cluster summary, KubeBlocks cluster YAML, pods, ops requests, Redis config, backup resources, restore resources, metrics, and pod logs.
+
+Sensitive fields and common secret text patterns are replaced with `[REDACTED]`. Package generation records partial collection failures in `manifest.json` warnings instead of failing the entire export.
+
+### Versions and release channel
+
+`manifest.json` carries a `versions` block so triage can identify the build without unpacking the archive:
+
+```json
+{
+  "versions": {
+    "chart": "0.5.0",
+    "channel": "stable",
+    "appVersion": "1.0.0",
+    "server": "0.5.0",
+    "ui": "0.5.0",
+    "addon": "1.7.5"
+  }
+}
+```
+
+`channel` is one of `stable`, `beta`, or `lts`, and is read from the annotation the chart was published with. See [Compatibility matrix](/enterprise/reference/compatibility) for what each channel means. The same values are shown on the Diagnostics page under **Product Versions**, and `system/product-versions.json` holds the full detail including image references and the Helm release revision.
+
+## Inspect a support package
+
+The package viewer is a separate internal application in `packages/support-viewer`. It does not authenticate to the Admin Server and does not upload the package anywhere; it only reads a local zip in the browser.
+
+For local development:
+
+```bash
+pnpm --filter @falkordb/support-viewer dev
+```
+
+Open `/support-viewer.html`, select **Load package**, and choose a `falkordb-support-*.zip` file. The Package Summary panel shows the chart version and release channel the package came from. The viewer organizes the archive into Overview, Clusters, KubeBlocks, Logs, Kubernetes, System, Backups, Audit, and All Files sections. JSON entries are formatted for inspection, while log entries show line, warning, and error counts beside the selected log tail.
+
+## Health status meaning
+
+- `healthy`: all checks passed.
+- `degraded`: at least one check failed.
+- `unhealthy`: all checks failed, or the health endpoint hit an unexpected error.
+
+## Validate from the API
+
+```bash
+curl -f http://localhost:3000/api/admin/diagnostics/health
+curl -f http://localhost:3000/api/admin/diagnostics/export -o diagnostics.json
+```
+
+Use the deployed Admin Server URL and authenticated session or token method appropriate for your environment.
+
+## Remaining work
+
+The v1 readiness plan still tracks deeper diagnostics work: crash/error report capture, richer usage summaries, event collection, viewer validation helpers, and manual validation against production-like clusters.

@@ -1,0 +1,45 @@
+---
+title: "Revoke user role"
+sidebarTitle: "Revoke user role"
+api: "DELETE https://api.omnistrate.cloud/2022-09-01-00/resource-instance/subscription/{subscriptionId}/revoke-user-role"
+description: "Remove a user's access to a subscription."
+---
+
+Revokes a role previously granted with [Invite user](/cloud/api-reference/account/access/invite-user). The user immediately loses access to every deployment instance in the subscription.
+
+## Authorization
+
+<ParamField header="Cookie" type="string" required>
+  Session cookie set by [Sign in](/cloud/api-reference/authentication/signin): `omnistrate_token=<jwt>`.
+</ParamField>
+
+## Path parameters
+
+<ParamField path="subscriptionId" type="string" required>
+  The subscription ID, for example `sub-abc123`.
+</ParamField>
+
+## Body
+
+<ParamField body="email" type="string" required>
+  Email address of the user whose role is revoked.
+</ParamField>
+
+<ParamField body="roleType" type="string" required>
+  Role to revoke. One of `root`, `admin`, `editor`, `reader`, `service_editor`, `service_reader`, or `service_operator`.
+</ParamField>
+
+```json Request
+{
+  "email": "ada@example.com",
+  "roleType": "editor"
+}
+```
+
+## Response
+
+Returns `200 OK` with an empty body.
+
+## Errors
+
+See [Error](/cloud/api-reference/schemas#error) for the error response shape.

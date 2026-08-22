@@ -1,0 +1,151 @@
+---
+title: "What's new in 1.0"
+sidebarTitle: "1.0"
+description: "FalkorDB Enterprise 1.0 hardens the platform to the restricted Pod Security Standard, signs every artifact, and documents the whole security posture with CI-enforced claims."
+icon: "sparkles"
+---
+
+FalkorDB Enterprise 1.0 is the release you can audit end to end. Every workload
+the chart owns now runs under the `restricted` Pod Security Standard, the Admin
+Server's permissions are scoped to the namespaces it actually manages, images and
+charts are signed, and the entire security posture is written down on a page that
+CI re-checks against the rendered chart on every change.
+
+<Info>
+  1.0 is currently in beta. Helm skips prerelease versions unless asked, so a
+  default install will not pick it up. See [Try it](#try-it) below.
+</Info>
+
+## Least privilege, by default
+
+The Admin Server used to read Secrets and ConfigMaps cluster-wide. It no longer
+can. Access now lives in a ClusterRole that is only ever bound per namespace —
+into the release namespace by the chart, and into each database namespace as the
+server provisions it. In any namespace it has not been bound into, it has no
+access at all.
+
+<CardGroup cols={2}>
+  <Card title="No cluster-wide Secret access" icon="lock">
+    Permissions are bound per namespace, and reconciled on startup. Upgrading
+    needs no manual step.
+  </Card>
+  <Card title="No wildcards" icon="shield">
+    No role the chart owns uses a wildcard, and the grant that creates
+    RoleBindings is restricted to a single named role.
+  </Card>
+  <Card title="Restricted Pod Security" icon="user-shield">
+    Admin Server, Admin UI and both hook Jobs run as non-root with
+    `readOnlyRootFilesystem` and all capabilities dropped.
+  </Card>
+  <Card title="Namespaces you choose" icon="filter">
+    `adminServer.managedNamespaces.pattern` restricts which namespaces may hold
+    databases, enforced server-side so it covers API clients too.
+  </Card>
+</CardGroup>
+
+The session signing key no longer passes through Helm values either. The
+installer creates the Secret out of band and hands the chart only its name, so
+the key never appears in the process table, in the Helm release Secret, or in
+`helm get values`.
+
+## A verifiable supply chain
+
+Container images and the Helm chart are signed with `cosign`, and images carry a
+CycloneDX bill of materials as an attestation. The mirroring scripts copy
+signatures alongside each image, so an air-gapped registry stays verifiable
+rather than losing provenance at the boundary.
+
+`adminServer.image.digest` and `adminUi.image.digest` pin images by content — the
+only reference a registry cannot silently repoint.
+
+<Card title="Supply chain reference" icon="box-open" href="/enterprise/reference/supply-chain" horizontal>
+  The verification commands, and how to make signature checking a real admission
+  boundary.
+</Card>
+
+## Network isolation you can turn on
+
+`networkPolicy.enabled` creates NetworkPolicies for the Admin Server and Admin
+UI. Both set `policyTypes: [Ingress, Egress]`, so anything not named is denied.
+Dedicated values say where your ingress controller, monitoring stack and DNS
+live, and the address ranges cover the API server and your identity provider.
+
+It is off by default on purpose: a CNI that does not implement NetworkPolicy
+accepts the objects and silently enforces nothing, which is worse than not
+having them.
+
+You can also put HTTP Basic auth on `/metrics` with
+`adminServer.metrics.basicAuth`. Setting only half the credential pair fails the
+render rather than quietly leaving the endpoint open.
+
+## Claims you can check
+
+1.0 ships a [security reference](/enterprise/security) describing the whole posture in one
+place: every RBAC grant and why it exists, which controls Kubernetes enforces
+rather than the product, and where the limits are. A CI job re-checks those
+claims against the rendered chart, so removing a control from the chart fails the
+build.
+
+Alongside it:
+
+<CardGroup cols={3}>
+  <Card title="Pod security" icon="lock" href="/enterprise/reference/pod-security">
+    The measured Pod Security Admission level for each namespace.
+  </Card>
+  <Card title="Network policy" icon="network-wired" href="/enterprise/reference/network-policy">
+    What each policy allows, and what it denies.
+  </Card>
+  <Card title="Helm values reference" icon="sliders" href="/enterprise/reference/helm-values-reference">
+    Every value the chart accepts, generated from `values.yaml`.
+  </Card>
+</CardGroup>
+
+## Releases you can plan around
+
+Releases now run on channels. Stable is the default, beta is published as a
+prerelease version so a default install can never pick one up, and every release
+has notes, a compatibility matrix and — where it needs one — a migration guide.
+
+- `install.sh --version VERSION` installs or moves to an exact chart version.
+- `install.sh --channel beta` opts in to the latest beta.
+- The installed version and channel show on the Diagnostics page and in the
+  support package, so a bundle identifies the build it came from.
+
+<CardGroup cols={2}>
+  <Card title="Changelog" icon="list" href="/enterprise/upgrades/changelog" horizontal>
+    Every change in every published release.
+  </Card>
+  <Card title="Compatibility matrix" icon="table" href="/enterprise/reference/compatibility" horizontal>
+    The subchart versions each release pins.
+  </Card>
+</CardGroup>
+
+## Smoother installs
+
+Registry credentials have one home: `global.imageCredentials`. With
+`create: true` the chart owns the pull Secret, otherwise it uses one you already
+have. The Admin Server then replicates those Secrets into every namespace it
+provisions a database into, so no namespace has to be seeded by hand first.
+
+The chart also prints post-install notes naming the release and the pull Secret
+in use, and warns when the pull secrets configured for the addon omit it — the
+setting that would otherwise leave database pods pulling anonymously and failing
+much later.
+
+## Try it
+
+```bash
+curl -fsSL https://falkordb.github.io/FalkorDB-Enterprise/install.sh | \
+  bash -s -- --channel beta --yes
+```
+
+Upgrading an existing installation? 0.3.x can go straight to 1.0 in one step.
+
+<CardGroup cols={2}>
+  <Card title="Migrate from 0.3 to 1.0" icon="right-left" href="/enterprise/upgrades/migrations/0.3-to-1.0" horizontal>
+    The registry move, the narrowed permissions and the new secret handling.
+  </Card>
+  <Card title="Upgrade procedure" icon="arrow-up" href="/enterprise/upgrades/enterprise" horizontal>
+    Prechecks, the upgrade itself, and how to roll back.
+  </Card>
+</CardGroup>

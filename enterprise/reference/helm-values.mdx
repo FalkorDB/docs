@@ -1,0 +1,256 @@
+---
+title: "Helm values"
+description: "High-impact Helm values for the FalkorDB Enterprise chart, verified against the chart defaults."
+icon: "sliders"
+---
+
+This page summarizes the high-impact Helm values for FalkorDB Enterprise.
+
+<Info>
+  The source of truth is the chart's own `values.yaml`. Extract it with `helm pull oci://registry.falkordb.cloud/falkordb/falkordb-enterprise --untar` and verify against the chart version you are installing.
+</Info>
+
+For every key the chart accepts, not just the ones below, see
+[All Helm values](/enterprise/reference/helm-values-reference). That page is generated from
+`values.yaml`, so its defaults are always the shipped ones.
+
+## Platform dependencies
+
+| Value | Default | Purpose |
+| --- | --- | --- |
+| `kubeblocks.enabled` | `true` | Enables embedded KubeBlocks subchart for standalone Helm use. The installer sets this to `false` because it manages KubeBlocks as a separate release. |
+| `snapshot-controller.enabled` | `false` | Snapshot Controller subchart. The installer manages Snapshot Controller separately. |
+| `volumeSnapshotClass.enabled` | `true` | Creates a `VolumeSnapshotClass` for CSI-backed storage. The default driver is `hostpath.csi.k8s.io` for local development when `csi-hostpath-driver.enabled=true`; production installs should set this to the CSI driver used by their storage class. |
+| `csi-hostpath-driver.enabled` | `false` | Optional CSI hostpath driver for local development clusters that need volume snapshot backups. Existing `local-path` PVCs are not migrated; recreate clusters on the CSI storage class before using volume snapshots. |
+| `falkordb-addon.enabled` | `true` | Installs the FalkorDB KubeBlocks addon as part of the Enterprise chart. |
+| `falkordb-browser.enabled` | `true` | Installs FalkorDB Browser. |
+| `csi-s3.enabled` | `false` | Optional S3 CSI driver dependency. |
+| `csi-nfs.enabled` | `false` | Optional NFS CSI driver dependency. |
+
+When using `install.sh`, the installer detects the default StorageClass provisioner and configures snapshot values automatically:
+
+- CSI-backed cloud StorageClasses, such as `ebs.csi.aws.com`, `pd.csi.storage.gke.io`, and `disk.csi.azure.com`, get a matching chart-managed `VolumeSnapshotClass` unless a default one already exists for that driver.
+- Local non-CSI StorageClasses, such as `rancher.io/local-path`, enable the optional `csi-hostpath-driver` and make `csi-hostpath-sc` the default for new PVCs. Existing PVCs are not migrated.
+- Unknown or non-CSI provisioners disable the chart-managed `VolumeSnapshotClass`; pass `--set volumeSnapshotClass.driver=<csi-driver>` when the storage platform supports snapshots but cannot be detected.
+
+Explicit `--set` and `--set-string` values passed to the installer override the detected snapshot configuration.
+
+On upgrades, the installer reuses existing Helm release values before applying new detected values. This preserves deployment-specific image tags, image pull secrets, ingress hosts, TLS settings, and immutable PVC settings while still adding the correct snapshot configuration.
+
+FalkorDB Enterprise is intentionally limited to one installation per Kubernetes cluster. The chart renders a fixed cluster-scoped ClusterRole install lock and also checks for an existing Helm-owned `ClusterDefinition/falkordb` from older chart versions. Upgrades of the owning Helm release are allowed; installs from a different release or namespace fail during Helm rendering.
+
+## Registry credentials
+
+`registry.falkordb.cloud` serves the FalkorDB images anonymously, so a default install needs no credentials. Configure this block only when pulling from a registry that requires authentication.
+
+| Value | Default | Purpose |
+| --- | --- | --- |
+| `global.imageRegistry` | `registry.falkordb.cloud/falkordb` | Registry host and namespace prefixed to every chart-owned image. Overrides per-image `registry` values. |
+| `global.imageCredentials.create` | `false` | When `true`, the chart creates the `dockerconfigjson` Secret from the fields below. When `false`, the Secret must already exist in the release namespace. |
+| `global.imageCredentials.name` | `""` | Name of the pull Secret. Empty means no pull secret is referenced. Defaults to `falkordb-registry-pull-secret` when `create=true`. |
+| `global.imageCredentials.registry` | `registry.falkordb.cloud` | Registry host the credentials authenticate against. Required when `create=true`. |
+| `global.imageCredentials.username` | `""` | Registry username. Required when `create=true`. |
+| `global.imageCredentials.password` | `""` | Registry password or token. Required when `create=true`. |
+| `global.imagePullSecrets` | `[]` | Additional pull Secrets applied on top of `imageCredentials.name`. Entries may be plain names or `{name: ...}` objects. |
+| `falkordb-addon.imagePullSecrets` | `[]` | Pull Secrets referenced by FalkorDB database pods and OpsDefinition jobs. Must match the names above; the addon subchart cannot read `global`. |
+
+Kubernetes has no cluster-scoped image pull Secret — `imagePullSecrets` always resolves in the pod's own namespace. The Admin Server therefore copies the Secrets named in `global.imageCredentials.name` and `global.imagePullSecrets` from its own namespace into every namespace it provisions a database into, refreshing the copy on each cluster operation so a rotated credential propagates. Nothing outside this block needs to know the credentials, and operators do not have to seed namespaces by hand.
+
+`install.sh` creates the Secret from `GITEA_USERNAME` and `GITEA_TOKEN` (or `--registry-username` / `--registry-password`) and sets all of the values above for you.
+
+<Warning>
+  Setting `global.imageCredentials.create=true` on an existing release hands ownership of the Secret to Helm. Helm refuses to adopt an object it does not own, so this fails with `invalid ownership metadata` unless the existing Secret carries the `app.kubernetes.io/managed-by=Helm` label and the `meta.helm.sh/release-name` and `meta.helm.sh/release-namespace` annotations. Secrets created by `install.sh` are stamped with them and are adoptable; hand-made ones must be labeled or deleted first.
+</Warning>
+
+## API server address
+
+| Value | Default | Purpose |
+| --- | --- | --- |
+| `global.kubernetesServiceHost` | `""` | Overrides `KUBERNETES_SERVICE_HOST` in every chart-owned container, and in database pods through `falkordb-addon`. Empty keeps the ClusterIP the kubelet injects. |
+| `global.kubernetesServicePort` | `""` | Overrides `KUBERNETES_SERVICE_PORT` and `KUBERNETES_SERVICE_PORT_HTTPS` in the same places. Empty keeps the kubelet's port. |
+| `global.extraEnv` | `[]` | Extra environment variables appended to every chart-owned container. Unlike the two values above it stops there: database pods take `falkordb-addon.extraEnv` instead. Component-level `extraEnv` is applied after this and still wins. |
+
+The kubelet injects `KUBERNETES_SERVICE_HOST` and `KUBERNETES_SERVICE_PORT` into every container, pointing at the API server's in-cluster ClusterIP. Every in-cluster client — the Admin Server's Kubernetes client, `kubectl` in the hook Jobs, controller-runtime inside KubeBlocks — builds its API URL from those two variables. Leave both values empty unless the ClusterIP route does not work; nothing is rendered when they are unset.
+
+Set them when either failure mode applies:
+
+- The ClusterIP's only endpoint is a managed or public API endpoint that requires SNI. A client connecting by IP sends no SNI, so the endpoint cannot select a certificate and TLS fails mid-handshake.
+- A firewall rejects traffic to the ClusterIP outright.
+
+A container's own environment entry takes precedence over the kubelet-injected one, so setting these moves every client onto a DNS name.
+
+<Warning>
+  The host must be covered by a Subject Alternative Name on the API server's serving certificate, or clients will fail certificate verification instead of connecting. `kubernetes.default.svc.cluster.local` is always covered and is the right first choice.
+</Warning>
+
+KubeBlocks does not read `global`. Use `install.sh --kubernetes-service-host`, which fans the value out to the standalone KubeBlocks release it installs, or `examples/values-apiserver-dns.yaml`, which sets `kubeblocks.extraEnvs` and `kubeblocks.dataProtection.extraEnvs` alongside the global keys.
+
+FalkorDB database pods need no extra configuration. The `falkordb-addon` subchart reads the same two values and emits them through `ComponentDefinition.spec.vars`, which KubeBlocks injects into every container of a database pod, including the `kbagent` sidecar it adds itself.
+
+## Gateway and public URLs
+
+| Value | Default | Purpose |
+| --- | --- | --- |
+| `gateway.enabled` | `true` | Enables shared gateway routing templates. |
+| `gateway.ingress.enabled` | `false` | Creates public ingress routing when enabled. |
+| `gateway.ingress.hosts[0].host` | `""` | Public hostname used to derive Admin UI URL and CORS defaults. |
+| `gateway.routes.ui.path` | `/` | Admin UI route path. |
+| `gateway.routes.api.path` | `/api` | Admin Server API route path. |
+| `gateway.routes.openapi.path` | `/swagger.json` | OpenAPI route path. |
+
+## Admin Server
+
+| Value | Default | Purpose |
+| --- | --- | --- |
+| `adminServer.enabled` | `true` | Deploys Admin Server. |
+| `adminServer.image.repository` | `falkordb/falkordb-enterprise-server` | Admin Server image repository. |
+| `adminServer.image.tag` | `""` | Admin Server image tag. Empty falls back to the chart's `appVersion`. |
+| `adminServer.image.digest` | `""` | Pin the Admin Server image by content, for example `sha256:abc...`. Takes precedence over `tag`. See [Supply chain](/enterprise/reference/supply-chain). |
+| `adminServer.secret.jwtSecret` | `""` | Required by chart rendering when `adminServer.secret.create=true` and `adminServer.secret.jwtExistingSecret.name` is empty. Must be at least 32 characters. Prefer the existing-Secret form below. |
+| `adminServer.secret.jwtExistingSecret.name` | `""` | Read the JWT signing secret from a Secret that already exists in the release namespace. Mutually exclusive with `adminServer.secret.jwtSecret`. The installer uses this so the value never appears in `helm get values` or the process table. |
+| `adminServer.secret.jwtExistingSecret.key` | `jwt-secret` | Key within that Secret. |
+| `adminServer.metrics.basicAuth.username` | `""` | HTTP Basic username for `/metrics`. Set with the password to require authentication. |
+| `adminServer.metrics.basicAuth.password` | `""` | HTTP Basic password for `/metrics`. |
+| `adminServer.metrics.basicAuth.existingSecret` | `""` | Existing Secret with `username` and `password` keys, used instead of the two values above. |
+| `adminServer.license.value` | `""` | Optional signed FalkorDB Enterprise license string. When set, the chart creates a dedicated Secret and the admin server activates it on startup. Prefer an existing Secret for production. |
+| `adminServer.license.existingSecret.name` | `""` | Existing Secret name containing the signed license. Mutually exclusive with `adminServer.license.value`. |
+| `adminServer.license.existingSecret.key` | `license` | Secret key that contains the signed license. |
+| `adminServer.license.statePath` | `/data/license-state.json` | Persisted license state path. Keep under the admin server persistence mount so activated licenses survive pod restarts. |
+| `adminServer.env.corsOrigin` | `""` | Overrides the derived Admin UI public URL for CORS. |
+| `adminServer.env.cookieSecure` | `null` | Uses server default when unset. Set `true` for TLS production, `false` only for HTTP testing. |
+| `adminServer.env.enableSwagger` | `"false"` | Enables Swagger/OpenAPI serving when set to `"true"`. |
+| `adminServer.persistence.enabled` | `true` | Persists Admin Server data such as audit DB. |
+| `adminServer.persistence.size` | `8Gi` | Admin Server PVC size. |
+| `adminServer.managedNamespaces.pattern` | `""` | Regular expression, anchored at both ends, that a namespace name must match before a database may be created in it. Empty imposes no restriction. |
+
+### Restricting which namespaces can hold databases
+
+Admin Server creates a namespace on demand the first time a database is deployed into it. `adminServer.managedNamespaces.pattern` confines that to namespaces you have opted into:
+
+```yaml
+adminServer:
+  managedNamespaces:
+    pattern: "falkordb-.*"
+```
+
+The pattern is anchored for you, so the example accepts `falkordb-team-a` but rejects `team-a` and `kube-system`, and you do not need to write `^` or `$` yourself. It is enforced on the server, not only in the console, so it also applies to API clients and to restores that rebuild a namespace from stored metadata.
+
+Admin Server's permission to read and write Secrets is granted per namespace rather than cluster-wide. The chart creates a `ClusterRole` named `<release>-admin-server-namespaced` holding that access and binds it into the release namespace; Admin Server binds it into each database namespace the first time a database is created there. It has no Secret access at all in namespaces it does not manage. Set `adminServer.rbac.create=false` to manage these objects yourself — Admin Server then skips creating the per-namespace binding and expects one to already exist.
+
+On startup Admin Server also checks every namespace that already holds a database and creates any binding that is missing. Upgrades from a release that granted Secret access cluster-wide therefore need no manual step, and a binding deleted by hand is restored on the next restart.
+
+Because Admin Server holds no `namespaces: list` permission, the namespace picker in the console lists only namespaces that already hold a database, plus the release namespace. Type a new name into the field to deploy into a namespace for the first time.
+
+### Admin Server license
+
+<Tip>
+  Leave `adminServer.license` unset to start on a 14-day free trial with no configured limits — no license value or Secret is required. Activate or replace the license later from the Admin UI's **License** page; the values below only matter if you want to provide a license at install time.
+</Tip>
+
+Set a license directly in values for development or one-off installs:
+
+```yaml
+adminServer:
+	license:
+		value: "falkor.license.v1.<payload>.<signature>"
+```
+
+For production, store the signed license in an existing Secret in the release namespace and reference it from values:
+
+```bash
+kubectl -n falkordb-system create secret generic falkordb-enterprise-license \
+	--from-literal=license='falkor.license.v1.<payload>.<signature>'
+```
+
+```yaml
+adminServer:
+	license:
+		existingSecret:
+			name: falkordb-enterprise-license
+			key: license
+```
+
+The admin server reads the Secret through `FALKORDB_LICENSE`, validates the signature, and persists the license state at `adminServer.license.statePath`. If the license expires, is invalid, or any configured limit is exceeded, the server and UI enter read-only mode until a valid license within limits is active.
+
+The signed license key payload includes a `version` field so future payload formats can be introduced explicitly. The current supported payload version is `1`.
+
+To bind a license to one Kubernetes cluster, include `k8sClusterId` in the signed payload. By default the admin server compares this value to the UID of the `kube-system` namespace. You can retrieve it with:
+
+```bash
+kubectl get namespace kube-system -o jsonpath='{.metadata.uid}'
+```
+
+If your environment needs a different cluster identity source, set `K8S_CLUSTER_ID` on the admin server and issue licenses with the same value. Licenses without `k8sClusterId` remain unbound.
+
+```json
+{
+	"version": 1,
+	"licenseId": "lic_...",
+	"accountName": "Example Corp",
+	"k8sClusterId": "00000000-0000-0000-0000-000000000000",
+	"issuedAt": "2026-05-28T00:00:00.000Z",
+	"expiresAt": "2027-05-28T00:00:00.000Z",
+	"limits": {
+		"cpuCores": "unlimited",
+		"memoryGB": "unlimited",
+		"deployments": "unlimited",
+		"users": "unlimited"
+	}
+}
+```
+
+## Bootstrap Admin resources
+
+| Value | Default | Purpose |
+| --- | --- | --- |
+| `adminServer.bootstrap.adminUser.create` | `true` | Creates a Kubernetes Secret-backed local admin user. |
+| `adminServer.bootstrap.adminUser.email` | `admin@falkordb.local` | Bootstrap admin email. |
+| `adminServer.bootstrap.adminUser.password` | `Test123!@#` | Bootstrap admin password used only if no password hash and no existing user Secret exist. Change for production. |
+| `adminServer.bootstrap.adminUser.mustChangePassword` | `false` | Forces password change after first sign-in when true. |
+| `adminServer.bootstrap.rbacConfig.create` | `false` | Seeds RBAC ConfigMap. Existing config is preserved with Helm keep annotation. |
+| `adminServer.bootstrap.settingsConfig.create` | `false` | Seeds settings ConfigMap. Existing config is preserved with Helm keep annotation. |
+
+## Admin UI
+
+| Value | Default | Purpose |
+| --- | --- | --- |
+| `adminUi.enabled` | `true` | Deploys Admin UI. |
+| `adminUi.image.repository` | `falkordb/falkordb-enterprise-ui` | Admin UI image repository. |
+| `adminUi.image.tag` | `""` | Admin UI image tag. Empty falls back to the chart's `appVersion`. |
+| `adminUi.image.digest` | `""` | Pin the Admin UI image by content, for example `sha256:abc...`. Takes precedence over `tag`. See [Supply chain](/enterprise/reference/supply-chain). |
+| `adminUi.env.viteApiUrl` | `""` | Public API origin. Defaults to relative routing through gateway behavior. |
+| `adminUi.env.viteBrowserUrl` | `""` | Browser URL override. Defaults to the Browser ingress URL when configured. |
+| `adminUi.env.viteMockApi` | `"false"` | Enables mock API mode. Keep false outside local UI demos. |
+
+## Browser encryption
+
+| Value | Default | Purpose |
+| --- | --- | --- |
+| `falkordb-browser.browser.encryption.key` | `""` | Optional 64-character hexadecimal Browser encryption key. |
+| `falkordb-browser.browser.encryption.existingSecret.name` | `""` | Use an existing Secret instead of chart-generated key management. |
+| `browserEncryptionKey.enabled` | `true` | Runs a hook Job to ensure Browser encryption key Secret exists and restarts Browser. |
+
+## Network policies
+
+See [Network policies](/enterprise/reference/network-policy) for what each rule allows.
+
+| Value | Default | Purpose |
+| --- | --- | --- |
+| `networkPolicy.enabled` | `false` | Creates NetworkPolicy resources for Admin Server and Admin UI. |
+| `networkPolicy.ingressControllerNamespace` | `ingress-nginx` | Namespace allowed to reach both components. Empty string removes the rule. |
+| `networkPolicy.monitoringNamespace` | `monitoring` | Namespace allowed to scrape Admin Server metrics. Applied only when `podMonitor.enabled` is true. |
+| `networkPolicy.dnsNamespace` | `kube-system` | Namespace running cluster DNS, allowed on port 53. |
+| `networkPolicy.externalEgress.ports` | `[443, 6443]` | Ports the Admin Server may reach outside the cluster. |
+| `networkPolicy.externalEgress.cidrs` | `["0.0.0.0/0"]` | Ranges the Admin Server may reach for the API server and identity provider. Narrow for production. |
+| `networkPolicy.adminServer.extraIngress` | `[]` | Extra ingress rules appended to the Admin Server policy. Each entry is a complete rule with its own `from` and `ports`. |
+| `networkPolicy.adminServer.extraEgress` | `[]` | Extra egress rules appended to the Admin Server policy. Each entry is a complete rule with its own `to` and `ports`. |
+| `networkPolicy.adminUi.extraIngress` | `[]` | Extra ingress rules appended to the Admin UI policy. |
+| `networkPolicy.adminUi.extraEgress` | `[]` | Extra egress rules appended to the Admin UI policy. |
+
+## Observability
+
+| Value | Default | Purpose |
+| --- | --- | --- |
+| `podMonitor.enabled` | `false` | Creates PodMonitor for Admin Server. |
+| `alertRules.enabled` | `false` | Creates PrometheusRule resources. |
+| `grafanaDashboards.enabled` | `false` | Creates Grafana dashboard resources from configured dashboard values. |

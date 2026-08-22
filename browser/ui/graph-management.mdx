@@ -1,0 +1,34 @@
+---
+title: "Graphs Manager"
+description: "Create, delete, duplicate, export, and upload graph data from FalkorDB Browser."
+---
+
+Graphs Manager is where you control graph lifecycle actions from one dialog.
+
+## Supported actions
+
+| Action | Description |
+| :--- | :--- |
+| Create graph | Create a new graph from the UI. |
+| Delete graph | Delete one or more selected graphs. |
+| Duplicate graph | Create a copy of an existing graph, including data. |
+| Export graph | Download a `.dump` file through `/api/graph/{graph}/export`. Replace `{graph}` with the graph identifier. |
+| Upload data | Open the Upload Data flow for file-based or query-based imports. |
+
+## Related pages
+- [Upload Data dialog](/browser/ui/upload-data)
+- [Graph page (overall layout)](/browser/ui/graph-page)
+
+## Frequently Asked Questions
+
+<AccordionGroup>
+  <Accordion title="Can I export graph data from Graphs Manager?">
+    Yes. Select a graph and use Export to download a `.dump` file via `/api/graph/{graph}/export`, replacing `{graph}` with the graph identifier.
+  </Accordion>
+  <Accordion title="Can I duplicate a graph including all data?">
+    Yes. Duplicate creates a new graph copy from the selected source graph.
+  </Accordion>
+  <Accordion title="Can I remove multiple graphs in one flow?">
+    Yes. Graph deletion supports multi-selection when multiple graphs are selected.
+  </Accordion>
+</AccordionGroup>

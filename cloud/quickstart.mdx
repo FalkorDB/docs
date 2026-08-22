@@ -1,0 +1,79 @@
+---
+title: "Quickstart"
+description: "Create your first FalkorDB Cloud instance with the API"
+---
+
+This guide takes you from credentials to a running FalkorDB instance using the API.
+
+## Prerequisites
+
+Before you begin, you need:
+
+- A [FalkorDB Cloud](https://app.falkordb.cloud) account.
+- `curl` and `jq` installed locally.
+
+## Get started
+
+<Steps>
+  <Step title="Sign in">
+    Sign in with HTTP Basic authentication. The response sets the `omnistrate_token` session cookie that authorizes every other request, so store it in a cookie jar.
+
+    ```bash
+    curl -s -c cookies.txt -X POST \
+      https://api.omnistrate.cloud/2022-09-01-00/resource-instance/user/signin \
+      -u "$FALKORDB_EMAIL:$FALKORDB_PASSWORD"
+    ```
+
+    See [Sign in](/cloud/api-reference/authentication/signin) for the full reference. The session lasts 1 hour.
+  </Step>
+  <Step title="Create an instance">
+    Send a create request to the endpoint for your service tier and deployment component, replaying the cookie jar with `-b`. This example creates a Free instance.
+
+    ```bash
+    INSTANCE_ID=$(curl -s -b cookies.txt -X POST \
+      "https://api.omnistrate.cloud/2022-09-01-00/resource-instance/sp-JvkxkPhinN/falkordb/v1/prod/falkordb-free-customer-hosted/falkordb-free-falkordb-customer-hosted-model-omnistrate-multi-tenancy/free" \
+      -H "Content-Type: application/json" \
+      -d '{
+        "cloud_provider": "aws",
+        "region": "us-east-1",
+        "requestParams": {
+          "name": "my-first-graph",
+          "falkordbUser": "falkordb",
+          "falkordbPassword": "'"$FALKORDB_DB_PASSWORD"'"
+        }
+      }' | jq -r .id)
+    ```
+  </Step>
+  <Step title="Wait until it is running">
+    Instances are provisioned asynchronously. Poll the describe endpoint until `status` is `RUNNING`.
+
+    ```bash
+    curl -s -b cookies.txt \
+      "https://api.omnistrate.cloud/2022-09-01-00/resource-instance/sp-JvkxkPhinN/falkordb/v1/prod/falkordb-free-customer-hosted/falkordb-free-falkordb-customer-hosted-model-omnistrate-multi-tenancy/free/$INSTANCE_ID" \
+      | jq '{status, result_params}'
+    ```
+
+    The `result_params` object contains the hostname and port you connect to.
+  </Step>
+  <Step title="Connect">
+    Use the returned endpoint with any FalkorDB client.
+
+    ```bash
+    redis-cli -h <hostname> -p <port> --user falkordb --pass "$FALKORDB_DB_PASSWORD" \
+      GRAPH.QUERY social "CREATE (:Person {name: 'Alice'})"
+    ```
+  </Step>
+</Steps>
+
+<Warning>
+  Never hardcode credentials in scripts or commit them to source control. Read them from environment variables or a secret manager, and keep `cookies.txt` out of version control.
+</Warning>
+
+## Next steps
+
+- Browse the [API reference](/cloud/api-reference/introduction) for every tier and component.
+- Review the [shared schemas](/cloud/api-reference/schemas) for request and response shapes.
+
+<Tip>
+  Need help? Reach out at [contact@falkordb.com](mailto:contact@falkordb.com).
+</Tip>

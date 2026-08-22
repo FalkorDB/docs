@@ -1,0 +1,77 @@
+---
+title: "Create instance"
+sidebarTitle: "Create"
+api: "POST https://api.omnistrate.cloud/2022-09-01-00/resource-instance/sp-JvkxkPhinN/falkordb/v1/prod/falkordb-free-customer-hosted/falkordb-free-falkordb-customer-hosted-model-omnistrate-multi-tenancy/free"
+description: "Provision a new Free instance."
+---
+
+Provisions a new Free instance in the requested cloud provider and region. The instance is created asynchronously; poll [Describe](/cloud/api-reference/free/free/describe) until `status` is `RUNNING`.
+
+## Authorization
+
+<ParamField header="Cookie" type="string" required>
+  Session cookie set by [Sign in](/cloud/api-reference/authentication/signin): `omnistrate_token=<jwt>`.
+  Browsers send it automatically; other clients must forward it on every request.
+</ParamField>
+
+## Query parameters
+
+<ParamField query="subscriptionId" type="string">
+  ID of the subscription that owns the instance.
+</ParamField>
+
+## Body
+
+<ParamField body="cloud_provider" type="string" required>
+  Cloud provider to provision the instance on, for example `aws` or `gcp`.
+</ParamField>
+
+<ParamField body="region" type="string" required>
+  Region to provision the instance in, for example `us-east-1`.
+</ParamField>
+
+<ParamField body="requestParams" type="object" required>
+  Instance configuration.
+
+  <Expandable title="requestParams properties">
+    <ParamField body="falkordbPassword" type="string" required>
+      Default password for the database. Updating this value after deployment restarts the instance.
+    </ParamField>
+
+    <ParamField body="falkordbUser" type="string" default="falkordb" required>
+      Default username for the database. Set at creation only.
+    </ParamField>
+
+    <ParamField body="description" type="string" default="Description">
+      Description of the instance.
+    </ParamField>
+
+    <ParamField body="name" type="string" default="FalkorDB Instance">
+      Human-readable name for the instance.
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+## Sizing and tier availability
+
+The Free tier is fixed size and does not expose any sizing parameters.
+
+Only `name`, `description`, `falkordbUser`, and `falkordbPassword` are available on the Free tier. Sizing, TLS, persistence, and the `falkorDB*` tuning parameters are **not** configurable.
+
+See [Instance configuration](/cloud/api-reference/schemas#instance-configuration) for the full field reference.
+
+## Response
+
+<ResponseField name="id" type="string">
+  ID of the resource instance.
+</ResponseField>
+
+```json 202 Accepted
+{
+  "id": "instance-abc123"
+}
+```
+
+## Errors
+
+See [Error](/cloud/api-reference/schemas#error) for the shared error response shape.

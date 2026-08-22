@@ -1,0 +1,38 @@
+---
+title: "API Docs (Swagger)"
+description: "Use the built-in Swagger UI in FalkorDB Browser to explore and test REST API endpoints."
+---
+
+FalkorDB Browser includes built-in API documentation at `/docs`.
+
+Use the Authorize flow before running protected endpoints.
+
+## Swagger capabilities
+
+| Feature | Description |
+| :--- | :--- |
+| Built-in docs | Available at `/docs`. |
+| OpenAPI source | Loaded from `/api/swagger`. |
+| Interactive testing | Supports authenticated "Try it out" requests. |
+
+## Typical workflow
+
+| Step | Action |
+| :--- | :--- |
+| 1 | Open `/docs` from the Browser. |
+| 2 | Expand the endpoint group and choose an endpoint. |
+| 3 | Use Authorize when needed, then run "Try it out". |
+
+## Frequently Asked Questions
+
+<AccordionGroup>
+  <Accordion title="Where are Browser API docs located?">
+    Open `/docs` in the Browser app to view Swagger UI.
+  </Accordion>
+  <Accordion title="Where does Swagger load its schema from?">
+    Swagger loads the OpenAPI document from `/api/swagger`.
+  </Accordion>
+  <Accordion title="Can I test endpoints from the docs page?">
+    Yes. Use the built-in interactive execution flow in Swagger.
+  </Accordion>
+</AccordionGroup>

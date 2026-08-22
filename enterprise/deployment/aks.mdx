@@ -1,0 +1,272 @@
+---
+title: "Azure Kubernetes Service"
+description: "Provision Azure infrastructure and install FalkorDB Enterprise on AKS."
+icon: "microsoft"
+---
+
+## Prerequisites
+
+- [Azure CLI](https://learn.microsoft.com/cli/azure/install-azure-cli) (`az`) 2.60 or later, logged in with `az login`.
+- An Azure subscription where you can create resource groups, networks, and AKS clusters.
+- `kubectl`, `helm`, and `base64` on the machine that runs the installer.
+- Access to run `kubectl` commands in the cluster's context (configured below with `az aks get-credentials`).
+- At least 3 worker nodes with 4 CPU and 16 GB of memory each.
+- Outbound access from the cluster to pull images: `registry.falkordb.cloud` (Enterprise images, credentials required), `docker.io`, `apecloud-registry.cn-zhangjiakou.cr.aliyuncs.com`, `registry.k8s.io`, and `ghcr.io` — or `registry.falkordb.cloud` alone, since every image is also mirrored there (see [Private registries](/enterprise/deployment/private-images)).
+
+Select the subscription to use:
+
+```bash
+az account list --output table
+az account set --subscription "<subscription-id-or-name>"
+```
+
+Register the required resource providers once per subscription:
+
+```bash
+az provider register --namespace Microsoft.ContainerService
+az provider register --namespace Microsoft.Network
+az provider register --namespace Microsoft.Compute
+```
+
+## Required infrastructure
+
+A production AKS install needs:
+
+| Resource | Purpose |
+| --- | --- |
+| Resource group | Container for all Azure resources. |
+| Virtual network and subnet | Network for AKS nodes when using Azure CNI. |
+| AKS cluster | Kubernetes control plane and system node pool. |
+| User node pool | Dedicated capacity for FalkorDB database workloads. |
+| Azure Disk CSI + snapshot support | Persistent volumes and backup snapshots (enabled by default on AKS). |
+| Load balancer or ingress with public DNS | External access to the Admin UI and Admin Server. |
+
+Set common variables used by the commands below:
+
+```bash
+export LOCATION=eastus
+export RESOURCE_GROUP=falkordb-enterprise-rg
+export CLUSTER_NAME=falkordb-enterprise
+export VNET_NAME=falkordb-vnet
+export SUBNET_NAME=aks-subnet
+```
+
+### 1. Create the resource group
+
+```bash
+az group create \
+  --name "$RESOURCE_GROUP" \
+  --location "$LOCATION"
+```
+
+### 2. Create the virtual network and subnet
+
+```bash
+az network vnet create \
+  --resource-group "$RESOURCE_GROUP" \
+  --name "$VNET_NAME" \
+  --address-prefixes 10.10.0.0/16 \
+  --subnet-name "$SUBNET_NAME" \
+  --subnet-prefixes 10.10.0.0/20
+
+export SUBNET_ID=$(az network vnet subnet show \
+  --resource-group "$RESOURCE_GROUP" \
+  --vnet-name "$VNET_NAME" \
+  --name "$SUBNET_NAME" \
+  --query id -o tsv)
+```
+
+### 3. Create the AKS cluster
+
+Create a cluster with a small system node pool. Database workloads run on a separate user node pool created in the next step.
+
+VM size availability varies by subscription and region. Verify a size is allowed before creating the cluster, and substitute an available equivalent if needed (for example `Standard_D4s_v4`, `Standard_D4as_v5`, or `Standard_D4s_v6` in place of each other):
+
+```bash
+az vm list-skus --location "$LOCATION" --size Standard_D4 --output table
+az vm list-skus --location "$LOCATION" --size Standard_E8 --output table
+```
+
+```bash
+az aks create \
+  --resource-group "$RESOURCE_GROUP" \
+  --name "$CLUSTER_NAME" \
+  --location "$LOCATION" \
+  --kubernetes-version 1.34 \
+  --tier standard \
+  --network-plugin azure \
+  --vnet-subnet-id "$SUBNET_ID" \
+  --nodepool-name system \
+  --node-count 2 \
+  --node-vm-size Standard_D4as_v5 \
+  --enable-managed-identity \
+  --enable-cluster-autoscaler \
+  --min-count 2 \
+  --max-count 3 \
+  --generate-ssh-keys
+```
+
+If your region and subscription support availability zones, add `--zones 1 2 3` to spread nodes across zones. Check support first; if the command fails with `AvailabilityZoneNotSupported`, omit the flag:
+
+```bash
+az vm list-skus --location "$LOCATION" --size Standard_D4as_v5 \
+  --query '[].locationInfo[0].zones' -o tsv
+```
+
+Notes:
+
+- `--tier standard` enables the uptime SLA for production control planes.
+- If cluster creation fails with `The VM size ... is not allowed in your subscription`, pick a size from the list in the error message or request a quota increase; see [AKS quotas, SKUs, and regions](https://aka.ms/aks/quotas-skus-regions).
+- The Azure Disk CSI driver and snapshot controller CRDs are enabled by default on current AKS versions.
+
+### 4. Create a user node pool for databases
+
+Size this pool for your FalkorDB memory footprint. Memory-optimized `E`-series VMs are a good fit for graph workloads.
+
+```bash
+az aks nodepool add \
+  --resource-group "$RESOURCE_GROUP" \
+  --cluster-name "$CLUSTER_NAME" \
+  --name falkordb \
+  --mode User \
+  --node-vm-size Standard_E8as_v5 \
+  --node-count 3 \
+  --enable-cluster-autoscaler \
+  --min-count 3 \
+  --max-count 10
+```
+
+Add `--zones 1 2 3` if your region and subscription support availability zones.
+Adjust `--max-count` accordingly.
+
+### 5. Get cluster credentials
+
+```bash
+az aks get-credentials \
+  --resource-group "$RESOURCE_GROUP" \
+  --name "$CLUSTER_NAME"
+
+kubectl config current-context
+kubectl get nodes
+```
+
+### 6. Verify storage and snapshot support
+
+FalkorDB Enterprise uses persistent volumes for databases and the Admin Server, and volume snapshots for backups. Verify AKS defaults:
+
+```bash
+kubectl get storageclass
+kubectl get crd volumesnapshots.snapshot.storage.k8s.io
+```
+
+AKS ships the `managed-csi` and `managed-csi-premium` storage classes. Use `managed-csi-premium` (Premium SSD) for database volumes in production.
+
+The installer deploys its own Snapshot Controller release into the KubeBlocks namespace. If your AKS cluster already runs a snapshot controller (the `volumesnapshots` CRD exists and a controller is active in `kube-system`), skip the bundled one during install with `--skip-snapshot-controller`.
+
+## Install FalkorDB Enterprise
+
+### Quick install
+
+With the AKS context active, run the installer:
+
+```bash
+curl -fsSL https://falkordb.github.io/FalkorDB-Enterprise/install.sh | \
+  bash -s -- --yes
+```
+
+On a default AKS install, the installer deploys ingress-nginx (unless the cluster already has a default `IngressClass`), exposes the Admin UI and Admin Server API on a single public IP through the gateway Ingress, and prints the URL. See [Quickstart](/enterprise/get-started/quickstart) for what the installer does and how to validate it.
+
+### Production install
+
+For production, prepare a values file with TLS ingress, a stable JWT secret, and a bootstrap admin user as described in [Production install](/enterprise/deployment/production). A ready-to-edit AKS example ships inside the chart at `examples/values-aks.yaml` — extract it with `helm pull oci://registry.falkordb.cloud/falkordb/falkordb-enterprise --untar`. Example AKS-specific values:
+
+```yaml
+gateway:
+  enabled: true
+  ingress:
+    enabled: true
+    className: webapprouting.kubernetes.azure.com
+    hosts:
+      - host: admin.example.com
+    tls:
+      - secretName: falkordb-enterprise-admin-tls
+        hosts:
+          - admin.example.com
+
+adminServer:
+  env:
+    nodeEnv: production
+    corsOrigin: https://admin.example.com
+    cookieSecure: true
+  persistence:
+    enabled: true
+    size: 8Gi
+    storageClassName: managed-csi-premium
+```
+
+If you use the AKS application routing add-on as the ingress class above, enable it first:
+
+```bash
+az aks approuting enable \
+  --resource-group "$RESOURCE_GROUP" \
+  --name "$CLUSTER_NAME"
+```
+
+Alternatively, install ingress-nginx and set `className: nginx`.
+
+Then install:
+
+```bash
+curl -fsSL https://falkordb.github.io/FalkorDB-Enterprise/install.sh | \
+  JWT_SECRET="$(openssl rand -hex 32)" bash -s -- \
+    --kube-context "$CLUSTER_NAME" \
+    --namespace falkordb-system \
+    --kubeblocks-namespace kb-system \
+    --values production-values.yaml \
+    --yes
+```
+
+### DNS
+
+Point your Admin UI hostname at the ingress public IP:
+
+```bash
+kubectl get ingress -n falkordb-system
+```
+
+Create an `A` record for `admin.example.com` pointing at the `ADDRESS` shown, either in your DNS provider or in Azure DNS:
+
+```bash
+az network dns record-set a add-record \
+  --resource-group "<dns-rg>" \
+  --zone-name example.com \
+  --record-set-name admin \
+  --ipv4-address <ingress-ip>
+```
+
+## Validate the install
+
+```bash
+helm status kubeblocks -n kb-system
+helm status falkordb-enterprise -n falkordb-system
+kubectl get pods -n kb-system
+kubectl get pods -n falkordb-system
+kubectl get ingress -n falkordb-system
+```
+
+Open the Admin UI URL and sign in with the bootstrap admin user. For OAuth sign-in, see [Azure AD OAuth setup](/enterprise/authentication/azure-ad-oauth).
+
+### Pod security admission
+
+The installer labels `falkordb-system` with `enforce=baseline`. `baseline` is also enough for `kb-system` and for database namespaces. See [Pod Security Admission levels](/enterprise/reference/pod-security) for the measured level of each namespace and the workloads that cap it.
+
+## Clean up
+
+Delete the Enterprise release first (see [uninstall](/enterprise/upgrades/uninstall)), then remove the Azure resources:
+
+```bash
+az aks delete --resource-group "$RESOURCE_GROUP" --name "$CLUSTER_NAME" --yes
+az group delete --name "$RESOURCE_GROUP" --yes
+```
+
+Deleting the resource group removes the cluster, network, disks, and load balancers it contains.

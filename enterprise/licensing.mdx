@@ -1,0 +1,250 @@
+---
+title: "Licensing"
+description: "How to obtain a FalkorDB Enterprise license, how licenses are signed offline, how they bind to a Kubernetes cluster, and which limits they enforce."
+icon: "key"
+---
+
+A FalkorDB Enterprise license is a signed token that authorizes the admin server
+and encodes the resource limits your account has purchased. It is issued by
+FalkorDB, verified inside your cluster, and never leaves it.
+
+## Get a license
+
+Getting a license happens in two phases. FalkorDB onboards your organization
+once; after that your team issues its own licenses without waiting on anyone.
+
+### Onboarding, once per organization
+
+Contact support to get started. Onboarding creates your organization and sets
+the quota it can draw against — the ceiling on Kubernetes clusters, CPU cores,
+memory and deployments your account is entitled to, and how far out licenses may
+be dated.
+
+<Card title="Contact FalkorDB support to onboard" icon="envelope" href="mailto:support@falkordb.com" horizontal>
+  Ask to onboard your organization for FalkorDB Enterprise.
+</Card>
+
+To avoid a round trip, include:
+
+| Detail | Why it is needed |
+| --- | --- |
+| Account or organization name | Identifies the organization and is recorded in every license as `accountName` |
+| Total CPU cores, memory and deployments you expect to run | Sets the quota all your clusters draw against |
+| How many Kubernetes clusters you will run | Quota is capped per cluster count, not only in total |
+| How many people need admin access | Sets the `users` limit stamped into each license |
+| Term you are contracting for | Caps how far out a license may be dated |
+
+### Self-service, after onboarding
+
+Once your organization exists, licensing moves to the FalkorDB Enterprise
+Portal, a FalkorDB-hosted site your team signs in to. Support provides the
+address during onboarding. From there you can, without contacting anyone:
+
+- **Register a Kubernetes cluster** and receive its license immediately. A
+  license is minted at the moment of registration — the two are never created
+  apart.
+- **Regenerate a license** for a cluster, for example after it expires or if the
+  string was mishandled.
+- **Resize a cluster**, within the quota your organization already holds.
+- **Request more quota** when you need to grow beyond it. Quota changes are the
+  one step that still goes through FalkorDB.
+
+Registration asks for the cluster ID described in
+[Binding to a cluster](#binding-to-a-cluster), along with the CPU, memory and
+deployment capacity that cluster should be allowed. Those numbers are checked
+against your remaining quota and then become the license limits.
+
+<Tip>
+  You do not need a license to start. An unlicensed admin server begins a 14-day
+  trial with no limits the first time it starts, so you can install and evaluate
+  before onboarding completes. When the trial ends the installation goes
+  read-only until a license is activated.
+</Tip>
+
+## How licenses are generated
+
+Licensing is entirely offline. Nothing in the flow contacts a FalkorDB server,
+at issue time or at validation time, so an air-gapped installation is licensed
+exactly like a connected one.
+
+<Steps>
+  <Step title="FalkorDB signs the payload">
+    The portal holds a private signing key. A small JSON payload describing your
+    account, cluster, limits and expiry is signed with it. The key stays in
+    FalkorDB-hosted infrastructure and is not part of any release artifact.
+  </Step>
+  <Step title="You receive a single string">
+    The result is one line of text in the form
+    `falkor.license.v1.<payload>.<signature>`. The payload segment is the
+    `base64url` encoding of the JSON, and the signature covers that exact
+    segment. Both are readable, and neither is secret in the sense a password
+    is — but a modified payload will not verify.
+  </Step>
+  <Step title="The admin server verifies it locally">
+    The matching public key is compiled into the admin server image. It is not a
+    chart value and not fetched at runtime, so verification works with no
+    network access at all. The image also carries a checksum of the public key
+    and re-checks it on every validation, so a tampered image fails closed
+    rather than accepting forged licenses.
+  </Step>
+</Steps>
+
+The portal and your cluster never talk to each other. There is no callback, no
+heartbeat and no activation server: the signed string is the only thing that
+crosses the boundary, and you carry it across. A cluster that is air-gapped, or
+offline for a month, is licensed exactly like a connected one.
+
+The signature scheme is `Ed25519`. The payload carries a `version` field, which
+is `1` today; the admin server rejects any version it does not recognize rather
+than guessing at the meaning of unknown fields.
+
+### What is inside a license
+
+| Field | Meaning |
+| --- | --- |
+| `version` | Payload format version. Currently `1` |
+| `licenseId` | Unique identifier for this license |
+| `accountName` | The account the license was issued to |
+| `k8sClusterId` | Cluster this license is valid on. Always set on a portal-issued license |
+| `issuedAt` | When the license was signed |
+| `expiresAt` | When the license stops being valid. Always set on a portal-issued license, capped by your organization's contracted term |
+| `limits` | The four enforced dimensions, described below |
+
+Nothing in the payload is encrypted, so you can always decode it to see exactly
+what you have been granted.
+
+## Binding to a cluster
+
+Every license the portal issues is locked to exactly one Kubernetes cluster.
+That is why registering a cluster and issuing its license are a single step:
+there is nothing to bind a license to until the cluster is registered.
+
+Cluster identity is the `uid` of the `kube-system` namespace, which Kubernetes
+assigns when the cluster is created and which no two clusters share. Read it out
+of the cluster you are registering:
+
+```bash
+kubectl get namespace kube-system -o jsonpath='{.metadata.uid}'
+```
+
+The portal records that value as `k8sClusterId`. At validation time the admin
+server compares it against the `K8S_CLUSTER_ID` environment variable when one is
+set, and otherwise against the live `kube-system` namespace `uid`.
+
+<Warning>
+  A license only works on the cluster it was issued for. Activating it anywhere
+  else fails with `License is not valid for this Kubernetes cluster`, and the
+  installation stays read-only. Rebuilding a cluster from scratch produces a new
+  `kube-system` `uid`, so treat it as a new cluster to register rather than one
+  to move a license onto.
+</Warning>
+
+The license format itself allows `k8sClusterId` to be omitted, in which case the
+admin server accepts the license on any cluster. Such licenses are not something
+you can issue for yourself; ask support if an unbound license is genuinely
+required.
+
+## What a license limits
+
+A license constrains four dimensions. Every one of them is a live count taken
+from the installation itself, not a figure you self-report.
+
+| Dimension | Field | What is counted |
+| --- | --- | --- |
+| Deployments | `deployments` | Number of FalkorDB database deployments |
+| CPU | `cpuCores` | Sum of CPU requests across every deployment, multiplied by node count, including Sentinel and sharded components |
+| Memory | `memoryGB` | Sum of memory requests across every deployment, on the same basis |
+| Users | `users` | Number of admin user accounts |
+
+Each dimension is either a number or `unlimited`. CPU and memory are read from
+the resource requests you set on a deployment, falling back to limits when no
+request is set, and are multiplied by the number of nodes in each component.
+A Sentinel or sharded deployment therefore counts every node it runs, not one
+per deployment.
+
+Notably, the license does **not** gate features. Authentication providers,
+backups, sharding, monitoring and the API are all available regardless of which
+license you hold. Only capacity is licensed.
+
+### When a limit would be exceeded
+
+Limits are checked before a change is applied, not after. Creating a deployment,
+scaling one up or down, changing its resources, or adding a user all recompute
+what usage *would* become and refuse the change if it crosses a limit. The
+existing installation keeps running untouched — an over-limit request is
+rejected, never partially applied.
+
+## License states
+
+The admin server reports exactly one state at a time.
+
+| State | Meaning | Writes allowed |
+| --- | --- | --- |
+| `trial` | No license; the 14-day trial is running with no limits | Yes |
+| `active` | Valid license, within limits, not expired | Yes |
+| `expired` | The `expiresAt` date has passed | No |
+| `invalid` | Signature, payload or cluster binding check failed | No |
+| `locked` | Valid license, but a limit is currently exceeded, or the trial ended | No |
+| `disabled` | Enforcement switched off for development | Yes |
+
+In `expired`, `invalid` and `locked` the installation enters read-only mode.
+Authenticated write requests are refused with HTTP `423 Locked` and a message
+naming the violation, while reads continue to work normally. Your databases are
+unaffected and keep serving traffic — read-only mode applies to the management
+plane, not to the data plane.
+
+The licensing and authentication endpoints stay reachable in read-only mode by
+design, so you can always sign in and activate a replacement license to recover.
+
+## Activate a license
+
+The license reaches the admin server in one of three ways.
+
+### Admin UI
+
+Sign in and open **Licensing** in the sidebar. Paste the license string and
+activate it. This works even when the installation is locked, and is the fastest
+way to recover from an expired license.
+
+### Command line
+
+```bash
+falkordb-admin license activate --license 'falkor.license.v1.<payload>.<signature>'
+falkordb-admin license status
+```
+
+### Helm
+
+Supply the license at install time for unattended deployments. See
+[Production installation](/enterprise/deployment/production#enterprise-license) for the
+Secret and values keys.
+
+<Warning>
+  Keep admin server persistence enabled. Validated license state is written to
+  `/data/license-state.json`, and a license activated through the UI, CLI or API
+  is lost on pod restart if that path is not backed by a volume.
+</Warning>
+
+## Check the current status
+
+```bash
+falkordb-admin license status
+```
+
+The same information is on the **Licensing** page of the Admin UI, which shows
+the active limits next to current usage, the expiry date, and any violations
+holding the installation in read-only mode. Check it before scaling up, so a
+capacity change does not fail at apply time.
+
+## Renew or change a license
+
+Renewals and resizes are self-service in the portal. Regenerate the cluster's
+license, or change its capacity, and activate the new string the same way as the
+first one. There is no migration step and no downtime: activating a new license
+replaces the previous one immediately, and an installation sitting in `locked`
+because it outgrew its limits returns to `active` as soon as a license covering
+current usage is activated.
+
+Two things still go through FalkorDB support: increasing your organization's
+quota, and extending the term licenses may be dated to. Both are ceilings set at
+the organization level, so no amount of self-service can raise them.

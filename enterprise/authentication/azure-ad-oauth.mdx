@@ -1,0 +1,228 @@
+---
+title: "Microsoft Entra ID OAuth"
+description: "Enable Microsoft Entra ID (Azure AD) sign-in and Microsoft Graph group lookup for role mapping."
+icon: "microsoft"
+---
+
+Azure AD can be configured from Admin Settings or with Admin Server environment variables.
+
+Azure AD OAuth has two parts:
+
+- An Azure app registration in Microsoft Entra ID.
+- FalkorDB Enterprise OAuth settings, stored in Admin Settings and Kubernetes Secrets.
+
+## Prerequisites
+
+- FalkorDB Enterprise is installed and the Admin UI is reachable.
+- You can sign in as an admin with the `settings.update` permission.
+- You know the public URL users use to reach the Admin UI, for example `https://admin.example.com`.
+- You can create or update an app registration in Microsoft Entra ID.
+- For group-based role mapping, you can grant Microsoft Graph application permissions and admin consent.
+
+## Create the Azure app registration
+
+1. Open the Microsoft Entra admin center.
+2. Go to **Identity** > **Applications** > **App registrations**.
+3. Select **New registration**.
+4. Enter a name, for example `FalkorDB Enterprise Admin`.
+5. Choose the supported account type for your organization.
+6. Under **Redirect URI**, choose **Web** and add:
+
+```text
+https://admin.example.com/api/auth/oauth/azure/callback
+```
+
+Replace `https://admin.example.com` with the public Admin UI origin for your installation.
+
+7. Save the app registration.
+8. Copy the **Application (client) ID** and **Directory (tenant) ID**.
+9. Open **Certificates & secrets** and create a new client secret.
+10. Copy the client secret value immediately. Azure shows it only once.
+
+## Configure API permissions
+
+For basic login, the app needs delegated Microsoft Graph permissions:
+
+| Permission | Type | Purpose |
+| --- | --- | --- |
+| `User.Read` | Delegated | Read the signed-in user's profile from Microsoft Graph. |
+| `openid` | Delegated | Request OpenID Connect identity. |
+| `email` | Delegated | Request the user's email claim when available. |
+| `profile` | Delegated | Request basic profile claims. |
+| `offline_access` | Delegated | Allow refresh tokens. |
+
+For group-based role mapping, add Microsoft Graph application permissions and grant admin consent:
+
+| Permission | Type | Purpose |
+| --- | --- | --- |
+| `GroupMember.Read.All` | Application | Read group memberships for users. |
+| `Group.Read.All` or `Directory.Read.All` | Application | Read group metadata when listing or validating groups. |
+
+After adding permissions, select **Grant admin consent** for the tenant.
+
+## Configure Azure AD in the Admin UI
+
+1. Sign in to the Admin UI as an admin.
+2. Open **System Settings**.
+3. Open **OAuth / SSO**.
+4. Expand the **Azure AD** provider card.
+5. Fill in the Azure OAuth fields:
+
+| Field | Value |
+| --- | --- |
+| Azure Client ID | Application client ID from the app registration. |
+| Tenant ID | Directory tenant ID from Microsoft Entra ID. |
+| Azure Client Secret Secret | Kubernetes Secret name that will store the OAuth client secret, for example `azure-oauth-client-secret`. |
+| Azure Redirect URI | The same redirect URI registered in the app registration, for example `https://admin.example.com/api/auth/oauth/azure/callback`. |
+| Azure Client Secret | Paste the Azure client secret value. This value is write-only and is not shown again after saving. |
+
+6. Configure sign-in policy fields as needed:
+
+| Field | Purpose |
+| --- | --- |
+| Allowed Domains | Comma-separated email domains allowed to sign in. Leave empty to allow any Azure AD account accepted by the app registration. |
+| Auto-Onboard OAuth Users | Creates a FalkorDB Enterprise user on first successful OAuth login. |
+| Strict Role Attribute Matching | Rejects OAuth logins if the configured role claim is missing or unknown. |
+| Role Attribute Path | JMESPath expression for reading a role from the OAuth profile, when role claims are used. |
+
+7. Select **Save Settings**.
+
+The Admin Server stores `client_id`, `tenant_id`, `redirect_uri`, and `client_secret_secret_ref` in Admin Settings. The client secret itself is written to the referenced Kubernetes Secret under the `client_secret` key.
+
+## Configure with the API
+
+You can also configure Azure AD OAuth through the settings API. Authenticate as an admin first, then send a `PATCH` request to `/api/settings/`.
+
+```bash
+curl -X PATCH 'https://admin.example.com/api/settings/' \
+  -H 'Content-Type: application/json' \
+  -H 'Cookie: token=<session-cookie>' \
+  --data @- <<'JSON'
+{
+  "features": {
+    "self_service_onboarding": true
+  },
+  "oauth": {
+    "allowed_domains": ["example.com"],
+    "role_attribute_strict": false
+  },
+  "azure_oauth": {
+    "client_id": "00000000-0000-0000-0000-000000000000",
+    "tenant_id": "11111111-1111-1111-1111-111111111111",
+    "redirect_uri": "https://admin.example.com/api/auth/oauth/azure/callback",
+    "client_secret_secret_ref": "azure-oauth-client-secret",
+    "client_secret": "replace-with-azure-client-secret"
+  }
+}
+JSON
+```
+
+## Configure with Kubernetes Secrets and ConfigMap
+
+Create the OAuth client secret:
+
+```bash
+kubectl -n falkordb-system create secret generic azure-oauth-client-secret \
+  --from-literal=client_secret='replace-with-azure-client-secret'
+```
+
+Then patch Admin Settings with the public Azure metadata:
+
+```bash
+kubectl -n falkordb-system patch configmap falkordb-admin-settings --type merge -p "$(cat <<'JSON'
+{
+  "data": {
+    "settings.json": "{\n  \"features\": {\n    \"oauth2_enabled\": true,\n    \"local_users_enabled\": true,\n    \"self_service_onboarding\": true,\n    \"multi_cluster_mode\": false,\n    \"backup_auto_schedule\": true,\n    \"metrics_collection\": true,\n    \"api_docs_enabled\": true\n  },\n  \"oauth\": {\n    \"allowed_domains\": [\"example.com\"],\n    \"role_attribute_strict\": false\n  },\n  \"azure_oauth\": {\n    \"client_id\": \"00000000-0000-0000-0000-000000000000\",\n    \"tenant_id\": \"11111111-1111-1111-1111-111111111111\",\n    \"redirect_uri\": \"https://admin.example.com/api/auth/oauth/azure/callback\",\n    \"client_secret_secret_ref\": \"azure-oauth-client-secret\"\n  },\n  \"retention\": {\n    \"audit_log_retention_days\": 90,\n    \"metrics_retention_days\": 30\n  },\n  \"metrics\": {\n    \"prometheus_port\": 9121\n  },\n  \"ui\": {}\n}"
+  }
+}
+JSON
+)"
+```
+
+Prefer the Admin UI or settings API when possible; they preserve existing settings and avoid replacing the full `settings.json` document by hand.
+
+## Configure with environment variables
+
+Azure AD OAuth can also be configured with Admin Server environment variables. This is useful for local development or simple deployments:
+
+```bash
+OAUTH_PROVIDER=azure
+AZURE_CLIENT_ID=00000000-0000-0000-0000-000000000000
+AZURE_CLIENT_SECRET=replace-with-azure-client-secret
+AZURE_TENANT_ID=11111111-1111-1111-1111-111111111111
+AZURE_REDIRECT_URI=http://localhost:3000/api/auth/oauth/azure/callback
+```
+
+Settings configured in the Admin UI are preferred for Azure AD OAuth at request time. Environment variables remain a fallback when settings-backed Azure AD OAuth is not configured.
+
+## Configure with Helm
+
+For Helm-based deployments, set the Azure values on install or upgrade:
+
+```yaml
+adminServer:
+  secret:
+    azureClientId: "00000000-0000-0000-0000-000000000000"
+    azureClientSecret: "replace-with-azure-client-secret"
+  env:
+    oauthProvider: azure
+    azureTenantId: "11111111-1111-1111-1111-111111111111"
+    azureRedirectUri: "https://admin.example.com/api/auth/oauth/azure/callback"
+```
+
+## Test the login flow
+
+Start the OAuth flow from a browser:
+
+```text
+https://admin.example.com/api/auth/oauth/azure
+```
+
+Do not start from the raw Microsoft authorization URL during manual testing. The FalkorDB Enterprise OAuth endpoint sets the CSRF state cookie required by the callback.
+
+After a successful login, the Admin UI should show a **Continue with Azure AD** button whenever Azure AD is configured and OAuth login is enabled.
+
+## Network egress requirements
+
+If you restrict outbound traffic from the Admin Server, with
+[network policies](/enterprise/reference/network-policy) or an external firewall, these
+hosts must stay reachable on port 443:
+
+| Host | Purpose |
+| --- | --- |
+| `login.microsoftonline.com` | Exchange the authorization code for tokens, on your tenant's endpoint |
+| `graph.microsoft.com` | Read the signed-in user's profile and group membership |
+
+The redirect to the Microsoft sign-in page happens in your browser, so the
+Admin Server pod never connects to it. Only the calls above are made server to
+server.
+
+<Note>
+  `NetworkPolicy` matches on CIDR and cannot name a host. Microsoft publishes
+  its [address ranges](https://learn.microsoft.com/entra/identity/hybrid/connect/reference-connect-instances-and-endpoints)
+  but they are large and change without notice, so unlike Google Cloud there is
+  no small fixed range to pin. Expect to keep `networkPolicy.externalEgress`
+  broad on port 443, or enforce the host names in an egress proxy or firewall
+  that understands them.
+</Note>
+
+## Rotate the client secret
+
+To rotate the Azure client secret:
+
+1. Create a new client secret in the Azure app registration.
+2. Open **System Settings** > **OAuth / SSO**.
+3. Expand **Azure AD**.
+4. Keep the same Secret reference or enter a new Secret name.
+5. Paste the new value in **Azure Client Secret**.
+6. Select **Save Settings**.
+
+## Troubleshooting
+
+| Symptom | Check |
+| --- | --- |
+| Azure AD provider does not appear on the login page | Confirm `azure_oauth.client_id`, `azure_oauth.tenant_id`, and `azure_oauth.client_secret_secret_ref` are saved, or that `AZURE_CLIENT_ID`, `AZURE_CLIENT_SECRET`, and `AZURE_TENANT_ID` are set. |
+| OAuth callback returns `Invalid state parameter` | Start the flow at `/api/auth/oauth/azure`, not directly at Microsoft. |
+| Microsoft returns a redirect URI mismatch | Confirm the Azure app registration contains the exact `/api/auth/oauth/azure/callback` URL used by FalkorDB Enterprise. |
+| Login works but group role mapping fails | Confirm Microsoft Graph application permissions are granted and admin consent was completed. |
+| Secret reference is saved but login fails | Confirm the referenced Secret exists in the FalkorDB Enterprise namespace and contains `client_secret`. |

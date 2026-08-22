@@ -1,0 +1,219 @@
+---
+title: "Production install"
+description: "Install FalkorDB Enterprise with managed secrets, private images, ingress, TLS, and persistence."
+icon: "shield-check"
+---
+
+## Prerequisites
+
+- Access to run `kubectl` commands in the cluster's context.
+- At least 3 worker nodes with 4 CPU and 16 GB of memory each.
+- Outbound access from the cluster to pull images: `registry.falkordb.cloud` (Enterprise images, credentials required), `docker.io`, `apecloud-registry.cn-zhangjiakou.cr.aliyuncs.com`, `registry.k8s.io`, and `ghcr.io` — or `registry.falkordb.cloud` alone, since every image is also mirrored there (see [Private registries](/enterprise/deployment/private-images)).
+
+## Recommended inputs
+
+Prepare these values before installing:
+
+- Kubernetes context name.
+- FalkorDB Enterprise namespace.
+- KubeBlocks namespace.
+- A stable 32+ character JWT secret.
+- Image pull credentials if Enterprise images are private.
+- Public Admin UI hostname.
+- TLS-enabled ingress configuration.
+- Storage class for Admin Server persistence if the cluster default is not suitable.
+
+Only one FalkorDB Enterprise installation is supported per Kubernetes cluster. The Helm chart creates a cluster-scoped install lock named `falkordb-enterprise-install-lock` and blocks installs from any other release or namespace in the same cluster. Re-running or upgrading the owning release is allowed.
+
+Generate a JWT secret:
+
+```bash
+openssl rand -hex 32
+```
+
+## Production values file
+
+Create a values file for environment-specific settings:
+
+```yaml
+gateway:
+  enabled: true
+  ingress:
+    enabled: true
+    className: nginx
+    hosts:
+      - host: admin.example.com
+    tls:
+      - secretName: falkordb-enterprise-admin-tls
+        hosts:
+          - admin.example.com
+
+adminServer:
+  env:
+    nodeEnv: production
+    corsOrigin: https://admin.example.com
+    cookieSecure: true
+    enableSwagger: "false"
+  persistence:
+    enabled: true
+    size: 8Gi
+    storageClassName: ""
+  bootstrap:
+    adminUser:
+      email: admin@example.com
+      password: replace-with-a-temporary-password
+      mustChangePassword: true
+
+adminUi:
+  env:
+    viteApiUrl: ""
+```
+
+When `gateway.ingress.enabled=true`, the chart derives the Admin UI public URL from the first gateway ingress host. The Admin Server CORS origin defaults to that Admin UI public URL unless `adminServer.env.corsOrigin` is set.
+
+## Install with explicit context and Secrets
+
+```bash
+curl -fsSL https://falkordb.github.io/FalkorDB-Enterprise/install.sh | \
+  JWT_SECRET='replace-with-64-hex-characters' bash -s -- \
+    --kube-context production-cluster \
+    --release falkordb-enterprise \
+    --namespace falkordb-system \
+    --kubeblocks-namespace kb-system \
+    --values production-values.yaml \
+    --yes
+```
+
+You can also pass the secret as a script argument:
+
+```bash
+curl -fsSL https://falkordb.github.io/FalkorDB-Enterprise/install.sh | \
+  bash -s -- \
+    --kube-context production-cluster \
+    --namespace falkordb-system \
+  --kubeblocks-namespace kb-system \
+  --values production-values.yaml \
+  --jwt-secret 'replace-with-64-hex-characters' \
+  --yes
+```
+
+## Private images
+
+If Admin Server or Admin UI images are private, configure an image pull Secret. See [Private registries](/enterprise/deployment/private-images) for the complete flow.
+
+## Browser encryption key
+
+FalkorDB Browser is enabled by default. The chart includes a post-install/post-upgrade hook that ensures a 64-character hexadecimal `ENCRYPTION_KEY` exists for the Browser deployment and restarts the Browser when needed.
+
+To provide your own key:
+
+```yaml
+falkordb-browser:
+  browser:
+    encryption:
+      key: "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
+```
+
+To use an existing Secret:
+
+```yaml
+falkordb-browser:
+  browser:
+    encryption:
+      existingSecret:
+        name: browser-encryption
+        key: ENCRYPTION_KEY
+```
+
+## Enterprise license
+
+<Tip>
+  Leaving `adminServer.license` empty is a valid choice, not just a placeholder state: the admin server starts a 14-day free trial with no configured limits as soon as it comes up unlicensed. You do not need to pass a license through Helm at all — sign in to the Admin UI and activate or replace the license from the **Licensing** page at any time, including after install. Helm-provided licenses below are for automating unattended installs. See [Licensing](/enterprise/licensing) for how to obtain one and what it limits.
+</Tip>
+
+The admin server can receive a signed Enterprise license from Helm. For production, create a Secret in the Enterprise namespace and reference it from chart values:
+
+```bash
+kubectl -n falkordb-system create secret generic falkordb-enterprise-license \
+  --from-literal=license='falkor.license.v1.<payload>.<signature>'
+```
+
+```yaml
+adminServer:
+  license:
+    existingSecret:
+      name: falkordb-enterprise-license
+      key: license
+```
+
+For development installs, you can set the license directly in values:
+
+```yaml
+adminServer:
+  license:
+    value: "falkor.license.v1.<payload>.<signature>"
+```
+
+The chart exposes the license to the admin server as `FALKORDB_LICENSE` and persists validated license state at `/data/license-state.json` by default. Keep admin server persistence enabled so API-activated licenses and Helm-provided licenses survive pod restarts. If the license is expired, invalid, or any resource limit is exceeded, authenticated write operations are locked and the Admin UI becomes read-only until a valid license within limits is active.
+
+Generated license keys include a signed payload with `version: 1`. The admin server currently accepts payload version `1`; future license payload formats should increment this field.
+
+To bind the license to this Kubernetes cluster, generate it with the cluster ID from the UID of the `kube-system` namespace:
+
+```bash
+kubectl get namespace kube-system -o jsonpath='{.metadata.uid}'
+```
+
+The signed payload field is `k8sClusterId`. The admin server compares it to `K8S_CLUSTER_ID` when set, otherwise to the `kube-system` namespace UID. Omit `k8sClusterId` for an unbound license.
+
+## Post-install validation
+
+```bash
+helm status falkordb-enterprise -n falkordb-system
+kubectl get pods -n falkordb-system
+kubectl get ingress -n falkordb-system
+kubectl get secret -n falkordb-system -l 'app.kubernetes.io/component=admin-server'
+```
+
+Open the Admin UI URL, sign in with the bootstrap admin user, and change the temporary password if `mustChangePassword=true`.
+
+## Production notes
+
+- Do not use the default bootstrap password in shared environments.
+- Prefer a values file over long `--set` command lines.
+- Do not rely on `helm --reuse-values` for upgrades unless image tags are set explicitly.
+- Leave `cookieSecure` enabled behind TLS.
+- Keep Admin Server persistence enabled unless audit logs and local state are intentionally disposable.
+
+## Pod security admission
+
+The installer labels the release namespace `enforce=baseline` with `audit` and `warn` at `restricted`. In a default (non-CSI) install, `baseline` is also enough for `kb-system` and for database namespaces — no namespace needs `privileged`.
+
+If your cluster applies a stricter default, or you manage namespace labels yourself, see [Pod Security Admission levels](/enterprise/reference/pod-security) for the measured level of each namespace and the exact workloads that cap it.
+
+## Network policies
+
+The chart can restrict what reaches the Admin Server and Admin UI, and what the Admin Server can reach. This is off by default because a CNI that does not implement `NetworkPolicy` accepts the objects and enforces nothing.
+
+```yaml
+networkPolicy:
+  enabled: true
+  ingressControllerNamespace: ingress-nginx
+```
+
+Confirm your CNI enforces policy first, then narrow `networkPolicy.externalEgress` to your control plane and identity provider ranges. See [Network policies](/enterprise/reference/network-policy) for the full set of rules, the flows that deliberately have none, and how to verify enforcement.
+
+## Supply chain
+
+Verify the chart signature before installing, and the image signatures before promoting a release. `helm install` does no signature checking of its own.
+
+```bash
+cosign verify --key cosign.pub --insecure-ignore-tlog=true \
+  registry.falkordb.cloud/falkordb/falkordb-enterprise:1.2.0
+```
+
+Admin Server and Admin UI images resolve to the chart's `appVersion` by default, so a chart version always requests the same image version. For a stricter guarantee, pin `adminServer.image.digest` and `adminUi.image.digest` so the image cannot be swapped underneath you. See [Supply chain](/enterprise/reference/supply-chain).
+
+## Security review
+
+[Security](/enterprise/security) describes the whole posture in one place: every RBAC grant and why it exists, the workload security contexts, the secrets the chart handles, and which controls are enforced by Kubernetes rather than by the product. Point a security reviewer at that page.

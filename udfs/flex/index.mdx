@@ -1,0 +1,150 @@
+---
+title: "FLEX Function Reference"
+description: "Reference for FLEX, FalkorDB's open-source community UDF package with text, date, JSON, map, collection, bitwise, and similarity utilities."
+---
+
+FLEX is FalkorDB's open source community UDF package, available at [github.com/FalkorDB/flex](https://github.com/FalkorDB/flex).  
+It contains a variety of useful functionality, including:
+
+- String and set similarity metrics for fuzzy matching and comparison  
+- Date and time manipulation, formatting, and parsing  
+- Low-level bitwise operations on integers  
+
+We welcome contributions to extend this library with additional functionality.
+
+The following sections document all FLEX (FalkorDB Library for Extensions) functions.
+
+## Function Categories
+
+### Similarity Functions (`flex.sim.*`)
+
+Set similarity metrics for fuzzy matching and comparison.
+
+| Function | Description |
+|----------|-------------|
+| [sim.jaccard](/udfs/flex/similarity/jaccard) | Calculate Jaccard similarity coefficient between sets |
+
+### Text Functions (`flex.text.*`)
+
+String manipulation, formatting, case conversion utilities, and string similarity metrics.
+
+| Function | Description |
+|----------|-------------|
+| [text.capitalize](/udfs/flex/text/capitalize) | Capitalize the first character of a string |
+| [text.decapitalize](/udfs/flex/text/decapitalize) | Lowercase the first character of a string |
+| [text.swapCase](/udfs/flex/text/swapCase) | Swap the case of all characters in a string |
+| [text.camelCase](/udfs/flex/text/camelCase) | Convert string to camelCase format |
+| [text.upperCamelCase](/udfs/flex/text/upperCamelCase) | Convert string to UpperCamelCase (PascalCase) |
+| [text.snakeCase](/udfs/flex/text/snakeCase) | Convert string to snake_case format |
+| [text.format](/udfs/flex/text/format) | Format string with placeholder substitution |
+| [text.indexOf](/udfs/flex/text/indexOf) | Find first occurrence of substring |
+| [text.indexesOf](/udfs/flex/text/indexesOf) | Find all occurrences of substring |
+| [text.join](/udfs/flex/text/join) | Join array elements with delimiter |
+| [text.lpad](/udfs/flex/text/lpad) | Pad string on the left to target length |
+| [text.rpad](/udfs/flex/text/rpad) | Pad string on the right to target length |
+| [text.regexGroups](/udfs/flex/text/regexGroups) | Extract regex matches and capture groups |
+| [text.repeat](/udfs/flex/text/repeat) | Repeat string multiple times |
+| [text.replace](/udfs/flex/text/replace) | Replace text using regex pattern |
+| [text.jaroWinkler](/udfs/flex/text/jaroWinkler) | Compute Jaro-Winkler similarity for short strings |
+| [text.levenshtein](/udfs/flex/text/levenshtein) | Compute Levenshtein edit distance between strings |
+
+### Collection Functions (`flex.coll.*`)
+
+Operations on lists and arrays including set operations and transformations.
+
+| Function | Description |
+|----------|-------------|
+| [coll.zip](/udfs/flex/collections/zip) | Combine two lists element-by-element into pairs |
+| [coll.union](/udfs/flex/collections/union) | Combine lists and return unique elements |
+| [coll.intersection](/udfs/flex/collections/intersection) | Find common elements between lists |
+| [coll.shuffle](/udfs/flex/collections/shuffle) | Randomly shuffle list elements |
+| [coll.frequencies](/udfs/flex/collections/frequencies) | Count frequency of each element in list |
+
+### Map Functions (`flex.map.*`)
+
+Map/object manipulation for property management and transformation.
+
+| Function | Description |
+|----------|-------------|
+| [map.merge](/udfs/flex/map/merge) | Shallow merge multiple maps |
+| [map.fromPairs](/udfs/flex/map/fromPairs) | Convert list of key-value pairs to map |
+| [map.submap](/udfs/flex/map/submap) | Extract subset of keys from map |
+| [map.removeKey](/udfs/flex/map/removeKey) | Remove single key from map |
+| [map.removeKeys](/udfs/flex/map/removeKeys) | Remove multiple keys from map |
+
+### JSON Functions (`flex.json.*`)
+
+JSON serialization and parsing utilities.
+
+| Function | Description |
+|----------|-------------|
+| [json.toJson](/udfs/flex/json/toJson) | Serialize value to JSON string |
+| [json.fromJsonMap](/udfs/flex/json/fromJsonMap) | Parse JSON string to map |
+| [json.fromJsonList](/udfs/flex/json/fromJsonList) | Parse JSON string to list |
+
+### Date Functions (`flex.date.*`)
+
+Date and time manipulation, formatting, and parsing.
+
+| Function | Description |
+|----------|-------------|
+| [date.format](/udfs/flex/date/format) | Format date/time with pattern and timezone |
+| [date.parse](/udfs/flex/date/parse) | Parse date/time string with optional pattern |
+| [date.truncate](/udfs/flex/date/truncate) | Truncate date to specific unit (day, month, etc.) |
+| [date.toTimeZone](/udfs/flex/date/toTimeZone) | Convert date to timezone offset |
+
+### Bitwise Functions (`flex.bitwise.*`)
+
+Low-level bitwise operations on integers.
+
+| Function | Description |
+|----------|-------------|
+| [bitwise.and](/udfs/flex/bitwise/and) | Bitwise AND operation |
+| [bitwise.or](/udfs/flex/bitwise/or) | Bitwise OR operation |
+| [bitwise.xor](/udfs/flex/bitwise/xor) | Bitwise XOR (exclusive OR) operation |
+| [bitwise.not](/udfs/flex/bitwise/not) | Bitwise NOT (one's complement) operation |
+| [bitwise.shiftLeft](/udfs/flex/bitwise/shiftLeft) | Left bit shift operation |
+| [bitwise.shiftRight](/udfs/flex/bitwise/shiftRight) | Right bit shift with sign extension |
+
+## Common Use Cases
+
+### Data Cleaning and Normalization
+- `text.camelCase`, `text.snakeCase` - Normalize field names
+- `text.replace` - Remove or sanitize unwanted characters
+- `coll.union` - Deduplicate lists
+
+### Fuzzy Matching and Search
+- `text.levenshtein` - Find similar strings with edit distance
+- `text.jaroWinkler` - Match names and short strings
+- `sim.jaccard` - Compare sets and tag similarity
+
+### Data Aggregation and Analysis
+- `date.truncate` - Group by time periods
+- `coll.frequencies` - Count occurrences
+- `map.submap` - Select relevant fields
+
+### API and Data Exchange
+- `json.toJson`, `json.fromJsonMap` - JSON serialization
+- `map.removeKeys` - Filter sensitive data
+- `text.format` - Build formatted messages
+
+### Permission and Flag Management
+- `bitwise.and`, `bitwise.or` - Check and set permission flags
+- `bitwise.xor` - Toggle flags
+
+## Frequently Asked Questions
+
+<AccordionGroup>
+  <Accordion title="What is the FLEX library?">
+    FLEX (FalkorDB Library for Extensions) is FalkorDB's open-source community UDF package. It provides ready-to-use functions for text manipulation, date/time handling, JSON processing, collections, maps, bitwise operations, and similarity metrics.
+  </Accordion>
+  <Accordion title="How do I call FLEX functions in Cypher?">
+    FLEX functions use the namespace pattern `flex.<category>.<function>()`. For example: `flex.text.camelCase('hello world')` or `flex.sim.jaccard(list1, list2)`.
+  </Accordion>
+  <Accordion title="Do I need to install FLEX separately?">
+    Yes. FLEX is available at [github.com/FalkorDB/flex](https://github.com/FalkorDB/flex) and must be loaded into your FalkorDB instance as a UDF library before use.
+  </Accordion>
+  <Accordion title="Can I contribute new functions to FLEX?">
+    Yes! FLEX is open source and welcomes community contributions. Visit the [FLEX GitHub repository](https://github.com/FalkorDB/flex) to submit new functions or improvements.
+  </Accordion>
+</AccordionGroup>

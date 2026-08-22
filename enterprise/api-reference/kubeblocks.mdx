@@ -1,0 +1,367 @@
+---
+title: "KubeBlocks resources"
+description: "Reference for the KubeBlocks custom resources behind FalkorDB Enterprise deployments."
+icon: "dharmachakra"
+---
+
+FalkorDB Enterprise stores all of its state in Kubernetes. The Admin Server is a
+thin layer over a set of KubeBlocks custom resources, so anything the console
+creates can also be inspected, templated into GitOps, or edited with `kubectl`.
+
+<Warning>
+  Prefer the Admin UI, the [CLI](/enterprise/reference/cli), or the
+  [Admin Server API](/enterprise/api-reference/introduction). They validate input, enforce
+  role permissions, and write an audit entry. Edit these resources directly only
+  when you need GitOps or are debugging.
+</Warning>
+
+## Resource inventory
+
+| Kind | API version | Purpose |
+| --- | --- | --- |
+| `Cluster` | `apps.kubeblocks.io/v1` | A FalkorDB deployment |
+| `OpsRequest` | `operations.kubeblocks.io/v1alpha1` | Day-2 operations such as restart or scale |
+| `Backup` | `dataprotection.kubeblocks.io/v1alpha1` | A single backup |
+| `BackupPolicy` | `dataprotection.kubeblocks.io/v1alpha1` | Backup methods available to a deployment |
+| `BackupSchedule` | `dataprotection.kubeblocks.io/v1alpha1` | Recurring backups |
+| `BackupRepo` | `dataprotection.kubeblocks.io/v1alpha1` | Where backups are stored |
+| `Restore` | `dataprotection.kubeblocks.io/v1alpha1` | A restore operation |
+
+## Cluster
+
+One `Cluster` represents one FalkorDB deployment.
+
+| Field | Description |
+| --- | --- |
+| `spec.clusterDef` | Always `falkordb` |
+| `spec.topology` | `standalone`, `replication`, or `cluster` |
+| `spec.terminationPolicy` | `DoNotTerminate`, `Delete`, or `WipeOut` |
+| `spec.componentSpecs[].name` | `falkordb` for data pods, `falkordb-sent` for Sentinel |
+| `spec.componentSpecs[].componentDef` | Component definition, for example `falkordb-4-1.0.7` |
+| `spec.componentSpecs[].serviceVersion` | FalkorDB version to run |
+| `spec.componentSpecs[].replicas` | Pod count for the component, including the primary |
+| `spec.componentSpecs[].resources` | CPU and memory requests and limits |
+| `spec.componentSpecs[].volumeClaimTemplates[]` | Persistent volume size and storage class |
+| `spec.shardings[]` | Used instead of `componentSpecs` for sharded topologies |
+
+<Note>
+  `componentDef` names are pinned to the installed FalkorDB addon, not to the
+  FalkorDB version. List the values available on your cluster with
+  `kubectl get componentdefinitions | grep falkordb`.
+</Note>
+
+### Topologies
+
+| Deployment type | `spec.topology` | Shape |
+| --- | --- | --- |
+| [Standalone](/enterprise/databases/standalone) | `standalone` | One `falkordb` component, 1 replica |
+| [Replicated](/enterprise/databases/replicated) | `standalone` | One `falkordb` component, 2 or more replicas |
+| [Replicated with Sentinel](/enterprise/databases/sentinel) | `replication` | `falkordb` plus a 3-replica `falkordb-sent` component |
+| [Sharded](/enterprise/databases/sharded) | `cluster` | `spec.shardings[]` with at least 3 shards |
+
+### Example: replicated with Sentinel
+
+```yaml
+apiVersion: apps.kubeblocks.io/v1
+kind: Cluster
+metadata:
+  name: falkordb
+  namespace: demo
+spec:
+  clusterDef: falkordb
+  topology: replication
+  terminationPolicy: Delete
+  componentSpecs:
+    - name: falkordb
+      componentDef: falkordb-4-1.0.7
+      replicas: 2
+      resources:
+        requests:
+          cpu: "1"
+          memory: 2Gi
+        limits:
+          cpu: "2"
+          memory: 4Gi
+      volumeClaimTemplates:
+        - name: data
+          spec:
+            accessModes: ["ReadWriteOnce"]
+            resources:
+              requests:
+                storage: 20Gi
+    - name: falkordb-sent
+      componentDef: falkordb-sent-4-1.0.7
+      replicas: 3
+```
+
+### Example: sharded
+
+```yaml
+apiVersion: apps.kubeblocks.io/v1
+kind: Cluster
+metadata:
+  name: falkordb-sharded
+  namespace: demo
+spec:
+  clusterDef: falkordb
+  topology: cluster
+  terminationPolicy: Delete
+  shardings:
+    - name: shard
+      shards: 3
+      template:
+        name: falkordb
+        componentDef: falkordb-cluster-4-1.0.7
+        replicas: 2
+        resources:
+          requests:
+            cpu: "1"
+            memory: 2Gi
+        volumeClaimTemplates:
+          - name: data
+            spec:
+              accessModes: ["ReadWriteOnce"]
+              resources:
+                requests:
+                  storage: 20Gi
+```
+
+## OpsRequest
+
+Day-2 changes are not applied by patching the `Cluster`. The Admin Server
+creates an `OpsRequest`, and KubeBlocks reconciles it. Every request needs
+`spec.clusterName` and `spec.type`.
+
+| `spec.type` | Additional fields |
+| --- | --- |
+| `Restart` | `restart[].componentName` |
+| `Start` | none |
+| `Stop` | none |
+| `Switchover` | `switchover[].componentName`, `.instanceName`, `.candidateName` |
+| `Reconfiguring` | `reconfigures[].componentName`, `.parameters[].name`, `.parameters[].value` |
+| `HorizontalScaling` | `horizontalScaling[].componentName` plus `scaleOut.replicaChanges`, `scaleIn.replicaChanges`, or `shards` |
+| `VerticalScaling` | `verticalScaling[].componentName`, `.requests`, `.limits` |
+| `VolumeExpansion` | `volumeExpansion[].componentName`, `.volumeClaimTemplates[].name`, `.storage` |
+| `Expose` | `expose[].componentName`, `.switch`, `.services[]` |
+
+<Note>
+  KubeBlocks rejects a `HorizontalScaling` entry that sets `shards` together
+  with `scaleOut` or `scaleIn`. Change the shard count and the per-shard replica
+  count in two separate requests.
+</Note>
+
+<CodeGroup>
+
+```yaml Restart
+apiVersion: operations.kubeblocks.io/v1alpha1
+kind: OpsRequest
+metadata:
+  name: falkordb-restart
+  namespace: demo
+spec:
+  clusterName: falkordb
+  type: Restart
+  restart:
+    - componentName: falkordb
+```
+
+```yaml Scale out
+apiVersion: operations.kubeblocks.io/v1alpha1
+kind: OpsRequest
+metadata:
+  name: falkordb-scaleout
+  namespace: demo
+spec:
+  clusterName: falkordb
+  type: HorizontalScaling
+  horizontalScaling:
+    - componentName: falkordb
+      scaleOut:
+        replicaChanges: 1
+```
+
+```yaml Vertical scale
+apiVersion: operations.kubeblocks.io/v1alpha1
+kind: OpsRequest
+metadata:
+  name: falkordb-verticalscale
+  namespace: demo
+spec:
+  clusterName: falkordb
+  type: VerticalScaling
+  verticalScaling:
+    - componentName: falkordb
+      requests:
+        cpu: "2"
+        memory: 4Gi
+      limits:
+        cpu: "4"
+        memory: 8Gi
+```
+
+```yaml Expand volume
+apiVersion: operations.kubeblocks.io/v1alpha1
+kind: OpsRequest
+metadata:
+  name: falkordb-volumeexpand
+  namespace: demo
+spec:
+  clusterName: falkordb
+  type: VolumeExpansion
+  volumeExpansion:
+    - componentName: falkordb
+      volumeClaimTemplates:
+        - name: data
+          storage: 50Gi
+```
+
+```yaml Reconfigure
+apiVersion: operations.kubeblocks.io/v1alpha1
+kind: OpsRequest
+metadata:
+  name: falkordb-reconfigure
+  namespace: demo
+spec:
+  clusterName: falkordb
+  type: Reconfiguring
+  reconfigures:
+    - componentName: falkordb
+      parameters:
+        - name: maxmemory-policy
+          value: allkeys-lru
+```
+
+```yaml Switchover
+apiVersion: operations.kubeblocks.io/v1alpha1
+kind: OpsRequest
+metadata:
+  name: falkordb-switchover
+  namespace: demo
+spec:
+  clusterName: falkordb
+  type: Switchover
+  switchover:
+    - componentName: falkordb
+      instanceName: falkordb-falkordb-0
+      candidateName: falkordb-falkordb-1
+```
+
+</CodeGroup>
+
+## Backup and restore
+
+`Backup` creates a point-in-time copy. The default policy for a deployment is
+named `{deployment}-falkordb-backup-policy`.
+
+| Field | Description |
+| --- | --- |
+| `spec.backupMethod` | Method from the policy, for example `snapshot` |
+| `spec.backupPolicyName` | The `BackupPolicy` to use |
+| `spec.retentionPeriod` | How long to keep the backup, for example `7d` |
+| `spec.deletionPolicy` | `Delete` or `Retain` once retention expires |
+| `spec.backupRepoName` | Target `BackupRepo`, if not the default |
+| `spec.parentBackupName` | Base backup for an incremental backup |
+
+```yaml
+apiVersion: dataprotection.kubeblocks.io/v1alpha1
+kind: Backup
+metadata:
+  name: falkordb-backup-20240101
+  namespace: demo
+spec:
+  backupMethod: snapshot
+  backupPolicyName: falkordb-falkordb-backup-policy
+  retentionPeriod: 7d
+  deletionPolicy: Delete
+```
+
+`BackupSchedule` turns a policy into recurring backups. Cron expressions are
+evaluated in UTC.
+
+```yaml
+apiVersion: dataprotection.kubeblocks.io/v1alpha1
+kind: BackupSchedule
+metadata:
+  name: falkordb-schedule
+  namespace: demo
+spec:
+  backupPolicyName: falkordb-falkordb-backup-policy
+  schedules:
+    - name: daily
+      backupMethod: snapshot
+      cronExpression: "0 2 * * *"
+      enabled: true
+      retentionPeriod: 7d
+```
+
+`Restore` writes a backup back into an existing deployment. Set
+`spec.restoreTime` for a point-in-time restore.
+
+```yaml
+apiVersion: dataprotection.kubeblocks.io/v1alpha1
+kind: Restore
+metadata:
+  name: falkordb-restore-20240102
+  namespace: demo
+spec:
+  backup:
+    name: falkordb-backup-20240101
+    namespace: demo
+```
+
+To seed a **new** deployment from a backup, annotate the `Cluster` instead of
+creating a `Restore`:
+
+```yaml
+metadata:
+  annotations:
+    kubeblocks.io/restore-from-backup: falkordb-backup-20240101
+```
+
+See [Restore to the same deployment](/enterprise/operations/restore-same-database) and
+[Restore to a new deployment](/enterprise/operations/restore-new-database).
+
+## Status phases
+
+| Resource | `status.phase` values |
+| --- | --- |
+| `Cluster` | `Creating`, `Running`, `Updating`, `Stopping`, `Stopped`, `Deleting`, `Failed` |
+| `OpsRequest` | `Pending`, `Running`, `Completed`, `Failed`, `Cancelled` |
+| `Backup` | `Pending`, `Running`, `Completed`, `Failed` |
+| `Restore` | `Pending`, `Running`, `Completed`, `Failed` |
+
+A `Cluster` also reports per-component state under
+`status.components.{name}.phase` and `.upToDate`, and an `OpsRequest` reports
+`status.progress` as a percentage.
+
+## Labels and annotations
+
+| Key | Set on | Meaning |
+| --- | --- | --- |
+| `app.kubernetes.io/name` | Clusters, pods, services | Always `falkordb` |
+| `app.kubernetes.io/instance` | Most resources | Deployment name |
+| `app.kubernetes.io/managed-by` | Resources created by the console | `falkordb-admin` |
+| `apps.kubeblocks.io/component-name` | Pods | `falkordb`, `falkordb-sent`, or `shard` |
+| `kubeblocks.io/role` | Pods | `primary` or `secondary` |
+| `dataprotection.kubeblocks.io/backup-source` | Backups | `manual` or `scheduled` |
+| `falkordb.io/user-email` | User secrets | Owning account |
+| `falkordb.io/last-run` | Backup schedules | Timestamp of the most recent run |
+
+```bash
+# Deployments in a namespace
+kubectl get clusters.apps.kubeblocks.io -n demo
+
+# Find the primary pod
+kubectl get pods -n demo -l 'kubeblocks.io/role=primary'
+
+# Scheduled backups only
+kubectl get backups -n demo -l 'dataprotection.kubeblocks.io/backup-source=scheduled'
+
+# Follow an operation
+kubectl get opsrequest -n demo falkordb-restart -w
+```
+
+<Tip>
+  Quote label selectors that contain `*` or `[` in zsh, or the shell expands
+  them before `kubectl` sees them.
+</Tip>

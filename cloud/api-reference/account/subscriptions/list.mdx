@@ -1,0 +1,66 @@
+---
+title: "List subscriptions"
+sidebarTitle: "List"
+api: "GET https://api.omnistrate.cloud/2022-09-01-00/subscription"
+description: "List the subscriptions your account belongs to."
+---
+
+Lists every subscription your user has access to, either as the owner or as an invited user. The subscription ID is what you pass as `subscriptionId` when managing deployment instances.
+
+## Authorization
+
+<ParamField header="Cookie" type="string" required>
+  Session cookie set by [Sign in](/cloud/api-reference/authentication/signin): `omnistrate_token=<jwt>`.
+</ParamField>
+
+## Query parameters
+
+<ParamField query="serviceId" type="string">
+  Only return subscriptions for this service, for example `service-12345678`.
+</ParamField>
+
+<ParamField query="environmentType" type="string">
+  Environment type to filter by, for example `PROD`.
+</ParamField>
+
+<ParamField query="includeInactive" type="boolean">
+  Include suspended, cancelled, and terminated subscriptions. Defaults to `false`.
+</ParamField>
+
+## Response
+
+<ResponseField name="ids" type="string[]" required>
+  IDs of the matching subscriptions.
+</ResponseField>
+
+<ResponseField name="subscriptions" type="object[]">
+  The subscriptions. See [Describe subscription](/cloud/api-reference/account/subscriptions/describe) for the full field list.
+</ResponseField>
+
+<ResponseField name="nextPageToken" type="string">
+  Token to use to fetch the next page of results.
+</ResponseField>
+
+```json 200 OK
+{
+  "ids": ["sub-abc123"],
+  "subscriptions": [
+    {
+      "id": "sub-abc123",
+      "serviceId": "s-123456",
+      "serviceName": "FalkorDB",
+      "productTierId": "pt-123456",
+      "productTierName": "Pro",
+      "roleType": "root",
+      "status": "ACTIVE",
+      "defaultSubscription": true,
+      "cloudProviderNames": ["aws", "gcp"],
+      "createdAt": "2025-01-15T10:04:22Z"
+    }
+  ]
+}
+```
+
+## Errors
+
+See [Error](/cloud/api-reference/schemas#error) for the error response shape.

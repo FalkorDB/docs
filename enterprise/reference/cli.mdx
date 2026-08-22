@@ -1,0 +1,131 @@
+---
+title: "Command line"
+description: "Operate FalkorDB Enterprise from the terminal with the falkordb-admin CLI."
+icon: "terminal"
+---
+
+`falkordb-admin` drives the same
+[Admin Server API](/enterprise/api-reference/introduction) as the console, which makes it a
+good fit for scripting, CI, and support sessions.
+
+## Run it
+
+The CLI ships inside the Admin Server and Admin UI images, so the quickest way
+to use it is from a pod that is already running:
+
+```bash
+kubectl exec -it -n falkordb-system deploy/falkordb-enterprise-admin-server -- \
+  falkordb-admin --help
+```
+
+You can also build the standalone CLI image from a checkout of the repository:
+
+```bash
+docker build -f packages/admin-cli/Dockerfile -t falkordb-admin-cli:local .
+docker run --rm -e FALKORDB_ADMIN_URL=https://admin.example.com falkordb-admin-cli:local --help
+```
+
+## Connect
+
+The CLI keeps the server URL and session cookie in
+`~/.falkordb/admin-cli/config.json`.
+
+```bash
+falkordb-admin login --url https://admin.example.com --email admin@example.com --password-stdin
+falkordb-admin whoami
+```
+
+<Warning>
+  Use `--password-stdin` and pipe the password in, so it never lands in your
+  shell history or in a process listing.
+</Warning>
+
+| Setting | Flag | Environment variable |
+| --- | --- | --- |
+| Server URL | `--url` | `FALKORDB_ADMIN_URL` |
+| Config file | `--config` | `FALKORDB_ADMIN_CLI_CONFIG` |
+| Login email | `--email` | `FALKORDB_ADMIN_EMAIL` |
+| Login password | `--password` | `FALKORDB_ADMIN_PASSWORD` |
+
+Add `--output json` to any command to get machine-readable output.
+
+<Note>
+  Commands that act on a deployment require `--namespace`. Only the top-level
+  listings, such as `deployments list`, treat it as optional.
+</Note>
+
+## Common tasks
+
+<CodeGroup>
+
+```bash Deployments
+falkordb-admin deployments list
+falkordb-admin deployments get falkordb --namespace demo
+falkordb-admin deployments create --file deployment.json
+falkordb-admin deployments apply-yaml --file cluster.yaml
+falkordb-admin deployments scale falkordb --namespace demo --component falkordb --replicas 3
+falkordb-admin deployments credentials falkordb --namespace demo
+falkordb-admin deployments pods falkordb --namespace demo
+falkordb-admin deployments delete falkordb --namespace demo
+```
+
+```bash Operations
+falkordb-admin operations restart falkordb --namespace demo
+falkordb-admin operations stop falkordb --namespace demo --graceful true
+falkordb-admin operations start falkordb --namespace demo
+falkordb-admin operations switchover falkordb --namespace demo --replicaName falkordb-falkordb-1
+falkordb-admin operations volume-expand falkordb --namespace demo --volumeName data --size 50Gi
+falkordb-admin operations list falkordb --namespace demo
+```
+
+```bash Backups
+falkordb-admin backups list falkordb --namespace demo
+falkordb-admin backups create falkordb --namespace demo --file backup.json
+falkordb-admin backups repos list
+falkordb-admin backups policies falkordb list --namespace demo
+falkordb-admin backups schedules falkordb list --namespace demo
+falkordb-admin backups restores falkordb list --namespace demo
+```
+
+```bash Users and roles
+falkordb-admin users list --role operator --status active
+falkordb-admin users create --email dev@example.com --role viewer
+falkordb-admin users reset-password dev@example.com
+falkordb-admin rbac roles list
+falkordb-admin rbac group-mappings create --groupEmail sre@example.com --roleName operator
+```
+
+```bash Support
+falkordb-admin system namespaces
+falkordb-admin diagnostics health
+falkordb-admin diagnostics support-package
+falkordb-admin logs get falkordb falkordb-falkordb-0 --namespace demo --tailLines 200
+falkordb-admin license status
+```
+
+</CodeGroup>
+
+Run `falkordb-admin --help` for the full command list.
+
+## Call an endpoint directly
+
+Anything the CLI does not wrap yet is reachable through `raw`, which reuses the
+stored session:
+
+```bash
+falkordb-admin raw --method GET --path /api/system/namespaces
+```
+
+## Next steps
+
+`falkordb-admin --help` lists every command, and `falkordb-admin <command> --help`
+every flag for that command.
+
+<CardGroup cols={2}>
+  <Card title="Admin Server API" icon="code" href="/enterprise/api-reference/introduction">
+    The REST API the CLI talks to
+  </Card>
+  <Card title="Installer reference" icon="terminal" href="/enterprise/reference/installer-flags">
+    Options for install.sh and uninstall.sh
+  </Card>
+</CardGroup>

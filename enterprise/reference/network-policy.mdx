@@ -1,0 +1,203 @@
+---
+title: "Network policies"
+description: "Restrict what can reach the Admin Server and Admin UI, and what they can reach."
+icon: "shield"
+---
+
+The chart can generate `NetworkPolicy` objects for the Admin Server and the
+Admin UI. They are **off by default** and recommended for production.
+
+They are off by default because a cluster whose CNI does not implement
+`NetworkPolicy` accepts the objects and enforces nothing. Shipping them enabled
+would advertise isolation that some clusters silently do not provide. Enable
+them once you have confirmed your CNI enforces policy.
+
+```yaml
+networkPolicy:
+  enabled: true
+```
+
+## What the policies allow
+
+Both policies set `policyTypes: [Ingress, Egress]`, so everything not listed
+below is denied.
+
+| Direction | Component | Peer | Port | Condition |
+| --- | --- | --- | --- | --- |
+| Ingress | Admin Server | `networkPolicy.ingressControllerNamespace` | `adminServer.service.port` | Always |
+| Ingress | Admin Server | `networkPolicy.monitoringNamespace` | `adminServer.service.port` | `podMonitor.enabled` |
+| Ingress | Admin UI | `networkPolicy.ingressControllerNamespace` | `adminUi.containerPort` | Always |
+| Egress | Both | `networkPolicy.dnsNamespace` | 53 UDP and TCP | Always |
+| Egress | Admin Server | `networkPolicy.externalEgress.cidrs` | `networkPolicy.externalEgress.ports` | Always |
+
+Namespaces are matched on the `kubernetes.io/metadata.name` label, which
+Kubernetes sets on every namespace from version 1.21 onward. You do not need to
+label your ingress controller or monitoring namespaces by hand.
+
+Prometheus scrapes `/metrics` on the same port that serves the API, so the
+monitoring rule opens no additional port.
+
+### Flows that deliberately have no rule
+
+<AccordionGroup>
+  <Accordion title="Admin UI to Admin Server">
+    The Admin UI container serves static files. It never proxies to the API —
+    your browser calls the Admin Server directly through the ingress. The Admin
+    UI therefore needs no egress rule to the Admin Server, and the generated
+    policy denies that path.
+  </Accordion>
+  <Accordion title="Admin Server to database pods">
+    The Admin Server reads database metrics and logs through the API server's
+    `pods/proxy` and `pods/log` endpoints, not by connecting to database pods.
+    All of that traffic is already covered by the API server egress rule, so no
+    rule to the database pod range is generated.
+  </Accordion>
+  <Accordion title="Kubelet health probes">
+    Readiness and health probes originate on the node, and every CNI that
+    enforces `NetworkPolicy` permits them so that pods can pass their probes.
+    No rule is required and none is generated.
+  </Accordion>
+</AccordionGroup>
+
+## Narrowing external egress
+
+`networkPolicy.externalEgress` covers two destinations that a policy cannot
+name: the **Kubernetes API server** and, when `adminServer.env.oauthProvider`
+is set, the **identity provider**. `NetworkPolicy` matches on CIDR only. It has no
+concept of a host name, so neither destination is expressible by name.
+
+The default is deliberately wide:
+
+```yaml
+networkPolicy:
+  externalEgress:
+    ports: [443, 6443]
+    cidrs: ["0.0.0.0/0"]
+```
+
+The chart cannot know your control plane endpoint, and a wrong guess locks the
+Admin Server out of the API server entirely, which breaks every operation it
+performs. Narrow it yourself once you know both addresses:
+
+```yaml
+networkPolicy:
+  externalEgress:
+    ports: [443, 6443]
+    cidrs:
+      - 10.0.0.0/16        # control plane endpoint
+      - 199.36.153.8/30    # private.googleapis.com, if you use Google OAuth
+```
+
+Find your control plane endpoint with:
+
+```bash
+kubectl get endpoints kubernetes -n default -o jsonpath='{.subsets[*].addresses[*].ip}{"\n"}'
+```
+
+On a managed cluster this address can change when the control plane is
+replaced. If you pin it, treat it as something to re-check at upgrade time.
+
+### Identity provider egress
+
+Each provider's requirements are listed with its setup instructions:
+
+<CardGroup cols={2}>
+  <Card title="Google OAuth" icon="google" href="/enterprise/authentication/google-oauth">
+    Egress requirements and the Private Google Access address ranges.
+  </Card>
+  <Card title="Microsoft Entra ID" icon="microsoft" href="/enterprise/authentication/azure-ad-oauth">
+    Egress requirements for Entra ID and Microsoft Graph.
+  </Card>
+</CardGroup>
+
+Only the server-to-server calls need an egress rule. The redirect to the
+provider's sign-in page happens in your browser, not from the Admin Server pod,
+so those host names never appear in the policy.
+
+## Extra rules
+
+Anything the generated rules do not cover goes in the `extraIngress` and
+`extraEgress` lists, which are appended verbatim as additional items under
+`ingress:` and `egress:`. Each entry is therefore a complete rule with its own
+`from`/`to` and `ports`, not a bare peer:
+
+```yaml
+networkPolicy:
+  adminServer:
+    extraIngress:
+      - from:
+          - namespaceSelector:
+              matchLabels:
+                kubernetes.io/metadata.name: my-gateway
+        ports:
+          - protocol: TCP
+            port: 3000
+    extraEgress:
+      - to:
+          - ipBlock:
+              cidr: 10.20.0.0/16
+        ports:
+          - protocol: TCP
+            port: 443
+```
+
+## Verify enforcement
+
+First confirm your CNI enforces policy at all. Create two pods, deny traffic to
+one, and check that the connection stops working:
+
+```bash
+kubectl create namespace netpol-check
+kubectl run target -n netpol-check --image=nginx:alpine --port=80 --labels=app=target
+kubectl run client -n netpol-check --image=busybox:1.36 --labels=app=client --command -- sleep 3600
+kubectl wait --for=condition=Ready pod/target pod/client -n netpol-check --timeout=120s
+
+TARGET_IP=$(kubectl get pod target -n netpol-check -o jsonpath='{.status.podIP}')
+kubectl exec -n netpol-check client -- wget -q -T3 -O- "http://$TARGET_IP"
+```
+
+That should print the nginx welcome page. Now deny it:
+
+```bash
+kubectl apply -f - <<'EOF'
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: deny-to-target
+  namespace: netpol-check
+spec:
+  podSelector:
+    matchLabels:
+      app: target
+  policyTypes: [Ingress]
+  ingress: []
+EOF
+
+kubectl exec -n netpol-check client -- wget -q -T3 -O- "http://$TARGET_IP"
+```
+
+The second request must fail. If it still returns the welcome page, your CNI is
+not enforcing policy and enabling `networkPolicy.enabled` will not protect
+anything.
+
+```bash
+kubectl delete namespace netpol-check
+```
+
+Then check the generated policies against your release:
+
+```bash
+kubectl get networkpolicy -n falkordb-system
+kubectl describe networkpolicy -n falkordb-system
+```
+
+If the Admin Server stops working after you enable policies, the first thing to
+check is whether it can still reach the API server:
+
+```bash
+kubectl exec -n falkordb-system deploy/falkordb-enterprise-admin-server -- \
+  curl -sS -k -m 5 https://kubernetes.default.svc/version
+```
+
+A timeout there means `networkPolicy.externalEgress` does not cover your
+control plane endpoint.

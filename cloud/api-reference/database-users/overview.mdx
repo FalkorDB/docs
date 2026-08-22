@@ -1,0 +1,87 @@
+---
+title: "Database users"
+sidebarTitle: "Overview"
+description: "Manage FalkorDB database users and ACLs on a deployment instance."
+---
+
+import AclPresetClauses from '/snippets/cloud/acl-preset-clauses.mdx';
+
+Database users are the credentials your application uses to connect to a FalkorDB deployment instance. They are separate from the [Omnistrate account users](/cloud/api-reference/account/access/list-users) who manage subscriptions and instances.
+
+To manage the same users from the FalkorDB Cloud console instead, see [User Management](/cloud/operations/user-management).
+
+<Warning>
+  This API is served from a **different host** than the rest of this reference and uses **bearer token** authentication instead of a session cookie.
+</Warning>
+
+## Base URL
+
+```
+https://api.falkordb.cloud/v1/customer-ldap
+```
+
+## Authentication
+
+Send the JWT issued by [Sign in](/cloud/api-reference/authentication/signin) in an `Authorization` header:
+
+```
+Authorization: Bearer <jwt>
+```
+
+<Note>
+  The `omnistrate_token` cookie is `HttpOnly`, so browser JavaScript cannot read it. Browser clients should proxy these calls through their own backend, which reads the cookie server-side and forwards it as a bearer token.
+</Note>
+
+Every request also takes a `subscriptionId` query parameter identifying the subscription that owns the instance.
+
+```bash
+curl "https://api.falkordb.cloud/v1/customer-ldap/instances/instance-abc123/users?subscriptionId=sub-abc123" \
+  -H "Authorization: Bearer $TOKEN"
+```
+
+## ACL format
+
+Each user has an `acl` string using the Redis ACL syntax: a set of key patterns followed by the commands the user may run.
+
+```
+~* +GRAPH.QUERY +GRAPH.RO_QUERY +INFO +PING
+```
+
+- Key patterns start with `~` (keys) or `&` (pub/sub channels). `~*` grants access to all graphs.
+- Commands are prefixed with `+`. Subcommands use a pipe, for example `+CLIENT|LIST`.
+
+### Presets
+
+The [FalkorDB console](/cloud/operations/user-management) offers three presets, all scoped to `~*`:
+
+| Preset | Description |
+| --- | --- |
+| **Read** | Read-only access: graph reads (`+GRAPH.RO_QUERY`, `+GRAPH.EXPLAIN`, `+GRAPH.INFO`, `+GRAPH.LIST`) plus connection and introspection commands. |
+| **Write** | Everything in **Read**, plus graph mutations (`+GRAPH.QUERY`, `+GRAPH.DELETE`, `+GRAPH.CONSTRAINT`, `+GRAPH.BULK`, `+GRAPH.COPY`, `+GRAPH.PROFILE`, `+GRAPH.UDF`), key mutations (`+DEL`, `+RENAME`, `+EXPIRE`, `+RESTORE`, and similar), and transactions. |
+| **Admin** | Every allowed command. Adds `+FLUSHALL`, `+GRAPH.CONFIG`, `+MEMORY`, `+GRAPH.MEMORY`, `+MONITOR`, `+SLOWLOG`, `+BGREWRITEAOF`, `+MODULE\|LIST`, `+WAIT`, and `+WAITAOF` on top of **Write**. |
+
+<Note>
+  No preset grants `+ACL`, so a database user cannot manage other database users regardless of preset. User management happens through this API or the [FalkorDB console](/cloud/operations/user-management).
+</Note>
+
+The API has no preset field — [Create database user](/cloud/api-reference/database-users/create) takes a raw `acl` string. To reproduce a preset, send its exact string:
+
+<AclPresetClauses />
+
+### Allowed commands
+
+Only these commands (and their subcommands) may appear in an ACL:
+
+<Expandable title="allowed commands">
+`+INFO` `+CLIENT` `+DBSIZE` `+PING` `+HELLO` `+AUTH` `+RESTORE` `+DUMP` `+DEL` `+EXISTS` `+UNLINK` `+TYPE` `+FLUSHALL` `+TOUCH` `+EXPIRE` `+PEXPIREAT` `+TTL` `+PTTL` `+EXPIRETIME` `+RENAME` `+RENAMENX` `+SCAN` `+DISCARD` `+EXEC` `+MULTI` `+UNWATCH` `+WATCH` `+ECHO` `+SLOWLOG` `+WAIT` `+WAITAOF` `+READONLY` `+GRAPH.INFO` `+GRAPH.LIST` `+GRAPH.QUERY` `+GRAPH.RO_QUERY` `+GRAPH.EXPLAIN` `+GRAPH.PROFILE` `+GRAPH.DELETE` `+GRAPH.CONSTRAINT` `+GRAPH.SLOWLOG` `+GRAPH.BULK` `+GRAPH.CONFIG` `+GRAPH.COPY` `+CLUSTER` `+COMMAND` `+GRAPH.MEMORY` `+MEMORY` `+BGREWRITEAOF` `+MODULE|LIST` `+MONITOR` `+GRAPH.UDF`
+</Expandable>
+
+## Default user
+
+Every instance is created with a default database user. Its username is available as `falkordbUser` in the instance `result_params`. See [Describe instance](/cloud/api-reference/enterprise/standalone/describe).
+
+The default user is managed by the instance, not by this API:
+
+- It **cannot be deleted**. [Delete database user](/cloud/api-reference/database-users/delete) rejects the request.
+- Its **username cannot be changed**. `falkordbUser` is set when the instance is created and is not modifiable afterwards. To use a different username, create an additional database user with [Create database user](/cloud/api-reference/database-users/create).
+- Its **password and ACL can be changed** with [Update database user](/cloud/api-reference/database-users/update). Changing the password through [Update instance](/cloud/api-reference/enterprise/standalone/update) instead restarts the instance.

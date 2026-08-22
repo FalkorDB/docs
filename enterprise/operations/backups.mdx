@@ -1,0 +1,88 @@
+---
+title: "Backups and schedules"
+description: "Configure backup repositories, run on-demand backups, and create recurring schedules."
+icon: "floppy-disk"
+---
+
+## Create a backup repository
+
+1. Open **Backup Repositories**.
+2. Select **New Backup Repository**.
+3. Enter a repository name.
+4. Choose a storage provider.
+5. Fill the required provider fields.
+6. Add credentials if the repository cannot use ambient credentials such as IAM role or workload identity.
+7. Optionally mark the repository as the default repository.
+8. Select **Create Repository**.
+
+Supported repository provider types in the UI are:
+
+- `s3`
+- `s3-compatible`
+- `gcs-s3comp`
+- `azureblob`
+- `minio`
+- `nfs`
+- `pvc`
+- `cos`
+- `obs`
+- `oss`
+- `ftp`
+
+Credentials are stored as Kubernetes Secrets by the backend repository implementation.
+
+## Create an on-demand backup
+
+1. Open **Deployments**.
+2. Open the target deployment.
+3. Go to **Backups**.
+4. Select **Create Backup**.
+5. Choose a backup type allowed by the selected backup policy.
+6. Choose a backup policy.
+7. Select **Start Backup**.
+
+The UI creates backup names using this pattern:
+
+```text
+<deployment-name>-manual-<timestamp>
+```
+
+The backend checks that the cluster exists, that the cluster is `Running`, that the backup policy exists, and that the requested backup method is supported by the selected policy.
+
+## Create a backup schedule
+
+1. Open the target deployment.
+2. Go to **Schedules**.
+3. Select **New Schedule**.
+4. Enter schedule name, cron frequency, retention, backup policy, and backup method.
+5. Select **Create Schedule**.
+
+The schedule dialog defaults to:
+
+| Field | Default |
+| --- | --- |
+| Cron frequency | `0 3 * * *` |
+| Retention | `30d` |
+| Backup method | `datafile` |
+
+The backend validates that the cluster exists, the cluster is `Running`, the cron expression has five fields, the backup policy exists, and the backup method is supported by the policy.
+
+## Supported backup methods
+
+The UI exposes these methods depending on the selected policy:
+
+- `datafile`
+- `aof`
+- `volume-snapshot`
+
+On-demand backups currently allow `datafile` and `volume-snapshot` in the dialog. Schedules allow `datafile`, `aof`, and `volume-snapshot` when the selected backup policy supports them.
+
+## Validate
+
+```bash
+kubectl get backuprepos.dataprotection.kubeblocks.io
+kubectl get backups.dataprotection.kubeblocks.io -n <namespace>
+kubectl get backupschedules.dataprotection.kubeblocks.io -n <namespace>
+```
+
+In the Admin UI, review **Backups**, **Schedules**, **Operations**, and **Events**.

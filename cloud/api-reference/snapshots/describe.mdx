@@ -1,0 +1,104 @@
+---
+title: "Describe snapshot"
+sidebarTitle: "Describe"
+api: "GET https://api.omnistrate.cloud/2022-09-01-00/resource-instance/snapshot/{id}"
+description: "Retrieve the details and progress of a snapshot."
+---
+
+Returns a single snapshot, including its completion progress.
+
+## Authorization
+
+<ParamField header="Cookie" type="string" required>
+  Session cookie set by [Sign in](/cloud/api-reference/authentication/signin): `omnistrate_token=<jwt>`.
+</ParamField>
+
+## Path parameters
+
+<ParamField path="id" type="string" required>
+  ID of the snapshot.
+</ParamField>
+
+## Query parameters
+
+<ParamField query="subscriptionId" type="string">
+  Subscription that owns the snapshot.
+</ParamField>
+
+## Response
+
+<ResponseField name="snapshotId" type="string">
+  ID of the snapshot.
+</ResponseField>
+
+<ResponseField name="sourceInstanceId" type="string">
+  ID of the deployment instance the snapshot was taken from.
+</ResponseField>
+
+<ResponseField name="snapshotType" type="string">
+  `ManualSnapshot` or `AutomatedSnapshot`.
+</ResponseField>
+
+<ResponseField name="status" type="string">
+  Status of the snapshot.
+</ResponseField>
+
+<ResponseField name="progress" type="number">
+  Backup progress, from 0 to 100.
+</ResponseField>
+
+<ResponseField name="encrypted" type="boolean">
+  Whether the snapshot is encrypted.
+</ResponseField>
+
+<ResponseField name="cloudProvider" type="string">
+  Cloud provider that stores the snapshot.
+</ResponseField>
+
+<ResponseField name="region" type="string">
+  Region the snapshot is stored in.
+</ResponseField>
+
+<ResponseField name="createdTime" type="string">
+  Time the snapshot was started.
+</ResponseField>
+
+<ResponseField name="completeTime" type="string">
+  Time the snapshot completed.
+</ResponseField>
+
+<ResponseField name="serviceId" type="string">
+  ID of the service.
+</ResponseField>
+
+<ResponseField name="serviceName" type="string">
+  Name of the service.
+</ResponseField>
+
+<ResponseField name="productTierId" type="string">
+  ID of the product tier.
+</ResponseField>
+
+<ResponseField name="productTierName" type="string">
+  Name of the product tier.
+</ResponseField>
+
+<ResponseField name="productTierVersion" type="string">
+  Version of the product tier the snapshot was taken on.
+</ResponseField>
+
+<ResponseField name="subscriptionId" type="string">
+  ID of the subscription that owns the snapshot.
+</ResponseField>
+
+<ResponseField name="outputParams" type="object[]">
+  Custom output parameters recorded with the snapshot.
+</ResponseField>
+
+<ResponseField name="snapshotMetadata" type="object">
+  Additional metadata stored for the snapshot.
+</ResponseField>
+
+## Errors
+
+See [Error](/cloud/api-reference/schemas#error) for the error response shape.

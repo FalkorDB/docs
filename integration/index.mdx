@@ -1,0 +1,37 @@
+---
+title: "Integration"
+description: "Learn how to integrate FalkorDB into your applications with REST APIs"
+---
+
+The Integration section of the FalkorDB documentation provides all the necessary guidance for connecting 
+and integrating FalkorDB with your applications and workflows. 
+Learn how to leverage FalkorDB's flexible APIs and SDKs to build high-performance, low-latency graph applications.
+
+## Topics in This Section
+
+- [REST API](/integration/rest): Learn how to interact with FalkorDB using its REST API for seamless integration with your applications.
+- [Kafka Connect](/integration/kafka-connect): Learn how to interact with FalkorDB using Kafka Connect sink to replicate data from third-party applications.
+- [Apache Jena](/integration/jena): Learn how to use FalkorDB with Apache Jena via the jena-falkordb-adapter.
+- [BOLT protocol support](/integration/bolt-support): Learn how to connect to FalkorDB using the BOLT protocol.
+- [Spring Data FalkorDB](/integration/spring-data-falkordb): Learn how to use FalkorDB with Spring Data for JPA-style object-graph mapping.
+- [Snowflake Integration](/integration/snowflake): Learn how to run graph database operations directly within your Snowflake environment using the FalkorDB Native App.
+- [n8n GraphRAG Nodes](/integration/n8n): Learn how to use the FalkorDB GraphRAG n8n community nodes for ingestion and question answering in workflows.
+- [PyTorch Geometric](/integration/pyg): Train Graph Neural Networks directly on graphs stored in FalkorDB using PyG's remote backend interface.
+- [Bulk Loader](/integration/bulk-loader): Import large graphs from CSV files using the falkordb-bulk-loader Python utility.
+
+## Frequently Asked Questions
+
+<AccordionGroup>
+  <Accordion title="What integration options does FalkorDB support?">
+    FalkorDB supports multiple integration paths including a **REST API**, **Bolt protocol** (experimental), **Kafka Connect** sink, **Apache Jena** for RDF/SPARQL, **Spring Data** for Java applications, **Snowflake** native app, **n8n** community nodes, **PyTorch Geometric** for GNNs, and a **bulk loader** for CSV imports.
+  </Accordion>
+  <Accordion title="Which integration should I use for my application?">
+    For web applications, use the **REST API** or official client libraries. For Java/Spring apps, use **Spring Data FalkorDB**. For workflow automation, use the **FalkorDB GraphRAG n8n** community nodes. For streaming pipelines, use **Kafka Connect**. For machine learning on graphs, use **PyTorch Geometric**. For RDF/SPARQL workloads, use the **Apache Jena** adapter.
+  </Accordion>
+  <Accordion title="Can I use FalkorDB with Neo4j drivers?">
+    Yes, FalkorDB provides experimental **Bolt protocol support**, allowing you to connect using standard Neo4j drivers. However, for production use cases, the official FalkorDB client libraries are recommended.
+  </Accordion>
+  <Accordion title="How do I load large datasets into FalkorDB?">
+    Use the **falkordb-bulk-loader** tool to import nodes and relationships from CSV files in efficient binary batches. This is significantly faster than issuing individual `CREATE` queries.
+  </Accordion>
+</AccordionGroup>

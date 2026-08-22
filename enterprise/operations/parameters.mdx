@@ -1,0 +1,120 @@
+---
+title: "Parameters and resources"
+description: "Change FalkorDB parameters, network services, CPU, memory, and storage."
+icon: "gear"
+---
+
+## FalkorDB runtime parameters
+
+1. Open the deployment.
+2. Go to **Parameters**.
+3. Edit values under **FalkorDB Parameters**.
+4. Select **Save FalkorDB**.
+
+The UI stores FalkorDB parameters on the cluster spec under the FalkorDB module config. Only supported FalkorDB config keys are sent.
+
+## Redis parameters
+
+1. Open the deployment.
+2. Go to **Parameters**.
+3. Wait for Redis parameters to load from the ConfigMap.
+4. Edit changed values.
+5. Select **Save Redis**.
+
+The UI submits a KubeBlocks reconfigure OpsRequest for component `falkordb` with only changed parameters. Empty values are sent as `null` to clear a parameter where supported.
+
+## Enterprise module parameters
+
+The FalkorDB Enterprise module adds graph offloading and LDAP authentication. Its settings live under the `falkordbe.` prefix in `redis.conf`.
+
+1. Open the deployment.
+2. Go to **Parameters**.
+3. Edit values under **Enterprise Module Parameters**, in **Graph Offloading** or **LDAP Authentication**.
+4. Select **Save Enterprise**.
+
+Fields left at their default are not written to `redis.conf`; clearing a field removes the directive and restores the module default.
+
+### Graph offloading
+
+| Parameter | Default | Notes |
+| --- | --- | --- |
+| `falkordbe.idle-threshold-ms` | `0` | LRU idle time before a graph is offloaded. `0` disables background eviction. |
+| `falkordbe.evict-interval-ms` | `10000` | Scan interval of the eviction thread. Minimum `1000`. |
+| `falkordbe.memory-pressure` | `0` | Watermark in `[0.0, 1.0]`. Requires Redis `maxmemory` to be set, otherwise the ratio is always `0` and any positive value suppresses eviction entirely. |
+| `falkordbe.load-evict-budget` | `0` | Graphs the module may offload to make room for one `GRAPH.LOAD`. `0` disables it, `-1` allows unlimited evictions. |
+
+The directory the dumps are written to is not in this list. Every enterprise
+cluster gets `/data/offload` on the data volume, so the dumps survive a restart
+and do not count against the pod ephemeral-storage limit, and the primary and
+its replicas cannot collide on a dump file name. The module creates the
+directory when it is missing. The path is passed on the `redis-server` command
+line through `FALKORDB_EXTRA_MODULES_ARGS`, next to the flag that loads the
+module, because the addon also runs without the enterprise module and a
+`falkordbe.` directive that no module registers stops the server from starting.
+Changing it therefore means changing that environment variable on the
+deployment, which restarts the pods; a reconfigure operation rejects the key
+with `400`.
+
+### LDAP authentication
+
+Set `falkordbe.ldap_servers` to a comma separated list of `ldap[s]://host:port` to enable LDAP; leaving it empty keeps LDAP off. Pick the mode with `falkordbe.ldap_auth_mode`:
+
+- `bind` builds the user DN from `falkordbe.ldap_bind_dn_prefix` and `falkordbe.ldap_bind_dn_suffix`.
+- `search+bind` first looks the user up with `falkordbe.ldap_search_bind_dn` and `falkordbe.ldap_search_bind_passwd` under `falkordbe.ldap_search_base`.
+
+Keep the operational accounts out of LDAP with `falkordbe.ldap_exempted_users_regex`, for example `^(default|exporter|replication)$`, so monitoring and replication keep working when the directory is unreachable.
+
+Two settings need care:
+
+- `falkordbe.ldap_search_bind_passwd` is stored in clear text in the KubeBlocks managed ConfigMap of the cluster, so anyone who can read that ConfigMap can read the password. Use a dedicated read-only directory account, and restrict read access to the deployment namespace.
+- `falkordbe.ldap_tls_skip_verify` accepts any certificate the LDAP server presents, which removes the protection against man-in-the-middle attacks. Use it only in development.
+
+### How the values are applied
+
+The module reads its configuration from `redis.conf` at start-up; arguments on the `--loadmodule` line are ignored. Saving therefore submits a reconfigure OpsRequest, which rewrites the ConfigMap and then applies each changed key to the running server with `CONFIG SET`, without a restart.
+
+Only the keys listed above are accepted. Redis refuses to start when `redis.conf` holds a `falkordbe.` key the module does not register, so the admin server rejects unknown keys and malformed values with `400` instead of writing them.
+
+## CPU and memory
+
+1. Open the deployment.
+2. Select **Edit**.
+3. Choose **Resources**.
+4. Enter CPU and memory requests or limits.
+5. Select **Apply Resources**.
+
+Examples accepted by the UI:
+
+- CPU: `100m`, `500m`, `1`, `2`
+- Memory: `256Mi`, `1Gi`, `2Gi`
+
+## Storage
+
+1. Open the deployment.
+2. Select **Edit**.
+3. Choose **Storage**.
+4. Enter a larger size, for example `50Gi`.
+5. Select **Expand Storage**.
+
+## Network configuration
+
+Initial network services are configured during creation in the **Networking** step. Service types supported by the UI are:
+
+- `ClusterIP`
+- `NodePort`
+- `LoadBalancer`
+
+For existing deployments, use the deployment edit flow for networking changes where available. The backend also exposes an OpsRequest-based expose operation for service exposure changes.
+
+## Authentication settings
+
+During creation, the UI supports ACL authentication with username and password fields, and LDAP as a selectable auth method where supported by the backend and deployment configuration. For existing deployments, credential retrieval is available from deployment details through the credentials API.
+
+## Validate
+
+```bash
+kubectl get opsrequests.operations.kubeblocks.io -n <namespace>
+kubectl get clusters.apps.kubeblocks.io -n <namespace> <deployment-name> -o yaml
+```
+
+In the Admin UI, review **Operations**, **Parameters**, **Networking**, and **Events**.

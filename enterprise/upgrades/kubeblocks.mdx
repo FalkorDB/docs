@@ -1,0 +1,90 @@
+---
+title: "Upgrade KubeBlocks"
+description: "Upgrade the KubeBlocks platform components used by FalkorDB Enterprise."
+icon: "cubes"
+---
+
+The default installer manages KubeBlocks as a separate Helm release in `kb-system`. It reads the desired KubeBlocks version from the Enterprise chart dependency unless `--kubeblocks-version` is provided.
+
+## Prechecks
+
+```bash
+helm status kubeblocks -n kb-system
+kubectl get pods -n kb-system
+kubectl get crd | grep kubeblocks
+```
+
+Back up current values and CRD inventory:
+
+```bash
+helm get values kubeblocks -n kb-system -o yaml > kubeblocks.current-values.yaml
+kubectl get crd -o name | grep kubeblocks > kubeblocks.crds.before.txt
+```
+
+Check current FalkorDB Enterprise releases and workloads:
+
+```bash
+helm status falkordb-enterprise -n falkordb-system
+kubectl get clusters.apps.kubeblocks.io -A
+```
+
+## Upgrade with the installer
+
+```bash
+curl -fsSL https://falkordb.github.io/FalkorDB-Enterprise/install.sh | \
+  bash -s -- \
+    --kube-context production-cluster \
+    --namespace falkordb-system \
+    --kubeblocks-namespace kb-system \
+    --kubeblocks-version '<kubeblocks-version>' \
+    --values production-values.yaml \
+    --yes
+```
+
+The installer applies KubeBlocks CRDs, installs or updates the KubeBlocks Helm release, installs or updates Snapshot Controller, and then upgrades the Enterprise release.
+
+## Upgrade KubeBlocks only
+
+If you need to upgrade KubeBlocks separately from Enterprise, use Helm directly with the same required RBAC override that the installer applies:
+
+```bash
+helm repo add kubeblocks https://apecloud.github.io/helm-charts
+helm repo update kubeblocks
+
+kubectl apply --server-side -f "https://github.com/apecloud/kubeblocks/releases/download/v<kubeblocks-version>/kubeblocks_crds.yaml"
+kubectl apply --server-side -f "https://raw.githubusercontent.com/apecloud/kubeblocks/v1.2.0-alpha.1/deploy/helm/crds/apps.kubeblocks.io_componentdefinitions.yaml"
+
+helm upgrade --install kubeblocks kubeblocks/kubeblocks \
+  -n kb-system \
+  --create-namespace \
+  --version '<kubeblocks-version>' \
+  --set 'autoInstalledAddons={}' \
+  --set 'rbac.additionalPolicyRules[0].apiGroups[0]=rbac.authorization.k8s.io' \
+  --set 'rbac.additionalPolicyRules[0].resources[0]=clusterroles' \
+  --set 'rbac.additionalPolicyRules[0].verbs={create,delete,get,list,patch,update,watch}' \
+  --wait --timeout 20m
+```
+
+## Post-upgrade validation
+
+```bash
+helm status kubeblocks -n kb-system
+kubectl get pods -n kb-system
+kubectl get clusters.apps.kubeblocks.io -A
+kubectl get opsrequests.operations.kubeblocks.io -A
+```
+
+In the Admin UI, verify deployment list, deployment details, operations, backups, logs, and metrics.
+
+## Rollback notes
+
+KubeBlocks rollback can involve CRDs and conversion webhooks. Do not blindly roll back CRDs on a production cluster without checking KubeBlocks compatibility and current custom resources.
+
+For the Helm release itself:
+
+```bash
+helm history kubeblocks -n kb-system
+helm rollback kubeblocks <revision> -n kb-system --wait --timeout 20m
+```
+
+After rollback, validate KubeBlocks pods, webhooks, CRDs, and existing FalkorDB clusters.
