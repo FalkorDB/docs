@@ -1708,10 +1708,10 @@
   ],
   "seo": {
     "metatags": {
-      "og:image": "/images/falkor-logo.png",
+      "og:image": "https://docs.falkordb.com/images/falkor-logo.png",
       "og:image:alt": "FalkorDB — the high-performance graph database for GraphRAG and GenAI",
       "og:locale": "en_US",
-      "twitter:image": "/images/falkor-logo.png",
+      "twitter:image": "https://docs.falkordb.com/images/falkor-logo.png",
       "twitter:image:alt": "FalkorDB — the high-performance graph database for GraphRAG and GenAI",
       "twitter:card": "summary_large_image",
       "twitter:site": "@FalkorDB",
