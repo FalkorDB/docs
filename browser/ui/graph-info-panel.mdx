@@ -26,7 +26,14 @@ It also provides “*” shortcuts:
 - **All edges** (`MATCH p=()-[]-() RETURN p`)
 
 ## Style customization entrypoint
-Next to each label, a palette button opens the **Style Settings** panel for that label.
+Next to each label and each relationship type, a palette button opens the
+[Customize Style](/browser/ui/style-panel) panel for that label or type.
+
+## Offloaded graphs (Enterprise)
+When a graph has been offloaded from memory, its counts and memory usage are
+shown as `N/A`. Reading them would load the graph back into memory, which would
+undo the offload. See [Graphs Manager](/browser/ui/graph-management) for the
+loaded/offloaded indicator.
 
 ## Frequently Asked Questions
 
@@ -41,6 +48,9 @@ Next to each label, a palette button opens the **Style Settings** panel for that
     It shows the current **memory utilization** of the selected graph in MB. This can be toggled on/off in Browser Settings.
   </Accordion>
   <Accordion title="How do I change the visual style of a label?">
-    Click the **palette icon** next to a label in the Graph Info panel to open the Style Settings panel where you can change color and size.
+    Click the **palette icon** next to a label or a relationship type in the Graph Info panel to open the [Customize Style](/browser/ui/style-panel) panel, where you can change its color and size.
+  </Accordion>
+  <Accordion title="Why does my graph show N/A for counts and memory?">
+    The graph is **offloaded** from memory (FalkorDB Enterprise). Reading its statistics would load it back into memory, so the Browser reports `N/A` instead.
   </Accordion>
 </AccordionGroup>

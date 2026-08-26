@@ -19,11 +19,27 @@ When your cursor is on the **first line** or **last line** of the editor:
 - **Up arrow**: navigate backward through query history
 - **Down arrow**: navigate forward through query history
 
+## Real-time syntax validation
+The editor parses your Cypher as you type with a full openCypher grammar
+extended for FalkorDB, and underlines syntax errors immediately.
+
+- The RUN tooltip reads *Fix the highlighted syntax errors to run* while the
+  query is invalid, and running it raises a **Syntax Error** message instead of
+  sending it to the server. Only runtime and semantic errors ever reach the
+  database.
+- Hovering an underlined span explains the problem.
+- The quick-fix menu offers **Did you mean…?** replacements for likely typos,
+  plus **✨ Fix with AI** when Chat is configured with a model.
+
 ## Autocomplete & syntax highlighting
 The editor provides:
-- Cypher keyword suggestions
-- Function suggestions
-- Graph-scoped suggestions (labels, relationship types, property keys) fetched from the server
+- Cypher keyword suggestions covering the full openCypher keyword set plus
+  FalkorDB extensions
+- Built-in function and procedure suggestions
+- User-defined function (UDF) suggestions
+- Graph-scoped suggestions (labels, relationship types, property keys) fetched
+  from the server for the selected graph
+- Variables bound earlier in the query
 
 ## Maximize mode
 The maximize button opens a full-screen editor dialog with the same Run/Clear controls.
@@ -35,7 +51,10 @@ The maximize button opens a full-screen editor dialog with the same Run/Clear co
     Press **Enter** to run a query (only when the autocomplete suggestion widget is closed) or **Cmd/Ctrl + Enter** to run regardless. Use **Shift + Enter** to insert a newline without executing.
   </Accordion>
   <Accordion title="Does the editor support autocomplete?">
-    Yes. The Monaco-based editor provides **Cypher keyword suggestions**, **function suggestions**, and **graph-scoped suggestions** (labels, relationship types, property keys) fetched from the server.
+    Yes. The Monaco-based editor suggests **Cypher keywords**, **built-in functions and procedures**, **user-defined functions**, **graph-scoped names** (labels, relationship types, property keys) fetched from the server, and **variables** already bound in the query.
+  </Accordion>
+  <Accordion title="Why won't my query run?">
+    The editor validates Cypher syntax as you type. If the RUN tooltip says *Fix the highlighted syntax errors to run*, correct the underlined text. Open the quick-fix menu for a **Did you mean…?** replacement, or **✨ Fix with AI** when Chat is configured.
   </Accordion>
   <Accordion title="How do I navigate through previous queries using the keyboard?">
     Place your cursor on the **first line** and press **Up arrow** to go back through history, or on the **last line** and press **Down arrow** to go forward.

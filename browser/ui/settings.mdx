@@ -17,25 +17,33 @@ The Settings page is organized into these sections:
 If you navigate away from **Browser Settings** while there are unsaved changes, the UI prompts you to **Save** or **Discard** changes.
 
 ## Browser Settings
-The Browser Settings panel is a page that can be scrolled, with grouped sections (collapsed/expanded in the UI). Common settings include:
-- **Query execution**
-  - Query timeout
-  - Result limits
-  - Default query behavior (run a default query when selecting a graph)
-- **User experience**
-  - Content persistence (restores the last used graph + query from localStorage)
-  - Node caption priority keys (controls how node labels/captions are picked)
-  - Property-key display options (e.g. prefix behavior)
-- **Graph Info**
-  - Refresh interval (how often graph info refreshes)
-- **Chat**
-  - LLM connection source: cloud/API key or local LLM
-  - Saved cloud API keys
-  - Local provider: Ollama or LM Studio
-  - Local endpoint URL
-  - Model selection
-  - Current LLM connection indicator
-  - How many interactions to store locally
+Browser Settings is a long page of collapsible sections. At the top right,
+**Replay Tutorial** restarts the guided tour; at the bottom, **Cancel Changes**
+and **Save Settings** apply or discard your edits.
+
+### Chat
+- **Store latest interactions (per graph) [5..10]** — how many messages to keep
+- **LLM connection** — cloud API key or local LLM, the saved keys, the local
+  provider and server URL, and the model
+
+### Graph Info
+- **Max Items For Search** — caps how many items the Graph Info lists offer
+
+### Query Execution
+- **Timeout** — how long a query may run before it is stopped
+- **Limit** — the maximum number of rows a query returns
+- **Default Query On-load** — the query to run when a graph is selected, and a
+  switch to turn it off
+
+### User Experience
+- **Captions Keys** — which property keys are used as node and edge captions,
+  in priority order, plus **Add Property Key To Caption** to add your own
+- **Show property key prefix** — whether captions include the key name
+- **Refresh Interval** — how often graph info and database state are reloaded
+- **Max Tabs** — how many [graph tabs](/browser/ui/graph-tabs) can be open at
+  once (4–10, default 8)
+- **Query Result Table View Preferences** — **Column Width**, **Row Height**,
+  and **Row Height Expand Multiplier**
 
 ## Chat and LLM connection
 Use **Settings → Browser Settings → Chat** to choose what powers the Chat panel.
@@ -62,6 +70,12 @@ If models do not appear, make sure the local server is running and the endpoint 
 
 ### Replay Tutorial
 Browser Settings includes a **Replay Tutorial** action, which re-runs the guided tour overlay.
+
+<Note>
+The last graph and query you used are no longer restored by a "content
+persistence" setting. That is handled by [graph tabs](/browser/ui/graph-tabs),
+which are saved per connection.
+</Note>
 
 ## Personal Access Tokens
 The Tokens section provides a UI to:
@@ -98,5 +112,8 @@ Allows:
   </Accordion>
   <Accordion title="How do I replay the onboarding tutorial?">
     Go to **Settings → Browser Settings** and click the **Replay Tutorial** action to re-run the guided tour overlay.
+  </Accordion>
+  <Accordion title="How do I change how many graph tabs I can open?">
+    Go to **Settings → Browser Settings → User Experience** and move the **Max Tabs** slider. It accepts 4 to 10 tabs and defaults to 8. Lowering it never closes tabs you already have open.
   </Accordion>
 </AccordionGroup>

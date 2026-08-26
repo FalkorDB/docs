@@ -21,14 +21,25 @@ These toggles update visibility on the canvas without re-running the query.
 
 ## Canvas controls
 The controls area includes:
-- **Animation control** (play/pause force-layout delay)
-- **Zoom in / Zoom out**
-- **Center / fit to screen**
+
+| Control | Options | What it does |
+| :--- | :--- | :--- |
+| **Animation** | play / pause | Runs or freezes the force simulation. |
+| **Zoom in / Zoom out** | — | Steps the zoom level. |
+| **Fit graph to screen** | — | Fits the visible elements (or the current selection) into the viewport. |
+| **Layout** | `Force`, `Tree`, `Radial` | Chooses how elements are arranged. |
+| **Direction** | `Top → Down`, `Bottom → Up`, `Left → Right`, `Right → Left` (Tree); `Outward`, `Inward` (Radial) | Orients the hierarchical layouts. |
+| **Pin** | `Pin nodes on drag` / `Unpin nodes` | Keeps dragged nodes where you drop them. Tree and Radial pin automatically. |
+| **Dim** | on / off | Dims elements that are not part of the current selection. |
+
+All of these are remembered per [graph tab](/browser/ui/graph-tabs), and the
+**Graph** and **Schema** tabs keep their own settings.
 
 ## Tabs around the canvas
 From the same results region you can switch to:
 - **Table** view (when tabular data exists)
 - **Metadata** view (when metadata/explain exists)
+- **Schema** view (the graph's data model — see [Schema view](/browser/ui/schema-view))
 
 ## Frequently Asked Questions
 
@@ -44,5 +55,11 @@ From the same results region you can switch to:
   </Accordion>
   <Accordion title="What does the animation control do?">
     The play/pause button controls the **force-layout animation** which arranges nodes dynamically. Pausing it freezes the layout in its current position.
+  </Accordion>
+  <Accordion title="Can I arrange the graph as a tree?">
+    Yes. Use the **Layout** control to pick `Tree` or `Radial`, then set the **Direction** (`Top → Down`, `Bottom → Up`, `Left → Right`, `Right → Left`, or `Outward`/`Inward`). Hierarchical layouts pin nodes automatically.
+  </Accordion>
+  <Accordion title="Do canvas settings carry over between tabs?">
+    No. Layout, direction, animation, pin, dim, and the viewport are stored per graph tab, and the Graph and Schema views keep separate settings within the same tab.
   </Accordion>
 </AccordionGroup>
