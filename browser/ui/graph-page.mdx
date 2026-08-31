@@ -14,14 +14,23 @@ The page is composed of:
    - Graph selector (choose the active graph)
    - Query editor (Monaco-based) with Run button
    - Query history button + editor maximize button
-3. **Main results area**
+3. **Tab strip** (one tab per open graph/query; see [Graph tabs](/browser/ui/graph-tabs))
+4. **Main results area**
    - **Graph** tab (visual canvas)
    - **Table** tab (tabular results)
    - **Metadata** tab (Explain/Profile/Metadata)
-4. **Right side panel** (can be resized, context-driven)
+   - **Schema** tab (the graph's data model; see [Schema view](/browser/ui/schema-view))
+5. **Right side panel** (can be resized, context-driven)
    - **Data panel** (inspect/edit selected node/edge)
    - **Add panel** (create nodes/edges)
    - **Chat panel** (natural-language querying)
+   - **Graph Info panel** and the **Customize Style** panel
+
+## Working in several tabs
+The tab strip spans the full width of the page, above the results area. Each
+tab keeps its own graph, query, results view, canvas position, selection, and
+panel state, so you can compare graphs or queries side by side. See
+[Graph tabs](/browser/ui/graph-tabs).
 
 ## Right-hand panel resize behavior
 The right panel expands/collapses based on what you’re doing:
@@ -44,7 +53,10 @@ Graph info (labels, relationship types, property keys, memory usage) is periodic
   <Accordion title="How often does Graph Info refresh?">
     Graph Info refreshes periodically based on the **refresh interval** configured in Settings → Browser Settings → Graph Info.
   </Accordion>
-  <Accordion title="What are the three tabs in the results area?">
-    The three tabs are **Graph** (visual canvas), **Table** (tabular rows/columns), and **Metadata** (Explain/Profile/Metadata output).
+  <Accordion title="What are the tabs in the results area?">
+    The results area has four tabs: **Graph** (visual canvas), **Table** (tabular rows/columns), **Metadata** (Explain/Profile/Metadata output), and **Schema** (the graph's labels, relationship placements, property keys, constraints, and indexes).
+  </Accordion>
+  <Accordion title="Can I keep more than one graph or query open?">
+    Yes. The tab strip above the results area holds several tabs, each with its own graph, query, view, canvas position, and panels. See [Graph tabs](/browser/ui/graph-tabs).
   </Accordion>
 </AccordionGroup>

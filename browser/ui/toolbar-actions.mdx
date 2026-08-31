@@ -21,6 +21,13 @@ Keyboard behavior:
 
 Selecting a suggestion zooms/fits the canvas around the matched element.
 
+## Show All
+Hiding node labels or relationship types from the Graph Info lists only affects
+what is drawn, not what was returned. The **Show All** button restores every
+hidden label and relationship type in one click. It is disabled when nothing is
+hidden, and it is available to read-only users as well, since revealing
+elements is not an edit.
+
 ## Element actions (create / delete)
 When the user is not Read-Only, the toolbar supports:
 - **Add node**
@@ -46,7 +53,10 @@ The toolbar can display warnings when:
   <Accordion title="How do I add an edge between two nodes?">
     Select **two nodes** on the canvas, then click **Add edge** in the toolbar. This is typically only enabled when exactly two nodes are selected.
   </Accordion>
+  <Accordion title="How do I bring back elements I hid?">
+    Click **Show All** in the toolbar. It re-enables every hidden node label and relationship type at once and is disabled when nothing is hidden.
+  </Accordion>
   <Accordion title="What does the result limit warning mean?">
-    It means your query returned more results than the configured limit allows. Increase the **result limit** in Settings → Browser Settings → Query execution to see more results.
+    It means your query returned more results than the configured limit allows. Increase the **Limit** in Settings → Browser Settings → Query Execution to see more results.
   </Accordion>
 </AccordionGroup>

@@ -1,31 +1,46 @@
 ---
-title: "Style Panel"
-description: "Customize label styles (color/size), live preview, persistence in localStorage, and cancel/save behavior."
+title: "Customize Style Panel"
+description: "Customize node label and relationship type styles (color and size), live preview, persistence, and cancel/save behavior."
 ---
 
-The Style panel ("Style Settings") customizes how nodes of a specific label appear in the graph.
+The **Customize Style** panel changes how a node label or a relationship type is
+drawn on the canvas.
 
-![Style panel](/images/browser/style-panel.webp)
+![Customize Style panel with a node label selected](/images/browser/style-panel.webp)
 
 ## How to open
 1. Open **Graph Info**.
-2. Click the palette icon next to a node label.
+2. Click the palette icon next to a node label or a relationship type.
 
 ## What you can change
 - **Color**
-  - Preset colors
-  - Custom color via a red/green/blue color picker
+  - 15 preset colors
+  - A custom color, chosen with the color picker or typed as a hex value
 - **Size**
-  - Choose from predefined size options
+  - Ten scale options from `0.25x` to `2.50x`
 
-Changes are previewed immediately on the canvas.
+Size is a single multiplier. For a node label it scales the node radius; for a
+relationship type it scales the line width, the label font size, and the
+arrowhead together, so an edge type stays visually consistent.
+
+![Customize Style panel with a relationship type selected](/images/browser/style-panel-relationship.webp)
+
+Changes are previewed immediately on the canvas, and the same style is used in
+the [Schema view](/browser/ui/schema-view).
 
 ## Save vs Cancel
-- **Save**
+The **Cancel** and **Save Changes** buttons appear only once you have changed
+something.
+
+- **Save Changes**
+  - Persists the style so the label or relationship type keeps it.
+- **Cancel**
+  - Reverts to the original values. The panel stays open.
+- **Close** (`X`)
   - Closes the panel.
-  - Persists the style to browser storage (localStorage) so the label keeps the style.
-- **Cancel / Close**
-  - Reverts to the original style values.
+
+Styles are stored in your browser, scoped to the active connection, so they
+survive reloads and tab switches but are not shared with other users.
 
 ## Tutorial note
 During the tutorial, saving style changes is intentionally prevented.
@@ -33,16 +48,19 @@ During the tutorial, saving style changes is intentionally prevented.
 ## Frequently Asked Questions
 
 <AccordionGroup>
-  <Accordion title="How do I open the Style panel?">
-    Open the **Graph Info** panel, then click the **palette icon** next to the node label you want to customize.
+  <Accordion title="How do I open the Customize Style panel?">
+    Open the **Graph Info** panel, then click the **palette icon** next to the node label or relationship type you want to customize.
+  </Accordion>
+  <Accordion title="Can I style relationships as well as nodes?">
+    Yes. Relationship types have their own color and size. The size multiplier scales the line width, the relationship label font size, and the arrowhead together.
   </Accordion>
   <Accordion title="Are style changes saved automatically?">
-    No. You must click **Save** to persist changes to localStorage. Clicking **Cancel** or closing the panel reverts to the original style.
+    No. Click **Save Changes** to persist them. **Cancel** reverts to the original color and size without closing the panel.
   </Accordion>
   <Accordion title="Can I use a custom color?">
-    Yes. Besides preset colors, you can choose a **custom color** using the red/green/blue color picker.
+    Yes. Besides the 15 preset colors, the palette button opens a color picker where you can also type a hex value.
   </Accordion>
   <Accordion title="Do style changes affect other users?">
-    No. Styles are stored in your browser's **localStorage** and only apply to your session. Other users will see their own style settings.
+    No. Styles are stored in your browser and scoped to the active connection, so they only apply to you.
   </Accordion>
 </AccordionGroup>
