@@ -1,0 +1,183 @@
+---
+title: "algo.CCH"
+description: "Preprocess a weighted graph into a Customizable Contraction Hierarchy for fast, repeated point-to-point shortest-path queries."
+---
+
+**Customizable Contraction Hierarchies (CCH)** trade a one-time preprocessing step for very fast point-to-point shortest-path queries. On a large, mostly-static weighted graph — a road network being the canonical example — a CCH answers repeated shortest-path queries far faster than running [algo.SPpaths](/algorithms/sppath) or [algo.AStar](/algorithms/astar) from scratch each time.
+
+CCH is exposed as two procedures that are used together:
+
+1. **`algo.CCH`** — builds the hierarchy **once**, materializing it into the graph as *shortcut* edges plus a *rank* property on every node. This is a write operation.
+2. **`algo.CCH.query`** — answers a point-to-point query using the materialized hierarchy. This is a read operation you run as many times as you like.
+
+Because the hierarchy lives entirely in the graph (as edges and properties), nothing is kept in server memory between calls.
+
+<Note>
+  CCH shines when the graph topology is stable and you issue many queries
+  against it. For a handful of one-off queries, or when the graph changes
+  frequently, [algo.SPpaths](/algorithms/sppath) or
+  [algo.AStar](/algorithms/astar) are simpler and avoid the build cost.
+</Note>
+
+## Building the hierarchy — `algo.CCH`
+
+`algo.CCH` preprocesses the sub-graph induced by `relTypes` for the metric `weightProp`, and commits the result to the graph:
+
+- every improving shortcut becomes a `shortcutRelType` edge carrying its weight under `weightProp` and its middle node under `middleProp`;
+- every node receives its elimination rank under `rankProp`.
+
+### Syntax
+
+```cypher
+CALL algo.CCH({
+  relTypes: [<relationship_type>],
+  weightProp: <property>,
+  shortcutRelType: <relationship_type>,
+  rankProp: <property>,
+  middleProp: <property>
+})
+YIELD shortcutsCreated
+```
+
+### Parameters
+
+| Name              | Type   | Description                                                                                       |
+|-------------------|--------|---------------------------------------------------------------------------------------------------|
+| `relTypes`        | Array  | Relationship types that form the graph to preprocess                                              |
+| `weightProp`      | String | Edge property to minimize (the metric, e.g. `length` or `time`)                                   |
+| `shortcutRelType` | String | Relationship type used for the shortcut edges the build creates                                   |
+| `rankProp`        | String | Node property the build writes each node's elimination rank into                                  |
+| `middleProp`      | String | Edge property on each shortcut holding its middle node's id (used to unpack shortcuts into a path) |
+
+All five keys are required.
+
+### Returns
+
+| Name               | Type    | Description                          |
+|--------------------|---------|--------------------------------------|
+| `shortcutsCreated` | Integer | Number of shortcut edges materialized |
+
+<Warning>
+  `algo.CCH` **modifies the graph**: it creates `shortcutRelType` edges and
+  writes the `rankProp` and `middleProp` properties. Choose names that do not
+  clash with your existing schema, and re-run `algo.CCH` after any change to the
+  graph's topology or to the `weightProp` values — the materialized hierarchy is
+  only valid for the graph it was built on.
+</Warning>
+
+## Querying — `algo.CCH.query`
+
+`algo.CCH.query` runs a rank-aware bidirectional search over the original edges **and** the shortcut edges, then unpacks the result back into a path made of original edges.
+
+### Syntax
+
+```cypher
+CALL algo.CCH.query({
+  sourceNode: <node>,
+  targetNode: <node>,
+  relTypes: [<relationship_type>],
+  shortcutRelType: <relationship_type>,
+  weightProp: <property>,
+  rankProp: <property>,
+  middleProp: <property>
+})
+YIELD pathWeight, path
+```
+
+### Parameters
+
+| Name              | Type   | Description                                                             |
+|-------------------|--------|-------------------------------------------------------------------------|
+| `sourceNode`      | Node   | Starting node                                                           |
+| `targetNode`      | Node   | Destination node                                                        |
+| `relTypes`        | Array  | The original relationship types (same as used to build)                |
+| `shortcutRelType` | String | The shortcut relationship type created by `algo.CCH`                    |
+| `weightProp`      | String | The metric property (same as used to build)                            |
+| `rankProp`        | String | The node rank property written by `algo.CCH`                           |
+| `middleProp`      | String | The shortcut middle-node property written by `algo.CCH`                |
+
+<Note>
+  The `relTypes`, `weightProp`, `shortcutRelType`, `rankProp` and `middleProp`
+  values passed to `algo.CCH.query` must match the ones used to build the
+  hierarchy with `algo.CCH`.
+</Note>
+
+### Returns
+
+| Name         | Type  | Description                                    |
+|--------------|-------|------------------------------------------------|
+| `pathWeight` | Float | Total `weightProp` of the shortest path        |
+| `path`       | Path  | Shortest path from source to target, expanded into original edges |
+
+If the target is unreachable from the source, the procedure returns no rows.
+
+## Example
+
+Build the hierarchy once, then query it. Here `ROAD` edges carry a `w` weight, shortcuts use the `SHORTCUT` type, ranks are stored under `rank`, and shortcut middles under `mid`:
+
+```cypher
+// 1. a small road graph
+CREATE
+  (a:Junction {name:'A'}), (b:Junction {name:'B'}), (c:Junction {name:'C'}),
+  (a)-[:ROAD {w:10}]->(b), (b)-[:ROAD {w:10}]->(a),
+  (a)-[:ROAD {w:1}]->(c),  (c)-[:ROAD {w:1}]->(a),
+  (c)-[:ROAD {w:1}]->(b),  (b)-[:ROAD {w:1}]->(c)
+```
+
+```cypher
+// 2. build the hierarchy (run once)
+CALL algo.CCH({
+  relTypes: ['ROAD'],
+  weightProp: 'w',
+  shortcutRelType: 'SHORTCUT',
+  rankProp: 'rank',
+  middleProp: 'mid'
+})
+YIELD shortcutsCreated
+RETURN shortcutsCreated
+```
+
+```cypher
+// 3. query it (run many times)
+MATCH (a:Junction {name:'A'}), (b:Junction {name:'B'})
+CALL algo.CCH.query({
+  sourceNode: a,
+  targetNode: b,
+  relTypes: ['ROAD'],
+  shortcutRelType: 'SHORTCUT',
+  weightProp: 'w',
+  rankProp: 'rank',
+  middleProp: 'mid'
+})
+YIELD pathWeight, path
+RETURN pathWeight, [n IN nodes(path) | n.name] AS route
+```
+
+#### Expected Result:
+| pathWeight | route      |
+|------------|------------|
+| `2`        | [A, C, B]  |
+
+The direct `A → B` road costs `10`, but the shortest route `A → C → B` costs `2`; the query returns that path, expanded back into the original `ROAD` edges.
+
+---
+
+## Frequently Asked Questions
+
+<AccordionGroup>
+  <Accordion title="When should I use CCH instead of algo.SPpaths or algo.AStar?">
+    Use CCH when the graph is large and mostly static, and you run **many** point-to-point queries against it — the one-time build is amortized over fast repeated queries. For occasional queries, or a graph that changes often, prefer [algo.SPpaths](/algorithms/sppath) or [algo.AStar](/algorithms/astar).
+  </Accordion>
+  <Accordion title="Does algo.CCH modify my graph?">
+    Yes. It creates `shortcutRelType` edges and writes the `rankProp` and `middleProp` properties. `algo.CCH.query` is read-only and does not change the graph.
+  </Accordion>
+  <Accordion title="What happens if the graph changes after I build the hierarchy?">
+    The materialized hierarchy is only valid for the graph it was built on. After changing the topology or the `weightProp` values, re-run `algo.CCH` to rebuild it.
+  </Accordion>
+  <Accordion title="Can I keep more than one hierarchy on the same graph?">
+    Yes. Build each one with distinct `shortcutRelType`, `rankProp` and `middleProp` names — for example one hierarchy optimizing distance and another optimizing travel time — and pass the matching names to `algo.CCH.query`.
+  </Accordion>
+  <Accordion title="Can multiple queries run at the same time?">
+    Yes. `algo.CCH.query` is read-only and holds no shared state, so many queries can run concurrently against the same graph.
+  </Accordion>
+</AccordionGroup>

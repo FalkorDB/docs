@@ -1,0 +1,154 @@
+---
+title: "algo.AStar"
+description: "Find the shortest path between two nodes using A* search guided by a geographic (haversine) heuristic."
+---
+
+The `algo.AStar` procedure finds the shortest path between a **source** and a **target** node using the [A* search algorithm](https://en.wikipedia.org/wiki/A*_search_algorithm).
+
+Like [algo.SPpaths](/algorithms/sppath), it minimizes a numeric edge property (`weightProp`), but it is guided by a geographic heuristic — the straight-line (great-circle) distance from each node to the target. On spatial graphs such as road networks this lets A* explore far fewer nodes than a plain Dijkstra search, while still returning an optimal path.
+
+Every node must carry latitude and longitude properties; A* uses them to compute the haversine distance to the target.
+
+## Syntax
+
+```cypher
+CALL algo.AStar({
+  sourceNode: <node>,
+  targetNode: <node>,
+  relTypes: [<relationship_type>],
+  weightProp: <property>,
+  latitudeProperty: <property>,
+  longitudeProperty: <property>,
+  heuristicScale: <number>,      // optional, default 1.0
+  relDirection: "outgoing",     // optional: "outgoing", "incoming", "both"
+  pathCount: <int>               // optional, default 1
+})
+YIELD path, pathWeight
+```
+
+## Parameters
+
+| Name                | Type    | Description                                                                                     |
+|---------------------|---------|-------------------------------------------------------------------------------------------------|
+| `sourceNode`        | Node    | Starting node                                                                                   |
+| `targetNode`        | Node    | Destination node                                                                                |
+| `relTypes`          | Array   | List of relationship types to follow                                                            |
+| `weightProp`        | String  | Edge property to minimize along the path (e.g., `length`, `time`)                               |
+| `latitudeProperty`  | String  | Node property holding the latitude (decimal degrees)                                             |
+| `longitudeProperty` | String  | Node property holding the longitude (decimal degrees)                                            |
+| `heuristicScale`    | Number  | Optional. Converts the haversine heuristic (meters) into `weightProp` units. Default `1.0`.     |
+| `relDirection`      | String  | Optional. Traversal direction: `outgoing` (default), `incoming`, or `both`                      |
+| `pathCount`         | Integer | Optional. Number of paths to return (default `1`; must be `≥ 1`)                                 |
+
+## Returns
+
+| Name         | Type   | Description                                     |
+|--------------|--------|-------------------------------------------------|
+| `path`       | Path   | Discovered path from source to target           |
+| `pathWeight` | Float  | Sum of `weightProp` across the path             |
+
+## The `heuristicScale` parameter
+
+The A* heuristic is the **haversine distance in meters** between a node and the target. For the search to return an optimal path, the heuristic must never overestimate the remaining cost — it must be a *lower bound* on the true remaining `weightProp` (this is the *admissibility* requirement of A*).
+
+When `weightProp` is **not** a distance in meters, the raw meters heuristic is on the wrong scale and can dwarf the actual edge weights, causing A* to behave greedily and return a **sub-optimal** path. `heuristicScale` multiplies the heuristic to bring it into `weightProp` units. Set it to a lower bound on the weight accrued per meter of straight-line progress:
+
+| `weightProp` represents | Suggested `heuristicScale`            | Reasoning                                              |
+|-------------------------|---------------------------------------|--------------------------------------------------------|
+| Distance in meters      | `1.0` (the default)                   | Heuristic is already in the right units                |
+| Distance in kilometers  | `0.001`                               | 1 meter = 0.001 km                                     |
+| Travel time in seconds  | `1 / max_speed_m_per_s`               | Fastest possible time to cover one meter               |
+| Travel time in hours    | `1 / max_speed_m_per_hour`            | e.g. `1/120000` for a 120 km/h maximum speed           |
+
+<Warning>
+  Leaving `heuristicScale` at its default `1.0` while `weightProp` is *not* a
+  distance in meters (for example a drive-time weight) makes the heuristic
+  inadmissible, so A* may return a **sub-optimal path**. Always scale the
+  heuristic to the units of `weightProp`.
+</Warning>
+
+<Note>
+  `heuristicScale` must be a non-negative number. A smaller value is always
+  safe (the search stays optimal but explores more nodes); a value larger than
+  the true minimum weight-per-meter trades optimality for speed.
+</Note>
+
+## Examples
+
+Consider a small road network where each junction stores its coordinates and each road stores its `length` (meters) and `time` (seconds):
+
+```cypher
+CREATE
+  (a:Junction {name:'A', lat:40.7128, lon:-74.0060}),
+  (b:Junction {name:'B', lat:40.7300, lon:-73.9950}),
+  (c:Junction {name:'C', lat:40.7580, lon:-73.9855}),
+  (a)-[:ROAD {length:3200, time:240}]->(b),
+  (b)-[:ROAD {length:4100, time:300}]->(c),
+  (a)-[:ROAD {length:8000, time:360}]->(c)
+```
+
+### Example: shortest route by distance
+
+`length` is in meters, so the default `heuristicScale` of `1.0` is correct:
+
+```cypher
+MATCH (a:Junction {name:'A'}), (c:Junction {name:'C'})
+CALL algo.AStar({
+  sourceNode: a,
+  targetNode: c,
+  relTypes: ['ROAD'],
+  weightProp: 'length',
+  latitudeProperty: 'lat',
+  longitudeProperty: 'lon'
+})
+YIELD path, pathWeight
+RETURN pathWeight, [n IN nodes(path) | n.name] AS route
+```
+
+#### Expected Result:
+| pathWeight | route         |
+|------------|---------------|
+| `7300`     | [A, B, C]     |
+
+### Example: fastest route by travel time
+
+Here `weightProp` is `time` in **seconds**, so the heuristic must be scaled by `1 / max_speed`. Assuming a maximum speed of 30 m/s, use `heuristicScale: 0.0333`:
+
+```cypher
+MATCH (a:Junction {name:'A'}), (c:Junction {name:'C'})
+CALL algo.AStar({
+  sourceNode: a,
+  targetNode: c,
+  relTypes: ['ROAD'],
+  weightProp: 'time',
+  latitudeProperty: 'lat',
+  longitudeProperty: 'lon',
+  heuristicScale: 0.0333
+})
+YIELD path, pathWeight
+RETURN pathWeight, [n IN nodes(path) | n.name] AS route
+```
+
+#### Expected Result:
+| pathWeight | route      |
+|------------|------------|
+| `360`      | [A, C]     |
+
+---
+
+## Frequently Asked Questions
+
+<AccordionGroup>
+  <Accordion title="When should I use algo.AStar vs algo.SPpaths?">
+    Use **algo.AStar** for point-to-point queries on **spatial** graphs where nodes have coordinates (road networks, maps): the geographic heuristic prunes the search and is usually faster than Dijkstra. Use **[algo.SPpaths](/algorithms/sppath)** when nodes have no coordinates, or when you need cost constraints (`costProp`/`maxCost`) or all shortest paths.
+  </Accordion>
+  <Accordion title="Why is my A* path not the shortest one?">
+    Almost always because `heuristicScale` doesn't match the units of `weightProp`. The heuristic is in meters; if `weightProp` is a travel time (or any non-meter unit) and the scale is left at the default `1.0`, the heuristic overestimates the remaining cost and the search returns a sub-optimal path. Set `heuristicScale` to a lower bound on the weight per meter (see [the heuristicScale section](#the-heuristicscale-parameter)).
+  </Accordion>
+  <Accordion title="What happens if a node is missing its latitude or longitude?">
+    A* needs coordinates on every node it visits to compute the heuristic. Ensure `latitudeProperty` and `longitudeProperty` are present and numeric on all nodes reachable during the search.
+  </Accordion>
+  <Accordion title="Can I run many point-to-point queries efficiently on a static graph?">
+    For a graph that rarely changes and is queried many times, consider preprocessing it with **[algo.CCH](/algorithms/cch)** (Customizable Contraction Hierarchies), which answers repeated point-to-point queries even faster than A* after a one-time build.
+  </Accordion>
+</AccordionGroup>
