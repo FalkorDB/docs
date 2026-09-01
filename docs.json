@@ -808,6 +808,14 @@
       "destination": "/commands/graph.list"
     },
     {
+      "source": "/commands/graph.memory-usage",
+      "destination": "/commands/graph.memory"
+    },
+    {
+      "source": "/commands/graph.memory-usage.html",
+      "destination": "/commands/graph.memory"
+    },
+    {
       "source": "/commands/graph.memory.html",
       "destination": "/commands/graph.memory"
     },
@@ -1342,6 +1350,50 @@
     {
       "source": "/migration.html",
       "destination": "/operations/migration"
+    },
+    {
+      "source": "/migration/index.html",
+      "destination": "/operations/migration"
+    },
+    {
+      "source": "/migration/kuzu-to-falkordb",
+      "destination": "/operations/migration/kuzu-to-falkordb"
+    },
+    {
+      "source": "/migration/kuzu-to-falkordb.html",
+      "destination": "/operations/migration/kuzu-to-falkordb"
+    },
+    {
+      "source": "/migration/neo4j-to-falkordb",
+      "destination": "/operations/migration/neo4j-to-falkordb"
+    },
+    {
+      "source": "/migration/neo4j-to-falkordb.html",
+      "destination": "/operations/migration/neo4j-to-falkordb"
+    },
+    {
+      "source": "/migration/rdf-to-falkordb",
+      "destination": "/operations/migration/rdf-to-falkordb"
+    },
+    {
+      "source": "/migration/rdf-to-falkordb.html",
+      "destination": "/operations/migration/rdf-to-falkordb"
+    },
+    {
+      "source": "/migration/redisgraph-to-falkordb",
+      "destination": "/operations/migration/redisgraph-to-falkordb"
+    },
+    {
+      "source": "/migration/redisgraph-to-falkordb.html",
+      "destination": "/operations/migration/redisgraph-to-falkordb"
+    },
+    {
+      "source": "/migration/sql-to-falkordb",
+      "destination": "/operations/migration/sql-to-falkordb"
+    },
+    {
+      "source": "/migration/sql-to-falkordb.html",
+      "destination": "/operations/migration/sql-to-falkordb"
     },
     {
       "source": "/opentelemetry",
