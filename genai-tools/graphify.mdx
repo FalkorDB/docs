@@ -1,11 +1,11 @@
 ---
 title: "Graphify"
-description: "Build a knowledge graph with Graphify and import the generated Cypher into FalkorDB for persistent graph queries."
+description: "Build a knowledge graph with Graphify and load it directly into FalkorDB for persistent graph queries."
 ---
 
 ## Overview
 
-Graphify turns code, documentation, PDFs, screenshots, and notes into a connected knowledge graph. It can export that graph as Cypher for compatible databases, and FalkorDB's Cypher support makes it straightforward to import the result and continue querying it in a persistent graph database.
+Graphify turns code, documentation, PDFs, screenshots, and notes into a connected knowledge graph. Its FalkorDB export can load that graph directly into FalkorDB for persistent querying.
 
 Use Graphify when you want to:
 
@@ -18,32 +18,37 @@ This is a best-fit workflow for graph-first repository analysis, documentation i
 
 ## Install Graphify
 
-Graphify runs as a skill in AI coding assistants such as Claude Code, Codex, Cursor, and Gemini CLI. Install the CLI and register the skill:
+Graphify runs as a skill in AI coding assistants. The examples below cover Claude Code and Codex; see the [Graphify README](https://github.com/Graphify-Labs/graphify/blob/main/README.md) for other supported assistants. Install the CLI with the FalkorDB integration and register the skill:
 
-```bash
-uv tool install graphifyy
+<CodeGroup>
+
+```bash Claude Code
+uv tool install "graphifyy[falkordb]"
 graphify install
 ```
 
-Then open a supported AI coding assistant in any directory and run the skill on a folder or repository:
+```bash Codex
+uv tool install "graphifyy[falkordb]"
+graphify install --platform codex
+```
 
-```text
+</CodeGroup>
+
+Then open your AI coding assistant in any directory and run the skill on a folder or repository:
+
+<CodeGroup>
+
+```text Claude Code
 /graphify ./my-project
 ```
 
-The example uses Claude Code syntax. In Codex, invoke the skill with `$graphify ./my-project` instead.
-
-Graphify supports additional modes such as `--wiki`, `--watch`, and `--mcp` depending on how you want to consume the graph.
-
-## Export a Cypher graph
-
-Graphify can generate a Cypher export for use with graph databases that accept Cypher. Use the export option to produce a file you can load into FalkorDB:
-
-```text
-/graphify ./my-project --falkordb
+```text Codex
+$graphify ./my-project
 ```
 
-This writes a Cypher file such as `graphify-out/cypher.txt`.
+</CodeGroup>
+
+Graphify supports additional modes such as `--wiki`, `--watch`, and `--mcp` depending on how you want to consume the graph.
 
 ## Load the graph into FalkorDB
 
@@ -53,30 +58,21 @@ Start FalkorDB locally:
 docker run -p 6379:6379 falkordb/falkordb:latest
 ```
 
-Then import the generated Cypher into a FalkorDB graph:
+Then run Graphify with the FalkorDB push option. The target graph is named `graphify` by default:
 
-```python
-from pathlib import Path
-from falkordb import FalkorDB
+<CodeGroup>
 
-# Connect to FalkorDB
-falkordb = FalkorDB(host="localhost", port=6379)
-graph = falkordb.select_graph("graphify")
-
-# Read the exported Cypher file and run each statement individually
-cypher_path = Path("graphify-out/cypher.txt")
-cypher_text = cypher_path.read_text()
-
-for statement in [s.strip() for s in cypher_text.split(";") if s.strip()]:
-    graph.query(statement)
+```text Claude Code
+/graphify ./my-project --falkordb-push falkordb://localhost:6379
 ```
 
-Once imported, you can query the graph with standard FalkorDB Cypher:
-
-```python
-results = graph.query("MATCH (n) RETURN n LIMIT 10")
-print(results)
+```text Codex
+$graphify ./my-project --falkordb-push falkordb://localhost:6379
 ```
+
+</CodeGroup>
+
+Graphify uses `MERGE`, so pushing again does not duplicate unchanged entities. It does not remove entities that disappeared from the source corpus; clear or replace the target graph before pushing when deletions must be reflected. If you need a portable Cypher artifact instead, use `--falkordb`; Graphify writes the statements to `graphify-out/cypher.txt`. Direct push is recommended because FalkorDB executes one Cypher statement at a time.
 
 ## Querying the imported graph
 
@@ -98,7 +94,7 @@ LIMIT 50;
 
 ## Tips
 
-- For large corpora, keep the Graphify output as a reusable artifact and re-import it whenever you update the source material.
+- For large corpora, keep the Graphify output as a reusable artifact. Re-push it for additive updates, or replace the target graph when source entities were removed.
 
 ## Reference
 
