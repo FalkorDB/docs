@@ -349,6 +349,9 @@ graphA
 GraphBLAS
 GraphBlas
 GraphCypherQAChain
+Graphify
+graphify
+graphifyy
 Graphiti
 graphiti
 GraphName
@@ -898,6 +901,7 @@ utf
 util
 UUID
 UUIDStringGenerator
+uv
 Uvicorn
 UX
 ValueType

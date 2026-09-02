@@ -17,13 +17,14 @@ Learn how to leverage FalkorDB's flexible APIs and SDKs to build high-performanc
 - [Snowflake Integration](/integration/snowflake): Learn how to run graph database operations directly within your Snowflake environment using the FalkorDB Native App.
 - [n8n GraphRAG Nodes](/integration/n8n): Learn how to use the FalkorDB GraphRAG n8n community nodes for ingestion and question answering in workflows.
 - [PyTorch Geometric](/integration/pyg): Train Graph Neural Networks directly on graphs stored in FalkorDB using PyG's remote backend interface.
+- [Graphify](/genai-tools/graphify): Build a knowledge graph from code, documentation, PDFs, and notes, then load it directly into FalkorDB.
 - [Bulk Loader](/integration/bulk-loader): Import large graphs from CSV files using the falkordb-bulk-loader Python utility.
 
 ## Frequently Asked Questions
 
 <AccordionGroup>
   <Accordion title="What integration options does FalkorDB support?">
-    FalkorDB supports multiple integration paths including a **REST API**, **Bolt protocol** (experimental), **Kafka Connect** sink, **Apache Jena** for RDF/SPARQL, **Spring Data** for Java applications, **Snowflake** native app, **n8n** community nodes, **PyTorch Geometric** for GNNs, and a **bulk loader** for CSV imports.
+    FalkorDB supports multiple integration paths including a **REST API**, **Bolt protocol** (experimental), **Kafka Connect** sink, **Apache Jena** for RDF/SPARQL, **Spring Data** for Java applications, **Snowflake** native app, **n8n** community nodes, **PyTorch Geometric** for GNNs, **Graphify** for knowledge graph generation, and a **bulk loader** for CSV imports.
   </Accordion>
   <Accordion title="Which integration should I use for my application?">
     For web applications, use the **REST API** or official client libraries. For Java/Spring apps, use **Spring Data FalkorDB**. For workflow automation, use the **FalkorDB GraphRAG n8n** community nodes. For streaming pipelines, use **Kafka Connect**. For machine learning on graphs, use **PyTorch Geometric**. For RDF/SPARQL workloads, use the **Apache Jena** adapter.

@@ -1,0 +1,104 @@
+---
+title: "Graphify"
+description: "Build a knowledge graph with Graphify and load it directly into FalkorDB for persistent graph queries."
+---
+
+## Overview
+
+Graphify turns code, documentation, PDFs, screenshots, and notes into a connected knowledge graph. Its FalkorDB export can load that graph directly into FalkorDB for persistent querying.
+
+Use Graphify when you want to:
+
+- build a graph from an existing repository, docs set, or mixed corpus
+- expose concept and relationship structure across files and folders
+- generate a reusable graph for downstream retrieval, agent memory, and exploration
+- keep an artifact that can be loaded into FalkorDB for long-lived querying
+
+This is a best-fit workflow for graph-first repository analysis, documentation indexing, and knowledge-base construction.
+
+## Install Graphify
+
+Graphify runs as a skill in AI coding assistants. The examples below cover Claude Code and Codex; see the [Graphify README](https://github.com/Graphify-Labs/graphify/blob/main/README.md) for other supported assistants. Install the CLI with the FalkorDB integration and register the skill:
+
+<CodeGroup>
+
+```bash Claude Code
+uv tool install "graphifyy[falkordb]"
+graphify install
+```
+
+```bash Codex
+uv tool install "graphifyy[falkordb]"
+graphify install --platform codex
+```
+
+</CodeGroup>
+
+Then open your AI coding assistant in any directory and run the skill on a folder or repository:
+
+<CodeGroup>
+
+```text Claude Code
+/graphify ./my-project
+```
+
+```text Codex
+$graphify ./my-project
+```
+
+</CodeGroup>
+
+Graphify supports additional modes such as `--wiki`, `--watch`, and `--mcp` depending on how you want to consume the graph.
+
+## Load the graph into FalkorDB
+
+Start FalkorDB locally:
+
+```bash
+docker run -p 6379:6379 falkordb/falkordb:latest
+```
+
+Then run Graphify with the FalkorDB push option. The target graph is named `graphify` by default:
+
+<CodeGroup>
+
+```text Claude Code
+/graphify ./my-project --falkordb-push falkordb://localhost:6379
+```
+
+```text Codex
+$graphify ./my-project --falkordb-push falkordb://localhost:6379
+```
+
+</CodeGroup>
+
+Graphify uses `MERGE`, so pushing again does not duplicate unchanged entities. It does not remove entities that disappeared from the source corpus; clear or replace the target graph before pushing when deletions must be reflected. If you need a portable Cypher artifact instead, use `--falkordb`; Graphify writes the statements to `graphify-out/cypher.txt`. Direct push is recommended because FalkorDB executes one Cypher statement at a time.
+
+## Querying the imported graph
+
+After the graph is in FalkorDB, you can use regular FalkorDB queries to explore the data, for example:
+
+```cypher
+MATCH (n)-[r]->(m)
+RETURN type(r), count(r)
+ORDER BY count(r) DESC
+LIMIT 20;
+```
+
+```cypher
+MATCH (n)
+WHERE n.name CONTAINS "query"
+RETURN n
+LIMIT 50;
+```
+
+## Tips
+
+- For large corpora, keep the Graphify output as a reusable artifact. Re-push it for additive updates, or replace the target graph when source entities were removed.
+
+## Reference
+
+- [Graphify on GitHub](https://github.com/Graphify-Labs/graphify)
+- [Graphify README](https://github.com/Graphify-Labs/graphify/blob/main/README.md)
+- [FalkorDB Python client](https://github.com/FalkorDB/falkordb-py)
+- [Cypher documentation](/cypher)
