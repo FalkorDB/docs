@@ -18,17 +18,16 @@ This is a best-fit workflow for graph-first repository analysis, documentation i
 
 ## Install Graphify
 
-Install the Python package and the CLI:
+Graphify runs as a [Claude Code](https://claude.ai/code) skill. Install the Python package and register the skill:
 
 ```bash
-pip install graphifyy
-graphify install
+pip install graphifyy && graphify install
 ```
 
-Then run Graphify on a folder or repository:
+Then open Claude Code in any directory and run the skill on a folder or repository:
 
-```bash
-graphify ./my-project
+```
+/graphify ./my-project
 ```
 
 Graphify supports additional modes such as `--wiki`, `--watch`, and `--mcp` depending on how you want to consume the graph.
@@ -37,8 +36,8 @@ Graphify supports additional modes such as `--wiki`, `--watch`, and `--mcp` depe
 
 Graphify can generate a Neo4j-style Cypher export for use with graph databases that accept Cypher. Use the export option to produce a file you can load into FalkorDB:
 
-```bash
-graphify ./my-project --neo4j
+```
+/graphify ./my-project --neo4j
 ```
 
 This writes a Cypher file such as `graphify-out/cypher.txt`.
@@ -105,4 +104,4 @@ LIMIT 50;
 - [Graphify on GitHub](https://github.com/Graphify-Labs/graphify)
 - [Graphify README](https://github.com/Graphify-Labs/graphify/blob/main/README.md)
 - [FalkorDB Python client](https://github.com/FalkorDB/falkordb-py)
-- [Cypher documentation](/cypher/index)
+- [Cypher documentation](/cypher)

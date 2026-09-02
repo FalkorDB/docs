@@ -289,7 +289,7 @@
                   "integration/spring-data-falkordb",
                   "integration/snowflake",
                   "integration/pyg",
-                  "integration/graphify",
+                  "genai-tools/graphify",
                   "integration/bulk-loader",
                   "integration/n8n"
                 ],
@@ -320,7 +320,8 @@
                     "root": "genai-tools/mcpserver/index"
                   },
                   "genai-tools/queryweaver",
-                  "genai-tools/code-graph"
+                  "genai-tools/code-graph",
+                  "genai-tools/graphify"
                 ],
                 "root": "genai-tools/index"
               },
