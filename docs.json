@@ -289,6 +289,7 @@
                   "integration/spring-data-falkordb",
                   "integration/snowflake",
                   "integration/pyg",
+                  "integration/graphify",
                   "integration/bulk-loader",
                   "integration/n8n"
                 ],

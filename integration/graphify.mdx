@@ -1,0 +1,108 @@
+---
+title: "Graphify"
+description: "Build a knowledge graph with Graphify and import the generated Cypher into FalkorDB for persistent graph queries."
+---
+
+Graphify turns code, documentation, PDFs, screenshots, and notes into a connected knowledge graph. It can export that graph as Cypher for Neo4j-compatible databases, and FalkorDB's Cypher support makes it straightforward to import the result and continue querying it in a persistent graph database.
+
+## Overview
+
+Use Graphify when you want to:
+
+- build a graph from an existing repository, docs set, or mixed corpus
+- expose concept and relationship structure across files and folders
+- generate a reusable graph for downstream retrieval, agent memory, and exploration
+- keep an artifact that can be loaded into FalkorDB for long-lived querying
+
+This is a best-fit workflow for graph-first repository analysis, documentation indexing, and knowledge-base construction.
+
+## Install Graphify
+
+Install the Python package and the CLI:
+
+```bash
+pip install graphifyy
+graphify install
+```
+
+Then run Graphify on a folder or repository:
+
+```bash
+graphify ./my-project
+```
+
+Graphify supports additional modes such as `--wiki`, `--watch`, and `--mcp` depending on how you want to consume the graph.
+
+## Export a Cypher graph
+
+Graphify can generate a Neo4j-style Cypher export for use with graph databases that accept Cypher. Use the export option to produce a file you can load into FalkorDB:
+
+```bash
+graphify ./my-project --neo4j
+```
+
+This writes a Cypher file such as `graphify-out/cypher.txt`.
+
+## Load the graph into FalkorDB
+
+Start FalkorDB locally:
+
+```bash
+docker run -p 6379:6379 falkordb/falkordb:latest
+```
+
+Then import the generated Cypher into a FalkorDB graph:
+
+```python
+from pathlib import Path
+from falkordb import FalkorDB
+
+# Connect to FalkorDB
+falkordb = FalkorDB(host="localhost", port=6379)
+graph = falkordb.select_graph("graphify")
+
+# Read the exported Cypher file and run each statement individually
+cypher_path = Path("graphify-out/cypher.txt")
+cypher_text = cypher_path.read_text()
+
+for statement in [s.strip() for s in cypher_text.split(";") if s.strip()]:
+    graph.query(statement)
+```
+
+Once imported, you can query the graph with standard FalkorDB Cypher:
+
+```python
+results = graph.query("MATCH (n) RETURN n LIMIT 10")
+print(results)
+```
+
+## Querying the imported graph
+
+After the graph is in FalkorDB, you can use regular FalkorDB queries to explore the data, for example:
+
+```cypher
+MATCH (n)-[r]->(m)
+RETURN type(r), count(r)
+ORDER BY count(r) DESC
+LIMIT 20;
+```
+
+```cypher
+MATCH (n)
+WHERE n.name CONTAINS "query"
+RETURN n
+LIMIT 50;
+```
+
+## Tips
+
+- Graphify's `--neo4j` output is a good match for FalkorDB because FalkorDB is Cypher-first and accepts many Neo4j-style queries.
+- If the generated export contains Neo4j-specific syntax, adjust the statements to the equivalent FalkorDB Cypher before loading them.
+- For large corpora, keep the Graphify output as a reusable artifact and re-import it whenever you update the source material.
+
+## Reference
+
+- [Graphify on GitHub](https://github.com/Graphify-Labs/graphify)
+- [Graphify README](https://github.com/Graphify-Labs/graphify/blob/main/README.md)
+- [FalkorDB Python client](https://github.com/FalkorDB/falkordb-py)
+- [Cypher documentation](/cypher/index)

@@ -349,6 +349,8 @@ graphA
 GraphBLAS
 GraphBlas
 GraphCypherQAChain
+Graphify
+graphify
 Graphiti
 graphiti
 GraphName
