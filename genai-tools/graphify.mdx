@@ -34,10 +34,10 @@ Graphify supports additional modes such as `--wiki`, `--watch`, and `--mcp` depe
 
 ## Export a Cypher graph
 
-Graphify can generate a Neo4j-style Cypher export for use with graph databases that accept Cypher. Use the export option to produce a file you can load into FalkorDB:
+Graphify can generate a Cypher export for use with graph databases that accept Cypher. Use the export option to produce a file you can load into FalkorDB:
 
 ```
-/graphify ./my-project --neo4j
+/graphify ./my-project --falkordb
 ```
 
 This writes a Cypher file such as `graphify-out/cypher.txt`.
@@ -95,8 +95,6 @@ LIMIT 50;
 
 ## Tips
 
-- Graphify's `--neo4j` output is a good match for FalkorDB because FalkorDB is Cypher-first and accepts many Neo4j-style queries.
-- If the generated export contains Neo4j-specific syntax, adjust the statements to the equivalent FalkorDB Cypher before loading them.
 - For large corpora, keep the Graphify output as a reusable artifact and re-import it whenever you update the source material.
 
 ## Reference
