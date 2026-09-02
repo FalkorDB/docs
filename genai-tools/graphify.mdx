@@ -3,9 +3,9 @@ title: "Graphify"
 description: "Build a knowledge graph with Graphify and import the generated Cypher into FalkorDB for persistent graph queries."
 ---
 
-Graphify turns code, documentation, PDFs, screenshots, and notes into a connected knowledge graph. It can export that graph as Cypher for compatible databases, and FalkorDB's Cypher support makes it straightforward to import the result and continue querying it in a persistent graph database.
-
 ## Overview
+
+Graphify turns code, documentation, PDFs, screenshots, and notes into a connected knowledge graph. It can export that graph as Cypher for compatible databases, and FalkorDB's Cypher support makes it straightforward to import the result and continue querying it in a persistent graph database.
 
 Use Graphify when you want to:
 
@@ -18,17 +18,20 @@ This is a best-fit workflow for graph-first repository analysis, documentation i
 
 ## Install Graphify
 
-Graphify runs as a [Claude Code](https://claude.ai/code) skill. Install the Python package and register the skill:
+Graphify runs as a skill in AI coding assistants such as Claude Code, Codex, Cursor, and Gemini CLI. Install the CLI and register the skill:
 
 ```bash
-pip install graphifyy && graphify install
+uv tool install graphifyy
+graphify install
 ```
 
-Then open Claude Code in any directory and run the skill on a folder or repository:
+Then open a supported AI coding assistant in any directory and run the skill on a folder or repository:
 
-```
+```text
 /graphify ./my-project
 ```
+
+The example uses Claude Code syntax. In Codex, invoke the skill with `$graphify ./my-project` instead.
 
 Graphify supports additional modes such as `--wiki`, `--watch`, and `--mcp` depending on how you want to consume the graph.
 
@@ -36,7 +39,7 @@ Graphify supports additional modes such as `--wiki`, `--watch`, and `--mcp` depe
 
 Graphify can generate a Cypher export for use with graph databases that accept Cypher. Use the export option to produce a file you can load into FalkorDB:
 
-```
+```text
 /graphify ./my-project --falkordb
 ```
 
