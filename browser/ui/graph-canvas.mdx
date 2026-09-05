@@ -1,0 +1,65 @@
+---
+title: "Main Graph Canvas"
+description: "Interactive graph visualization: pan/zoom, selection, label/relationship toggles, and layout controls."
+---
+
+The **Graph** results tab renders your query results as an interactive node/edge visualization.
+
+![Graph canvas](/images/browser/overview.webp)
+
+## Core interactions
+- **Pan/zoom** the canvas to explore results.
+- **Select** nodes/edges to inspect them (opens the Data panel).
+- **Right-click / context menu** is used in the tutorial flow to open element details.
+
+## Labels & Relationships filters
+When you have results, the overlay includes:
+- **Labels** list: toggle visibility of nodes by label.
+- **Relationships** list: toggle visibility of edges by relationship type.
+
+These toggles update visibility on the canvas without re-running the query.
+
+## Canvas controls
+The controls area includes:
+
+| Control | Options | What it does |
+| :--- | :--- | :--- |
+| **Animation** | play / pause | Runs or freezes the force simulation. |
+| **Zoom in / Zoom out** | — | Steps the zoom level. |
+| **Fit graph to screen** | — | Fits the visible elements (or the current selection) into the viewport. |
+| **Layout** | `Force`, `Tree`, `Radial` | Chooses how elements are arranged. |
+| **Direction** | `Top → Down`, `Bottom → Up`, `Left → Right`, `Right → Left` (Tree); `Outward`, `Inward` (Radial) | Orients the hierarchical layouts. |
+| **Pin** | `Pin nodes on drag` / `Unpin nodes` | Keeps dragged nodes where you drop them. Tree and Radial pin automatically. |
+| **Dim** | on / off | Dims elements that are not part of the current selection. |
+
+All of these are remembered per [graph tab](/browser/ui/graph-tabs), and the
+**Graph** and **Schema** tabs keep their own settings.
+
+## Tabs around the canvas
+From the same results region you can switch to:
+- **Table** view (when tabular data exists)
+- **Metadata** view (when metadata/explain exists)
+- **Schema** view (the graph's data model — see [Schema view](/browser/ui/schema-view))
+
+## Frequently Asked Questions
+
+<AccordionGroup>
+  <Accordion title="How do I pan and zoom the graph canvas?">
+    Use your mouse or trackpad to **pan** (click and drag the background) and **zoom** (scroll wheel or pinch gesture). You can also use the zoom in/out buttons in the canvas controls.
+  </Accordion>
+  <Accordion title="Can I hide certain node labels or relationship types?">
+    Yes. Use the **Labels** and **Relationships** filter lists overlaid on the canvas to toggle visibility of specific node labels or edge types without re-running the query.
+  </Accordion>
+  <Accordion title="How do I center the graph on screen?">
+    Click the **Fit graph to screen** button in the canvas controls area to automatically fit all visible elements within the viewport.
+  </Accordion>
+  <Accordion title="What does the animation control do?">
+    The play/pause button controls the **force-layout animation** which arranges nodes dynamically. Pausing it freezes the layout in its current position.
+  </Accordion>
+  <Accordion title="Can I arrange the graph as a tree?">
+    Yes. Use the **Layout** control to pick `Tree` or `Radial`, then set the **Direction** (`Top → Down`, `Bottom → Up`, `Left → Right`, `Right → Left`, or `Outward`/`Inward`). Hierarchical layouts pin nodes automatically.
+  </Accordion>
+  <Accordion title="Do canvas settings carry over between tabs?">
+    No. Layout, direction, animation, pin, dim, and the viewport are stored per graph tab, and the Graph and Schema views keep separate settings within the same tab.
+  </Accordion>
+</AccordionGroup>

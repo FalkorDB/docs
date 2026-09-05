@@ -1,0 +1,62 @@
+---
+title: "Graph Page (Layout)"
+description: "How the main Graphs workspace is laid out: selector bar, query editor, results area, side panel that can be resized."
+---
+
+The Graph page (`/graph`) is the primary workspace for querying and visualizing data.
+
+![Graph workspace overview](/images/browser/overview.webp)
+
+## High-level layout
+The page is composed of:
+1. **Left sidebar** (navigation, theme, graph info/chat toggles)
+2. **Top selector bar**
+   - Graph selector (choose the active graph)
+   - Query editor (Monaco-based) with Run button
+   - Query history button + editor maximize button
+3. **Tab strip** (one tab per open graph/query; see [Graph tabs](/browser/ui/graph-tabs))
+4. **Main results area**
+   - **Graph** tab (visual canvas)
+   - **Table** tab (tabular results)
+   - **Metadata** tab (Explain/Profile/Metadata)
+   - **Schema** tab (the graph's data model; see [Schema view](/browser/ui/schema-view))
+5. **Right side panel** (can be resized, context-driven)
+   - **Data panel** (inspect/edit selected node/edge)
+   - **Add panel** (create nodes/edges)
+   - **Chat panel** (natural-language querying)
+   - **Graph Info panel** and the **Customize Style** panel
+
+## Working in several tabs
+The tab strip spans the full width of the page, above the results area. Each
+tab keeps its own graph, query, results view, canvas position, selection, and
+panel state, so you can compare graphs or queries side by side. See
+[Graph tabs](/browser/ui/graph-tabs).
+
+## Right-hand panel resize behavior
+The right panel expands/collapses based on what you’re doing:
+- Selecting a node/edge typically opens **Data**.
+- Starting “Add node / Add edge” opens **Add**.
+- Toggling Chat opens **Chat** and clears selection.
+
+## Graph info refresh
+Graph info (labels, relationship types, property keys, memory usage) is periodically refreshed based on the configured refresh interval.
+
+## Frequently Asked Questions
+
+<AccordionGroup>
+  <Accordion title="How is the Graph page laid out?">
+    The page has a **left sidebar** for navigation, a **top selector bar** with the graph selector and query editor, a **main results area** with Graph/Table/Metadata tabs, and a **right side panel** for data inspection, adding elements, or chat.
+  </Accordion>
+  <Accordion title="Can I resize the right side panel?">
+    Yes. The right panel expands and collapses based on context (selecting an element opens Data, creating elements opens Add, toggling Chat opens the Chat panel) and can be manually resized.
+  </Accordion>
+  <Accordion title="How often does Graph Info refresh?">
+    Graph Info refreshes periodically based on the **refresh interval** configured in Settings → Browser Settings → Graph Info.
+  </Accordion>
+  <Accordion title="What are the tabs in the results area?">
+    The results area has four tabs: **Graph** (visual canvas), **Table** (tabular rows/columns), **Metadata** (Explain/Profile/Metadata output), and **Schema** (the graph's labels, relationship placements, property keys, constraints, and indexes).
+  </Accordion>
+  <Accordion title="Can I keep more than one graph or query open?">
+    Yes. The tab strip above the results area holds several tabs, each with its own graph, query, view, canvas position, and panels. See [Graph tabs](/browser/ui/graph-tabs).
+  </Accordion>
+</AccordionGroup>

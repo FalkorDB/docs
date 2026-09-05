@@ -1,0 +1,62 @@
+---
+title: "GRAPH.RO_QUERY"
+description: "GRAPH.RO_QUERY runs a read-only openCypher query against a FalkorDB graph and returns an error if the query attempts any write."
+---
+
+Executes a given read only query against a specified graph.
+
+Arguments: `Graph name, Query, [timeout], [--compact], [version]`
+
+Returns: [Result set](/design/result-structure) for a read only query or an error if a write query was given.
+
+| Optional argument | Description |
+| --- | --- |
+| `timeout` | Query-level timeout in milliseconds. See [the configuration section](/getting-started/configuration#timeout). |
+| `--compact` | Returns results in [compact format](/design/client-spec#retrieving-the-compact-result-set). |
+| `version` | Graph version number. When provided, the server rejects the query with a `version mismatch` error if the current graph version doesn't match, allowing clients to invalidate cached schema mappings. |
+
+<CodeGroup>
+
+```python Python
+graph.ro_query("MATCH (p:president)-[:born]->(:state {name:'Hawaii'}) RETURN p")
+```
+
+```javascript JavaScript
+const result = await graph.roQuery("MATCH (p:president)-[:born]->(:state {name:'Hawaii'}) RETURN p");
+console.log(result);
+```
+
+```java Java
+ResultSet result = graph.readOnlyQuery("MATCH (p:president)-[:born]->(:state {name:'Hawaii'}) RETURN p");
+System.out.println(result);
+```
+
+```rust Rust
+let result = graph.ro_query(r#"MATCH (p:president)-[:born]->(:state {name:'Hawaii'}) RETURN p"#).execute().await?;
+println!("{:?}", result);
+```
+
+```bash Shell
+GRAPH.RO_QUERY us_government "MATCH (p:president)-[:born]->(:state {name:'Hawaii'}) RETURN p"
+```
+
+</CodeGroup>
+
+Query-level timeouts can be set as described in [the configuration section](/getting-started/configuration#timeout).
+
+## Frequently Asked Questions
+
+<AccordionGroup>
+  <Accordion title="What is the difference between GRAPH.QUERY and GRAPH.RO_QUERY?">
+    **GRAPH.RO_QUERY** only executes read operations and will return an error if you attempt a write query (CREATE, SET, DELETE, MERGE with creation). **GRAPH.QUERY** supports both read and write operations.
+  </Accordion>
+  <Accordion title="Why should I use GRAPH.RO_QUERY instead of GRAPH.QUERY for reads?">
+    GRAPH.RO_QUERY can be distributed to read replicas in a clustered setup, improving read scalability. It also provides a safety guarantee that data will not be accidentally modified.
+  </Accordion>
+  <Accordion title="What happens if I pass a write query to GRAPH.RO_QUERY?">
+    The command will return an error indicating that write queries are not permitted. The graph data will remain unchanged.
+  </Accordion>
+  <Accordion title="Does GRAPH.RO_QUERY support the same optional parameters as GRAPH.QUERY?">
+    Yes. GRAPH.RO_QUERY accepts the same optional parameters: `timeout`, `--compact`, and `version`.
+  </Accordion>
+</AccordionGroup>

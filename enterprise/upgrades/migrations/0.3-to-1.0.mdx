@@ -1,0 +1,217 @@
+---
+title: "Migrate from 0.3 to 1.0"
+description: "Upgrade FalkorDB Enterprise 0.3.x straight to 1.0, covering the registry move, the narrowed Admin Server permissions and the new secret handling."
+icon: "right-left"
+---
+
+This guide takes a 0.3.x installation to 1.0 in one step. You do not need to stop
+at 0.4 on the way — everything 0.4 required is folded in below.
+
+<Warning>
+  1.0.0-beta.1 is a beta release. Helm ignores prerelease versions unless you ask
+  for them, so a plain upgrade will not pick it up. Every command here names the
+  version explicitly.
+</Warning>
+
+## What does not change
+
+Worth knowing before you plan a window, because it rules out the slowest parts of
+an upgrade:
+
+- **KubeBlocks stays on `1.2.0-alpha.1`.** It is the same version 0.3 shipped, so
+  there is no operator upgrade and no CRD work in this path.
+- **Your databases are not touched.** The FalkorDB addon moves from 1.7.2 to
+  1.7.5, which adds a new ComponentDefinition alongside the existing ones rather
+  than replacing them. Running deployments keep the definition they were created
+  with and are not restarted.
+- **No data migration.** Nothing in this upgrade rewrites the Admin Server
+  database or any FalkorDB volume.
+
+## Who is affected
+
+| Situation | Action required |
+| --- | --- |
+| Installed with `install.sh` and no image overrides | [Update the pull secret](#1-move-image-pulls-off-ghcr-io) |
+| Pinned image references in a values file | Remove them, or repoint them |
+| Mirrored registry or air-gapped install | [Re-mirror from the new source](#2-re-mirror-if-you-run-a-private-registry) |
+| Chart pulled from `oci://ghcr.io/...` | Pull from `oci://registry.falkordb.cloud/falkordb/falkordb-enterprise` |
+| Session signing key set in a values file | [Move it out of Helm values](#3-move-the-session-signing-key-out-of-helm-values) |
+| Operators who deploy into new namespaces from the console | [Expect a different namespace picker](#4-expect-a-narrower-namespace-picker) |
+
+## 1. Move image pulls off ghcr.io
+
+0.4.0 moved first-party images and the Helm chart to `registry.falkordb.cloud`.
+This is the one change in the path that will stop an upgrade if you skip it.
+
+<Warning>
+  Credentials issued for `ghcr.io` do not work against `registry.falkordb.cloud`.
+  Request registry credentials from FalkorDB support before you start.
+</Warning>
+
+The installer creates the pull Secret when you supply credentials:
+
+```bash
+curl -fsSL https://falkordb.github.io/FalkorDB-Enterprise/install.sh | \
+  bash -s -- \
+    --namespace falkordb-system \
+    --registry-username '<username>' \
+    --registry-password '<token>' \
+    --version 1.0.0-beta.1 \
+    --yes
+```
+
+To rotate it by hand instead:
+
+```bash
+kubectl -n falkordb-system delete secret falkordb-registry-pull-secret --ignore-not-found
+kubectl -n falkordb-system create secret docker-registry falkordb-registry-pull-secret \
+  --docker-server=registry.falkordb.cloud \
+  --docker-username='<username>' \
+  --docker-password='<token>'
+```
+
+Then search your values files for `ghcr.io` and delete first-party image
+overrides. The chart resolves every first-party image from `global.imageRegistry`,
+which now defaults to `registry.falkordb.cloud/falkordb`.
+
+1.0 also adds `global.imageCredentials` as the single place to configure registry
+credentials in values. With `create: true` the chart owns the pull Secret;
+otherwise it expects one to already exist in the release namespace:
+
+```yaml
+global:
+  imageCredentials:
+    create: true
+    registry: registry.falkordb.cloud
+    username: "<username>"
+    password: "<token>"
+```
+
+<Note>
+  Three subcharts are still hosted on `ghcr.io` as Helm charts: the FalkorDB
+  addon, `falkordb-browser`, and `dm-sql-to-falkordb`. `helm dependency update`
+  reads them from there anonymously. That is a chart source, not an image source,
+  and needs no credentials.
+</Note>
+
+A further change in 1.0 removes a manual step you may have automated: the Admin
+Server now copies the registry pull Secrets into every namespace it provisions a
+database into, so those namespaces no longer have to be seeded by hand.
+
+## 2. Re-mirror if you run a private registry
+
+Image tags move with the chart version, so a mirror populated for 0.3 does not
+satisfy 1.0. Fetch the 1.0 chart and the mirroring scripts, then regenerate the
+image list and push it:
+
+```bash
+helm pull oci://registry.falkordb.cloud/falkordb/falkordb-enterprise --version 1.0.0-beta.1 --untar
+
+for s in collect-images.sh mirror-images.sh verify-mirror-overlay.sh; do
+  curl -fsSL "https://falkordb.github.io/FalkorDB-Enterprise/$s" -o "$s" && chmod +x "$s"
+done
+
+CHART_DIR=./falkordb-enterprise ./collect-images.sh --output images.txt
+./mirror-images.sh --manifest images.txt --target-registry <your-registry> --target-namespace falkordb
+CHART_DIR=./falkordb-enterprise OVERLAY=my-mirror.yaml ./verify-mirror-overlay.sh
+```
+
+The first-party images are not in the manifest and must be copied separately.
+Then apply the overlay values, starting from the bundled
+`falkordb-enterprise/examples/mirror-registry-values.yaml`. See
+[Private images](/enterprise/deployment/private-images) for the full procedure.
+
+Images and the chart are signed with `cosign` from 1.0, and `mirror-images.sh`
+copies the signatures alongside each image so a mirror stays verifiable. See
+[Supply chain](/enterprise/reference/supply-chain) for the verification commands.
+
+## 3. Move the session signing key out of Helm values
+
+1.0 stops passing the session signing key through Helm. The installer creates the
+Secret out of band and hands the chart only its name, so the key no longer
+appears in the process table, in the Helm release Secret, or in
+`helm get values`.
+
+`adminServer.secret.jwtSecret` still exists, so an upgrade that keeps it does not
+break. To take the improvement, drop it from your values file and point the chart
+at a Secret instead:
+
+```yaml
+adminServer:
+  secret:
+    jwtExistingSecret:
+      name: falkordb-enterprise-admin-server-jwt
+      key: jwt-secret
+```
+
+The installer reuses the existing key when it finds one, so doing this does not
+sign users out.
+
+## 4. Expect a narrower namespace picker
+
+The Admin Server no longer holds `namespaces: list`, and its Secret and ConfigMap
+access is no longer cluster-wide — it is bound per namespace, into the release
+namespace by the chart and into each database namespace as it provisions one.
+
+There is no manual step: existing installs are reconciled on startup. The
+visible consequence is that the console's namespace picker lists only namespaces
+that already hold a database, plus the release namespace. To deploy into a new
+namespace, type its name into the field rather than choosing it from the list.
+
+## 5. Review Pod Security labels
+
+Every workload the chart owns now satisfies the `restricted` Pod Security
+Standard, and the installer labels the namespaces it creates. If you set Pod
+Security labels yourself, or enforce them with a policy engine, review
+[Pod security](/enterprise/reference/pod-security) before upgrading — the installer raises
+the release namespace to `privileged` only when it auto-enables the bundled CSI
+hostpath driver.
+
+## 6. Upgrade
+
+```bash
+curl -fsSL https://falkordb.github.io/FalkorDB-Enterprise/install.sh | \
+  bash -s -- \
+    --namespace falkordb-system \
+    --version 1.0.0-beta.1 \
+    --values production-values.yaml \
+    --yes
+```
+
+<Warning>
+  If your values file pins `adminServer.image.tag` or `adminUi.image.tag` to a
+  0.3 version, the chart upgrades but the pods keep running the old images.
+  Remove both pins so they follow the chart, or set them to `1.0.0-beta.1`.
+</Warning>
+
+## Verify
+
+Confirm no workload still references `ghcr.io`:
+
+```bash
+kubectl -n falkordb-system get pods \
+  -o jsonpath='{range .items[*]}{range .spec.containers[*]}{.image}{"\n"}{end}{end}' \
+  | sort -u
+```
+
+Every line should start with `registry.falkordb.cloud`, or with your mirror host.
+Then check the release and that your databases are untouched:
+
+```bash
+helm get metadata falkordb-enterprise -n falkordb-system
+kubectl get clusters.apps.kubeblocks.io -A
+```
+
+## Rollback
+
+Downgrade with the installer:
+
+```bash
+curl -fsSL https://falkordb.github.io/FalkorDB-Enterprise/install.sh | \
+  bash -s -- --namespace falkordb-system --version 0.3.1 --yes
+```
+
+Restore the `ghcr.io` pull secret as part of the rollback. The 0.3.x images
+remain on `ghcr.io`, so a rollback does not need the new credentials. Databases
+are unaffected either way, because the addon leaves older ComponentDefinitions in
+place.

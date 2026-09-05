@@ -1,0 +1,127 @@
+---
+title: "Troubleshoot deployments"
+description: "Diagnose and fix common issues with FalkorDB deployments managed by KubeBlocks."
+icon: "stethoscope"
+---
+
+## Cluster stuck in updating: pods missing a role label
+
+### Symptoms
+
+- The Cluster resource stays in phase `Updating` after all pods are `Running` and ready.
+- One or more pods have no value in the `kubeblocks.io/role` label while their peers show `primary` or `secondary`:
+
+```bash
+kubectl get pods -n <namespace> -l app.kubernetes.io/instance=<cluster-name> -L kubeblocks.io/role
+```
+
+```text
+NAME                     READY   STATUS    AGE   ROLE
+my-db-shard-abc-0        3/3     Running   17m
+my-db-shard-abc-1        3/3     Running   17m   secondary
+```
+
+### Diagnosis
+
+1. Confirm the database itself is healthy. For a sharded cluster, each shard `-0` pod should report `master` and `cluster_state:ok`:
+
+   ```bash
+   kubectl exec -n <namespace> <pod> -c falkordb-cluster -- sh -c \
+     'redis-cli -a "$REDIS_DEFAULT_PASSWORD" --no-auth-warning role | head -1; \
+      redis-cli -a "$REDIS_DEFAULT_PASSWORD" --no-auth-warning cluster info | grep cluster_state'
+   ```
+
+   For standalone, replicated, or Sentinel topologies, use the `falkordb` container name instead of `falkordb-cluster`.
+
+2. Check that the role probe ran on the affected pod. The kbagent sidecar logs the probed role:
+
+   ```bash
+   kubectl logs -n <namespace> <pod> -c kbagent --tail 50 | grep roleProbe
+   ```
+
+   A healthy probe logs `"output": "primary"` (or `secondary`).
+
+3. Check the KubeBlocks controller for a failed label update:
+
+   ```bash
+   kubectl logs -n kb-system -l app.kubernetes.io/component=apps --tail 400 | grep -iE '<cluster-name>.*(role|conflict|modified)'
+   ```
+
+   The signature of this case is an event reconcile error such as:
+
+   ```text
+   Operation cannot be fulfilled on pods "<pod>": the object has been modified;
+   please apply your changes to the latest version and try again
+   ```
+
+### Root cause
+
+The kbagent role probe reports the role once and re-emits it only when the role changes. If the KubeBlocks event controller loses an optimistic-concurrency conflict while writing the `kubeblocks.io/role` pod label (common during post-provision churn, when several controllers update the same pod), the write is dropped and never retried. The database is healthy; only the label is missing, which keeps the Cluster in `Updating`.
+
+### Fix
+
+Apply the label the controller failed to write, matching the actual role reported by the database in the diagnosis step:
+
+```bash
+kubectl label pod -n <namespace> <pod> kubeblocks.io/role=primary --overwrite
+```
+
+The Cluster transitions to `Running` as soon as all pods carry a role label:
+
+```bash
+kubectl get cluster -n <namespace> <cluster-name> -o jsonpath='{.status.phase}'
+```
+
+Alternatively, deleting the affected pod also resolves it: the replacement pod is probed fresh and labeled on startup. Prefer re-labeling, since it avoids a failover and is instantaneous.
+
+> Only set the label to the role the database actually reports. Labeling a replica as `primary` misroutes client traffic sent through the read-write Service.
+
+## Pods cannot reach the Kubernetes API server
+
+### Symptoms
+
+- The Admin Server logs Kubernetes client errors and reports the cluster as unavailable, or the KubeBlocks manager crash-loops.
+- The failure is a TLS or connection error against an IP address rather than a hostname — `tls: handshake failure`, `EOF`, `connection reset by peer`, or `dial tcp 172.25.0.1:443: i/o timeout`.
+- The address in the error matches the `kubernetes` Service ClusterIP in the `default` namespace:
+
+```bash
+kubectl get svc kubernetes -n default -o jsonpath='{.spec.clusterIP}'
+```
+
+### Root cause
+
+The kubelet injects `KUBERNETES_SERVICE_HOST` and `KUBERNETES_SERVICE_PORT` into every container, pointing at that ClusterIP, and every in-cluster client builds its API URL from them. Two cluster configurations break that route:
+
+- The ClusterIP's only endpoint is a managed or public API endpoint that requires SNI. A client connecting by IP sends no SNI, so the endpoint cannot select a certificate and the handshake is terminated.
+- A firewall rejects traffic to the ClusterIP.
+
+### Fix
+
+Point the clients at a DNS name instead. A container's own environment entry takes precedence over the kubelet-injected one.
+
+```bash
+curl -fsSL https://falkordb.github.io/FalkorDB-Enterprise/install.sh | \
+  bash -s -- --kubernetes-service-host kubernetes.default.svc.cluster.local
+```
+
+The installer applies the value to the chart's workloads and to the KubeBlocks release. For installs driven by `helm` directly, use `examples/values-apiserver-dns.yaml`:
+
+```bash
+helm upgrade --install falkordb-enterprise <chart> \
+  -f examples/values-apiserver-dns.yaml
+```
+
+Verify the override reached the pods:
+
+```bash
+kubectl get deploy -n <namespace> -o jsonpath='{range .items[*]}{.metadata.name}{"\t"}{.spec.template.spec.containers[*].env[?(@.name=="KUBERNETES_SERVICE_HOST")].value}{"\n"}{end}'
+```
+
+Database pods are covered by the same values. The FalkorDB addon emits them through `ComponentDefinition.spec.vars`, so KubeBlocks injects them into every container of a database pod, including the `kbagent` sidecar. Check one directly:
+
+```bash
+kubectl get pod -n <namespace> <database-pod> -o jsonpath='{.spec.containers[*].env[?(@.name=="KUBERNETES_SERVICE_HOST")].value}'
+```
+
+> The host must appear in a Subject Alternative Name on the API server's serving certificate. If it does not, clients fail certificate verification (`x509: certificate is valid for ...`) instead of connecting. `kubernetes.default.svc.cluster.local` is always covered; confirm any other name before using it.
+

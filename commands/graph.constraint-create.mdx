@@ -1,0 +1,255 @@
+---
+title: "GRAPH.CONSTRAINT CREATE"
+description: "Create mandatory and unique constraints on FalkorDB graphs to enforce data integrity. Guarantee property existence and value uniqueness for nodes and relationships."
+---
+
+```sh
+GRAPH.CONSTRAINT CREATE key
+  MANDATORY|UNIQUE
+  NODE label | RELATIONSHIP reltype
+  PROPERTIES propCount prop [prop...]
+```
+
+Creates a graph constraint.
+
+[Examples](#examples)
+
+## Introduction to constraints
+
+A constraint is a rule enforced on graph nodes or relationships, used to guarantee a certain structure of the data.
+
+FalkorDB supports two types of constraints:
+
+1. Mandatory constraints
+2. Unique constraints
+
+### Mandatory constraints
+
+A mandatory constraint enforces existence of given attributes for all nodes with a given label or for all edges with a given relationship-type.
+
+Consider a mandatory constraint over the attribute `id` of all nodes with the label `Person`.
+This constraint will enforce that any `Person` node in the graph has an `id` attribute.
+Any attempt to create or modify a `Person` node, such that the resulting node does not have an `id` attribute, will fail.
+
+### Unique constraints
+
+A unique constraint enforces uniqueness of values of a given set of attributes for all nodes with a given label or for all edges with a given relationship-type. I.e., no duplicates are allowed.
+
+Consider a unique constraint over the attributes: `first_name` and `last_name` of all nodes with the label `Person`
+This constraint will enforce that any combination of `first_name`, `last_name` is unique.
+E.g., a graph can contain the following `Person` nodes:
+
+```sql
+(:Person {first_name:'Frank', last_name:'Costanza'})
+(:Person {first_name:'Estelle', last_name:'Costanza'})
+```
+
+But trying to create a third node with `first_name` Frank and `last_name` Costanza, will issue an error and the query will fail.
+
+\<note><b>Notes:</b>
+
+- A unique constraint requires the existence of an exact-match index prior to its creation. For example, trying to create a unique constraint governing attributes: `first_name` and `last_name` of nodes with label `Person` without having an exact-match index over `Person`'s `first_name` and `last_name` attributes will fail.
+
+- A unique constraint is enforced for a given node or edge only if all the constrained properties are defined (non-null).
+- Unique constraints are not enforced for array-valued properties.
+- Trying to delete an index that supports a constraint will fail.
+
+\</note>
+
+## Creating a constraint
+
+To create a constraint, use the `GRAPH.CONSTRAINT CREATE` command as follows:
+
+```sh
+GRAPH.CONSTRAINT CREATE key constraintType {NODE label | RELATIONSHIP reltype} PROPERTIES propCount prop [prop...]
+```
+
+## Required arguments
+
+<Accordion title="key" defaultOpen>
+is key name for the graph.
+</Accordion>
+
+<Accordion title="constraintType" defaultOpen>
+is the constraint type: either `MANDATORY` or `UNIQUE`.
+</Accordion>
+
+<Accordion title="NODE label | RELATIONSHIP reltype" defaultOpen>
+
+is the graph entity type (`NODE` or `RELATIONSHIP`) and the name of the node label or relationship type on which the constraint should be enforced.
+</Accordion>
+
+<Accordion title="propCount" defaultOpen>
+is the number of properties following. Valid values are between 1 and 255.
+</Accordion>
+
+<Accordion title="prop..." defaultOpen>
+is a list of `propCount` property names.
+</Accordion>
+
+\<note><b>Notes:</b>
+
+- Constraints are created asynchronously. The constraint creation command will reply with `PENDING` and the newly created constraint is enforced gradually on all relevant nodes or relationships.
+  During its creation phase, a constraint's status is `UNDER CONSTRUCTION`. When all governed nodes or relationships confirm to the constraint - its status is updated to `OPERATIONAL`, otherwise, if a conflict is detected, the constraint status is updated to `FAILED` and the constraint is not enforced. The caller may try to resolve the conflict and recreate the constraint. To retrieve the status of all constraints - use the `db.constraints()` procedure.
+- A constraint creation command may fail synchronously due to the following reasons:
+  1. Syntax error
+  2. Constraint already exists
+  3. Missing supporting index (for unique constraint)
+
+  In addition, a constraint creation command may fail asynchronously due to the following reasons:
+
+  1. The graph contains data which violates the constraint
+
+\</note>
+
+## Return value
+
+@simple-string-reply - `PENDING` if executed correctly and the constraint is being created asynchronously, or @error-reply otherwise.
+
+## Examples
+
+### Creating a unique constraint for a node label
+
+To create a unique constraint for all nodes with label `Person` enforcing uniqueness on the combination of values of attributes `first_name` and `last_name`, issue the following commands:
+
+<CodeGroup>
+
+```python Python
+from falkordb import FalkorDB
+client = FalkorDB()
+graph = client.select_graph('g')
+graph.query("CREATE INDEX FOR (p:Person) ON (p.first_name, p.last_name)")
+result = client.create_constraint('g', 'UNIQUE', 'NODE', 'Person', ['first_name', 'last_name'])
+print(result)
+```
+
+```javascript JavaScript
+import { FalkorDB } from 'falkordb';
+const client = await FalkorDB.connect();
+const graph = client.selectGraph('g');
+await graph.query("CREATE INDEX FOR (p:Person) ON (p.first_name, p.last_name)");
+const result = await client.createConstraint('g', 'UNIQUE', 'NODE', 'Person', ['first_name', 'last_name']);
+console.log(result);
+```
+
+```java Java
+import com.falkordb.*;
+
+Driver driver = FalkorDB.driver("localhost", 6379);
+Graph graph = driver.graph("g");
+graph.query("CREATE INDEX FOR (p:Person) ON (p.first_name, p.last_name)");
+String result = graph.createConstraint("UNIQUE", "NODE", "Person", "first_name", "last_name");
+System.out.println(result);
+```
+
+```rust Rust
+use falkordb::{FalkorClientBuilder, FalkorConnectionInfo};
+
+let connection_info: FalkorConnectionInfo = "falkor://127.0.0.1:6379"
+    .try_into().expect("Invalid connection info");
+let client = FalkorClientBuilder::new()
+    .with_connection_info(connection_info)
+    .build().expect("Failed to build client");
+let graph = client.select_graph("g");
+graph.query("CREATE INDEX FOR (p:Person) ON (p.first_name, p.last_name)")?;
+let result = client.create_constraint("g", "UNIQUE", "NODE", "Person", &["first_name", "last_name"])?;
+println!("{}", result);
+```
+
+```bash Shell
+redis> GRAPH.QUERY g "CREATE INDEX FOR (p:Person) ON (p.first_name, p.last_name)"
+redis> GRAPH.CONSTRAINT CREATE g UNIQUE NODE Person PROPERTIES 2 first_name last_name
+# Output: PENDING
+```
+
+</CodeGroup>
+
+### Creating a mandatory constraint for a relationship type
+
+To create a mandatory constraint for all edges with relationship-type `Visited`, enforcing the existence of a `date` attribute, issue the following command:
+
+<CodeGroup>
+
+```python Python
+result = client.create_constraint('g', 'MANDATORY', 'RELATIONSHIP', 'Visited', ['date'])
+print(result)
+```
+
+```javascript JavaScript
+const result = await client.createConstraint('g', 'MANDATORY', 'RELATIONSHIP', 'Visited', ['date']);
+console.log(result);
+```
+
+```java Java
+String result = graph.createConstraint("MANDATORY", "RELATIONSHIP", "Visited", "date");
+System.out.println(result);
+```
+
+```rust Rust
+let result = client.create_constraint("g", "MANDATORY", "RELATIONSHIP", "Visited", &["date"])?;
+println!("{}", result);
+```
+
+```bash Shell
+redis> GRAPH.CONSTRAINT CREATE g MANDATORY RELATIONSHIP Visited PROPERTIES 1 date
+# Output: PENDING
+```
+
+</CodeGroup>
+
+### Listing constraints
+
+To list all constraints enforced on a given graph, use the `db.constraints` procedure:
+
+<CodeGroup>
+
+```python Python
+result = graph.ro_query("call db.constraints()")
+print(result)
+```
+
+```javascript JavaScript
+const result = await graph.roQuery("call db.constraints()");
+console.log(result);
+```
+
+```java Java
+ResultSet result = graph.readOnlyQuery("call db.constraints()");
+System.out.println(result);
+```
+
+```rust Rust
+let result = graph.ro_query("call db.constraints()")?;
+println!("{:?}", result);
+```
+
+```bash Shell
+redis> GRAPH.RO_QUERY g "call db.constraints()"
+# Output: ...
+```
+
+</CodeGroup>
+
+## Deleting a constraint
+
+See [GRAPH.CONSTRAINT DROP](/commands/graph.constraint-drop)
+
+## Frequently Asked Questions
+
+<AccordionGroup>
+  <Accordion title="Are constraints created synchronously or asynchronously?">
+    Constraints are created **asynchronously**. The command returns `PENDING` immediately, and the constraint is enforced gradually. Use the `db.constraints()` procedure to check the constraint status.
+  </Accordion>
+  <Accordion title="Do I need an index before creating a unique constraint?">
+    Yes. A unique constraint requires an **exact-match index** on the same properties to exist before creation. Without the index, the constraint creation will fail.
+  </Accordion>
+  <Accordion title="What happens if existing data violates the constraint?">
+    If the graph already contains data that violates the constraint, the constraint status will be set to `FAILED` and it will not be enforced. You must resolve the conflicting data and recreate the constraint.
+  </Accordion>
+  <Accordion title="Can I create constraints on relationships?">
+    Yes. Both mandatory and unique constraints can be applied to relationships using the `RELATIONSHIP reltype` syntax instead of `NODE label`.
+  </Accordion>
+  <Accordion title="Are unique constraints enforced on NULL properties?">
+    No. A unique constraint is only enforced for a node or edge when **all** constrained properties are defined (non-null). Entities with missing constrained properties are not subject to uniqueness checks.
+  </Accordion>
+</AccordionGroup>

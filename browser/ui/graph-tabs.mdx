@@ -1,0 +1,95 @@
+---
+title: "Graph Tabs"
+description: "Work on several graphs and queries side by side: add, rename, switch, and close tabs, and control how much state each tab remembers."
+---
+
+The Graph page keeps a tab strip above the workspace so you can hold several
+graphs, queries, and views open at once and switch between them without losing
+your place.
+
+![Graph tab strip with a tab being renamed](/images/browser/graph-tabs.webp)
+
+## The tab strip
+
+The strip sits directly above the graph selector and query bar and spans the
+full width of the page. Each tab shows its own label; the active tab is
+highlighted.
+
+| Control | Where | What it does |
+| :--- | :--- | :--- |
+| Tab label | On the tab | Click to switch to that tab. |
+| Pencil icon | On the tab | Rename the tab inline. |
+| `X` icon | On the tab | Close the tab. |
+| `+` button | End of the strip | Open an empty tab. Its tooltip reads `New tab`. |
+
+The last remaining tab cannot be closed, so the workspace always has at least
+one tab open.
+
+## Renaming a tab
+
+A tab is labeled with the graph it has selected, or `New tab` when no graph is
+selected yet. Click the pencil icon to replace that with your own name:
+
+- Press `Enter` or click away to commit the new name.
+- Press `Esc` to cancel.
+- Clear the field to fall back to the graph name.
+
+Because labels can repeat (two tabs can point at the same graph), custom names
+are the easiest way to tell similar tabs apart.
+
+## What each tab remembers
+
+Switching tabs restores the tab's view, not just its query. Every tab keeps its
+own:
+
+- Selected graph and query text
+- Active results tab (**Graph**, **Table**, **Metadata**, or **Schema**)
+- Canvas viewport (pan and zoom) and current selection
+- Layout mode and direction, plus the animation, pin, and dim toggles
+- Search and filter panel state, Graph Info panel state, and Chat panel state
+- Open Customize Style panel
+
+The **Graph** and **Schema** views track these separately, so pinning the
+schema layout does not pin the graph layout in the same tab.
+
+Chat history is also per tab, so two tabs on the same graph keep independent
+conversations.
+
+## Persistence
+
+Tabs are stored in your browser's local storage and are scoped to the active
+connection. They survive a page reload, and switching connections gives you
+that connection's own set of tabs. Closing a tab discards the state stored for
+it.
+
+## Max Tabs
+
+The number of tabs is capped by **Settings → Browser Settings → User Experience
+→ Max Tabs**, which accepts a value between **4** and **10** and defaults to
+**8**. At the cap the `New tab` button is disabled and its tooltip points you at
+the setting. Lowering the limit never closes tabs you already have open.
+
+## Related pages
+- [Graph page (overall layout)](/browser/ui/graph-page)
+- [Schema view](/browser/ui/schema-view)
+- [Settings page](/browser/ui/settings)
+
+## Frequently Asked Questions
+
+<AccordionGroup>
+  <Accordion title="How do I open another graph without losing my current one?">
+    Click **New tab** at the end of the tab strip, then pick a graph in the new tab. The original tab keeps its graph, query, canvas position, and selection.
+  </Accordion>
+  <Accordion title="Do tabs survive a page reload?">
+    Yes. Tabs are saved in local storage per connection, so reloading restores the strip. Live canvas state such as the viewport and selection is restored from the tab's saved metadata.
+  </Accordion>
+  <Accordion title="How many tabs can I open?">
+    Between 4 and 10, depending on the **Max Tabs** setting in Settings → Browser Settings → User Experience. The default is 8.
+  </Accordion>
+  <Accordion title="Can I give a tab a custom name?">
+    Yes. Click the pencil icon on the tab, type a name, and press `Enter`. Clearing the field restores the graph name as the label.
+  </Accordion>
+  <Accordion title="Is Chat history shared between tabs?">
+    No. Each tab keeps its own conversation, even when two tabs are open on the same graph.
+  </Accordion>
+</AccordionGroup>

@@ -1,0 +1,20 @@
+---
+title: "JSON Functions"
+description: "FLEX JSON functions for serializing values to JSON strings and parsing JSON strings into maps or lists."
+---
+
+FLEX json utilities.
+
+## Frequently Asked Questions
+
+<AccordionGroup>
+  <Accordion title="What are FLEX JSON functions?">
+    FLEX JSON functions provide serialization (value to JSON string) and parsing (JSON string to map or list) utilities for use in Cypher queries.
+  </Accordion>
+  <Accordion title="How do FLEX JSON functions handle invalid input?">
+    They handle errors gracefully — `fromJsonMap` returns an empty map `{}` and `fromJsonList` returns an empty list `[]` on parse failures, without throwing exceptions.
+  </Accordion>
+  <Accordion title="How do I call a JSON function?">
+    Use the namespace `flex.json.<function>()`. For example: `flex.json.toJson({name: 'Alice'})` returns a JSON string.
+  </Accordion>
+</AccordionGroup>

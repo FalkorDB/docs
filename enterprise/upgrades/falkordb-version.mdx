@@ -1,0 +1,49 @@
+---
+title: "Upgrade a FalkorDB version"
+description: "Update a deployment to a target FalkorDB version."
+icon: "code-branch"
+---
+
+## What the UI does
+
+The deployment details page opens an **Upgrade Deployment** dialog. The user enters a target version, and the UI calls:
+
+```text
+POST /api/clusters/<clusterName>/upgrade?namespace=<namespace>
+```
+
+with this body:
+
+```json
+{ "version": "<target-version>" }
+```
+
+The Admin Server validates the requested version against the version catalog, checks that the cluster exists, rejects upgrades for clusters in `Failed` state, and updates the cluster version.
+
+## Upgrade from Admin UI
+
+1. Open **Deployments**.
+2. Open the target deployment.
+3. Select **Upgrade**.
+4. Enter the target FalkorDB version, for example `v2.0.0` or another version shown by your version catalog.
+5. Select **Confirm Upgrade**.
+
+The UI warns that the deployment will undergo a rolling restart and brief downtime may occur.
+
+## Validate
+
+```bash
+kubectl get clusters.apps.kubeblocks.io -n <namespace> <deployment-name> -o yaml
+kubectl get pods -n <namespace>
+kubectl get events -n <namespace> --sort-by=.metadata.creationTimestamp
+```
+
+In the Admin UI, review **General**, **Pods**, **Operations**, and **Events**.
+
+## Failure handling
+
+- If the version is invalid or unavailable, the backend returns a `400` response.
+- If the cluster is not found, the backend returns a `404` response.
+- If the cluster is in `Failed` state, resolve the cluster condition before retrying.
+
+Rollback is not a separate UI flow today. To roll back, run another upgrade to the previously working FalkorDB version after confirming the version is available in the catalog.

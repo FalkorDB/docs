@@ -1,0 +1,255 @@
+---
+title: "Red Hat OpenShift"
+description: "Install FalkorDB Enterprise on OpenShift with SCC-compatible security contexts, Routes, and ODF storage."
+icon: "red-hat"
+---
+
+The overall flow is the same installer used everywhere else, but OpenShift differs from vanilla Kubernetes in three areas covered below: Security Context Constraints (SCCs), routing (Routes vs Ingress), and storage.
+
+## Prerequisites
+
+- An OpenShift 4.14+ cluster and the [`oc` CLI](https://docs.openshift.com/container-platform/latest/cli_reference/openshift_cli/getting-started-cli.html) logged in with a user that has `cluster-admin` (the installer creates namespaces, CRDs, ClusterRoles, and webhooks).
+- `kubectl`, `helm`, and `base64` on the machine that runs the installer, with access to run `kubectl` commands in the cluster's context. `oc` can stand in for `kubectl`, but the installer invokes `kubectl` directly, so keep both on the `PATH`.
+- At least 3 worker nodes with 4 CPU and 16 GB of memory each.
+- Outbound access from the cluster to pull images: `registry.falkordb.cloud` (Enterprise images, credentials required), `docker.io`, `apecloud-registry.cn-zhangjiakou.cr.aliyuncs.com`, `registry.k8s.io`, and `ghcr.io` — or `registry.falkordb.cloud` alone, since every image is also mirrored there (see [Private registries](/enterprise/deployment/private-images)).
+
+Verify the context:
+
+```bash
+oc whoami
+kubectl config current-context
+kubectl get nodes
+```
+
+## How OpenShift differs
+
+| Area | Vanilla Kubernetes | OpenShift | What to do |
+| --- | --- | --- | --- |
+| Pod UIDs | Chart sets fixed UIDs (1000, 101, 1001) | The default `restricted-v2` SCC assigns an arbitrary UID from a per-namespace range and rejects pods that request a UID outside it | Remove the fixed UIDs via values overrides (below), or grant the `nonroot-v2` SCC to the chart service accounts |
+| External access | Ingress (nginx or cloud class) | Routes, served by the OpenShift router; the ingress operator automatically creates Routes for Ingress resources that use the `openshift-default` IngressClass | Set `gateway.ingress.className: openshift-default`; do not let the installer deploy ingress-nginx |
+| Storage snapshots | Cloud CSI drivers | OpenShift Data Foundation (Ceph CSI) or a cloud CSI driver on ROSA/ARO | The installer auto-detects `openshift-storage.*` Ceph CSI provisioners and cloud CSI classes |
+| Snapshot controller | Installed by the installer | OpenShift ships the CSI snapshot controller and `VolumeSnapshot` CRDs by default | Pass `--skip-snapshot-controller` |
+
+Nothing in the chart requires privileged containers, `hostPath` volumes, or `hostNetwork`, so no custom SCC beyond `restricted-v2`/`nonroot-v2` is needed for the chart's own workloads. The equivalent Pod Security Admission levels, measured per namespace, are in [Pod Security Admission levels](/enterprise/reference/pod-security); the bundled CSI drivers are the one exception and do need elevated permissions.
+
+## 1. Prepare security context values
+
+The chart's defaults pin `runAsUser`/`runAsGroup`/`fsGroup` for the Admin Server (1000), Admin UI (101), and hook jobs (1001). Under the default `restricted-v2` SCC these fixed UIDs are rejected because they fall outside the namespace's assigned UID range.
+
+The recommended approach is to null the fixed IDs and let OpenShift assign them. All other hardening (`runAsNonRoot`, `seccompProfile: RuntimeDefault`, dropped capabilities, no privilege escalation) stays in place and satisfies `restricted-v2`. Add this to your values file:
+
+```yaml
+# openshift-values.yaml
+adminServer:
+  podSecurityContext:
+    runAsUser: null
+    runAsGroup: null
+    fsGroup: null
+
+adminUi:
+  podSecurityContext:
+    runAsUser: null
+    runAsGroup: null
+    fsGroup: null
+
+preflight:
+  cleanupStaleOpsDefinitions:
+    podSecurityContext:
+      runAsUser: null
+      runAsGroup: null
+
+browserEncryptionKey:
+  podSecurityContext:
+    runAsUser: null
+    runAsGroup: null
+
+# The FalkorDB Browser image writes runtime data to /app/.data, which is owned
+# by its build-time UID (1001). With an SCC-assigned UID the directory is not
+# writable and the pod crash-loops with "Data directory /app/.data is not
+# writable". Mount an emptyDir there so fsGroup makes it writable:
+falkordb-browser:
+  volumes:
+    - name: data
+      emptyDir: {}
+  volumeMounts:
+    - name: data
+      mountPath: /app/.data
+```
+
+Alternative: keep the default UIDs and grant the `nonroot-v2` SCC to the release service accounts after the namespace exists. Only use this if your images require their build-time UID:
+
+```bash
+oc adm policy add-scc-to-user nonroot-v2 -z falkordb-enterprise-admin-server -n falkordb-system
+oc adm policy add-scc-to-user nonroot-v2 -z falkordb-enterprise-admin-ui -n falkordb-system
+```
+
+KubeBlocks and the FalkorDB database pods it creates run their own security contexts, and both are compatible with `restricted-v2` out of the box: the KubeBlocks operator pods in `kb-system` and the database pods (service accounts `kb-<cluster>-<component>`) are admitted with no SCC grants (verified on ROSA 4.20 with FalkorDB addon chart >= 1.6.1, which is what this chart bundles). OpenShift assigns each container an arbitrary namespace-range UID; all database containers — `falkordb`, `kbagent`, and `metrics` — run correctly that way.
+
+## 2. Configure routing
+
+OpenShift's ingress operator watches Ingress resources and creates matching Routes when the Ingress uses the `openshift-default` IngressClass. This means the chart's standard gateway Ingress works unchanged — no Route template is required.
+
+Confirm the IngressClass exists:
+
+```bash
+kubectl get ingressclass
+```
+
+Add to your values file:
+
+```yaml
+gateway:
+  enabled: true
+  ingress:
+    enabled: true
+    className: openshift-default
+    annotations:
+      # Edge-terminate TLS at the OpenShift router using its default wildcard
+      # certificate, and redirect HTTP -> HTTPS. Without these the generated
+      # Routes are plain HTTP only, and browsers hitting https:// get the
+      # router's "Application is not available" page.
+      route.openshift.io/termination: edge
+      haproxy.router.openshift.io/redirect-to-https: "true"
+    hosts:
+      - host: admin.apps.<cluster-domain>   # e.g. admin.apps.ocp.example.com
+
+adminServer:
+  env:
+    nodeEnv: production
+    corsOrigin: https://admin.apps.<cluster-domain>
+    cookieSecure: true
+```
+
+To use your own certificate instead of the router's wildcard cert, add a `tls` block referencing a secret in the release namespace:
+
+```yaml
+gateway:
+  ingress:
+    tls:
+      - secretName: falkordb-enterprise-admin-tls
+        hosts:
+          - admin.apps.<cluster-domain>
+```
+
+Notes:
+
+- Use a hostname under the cluster's apps wildcard domain (`*.apps.<cluster-domain>`) to get DNS for free, or any custom domain that resolves to the router.
+- With the `tls` block, the ingress operator copies the secret into the generated Route (edge termination). If you omit both the annotations and `tls`, the Route serves plain HTTP only — https:// requests return 503 (verified on ROSA 4.20).
+- The ingress operator emits an `IncompleteIngressToRouteRules: Unsupported exact path type` event on the gateway Ingress. This is harmless — the Routes for `/` (Admin UI) and `/api` (Admin Server) are still generated and serve correctly (verified on ROSA 4.20).
+- Do **not** rely on the installer's quick-access path that deploys ingress-nginx: on OpenShift, always pass a values file with the ingress block above (or use `--no-ingress` with LoadBalancer services on ROSA/ARO where cloud load balancers are available).
+
+### Expose FalkorDB Browser
+
+The FalkorDB Browser has its own ingress, disabled by default — without it the Browser is not reachable and the Admin UI's browser link (`VITE_BROWSER_URL`) stays empty. Give it a second hostname under the apps domain:
+
+```yaml
+falkordb-browser:
+  ingress:
+    enabled: true
+    className: openshift-default
+    annotations:
+      route.openshift.io/termination: edge
+      haproxy.router.openshift.io/redirect-to-https: "true"
+    hosts:
+      - host: browser.apps.<cluster-domain>
+        paths:
+          - path: /
+            pathType: Prefix
+  env:
+    nextauthUrl: https://browser.apps.<cluster-domain>/
+    # Required with the emptyDir at /app/.data: the volume is root-owned
+    # (fsGroup only sets the group) and the app chmods the storage directory,
+    # which fails with EPERM for the SCC-assigned UID and aborts every login
+    # ("Failed to persist connection credential"). A subdirectory the app
+    # mkdirs itself is owned by the app UID, so chmod succeeds.
+    apiTokenStoragePath: /app/.data/tokens/api_tokens.json
+
+adminUi:
+  env:
+    # Set explicitly: the chart's auto-derived URL uses http:// unless the
+    # ingress has a tls block, which annotation-based edge termination omits.
+    viteBrowserUrl: https://browser.apps.<cluster-domain>
+```
+
+## 3. Verify storage and snapshot support
+
+FalkorDB Enterprise uses persistent volumes for databases and the Admin Server, and CSI volume snapshots for backups.
+
+```bash
+kubectl get storageclass
+kubectl get volumesnapshotclass
+kubectl get crd volumesnapshots.snapshot.storage.k8s.io
+```
+
+- **OpenShift Data Foundation (ODF)**: the installer auto-detects the `openshift-storage.rbd.csi.ceph.com` provisioner and uses it for snapshot-capable storage. Use the `ocs-storagecluster-ceph-rbd` class for database volumes.
+- **ROSA / ARO**: the AWS EBS (`ebs.csi.aws.com`) and Azure Disk (`disk.csi.azure.com`) CSI drivers are detected automatically.
+- OpenShift ships the CSI snapshot controller and CRDs, so pass `--skip-snapshot-controller` to the installer to avoid running a second controller.
+
+If no snapshot-capable storage exists, the installer disables the chart-managed `VolumeSnapshotClass` and backups fall back to PVC-mounted repositories.
+
+### OpenShift local (CRC)
+
+OpenShift Local behaves differently from full OCP in ways that matter for testing this chart:
+
+- **Sizing**: the defaults (10.5 GB RAM, 31 GB disk) are too small — KubeBlocks pods fail to schedule and the kubelet evicts pods on ephemeral-storage pressure. Before starting:
+
+  ```bash
+  crc config set memory 16384
+  crc config set disk-size 45
+  ```
+
+- **Snapshots**: unlike full OCP, CRC does **not** ship the snapshot controller or `VolumeSnapshot` CRDs, so do *not* pass `--skip-snapshot-controller`. The snapshot-controller chart pods run as UID 1000 and are rejected by `restricted-v2`; grant `nonroot-v2` to their service accounts in the KubeBlocks namespace:
+
+  ```bash
+  oc adm policy add-scc-to-user nonroot-v2 -z snapshot-controller -n kb-system
+  oc adm policy add-scc-to-user nonroot-v2 -z snapshot-controller-conversion-webhook -n kb-system
+  ```
+
+- **Storage**: CRC's `kubevirt.io.hostpath-provisioner` is not CSI-snapshot-capable; the installer disables the chart-managed `VolumeSnapshotClass` automatically and backups fall back to PVC-mounted repositories.
+
+## 4. Install FalkorDB Enterprise
+
+Combine the SCC and routing values from steps 1–2 into one file (for example `openshift-values.yaml`), plus the production settings from [Production install](/enterprise/deployment/production) (JWT secret, bootstrap admin, persistence, license). A ready-to-edit example ships inside the chart at `examples/values-openshift.yaml` — extract it with `helm pull oci://registry.falkordb.cloud/falkordb/falkordb-enterprise --untar`. Then run:
+
+```bash
+curl -fsSL https://falkordb.github.io/FalkorDB-Enterprise/install.sh | \
+  JWT_SECRET="$(openssl rand -hex 32)" bash -s -- \
+    --kube-context "$(kubectl config current-context)" \
+    --namespace falkordb-system \
+    --kubeblocks-namespace kb-system \
+    --skip-snapshot-controller \
+    --values openshift-values.yaml \
+    --yes
+```
+
+The installer verifies RBAC, installs KubeBlocks into `kb-system`, then installs the FalkorDB Enterprise release into `falkordb-system`.
+
+## 5. Validate the install
+
+```bash
+helm status kubeblocks -n kb-system
+helm status falkordb-enterprise -n falkordb-system
+kubectl get pods -n kb-system
+kubectl get pods -n falkordb-system
+kubectl get ingress -n falkordb-system
+oc get route -n falkordb-system
+```
+
+You should see a Route generated from the gateway Ingress. Open `https://admin.apps.<cluster-domain>` and log in with the bootstrap admin user.
+
+If a pod is stuck in `CreateContainerConfigError` or fails admission, check for SCC violations:
+
+```bash
+oc get events -n falkordb-system --field-selector reason=FailedCreate
+oc describe pod <pod> -n falkordb-system | grep -i scc
+```
+
+## Operations notes for OpenShift
+
+The standard [operations playbooks](/enterprise/operations/scaling) apply unchanged. OpenShift-specific caveats:
+
+- **Backups and restores** ([Backups and schedules](/enterprise/operations/backups)): snapshot-based backups require ODF or a cloud CSI driver with a `VolumeSnapshotClass`. Verify with `kubectl get volumesnapshotclass` before scheduling backups. On ROSA the stock `csi-aws-vsc` class (EBS CSI) works out of the box — the `volume-snapshot` backup method completes and produces a ready-to-use `VolumeSnapshot` (verified on ROSA 4.20).
+- **Database deployments** ([Standalone deployment](/enterprise/databases/standalone) and related): with the bundled FalkorDB addon chart (`1.6.1` or later), database pods are admitted under `restricted-v2` with no SCC configuration. On older addon versions (`1.6.0` and earlier) database pods fail SCC admission — symptom: the database stays `Pending`, the PVC shows `WaitForFirstConsumer`, and the InstanceSet logs a `FailedReconcile` event with the SCC rejection. Fix by upgrading, or with `openshift.sccBinding.enabled=true` / a manual `anyuid` grant as shown in step 1.
+- **Upgrades** ([Upgrade FalkorDB Enterprise](/enterprise/upgrades/enterprise), [Upgrade KubeBlocks](/enterprise/upgrades/kubeblocks)): keep passing the same `openshift-values.yaml` (including the SCC overrides) on every upgrade, or the fixed UIDs return and pods are rejected on the next rollout.
+- **Support packages** ([Support packages](/enterprise/troubleshooting/support-package)): work unchanged; the Admin Server only needs the RBAC the chart already grants.
+- **Cluster upgrades**: OpenShift minor upgrades can rotate router and SCC defaults. After an OCP upgrade, confirm pods reschedule cleanly and the Route still serves the Admin UI.

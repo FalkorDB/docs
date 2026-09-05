@@ -1,0 +1,80 @@
+---
+title: "GRAPH.LIST"
+description: "GRAPH.LIST returns the name of every graph key stored in the FalkorDB keyspace, with examples in Python, JavaScript, Java, and Rust."
+---
+
+Lists all graph keys in the keyspace.
+
+## Examples
+
+<CodeGroup>
+
+```python Python
+from falkordb import FalkorDB
+db = FalkorDB(host='localhost', port=6379)
+graphs = db.list_graphs()
+print(graphs)
+```
+
+```javascript JavaScript
+import { FalkorDB } from 'falkordb';
+const db = await FalkorDB.connect({
+  socket: { host: 'localhost', port: 6379 }
+});
+const graphs = await db.list();
+console.log(graphs);
+```
+
+```java Java
+import com.falkordb.*;
+
+Driver driver = FalkorDB.driver("localhost", 6379);
+List<String> graphs = driver.listGraphs();
+System.out.println(graphs);
+```
+
+```rust Rust
+use falkordb::{FalkorClientBuilder, FalkorConnectionInfo};
+
+let connection_info: FalkorConnectionInfo = "falkor://127.0.0.1:6379"
+    .try_into()
+    .expect("Invalid connection info");
+let client = FalkorClientBuilder::new()
+    .with_connection_info(connection_info)
+    .build()
+    .expect("Failed to build client");
+let graphs = client.list_graphs();
+println!("{:?}", graphs);
+```
+
+```bash Shell
+GRAPH.LIST
+```
+
+</CodeGroup>
+
+### Sample Output
+
+```sh
+127.0.0.1:6379> GRAPH.LIST
+2) G
+3) resources
+4) players
+```
+
+## Frequently Asked Questions
+
+<AccordionGroup>
+  <Accordion title="Does GRAPH.LIST require a graph name argument?">
+    No. `GRAPH.LIST` takes no arguments. It scans the entire keyspace and returns all keys that contain graph data.
+  </Accordion>
+  <Accordion title="Does GRAPH.LIST return graphs from all databases?">
+    No. `GRAPH.LIST` only returns graph keys from the currently selected Redis database (the one selected with the `SELECT` command).
+  </Accordion>
+  <Accordion title="What is returned if no graphs exist?">
+    An empty array is returned if no graph keys exist in the current keyspace.
+  </Accordion>
+  <Accordion title="Are internal telemetry graphs included in the output?">
+    Yes. Internal telemetry graphs (e.g., `telemetry{A}`) may appear in the list. These are automatically created by FalkorDB for internal tracking purposes.
+  </Accordion>
+</AccordionGroup>

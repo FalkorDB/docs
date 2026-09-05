@@ -1,0 +1,179 @@
+---
+title: "External DNS access"
+description: "Publish per-pod DNS names so workloads outside the cluster can reach databases directly."
+icon: "globe"
+---
+
+By default, FalkorDB databases are reachable only through Kubernetes-internal
+service names such as
+`mydb-falkordb-falkordb.falkordb-system.svc.cluster.local`. Those names resolve
+only inside the cluster's CoreDNS, so workloads that live elsewhere — a second
+Kubernetes cluster, an EC2/VM tier, a peered VPC — cannot use them.
+
+This page describes how to publish stable, network-wide DNS names that resolve
+**directly to pod IPs**, so clients reach a FalkorDB pod in a single hop with no
+kube-proxy or load balancer in between.
+
+## Prerequisite: routable pod IPs
+
+Pod IPs must be routable from the network the clients live in. This is true when
+the CNI allocates pod IPs from the VPC address space:
+
+| Platform | Routable? |
+| --- | --- |
+| EKS with the AWS VPC CNI | Yes (default) |
+| AKS with Azure CNI and a pod subnet | Yes |
+| GKE VPC-native (alias IP) clusters | Yes |
+| Any cluster using an overlay (kubenet, Flannel VXLAN, Calico IPIP/VXLAN) | **No** |
+
+On an overlay network the pod CIDR is only meaningful inside the cluster; DNS
+records pointing at pod IPs will resolve but will not be reachable. Use a
+LoadBalancer service instead in that case.
+
+Also confirm that security groups / network policies allow the client network to
+reach the pod CIDR on `6379` (and `26379` when using Sentinel).
+
+## Prerequisite: ExternalDNS
+
+The admin server annotates the services it creates; an
+[ExternalDNS](https://kubernetes-sigs.github.io/external-dns/) controller in the
+cluster turns those annotations into records. Install it with a provider for
+your private zone, for example a Route 53 private hosted zone attached to the
+VPC:
+
+```bash
+helm repo add external-dns https://kubernetes-sigs.github.io/external-dns/
+helm install external-dns external-dns/external-dns \
+  --namespace external-dns --create-namespace \
+  --set provider=aws \
+  --set "domainFilters[0]=db.internal.example.com" \
+  --set policy=sync \
+  --set "sources[0]=service" \
+  --set txtOwnerId=falkordb
+```
+
+`policy=sync` lets ExternalDNS delete records when a database is deleted.
+Restrict `domainFilters` to the zone you delegate to FalkorDB so the controller
+cannot touch unrelated records.
+
+## Enabling it
+
+### For the whole installation
+
+Set the default domain once and every new database inherits it:
+
+```yaml
+# values.yaml
+adminServer:
+  env:
+    clusterExternalDomain: db.internal.example.com
+```
+
+### For a single database
+
+In the admin UI, open the **Networking** step of the create wizard and turn on
+**Publish external DNS names**, then enter your domain. The step previews the
+zones that will be created.
+
+From the API, set `spec.externalDomain` when creating a database:
+
+```bash
+curl -X POST https://admin.example.com/api/clusters \
+  -H 'Content-Type: application/json' \
+  -d '{
+        "name": "orders",
+        "namespace": "falkordb",
+        "spec": {
+          "topology": "replication",
+          "replicas": 3,
+          "externalDomain": "db.internal.example.com"
+        }
+      }'
+```
+
+To change or remove it later, use the **Networking** step of the edit wizard, or
+`PATCH` the database with `"externalDomain": ""`. The records and the services
+backing them are removed. Because the domain is passed to the pods as an
+environment variable, changing it rolls the pods one at a time.
+
+## What gets created
+
+For a database named `orders` with `externalDomain: db.internal.example.com`:
+
+| Name | Resolves to | Port |
+| --- | --- | --- |
+| `orders.db.internal.example.com` | every FalkorDB (or shard) pod IP | 6379 |
+| `<pod>.orders.db.internal.example.com` | that pod's IP | 6379 |
+| `orders-sent.db.internal.example.com` | every Sentinel pod IP | 26379 |
+| `<pod>.orders-sent.db.internal.example.com` | that pod's IP | 26379 |
+
+Sentinel gets its own zone because a Sentinel client that dialled a FalkorDB pod
+on 26379 would hang.
+
+The apex is a multi-A record — exactly what a Redis Cluster seed list or a
+Sentinel address list wants. The per-pod names are stable across rescheduling
+and are what the servers announce to each other.
+
+Under the hood the admin server:
+
+1. Creates a **headless** service (`clusterIP: None`,
+   `publishNotReadyAddresses: true`) per component, annotated with
+   `external-dns.alpha.kubernetes.io/hostname` and a 30 s TTL. Because it is
+   headless, its endpoints are pod IPs, so ExternalDNS emits A records that
+   point at pods rather than at a virtual service IP.
+2. Sets `ANNOUNCE_HOSTNAME_OVERRIDE=$(CURRENT_POD_NAME).<zone>` on the FalkorDB
+   and Sentinel components. The kubelet expands `$(CURRENT_POD_NAME)` per pod,
+   so one environment variable produces a distinct name for every replica.
+
+These services are tagged `falkordb.com/managed-by: external-dns`, are hidden
+from the database's service list in the UI and API, and are reconciled by the
+admin server — do not edit them by hand.
+
+## How each topology announces itself
+
+| Topology | Effect of `ANNOUNCE_HOSTNAME_OVERRIDE` |
+| --- | --- |
+| Standalone / replication | `replica-announce-ip` is set to the pod's external name, so a replica reports a reachable address to its primary. |
+| Sentinel | `sentinel announce-ip` is set, and `resolve-hostnames` / `announce-hostnames` are enabled so Sentinel hands clients the external name of the current primary during failover. |
+| Sharded (Redis Cluster) | `cluster-announce-hostname` is set and `cluster-preferred-endpoint-type` becomes `hostname`, so `MOVED`/`ASK` redirects and `CLUSTER SLOTS` return external names. |
+
+Because clients follow whatever the server announces, all three topologies keep
+working through failover and rescheduling without client-side configuration.
+
+## Connecting
+
+The connection card in the admin UI shows both addresses once an external domain
+is configured: **Host (external)** for workloads outside the cluster and
+**Host (in-cluster)** for workloads next to the database. The credentials API
+returns both as `externalHostname` and `internalHostname`.
+
+```bash
+# Standalone / replication
+redis-cli -h orders.db.internal.example.com -p 6379 --user default --pass "$PASSWORD"
+
+# Sharded
+redis-cli -c -h orders.db.internal.example.com -p 6379 --user default --pass "$PASSWORD"
+```
+
+## Caveats
+
+- **DNS caching.** Records use a 30 s TTL, but many client runtimes (notably the
+  JVM) cache DNS more aggressively. After a pod is rescheduled its name may
+  point at a stale IP until the cache expires. Configure your client's DNS TTL
+  (for example the JVM's `networkaddress.cache.ttl`) to 30 seconds or less.
+- **Propagation delay.** A newly created database is not resolvable until
+  ExternalDNS syncs (typically under a minute) and the record propagates.
+- **Zone ownership.** Point `domainFilters` at a zone dedicated to FalkorDB.
+  ExternalDNS with `policy=sync` deletes records it believes it owns.
+- **Sharded clusters on routable pod IPs** already work from outside the cluster
+  via `MOVED` redirects to pod IPs. An external domain is still worth setting so
+  clients get stable names rather than IPs that change on rescheduling.
+
+## Alternative: CoreDNS forwarding
+
+If you do not want to run ExternalDNS and the client network already routes to
+pod IPs, you can instead forward the `cluster.local` zone from the client
+network's resolver to the FalkorDB cluster's CoreDNS. This keeps the existing
+in-cluster names working everywhere and requires no changes to the database, but
+it couples the two networks' DNS and every lookup still resolves to a service IP
+— you keep the kube-proxy hop that this feature removes.

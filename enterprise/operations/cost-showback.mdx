@@ -1,0 +1,151 @@
+---
+title: "Cost Showback"
+description: "Estimate what each FalkorDB deployment costs to run, and total spend across the fleet."
+icon: "dollar-sign"
+---
+
+The Admin UI can show an estimated cost for each deployment and a total across every
+deployment you can see. Use it to answer *which databases account for most of our spend*
+and to attribute that spend back to the teams that own them.
+
+<Warning>
+  These figures are estimates, not a bill. FalkorDB Enterprise runs on any Kubernetes
+  cluster — EKS, GKE, AKS, OpenShift, bare metal, air-gapped — so it has no way to know
+  what your infrastructure actually costs. You supply the rates, and the product applies
+  them to the capacity each deployment reserves.
+</Warning>
+
+## Configure pricing
+
+1. Open **Settings**.
+2. Go to **Cost Showback**.
+3. Turn on **Show estimated costs**.
+4. Set the **Currency** to a three-letter ISO 4217 code such as `USD`, `EUR`, or `GBP`.
+5. Enter the three rates:
+
+| Rate | Meaning |
+| --- | --- |
+| **CPU rate** | Price of one reserved CPU core for one hour |
+| **Memory rate** | Price of one reserved GB of memory for one hour |
+| **Storage rate** | Price of one provisioned GB of storage for one month |
+
+6. Select **Save Settings**.
+
+A rough starting point on a major cloud is `0.04` per CPU core-hour, `0.005` per GB-hour of
+memory, and `0.10` per GB-month of storage. Your own negotiated, committed-use, or spot
+rates will differ, and using them is the point — the estimate is only as good as the rates
+you enter.
+
+### Configure pricing in Helm values
+
+The rates live in the settings ConfigMap, so they can be declared in `values.yaml` and
+reconciled like any other setting:
+
+```yaml
+adminServer:
+  bootstrap:
+    settingsConfig:
+      create: true
+      settings:
+        cost:
+          enabled: true
+          provider: rate-card
+          currency: USD
+          rate_card:
+            cpu_core_hour: 0.04
+            memory_gb_hour: 0.005
+            storage_gb_month: 0.10
+            # Optional: charge specific StorageClasses at a different rate.
+            storage_class_overrides:
+              fast-ssd: 0.25
+```
+
+## Where costs appear
+
+- **Dashboard** — a one-line summary of total estimated spend and the biggest spender.
+- **Deployments** — an estimated monthly cost beside each deployment, and a **Sort by →
+  Highest cost** option.
+- **Deployment details** — the deployment's estimated cost split by CPU, memory, and
+  storage on the **General** tab, with its share of total spend.
+- **Cluster Statistics** — the full breakdown: every deployment with its per-dimension
+  cost, share of the total, and fleet totals. The dashboard and deployment pages link here.
+- **Create wizards** — an estimate on the Review step, priced from the exact request that
+  is about to be sent.
+- **Update wizard, Scale and Quick Edit** — the change as a before-to-after figure, so the
+  cost of a scale-out is visible while it is still a decision.
+
+Estimates update as you adjust CPU, memory, replicas or shards. Because cost is
+requests-based, raising only a *limit* correctly reports no change — the reserved capacity
+has not moved.
+
+## Before you configure pricing
+
+With cost showback turned off, or before a rate card is filled in, the same views still
+report each deployment's **reserved capacity** and its share of the fleet. That already
+answers which deployments are the largest; adding rates only puts a currency figure on it.
+
+## How the estimate is calculated
+
+A deployment is charged for the capacity it **reserves**, not what it happens to be using:
+
+```text
+CPU cost     = CPU requests × replicas × CPU rate
+Memory cost  = memory requests × replicas × memory rate
+Storage cost = provisioned PVC size × replicas × storage rate
+```
+
+Every component that reserves capacity is counted, including sentinel pods and each shard
+in a sharded topology. Where a component declares limits but no requests, the limits are
+used instead.
+
+A sharded deployment is charged for `shardCount × replicas` pods. It has no separate
+primary component — its top-level replica count and resources describe the shard template,
+not an additional workload.
+
+Monthly figures project the hourly rate over **730 hours**, the convention every major
+cloud uses.
+
+Reserved capacity is used rather than measured consumption for two reasons. Kubernetes
+holds requested capacity for a pod whether or not it is used, so a deployment that reserves
+four cores denies those cores to everything else even while idle. And a reserved figure is
+stable between reads, which makes it defensible as a chargeback basis in a way that a
+fluctuating usage sample is not.
+
+## What the total excludes
+
+The fleet total is a **floor on real spend**, not a reconciliation of your cloud bill. It
+does not include:
+
+- **Idle cluster capacity** — nodes you pay for but no deployment has reserved.
+- **The managed control-plane fee** — for example the per-cluster hourly charge on EKS or GKE.
+- **Load balancers**, ingress, and network egress.
+- **Backup object storage** and volume snapshots.
+- **The Admin Server, Admin UI, KubeBlocks, and other platform components.**
+
+None of these belong to any single deployment, so attributing them would be a guess layered
+on top of an estimate. Compare the fleet total against your actual bill to understand the
+gap for your environment.
+
+## Deployments with no resource requests
+
+A deployment that sets no CPU or memory requests prices at zero, because there is nothing
+to attribute cost to. The Admin UI flags this rather than presenting it as free — it almost
+always means the deployment should have had requests set. See
+[Scaling](/enterprise/operations/scaling) to add them.
+
+## Who can see costs
+
+Cost visibility follows deployment visibility: each cost view requires the same permission
+as the deployment view it corresponds to.
+
+| View | Permission |
+| --- | --- |
+| Fleet totals and the breakdown table — dashboard, deployments list, Cluster Statistics | `clusters:list` |
+| A single deployment's cost on its **General** tab | `clusters:read` |
+| Estimating a prospective deployment in a wizard or scale dialog | `clusters:list` |
+| Editing the rate card | `settings:update` |
+
+Both are scoped by namespace, so a role restricted to one team's namespaces sees that
+team's spend and nothing else. A deployment's reported share of total spend is also
+calculated only across the namespaces the caller can list, so it never reveals the size of
+spend elsewhere in the cluster.

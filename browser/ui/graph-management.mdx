@@ -1,0 +1,50 @@
+---
+title: "Graphs Manager"
+description: "Create, delete, duplicate, export, and upload graph data from FalkorDB Browser."
+---
+
+Graphs Manager is where you control graph lifecycle actions from one dialog.
+
+## Supported actions
+
+| Action | Description |
+| :--- | :--- |
+| Create graph | Create a new graph from the UI. |
+| Delete graph | Delete one or more selected graphs. |
+| Duplicate graph | Create a copy of an existing graph, including data. |
+| Export graph | Download a `.dump` file through `/api/graph/{graph}/export`. Replace `{graph}` with the graph identifier. |
+| Upload data | Open the Upload Data flow for file-based or query-based imports. |
+
+## Loaded and offloaded graphs (Enterprise)
+When the Browser is connected to a FalkorDB Enterprise instance that supports
+graph offloading, each graph in the list carries a status dot:
+
+| Indicator | Meaning |
+| :--- | :--- |
+| `Loaded` | The graph is in memory and its statistics can be read. |
+| `Offloaded` | The graph is persisted but not in memory. |
+
+Offloaded graphs still appear in the list and can still be selected — but their
+counts and memory usage are reported as `N/A`, because reading them would load
+the graph back into memory and undo the offload.
+
+## Related pages
+- [Upload Data dialog](/browser/ui/upload-data)
+- [Graph page (overall layout)](/browser/ui/graph-page)
+
+## Frequently Asked Questions
+
+<AccordionGroup>
+  <Accordion title="Can I export graph data from Graphs Manager?">
+    Yes. Select a graph and use Export to download a `.dump` file via `/api/graph/{graph}/export`, replacing `{graph}` with the graph identifier.
+  </Accordion>
+  <Accordion title="Can I duplicate a graph including all data?">
+    Yes. Duplicate creates a new graph copy from the selected source graph.
+  </Accordion>
+  <Accordion title="Can I remove multiple graphs in one flow?">
+    Yes. Graph deletion supports multi-selection when multiple graphs are selected.
+  </Accordion>
+  <Accordion title="What do the Loaded and Offloaded dots next to a graph mean?">
+    On FalkorDB Enterprise, `Loaded` means the graph is in memory, and `Offloaded` means it is persisted but not in memory. Statistics for offloaded graphs show `N/A` so that reading them does not pull the graph back into memory.
+  </Accordion>
+</AccordionGroup>

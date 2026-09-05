@@ -1,0 +1,48 @@
+---
+title: "Replicated deployment"
+description: "Create a multi-node FalkorDB deployment without Sentinel services."
+icon: "copy"
+---
+
+## When to use this
+
+Use this flow when you want multiple FalkorDB pods but do not need Sentinel-managed failover.
+
+Current implementation note: the UI does not send a separate no-Sentinel `replication` topology. When Sentinel is disabled, the create request uses:
+
+- `spec.topology: standalone`
+- `spec.replicas` set from the FalkorDB replica count
+- No `spec.sentinel` block
+
+For production high availability, use [Replicated deployment with Sentinel](/enterprise/databases/sentinel), which sends `spec.topology: replication` and a Sentinel block.
+
+## Create from Admin UI
+
+1. Open **Deployments** > **Create Deployment**.
+2. Choose **Standalone**.
+3. Choose **Full Setup**.
+4. In **FalkorDB**, set **Replicas** to `2` or higher.
+5. In **Sentinel**, leave Sentinel disabled for a replicated deployment without Sentinel.
+6. Configure resources, authentication, networking, TLS, backup, and FalkorDB parameters as needed. See [Networking](/enterprise/databases/networking) for the external domain option.
+7. Review and submit.
+
+## Template notes
+
+- The Dev template sets replicas to `1` and Sentinel disabled.
+- The QA template sets replicas to `2` and Sentinel enabled by default.
+- The Prod template enforces at least `2` replicas and Sentinel enabled.
+
+If you choose QA or Prod and want no Sentinel, switch to full setup and verify the selected template policy allows it. Prod requires Sentinel and at least two FalkorDB replicas.
+
+## Validate
+
+```bash
+kubectl get clusters.apps.kubeblocks.io -n <namespace>
+kubectl get pods -n <namespace>
+```
+
+In the Admin UI, open the deployment and review:
+
+- **General** for topology and replica count.
+- **Pods** for ready replicas.
+- **Operations** for any KubeBlocks OpsRequests.

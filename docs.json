@@ -1,0 +1,2370 @@
+{
+  "$schema": "https://mintlify.com/docs.json",
+  "theme": "mint",
+  "name": "FalkorDB Docs",
+  "description": "Official FalkorDB documentation — the high-performance graph database for GraphRAG, Cypher queries, and knowledge graphs powering accurate GenAI applications.",
+  "colors": {
+    "primary": "#FF8101",
+    "light": "#FDE900",
+    "dark": "#FF8101"
+  },
+  "favicon": "/images/favicon.ico",
+  "logo": {
+    "light": "/images/falkordb-logo-color.svg",
+    "dark": "/images/falkordb-logo.svg",
+    "href": "https://www.falkordb.com"
+  },
+  "appearance": {
+    "default": "dark"
+  },
+  "navigation": {
+    "products": [
+      {
+        "product": "FalkorDB",
+        "description": "The open source graph database, Cypher language, and tooling.",
+        "icon": "database",
+        "anchors": [
+          {
+            "anchor": "Documentation",
+            "icon": "book-open",
+            "groups": [
+              {
+                "group": "Home",
+                "pages": [
+                  "index",
+                  "datatypes",
+                  "support"
+                ]
+              },
+              {
+                "group": "Getting Started",
+                "pages": [
+                  "getting-started/configuration",
+                  "getting-started/clients"
+                ],
+                "root": "getting-started/index"
+              },
+              {
+                "group": "Cypher Language",
+                "pages": [
+                  "cypher/match",
+                  "cypher/optional-match",
+                  "cypher/where",
+                  "cypher/return",
+                  "cypher/order-by",
+                  "cypher/skip",
+                  "cypher/limit",
+                  "cypher/create",
+                  "cypher/delete",
+                  "cypher/set",
+                  "cypher/merge",
+                  "cypher/with",
+                  "cypher/union",
+                  "cypher/unwind",
+                  "cypher/foreach",
+                  "cypher/call",
+                  "cypher/load-csv",
+                  "cypher/functions",
+                  "cypher/procedures",
+                  {
+                    "group": "Indexing",
+                    "pages": [
+                      "cypher/indexing/range-index",
+                      "cypher/indexing/fulltext-index",
+                      "cypher/indexing/vector-index"
+                    ],
+                    "root": "cypher/indexing/index"
+                  },
+                  "cypher/cypher-support",
+                  "cypher/remove",
+                  "cypher/known-limitations"
+                ],
+                "root": "cypher/index"
+              },
+              {
+                "group": "Algorithms",
+                "pages": [
+                  "algorithms/bfs",
+                  "algorithms/betweenness-centrality",
+                  "algorithms/cdlp",
+                  "algorithms/pagerank",
+                  "algorithms/sppath",
+                  "algorithms/sspath",
+                  "algorithms/wcc",
+                  "algorithms/harmonic-centrality",
+                  "algorithms/maxflow",
+                  "algorithms/msf"
+                ],
+                "root": "algorithms/index"
+              },
+              {
+                "group": "UDFs",
+                "pages": [
+                  {
+                    "group": "FLEX Function Reference",
+                    "pages": [
+                      {
+                        "group": "Bitwise Functions",
+                        "pages": [
+                          "udfs/flex/bitwise/and",
+                          "udfs/flex/bitwise/not",
+                          "udfs/flex/bitwise/or",
+                          "udfs/flex/bitwise/shiftLeft",
+                          "udfs/flex/bitwise/shiftRight",
+                          "udfs/flex/bitwise/xor"
+                        ],
+                        "root": "udfs/flex/bitwise/index"
+                      },
+                      {
+                        "group": "Collection Functions",
+                        "pages": [
+                          "udfs/flex/collections/frequencies",
+                          "udfs/flex/collections/intersection",
+                          "udfs/flex/collections/shuffle",
+                          "udfs/flex/collections/union",
+                          "udfs/flex/collections/zip"
+                        ],
+                        "root": "udfs/flex/collections/index"
+                      },
+                      {
+                        "group": "Date Functions",
+                        "pages": [
+                          "udfs/flex/date/format",
+                          "udfs/flex/date/parse",
+                          "udfs/flex/date/toTimeZone",
+                          "udfs/flex/date/truncate"
+                        ],
+                        "root": "udfs/flex/date/index"
+                      },
+                      {
+                        "group": "JSON Functions",
+                        "pages": [
+                          "udfs/flex/json/fromJsonList",
+                          "udfs/flex/json/fromJsonMap",
+                          "udfs/flex/json/toJson"
+                        ],
+                        "root": "udfs/flex/json/index"
+                      },
+                      {
+                        "group": "Map Functions",
+                        "pages": [
+                          "udfs/flex/map/fromPairs",
+                          "udfs/flex/map/merge",
+                          "udfs/flex/map/removeKey",
+                          "udfs/flex/map/removeKeys",
+                          "udfs/flex/map/submap"
+                        ],
+                        "root": "udfs/flex/map/index"
+                      },
+                      {
+                        "group": "Similarity Functions",
+                        "pages": [
+                          "udfs/flex/similarity/jaccard"
+                        ],
+                        "root": "udfs/flex/similarity/index"
+                      },
+                      {
+                        "group": "Text Functions",
+                        "pages": [
+                          "udfs/flex/text/camelCase",
+                          "udfs/flex/text/capitalize",
+                          "udfs/flex/text/decapitalize",
+                          "udfs/flex/text/format",
+                          "udfs/flex/text/indexOf",
+                          "udfs/flex/text/indexesOf",
+                          "udfs/flex/text/jaroWinkler",
+                          "udfs/flex/text/join",
+                          "udfs/flex/text/levenshtein",
+                          "udfs/flex/text/lpad",
+                          "udfs/flex/text/regexGroups",
+                          "udfs/flex/text/repeat",
+                          "udfs/flex/text/replace",
+                          "udfs/flex/text/rpad",
+                          "udfs/flex/text/snakeCase",
+                          "udfs/flex/text/swapCase",
+                          "udfs/flex/text/upperCamelCase"
+                        ],
+                        "root": "udfs/flex/text/index"
+                      }
+                    ],
+                    "root": "udfs/flex/index"
+                  }
+                ],
+                "root": "udfs/index"
+              },
+              {
+                "group": "Commands",
+                "pages": [
+                  "commands/graph.query",
+                  "commands/graph.ro-query",
+                  "commands/graph.delete",
+                  "commands/graph.explain",
+                  "commands/graph.list",
+                  "commands/graph.profile",
+                  "commands/graph.config-set",
+                  "commands/graph.constraint-drop",
+                  "commands/graph.copy",
+                  "commands/graph.info",
+                  "commands/graph.memory",
+                  "commands/acl",
+                  "commands/graph.config-get",
+                  "commands/graph.constraint-create",
+                  "commands/graph.slowlog"
+                ],
+                "root": "commands/index"
+              },
+              {
+                "group": "Operations",
+                "pages": [
+                  {
+                    "group": "Migration",
+                    "pages": [
+                      "operations/migration/redisgraph-to-falkordb",
+                      "operations/migration/neo4j-to-falkordb",
+                      "operations/migration/kuzu-to-falkordb",
+                      "operations/migration/rdf-to-falkordb",
+                      "operations/migration/sql-to-falkordb"
+                    ],
+                    "root": "operations/migration/index"
+                  },
+                  {
+                    "group": "Durability",
+                    "pages": [
+                      "operations/durability/persistence",
+                      "operations/durability/acl-persistence"
+                    ],
+                    "root": "operations/durability/index"
+                  },
+                  "operations/replication",
+                  "operations/cluster",
+                  "operations/k8s-support",
+                  "operations/opentelemetry",
+                  "operations/railway",
+                  {
+                    "group": "FalkorDBLite",
+                    "pages": [
+                      "operations/falkordblite/falkordblite-py",
+                      "operations/falkordblite/falkordblite-ts"
+                    ],
+                    "root": "operations/falkordblite/index"
+                  },
+                  "operations/lightning-ai",
+                  "operations/building-docker",
+                  "operations/kubeblocks",
+                  "operations/docker"
+                ],
+                "root": "operations/index"
+              },
+              {
+                "group": "The FalkorDB Design",
+                "pages": [
+                  "design/client-spec",
+                  "design/result-structure",
+                  "design/bulk-spec",
+                  "design/third-party",
+                  "design/concurrency"
+                ],
+                "root": "design/index"
+              },
+              {
+                "group": "References",
+                "pages": [
+                  "references/license"
+                ],
+                "root": "references/index"
+              }
+            ]
+          },
+          {
+            "anchor": "Integrations",
+            "icon": "plug",
+            "groups": [
+              {
+                "group": "Integration",
+                "pages": [
+                  "integration/rest",
+                  "integration/kafka-connect",
+                  "integration/jena",
+                  "integration/bolt-support",
+                  "integration/spring-data-falkordb",
+                  "integration/snowflake",
+                  "integration/pyg",
+                  "genai-tools/graphify",
+                  "integration/bulk-loader",
+                  "integration/n8n"
+                ],
+                "root": "integration/index"
+              }
+            ]
+          },
+          {
+            "anchor": "AI Tools",
+            "icon": "robot",
+            "groups": [
+              {
+                "group": "GenAI Tools",
+                "pages": [
+                  "genai-tools/graphrag-sdk",
+                  "genai-tools/ag2",
+                  "genai-tools/langchain",
+                  "genai-tools/langgraph",
+                  "genai-tools/llamaindex",
+                  "genai-tools/graphrag-toolkit",
+                  {
+                    "group": "MCP Server",
+                    "pages": [
+                      "genai-tools/mcpserver/quickstart",
+                      "genai-tools/mcpserver/configuration",
+                      "genai-tools/mcpserver/docker"
+                    ],
+                    "root": "genai-tools/mcpserver/index"
+                  },
+                  "genai-tools/queryweaver",
+                  "genai-tools/code-graph",
+                  "genai-tools/graphify"
+                ],
+                "root": "genai-tools/index"
+              },
+              {
+                "group": "Agentic Memory",
+                "pages": [
+                  "agentic-memory/graphiti",
+                  "agentic-memory/cognee",
+                  "agentic-memory/graphiti-mcp-server",
+                  "agentic-memory/mem0"
+                ],
+                "root": "agentic-memory/index"
+              }
+            ]
+          },
+          {
+            "anchor": "Browser",
+            "icon": "desktop",
+            "groups": [
+              {
+                "group": "Browser",
+                "pages": [
+                  {
+                    "group": "UI Elements",
+                    "pages": [
+                      "browser/ui/login",
+                      "browser/ui/navigation",
+                      "browser/ui/settings",
+                      "browser/ui/graph-page",
+                      "browser/ui/graph-tabs",
+                      "browser/ui/graph-canvas",
+                      "browser/ui/graph-info-panel",
+                      "browser/ui/style-panel",
+                      "browser/ui/data-panel",
+                      "browser/ui/query-editor",
+                      "browser/ui/query-history",
+                      "browser/ui/table-view",
+                      "browser/ui/metadata-view",
+                      "browser/ui/schema-view",
+                      "browser/ui/toolbar-actions",
+                      "browser/ui/chat-panel",
+                      "browser/ui/udf-libraries",
+                      "browser/ui/upload-data",
+                      "browser/ui/graph-management",
+                      "browser/ui/api-documentation",
+                      "browser/ui/auth-access-control"
+                    ],
+                    "root": "browser/ui/index"
+                  },
+                  "browser/canvas"
+                ],
+                "root": "browser/index"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "product": "FalkorDB Cloud",
+        "description": "The managed FalkorDB service and its provisioning API.",
+        "icon": "cloud",
+        "tabs": [
+          {
+            "tab": "Guides",
+            "groups": [
+              {
+                "group": "Getting Started",
+                "pages": [
+                  "cloud/index",
+                  "cloud/quickstart",
+                  "cloud/features"
+                ]
+              },
+              {
+                "group": "Service tiers",
+                "pages": [
+                  "cloud/tiers/free",
+                  "cloud/tiers/startup",
+                  "cloud/tiers/pro",
+                  "cloud/tiers/enterprise"
+                ]
+              },
+              {
+                "group": "Operations",
+                "pages": [
+                  "cloud/operations/export-import",
+                  "cloud/operations/upgrading-instances",
+                  "cloud/operations/user-management",
+                  "cloud/operations/monitoring-dashboard",
+                  "cloud/operations/maintenance-windows"
+                ]
+              }
+            ]
+          },
+          {
+            "tab": "API Reference",
+            "pages": [
+              "cloud/api-reference/introduction",
+              "cloud/api-reference/schemas",
+              {
+                "group": "Authentication",
+                "pages": [
+                  "cloud/api-reference/authentication/signin",
+                  "cloud/api-reference/authentication/logout"
+                ]
+              },
+              {
+                "group": "Account management",
+                "pages": [
+                  "cloud/api-reference/account/service-plans",
+                  {
+                    "group": "Subscriptions",
+                    "pages": [
+                      "cloud/api-reference/account/subscriptions/list",
+                      "cloud/api-reference/account/subscriptions/create",
+                      "cloud/api-reference/account/subscriptions/describe",
+                      "cloud/api-reference/account/subscriptions/delete"
+                    ]
+                  },
+                  {
+                    "group": "Access control",
+                    "pages": [
+                      "cloud/api-reference/account/access/list-users",
+                      "cloud/api-reference/account/access/invite-user",
+                      "cloud/api-reference/account/access/revoke-user"
+                    ]
+                  },
+                  "cloud/api-reference/account/user/describe"
+                ]
+              },
+              {
+                "group": "Cloud accounts",
+                "pages": [
+                  "cloud/api-reference/cloud-accounts/overview",
+                  "cloud/api-reference/cloud-accounts/create",
+                  "cloud/api-reference/cloud-accounts/describe",
+                  "cloud/api-reference/cloud-accounts/connection"
+                ]
+              },
+              {
+                "group": "Custom networks",
+                "pages": [
+                  "cloud/api-reference/networking/list",
+                  "cloud/api-reference/networking/create",
+                  "cloud/api-reference/networking/describe",
+                  "cloud/api-reference/networking/update",
+                  "cloud/api-reference/networking/delete"
+                ]
+              },
+              {
+                "group": "Snapshots",
+                "pages": [
+                  "cloud/api-reference/snapshots/list",
+                  "cloud/api-reference/snapshots/create",
+                  "cloud/api-reference/snapshots/describe",
+                  "cloud/api-reference/snapshots/restore",
+                  "cloud/api-reference/snapshots/copy",
+                  "cloud/api-reference/snapshots/delete"
+                ]
+              },
+              {
+                "group": "Database users",
+                "pages": [
+                  "cloud/api-reference/database-users/overview",
+                  "cloud/api-reference/database-users/list",
+                  "cloud/api-reference/database-users/create",
+                  "cloud/api-reference/database-users/update",
+                  "cloud/api-reference/database-users/delete"
+                ]
+              },
+              {
+                "group": "Enterprise BYOA",
+                "pages": [
+                  {
+                    "group": "Standalone",
+                    "pages": [
+                      "cloud/api-reference/enterprise-byoa/standalone/list",
+                      "cloud/api-reference/enterprise-byoa/standalone/create",
+                      "cloud/api-reference/enterprise-byoa/standalone/describe",
+                      "cloud/api-reference/enterprise-byoa/standalone/update",
+                      "cloud/api-reference/enterprise-byoa/standalone/delete",
+                      "cloud/api-reference/enterprise-byoa/standalone/backup",
+                      "cloud/api-reference/enterprise-byoa/standalone/copy-snapshot",
+                      "cloud/api-reference/enterprise-byoa/standalone/failover",
+                      "cloud/api-reference/enterprise-byoa/standalone/start",
+                      "cloud/api-reference/enterprise-byoa/standalone/stop",
+                      "cloud/api-reference/enterprise-byoa/standalone/restart"
+                    ]
+                  },
+                  {
+                    "group": "Cluster (Multi-Zone)",
+                    "pages": [
+                      "cloud/api-reference/enterprise-byoa/cluster-multi-zone/list",
+                      "cloud/api-reference/enterprise-byoa/cluster-multi-zone/create",
+                      "cloud/api-reference/enterprise-byoa/cluster-multi-zone/describe",
+                      "cloud/api-reference/enterprise-byoa/cluster-multi-zone/update",
+                      "cloud/api-reference/enterprise-byoa/cluster-multi-zone/delete",
+                      "cloud/api-reference/enterprise-byoa/cluster-multi-zone/backup",
+                      "cloud/api-reference/enterprise-byoa/cluster-multi-zone/copy-snapshot",
+                      "cloud/api-reference/enterprise-byoa/cluster-multi-zone/failover",
+                      "cloud/api-reference/enterprise-byoa/cluster-multi-zone/start",
+                      "cloud/api-reference/enterprise-byoa/cluster-multi-zone/stop",
+                      "cloud/api-reference/enterprise-byoa/cluster-multi-zone/restart"
+                    ]
+                  },
+                  {
+                    "group": "Cluster (Single-Zone)",
+                    "pages": [
+                      "cloud/api-reference/enterprise-byoa/cluster-single-zone/list",
+                      "cloud/api-reference/enterprise-byoa/cluster-single-zone/create",
+                      "cloud/api-reference/enterprise-byoa/cluster-single-zone/describe",
+                      "cloud/api-reference/enterprise-byoa/cluster-single-zone/update",
+                      "cloud/api-reference/enterprise-byoa/cluster-single-zone/delete",
+                      "cloud/api-reference/enterprise-byoa/cluster-single-zone/backup",
+                      "cloud/api-reference/enterprise-byoa/cluster-single-zone/copy-snapshot",
+                      "cloud/api-reference/enterprise-byoa/cluster-single-zone/failover",
+                      "cloud/api-reference/enterprise-byoa/cluster-single-zone/start",
+                      "cloud/api-reference/enterprise-byoa/cluster-single-zone/stop",
+                      "cloud/api-reference/enterprise-byoa/cluster-single-zone/restart"
+                    ]
+                  },
+                  {
+                    "group": "Multi-Zone",
+                    "pages": [
+                      "cloud/api-reference/enterprise-byoa/multi-zone/list",
+                      "cloud/api-reference/enterprise-byoa/multi-zone/create",
+                      "cloud/api-reference/enterprise-byoa/multi-zone/describe",
+                      "cloud/api-reference/enterprise-byoa/multi-zone/update",
+                      "cloud/api-reference/enterprise-byoa/multi-zone/delete",
+                      "cloud/api-reference/enterprise-byoa/multi-zone/backup",
+                      "cloud/api-reference/enterprise-byoa/multi-zone/copy-snapshot",
+                      "cloud/api-reference/enterprise-byoa/multi-zone/failover",
+                      "cloud/api-reference/enterprise-byoa/multi-zone/start",
+                      "cloud/api-reference/enterprise-byoa/multi-zone/stop",
+                      "cloud/api-reference/enterprise-byoa/multi-zone/restart"
+                    ]
+                  },
+                  {
+                    "group": "Single-Zone",
+                    "pages": [
+                      "cloud/api-reference/enterprise-byoa/single-zone/list",
+                      "cloud/api-reference/enterprise-byoa/single-zone/create",
+                      "cloud/api-reference/enterprise-byoa/single-zone/describe",
+                      "cloud/api-reference/enterprise-byoa/single-zone/update",
+                      "cloud/api-reference/enterprise-byoa/single-zone/delete",
+                      "cloud/api-reference/enterprise-byoa/single-zone/backup",
+                      "cloud/api-reference/enterprise-byoa/single-zone/copy-snapshot",
+                      "cloud/api-reference/enterprise-byoa/single-zone/failover",
+                      "cloud/api-reference/enterprise-byoa/single-zone/start",
+                      "cloud/api-reference/enterprise-byoa/single-zone/stop",
+                      "cloud/api-reference/enterprise-byoa/single-zone/restart"
+                    ]
+                  }
+                ]
+              },
+              {
+                "group": "Enterprise",
+                "pages": [
+                  {
+                    "group": "Standalone",
+                    "pages": [
+                      "cloud/api-reference/enterprise/standalone/list",
+                      "cloud/api-reference/enterprise/standalone/create",
+                      "cloud/api-reference/enterprise/standalone/describe",
+                      "cloud/api-reference/enterprise/standalone/update",
+                      "cloud/api-reference/enterprise/standalone/delete",
+                      "cloud/api-reference/enterprise/standalone/backup",
+                      "cloud/api-reference/enterprise/standalone/copy-snapshot",
+                      "cloud/api-reference/enterprise/standalone/failover",
+                      "cloud/api-reference/enterprise/standalone/start",
+                      "cloud/api-reference/enterprise/standalone/stop",
+                      "cloud/api-reference/enterprise/standalone/restart"
+                    ]
+                  },
+                  {
+                    "group": "Cluster (Multi-Zone)",
+                    "pages": [
+                      "cloud/api-reference/enterprise/cluster-multi-zone/list",
+                      "cloud/api-reference/enterprise/cluster-multi-zone/create",
+                      "cloud/api-reference/enterprise/cluster-multi-zone/describe",
+                      "cloud/api-reference/enterprise/cluster-multi-zone/update",
+                      "cloud/api-reference/enterprise/cluster-multi-zone/delete",
+                      "cloud/api-reference/enterprise/cluster-multi-zone/backup",
+                      "cloud/api-reference/enterprise/cluster-multi-zone/copy-snapshot",
+                      "cloud/api-reference/enterprise/cluster-multi-zone/failover",
+                      "cloud/api-reference/enterprise/cluster-multi-zone/start",
+                      "cloud/api-reference/enterprise/cluster-multi-zone/stop",
+                      "cloud/api-reference/enterprise/cluster-multi-zone/restart"
+                    ]
+                  },
+                  {
+                    "group": "Cluster (Single-Zone)",
+                    "pages": [
+                      "cloud/api-reference/enterprise/cluster-single-zone/list",
+                      "cloud/api-reference/enterprise/cluster-single-zone/create",
+                      "cloud/api-reference/enterprise/cluster-single-zone/describe",
+                      "cloud/api-reference/enterprise/cluster-single-zone/update",
+                      "cloud/api-reference/enterprise/cluster-single-zone/delete",
+                      "cloud/api-reference/enterprise/cluster-single-zone/backup",
+                      "cloud/api-reference/enterprise/cluster-single-zone/copy-snapshot",
+                      "cloud/api-reference/enterprise/cluster-single-zone/failover",
+                      "cloud/api-reference/enterprise/cluster-single-zone/start",
+                      "cloud/api-reference/enterprise/cluster-single-zone/stop",
+                      "cloud/api-reference/enterprise/cluster-single-zone/restart"
+                    ]
+                  },
+                  {
+                    "group": "Multi-Zone",
+                    "pages": [
+                      "cloud/api-reference/enterprise/multi-zone/list",
+                      "cloud/api-reference/enterprise/multi-zone/create",
+                      "cloud/api-reference/enterprise/multi-zone/describe",
+                      "cloud/api-reference/enterprise/multi-zone/update",
+                      "cloud/api-reference/enterprise/multi-zone/delete",
+                      "cloud/api-reference/enterprise/multi-zone/backup",
+                      "cloud/api-reference/enterprise/multi-zone/copy-snapshot",
+                      "cloud/api-reference/enterprise/multi-zone/failover",
+                      "cloud/api-reference/enterprise/multi-zone/start",
+                      "cloud/api-reference/enterprise/multi-zone/stop",
+                      "cloud/api-reference/enterprise/multi-zone/restart"
+                    ]
+                  },
+                  {
+                    "group": "Single-Zone",
+                    "pages": [
+                      "cloud/api-reference/enterprise/single-zone/list",
+                      "cloud/api-reference/enterprise/single-zone/create",
+                      "cloud/api-reference/enterprise/single-zone/describe",
+                      "cloud/api-reference/enterprise/single-zone/update",
+                      "cloud/api-reference/enterprise/single-zone/delete",
+                      "cloud/api-reference/enterprise/single-zone/backup",
+                      "cloud/api-reference/enterprise/single-zone/copy-snapshot",
+                      "cloud/api-reference/enterprise/single-zone/failover",
+                      "cloud/api-reference/enterprise/single-zone/start",
+                      "cloud/api-reference/enterprise/single-zone/stop",
+                      "cloud/api-reference/enterprise/single-zone/restart"
+                    ]
+                  }
+                ]
+              },
+              {
+                "group": "Pro",
+                "pages": [
+                  {
+                    "group": "Standalone",
+                    "pages": [
+                      "cloud/api-reference/pro/standalone/list",
+                      "cloud/api-reference/pro/standalone/create",
+                      "cloud/api-reference/pro/standalone/describe",
+                      "cloud/api-reference/pro/standalone/update",
+                      "cloud/api-reference/pro/standalone/delete",
+                      "cloud/api-reference/pro/standalone/backup",
+                      "cloud/api-reference/pro/standalone/copy-snapshot",
+                      "cloud/api-reference/pro/standalone/failover",
+                      "cloud/api-reference/pro/standalone/start",
+                      "cloud/api-reference/pro/standalone/stop",
+                      "cloud/api-reference/pro/standalone/restart"
+                    ]
+                  },
+                  {
+                    "group": "Cluster (Multi-Zone)",
+                    "pages": [
+                      "cloud/api-reference/pro/cluster-multi-zone/list",
+                      "cloud/api-reference/pro/cluster-multi-zone/create",
+                      "cloud/api-reference/pro/cluster-multi-zone/describe",
+                      "cloud/api-reference/pro/cluster-multi-zone/update",
+                      "cloud/api-reference/pro/cluster-multi-zone/delete",
+                      "cloud/api-reference/pro/cluster-multi-zone/backup",
+                      "cloud/api-reference/pro/cluster-multi-zone/copy-snapshot",
+                      "cloud/api-reference/pro/cluster-multi-zone/failover",
+                      "cloud/api-reference/pro/cluster-multi-zone/start",
+                      "cloud/api-reference/pro/cluster-multi-zone/stop",
+                      "cloud/api-reference/pro/cluster-multi-zone/restart"
+                    ]
+                  },
+                  {
+                    "group": "Multi-Zone",
+                    "pages": [
+                      "cloud/api-reference/pro/multi-zone/list",
+                      "cloud/api-reference/pro/multi-zone/create",
+                      "cloud/api-reference/pro/multi-zone/describe",
+                      "cloud/api-reference/pro/multi-zone/update",
+                      "cloud/api-reference/pro/multi-zone/delete",
+                      "cloud/api-reference/pro/multi-zone/backup",
+                      "cloud/api-reference/pro/multi-zone/copy-snapshot",
+                      "cloud/api-reference/pro/multi-zone/failover",
+                      "cloud/api-reference/pro/multi-zone/start",
+                      "cloud/api-reference/pro/multi-zone/stop",
+                      "cloud/api-reference/pro/multi-zone/restart"
+                    ]
+                  },
+                  {
+                    "group": "Single-Zone",
+                    "pages": [
+                      "cloud/api-reference/pro/single-zone/list",
+                      "cloud/api-reference/pro/single-zone/create",
+                      "cloud/api-reference/pro/single-zone/describe",
+                      "cloud/api-reference/pro/single-zone/update",
+                      "cloud/api-reference/pro/single-zone/delete",
+                      "cloud/api-reference/pro/single-zone/backup",
+                      "cloud/api-reference/pro/single-zone/copy-snapshot",
+                      "cloud/api-reference/pro/single-zone/failover",
+                      "cloud/api-reference/pro/single-zone/start",
+                      "cloud/api-reference/pro/single-zone/stop",
+                      "cloud/api-reference/pro/single-zone/restart"
+                    ]
+                  }
+                ]
+              },
+              {
+                "group": "Startup",
+                "pages": [
+                  {
+                    "group": "Standalone",
+                    "pages": [
+                      "cloud/api-reference/startup/standalone/list",
+                      "cloud/api-reference/startup/standalone/create",
+                      "cloud/api-reference/startup/standalone/describe",
+                      "cloud/api-reference/startup/standalone/update",
+                      "cloud/api-reference/startup/standalone/delete",
+                      "cloud/api-reference/startup/standalone/backup",
+                      "cloud/api-reference/startup/standalone/copy-snapshot",
+                      "cloud/api-reference/startup/standalone/failover",
+                      "cloud/api-reference/startup/standalone/start",
+                      "cloud/api-reference/startup/standalone/stop",
+                      "cloud/api-reference/startup/standalone/restart"
+                    ]
+                  }
+                ]
+              },
+              {
+                "group": "Free",
+                "pages": [
+                  {
+                    "group": "Free",
+                    "pages": [
+                      "cloud/api-reference/free/free/list",
+                      "cloud/api-reference/free/free/create",
+                      "cloud/api-reference/free/free/describe",
+                      "cloud/api-reference/free/free/update",
+                      "cloud/api-reference/free/free/delete",
+                      "cloud/api-reference/free/free/backup",
+                      "cloud/api-reference/free/free/copy-snapshot",
+                      "cloud/api-reference/free/free/failover",
+                      "cloud/api-reference/free/free/start",
+                      "cloud/api-reference/free/free/stop",
+                      "cloud/api-reference/free/free/restart"
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "product": "FalkorDB Enterprise",
+        "description": "Self-managed FalkorDB on your own Kubernetes clusters.",
+        "icon": "building",
+        "tabs": [
+          {
+            "tab": "Documentation",
+            "groups": [
+              {
+                "group": "Get started",
+                "pages": [
+                  "enterprise/index",
+                  "enterprise/get-started/overview",
+                  "enterprise/get-started/requirements",
+                  "enterprise/get-started/quickstart"
+                ]
+              },
+              {
+                "group": "Install",
+                "pages": [
+                  "enterprise/deployment/production",
+                  "enterprise/deployment/private-images",
+                  "enterprise/deployment/external-dns",
+                  {
+                    "group": "Platform guides",
+                    "icon": "server",
+                    "pages": [
+                      "enterprise/deployment/aks",
+                      "enterprise/deployment/aks-internal",
+                      "enterprise/deployment/eks",
+                      "enterprise/deployment/gke",
+                      "enterprise/deployment/openshift",
+                      "enterprise/deployment/rancher"
+                    ]
+                  }
+                ]
+              },
+              {
+                "group": "Authentication",
+                "pages": [
+                  "enterprise/authentication/google-oauth",
+                  "enterprise/authentication/azure-ad-oauth"
+                ]
+              },
+              {
+                "group": "Deploy databases",
+                "pages": [
+                  "enterprise/databases/networking",
+                  "enterprise/databases/standalone",
+                  "enterprise/databases/replicated",
+                  "enterprise/databases/sentinel",
+                  "enterprise/databases/sharded",
+                  "enterprise/databases/yaml"
+                ]
+              },
+              {
+                "group": "Operations",
+                "pages": [
+                  "enterprise/operations/scaling",
+                  "enterprise/operations/parameters",
+                  "enterprise/operations/backups",
+                  "enterprise/operations/restore-same-database",
+                  "enterprise/operations/restore-new-database",
+                  "enterprise/operations/monitoring",
+                  "enterprise/operations/cost-showback",
+                  "enterprise/operations/reset-admin-password"
+                ]
+              },
+              {
+                "group": "Licensing",
+                "pages": [
+                  "enterprise/licensing"
+                ]
+              },
+              {
+                "group": "Security",
+                "pages": [
+                  "enterprise/security"
+                ]
+              },
+              {
+                "group": "Releases",
+                "pages": [
+                  "enterprise/releases/1-0"
+                ]
+              },
+              {
+                "group": "Upgrade and uninstall",
+                "pages": [
+                  "enterprise/upgrades/enterprise",
+                  "enterprise/upgrades/changelog",
+                  {
+                    "group": "Migration guides",
+                    "pages": [
+                      "enterprise/upgrades/migrations/0.3-to-0.4",
+                      "enterprise/upgrades/migrations/0.3-to-1.0"
+                    ]
+                  },
+                  "enterprise/upgrades/kubeblocks",
+                  "enterprise/upgrades/falkordb-version",
+                  "enterprise/upgrades/uninstall"
+                ]
+              },
+              {
+                "group": "Troubleshooting",
+                "pages": [
+                  "enterprise/troubleshooting/deployments",
+                  "enterprise/troubleshooting/support-package"
+                ]
+              }
+            ]
+          },
+          {
+            "tab": "Reference",
+            "groups": [
+              {
+                "group": "Reference",
+                "pages": [
+                  "enterprise/reference/helm-values",
+                  "enterprise/reference/helm-values-reference",
+                  "enterprise/reference/installer-flags",
+                  "enterprise/reference/pod-security",
+                  "enterprise/reference/network-policy",
+                  "enterprise/reference/supply-chain",
+                  "enterprise/reference/compatibility",
+                  "enterprise/reference/cli",
+                  "enterprise/reference/glossary"
+                ]
+              }
+            ]
+          },
+          {
+            "tab": "API reference",
+            "groups": [
+              {
+                "group": "Overview",
+                "pages": [
+                  "enterprise/api-reference/introduction",
+                  "enterprise/api-reference/kubeblocks"
+                ]
+              },
+              {
+                "group": "Admin Server API",
+                "openapi": {
+                  "source": "/enterprise/api-reference/admin-server.json",
+                  "directory": "enterprise/api-reference/endpoints"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "product": "GraphRAG SDK",
+        "description": "Build knowledge graphs from documents and query them with natural language.",
+        "icon": "share-nodes",
+        "anchors": [
+          {
+            "anchor": "Documentation",
+            "icon": "book-open",
+            "groups": [
+              {
+                "group": "Home",
+                "pages": [
+                  "graphrag/index",
+                  "graphrag/getting-started",
+                  "graphrag/architecture",
+                  "graphrag/reducing-llm-hallucinations",
+                  "graphrag/configuration"
+                ]
+              },
+              {
+                "group": "Pipeline",
+                "pages": [
+                  "graphrag/ingestion",
+                  "graphrag/extraction",
+                  "graphrag/retrieval",
+                  "graphrag/storage",
+                  "graphrag/graph-schema"
+                ]
+              },
+              {
+                "group": "Ontology",
+                "pages": [
+                  "graphrag/ontology-discovery",
+                  "graphrag/ontology-evolution",
+                  "graphrag/incremental-updates"
+                ]
+              },
+              {
+                "group": "Reference",
+                "pages": [
+                  "graphrag/strategies",
+                  "graphrag/providers",
+                  "graphrag/api-reference",
+                  "graphrag/reliability-and-grounding",
+                  "graphrag/graphrag-accuracy-benchmark",
+                  "graphrag/benchmark"
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "navbar": {
+    "links": [
+      {
+        "label": "Github",
+        "href": "https://github.com/FalkorDB/FalkorDB"
+      },
+      {
+        "label": "Support",
+        "href": "https://support.falkordb.com"
+      },
+      {
+        "label": "Discord",
+        "href": "https://discord.com/invite/6M4QwDXn2w"
+      }
+    ],
+    "primary": {
+      "type": "button",
+      "label": "Try FalkorDB Cloud",
+      "href": "https://app.falkordb.cloud"
+    }
+  },
+  "footer": {
+    "socials": {
+      "github": "https://github.com/FalkorDB/FalkorDB",
+      "x": "https://x.com/FalkorDB",
+      "linkedin": "https://www.linkedin.com/company/falkordb",
+      "discord": "https://discord.com/invite/6M4QwDXn2w",
+      "youtube": "https://www.youtube.com/@falkordb",
+      "reddit": "https://www.reddit.com/r/falkordb/"
+    }
+  },
+  "integrations": {
+    "gtm": {
+      "tagId": "GTM-MBWB627H"
+    }
+  },
+  "contextual": {
+    "options": [
+      "copy",
+      "view",
+      "assistant",
+      "chatgpt",
+      "claude",
+      "perplexity",
+      "mcp",
+      "add-mcp",
+      "cursor",
+      "vscode",
+      "download-spec"
+    ]
+  },
+  "markdown": {
+    "instructions": [
+      "FalkorDB is a graph database that speaks the Redis protocol. Queries are issued as OpenCypher through the GRAPH.QUERY and GRAPH.RO_QUERY commands, not over Bolt or a SQL connection.",
+      "FalkorDB implements a subset of OpenCypher with proprietary extensions. Do not assume Neo4j-only syntax or procedures are available — check /cypher/cypher-support and /cypher/known-limitations before using a clause.",
+      "FalkorDB is the successor to RedisGraph, but they are separate products. Do not present RedisGraph commands, versions, or limitations as current FalkorDB behavior.",
+      "Use the official clients listed in /getting-started/clients rather than generic Redis or Neo4j drivers, and prefer the language the user is already working in.",
+      "Configuration parameters are set with GRAPH.CONFIG SET or at startup; cite the exact parameter name from /getting-started/configuration rather than inventing one.",
+      "This site covers four products: FalkorDB (core), FalkorDB Cloud, FalkorDB Enterprise, and the GraphRAG SDK. Name which one an answer applies to, since setup and operations differ."
+    ]
+  },
+  "redirects": [
+    {
+      "source": "/References",
+      "destination": "/references"
+    },
+    {
+      "source": "/References.html",
+      "destination": "/references"
+    },
+    {
+      "source": "/References/index.html",
+      "destination": "/references"
+    },
+    {
+      "source": "/References/license.html",
+      "destination": "/references/license"
+    },
+    {
+      "source": "/agentic-memory/cognee.html",
+      "destination": "/agentic-memory/cognee"
+    },
+    {
+      "source": "/agentic-memory/graphiti-mcp-server.html",
+      "destination": "/agentic-memory/graphiti-mcp-server"
+    },
+    {
+      "source": "/agentic-memory/graphiti.html",
+      "destination": "/agentic-memory/graphiti"
+    },
+    {
+      "source": "/agentic-memory/index.html",
+      "destination": "/agentic-memory"
+    },
+    {
+      "source": "/agentic-memory/mem0.html",
+      "destination": "/agentic-memory/mem0"
+    },
+    {
+      "source": "/algorithms/betweenness-centrality.html",
+      "destination": "/algorithms/betweenness-centrality"
+    },
+    {
+      "source": "/algorithms/betweenness_centrality",
+      "destination": "/algorithms/betweenness-centrality"
+    },
+    {
+      "source": "/algorithms/betweenness_centrality.html",
+      "destination": "/algorithms/betweenness-centrality"
+    },
+    {
+      "source": "/algorithms/bfs.html",
+      "destination": "/algorithms/bfs"
+    },
+    {
+      "source": "/algorithms/cdlp.html",
+      "destination": "/algorithms/cdlp"
+    },
+    {
+      "source": "/algorithms/harmonic-centrality.html",
+      "destination": "/algorithms/harmonic-centrality"
+    },
+    {
+      "source": "/algorithms/index.html",
+      "destination": "/algorithms"
+    },
+    {
+      "source": "/algorithms/maxflow.html",
+      "destination": "/algorithms/maxflow"
+    },
+    {
+      "source": "/algorithms/msf.html",
+      "destination": "/algorithms/msf"
+    },
+    {
+      "source": "/algorithms/pagerank.html",
+      "destination": "/algorithms/pagerank"
+    },
+    {
+      "source": "/algorithms/sppath.html",
+      "destination": "/algorithms/sppath"
+    },
+    {
+      "source": "/algorithms/sspath.html",
+      "destination": "/algorithms/sspath"
+    },
+    {
+      "source": "/algorithms/wcc.html",
+      "destination": "/algorithms/wcc"
+    },
+    {
+      "source": "/bolt-support",
+      "destination": "/integration/bolt-support"
+    },
+    {
+      "source": "/bolt-support.html",
+      "destination": "/integration/bolt-support"
+    },
+    {
+      "source": "/bolt_support",
+      "destination": "/integration/bolt-support"
+    },
+    {
+      "source": "/bolt_support.html",
+      "destination": "/integration/bolt-support"
+    },
+    {
+      "source": "/browser/canvas.html",
+      "destination": "/browser/canvas"
+    },
+    {
+      "source": "/browser/index.html",
+      "destination": "/browser"
+    },
+    {
+      "source": "/browser/ui/api-documentation.html",
+      "destination": "/browser/ui/api-documentation"
+    },
+    {
+      "source": "/browser/ui/auth-access-control.html",
+      "destination": "/browser/ui/auth-access-control"
+    },
+    {
+      "source": "/browser/ui/chat-panel.html",
+      "destination": "/browser/ui/chat-panel"
+    },
+    {
+      "source": "/browser/ui/data-panel.html",
+      "destination": "/browser/ui/data-panel"
+    },
+    {
+      "source": "/browser/ui/graph-canvas.html",
+      "destination": "/browser/ui/graph-canvas"
+    },
+    {
+      "source": "/browser/ui/graph-info-panel.html",
+      "destination": "/browser/ui/graph-info-panel"
+    },
+    {
+      "source": "/browser/ui/graph-management.html",
+      "destination": "/browser/ui/graph-management"
+    },
+    {
+      "source": "/browser/ui/graph-page.html",
+      "destination": "/browser/ui/graph-page"
+    },
+    {
+      "source": "/browser/ui/index.html",
+      "destination": "/browser/ui"
+    },
+    {
+      "source": "/browser/ui/login.html",
+      "destination": "/browser/ui/login"
+    },
+    {
+      "source": "/browser/ui/metadata-view.html",
+      "destination": "/browser/ui/metadata-view"
+    },
+    {
+      "source": "/browser/ui/navigation.html",
+      "destination": "/browser/ui/navigation"
+    },
+    {
+      "source": "/browser/ui/query-editor.html",
+      "destination": "/browser/ui/query-editor"
+    },
+    {
+      "source": "/browser/ui/query-history.html",
+      "destination": "/browser/ui/query-history"
+    },
+    {
+      "source": "/browser/ui/settings.html",
+      "destination": "/browser/ui/settings"
+    },
+    {
+      "source": "/browser/ui/style-panel.html",
+      "destination": "/browser/ui/style-panel"
+    },
+    {
+      "source": "/browser/ui/table-view.html",
+      "destination": "/browser/ui/table-view"
+    },
+    {
+      "source": "/browser/ui/toolbar-actions.html",
+      "destination": "/browser/ui/toolbar-actions"
+    },
+    {
+      "source": "/browser/ui/udf-libraries.html",
+      "destination": "/browser/ui/udf-libraries"
+    },
+    {
+      "source": "/browser/ui/upload-data.html",
+      "destination": "/browser/ui/upload-data"
+    },
+    {
+      "source": "/building-docker",
+      "destination": "/operations/building-docker"
+    },
+    {
+      "source": "/building-docker.html",
+      "destination": "/operations/building-docker"
+    },
+    {
+      "source": "/clients",
+      "destination": "/getting-started/clients"
+    },
+    {
+      "source": "/clients.html",
+      "destination": "/getting-started/clients"
+    },
+    {
+      "source": "/cloud/enterprise-tier",
+      "destination": "/cloud/tiers/enterprise"
+    },
+    {
+      "source": "/cloud/enterprise-tier.html",
+      "destination": "/cloud/tiers/enterprise"
+    },
+    {
+      "source": "/cloud/features.html",
+      "destination": "/cloud/features"
+    },
+    {
+      "source": "/cloud/free-tier",
+      "destination": "/cloud/tiers/free"
+    },
+    {
+      "source": "/cloud/free-tier.html",
+      "destination": "/cloud/tiers/free"
+    },
+    {
+      "source": "/cloud/index.html",
+      "destination": "/cloud"
+    },
+    {
+      "source": "/cloud/maintenance-windows",
+      "destination": "/cloud/operations/maintenance-windows"
+    },
+    {
+      "source": "/cloud/maintenance-windows.html",
+      "destination": "/cloud/operations/maintenance-windows"
+    },
+    {
+      "source": "/cloud/monitoring-dashboard",
+      "destination": "/cloud/operations/monitoring-dashboard"
+    },
+    {
+      "source": "/cloud/monitoring-dashboard.html",
+      "destination": "/cloud/operations/monitoring-dashboard"
+    },
+    {
+      "source": "/cloud/operations",
+      "destination": "/cloud"
+    },
+    {
+      "source": "/cloud/operations/export-import.html",
+      "destination": "/cloud/operations/export-import"
+    },
+    {
+      "source": "/cloud/operations/index.html",
+      "destination": "/cloud"
+    },
+    {
+      "source": "/cloud/pro-tier",
+      "destination": "/cloud/tiers/pro"
+    },
+    {
+      "source": "/cloud/pro-tier.html",
+      "destination": "/cloud/tiers/pro"
+    },
+    {
+      "source": "/cloud/startup-tier",
+      "destination": "/cloud/tiers/startup"
+    },
+    {
+      "source": "/cloud/startup-tier.html",
+      "destination": "/cloud/tiers/startup"
+    },
+    {
+      "source": "/cloud/user-management",
+      "destination": "/cloud/operations/user-management"
+    },
+    {
+      "source": "/code-graph",
+      "destination": "/genai-tools/code-graph"
+    },
+    {
+      "source": "/code-graph.html",
+      "destination": "/genai-tools/code-graph"
+    },
+    {
+      "source": "/codegraph",
+      "destination": "/genai-tools/code-graph"
+    },
+    {
+      "source": "/codegraph.html",
+      "destination": "/genai-tools/code-graph"
+    },
+    {
+      "source": "/commands/acl.html",
+      "destination": "/commands/acl"
+    },
+    {
+      "source": "/commands/graph.config-get.html",
+      "destination": "/commands/graph.config-get"
+    },
+    {
+      "source": "/commands/graph.config-set.html",
+      "destination": "/commands/graph.config-set"
+    },
+    {
+      "source": "/commands/graph.constraint-create.html",
+      "destination": "/commands/graph.constraint-create"
+    },
+    {
+      "source": "/commands/graph.constraint-drop.html",
+      "destination": "/commands/graph.constraint-drop"
+    },
+    {
+      "source": "/commands/graph.copy.html",
+      "destination": "/commands/graph.copy"
+    },
+    {
+      "source": "/commands/graph.delete.html",
+      "destination": "/commands/graph.delete"
+    },
+    {
+      "source": "/commands/graph.explain.html",
+      "destination": "/commands/graph.explain"
+    },
+    {
+      "source": "/commands/graph.info.html",
+      "destination": "/commands/graph.info"
+    },
+    {
+      "source": "/commands/graph.list.html",
+      "destination": "/commands/graph.list"
+    },
+    {
+      "source": "/commands/graph.memory-usage",
+      "destination": "/commands/graph.memory"
+    },
+    {
+      "source": "/commands/graph.memory-usage.html",
+      "destination": "/commands/graph.memory"
+    },
+    {
+      "source": "/commands/graph.memory.html",
+      "destination": "/commands/graph.memory"
+    },
+    {
+      "source": "/commands/graph.profile.html",
+      "destination": "/commands/graph.profile"
+    },
+    {
+      "source": "/commands/graph.query.html",
+      "destination": "/commands/graph.query"
+    },
+    {
+      "source": "/commands/graph.ro-query.html",
+      "destination": "/commands/graph.ro-query"
+    },
+    {
+      "source": "/commands/graph.ro_query",
+      "destination": "/commands/graph.ro-query"
+    },
+    {
+      "source": "/commands/graph.ro_query.html",
+      "destination": "/commands/graph.ro-query"
+    },
+    {
+      "source": "/commands/graph.slowlog.html",
+      "destination": "/commands/graph.slowlog"
+    },
+    {
+      "source": "/commands/index.html",
+      "destination": "/commands"
+    },
+    {
+      "source": "/configuration",
+      "destination": "/getting-started/configuration"
+    },
+    {
+      "source": "/configuration.html",
+      "destination": "/getting-started/configuration"
+    },
+    {
+      "source": "/cypher/algorithms",
+      "destination": "/algorithms"
+    },
+    {
+      "source": "/cypher/algorithms.html",
+      "destination": "/algorithms"
+    },
+    {
+      "source": "/cypher/call.html",
+      "destination": "/cypher/call"
+    },
+    {
+      "source": "/cypher/create.html",
+      "destination": "/cypher/create"
+    },
+    {
+      "source": "/cypher/cypher-support.html",
+      "destination": "/cypher/cypher-support"
+    },
+    {
+      "source": "/cypher/cypher_support",
+      "destination": "/cypher/cypher-support"
+    },
+    {
+      "source": "/cypher/cypher_support.html",
+      "destination": "/cypher/cypher-support"
+    },
+    {
+      "source": "/cypher/delete.html",
+      "destination": "/cypher/delete"
+    },
+    {
+      "source": "/cypher/foreach.html",
+      "destination": "/cypher/foreach"
+    },
+    {
+      "source": "/cypher/functions.html",
+      "destination": "/cypher/functions"
+    },
+    {
+      "source": "/cypher/index.html",
+      "destination": "/cypher"
+    },
+    {
+      "source": "/cypher/indexing.html",
+      "destination": "/cypher/indexing"
+    },
+    {
+      "source": "/cypher/indexing/fulltext-index.html",
+      "destination": "/cypher/indexing/fulltext-index"
+    },
+    {
+      "source": "/cypher/indexing/index.html",
+      "destination": "/cypher/indexing"
+    },
+    {
+      "source": "/cypher/indexing/range-index.html",
+      "destination": "/cypher/indexing/range-index"
+    },
+    {
+      "source": "/cypher/indexing/vector-index.html",
+      "destination": "/cypher/indexing/vector-index"
+    },
+    {
+      "source": "/cypher/known-limitations.html",
+      "destination": "/cypher/known-limitations"
+    },
+    {
+      "source": "/cypher/known_limitations",
+      "destination": "/cypher/known-limitations"
+    },
+    {
+      "source": "/cypher/known_limitations.html",
+      "destination": "/cypher/known-limitations"
+    },
+    {
+      "source": "/cypher/limit.html",
+      "destination": "/cypher/limit"
+    },
+    {
+      "source": "/cypher/load-csv.html",
+      "destination": "/cypher/load-csv"
+    },
+    {
+      "source": "/cypher/load_csv",
+      "destination": "/cypher/load-csv"
+    },
+    {
+      "source": "/cypher/load_csv.html",
+      "destination": "/cypher/load-csv"
+    },
+    {
+      "source": "/cypher/match.html",
+      "destination": "/cypher/match"
+    },
+    {
+      "source": "/cypher/merge.html",
+      "destination": "/cypher/merge"
+    },
+    {
+      "source": "/cypher/optional-match.html",
+      "destination": "/cypher/optional-match"
+    },
+    {
+      "source": "/cypher/optional_match",
+      "destination": "/cypher/optional-match"
+    },
+    {
+      "source": "/cypher/optional_match.html",
+      "destination": "/cypher/optional-match"
+    },
+    {
+      "source": "/cypher/order-by.html",
+      "destination": "/cypher/order-by"
+    },
+    {
+      "source": "/cypher/order_by",
+      "destination": "/cypher/order-by"
+    },
+    {
+      "source": "/cypher/order_by.html",
+      "destination": "/cypher/order-by"
+    },
+    {
+      "source": "/cypher/procedures.html",
+      "destination": "/cypher/procedures"
+    },
+    {
+      "source": "/cypher/remove.html",
+      "destination": "/cypher/remove"
+    },
+    {
+      "source": "/cypher/return.html",
+      "destination": "/cypher/return"
+    },
+    {
+      "source": "/cypher/set.html",
+      "destination": "/cypher/set"
+    },
+    {
+      "source": "/cypher/skip.html",
+      "destination": "/cypher/skip"
+    },
+    {
+      "source": "/cypher/union.html",
+      "destination": "/cypher/union"
+    },
+    {
+      "source": "/cypher/unwind.html",
+      "destination": "/cypher/unwind"
+    },
+    {
+      "source": "/cypher/where.html",
+      "destination": "/cypher/where"
+    },
+    {
+      "source": "/cypher/with.html",
+      "destination": "/cypher/with"
+    },
+    {
+      "source": "/datatypes.html",
+      "destination": "/datatypes"
+    },
+    {
+      "source": "/design/bulk-spec.html",
+      "destination": "/design/bulk-spec"
+    },
+    {
+      "source": "/design/bulk_spec",
+      "destination": "/design/bulk-spec"
+    },
+    {
+      "source": "/design/bulk_spec.html",
+      "destination": "/design/bulk-spec"
+    },
+    {
+      "source": "/design/client-spec.html",
+      "destination": "/design/client-spec"
+    },
+    {
+      "source": "/design/client_spec",
+      "destination": "/design/client-spec"
+    },
+    {
+      "source": "/design/client_spec.html",
+      "destination": "/design/client-spec"
+    },
+    {
+      "source": "/design/concurrency.html",
+      "destination": "/design/concurrency"
+    },
+    {
+      "source": "/design/index.html",
+      "destination": "/design"
+    },
+    {
+      "source": "/design/result-structure.html",
+      "destination": "/design/result-structure"
+    },
+    {
+      "source": "/design/result_structure",
+      "destination": "/design/result-structure"
+    },
+    {
+      "source": "/design/result_structure.html",
+      "destination": "/design/result-structure"
+    },
+    {
+      "source": "/design/third-party.html",
+      "destination": "/design/third-party"
+    },
+    {
+      "source": "/genai-tools/ag2.html",
+      "destination": "/genai-tools/ag2"
+    },
+    {
+      "source": "/genai-tools/code-graph.html",
+      "destination": "/genai-tools/code-graph"
+    },
+    {
+      "source": "/genai-tools/graphrag-sdk.html",
+      "destination": "/genai-tools/graphrag-sdk"
+    },
+    {
+      "source": "/genai-tools/graphrag-sdk/api-reference",
+      "destination": "/graphrag/api-reference"
+    },
+    {
+      "source": "/genai-tools/graphrag-sdk/api-reference/connection.html",
+      "destination": "/graphrag/api-reference"
+    },
+    {
+      "source": "/genai-tools/graphrag-sdk/api-reference/discovery.html",
+      "destination": "/graphrag/api-reference"
+    },
+    {
+      "source": "/genai-tools/graphrag-sdk/api-reference/exceptions.html",
+      "destination": "/graphrag/api-reference"
+    },
+    {
+      "source": "/genai-tools/graphrag-sdk/api-reference/graphrag.html",
+      "destination": "/graphrag/api-reference"
+    },
+    {
+      "source": "/genai-tools/graphrag-sdk/api-reference/ingestion-strategies.html",
+      "destination": "/graphrag/api-reference"
+    },
+    {
+      "source": "/genai-tools/graphrag-sdk/api-reference/ontology.html",
+      "destination": "/graphrag/api-reference"
+    },
+    {
+      "source": "/genai-tools/graphrag-sdk/api-reference/providers.html",
+      "destination": "/graphrag/api-reference"
+    },
+    {
+      "source": "/genai-tools/graphrag-sdk/api-reference/retrieval-strategies.html",
+      "destination": "/graphrag/api-reference"
+    },
+    {
+      "source": "/genai-tools/graphrag-sdk/changelog.html",
+      "destination": "/graphrag"
+    },
+    {
+      "source": "/genai-tools/graphrag-sdk/concepts",
+      "destination": "/graphrag/architecture"
+    },
+    {
+      "source": "/genai-tools/graphrag-sdk/concepts/incremental-updates.html",
+      "destination": "/graphrag/incremental-updates"
+    },
+    {
+      "source": "/genai-tools/graphrag-sdk/concepts/ingestion-pipeline.html",
+      "destination": "/graphrag/ingestion"
+    },
+    {
+      "source": "/genai-tools/graphrag-sdk/concepts/knowledge-graph.html",
+      "destination": "/graphrag/architecture"
+    },
+    {
+      "source": "/genai-tools/graphrag-sdk/concepts/ontology-discovery.html",
+      "destination": "/graphrag/ontology-discovery"
+    },
+    {
+      "source": "/genai-tools/graphrag-sdk/concepts/ontology.html",
+      "destination": "/graphrag/graph-schema"
+    },
+    {
+      "source": "/genai-tools/graphrag-sdk/concepts/retrieval-pipeline.html",
+      "destination": "/graphrag/retrieval"
+    },
+    {
+      "source": "/genai-tools/graphrag-sdk/guides",
+      "destination": "/graphrag/getting-started"
+    },
+    {
+      "source": "/genai-tools/graphrag-sdk/guides/auto-discover-schema.html",
+      "destination": "/graphrag/ontology-discovery"
+    },
+    {
+      "source": "/genai-tools/graphrag-sdk/guides/ci-pr-merge-pattern.html",
+      "destination": "/graphrag/incremental-updates"
+    },
+    {
+      "source": "/genai-tools/graphrag-sdk/guides/define-custom-schema.html",
+      "destination": "/graphrag/graph-schema"
+    },
+    {
+      "source": "/genai-tools/graphrag-sdk/guides/ingest-pdf-and-markdown.html",
+      "destination": "/graphrag/ingestion"
+    },
+    {
+      "source": "/genai-tools/graphrag-sdk/guides/suggest-extensions-from-new-docs.html",
+      "destination": "/graphrag/ontology-evolution"
+    },
+    {
+      "source": "/genai-tools/graphrag-sdk/guides/swap-llm-provider.html",
+      "destination": "/graphrag/providers"
+    },
+    {
+      "source": "/genai-tools/graphrag-sdk/quickstart.html",
+      "destination": "/graphrag/getting-started"
+    },
+    {
+      "source": "/genai-tools/graphrag-server",
+      "destination": "/genai-tools/graphrag-sdk"
+    },
+    {
+      "source": "/genai-tools/graphrag-server.html",
+      "destination": "/genai-tools/graphrag-sdk"
+    },
+    {
+      "source": "/genai-tools/graphrag-toolkit.html",
+      "destination": "/genai-tools/graphrag-toolkit"
+    },
+    {
+      "source": "/genai-tools/index.html",
+      "destination": "/genai-tools"
+    },
+    {
+      "source": "/genai-tools/langchain.html",
+      "destination": "/genai-tools/langchain"
+    },
+    {
+      "source": "/genai-tools/langgraph.html",
+      "destination": "/genai-tools/langgraph"
+    },
+    {
+      "source": "/genai-tools/llamaindex.html",
+      "destination": "/genai-tools/llamaindex"
+    },
+    {
+      "source": "/genai-tools/mcpserver/configuration.html",
+      "destination": "/genai-tools/mcpserver/configuration"
+    },
+    {
+      "source": "/genai-tools/mcpserver/docker.html",
+      "destination": "/genai-tools/mcpserver/docker"
+    },
+    {
+      "source": "/genai-tools/mcpserver/index.html",
+      "destination": "/genai-tools/mcpserver"
+    },
+    {
+      "source": "/genai-tools/mcpserver/quickstart.html",
+      "destination": "/genai-tools/mcpserver/quickstart"
+    },
+    {
+      "source": "/genai-tools/queryweaver.html",
+      "destination": "/genai-tools/queryweaver"
+    },
+    {
+      "source": "/getting-started.html",
+      "destination": "/getting-started"
+    },
+    {
+      "source": "/getting-started/clients.html",
+      "destination": "/getting-started/clients"
+    },
+    {
+      "source": "/getting-started/configuration.html",
+      "destination": "/getting-started/configuration"
+    },
+    {
+      "source": "/getting-started/index.html",
+      "destination": "/getting-started"
+    },
+    {
+      "source": "/getting_started",
+      "destination": "/getting-started"
+    },
+    {
+      "source": "/getting_started.html",
+      "destination": "/getting-started"
+    },
+    {
+      "source": "/graphrag-sdk",
+      "destination": "/genai-tools/graphrag-sdk"
+    },
+    {
+      "source": "/graphrag-sdk.html",
+      "destination": "/genai-tools/graphrag-sdk"
+    },
+    {
+      "source": "/graphrag_sdk",
+      "destination": "/genai-tools/graphrag-sdk"
+    },
+    {
+      "source": "/graphrag_sdk.html",
+      "destination": "/genai-tools/graphrag-sdk"
+    },
+    {
+      "source": "/index.html",
+      "destination": "/"
+    },
+    {
+      "source": "/integration/bolt-support.html",
+      "destination": "/integration/bolt-support"
+    },
+    {
+      "source": "/integration/bulk-loader.html",
+      "destination": "/integration/bulk-loader"
+    },
+    {
+      "source": "/integration/index.html",
+      "destination": "/integration"
+    },
+    {
+      "source": "/integration/jena.html",
+      "destination": "/integration/jena"
+    },
+    {
+      "source": "/integration/kafka-connect.html",
+      "destination": "/integration/kafka-connect"
+    },
+    {
+      "source": "/integration/n8n.html",
+      "destination": "/integration/n8n"
+    },
+    {
+      "source": "/integration/pyg.html",
+      "destination": "/integration/pyg"
+    },
+    {
+      "source": "/integration/rest.html",
+      "destination": "/integration/rest"
+    },
+    {
+      "source": "/integration/snowflake.html",
+      "destination": "/integration/snowflake"
+    },
+    {
+      "source": "/integration/spring-data-falkordb.html",
+      "destination": "/integration/spring-data-falkordb"
+    },
+    {
+      "source": "/license",
+      "destination": "/references/license"
+    },
+    {
+      "source": "/license.html",
+      "destination": "/references/license"
+    },
+    {
+      "source": "/llm-integrations",
+      "destination": "/genai-tools"
+    },
+    {
+      "source": "/llm-integrations.html",
+      "destination": "/genai-tools"
+    },
+    {
+      "source": "/llm_integrations",
+      "destination": "/genai-tools"
+    },
+    {
+      "source": "/llm_integrations.html",
+      "destination": "/genai-tools"
+    },
+    {
+      "source": "/llm_support",
+      "destination": "/genai-tools"
+    },
+    {
+      "source": "/llm_support.html",
+      "destination": "/genai-tools"
+    },
+    {
+      "source": "/migration",
+      "destination": "/operations/migration"
+    },
+    {
+      "source": "/migration.html",
+      "destination": "/operations/migration"
+    },
+    {
+      "source": "/migration/index.html",
+      "destination": "/operations/migration"
+    },
+    {
+      "source": "/migration/kuzu-to-falkordb",
+      "destination": "/operations/migration/kuzu-to-falkordb"
+    },
+    {
+      "source": "/migration/kuzu-to-falkordb.html",
+      "destination": "/operations/migration/kuzu-to-falkordb"
+    },
+    {
+      "source": "/migration/neo4j-to-falkordb",
+      "destination": "/operations/migration/neo4j-to-falkordb"
+    },
+    {
+      "source": "/migration/neo4j-to-falkordb.html",
+      "destination": "/operations/migration/neo4j-to-falkordb"
+    },
+    {
+      "source": "/migration/rdf-to-falkordb",
+      "destination": "/operations/migration/rdf-to-falkordb"
+    },
+    {
+      "source": "/migration/rdf-to-falkordb.html",
+      "destination": "/operations/migration/rdf-to-falkordb"
+    },
+    {
+      "source": "/migration/redisgraph-to-falkordb",
+      "destination": "/operations/migration/redisgraph-to-falkordb"
+    },
+    {
+      "source": "/migration/redisgraph-to-falkordb.html",
+      "destination": "/operations/migration/redisgraph-to-falkordb"
+    },
+    {
+      "source": "/migration/sql-to-falkordb",
+      "destination": "/operations/migration/sql-to-falkordb"
+    },
+    {
+      "source": "/migration/sql-to-falkordb.html",
+      "destination": "/operations/migration/sql-to-falkordb"
+    },
+    {
+      "source": "/opentelemetry",
+      "destination": "/operations/opentelemetry"
+    },
+    {
+      "source": "/opentelemetry.html",
+      "destination": "/operations/opentelemetry"
+    },
+    {
+      "source": "/operation",
+      "destination": "/operations"
+    },
+    {
+      "source": "/operation.html",
+      "destination": "/operations"
+    },
+    {
+      "source": "/operation/replication",
+      "destination": "/operations/replication"
+    },
+    {
+      "source": "/operation/replication.html",
+      "destination": "/operations/replication"
+    },
+    {
+      "source": "/operations/building-docker.html",
+      "destination": "/operations/building-docker"
+    },
+    {
+      "source": "/operations/cluster.html",
+      "destination": "/operations/cluster"
+    },
+    {
+      "source": "/operations/docker.html",
+      "destination": "/operations/docker"
+    },
+    {
+      "source": "/operations/durability.html",
+      "destination": "/operations/durability"
+    },
+    {
+      "source": "/operations/durability/acl-persistence.html",
+      "destination": "/operations/durability/acl-persistence"
+    },
+    {
+      "source": "/operations/durability/index.html",
+      "destination": "/operations/durability"
+    },
+    {
+      "source": "/operations/durability/persistence.html",
+      "destination": "/operations/durability/persistence"
+    },
+    {
+      "source": "/operations/falkordblite.html",
+      "destination": "/operations/falkordblite"
+    },
+    {
+      "source": "/operations/falkordblite/falkordblite-py.html",
+      "destination": "/operations/falkordblite/falkordblite-py"
+    },
+    {
+      "source": "/operations/falkordblite/falkordblite-ts.html",
+      "destination": "/operations/falkordblite/falkordblite-ts"
+    },
+    {
+      "source": "/operations/falkordblite/index.html",
+      "destination": "/operations/falkordblite"
+    },
+    {
+      "source": "/operations/index.html",
+      "destination": "/operations"
+    },
+    {
+      "source": "/operations/k8s-support.html",
+      "destination": "/operations/k8s-support"
+    },
+    {
+      "source": "/operations/k8s_support",
+      "destination": "/operations/k8s-support"
+    },
+    {
+      "source": "/operations/k8s_support.html",
+      "destination": "/operations/k8s-support"
+    },
+    {
+      "source": "/operations/kubeblocks.html",
+      "destination": "/operations/kubeblocks"
+    },
+    {
+      "source": "/operations/lightning-ai.html",
+      "destination": "/operations/lightning-ai"
+    },
+    {
+      "source": "/operations/migration/index.html",
+      "destination": "/operations/migration"
+    },
+    {
+      "source": "/operations/migration/kuzu-to-falkordb.html",
+      "destination": "/operations/migration/kuzu-to-falkordb"
+    },
+    {
+      "source": "/operations/migration/neo4j-to-falkordb.html",
+      "destination": "/operations/migration/neo4j-to-falkordb"
+    },
+    {
+      "source": "/operations/migration/rdf-to-falkordb.html",
+      "destination": "/operations/migration/rdf-to-falkordb"
+    },
+    {
+      "source": "/operations/migration/redisgraph-to-falkordb.html",
+      "destination": "/operations/migration/redisgraph-to-falkordb"
+    },
+    {
+      "source": "/operations/migration/sql-to-falkordb.html",
+      "destination": "/operations/migration/sql-to-falkordb"
+    },
+    {
+      "source": "/operations/opentelemetry.html",
+      "destination": "/operations/opentelemetry"
+    },
+    {
+      "source": "/operations/persistence",
+      "destination": "/operations/durability/persistence"
+    },
+    {
+      "source": "/operations/persistence.html",
+      "destination": "/operations/durability/persistence"
+    },
+    {
+      "source": "/operations/railway.html",
+      "destination": "/operations/railway"
+    },
+    {
+      "source": "/operations/replication.html",
+      "destination": "/operations/replication"
+    },
+    {
+      "source": "/redisgraph-to-falkordb",
+      "destination": "/operations/migration/redisgraph-to-falkordb"
+    },
+    {
+      "source": "/redisgraph-to-falkordb.html",
+      "destination": "/operations/migration/redisgraph-to-falkordb"
+    },
+    {
+      "source": "/references/index.html",
+      "destination": "/references"
+    },
+    {
+      "source": "/references/license.html",
+      "destination": "/references/license"
+    },
+    {
+      "source": "/support.html",
+      "destination": "/support"
+    },
+    {
+      "source": "/third-party",
+      "destination": "/design/third-party"
+    },
+    {
+      "source": "/third-party.html",
+      "destination": "/design/third-party"
+    },
+    {
+      "source": "/udfs/flex/bitwise/and.html",
+      "destination": "/udfs/flex/bitwise/and"
+    },
+    {
+      "source": "/udfs/flex/bitwise/index.html",
+      "destination": "/udfs/flex/bitwise"
+    },
+    {
+      "source": "/udfs/flex/bitwise/not.html",
+      "destination": "/udfs/flex/bitwise/not"
+    },
+    {
+      "source": "/udfs/flex/bitwise/or.html",
+      "destination": "/udfs/flex/bitwise/or"
+    },
+    {
+      "source": "/udfs/flex/bitwise/shiftLeft.html",
+      "destination": "/udfs/flex/bitwise/shiftLeft"
+    },
+    {
+      "source": "/udfs/flex/bitwise/shiftRight.html",
+      "destination": "/udfs/flex/bitwise/shiftRight"
+    },
+    {
+      "source": "/udfs/flex/bitwise/xor.html",
+      "destination": "/udfs/flex/bitwise/xor"
+    },
+    {
+      "source": "/udfs/flex/collections/frequencies.html",
+      "destination": "/udfs/flex/collections/frequencies"
+    },
+    {
+      "source": "/udfs/flex/collections/index.html",
+      "destination": "/udfs/flex/collections"
+    },
+    {
+      "source": "/udfs/flex/collections/intersection.html",
+      "destination": "/udfs/flex/collections/intersection"
+    },
+    {
+      "source": "/udfs/flex/collections/shuffle.html",
+      "destination": "/udfs/flex/collections/shuffle"
+    },
+    {
+      "source": "/udfs/flex/collections/union.html",
+      "destination": "/udfs/flex/collections/union"
+    },
+    {
+      "source": "/udfs/flex/collections/zip.html",
+      "destination": "/udfs/flex/collections/zip"
+    },
+    {
+      "source": "/udfs/flex/date/format.html",
+      "destination": "/udfs/flex/date/format"
+    },
+    {
+      "source": "/udfs/flex/date/index.html",
+      "destination": "/udfs/flex/date"
+    },
+    {
+      "source": "/udfs/flex/date/parse.html",
+      "destination": "/udfs/flex/date/parse"
+    },
+    {
+      "source": "/udfs/flex/date/toTimeZone.html",
+      "destination": "/udfs/flex/date/toTimeZone"
+    },
+    {
+      "source": "/udfs/flex/date/truncate.html",
+      "destination": "/udfs/flex/date/truncate"
+    },
+    {
+      "source": "/udfs/flex/index.html",
+      "destination": "/udfs/flex"
+    },
+    {
+      "source": "/udfs/flex/json/fromJsonList.html",
+      "destination": "/udfs/flex/json/fromJsonList"
+    },
+    {
+      "source": "/udfs/flex/json/fromJsonMap.html",
+      "destination": "/udfs/flex/json/fromJsonMap"
+    },
+    {
+      "source": "/udfs/flex/json/index.html",
+      "destination": "/udfs/flex/json"
+    },
+    {
+      "source": "/udfs/flex/json/toJson.html",
+      "destination": "/udfs/flex/json/toJson"
+    },
+    {
+      "source": "/udfs/flex/map/fromPairs.html",
+      "destination": "/udfs/flex/map/fromPairs"
+    },
+    {
+      "source": "/udfs/flex/map/index.html",
+      "destination": "/udfs/flex/map"
+    },
+    {
+      "source": "/udfs/flex/map/merge.html",
+      "destination": "/udfs/flex/map/merge"
+    },
+    {
+      "source": "/udfs/flex/map/removeKey.html",
+      "destination": "/udfs/flex/map/removeKey"
+    },
+    {
+      "source": "/udfs/flex/map/removeKeys.html",
+      "destination": "/udfs/flex/map/removeKeys"
+    },
+    {
+      "source": "/udfs/flex/map/submap.html",
+      "destination": "/udfs/flex/map/submap"
+    },
+    {
+      "source": "/udfs/flex/similarity/index.html",
+      "destination": "/udfs/flex/similarity"
+    },
+    {
+      "source": "/udfs/flex/similarity/jaccard.html",
+      "destination": "/udfs/flex/similarity/jaccard"
+    },
+    {
+      "source": "/udfs/flex/text/camelCase.html",
+      "destination": "/udfs/flex/text/camelCase"
+    },
+    {
+      "source": "/udfs/flex/text/capitalize.html",
+      "destination": "/udfs/flex/text/capitalize"
+    },
+    {
+      "source": "/udfs/flex/text/decapitalize.html",
+      "destination": "/udfs/flex/text/decapitalize"
+    },
+    {
+      "source": "/udfs/flex/text/format.html",
+      "destination": "/udfs/flex/text/format"
+    },
+    {
+      "source": "/udfs/flex/text/index.html",
+      "destination": "/udfs/flex/text"
+    },
+    {
+      "source": "/udfs/flex/text/indexOf.html",
+      "destination": "/udfs/flex/text/indexOf"
+    },
+    {
+      "source": "/udfs/flex/text/indexesOf.html",
+      "destination": "/udfs/flex/text/indexesOf"
+    },
+    {
+      "source": "/udfs/flex/text/jaroWinkler.html",
+      "destination": "/udfs/flex/text/jaroWinkler"
+    },
+    {
+      "source": "/udfs/flex/text/join.html",
+      "destination": "/udfs/flex/text/join"
+    },
+    {
+      "source": "/udfs/flex/text/levenshtein.html",
+      "destination": "/udfs/flex/text/levenshtein"
+    },
+    {
+      "source": "/udfs/flex/text/lpad.html",
+      "destination": "/udfs/flex/text/lpad"
+    },
+    {
+      "source": "/udfs/flex/text/regexGroups.html",
+      "destination": "/udfs/flex/text/regexGroups"
+    },
+    {
+      "source": "/udfs/flex/text/repeat.html",
+      "destination": "/udfs/flex/text/repeat"
+    },
+    {
+      "source": "/udfs/flex/text/replace.html",
+      "destination": "/udfs/flex/text/replace"
+    },
+    {
+      "source": "/udfs/flex/text/rpad.html",
+      "destination": "/udfs/flex/text/rpad"
+    },
+    {
+      "source": "/udfs/flex/text/snakeCase.html",
+      "destination": "/udfs/flex/text/snakeCase"
+    },
+    {
+      "source": "/udfs/flex/text/swapCase.html",
+      "destination": "/udfs/flex/text/swapCase"
+    },
+    {
+      "source": "/udfs/flex/text/upperCamelCase.html",
+      "destination": "/udfs/flex/text/upperCamelCase"
+    },
+    {
+      "source": "/udfs/index.html",
+      "destination": "/udfs"
+    }
+  ],
+  "seo": {
+    "metatags": {
+      "og:image": "https://docs.falkordb.com/images/falkor-logo.png",
+      "og:image:alt": "FalkorDB — the high-performance graph database for GraphRAG and GenAI",
+      "og:locale": "en_US",
+      "twitter:image": "https://docs.falkordb.com/images/falkor-logo.png",
+      "twitter:image:alt": "FalkorDB — the high-performance graph database for GraphRAG and GenAI",
+      "twitter:card": "summary_large_image",
+      "twitter:site": "@FalkorDB",
+      "twitter:creator": "@FalkorDB",
+      "author": "FalkorDB",
+      "publisher": "FalkorDB",
+      "application-name": "FalkorDB Docs",
+      "robots": "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1",
+      "googlebot": "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1",
+      "keywords": "FalkorDB, graph database, GraphRAG, knowledge graph, Cypher, OpenCypher, vector search, GenAI, RAG, RedisGraph, sparse matrix, linear algebra"
+    },
+    "organization": {
+      "id": "https://www.falkordb.com/#organization",
+      "name": "FalkorDB",
+      "legalName": "FalkorDB Inc.",
+      "url": "https://www.falkordb.com",
+      "logo": "https://docs.falkordb.com/images/falkor-logo.png",
+      "sameAs": [
+        "https://github.com/FalkorDB/FalkorDB",
+        "https://x.com/FalkorDB",
+        "https://www.linkedin.com/company/falkordb",
+        "https://discord.com/invite/6M4QwDXn2w",
+        "https://www.youtube.com/@falkordb",
+        "https://www.reddit.com/r/falkordb/"
+      ]
+    }
+  }
+}

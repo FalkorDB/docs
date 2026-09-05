@@ -1,0 +1,104 @@
+---
+title: "GRAPH.CONFIG-GET"
+description: "Retrieve FalkorDB configuration parameters with GRAPH.CONFIG-GET command. Query specific settings or use '*' to get all configuration values for threads, timeouts, and limits."
+---
+
+Retrieves the current value of a FalkorDB configuration parameter.
+
+FalkorDB configuration parameters are detailed [here](/getting-started/configuration).
+
+`*` can be used to retrieve the value of all FalkorDB configuration parameters.
+
+<CodeGroup>
+
+```python Python
+from falkordb import FalkorDB
+client = FalkorDB()
+config = client.config_get('*')
+print(config)
+```
+
+```javascript JavaScript
+import { FalkorDB } from 'falkordb';
+const client = await FalkorDB.connect();
+const config = await client.configGet('*');
+console.log(config);
+```
+
+```java Java
+import com.falkordb.*;
+
+Driver driver = FalkorDB.driver("localhost", 6379);
+String config = driver.configGet("*");
+System.out.println(config);
+```
+
+```rust Rust
+use falkordb::{FalkorClientBuilder, FalkorConnectionInfo};
+
+let connection_info: FalkorConnectionInfo = "falkor://127.0.0.1:6379"
+    .try_into().expect("Invalid connection info");
+let client = FalkorClientBuilder::new()
+    .with_connection_info(connection_info)
+    .build().expect("Failed to build client");
+let config = client.config_get("*")?;
+println!("{:?}", config);
+```
+
+```bash Shell
+graph.config get *
+# Output:
+# 1) 1) "TIMEOUT"
+#    2) (integer) 0
+# ...
+```
+
+</CodeGroup>
+
+<CodeGroup>
+
+```python Python
+timeout = client.config_get('TIMEOUT_DEFAULT')
+print(timeout)
+```
+
+```javascript JavaScript
+const timeout = await client.configGet('TIMEOUT_DEFAULT');
+console.log(timeout);
+```
+
+```java Java
+String timeout = driver.configGet("TIMEOUT_DEFAULT");
+System.out.println(timeout);
+```
+
+```rust Rust
+let timeout = client.config_get("TIMEOUT_DEFAULT")?;
+println!("{:?}", timeout);
+```
+
+```bash Shell
+graph.config get TIMEOUT_DEFAULT
+# Output:
+# 1) "TIMEOUT_DEFAULT"
+# 2) (integer) 0
+```
+
+</CodeGroup>
+
+## Frequently Asked Questions
+
+<AccordionGroup>
+  <Accordion title="How do I retrieve all configuration parameters at once?">
+    Use the wildcard `*` as the parameter name: `GRAPH.CONFIG GET *`. This returns all current FalkorDB configuration parameters and their values.
+  </Accordion>
+  <Accordion title="What configuration parameters are available?">
+    Common parameters include `TIMEOUT` (query timeout), `CACHE_SIZE` (execution plan cache size), `THREAD_COUNT` (worker threads), `RESULTSET_SIZE` (max result rows), and more. See the [configuration page](/getting-started/configuration) for the full list.
+  </Accordion>
+  <Accordion title="Does GRAPH.CONFIG GET require any special permissions?">
+    Yes. The `GRAPH.CONFIG GET` command typically requires administrative privileges to execute.
+  </Accordion>
+  <Accordion title="What format does the response use?">
+    The response is a nested array containing the parameter name and its current value. For example: `1) 'TIMEOUT_DEFAULT' 2) (integer) 0`.
+  </Accordion>
+</AccordionGroup>

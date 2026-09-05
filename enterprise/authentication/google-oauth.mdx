@@ -1,0 +1,305 @@
+---
+title: "Google OAuth"
+description: "Enable Google sign-in and Google Workspace group lookup for role mapping."
+icon: "google"
+---
+
+Google OAuth has two parts:
+
+- A Google OAuth client in Google Cloud.
+- FalkorDB Enterprise OAuth settings, stored in Admin Settings and Kubernetes Secrets.
+
+## Prerequisites
+
+- FalkorDB Enterprise is installed and the Admin UI is reachable.
+- You can sign in as an admin with the `settings.update` permission.
+- You know the public URL users use to reach the Admin UI, for example `https://admin.example.com`.
+- You can administer a Google Cloud project for the OAuth client.
+- For Workspace group lookup, you can administer Google Workspace domain-wide delegation.
+
+## Create the Google OAuth client
+
+1. Open the Google Cloud Console.
+2. Select or create the project that will own the OAuth client.
+3. Go to **APIs & Services** > **OAuth consent screen**.
+4. Configure the consent screen for your organization.
+5. Go to **APIs & Services** > **Credentials**.
+6. Create an **OAuth client ID**.
+7. Choose **Web application**.
+8. Add an authorized redirect URI:
+
+```text
+https://admin.example.com/api/auth/oauth/google/callback
+```
+
+Replace `https://admin.example.com` with the public Admin UI origin for your installation.
+
+9. Save the client and copy the generated **Client ID** and **Client secret**.
+
+## Configure OAuth in the Admin UI
+
+1. Sign in to the Admin UI as an admin.
+2. Open **System Settings**.
+3. Open **OAuth / SSO**.
+4. Expand the **Google** provider card.
+5. Fill in the OAuth client fields:
+
+| Field | Value |
+| --- | --- |
+| Client ID | Google OAuth client ID, for example `000000000000-example.apps.googleusercontent.com`. |
+| Client Secret Secret | Kubernetes Secret name that will store the OAuth client secret, for example `google-oauth-client-secret`. |
+| Redirect URI | The same redirect URI registered in Google Cloud, for example `https://admin.example.com/api/auth/oauth/google/callback`. |
+| Client Secret | Paste the Google OAuth client secret. This value is write-only and is not shown again after saving. |
+
+6. Configure sign-in policy fields as needed:
+
+| Field | Purpose |
+| --- | --- |
+| Allowed Domains | Comma-separated email domains allowed to sign in. Leave empty to allow any Google account accepted by Google. |
+| Auto-Onboard OAuth Users | Creates a FalkorDB Enterprise user on first successful OAuth login. |
+| Strict Role Attribute Matching | Rejects login when the configured role claim is missing or unknown. |
+| Role Attribute Path | JMESPath expression for reading a role from the OAuth profile, when role claims are used. |
+
+7. Select **Save Settings**.
+
+The Admin Server stores `client_id`, `redirect_uri`, and `client_secret_secret_ref` in Admin Settings. The client secret itself is written to the referenced Kubernetes Secret under the `client_secret` key.
+
+## Configure Workspace group lookup
+
+Workspace group lookup is optional. Enable it when OAuth users should receive roles from Google Workspace group mappings.
+
+### Create a Google Workspace service account
+
+1. In Google Cloud Console, go to **IAM & Admin** > **Service Accounts**.
+2. Create a service account for FalkorDB Enterprise Workspace lookups.
+3. Create a JSON key for the service account.
+4. Enable the Admin SDK API for the project.
+5. In Google Workspace Admin Console, configure domain-wide delegation for the service account client ID.
+6. Grant the delegated scopes required for Directory API group lookup:
+
+```text
+https://www.googleapis.com/auth/admin.directory.group.readonly
+https://www.googleapis.com/auth/admin.directory.group.member.readonly
+```
+
+### Save Workspace settings
+
+In **System Settings** > **OAuth / SSO** > **Google**, fill in:
+
+| Field | Value |
+| --- | --- |
+| Workspace Domain | Google Workspace domain, for example `example.com`. |
+| Delegated Admin Email | Workspace admin email used as the delegated subject, for example `admin@example.com`. |
+| Private Key Secret | Kubernetes Secret name that will store the service account key, for example `google-workspace-private-key`. |
+| Service Account Private Key | Paste either the PEM private key or the full service-account JSON. This value is write-only. |
+
+Select **Save Settings**.
+
+The Admin Server stores Workspace metadata in Admin Settings. The private key is written to the referenced Kubernetes Secret under the `private_key` key.
+
+## Configure with the API
+
+You can also configure Google OAuth through the settings API. Authenticate as an admin first, then send a `PATCH` request to `/api/settings/`.
+
+```bash
+curl -X PATCH 'https://admin.example.com/api/settings/' \
+  -H 'Content-Type: application/json' \
+  -H 'Cookie: token=<session-cookie>' \
+  --data @- <<'JSON'
+{
+  "features": {
+    "self_service_onboarding": true
+  },
+  "oauth": {
+    "allowed_domains": ["example.com"],
+    "role_attribute_strict": false
+  },
+  "google_oauth": {
+    "client_id": "000000000000-example.apps.googleusercontent.com",
+    "redirect_uri": "https://admin.example.com/api/auth/oauth/google/callback",
+    "client_secret_secret_ref": "google-oauth-client-secret",
+    "client_secret": "replace-with-google-client-secret"
+  },
+  "google_workspace": {
+    "domain": "example.com",
+    "admin_email": "admin@example.com",
+    "private_key_secret_ref": "google-workspace-private-key",
+    "private_key": "-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY-----\n"
+  }
+}
+JSON
+```
+
+`client_secret` and `private_key` are write-only. They are accepted on update, stored in Kubernetes Secrets, and omitted from subsequent `GET /api/settings/` responses.
+
+## Configure with Kubernetes manifests
+
+For GitOps or bootstrap flows, create the Secrets and seed the Admin Settings ConfigMap.
+
+Create the OAuth client secret:
+
+```bash
+kubectl -n falkordb-system create secret generic google-oauth-client-secret \
+  --from-literal=client_secret='replace-with-google-client-secret'
+```
+
+Create the Workspace private key Secret if Workspace group lookup is enabled:
+
+```bash
+kubectl -n falkordb-system create secret generic google-workspace-private-key \
+  --from-file=private_key=service-account.json
+```
+
+Patch the settings ConfigMap:
+
+```bash
+kubectl -n falkordb-system create configmap falkordb-admin-settings \
+  --from-literal=settings.json='{
+    "features": {
+      "oauth2_enabled": true,
+      "local_users_enabled": true,
+      "self_service_onboarding": true,
+      "multi_cluster_mode": false,
+      "backup_auto_schedule": true,
+      "metrics_collection": true,
+      "api_docs_enabled": false
+    },
+    "oauth": {
+      "allowed_domains": ["example.com"],
+      "role_attribute_strict": false
+    },
+    "google_oauth": {
+      "client_id": "000000000000-example.apps.googleusercontent.com",
+      "redirect_uri": "https://admin.example.com/api/auth/oauth/google/callback",
+      "client_secret_secret_ref": "google-oauth-client-secret"
+    },
+    "google_workspace": {
+      "domain": "example.com",
+      "admin_email": "admin@example.com",
+      "private_key_secret_ref": "google-workspace-private-key"
+    },
+    "retention": {
+      "audit_log_retention_days": 90,
+      "metrics_retention_days": 30
+    },
+    "metrics": {
+      "prometheus_port": 9121
+    },
+    "ui": {}
+  }' \
+  --dry-run=client -o yaml | kubectl apply -f -
+```
+
+After direct ConfigMap changes, restart the Admin Server so the new settings are loaded deterministically:
+
+```bash
+kubectl -n falkordb-system rollout restart deployment/falkordb-admin-server
+```
+
+## Environment variable fallback
+
+Google OAuth can still be configured with Admin Server environment variables. This is useful for local development or simple deployments:
+
+```env
+GOOGLE_CLIENT_ID=000000000000-example.apps.googleusercontent.com
+GOOGLE_CLIENT_SECRET=replace-with-google-client-secret
+GOOGLE_REDIRECT_URI=http://localhost:3000/api/auth/oauth/google/callback
+```
+
+Settings configured in the Admin UI are preferred for Google OAuth at request time. Environment variables remain a fallback when settings-backed Google OAuth is not configured.
+
+## Validate the setup
+
+Check that the Google provider appears in the public auth config:
+
+```bash
+curl -sS https://admin.example.com/api/auth/config
+```
+
+The response should include a Google method similar to:
+
+```json
+{
+  "methods": [
+    { "type": "local", "enabled": true },
+    {
+      "type": "google",
+      "enabled": true,
+      "clientId": "000000000000-example.apps.googleusercontent.com"
+    }
+  ]
+}
+```
+
+Start the OAuth flow from a browser:
+
+```text
+https://admin.example.com/api/auth/oauth/google
+```
+
+Do not start from the raw Google authorization URL during manual testing. The FalkorDB Enterprise OAuth endpoint sets the CSRF state cookie required by the callback.
+
+## Network egress requirements
+
+If you restrict outbound traffic from the Admin Server, with
+[network policies](/enterprise/reference/network-policy) or an external firewall, these
+hosts must stay reachable on port 443:
+
+| Host | Purpose | Required |
+| --- | --- | --- |
+| `oauth2.googleapis.com` | Exchange the authorization code for tokens, and revoke tokens on sign-out | Always |
+| `www.googleapis.com` | Read the signed-in user's profile | Always |
+| `admin.googleapis.com` | Google Workspace Directory API, for group lookup | Only when a Workspace domain is configured |
+
+`accounts.google.com` is **not** in this list. The redirect to the Google
+sign-in page happens in your browser, so the Admin Server pod never connects to
+it. Only the calls above are made server to server.
+
+### On Google Kubernetes Engine
+
+`NetworkPolicy` matches on CIDR and cannot name a host, so a generic rule for
+these hosts has to be wide. On GKE you can do better with
+[Private Google Access](https://cloud.google.com/vpc/docs/configure-private-google-access),
+which routes Google APIs through fixed address ranges:
+
+```yaml
+networkPolicy:
+  externalEgress:
+    ports: [443, 6443]
+    cidrs:
+      - 199.36.153.8/30    # private.googleapis.com
+      - 34.126.0.0/18      # Google APIs with direct connectivity
+      - 10.0.0.0/16        # your control plane endpoint
+```
+
+<Warning>
+  Use `private.googleapis.com` (`199.36.153.8/30`), not
+  `restricted.googleapis.com` (`199.36.153.4/30`). The restricted range does
+  not support Google Workspace APIs, so it breaks group lookup through
+  `admin.googleapis.com`.
+</Warning>
+
+Verify these ranges against Google's documentation before you rely on them.
+They are Google's to change, not ours.
+
+## Rotate Secrets
+
+To rotate the OAuth client secret or Workspace private key:
+
+1. Open **System Settings** > **OAuth / SSO**.
+2. Expand **Google**.
+3. Keep the same Secret reference name, or enter a new one.
+4. Paste the new write-only value.
+5. Select **Save Settings**.
+
+Saving a blank write-only field does not erase the existing Kubernetes Secret. To remove a Secret, delete it with `kubectl` after disabling or reconfiguring the related setting.
+
+## Troubleshooting
+
+| Symptom | Check |
+| --- | --- |
+| Google provider does not appear on the login page | Confirm `google_oauth.client_id` and `google_oauth.client_secret_secret_ref` are saved, or that `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` are set. |
+| OAuth callback returns `Invalid state parameter` | Start the flow at `/api/auth/oauth/google`, not directly at Google. |
+| Google reports redirect URI mismatch | The Admin UI Redirect URI must exactly match the authorized redirect URI in Google Cloud. |
+| Login succeeds but group mapping does not work | Confirm Workspace domain, delegated admin email, service account delegation, Admin SDK API, and the Workspace private key Secret. |
+| Secret reference is saved but login fails | Confirm the referenced Secret exists in the FalkorDB Enterprise namespace and contains `client_secret` for OAuth or `private_key` for Workspace. |

@@ -1,0 +1,42 @@
+---
+title: "Restore in place"
+description: "Restore a backup into an existing deployment."
+icon: "clock-rotate-left"
+---
+
+## What is implemented
+
+The Admin UI restore dialog supports **Override current instance**. It calls the restore API for the existing deployment with:
+
+```json
+{ "backup": { "name": "<backup-name>", "namespace": "<namespace>" } }
+```
+
+The backend validates that the target cluster exists, the backup exists, and the backup is marked restorable before creating a restore resource.
+
+## Restore from Admin UI
+
+1. Open **Deployments**.
+2. Open the target deployment.
+3. Go to **Backups**.
+4. Select **Restore** on the backup to use.
+5. Choose **Override current instance**.
+6. Select **Restore Now**.
+
+Restoring into the current deployment replaces current data with the selected backup data. Coordinate application downtime before starting the restore.
+
+## Validate
+
+```bash
+kubectl get restores.dataprotection.kubeblocks.io -n <namespace>
+kubectl get clusters.apps.kubeblocks.io -n <namespace> <deployment-name> -o yaml
+kubectl get pods -n <namespace>
+```
+
+In the Admin UI, review **Backups**, **Events**, and deployment health after the restore finishes.
+
+## Failure conditions
+
+- The restore fails if the target cluster does not exist.
+- The restore fails if the backup does not exist.
+- The restore fails if the backup is not ready for restore.

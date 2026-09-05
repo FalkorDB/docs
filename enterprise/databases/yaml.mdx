@@ -1,0 +1,52 @@
+---
+title: "Deploy from YAML"
+description: "Create a FalkorDB deployment from a raw KubeBlocks YAML manifest."
+icon: "file-code"
+---
+
+## What the UI does
+
+The **Advanced - YAML Manifest** screen uses Monaco Editor with YAML parsing and CRD schema-based IntelliSense. On submit, the UI calls `POST /api/clusters/yaml` with the raw YAML string.
+
+The Admin Server parses the manifest, requires `metadata.name` and `metadata.namespace`, checks that the cluster does not already exist, and then applies the YAML through the Kubernetes repository.
+
+## Create from YAML
+
+1. Open **Deployments** > **Create Deployment**.
+2. Choose **Advanced - YAML Manifest**.
+3. Edit the manifest.
+4. Confirm the UI shows **Valid YAML**.
+5. Select **Deploy Cluster**.
+
+## Required metadata
+
+The backend rejects manifests that do not include both fields:
+
+```yaml
+metadata:
+  name: falkordb
+  namespace: demo
+```
+
+The backend also rejects YAML creation when a cluster with the same name already exists in the namespace.
+
+## Default template
+
+The editor starts with a KubeBlocks Cluster manifest using:
+
+- `apiVersion: apps.kubeblocks.io/v1`
+- `kind: Cluster`
+- `spec.clusterDef: falkordb`
+- `spec.topology: replication`
+- Component `falkordb` with `2` replicas
+- Component `falkordb-sent` with `3` replicas
+- `terminationPolicy: Delete`
+
+## Validate
+
+```bash
+kubectl get clusters.apps.kubeblocks.io -n <namespace>
+kubectl get pods -n <namespace>
+```
+
+If creation fails, check the Admin UI toast and Admin Server logs. YAML parse errors are shown in the editor before submit; Kubernetes validation errors are returned by the backend after submit.

@@ -1,0 +1,109 @@
+---
+title: "GRAPH.CONSTRAINT DROP"
+description: "GRAPH.CONSTRAINT DROP removes a mandatory or unique constraint from a node label or relationship type in a FalkorDB graph."
+---
+
+```sh
+GRAPH.CONSTRAINT DROP key 
+  MANDATORY|UNIQUE
+  NODE label | RELATIONSHIP reltype
+  PROPERTIES propCount prop [prop...]
+```
+
+Deleted a graph constraint.
+
+[Examples](#examples)
+
+For an introduction to constraints see [GRAPH.CONSTRAINT CREATE](/commands/graph.constraint-create)
+
+## Required arguments
+
+<Accordion title="key" defaultOpen>
+is key name for the graph.
+</Accordion>
+
+<Accordion title="constraintType" defaultOpen>
+is the constraint type: either `MANDATORY` or `UNIQUE`.
+</Accordion>
+
+<Accordion title="NODE label | RELATIONSHIP reltype" defaultOpen>
+
+is the graph entity type (`NODE` or `RELATIONSHIP`) and the name of the node label or relationship type on which the constraint is enforced.
+</Accordion>
+
+<Accordion title="propCount" defaultOpen>
+is the number of properties following. Valid values are between 1 and 255.
+</Accordion>
+
+<Accordion title="prop..." defaultOpen>
+is a list of `propCount` property names.
+</Accordion>
+
+## Return value
+
+@simple-string-reply - `OK` if executed correctly, or @error-reply otherwise.
+
+## Examples
+
+To delete a unique constraint for all nodes with label `Person` enforcing uniqueness on the combination of values of attributes `first_name` and `last_name`, issue the following command:
+
+<CodeGroup>
+
+```python Python
+from falkordb import FalkorDB
+client = FalkorDB()
+result = client.drop_constraint('g', 'UNIQUE', 'NODE', 'Person', ['first_name', 'last_name'])
+print(result)
+```
+
+```javascript JavaScript
+import { FalkorDB } from 'falkordb';
+const client = await FalkorDB.connect();
+const result = await client.dropConstraint('g', 'UNIQUE', 'NODE', 'Person', ['first_name', 'last_name']);
+console.log(result);
+```
+
+```java Java
+import com.falkordb.*;
+
+Driver driver = FalkorDB.driver("localhost", 6379);
+Graph graph = driver.graph("g");
+String result = graph.dropConstraint("UNIQUE", "NODE", "Person", "first_name", "last_name");
+System.out.println(result);
+```
+
+```rust Rust
+use falkordb::{FalkorClientBuilder, FalkorConnectionInfo};
+
+let connection_info: FalkorConnectionInfo = "falkor://127.0.0.1:6379"
+    .try_into().expect("Invalid connection info");
+let client = FalkorClientBuilder::new()
+    .with_connection_info(connection_info)
+    .build().expect("Failed to build client");
+let result = client.drop_constraint("g", "UNIQUE", "NODE", "Person", &["first_name", "last_name"])?;
+println!("{}", result);
+```
+
+```bash Shell
+redis> GRAPH.CONSTRAINT DROP g UNIQUE NODE Person PROPERTIES 2 first_name last_name
+# Output: OK
+```
+
+</CodeGroup>
+
+## Frequently Asked Questions
+
+<AccordionGroup>
+  <Accordion title="Is dropping a constraint synchronous or asynchronous?">
+    Unlike constraint creation, dropping a constraint is **synchronous**. The command returns `OK` immediately upon successful removal.
+  </Accordion>
+  <Accordion title="Do I need to drop the supporting index after dropping a unique constraint?">
+    No, the supporting index is not automatically removed. You can drop it separately if it is no longer needed, but it may still be useful for query performance.
+  </Accordion>
+  <Accordion title="What happens if I try to drop a constraint that does not exist?">
+    The command will return an error indicating that the specified constraint was not found.
+  </Accordion>
+  <Accordion title="Does dropping a constraint affect existing data?">
+    No. Dropping a constraint only removes the enforcement rule. Existing data remains unchanged; it simply will no longer be validated against that constraint.
+  </Accordion>
+</AccordionGroup>

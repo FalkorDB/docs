@@ -1,0 +1,66 @@
+---
+title: "Customize Style Panel"
+description: "Customize node label and relationship type styles (color and size), live preview, persistence, and cancel/save behavior."
+---
+
+The **Customize Style** panel changes how a node label or a relationship type is
+drawn on the canvas.
+
+![Customize Style panel with a node label selected](/images/browser/style-panel.webp)
+
+## How to open
+1. Open **Graph Info**.
+2. Click the palette icon next to a node label or a relationship type.
+
+## What you can change
+- **Color**
+  - 15 preset colors
+  - A custom color, chosen with the color picker or typed as a hex value
+- **Size**
+  - Ten scale options from `0.25x` to `2.50x`
+
+Size is a single multiplier. For a node label it scales the node radius; for a
+relationship type it scales the line width, the label font size, and the
+arrowhead together, so an edge type stays visually consistent.
+
+![Customize Style panel with a relationship type selected](/images/browser/style-panel-relationship.webp)
+
+Changes are previewed immediately on the canvas, and the same style is used in
+the [Schema view](/browser/ui/schema-view).
+
+## Save vs Cancel
+The **Cancel** and **Save Changes** buttons appear only once you have changed
+something.
+
+- **Save Changes**
+  - Persists the style so the label or relationship type keeps it.
+- **Cancel**
+  - Reverts to the original values. The panel stays open.
+- **Close** (`X`)
+  - Closes the panel.
+
+Styles are stored in your browser, scoped to the active connection, so they
+survive reloads and tab switches but are not shared with other users.
+
+## Tutorial note
+During the tutorial, saving style changes is intentionally prevented.
+
+## Frequently Asked Questions
+
+<AccordionGroup>
+  <Accordion title="How do I open the Customize Style panel?">
+    Open the **Graph Info** panel, then click the **palette icon** next to the node label or relationship type you want to customize.
+  </Accordion>
+  <Accordion title="Can I style relationships as well as nodes?">
+    Yes. Relationship types have their own color and size. The size multiplier scales the line width, the relationship label font size, and the arrowhead together.
+  </Accordion>
+  <Accordion title="Are style changes saved automatically?">
+    No. Click **Save Changes** to persist them. **Cancel** reverts to the original color and size without closing the panel.
+  </Accordion>
+  <Accordion title="Can I use a custom color?">
+    Yes. Besides the 15 preset colors, the palette button opens a color picker where you can also type a hex value.
+  </Accordion>
+  <Accordion title="Do style changes affect other users?">
+    No. Styles are stored in your browser and scoped to the active connection, so they only apply to you.
+  </Accordion>
+</AccordionGroup>

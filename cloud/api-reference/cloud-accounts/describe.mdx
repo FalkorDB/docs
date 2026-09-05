@@ -1,0 +1,146 @@
+---
+title: "Describe account configuration"
+sidebarTitle: "Describe"
+api: "GET https://api.omnistrate.cloud/2022-09-01-00/accountconfig/{id}"
+description: "Get the status and bootstrap instructions for a cloud account."
+---
+
+Returns the account configuration, including the CloudFormation template URL or bootstrap shell command you run in your cloud account to grant FalkorDB the permissions it needs.
+
+## Authorization
+
+<ParamField header="Cookie" type="string" required>
+  Session cookie set by [Sign in](/cloud/api-reference/authentication/signin): `omnistrate_token=<jwt>`.
+</ParamField>
+
+## Path parameters
+
+<ParamField path="id" type="string" required>
+  Account configuration ID. Read it from `result_params.cloud_provider_account_config_id` on the cloud account deployment instance.
+</ParamField>
+
+## Response
+
+<ResponseField name="id" type="string" required>
+  ID of the account configuration.
+</ResponseField>
+
+<ResponseField name="name" type="string" required>
+  Name of the account configuration.
+</ResponseField>
+
+<ResponseField name="description" type="string" required>
+  Description of the account configuration.
+</ResponseField>
+
+<ResponseField name="cloudProviderId" type="string" required>
+  ID of the cloud provider.
+</ResponseField>
+
+<ResponseField name="status" type="string" required>
+  Configuration status: `PENDING`, `VERIFYING`, `READY`, `FAILED`, or `READY_TO_OFFBOARD`.
+</ResponseField>
+
+<ResponseField name="statusMessage" type="string" required>
+  Human readable detail for the current status.
+</ResponseField>
+
+<ResponseField name="byoaInstanceIDs" type="string[]">
+  BYOA deployment instances tied to this account configuration.
+</ResponseField>
+
+### AWS
+
+<ResponseField name="awsAccountID" type="string">
+  Your AWS account ID.
+</ResponseField>
+
+<ResponseField name="awsBootstrapRoleARN" type="string">
+  Bootstrap role ARN FalkorDB assumes.
+</ResponseField>
+
+<ResponseField name="awsCloudFormationTemplateURL" type="string">
+  CloudFormation template to deploy in your AWS account.
+</ResponseField>
+
+<ResponseField name="awsCloudFormationNoLBTemplateURL" type="string">
+  CloudFormation template variant without a load balancer.
+</ResponseField>
+
+### GCP
+
+<ResponseField name="gcpProjectID" type="string">
+  Your GCP project ID.
+</ResponseField>
+
+<ResponseField name="gcpProjectNumber" type="string">
+  Your GCP project number.
+</ResponseField>
+
+<ResponseField name="gcpServiceAccountEmail" type="string">
+  Bootstrap service account email.
+</ResponseField>
+
+<ResponseField name="gcpBootstrapShellCommand" type="string">
+  Command to run in Cloud Shell to grant permissions.
+</ResponseField>
+
+<ResponseField name="gcpDisconnectShellCommand" type="string">
+  Command to revoke access without offboarding.
+</ResponseField>
+
+<ResponseField name="gcpOffboardShellCommand" type="string">
+  Command to remove all FalkorDB resources from the project.
+</ResponseField>
+
+### Azure
+
+<ResponseField name="azureSubscriptionID" type="string">
+  Your Azure subscription ID.
+</ResponseField>
+
+<ResponseField name="azureTenantID" type="string">
+  Your Azure tenant ID.
+</ResponseField>
+
+<ResponseField name="azureBootstrapShellCommand" type="string">
+  Command to run in Azure Cloud Shell to grant permissions.
+</ResponseField>
+
+<ResponseField name="azureDisconnectShellCommand" type="string">
+  Command to revoke access without offboarding.
+</ResponseField>
+
+<ResponseField name="azureOffboardShellCommand" type="string">
+  Command to remove all FalkorDB resources from the subscription.
+</ResponseField>
+
+### OCI
+
+<ResponseField name="ociTenancyID" type="string">
+  Your OCI tenancy OCID.
+</ResponseField>
+
+<ResponseField name="ociDomainID" type="string">
+  Your OCI identity domain OCID.
+</ResponseField>
+
+<ResponseField name="ociBootstrapShellCommand" type="string">
+  Command to run in OCI Cloud Shell to grant permissions.
+</ResponseField>
+
+<ResponseField name="ociDisconnectShellCommand" type="string">
+  Command to revoke access without offboarding.
+</ResponseField>
+
+<ResponseField name="ociOffboardShellCommand" type="string">
+  Command to remove all FalkorDB resources from the tenancy.
+</ResponseField>
+
+<Warning>
+  Run the offboard command only after deleting every BYOA deployment instance in the account. It removes the FalkorDB infrastructure from your cloud account.
+</Warning>
+
+## Errors
+
+See [Error](/cloud/api-reference/schemas#error) for the error response shape.

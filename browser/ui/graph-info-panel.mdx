@@ -1,0 +1,56 @@
+---
+title: "Graph Info Panel"
+description: "Graph statistics (counts, memory), labels, edge types, property keys, and quick exploration queries."
+---
+
+The Graph Info panel provides quick, clickable insights into the selected graph’s structure.
+
+![Graph info panel](/images/browser/graph-info.webp)
+
+## What it shows
+- **Graph name**
+- **Memory usage** (optional; can be toggled via settings)
+- **Node count** and **edge count**
+- **Node labels**
+- **Edge (relationship) types**
+- **Property keys**
+
+## Click-to-explore behavior
+The panel is designed for exploration:
+- Clicking a **label** runs `MATCH (n:Label) RETURN n`.
+- Clicking an **edge type** runs `MATCH p=()-[:TYPE]-() RETURN p`.
+- Clicking a **property key** runs a query that finds nodes/edges where that key exists.
+
+It also provides “*” shortcuts:
+- **All nodes** (`MATCH (n) RETURN n`)
+- **All edges** (`MATCH p=()-[]-() RETURN p`)
+
+## Style customization entrypoint
+Next to each label and each relationship type, a palette button opens the
+[Customize Style](/browser/ui/style-panel) panel for that label or type.
+
+## Offloaded graphs (Enterprise)
+When a graph has been offloaded from memory, its counts and memory usage are
+shown as `N/A`. Reading them would load the graph back into memory, which would
+undo the offload. See [Graphs Manager](/browser/ui/graph-management) for the
+loaded/offloaded indicator.
+
+## Frequently Asked Questions
+
+<AccordionGroup>
+  <Accordion title="How do I explore nodes of a specific label?">
+    Click a **label name** in the Graph Info panel. This automatically runs `MATCH (n:Label) RETURN n` and displays the results on the canvas.
+  </Accordion>
+  <Accordion title="Can I see all edges of a specific relationship type?">
+    Yes. Click an **edge type** in the Graph Info panel to run `MATCH p=()-[:TYPE]-() RETURN p` and visualize all relationships of that type.
+  </Accordion>
+  <Accordion title="What does the memory usage indicator show?">
+    It shows the current **memory utilization** of the selected graph in MB. This can be toggled on/off in Browser Settings.
+  </Accordion>
+  <Accordion title="How do I change the visual style of a label?">
+    Click the **palette icon** next to a label or a relationship type in the Graph Info panel to open the [Customize Style](/browser/ui/style-panel) panel, where you can change its color and size.
+  </Accordion>
+  <Accordion title="Why does my graph show N/A for counts and memory?">
+    The graph is **offloaded** from memory (FalkorDB Enterprise). Reading its statistics would load it back into memory, so the Browser reports `N/A` instead.
+  </Accordion>
+</AccordionGroup>

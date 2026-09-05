@@ -1,0 +1,39 @@
+---
+title: "Upgrading Instances"
+description: "Change the database size of a Startup, Pro, or Enterprise instance with the edit button. Deployment type and tier changes require creating a new instance and importing your data."
+---
+
+FalkorDB Cloud supports **in-tier** size changes on a running instance. Changing the deployment type or moving to a different tier is not supported in place — use the import from another instance method instead.
+
+## In-tier upgrades
+
+**Startup**, **Pro**, and **Enterprise** instances support changing the database size from the instance page.
+
+1. Open the instance you want to resize.
+2. Select **Edit**.
+3. Choose the new size and confirm.
+
+Changing the size may restart the instance. Plan the change for a time that tolerates a brief interruption, or use a Replication / Cluster deployment to minimize impact.
+
+## What can't be changed in place
+
+| Change | Supported via edit? |
+| :--- | :--- |
+| Database size, same tier | Yes |
+| Deployment type (for example, Standalone → Replication) | No |
+| Tier (for example, Pro → Enterprise) | No |
+
+## Changing deployment type or tier
+
+To change the deployment type or move to a different tier:
+
+1. Create a new instance with the desired deployment type and tier.
+2. Open the new instance's **Import/Export RDB** tab and select **Import RDB**.
+3. Choose **Another instance** as the source and select your existing instance.
+4. Once the import completes and you've verified the new instance, update your application to point at it and decommission the old instance.
+
+See [Export and Import](/cloud/operations/export-import) for details on the import from another instance method.
+
+## Getting Support
+
+Questions about upgrading an instance? Email **[support@falkordb.com](mailto:support@falkordb.com)**. See the [Support page](/support) for what to include in your request.

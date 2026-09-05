@@ -1,0 +1,98 @@
+---
+title: "Uninstall"
+description: "Remove FalkorDB Enterprise and, optionally, the platform components it installed."
+icon: "trash"
+---
+
+## Preview the plan
+
+The uninstall script is published alongside the installer, so it can be run without a repository checkout. It supports dry-run mode:
+
+```bash
+curl -fsSL https://falkordb.github.io/FalkorDB-Enterprise/uninstall.sh | \
+  bash -s -- --dry-run
+```
+
+For a specific context and namespace:
+
+```bash
+curl -fsSL https://falkordb.github.io/FalkorDB-Enterprise/uninstall.sh | \
+  bash -s -- \
+    --kube-context production-cluster \
+    --namespace falkordb-system \
+    --dry-run
+```
+
+## Uninstall Enterprise only
+
+This removes the FalkorDB Enterprise Helm release and retained FalkorDB addon resources. KubeBlocks is kept.
+
+```bash
+curl -fsSL https://falkordb.github.io/FalkorDB-Enterprise/uninstall.sh | \
+  bash -s -- \
+    --namespace falkordb-system
+```
+
+For automation:
+
+```bash
+curl -fsSL https://falkordb.github.io/FalkorDB-Enterprise/uninstall.sh | \
+  bash -s -- \
+    --namespace falkordb-system \
+    --yes
+```
+
+## Also uninstall KubeBlocks
+
+```bash
+curl -fsSL https://falkordb.github.io/FalkorDB-Enterprise/uninstall.sh | \
+  bash -s -- \
+    --namespace falkordb-system \
+    --kubeblocks-namespace kb-system \
+    --uninstall-kubeblocks
+```
+
+## Delete namespaces
+
+```bash
+curl -fsSL https://falkordb.github.io/FalkorDB-Enterprise/uninstall.sh | \
+  bash -s -- \
+    --namespace falkordb-system \
+    --kubeblocks-namespace kb-system \
+    --uninstall-kubeblocks \
+    --delete-namespaces
+```
+
+If `--uninstall-kubeblocks` is not provided, `--delete-namespaces` deletes only the Enterprise namespace.
+
+## Delete CRDs
+
+Deleting CRDs removes KubeBlocks and VolumeSnapshot API definitions from the cluster. This can affect other workloads that use those APIs.
+
+```bash
+curl -fsSL https://falkordb.github.io/FalkorDB-Enterprise/uninstall.sh | \
+  bash -s -- \
+    --uninstall-kubeblocks \
+    --delete-crds \
+    --yes
+```
+
+## Verify removal
+
+```bash
+helm status falkordb-enterprise -n falkordb-system
+kubectl get all -n falkordb-system
+```
+
+If KubeBlocks was removed:
+
+```bash
+helm status kubeblocks -n kb-system
+kubectl get pods -n kb-system
+```
+
+If namespaces were deleted:
+
+```bash
+kubectl get namespace falkordb-system kb-system
+```
