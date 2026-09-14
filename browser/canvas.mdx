@@ -383,3 +383,34 @@ Requires support for Web Components (Custom Elements), ES Modules, Shadow DOM, a
 
 - [GitHub Repository](https://github.com/FalkorDB/falkordb-canvas)
 - [npm Package](https://www.npmjs.com/package/@falkordb/canvas)
+
+---
+
+## Frequently Asked Questions
+
+<AccordionGroup>
+  <Accordion title="What is FalkorDB Canvas?">
+    FalkorDB Canvas is a standalone web component for visualizing FalkorDB graphs with force-directed layouts. It is published on npm as [@falkordb/canvas](https://www.npmjs.com/package/@falkordb/canvas) and is the same component that powers graph visualization inside [FalkorDB Browser](/browser).
+  </Accordion>
+  <Accordion title="How do I install FalkorDB Canvas?">
+    Install it from npm with `npm install @falkordb/canvas`, import the package, and place a `falkordb-canvas` element in your page. Importing the module registers the custom element for you.
+  </Accordion>
+  <Accordion title="Can I use FalkorDB Canvas with React, Vue, or Angular?">
+    Yes. It is a standard Web Component, so it works with any framework or with plain JavaScript. The package ships full TypeScript definitions, and the Quick Start above includes both a vanilla JavaScript and a React/TypeScript example.
+  </Accordion>
+  <Accordion title="Does FalkorDB Canvas query FalkorDB directly?">
+    No. Canvas is a rendering component — it draws whatever nodes and links you hand it through `setData()`. Run your Cypher query with a [FalkorDB client](/getting-started/clients), convert the result into nodes and links, and pass that to the canvas.
+  </Accordion>
+  <Accordion title="What layout modes does FalkorDB Canvas support?">
+    Three: `force` (the default D3 force simulation), `tree` (hierarchical), and `radial`. Switch between them with `setLayout('tree')` and tune each one through `setLayoutOptions()`.
+  </Accordion>
+  <Accordion title="How do I visualize a large graph without slowing down the browser?">
+    Enable the `largeGraph` options to turn on viewport culling and skip expensive details at low zoom, call `setAnimation(false)` once the layout settles to stop the simulation, and prefer a deterministic layout such as `tree` for static graphs. `getCullingStats()` shows how many nodes and links are actually being drawn.
+  </Accordion>
+  <Accordion title="How do I keep the user's zoom and position when I update the data?">
+    Save the view with `getViewport()` before replacing the data, then restore it with `setViewport()` afterwards. This prevents the jarring re-fit that otherwise happens on every `setData()` call.
+  </Accordion>
+  <Accordion title="Which browsers does FalkorDB Canvas support?">
+    The latest versions of Chrome, Edge, Firefox, and Safari. It needs Custom Elements, Shadow DOM, ES Modules, and HTML5 Canvas support.
+  </Accordion>
+</AccordionGroup>

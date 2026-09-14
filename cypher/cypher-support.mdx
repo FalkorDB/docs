@@ -145,13 +145,13 @@ and is described in their documentation.
   <Accordion title="Does FalkorDB support regular expressions?">
     No. The regex operator is not currently supported. Use the string operators `STARTS WITH`, `ENDS WITH`, and `CONTAINS` for pattern matching on strings.
   </Accordion>
-  <Accordion title="Are user-defined functions supported?">
+  <Accordion title="Does FalkorDB support user-defined functions?">
     Yes. FalkorDB supports user-defined functions through the **Flex UDF library**, which provides functions for text manipulation, collections, date/time, JSON, maps, bitwise operations, and similarity. See the [UDFs documentation](/udfs) for the full list of available functions.
   </Accordion>
   <Accordion title="How do I use query parameters?">
     Use the CYPHER prefix: `CYPHER name='Alice' MATCH (n {name: $name}) RETURN n`. Each FalkorDB client library also provides its own method for passing parameters.
   </Accordion>
-  <Accordion title="What data types are supported?">
+  <Accordion title="What data types does FalkorDB support?">
     FalkorDB supports 64-bit doubles, 64-bit signed integers, strings, booleans, NULL, lists, maps, and temporal types (Date, DateTime, LocalDateTime, Time, LocalTime, Duration). Hexadecimal and octal numerics are not supported.
   </Accordion>
 </AccordionGroup>

@@ -80,7 +80,7 @@ ORDER BY similarity DESC
   <Accordion title="When should I use Jaro-Winkler vs Levenshtein?">
     Use Jaro-Winkler for comparing **short strings** like names and addresses where prefix similarity matters. Use Levenshtein when you need an exact edit distance count.
   </Accordion>
-  <Accordion title="Is the comparison case-sensitive?">
+  <Accordion title="Is flex.text.jaroWinkler case-sensitive?">
     Yes. `flex.text.jaroWinkler` performs a case-sensitive comparison. Apply `toLower()` to both strings for case-insensitive matching.
   </Accordion>
 </AccordionGroup>
