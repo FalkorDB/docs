@@ -451,8 +451,10 @@ GRAPH.CONSTRAINT CREATE myGraph MANDATORY NODE Person PROPERTIES 1 id
 GRAPH.CONSTRAINT DROP   myGraph MANDATORY NODE Person PROPERTIES 1 id
 ```
 
-Constraints are built asynchronously: the command replies `PENDING`, and the constraint is
-only enforced once its status becomes `OPERATIONAL`.
+Constraints are built asynchronously. The command replies `PENDING` and the constraint is
+enforced gradually while its status is `UNDER CONSTRUCTION`. It becomes `OPERATIONAL` once
+every governed node or relationship conforms, or `FAILED` if a conflict is found — in which
+case it is not enforced at all and has to be recreated after fixing the data.
 
 ```cypher
 CALL db.constraints()
