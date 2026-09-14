@@ -54,7 +54,7 @@ The current index implementation, however, does not handle not-equal (`<>`) filt
 
 To profile a query and see whether index optimizations have been introduced, use the `GRAPH.EXPLAIN` endpoint:
 
-```sh
+```bash
 $ redis-cli GRAPH.EXPLAIN social "MATCH (p:person) WHERE p.id < 5 RETURN p"
 1) "Results"
 2) "    Project"
