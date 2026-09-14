@@ -1,7 +1,7 @@
 ---
 title: "RedisGraph Alternative & Migration Guide"
 sidebarTitle: "RedisGraph to FalkorDB"
-description: "FalkorDB is the RedisGraph successor, built by the team behind RedisGraph. After the RedisGraph end-of-life, migrate with your existing RDB snapshot — no data conversion, no query rewrite, same GRAPH.* commands."
+description: "FalkorDB is the RedisGraph successor, built by the team behind RedisGraph. After the RedisGraph end-of-life, migrate with your existing RDB snapshot — no data conversion, the same GRAPH.* commands, and in the vast majority of cases no query changes."
 keywords:
   - "RedisGraph alternative"
   - "RedisGraph successor"
@@ -17,7 +17,7 @@ keywords:
 
 [RedisGraph reached end-of-life](https://redis.io/blog/redisgraph-eol/) on January 31, 2025. It is no longer maintained, no new patches are released, and RedisGraph commands are disabled on Redis Enterprise Cloud.
 
-**FalkorDB is the direct successor to RedisGraph**, built and maintained by the engineers behind the original RedisGraph project. It keeps the same sparse-matrix and [GraphBLAS](https://graphblas.org) architecture, the same `GRAPH.*` command API over the Redis protocol, and reads your existing RedisGraph RDB files as-is — so moving off a deprecated RedisGraph deployment is a restore, not a rewrite.
+**FalkorDB is the direct successor to RedisGraph**, built and maintained by the engineers behind the original RedisGraph project. It keeps the same sparse-matrix and [GraphBLAS](https://graphblas.org) architecture, the same `GRAPH.*` command API over the Redis protocol, and reads your existing RedisGraph RDB files as-is — so moving your data off a deprecated RedisGraph deployment is a restore, not a conversion.
 
 <Note>
   Looking for the fastest path off RedisGraph? Jump straight to the [migration steps](#migration-steps). Your `dump.rdb` loads into FalkorDB without conversion.
@@ -26,18 +26,18 @@ keywords:
 ## Why FalkorDB Is the RedisGraph Alternative
 
 * **Same team, same lineage.** FalkorDB continues the RedisGraph codebase and its linear-algebra query engine, led by the people who created it.
-* **Drop-in API compatibility.** `GRAPH.QUERY`, `GRAPH.RO_QUERY`, `GRAPH.EXPLAIN`, `GRAPH.PROFILE`, `GRAPH.DELETE`, and `GRAPH.LIST` behave as they did in RedisGraph. See the [command reference](/commands).
+* **Same command API.** `GRAPH.QUERY`, `GRAPH.RO_QUERY`, `GRAPH.EXPLAIN`, `GRAPH.PROFILE`, `GRAPH.DELETE`, and `GRAPH.LIST` behave as they did in RedisGraph. See the [command reference](/commands), and check [Cypher support](/cypher/cypher-support) and [known limitations](/cypher/known-limitations) for the clauses you rely on.
 * **Zero-conversion data migration.** FalkorDB loads RedisGraph RDB snapshots directly. There is no export/import pipeline, no CSV round-trip, and no ETL job.
-* **No client rewrite.** Existing RedisGraph client code keeps working; [official FalkorDB clients](/getting-started/clients) are available for Python, JavaScript, Java, Go, Rust, and C#.
-* **Actively developed.** Ongoing releases add capabilities RedisGraph never shipped, including [vector indexes](/cypher/indexing/vector-index), [full-text search](/cypher/indexing/fulltext-index), [graph algorithms](/algorithms), [UDFs](/udfs), and [GraphRAG tooling](/genai-tools/graphrag-sdk).
+* **Little to no application rewrite.** Code that issues `GRAPH.QUERY` and `GRAPH.RO_QUERY` over the Redis protocol generally works as-is. The community clients originally built for RedisGraph are not officially tested or supported, so plan to move to the [official FalkorDB clients](/getting-started/clients) for Python, JavaScript, Java, Go, Rust, and C#.
+* **Actively developed.** Ongoing releases add capabilities RedisGraph never shipped, including [vector indexes](/cypher/indexing/vector-index), [graph algorithms](/algorithms), [UDFs](/udfs), and [GraphRAG tooling](/genai-tools/graphrag-sdk).
 
 ### RedisGraph vs. FalkorDB
 
-| | RedisGraph | FalkorDB |
+| Feature | RedisGraph | FalkorDB |
 | --- | --- | --- |
 | Maintenance status | End-of-life since January 31, 2025; repository deprecated | Actively developed and supported |
 | Query language | openCypher subset | openCypher subset with [extensions](/cypher/cypher-support) |
-| Command API | `GRAPH.*` | Same `GRAPH.*` commands — drop-in |
+| Command API | `GRAPH.*` | Same `GRAPH.*` commands |
 | Storage format | RDB snapshots | Loads RedisGraph RDB files unchanged |
 | Vector search | Not available | [Vector indexes](/cypher/indexing/vector-index) for similarity search |
 | Full-text search | Available | [Full-text indexes](/cypher/indexing/fulltext-index) |
@@ -45,7 +45,7 @@ keywords:
 | GenAI / GraphRAG | Not available | [GraphRAG SDK](/genai-tools/graphrag-sdk), [MCP server](/genai-tools/mcpserver/quickstart), framework integrations |
 | Visual tooling | RedisInsight graph view (discontinued) | Built-in [FalkorDB Browser](/browser) |
 | Deployment options | Redis Stack / Redis Enterprise | [Docker](/getting-started), FalkorDB Cloud, [Kubernetes](/operations/k8s-support), self-managed |
-| Scaling | Redis replication | [Replication](/operations/replication) plus [sharded clustering](/operations/cluster) |
+| Scaling | Redis replication | [Replication](/operations/replication) plus [clustering](/operations/cluster) that distributes graphs across shards |
 
 ## Migration Steps
 
@@ -112,9 +112,9 @@ GRAPH.QUERY your_graph_name "MATCH (n) RETURN count(n)"
 
 ## After You Migrate
 
-Once your graphs are running on FalkorDB, these are the capabilities that were never available on RedisGraph:
+Once your graphs are running on FalkorDB, these are the capabilities to pick up next — most of them have no RedisGraph equivalent:
 
-* [Vector indexes](/cypher/indexing/vector-index) and [full-text indexes](/cypher/indexing/fulltext-index) for hybrid semantic and graph retrieval.
+* [Vector indexes](/cypher/indexing/vector-index), alongside the familiar [full-text indexes](/cypher/indexing/fulltext-index), for hybrid semantic and graph retrieval.
 * [Graph algorithms](/algorithms) such as PageRank, betweenness centrality, WCC, and max-flow.
 * [User-defined functions](/udfs) for logic that used to live in application code.
 * [GraphRAG SDK](/genai-tools/graphrag-sdk) and the [MCP server](/genai-tools/mcpserver/quickstart) for GenAI and agent workloads.
@@ -127,7 +127,7 @@ Once your graphs are running on FalkorDB, these are the capabilities that were n
     Yes. Redis announced the RedisGraph end-of-life in July 2023. End of support was January 31, 2025, the GitHub repository is no longer maintained, and RedisGraph commands are disabled on Redis Enterprise Cloud. See the [official EOL announcement](https://redis.io/blog/redisgraph-eol/).
   </Accordion>
   <Accordion title="What is the best RedisGraph alternative?">
-    FalkorDB. It is the successor to RedisGraph, built by the engineers behind the original project on the same GraphBLAS sparse-matrix engine. It keeps the `GRAPH.*` command API and the Cypher dialect you already use, reads your existing RDB files, and is actively developed — so it is the only alternative that requires neither a data conversion nor a query rewrite.
+    FalkorDB. It is the successor to RedisGraph, built by the engineers behind the original project on the same GraphBLAS sparse-matrix engine. It keeps the `GRAPH.*` command API and the Cypher dialect you already use, reads your existing RDB files, and is actively developed — so migrating needs no data conversion, and in the vast majority of cases no query changes. Review [Cypher support](/cypher/cypher-support) and [known limitations](/cypher/known-limitations) for the clauses you rely on.
   </Accordion>
   <Accordion title="Is FalkorDB a drop-in replacement for RedisGraph?">
     In practice, yes. FalkorDB speaks the Redis protocol, exposes the same `GRAPH.QUERY` and `GRAPH.RO_QUERY` commands, and loads RedisGraph RDB snapshots directly. Most deployments only change the connection endpoint. Review [Cypher support](/cypher/cypher-support) and [known limitations](/cypher/known-limitations) if you rely on unusual clauses.
@@ -142,10 +142,10 @@ Once your graphs are running on FalkorDB, these are the capabilities that were n
     Yes. Export an RDB file from your RedisGraph Cloud instance, then follow your FalkorDB Cloud provider instructions for uploading and restoring from the RDB file.
   </Accordion>
   <Accordion title="Will my existing RedisGraph client code work with FalkorDB?">
-    Yes. FalkorDB is API-compatible with RedisGraph. Your existing client code using `GRAPH.QUERY` and `GRAPH.RO_QUERY` commands will work without modifications. For new work, prefer the [official FalkorDB clients](/getting-started/clients), which are actively maintained.
+    In most cases, yes. FalkorDB exposes the same `GRAPH.QUERY` and `GRAPH.RO_QUERY` commands over the Redis protocol, so application code written against them generally needs no changes. The community client libraries originally built for RedisGraph may keep working through that protocol compatibility, but they are **not officially tested or supported** — use the [official FalkorDB clients](/getting-started/clients), which are actively maintained.
   </Accordion>
   <Accordion title="Do I have to rewrite my Cypher queries?">
-    No. FalkorDB implements the same openCypher dialect RedisGraph did, plus extensions. Queries written for RedisGraph run unchanged in the vast majority of cases.
+    Usually not. FalkorDB implements the same openCypher dialect RedisGraph did, plus extensions, so queries written for RedisGraph run unchanged in the vast majority of cases. Check [Cypher support](/cypher/cypher-support) and [known limitations](/cypher/known-limitations) if you depend on unusual clauses.
   </Accordion>
   <Accordion title="Can I keep running RedisGraph instead of migrating?">
     You can, but it is unsupported, unpatched software: no security fixes, no bug fixes, and no compatibility work for newer Redis versions. Migrating to FalkorDB restores an actively maintained path without changing your data or queries.
