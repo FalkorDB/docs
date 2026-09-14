@@ -285,15 +285,27 @@ ORDER BY cast_size DESC
 // List comprehension: [element IN list WHERE condition | output]
 MATCH p = ()-[*]->()
 RETURN [node IN nodes(p) WHERE node.rank > 10 | node.name]
+```
 
+```cypher
 // Pattern comprehension
 MATCH (n:Person)
 RETURN n.name, [(n)-[e:FRIEND_OF]->(f:Person) WHERE e.since < 2010 | f.age]
+```
 
-// CASE — simple and generic form
-RETURN CASE n.title WHEN 'Engineer' THEN 100 ELSE 0 END
+```cypher
+// CASE, simple form: one expression evaluated against each WHEN
+MATCH (n:Employee)
+RETURN CASE n.title WHEN 'Engineer' THEN 100 WHEN 'Scientist' THEN 80 ELSE 0 END
+```
+
+```cypher
+// CASE, generic form: each WHEN carries its own predicate
+MATCH (n:Person)
 RETURN CASE WHEN n.age < 18 THEN '0-18' WHEN n.age < 30 THEN '18-30' ELSE '30+' END
+```
 
+```cypher
 // reduce
 RETURN reduce(total = 0, n IN [1, 2, 3] | total + n)   // 6
 ```
@@ -371,25 +383,44 @@ CALL db.indexes()
 
 ## Vector search
 
-Store vectors with `vecf32()` and search them with the vector index procedures:
+Store vectors with `vecf32()` and search them with the vector index procedures. The index,
+the stored vectors, and the query vector must all share the same dimension — the
+3-dimensional vectors below are kept short so the example runs as-is.
 
 ```cypher
-CREATE (:Product {name: 'Laptop', embedding: vecf32([0.12, 0.83, 0.44])})
+CREATE VECTOR INDEX FOR (d:Doc) ON (d.embedding)
+  OPTIONS {dimension: 3, similarityFunction: 'cosine'}
 
-CALL db.idx.vector.queryNodes('Product', 'embedding', 5, vecf32([0.15, 0.81, 0.40]))
+CREATE (:Doc {title: 'Laptop review', embedding: vecf32([0.12, 0.83, 0.44])})
+CREATE (:Doc {title: 'Notebook review', embedding: vecf32([0.15, 0.81, 0.40])})
+
+CALL db.idx.vector.queryNodes('Doc', 'embedding', 5, vecf32([0.15, 0.81, 0.40]))
 YIELD node, score
-RETURN node.name, score ORDER BY score
-
-CALL db.idx.vector.queryRelationships('Call', 'summary', 5, vecf32([0.1, 0.2, 0.3]))
-YIELD relationship, score
-RETURN relationship, score
+RETURN node.title, score ORDER BY score DESC
 ```
+
+The same works on relationship properties:
+
+```cypher
+CREATE VECTOR INDEX FOR ()-[r:REVIEWED]->() ON (r.embedding)
+  OPTIONS {dimension: 3, similarityFunction: 'euclidean'}
+
+CALL db.idx.vector.queryRelationships('REVIEWED', 'embedding', 5, vecf32([0.1, 0.2, 0.3]))
+YIELD relationship, score
+RETURN relationship, score ORDER BY score
+```
+
+<Tip>
+Order results by what the similarity function means. With `cosine`, a higher score is more
+similar, so sort `DESC`. With `euclidean`, the score is a distance, so sort ascending.
+</Tip>
 
 Compare two vectors directly without an index:
 
 ```cypher
-RETURN vec.cosineDistance(a.embedding, b.embedding)
-RETURN vec.euclideanDistance(a.embedding, b.embedding)
+MATCH (a:Doc {title: 'Laptop review'}), (b:Doc {title: 'Notebook review'})
+RETURN vec.cosineDistance(a.embedding, b.embedding) AS cosine,
+       vec.euclideanDistance(a.embedding, b.embedding) AS euclidean
 ```
 
 Use `cosine` for normalized embeddings (most text embedding models) and `euclidean` when
@@ -398,13 +429,20 @@ magnitude is meaningful.
 ## Constraints
 
 Constraints are created with a Redis command rather than a Cypher clause. A unique constraint
-requires an existing range index on the same properties.
+requires a supporting range index on exactly the same properties, so create that index first
+or the command fails.
 
-```sh
+```bash
+# Prerequisite for the UNIQUE constraint below
+GRAPH.QUERY myGraph "CREATE INDEX FOR (p:Person) ON (p.first_name, p.last_name)"
+
 GRAPH.CONSTRAINT CREATE myGraph UNIQUE NODE Person PROPERTIES 2 first_name last_name
 GRAPH.CONSTRAINT CREATE myGraph MANDATORY NODE Person PROPERTIES 1 id
 GRAPH.CONSTRAINT DROP   myGraph MANDATORY NODE Person PROPERTIES 1 id
 ```
+
+Constraints are built asynchronously: the command replies `PENDING`, and the constraint is
+only enforced once its status becomes `OPERATIONAL`.
 
 ```cypher
 CALL db.constraints()
@@ -511,7 +549,7 @@ Full reference: [LOAD CSV](/cypher/load-csv).
 
 Never concatenate user input into a query. Pass parameters instead:
 
-```sh
+```bash
 GRAPH.QUERY social "CYPHER name='Alice' MATCH (n:Person {name: $name}) RETURN n"
 ```
 
@@ -528,7 +566,7 @@ Every client library exposes a language-native way to pass parameters.
 | [`GRAPH.LIST`](/commands/graph.list) | List every graph in the database |
 | [`GRAPH.DELETE`](/commands/graph.delete) | Delete a graph and its keys |
 
-```sh
+```bash
 GRAPH.EXPLAIN social "MATCH (p:Person) WHERE p.age > 30 RETURN p"
 1) "Results"
 2) "    Project"
