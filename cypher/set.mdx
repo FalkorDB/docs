@@ -10,7 +10,7 @@ The `SET` clause is used to create or update properties on nodes and relationshi
 
 To set a property on a node:
 
-```sh
+```bash
 GRAPH.QUERY DEMO_GRAPH "MATCH (n { name: 'Jim' }) SET n.name = 'Bob'"
 ```
 
@@ -18,7 +18,7 @@ GRAPH.QUERY DEMO_GRAPH "MATCH (n { name: 'Jim' }) SET n.name = 'Bob'"
 
 You can set multiple properties in a single `SET` clause by separating them with commas:
 
-```sh
+```bash
 GRAPH.QUERY DEMO_GRAPH
 "MATCH (n { name: 'Jim', age:32 })
 SET n.age = 33, n.name = 'Bob'"
@@ -32,7 +32,7 @@ You can set properties using a map. There are two operators with different behav
 
 Replaces **all** existing properties with the map properties:
 
-```sh
+```bash
 GRAPH.QUERY DEMO_GRAPH
 "MATCH (n { name: 'Jim', age:32 })
 SET n = {age: 33, name: 'Bob'}"
@@ -44,7 +44,7 @@ SET n = {age: 33, name: 'Bob'}"
 
 Updates only the specified properties while keeping other existing properties:
 
-```sh
+```bash
 GRAPH.QUERY DEMO_GRAPH
 "MATCH (n { name: 'Jim', age:32 })
 SET n += {age: 33}"
@@ -56,7 +56,7 @@ SET n += {age: 33}"
 
 You can copy all properties from one entity to another:
 
-```sh
+```bash
 GRAPH.QUERY DEMO_GRAPH
 "MATCH (jim {name: 'Jim'}), (pam {name: 'Pam'})
 SET jim = pam"
@@ -68,7 +68,7 @@ After executing this query, the `jim` node will have exactly the same properties
 
 To remove a property, set its value to `NULL`:
 
-```sh
+```bash
 GRAPH.QUERY DEMO_GRAPH "MATCH (n { name: 'Jim' }) SET n.name = NULL"
 ```
 
