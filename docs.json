@@ -47,6 +47,7 @@
               {
                 "group": "Cypher Language",
                 "pages": [
+                  "cypher/cheat-sheet",
                   "cypher/match",
                   "cypher/optional-match",
                   "cypher/where",
