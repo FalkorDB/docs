@@ -13,6 +13,9 @@ extensions. Before using syntax you know from another graph database, check
 [Cypher coverage](/cypher/cypher-support) and [Known limitations](/cypher/known-limitations).
 </Note>
 
+Statements separated by a blank line inside a single block are independent queries — send
+them one at a time rather than pasting the whole block.
+
 ## Patterns
 
 Patterns are the ASCII art at the heart of every query. Nodes use parentheses, relationships
@@ -329,7 +332,7 @@ DROP INDEX ON :FOLLOW(created_at)
 The older `CREATE INDEX ON :Person(age)` form is still accepted and creates the same index.
 
 Range indexes are applied automatically. Confirm with `GRAPH.EXPLAIN`, which shows
-`Index Scan` instead of `Label Scan`. Not-equal (`<>`) filters are not optimized.
+`Index Scan` instead of `Node By Label Scan`. Not-equal (`<>`) filters are not optimized.
 
 Full reference: [Range index](/cypher/indexing/range-index).
 
@@ -491,7 +494,11 @@ Full reference: [Procedures](/cypher/procedures).
 ```cypher
 CALL algo.pageRank('Person', 'KNOWS') YIELD node, score
 RETURN node.name, score ORDER BY score DESC LIMIT 10
+```
 
+Weighted shortest paths:
+
+```cypher
 MATCH (a:City {name: 'A'}), (g:City {name: 'G'})
 CALL algo.SPpaths({
   sourceNode: a,
@@ -543,10 +550,18 @@ Full reference: [Data types](/datatypes).
 ```cypher
 LOAD CSV FROM 'file://actors.csv' AS row
 MERGE (a:Actor {name: row[0], birth_year: toInteger(row[1])})
+```
 
+With a header row, address columns by name instead of position:
+
+```cypher
 LOAD CSV WITH HEADERS FROM 'file://actors.csv' AS row
 MERGE (a:Actor {name: row['name'], birth_year: toInteger(row['birthyear'])})
+```
 
+Use `FIELDTERMINATOR` for a delimiter other than a comma:
+
+```cypher
 LOAD CSV FROM 'file://actors.csv' AS row FIELDTERMINATOR ';'
 RETURN row LIMIT 10
 ```
@@ -613,7 +628,7 @@ Full reference: [Known limitations](/cypher/known-limitations).
   </Accordion>
   <Accordion title="How do I check whether my query uses an index?">
     Run `GRAPH.EXPLAIN <graph> "<query>"`. The plan shows `Index Scan` when an index is used
-    and `Label Scan` when it is not. `GRAPH.PROFILE` adds per-operation timings.
+    and `Node By Label Scan` when it is not. `GRAPH.PROFILE` adds per-operation timings.
   </Accordion>
   <Accordion title="How do I run a vector similarity search?">
     Create a vector index, store embeddings with `vecf32()`, then call
@@ -623,8 +638,9 @@ Full reference: [Known limitations](/cypher/known-limitations).
   <Accordion title="Does FalkorDB support Neo4j Cypher syntax?">
     Mostly. FalkorDB implements OpenCypher version 9 with extensions such as vector indexes,
     full-text search, and built-in graph algorithms. Neo4j-only features such as label
-    expressions, regular-expression operators, and temporal arithmetic functions are not
-    available. See [Cypher coverage](/cypher/cypher-support).
+    expressions, regular-expression operators, and user-defined functions are not available.
+    Neo4j's temporal arithmetic *functions* are also missing, though the `+` and `-`
+    operators do work on temporal values. See [Cypher coverage](/cypher/cypher-support).
   </Accordion>
   <Accordion title="How do I delete every node in a graph?">
     Run `MATCH (n) DETACH DELETE n` to empty the graph while keeping it, or use the
