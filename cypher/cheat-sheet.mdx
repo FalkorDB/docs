@@ -65,7 +65,9 @@ Full reference: [MATCH](/cypher/match).
 ```cypher
 MATCH (p:Person {name: 'Alice'})-[:WORKS_AT]->(c:Company)
 RETURN p.name, c.name
+```
 
+```cypher
 MATCH (p:Person)
 OPTIONAL MATCH (p)-[w:WORKS_AT]->(c:Company)
 RETURN p.name, c.name          // c.name is null when unmatched
@@ -319,11 +321,12 @@ Accelerates equality, range, geospatial, and array-membership filters.
 ```cypher
 CREATE INDEX FOR (p:Person) ON (p.age)                  // node label
 CREATE INDEX FOR ()-[f:FOLLOW]-() ON (f.created_at)     // relationship type
-CREATE INDEX ON :Person(age)                            // legacy syntax
 
 DROP INDEX ON :Person(age)
 DROP INDEX ON :FOLLOW(created_at)
 ```
+
+The older `CREATE INDEX ON :Person(age)` form is still accepted and creates the same index.
 
 Range indexes are applied automatically. Confirm with `GRAPH.EXPLAIN`, which shows
 `Index Scan` instead of `Label Scan`. Not-equal (`<>`) filters are not optimized.
@@ -334,11 +337,16 @@ Full reference: [Range index](/cypher/indexing/range-index).
 
 ```cypher
 CREATE FULLTEXT INDEX FOR (n:Movie) ON (n.title)
-CREATE FULLTEXT INDEX FOR (n:Movie) ON (n.title)
-  OPTIONS { language: 'German', stopwords: ['a', 'ab'] }
 CREATE FULLTEXT INDEX FOR ()-[m:Manager]-() ON (m.name)
 
 DROP FULLTEXT INDEX FOR (n:Movie) ON (n.title)
+```
+
+Pass `OPTIONS` instead to control stemming language and stopwords:
+
+```cypher
+CREATE FULLTEXT INDEX FOR (n:Movie) ON (n.title)
+  OPTIONS { language: 'German', stopwords: ['a', 'ab'] }
 ```
 
 Query it with RediSearch syntax — `*` for prefix matching and `%` for fuzzy matching:
@@ -346,7 +354,9 @@ Query it with RediSearch syntax — `*` for prefix matching and `%` for fuzzy ma
 ```cypher
 CALL db.idx.fulltext.queryNodes('Movie', 'Jun*') YIELD node, score
 RETURN node.title, score ORDER BY score DESC
+```
 
+```cypher
 CALL db.idx.fulltext.queryRelationships('Manager', 'Charlie Munger')
 YIELD relationship RETURN relationship.name
 ```
