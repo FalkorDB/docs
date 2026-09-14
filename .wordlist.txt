@@ -233,7 +233,9 @@ endtabs
 entrypoint
 enum
 enums
+EOL
 env
+ETL
 epel
 EpisodeType
 ErBEqN
@@ -761,6 +763,7 @@ signinUrl
 signout
 signum
 signup
+sidebarTitle
 similarityFunction
 SLAs
 SLOWLOG
@@ -862,6 +865,7 @@ toTimeZone
 toUpper
 tracebacks
 trackpad
+triplestore
 tradeoff
 tradeoffs
 Transactional
@@ -883,6 +887,7 @@ UI
 unaliased
 undirected
 UNIQIE
+unpatched
 unnormalized
 unparseable
 unserializable
