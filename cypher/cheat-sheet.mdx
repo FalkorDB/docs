@@ -483,9 +483,9 @@ Call a procedure with `CALL`; `YIELD` is optional and selects specific columns.
 | `db.labels()` | `label` |
 | `db.relationshipTypes()` | `relationshipType` |
 | `db.propertyKeys()` | `propertyKey` |
-| `db.indexes()` | index label, properties, type, status |
-| `db.constraints()` | constraint type, label, properties |
-| `db.meta.stats()` | node, relationship, and schema counts |
+| `db.indexes()` | `label`, `properties`, `types`, `options`, `language`, `stopwords`, `entitytype`, `status`, `info` |
+| `db.constraints()` | `type`, `label`, `properties`, `entitytype`, `status` |
+| `db.meta.stats()` | `labels`, `relTypes`, `relCount`, `nodeCount`, `labelCount`, `relTypeCount`, `propertyKeyCount` |
 | `db.idx.fulltext.createNodeIndex(label, prop...)` | — |
 | `db.idx.fulltext.queryNodes(label, query)` | `node`, `score` |
 | `db.idx.vector.queryNodes(label, attr, k, query)` | `node`, `score` |
