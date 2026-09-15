@@ -1,5 +1,6 @@
 ---
-title: "Cypher coverage"
+title: "OpenCypher Standard Compatibility and Feature Coverage"
+sidebarTitle: "Cypher Coverage"
 description: "FalkorDB implements a subset of the Cypher language, which is growing as development continues."
 ---
 
@@ -122,7 +123,7 @@ The currently-supported functions are listed in [the mathematical operators docu
 
 Parameters may be specified to allow for more flexible query construction:
 
-```sh
+```cypher
 CYPHER name_param = "Niccolò Machiavelli" birth_year_param = 1469 MATCH (p:Person {name: $name_param, birth_year: $birth_year_param}) RETURN p
 ```
 
