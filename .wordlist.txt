@@ -758,6 +758,7 @@ shiftLeft
 shiftRight
 shopfast
 shortestPath
+sidebarTitle
 signin
 signinUrl
 signout
@@ -929,6 +930,7 @@ weightProp
 whitespace
 Winkler
 WORKS
+workspaces
 WSL
 www
 XCode
