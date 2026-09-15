@@ -38,12 +38,12 @@ Create one credential under **Credentials -> New -> FalkorDB GraphRAG Server API
 | Field | Required | Description |
 | --- | --- | --- |
 | **Server URL** | yes | Base URL of your GraphRAG-Server instance, for example `http://localhost:8000`. |
-| **API Token** | no | Sent as `Authorization: Bearer ...` when the server requires authentication. |
+| **API Token** | no | Sent as `Authorization: ******` when the server requires API-token authentication. Leave this field blank when server authentication is disabled. |
 | **Request Timeout (Seconds)** | yes | Per-request timeout for GraphRAG-Server calls. |
 
 ## How to get an API token
 
-Use these steps in GraphRAG-Server before configuring the n8n credential.
+Use these steps only for GraphRAG-Server deployments that require API-token authentication. If server authentication is disabled, leave the n8n credential **API Token** field blank.
 
 ### 1. Open Settings and API Access
 
@@ -53,7 +53,7 @@ Open your graph in GraphRAG-Server, then go to **Settings** and keep the **API A
 
 ### 2. Add your LLM key
 
-In **Your LLM Keys**, add a provider key if one is not already present. API tokens run on your own LLM key, so this step is required first.
+In **Your LLM Keys**, add a provider key if one is not already present. API tokens run on your own LLM key, so this step is required first when API-token authentication is enabled. Self-hosted deployments may already manage provider credentials on the server.
 
 ![LLM key section in GraphRAG-Server Settings](/images/n8n/n8n-graphrag-llm-key.webp)
 
@@ -105,10 +105,10 @@ Use the pipeline node when you want to ingest documents, list documents, or answ
     `FalkorDB GraphRAG` is a regular pipeline node — you place it in the workflow and it runs a step you configured. `FalkorDB GraphRAG Tool` is an AI Agent tool node, so the agent decides when to call it and fills in the parameters itself.
   </Accordion>
   <Accordion title="How do I get an API token for the n8n credential?">
-    In GraphRAG-Server, open your graph, go to **Settings** and the **API Access** tab. Add a provider key under **Your LLM Keys** first, then generate a token under **API Tokens**, copy the raw value when it is shown, and paste it into the **API Token** field of the n8n credential.
+    Do this only when your GraphRAG-Server deployment uses API-token authentication: open your graph, go to **Settings** and the **API Access** tab, then generate a token under **API Tokens**, copy the raw value when it is shown, and paste it into the n8n credential **API Token** field. If server authentication is disabled, leave **API Token** blank.
   </Accordion>
   <Accordion title="Do I need my own LLM key to use the n8n GraphRAG nodes?">
-    Yes. API tokens run on your own LLM key, so you must add a provider key in GraphRAG-Server **before** you can generate the token that the n8n credential uses.
+    Not always. A provider key is required when your deployment uses GraphRAG-Server API-token authentication, because tokens run on your own LLM key. Self-hosted deployments may manage provider credentials on the server, and when server authentication is disabled the n8n credential **API Token** field stays blank.
   </Accordion>
   <Accordion title="Do I need a separate credential for each node?">
     No. Create one **FalkorDB GraphRAG Server API** credential and reuse it across both the pipeline node and the AI Agent tool node. It stores the server URL, the API token, and the per-request timeout.
