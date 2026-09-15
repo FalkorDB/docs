@@ -130,7 +130,7 @@ Once your graphs are running on FalkorDB, these are the capabilities to pick up 
     FalkorDB. It is the successor to RedisGraph, built by the engineers behind the original project on the same GraphBLAS sparse-matrix engine. It keeps the `GRAPH.*` command API and the Cypher dialect you already use, reads your existing RDB files, and is actively developed — so migrating needs no data conversion, and in the vast majority of cases no query changes. Review [Cypher support](/cypher/cypher-support) and [known limitations](/cypher/known-limitations) for the clauses you rely on.
   </Accordion>
   <Accordion title="Is FalkorDB a drop-in replacement for RedisGraph?">
-    In practice, yes. FalkorDB speaks the Redis protocol, exposes the same `GRAPH.QUERY` and `GRAPH.RO_QUERY` commands, and loads RedisGraph RDB snapshots directly. Most deployments only change the connection endpoint. Review [Cypher support](/cypher/cypher-support) and [known limitations](/cypher/known-limitations) if you rely on unusual clauses.
+In practice, at the Redis protocol and RDB level, yes: FalkorDB exposes the same `GRAPH.QUERY` and `GRAPH.RO_QUERY` commands and loads RedisGraph RDB snapshots directly. Most deployments can change the connection endpoint, but RedisGraph-derived client libraries are not officially tested or supported; use the [official FalkorDB clients](/getting-started/clients). Review [Cypher support](/cypher/cypher-support) and [known limitations](/cypher/known-limitations) if you rely on unusual clauses.
   </Accordion>
   <Accordion title="Is FalkorDB fully compatible with RedisGraph RDB files?">
     Yes. FalkorDB is fully compatible with RedisGraph RDB files. Simply load your existing `dump.rdb` into FalkorDB and your graphs will be available immediately.
