@@ -154,6 +154,7 @@ CREATE (n)                                        // empty node
 
 CREATE (:Person {name: 'Kurt', age: 27})          // label and properties
 
+MATCH (a:Person {name: 'Kurt'})
 CREATE (a)-[:MEMBER]->(:Band {name: 'Nirvana'})   // relationship to a new node
 
 CREATE (jim:Person {name: 'Jim'})-[:FRIENDS]->(pam:Person {name: 'Pam'})
@@ -190,6 +191,11 @@ Full reference: [MERGE](/cypher/merge).
 
 ### SET, REMOVE, DELETE
 
+`SET` and `REMOVE` act on variables bound earlier in the query. The forms below are shown as
+clauses — prefix each with a `MATCH` such as `MATCH (n:Person {name: 'Jim'})` to run it. The
+copy form is the exception: it needs both entities bound, as in
+`MATCH (jim {name: 'Jim'}), (pam {name: 'Pam'})`.
+
 ```cypher
 SET n.age = 33                      // one property
 SET n.age = 33, n.name = 'Bob'      // several properties
@@ -203,6 +209,15 @@ SET n.name = NULL                   // remove a property
 REMOVE n.score                      // remove a property
 REMOVE n:Admin                      // remove a label
 REMOVE n:Admin:Player               // remove several labels
+```
+
+Put together, that is one complete statement:
+
+```cypher
+MATCH (n:Person {name: 'Jim'})
+SET n.age = 33, n.title = 'Manager'
+REMOVE n:Candidate
+RETURN n
 ```
 
 ```cypher
@@ -360,10 +375,16 @@ CREATE FULLTEXT INDEX FOR (n:Movie) ON (n.title)
   OPTIONS { language: 'German', stopwords: ['a', 'ab'] }
 ```
 
-Query it with RediSearch syntax — `*` for prefix matching and `%` for fuzzy matching:
+Query it with RediSearch syntax: `term*` for prefix matching, and `%term%distance` for fuzzy
+matching, where `distance` is the maximum Levenshtein distance (1–3, default 1).
 
 ```cypher
 CALL db.idx.fulltext.queryNodes('Movie', 'Jun*') YIELD node, score
+RETURN node.title, score ORDER BY score DESC
+```
+
+```cypher
+CALL db.idx.fulltext.queryNodes('Movie', '%Jangle%1') YIELD node, score
 RETURN node.title, score ORDER BY score DESC
 ```
 
@@ -420,11 +441,15 @@ YIELD node, score
 RETURN node.title, score ORDER BY score DESC
 ```
 
-The same works on relationship properties:
+The same works on relationship properties. This continues from the `Doc` nodes created above,
+so run that example first:
 
 ```cypher
 CREATE VECTOR INDEX FOR ()-[r:REVIEWED]->() ON (r.embedding)
   OPTIONS {dimension: 3, similarityFunction: 'euclidean'}
+
+MATCH (d:Doc {title: 'Laptop review'})
+CREATE (:Person {name: 'Alice'})-[:REVIEWED {embedding: vecf32([0.1, 0.2, 0.3])}]->(d)
 
 CALL db.idx.vector.queryRelationships('REVIEWED', 'embedding', 5, vecf32([0.1, 0.2, 0.3]))
 YIELD relationship, score
@@ -610,6 +635,9 @@ GRAPH.EXPLAIN social "MATCH (p:Person) WHERE p.age > 30 RETURN p"
 3) "        Index Scan | (p:Person)"
 ```
 
+That plan assumes a range index on `:Person(age)` already exists. Without one the same query
+reports `Node By Label Scan`, which is the quickest way to spot a missing index.
+
 ## Gotchas
 
 - Indexes do not optimize `<>` filters — those still fall back to a full scan of the label or
@@ -642,9 +670,10 @@ Full reference: [Known limitations](/cypher/known-limitations).
     and `Node By Label Scan` when it is not. `GRAPH.PROFILE` adds per-operation timings.
   </Accordion>
   <Accordion title="How do I run a vector similarity search?">
-    Create a vector index, store embeddings with `vecf32()`, then call
-    `db.idx.vector.queryNodes('Label', 'attribute', k, vecf32([...])) YIELD node, score`.
-    Use `db.idx.vector.queryRelationships` for relationship embeddings.
+    Create a vector index, store embeddings with `vecf32()`, then run
+    `CALL db.idx.vector.queryNodes('Label', 'attribute', k, vecf32([...])) YIELD node, score`.
+    Use `CALL db.idx.vector.queryRelationships('TYPE', 'attribute', k, vecf32([...])) YIELD relationship, score`
+    for relationship embeddings.
   </Accordion>
   <Accordion title="Does FalkorDB support Neo4j Cypher syntax?">
     Mostly. FalkorDB implements a growing subset of OpenCypher version 9 with extensions such
