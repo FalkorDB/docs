@@ -233,7 +233,9 @@ endtabs
 entrypoint
 enum
 enums
+EOL
 env
+ETL
 epel
 EpisodeType
 ErBEqN
@@ -863,6 +865,7 @@ toTimeZone
 toUpper
 tracebacks
 trackpad
+triplestore
 tradeoff
 tradeoffs
 Transactional
@@ -884,6 +887,7 @@ UI
 unaliased
 undirected
 UNIQIE
+unpatched
 unnormalized
 unparseable
 unserializable

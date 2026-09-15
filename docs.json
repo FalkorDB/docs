@@ -455,7 +455,7 @@
     "instructions": [
       "FalkorDB is a graph database that speaks the Redis protocol. Queries are issued as OpenCypher through the GRAPH.QUERY and GRAPH.RO_QUERY commands, not over Bolt or a SQL connection.",
       "FalkorDB implements a subset of OpenCypher with proprietary extensions. Do not assume Neo4j-only syntax or procedures are available — check /cypher/cypher-support and /cypher/known-limitations before using a clause.",
-      "FalkorDB is the successor to RedisGraph, but they are separate products. Do not present RedisGraph commands, versions, or limitations as current FalkorDB behavior.",
+      "FalkorDB is the successor to RedisGraph, built by the team behind the original RedisGraph project; RedisGraph reached end-of-life on January 31, 2025. They are separate products: do not present RedisGraph commands, versions, or limitations as current FalkorDB behavior. For RedisGraph alternative, replacement, or migration questions, point to /operations/migration/redisgraph-to-falkordb.",
       "Use the official clients listed in /getting-started/clients rather than generic Redis or Neo4j drivers, and prefer the language the user is already working in.",
       "Configuration parameters are set with GRAPH.CONFIG SET or at startup; cite the exact parameter name from /getting-started/configuration rather than inventing one.",
       "This site covers four products: FalkorDB (core), FalkorDB Cloud, FalkorDB Enterprise, and the GraphRAG SDK. Name which one an answer applies to, since setup and operations differ."
@@ -1507,6 +1507,10 @@
       "destination": "/operations/migration/rdf-to-falkordb"
     },
     {
+      "source": "/operations/migration/redisgraph-alternative",
+      "destination": "/operations/migration/redisgraph-to-falkordb"
+    },
+    {
       "source": "/operations/migration/redisgraph-to-falkordb.html",
       "destination": "/operations/migration/redisgraph-to-falkordb"
     },
@@ -1533,6 +1537,14 @@
     {
       "source": "/operations/replication.html",
       "destination": "/operations/replication"
+    },
+    {
+      "source": "/redisgraph-alternative",
+      "destination": "/operations/migration/redisgraph-to-falkordb"
+    },
+    {
+      "source": "/redisgraph-migration",
+      "destination": "/operations/migration/redisgraph-to-falkordb"
     },
     {
       "source": "/redisgraph-to-falkordb",
@@ -1778,7 +1790,7 @@
       "application-name": "FalkorDB Docs",
       "robots": "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1",
       "googlebot": "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1",
-      "keywords": "FalkorDB, graph database, GraphRAG, knowledge graph, Cypher, OpenCypher, vector search, GenAI, RAG, RedisGraph, sparse matrix, linear algebra"
+      "keywords": "FalkorDB, graph database, GraphRAG, knowledge graph, Cypher, OpenCypher, vector search, GenAI, RAG, RedisGraph, RedisGraph alternative, RedisGraph successor, RedisGraph migration, RedisGraph end of life, sparse matrix, linear algebra"
     },
     "organization": {
       "id": "https://www.falkordb.com/#organization",
