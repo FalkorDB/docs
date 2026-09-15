@@ -8,8 +8,8 @@ Everything you need to write a Cypher query in FalkorDB, on one page. Each secti
 the full reference if you need the details.
 
 <Note>
-FalkorDB implements [OpenCypher](https://www.opencypher.org/) (version 9) plus proprietary
-extensions. Before using syntax you know from another graph database, check
+FalkorDB implements a growing subset of [OpenCypher](https://www.opencypher.org/) (version 9)
+plus proprietary extensions. Before using syntax you know from another graph database, check
 [Cypher coverage](/cypher/cypher-support) and [Known limitations](/cypher/known-limitations).
 </Note>
 
@@ -151,8 +151,11 @@ MATCH (n:Movie) RETURN n.title AS name
 
 ```cypher
 CREATE (n)                                        // empty node
+
 CREATE (:Person {name: 'Kurt', age: 27})          // label and properties
+
 CREATE (a)-[:MEMBER]->(:Band {name: 'Nirvana'})   // relationship to a new node
+
 CREATE (jim:Person {name: 'Jim'})-[:FRIENDS]->(pam:Person {name: 'Pam'})
 ```
 
@@ -325,9 +328,11 @@ Accelerates equality, range, geospatial, and array-membership filters.
 
 ```cypher
 CREATE INDEX FOR (p:Person) ON (p.age)                  // node label
+
 CREATE INDEX FOR ()-[f:FOLLOW]-() ON (f.created_at)     // relationship type
 
 DROP INDEX ON :Person(age)
+
 DROP INDEX ON :FOLLOW(created_at)
 ```
 
@@ -342,6 +347,7 @@ Full reference: [Range index](/cypher/indexing/range-index).
 
 ```cypher
 CREATE FULLTEXT INDEX FOR (n:Movie) ON (n.title)
+
 CREATE FULLTEXT INDEX FOR ()-[m:Manager]-() ON (m.name)
 
 DROP FULLTEXT INDEX FOR (n:Movie) ON (n.title)
@@ -541,7 +547,9 @@ localdatetime('2025-06-29T13:45:00')      // LocalDateTime
 duration('P3DT12H')                       // Duration
 
 RETURN date('2025-09-15').year                             // 2025
+
 RETURN date('2025-01-01') + duration('P1M')                // 2025-02-01
+
 RETURN localdatetime()                                     // current time
 ```
 
@@ -604,7 +612,8 @@ GRAPH.EXPLAIN social "MATCH (p:Person) WHERE p.age > 30 RETURN p"
 
 ## Gotchas
 
-- Indexes do not optimize `<>` filters — those still perform a full label scan.
+- Indexes do not optimize `<>` filters — those still fall back to a full scan of the label or
+  relationship type.
 - `LIMIT` does not restrict eager operations. `UNWIND [1,2,3] AS v CREATE (a {property: v}) RETURN a LIMIT 1` creates three nodes and returns one.
 - When a relationship in a pattern is never referenced elsewhere, FalkorDB only verifies that at least one match exists. Reference the alias (for example `WHERE ID(e) >= 0`) when you need every match.
 - Aggregation functions are not allowed inside pattern comprehensions. Aggregate in a preceding `WITH` or use `size()` on the resulting list.
@@ -638,10 +647,12 @@ Full reference: [Known limitations](/cypher/known-limitations).
     Use `db.idx.vector.queryRelationships` for relationship embeddings.
   </Accordion>
   <Accordion title="Does FalkorDB support Neo4j Cypher syntax?">
-    Mostly. FalkorDB implements OpenCypher version 9 with extensions such as vector indexes,
-    full-text search, and built-in graph algorithms. Neo4j-only features such as label
-    expressions and regular-expression operators are not available. FalkorDB supports
-    user-defined functions through the [Flex UDF library](/udfs).
+    Mostly. FalkorDB implements a growing subset of OpenCypher version 9 with extensions such
+    as vector indexes, full-text search, and built-in graph algorithms. Neo4j-only features
+    such as label expressions are not available, and the OpenCypher regex operator is
+    unsupported — use `STARTS WITH`, `ENDS WITH`, `CONTAINS`, or `string.matchRegEx()`
+    instead. FalkorDB supports user-defined functions through the
+    [Flex UDF library](/udfs).
     The named temporal arithmetic *functions* are also missing, though the `+` and `-`
     operators do work on temporal values. See [Cypher coverage](/cypher/cypher-support).
   </Accordion>
