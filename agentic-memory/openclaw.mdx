@@ -6,7 +6,7 @@ description: "Give your OpenClaw AI assistant long-term, graph-structured memory
 
 [OpenClaw](https://github.com/openclaw/openclaw) is a personal AI assistant runtime that talks to you over channels like WhatsApp, Telegram, Slack, and the CLI. Its built-in `memory-core` backend already keeps state on your own hardware, as `MEMORY.md` and `memory/*.md` files on disk, so memory does survive a restart.
 
-What those files cannot capture is **relationships**. Flat text has no edges, so the agent re-reads whole files each turn, which is slow and token-hungry, and any question that needs a join stays out of reach. Plain vector search has the same blind spot: it returns similar snippets, never the connection between them.
+What those files do not capture is **relationships**. `memory_search` chunks your notes and retrieves them by keyword, embedding, or a hybrid of both, which finds passages that *resemble* your query but never the edges between them. Ask which people connect two projects and there is no join to traverse — the pieces come back as separate, disconnected snippets.
 
 Pointing OpenClaw's memory slot at a FalkorDB-backed plugin stores facts, preferences, and the links between them as nodes and edges, so your assistant can recall not just *what* you said but *how it all connects*. For background, see [Curing AI Amnesia](https://www.falkordb.com/blog/curing-ai-amnesia/).
 
@@ -52,7 +52,7 @@ Start with **Option A** if you are adding memory to OpenClaw for the first time.
 
 ## Prerequisites
 
-- [Node.js 22 or later](https://nodejs.org/), required by OpenClaw
+- [Node.js](https://nodejs.org/) 24.16 or later, or 26.1 or later, as required by OpenClaw's `engines` range. Node 26 is recommended and Node 22 is not supported
 - [Docker](https://docs.docker.com/get-docker/), to run FalkorDB and, for Option B, Cognee
 - An OpenAI API key, or another supported LLM provider, for embeddings and entity extraction
 - `redis-cli`, optional, for inspecting graphs from the terminal
@@ -110,9 +110,13 @@ On every turn the plugin **recalls** before the agent answers, injecting relevan
 ### Install OpenClaw and the Plugin
 
 ```bash
-npm install -g openclaw@latest
+npm install -g openclaw@latest --allow-scripts=openclaw
 openclaw plugins install @falkordb/openclaw-mem0
 ```
+
+<Note>
+`--allow-scripts=openclaw` is required on npm 12 and npm 11.16 or later, which block lifecycle scripts by default. Omit the flag on npm 11.15 and earlier. Without it the package installs but the `openclaw` command may not be created. See the [OpenClaw installation guide](https://docs.openclaw.ai/install) for the full lifecycle script contract.
+</Note>
 
 Confirm the plugin registered:
 
@@ -171,6 +175,10 @@ Edit `~/.openclaw/openclaw.json` and merge the block below into your existing co
 ```
 
 Change `userId` to your own identifier. Memories are written to the graph `mem0_alice`, following the pattern `graphName` underscore `userId`.
+
+<Warning>
+The `memory` vector store above keeps embeddings in the gateway process, so they are **lost on every restart** and semantic recall has to re-embed from scratch. Your entities and relationships are safe either way, because those live in FalkorDB, but for anything beyond a trial set `oss.vectorStore.provider` to a persistent backend such as `qdrant` or `chroma` and give it `host`, `port`, and `collectionName` in `oss.vectorStore.config`.
+</Warning>
 
 To use FalkorDB Cloud, replace the `graphStore` config with your instance details:
 
@@ -406,13 +414,17 @@ Remove the `depends_on` block along with the `falkordb` service, since there is 
 
 ### Build and Run
 
+<Note>
+This Compose file starts its own FalkorDB service, named `falkordb` on port `6379`. If you already started a standalone container in [Running FalkorDB](#running-falkordb), stop and remove it first with `docker rm -f falkordb`, otherwise the build fails on a container name and port clash.
+</Note>
+
 ```bash
 export LLM_API_KEY="sk-your-key-here"
 docker compose up -d --build
 docker compose ps
 ```
 
-Both the `falkordb` and `cognee` containers should be present.
+Both the `falkordb` and `cognee` containers should be present. If you followed [Using FalkorDB Cloud Instead](#using-falkordb-cloud-instead), expect only `cognee`, since there is no local database service.
 
 ### Verify the Adapter Registered
 
@@ -437,7 +449,14 @@ If `graph falkor` is `False`, the adapter did not register. Confirm `/app/sitecu
 
 ### Point OpenClaw at Cognee
 
-The `cognee-openclaw` plugin only needs the API URL. In `~/.openclaw/openclaw.json`:
+Install the Cognee memory plugin, which is published under the `@cognee` scope:
+
+```bash
+openclaw plugins install @cognee/cognee-openclaw
+openclaw plugins list
+```
+
+The plugin is backend-agnostic, so it only needs the API URL. Configure it in `~/.openclaw/openclaw.json`:
 
 ```json
 {
@@ -446,7 +465,10 @@ The `cognee-openclaw` plugin only needs the API URL. In `~/.openclaw/openclaw.js
     "entries": {
       "cognee-openclaw": {
         "enabled": true,
-        "hooks": { "allowConversationAccess": true },
+        "hooks": {
+          "allowConversationAccess": true,
+          "allowPromptInjection": true
+        },
         "config": {
           "baseUrl": "http://localhost:8000",
           "agentDatasetPrefix": "openclaw-cognee-agent",
@@ -458,6 +480,12 @@ The `cognee-openclaw` plugin only needs the API URL. In `~/.openclaw/openclaw.js
   }
 }
 ```
+
+<Warning>
+Both `hooks` keys are required, because they gate different hook groups. `allowConversationAccess` unblocks the conversation hooks used to capture sessions; without it capture is **silently skipped**, leaving only a warning in gateway diagnostics. `allowPromptInjection` gates the prompt-injection hook the plugin uses to inject recalled memories. Restart the gateway after changing either flag. Running `openclaw cognee setup` writes both for you.
+</Warning>
+
+Note that the plugin entry is keyed by its short name, `cognee-openclaw`, even though the package is installed as `@cognee/cognee-openclaw`.
 
 ### Per-Agent Graphs
 
@@ -516,6 +544,8 @@ rm -f ~/.openclaw/memory/cognee/*.json
 ### Option B: Cognee Integration
 
 - **Environment variables alone do not work**: the stock image has no FalkorDB adapter, so `GRAPH_DATABASE_PROVIDER=falkor` fails when the engine is created. The registration check above catches this.
+- **Memory is silently never captured**: check that both `allowConversationAccess` and `allowPromptInjection` are `true` in the plugin's `hooks` block. Missing `allowConversationAccess` blocks conversation capture with no error beyond a gateway diagnostics warning.
+- **Plugin not found**: the package is installed as `@cognee/cognee-openclaw` but keyed as `cognee-openclaw` in `plugins.entries` and `plugins.slots.memory`. Confirm it appears in `openclaw plugins list`.
 - **`GRAPH_DATABASE_URL` must resolve to the FalkorDB host**: under the Compose file above that is the service name `falkordb`, not `localhost`.
 - **Stale plugin state**: if datasets look empty or chat lands in the wrong graph after recreating the server, remove `~/.openclaw/memory/cognee/*.json` and restart the gateway so it rebuilds against the fresh server.
 - **Keep credentials stable**: dataset ownership is per user, so changing the plugin's `apiKey` or `username` orphans existing datasets.
@@ -528,6 +558,7 @@ rm -f ~/.openclaw/memory/cognee/*.json
 - 📦 [`@falkordb/openclaw-mem0` on npm](https://www.npmjs.com/package/@falkordb/openclaw-mem0)
 - 📦 [`@falkordb/mem0` on npm](https://www.npmjs.com/package/@falkordb/mem0)
 - 🔌 [Cognee FalkorDB skill for OpenClaw](https://github.com/topoteretes/cognee-integrations/blob/main/integrations/openclaw/skills/falkor/SKILL.md)
+- 📦 [`@cognee/cognee-openclaw` on npm](https://www.npmjs.com/package/@cognee/cognee-openclaw)
 - 🤖 [OpenClaw](https://github.com/openclaw/openclaw)
 - 📚 [Mem0 Documentation](https://docs.mem0.ai)
 - 🔗 [FalkorDB Cloud](https://app.falkordb.cloud)
