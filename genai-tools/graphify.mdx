@@ -24,12 +24,12 @@ Graphify runs as a skill in AI coding assistants. The examples below cover Claud
 <CodeGroup>
 
 ```bash Claude Code
-uv tool install "graphifyy[falkordb]"
+pip install "graphifyy[falkordb]"
 graphify install
 ```
 
 ```bash Codex
-uv tool install "graphifyy[falkordb]"
+pip install "graphifyy[falkordb]"
 graphify install --platform codex
 ```
 
@@ -111,7 +111,7 @@ LIMIT 50;
     Graphify turns code, documentation, PDFs, screenshots, and notes into a connected knowledge graph. It runs as a skill inside AI coding assistants, and its FalkorDB export loads that graph into FalkorDB so you can query it persistently with Cypher.
   </Accordion>
   <Accordion title="How do I install Graphify with FalkorDB support?">
-    Install and register Graphify using the current command from the [Graphify README](https://github.com/Graphify-Labs/graphify/blob/main/README.md): `pip install graphifyy && graphify install`. For Codex, register with `graphify install --platform codex`.
+    Install and register Graphify with the FalkorDB extra: `pip install "graphifyy[falkordb]" && graphify install`. For Codex, register with `graphify install --platform codex`. The `[falkordb]` extra pulls in the `falkordb` SDK, which the exporter needs for `--falkordb-push`.
   </Accordion>
   <Accordion title="Which AI coding assistants does Graphify work with?">
     The examples on this page cover **Claude Code** and **Codex**. Other assistants are supported too — see the [Graphify README](https://github.com/Graphify-Labs/graphify/blob/main/README.md) for the current list and the matching install command.

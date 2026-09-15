@@ -186,7 +186,7 @@ RETURN maxFlow
   <Accordion title="Which edge property is used as the capacity?">
     The property named by `capacityProperty`, which defaults to `'capacity'`. If your edges store capacity under a different name — such as `cap` or `bandwidth` — set `capacityProperty` to that name.
   </Accordion>
-  <Accordion title="What do the nodes and edges return values contain?">
+  <Accordion title="What do the nodes and edges fields returned by algo.maxFlow contain?">
     They contain only the entities that carry **positive flow** in the solution, not the whole subgraph. `edgeFlows` holds the numeric flow for each edge in `edges`, in the same order, so you can zip them together with `UNWIND range(0, size(edges) - 1)`.
   </Accordion>
   <Accordion title="How do I limit max flow to part of my graph?">
