@@ -204,7 +204,9 @@ REMOVE n:Admin:Player               // remove several labels
 
 ```cypher
 MATCH (p:Person {name: 'Jim'}) DELETE p            // node and its relationships
+
 MATCH (:Person)-[r:FRIENDS]->() DELETE r           // relationship only
+
 MATCH (n) DETACH DELETE n                          // wipe the graph
 ```
 
