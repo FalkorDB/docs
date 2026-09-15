@@ -1,0 +1,529 @@
+---
+title: "OpenClaw: Persistent Graph Memory for AI Assistants with FalkorDB"
+sidebarTitle: "OpenClaw"
+description: "Give your OpenClaw AI assistant long-term, graph-structured memory with FalkorDB, using either the Mem0 memory plugin or the Cognee integration, with per-user and per-agent graph isolation."
+---
+
+[OpenClaw](https://github.com/openclaw/openclaw) is a personal AI assistant runtime that talks to you over channels like WhatsApp, Telegram, Slack, and the CLI. By default its memory is short-lived: end the session and everything you said is gone, so the next conversation starts from zero.
+
+FalkorDB replaces that scratchpad with a persistent knowledge graph. Facts, preferences, and the relationships between them are stored as nodes and edges, so your assistant can recall not just *what* you said but *how it all connects*. For background on why a graph beats flat files and plain vector search for agent memory, see [Curing AI Amnesia](https://www.falkordb.com/blog/curing-ai-amnesia/).
+
+## Why OpenClaw + FalkorDB?
+
+### FalkorDB's Added Value
+
+- **Graph-structured recall**: Answer relational questions that vector search alone cannot, such as which people connect two projects
+- **Native multi-graph support**: Give every user or agent its own isolated graph instead of filtering a shared table
+- **Hybrid retrieval**: Combine vector similarity with graph traversal to pull in connected context
+- **Fast traversals**: Keep memory injection inside the latency budget of a chat turn
+- **Easy cleanup**: Forgetting a user or an agent is a graph drop, not a cascade of deletes
+- **Cloud and on-premises ready**: Run locally in Docker or on FalkorDB Cloud
+- **Visual inspection**: Browse what your assistant actually remembers in the FalkorDB Browser
+
+### Use Cases
+
+- **Personal assistants**: Remember preferences, projects, and people across every session and channel
+- **Multi-agent gateways**: Host several agents on one gateway, each with its own private memory graph
+- **Team assistants**: Share an organizational memory while keeping per-user boundaries
+- **Long-running projects**: Accumulate context over weeks without re-explaining it each turn
+
+## Choosing an Integration Path
+
+There are two supported ways to back OpenClaw memory with FalkorDB. Both are production-usable and both store relationships in FalkorDB; they differ in the memory engine, the isolation model, and how much infrastructure you run.
+
+| | Option A: Mem0 plugin | Option B: Cognee integration |
+|---|---|---|
+| **OpenClaw plugin** | `@falkordb/openclaw-mem0` | `cognee-openclaw` |
+| **Memory engine** | [Mem0](https://docs.mem0.ai) | [Cognee](https://www.cognee.ai) |
+| **FalkorDB's role** | Graph store | Graph **and** vector store |
+| **Vector store** | Separate, in-memory by default | FalkorDB, via the hybrid adapter |
+| **Isolation model** | Per user, graph `mem0_alice` | Per agent, one graph per Cognee dataset |
+| **What you run** | A Node plugin, plus FalkorDB | A Cognee service and FalkorDB, via Docker Compose |
+| **Setup effort** | Install a plugin, edit one config file | Build a custom image, then configure |
+| **Capture model** | Auto-recall and auto-capture per turn, plus five agent tools | Session cache flushed to Cognee, then processed into the graph |
+| **Maintainer** | FalkorDB | Cognee community |
+| **Pick it when** | You want the fastest path to persistent memory, or per-user memory | You want one store for vectors and graph, Cognee's processing pipeline, or per-agent isolation |
+
+<Tip>
+Start with **Option A** if you are adding memory to OpenClaw for the first time. It is a single plugin install and one config block. Move to **Option B** when you want FalkorDB to serve vectors as well as the graph, or when you host multiple agents that each need their own memory.
+</Tip>
+
+## Prerequisites
+
+- [Node.js 22 or later](https://nodejs.org/), required by OpenClaw
+- [Docker](https://docs.docker.com/get-docker/), to run FalkorDB and, for Option B, Cognee
+- An OpenAI API key, or another supported LLM provider, for embeddings and entity extraction
+- `redis-cli`, optional, for inspecting graphs from the terminal
+
+## Running FalkorDB
+
+Both options need a FalkorDB instance. Choose one.
+
+### Option 1: Docker
+
+```bash
+docker run -d --name falkordb -p 6379:6379 -p 3000:3000 falkordb/falkordb:latest
+```
+
+Port `6379` serves the database and port `3000` serves the built-in [FalkorDB Browser](/browser). Verify it is up:
+
+```bash
+redis-cli -h localhost -p 6379 ping
+# PONG
+```
+
+### Option 2: FalkorDB Cloud
+
+Sign up at [app.falkordb.cloud](https://app.falkordb.cloud), create an instance, and note its **host**, **port**, **username**, and **password**. Use those values wherever the examples below show `localhost`.
+
+## Option A: Mem0 Plugin
+
+[`@falkordb/openclaw-mem0`](https://www.npmjs.com/package/@falkordb/openclaw-mem0) fills OpenClaw's memory slot with [Mem0](https://docs.mem0.ai), using FalkorDB as the graph store through the [`@falkordb/mem0`](https://www.npmjs.com/package/@falkordb/mem0) TypeScript library. A complete reference setup lives in [FalkorDB/openclaw-mem0-demo](https://github.com/FalkorDB/openclaw-mem0-demo).
+
+### Architecture
+
+```mermaid
+flowchart LR
+  A[OpenClaw agent] --> B["@falkordb/openclaw-mem0"]
+  B --> C[Mem0 SDK]
+  C --> D[FalkorDB]
+  C --> E[OpenAI]
+```
+
+| Component | Role |
+|---|---|
+| **OpenClaw** | The agent runtime and chat interface |
+| **`@falkordb/openclaw-mem0`** | Memory-slot plugin: auto-recall, auto-capture, and five memory tools |
+| **Mem0 SDK** | Extracts, stores, and retrieves facts |
+| **`@falkordb/mem0`** | FalkorDB graph store for Mem0, bundled with the plugin |
+| **FalkorDB** | Stores entity relationships as isolated per-user graphs |
+| **OpenAI** | Embeddings for semantic search and an LLM for entity extraction |
+
+On every turn the plugin **recalls** before the agent answers, injecting relevant memories, and **captures** afterwards, extracting new entities and relationships into the user's graph.
+
+### Install OpenClaw and the Plugin
+
+```bash
+npm install -g openclaw@latest
+openclaw plugins install @falkordb/openclaw-mem0
+```
+
+Confirm the plugin registered:
+
+```bash
+openclaw plugins list
+# @falkordb/openclaw-mem0
+```
+
+### Configure the Plugin
+
+Edit `~/.openclaw/openclaw.json` and merge the block below into your existing configuration. Setting `plugins.slots.memory` is what replaces OpenClaw's default `memory-core` with the FalkorDB-backed plugin.
+
+```json
+{
+  "gateway": { "mode": "local" },
+  "plugins": {
+    "slots": { "memory": "openclaw-mem0" },
+    "entries": {
+      "openclaw-mem0": {
+        "enabled": true,
+        "config": {
+          "mode": "open-source",
+          "userId": "alice",
+          "autoRecall": true,
+          "autoCapture": true,
+          "enableGraph": true,
+          "topK": 5,
+          "searchThreshold": 0.3,
+          "oss": {
+            "embedder": {
+              "provider": "openai",
+              "config": { "model": "text-embedding-3-small" }
+            },
+            "vectorStore": {
+              "provider": "memory",
+              "config": { "dimension": 1536 }
+            },
+            "graphStore": {
+              "provider": "falkordb",
+              "config": {
+                "host": "localhost",
+                "port": 6379,
+                "graphName": "mem0"
+              }
+            },
+            "llm": {
+              "provider": "openai",
+              "config": { "model": "gpt-4o-mini" }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+Change `userId` to your own identifier. Memories are written to the graph `mem0_alice`, following the pattern `graphName` underscore `userId`.
+
+To use FalkorDB Cloud, replace the `graphStore` config with your instance details:
+
+```json
+"graphStore": {
+  "provider": "falkordb",
+  "config": {
+    "host": "your-instance.falkordb.cloud",
+    "port": 6379,
+    "username": "default",
+    "password": "your-password",
+    "graphName": "mem0"
+  }
+}
+```
+
+### Set Your API Key and Restart
+
+The plugin needs an LLM key for embeddings and entity extraction:
+
+```bash
+export OPENAI_API_KEY="sk-your-key-here"
+```
+
+Add it to your shell profile, or to a `.env` file in your OpenClaw workspace, to make it permanent. Then restart the gateway:
+
+```bash
+openclaw gateway --port 18789 --verbose
+```
+
+If you run the gateway as a daemon, use `openclaw onboard --install-daemon` instead.
+
+### Chat and Verify
+
+```bash
+openclaw agent --local --session-id demo --message "I'm a software engineer who loves Rust and hiking"
+openclaw agent --local --session-id demo --message "Recommend me a weekend project"
+```
+
+The second response should draw on the first message. You can also query memory directly:
+
+```bash
+openclaw mem0 search "what languages does the user know"
+openclaw mem0 stats
+```
+
+### Platform Mode
+
+To use Mem0's managed cloud rather than self-hosting the memory engine, switch the plugin to platform mode. Keep `enableGraph` on so entity relationships are still built:
+
+```json
+{
+  "plugins": {
+    "entries": {
+      "openclaw-mem0": {
+        "enabled": true,
+        "config": {
+          "mode": "platform",
+          "apiKey": "${MEM0_API_KEY}",
+          "userId": "alice",
+          "enableGraph": true
+        }
+      }
+    }
+  }
+}
+```
+
+<Note>
+Platform mode uses Mem0 Cloud's own graph layer. Use the open-source mode shown above when you want the relationships stored in your own FalkorDB instance.
+</Note>
+
+### Agent Memory Tools
+
+Beyond automatic recall and capture, the plugin exposes five tools the agent can call during a conversation:
+
+| Tool | Description |
+|---|---|
+| `memory_search` | Search memories with a natural language query |
+| `memory_store` | Explicitly save a fact, session-scoped or long-term |
+| `memory_list` | List all stored memories for a user |
+| `memory_get` | Retrieve a specific memory by ID |
+| `memory_forget` | Delete a memory by ID or by query |
+
+### Memory Scopes
+
+| Scope | Behavior |
+|---|---|
+| **Session, short-term** | Auto-captured during the current conversation |
+| **User, long-term** | Persists across every session for that user |
+
+Auto-recall searches both scopes and presents long-term memories first.
+
+### Inspect the Graph
+
+Open the [FalkorDB Browser](/browser) at [http://localhost:3000](http://localhost:3000), select the graph `mem0_alice`, and run:
+
+```cypher
+MATCH (a)-[r]->(b) RETURN a, r, b
+```
+
+You should see extracted entities such as people, technologies, and hobbies, joined by the relationships between them. The same check from the terminal:
+
+```bash
+redis-cli -h localhost -p 6379
+
+GRAPH.LIST
+GRAPH.QUERY mem0_alice "MATCH (n) RETURN n.name LIMIT 10"
+GRAPH.QUERY mem0_alice "MATCH (a)-[r]->(b) RETURN a.name, type(r), b.name"
+```
+
+## Option B: Cognee Integration
+
+The community [`cognee-falkor-setup` skill](https://github.com/topoteretes/cognee-integrations/blob/main/integrations/openclaw/skills/falkor/SKILL.md) runs [Cognee](/agentic-memory/cognee) as a service with FalkorDB as **both** its graph and vector store, then points OpenClaw's backend-agnostic `cognee-openclaw` plugin at it.
+
+### Why a Custom Image Is Required
+
+The stock `cognee/cognee` image does not ship the FalkorDB adapter, and no environment variable turns it on. Cognee's `falkor` provider only becomes resolvable once `cognee_community_hybrid_adapter_falkor.register` has been imported, which registers the graph and vector providers along with the per-dataset handlers.
+
+The fix is to install the adapter and drop a `sitecustomize.py` on the image's `PYTHONPATH`. Python imports `sitecustomize` automatically at interpreter startup for every process, so `register` runs before any database engine is created, without patching Cognee's entrypoint.
+
+### Create the Build Files
+
+In a working directory, create these three files.
+
+`sitecustomize.py`:
+
+```python
+import cognee_community_hybrid_adapter_falkor.register  # noqa: F401
+```
+
+`Dockerfile`:
+
+```dockerfile
+FROM cognee/cognee:1.1.0
+
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
+RUN uv pip install --python /app/.venv/bin/python --no-deps "cognee-community-hybrid-adapter-falkor==0.3.0" \
+ && uv pip install --python /app/.venv/bin/python "falkordb>=1.0.9,<2.0.0"
+
+COPY sitecustomize.py /app/sitecustomize.py
+
+ENV GRAPH_DATABASE_PROVIDER=falkor \
+    GRAPH_DATABASE_URL=falkordb \
+    GRAPH_DATABASE_PORT=6379 \
+    VECTOR_DB_PROVIDER=falkor \
+    VECTOR_DB_URL=falkordb \
+    VECTOR_DB_PORT=6379 \
+    GRAPH_DATASET_DATABASE_HANDLER=falkor_graph_local \
+    VECTOR_DATASET_DATABASE_HANDLER=falkor_vector_local \
+    ENABLE_BACKEND_ACCESS_CONTROL=True
+```
+
+`docker-compose.yaml`:
+
+```yaml
+services:
+  falkordb:
+    image: falkordb/falkordb:latest
+    container_name: falkordb
+    ports:
+      - "127.0.0.1:6379:6379"
+      - "127.0.0.1:3001:3000"
+    volumes:
+      - falkordb_data:/data
+    restart: unless-stopped
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  cognee:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: cognee-falkor:1.1.0
+    container_name: cognee
+    depends_on:
+      falkordb:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:8000:8000"
+    environment:
+      - LLM_API_KEY=${LLM_API_KEY}
+      - AUTO_FEEDBACK=true
+    volumes:
+      - cognee_data:/app/cognee/.cognee_system
+    restart: unless-stopped
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8000/health" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+volumes:
+  falkordb_data:
+  cognee_data:
+```
+
+<Warning>
+Keep the version pins. The adapter is pinned to `0.3.0` against base image `cognee/cognee:1.1.0`. If the adapter install fails, check PyPI for a version compatible with your Cognee base tag and bump both together, rather than dropping the pin.
+</Warning>
+
+### Build and Run
+
+```bash
+export LLM_API_KEY="sk-your-key-here"
+docker compose up -d --build
+docker compose ps
+```
+
+Both the `falkordb` and `cognee` containers should be present.
+
+### Verify the Adapter Registered
+
+This check separates a working FalkorDB backend from a silently broken one. Do not skip it.
+
+```bash
+until curl -fsS http://localhost:8000/health >/dev/null; do sleep 3; done; echo "health OK"
+
+docker exec cognee /app/.venv/bin/python -c "import sitecustomize; \
+from cognee.infrastructure.databases.graph.supported_databases import supported_databases as g; \
+from cognee.infrastructure.databases.vector.supported_databases import supported_databases as v; \
+from cognee.infrastructure.databases.dataset_database_handler.supported_dataset_database_handlers import supported_dataset_database_handlers as h; \
+print('graph falkor:', 'falkor' in g); print('vector falkor:', 'falkor' in v); \
+print('handlers:', [k for k in h if 'falkor' in k])"
+
+docker exec falkordb redis-cli PING
+```
+
+Expect `graph falkor: True`, `vector falkor: True`, handlers `falkor_graph_local` and `falkor_vector_local`, and `PONG`.
+
+If `graph falkor` is `False`, the adapter did not register. Confirm `/app/sitecustomize.py` exists in the container and that the adapter install succeeded in the build logs, then rebuild. Do not continue until this prints `True`.
+
+### Point OpenClaw at Cognee
+
+The `cognee-openclaw` plugin only needs the API URL. In `~/.openclaw/openclaw.json`:
+
+```json
+{
+  "plugins": {
+    "slots": { "memory": "cognee-openclaw" },
+    "entries": {
+      "cognee-openclaw": {
+        "enabled": true,
+        "hooks": { "allowConversationAccess": true },
+        "config": {
+          "baseUrl": "http://localhost:8000",
+          "agentDatasetPrefix": "openclaw-cognee-agent",
+          "recallScopes": ["agent"],
+          "defaultWriteScope": "agent"
+        }
+      }
+    }
+  }
+}
+```
+
+### Per-Agent Graphs
+
+When the gateway hosts more than one agent, the plugin enables per-agent memory automatically. Each agent's files and chat route to a dataset named `agentDatasetPrefix` followed by a lowercased agent ID, and each dataset gets its own FalkorDB graph. Give every agent its own `workspace` in `agents.list`, and seed a one-line `MEMORY.md` in each so its dataset is created when the gateway starts. Set `perAgentMemory` to `true` or `false` to force the mode.
+
+### Verify End to End
+
+Restart the gateway, then confirm datasets and graphs appear as agents become active:
+
+```bash
+openclaw gateway stop && openclaw gateway start
+
+docker exec falkordb redis-cli GRAPH.LIST
+```
+
+You can also list datasets through the Cognee API by authenticating against `/api/v1/auth/login` with your Cognee credentials and calling `/api/v1/datasets`.
+
+Chat-derived memory reaches the graph only after the session cache is bridged into Cognee, which happens on `session_end`. Force it with:
+
+```bash
+openclaw cognee improve --dataset <name>
+```
+
+For a quick isolation check, tell agent A something, end its session, then ask agent B. Agent B should not know it.
+
+### Operations and Cleanup
+
+```bash
+docker compose logs -f cognee
+docker compose restart cognee
+docker compose down
+docker compose down -v
+```
+
+`docker compose down` stops the stack but keeps the data; adding `-v` also wipes the Cognee and FalkorDB volumes. To clear memory without destroying the containers, wipe through the API and then reset the plugin's local state:
+
+```bash
+openclaw cognee forget --everything --confirm
+rm -f ~/.openclaw/memory/cognee/*.json
+```
+
+## Troubleshooting
+
+### Both Options
+
+- **Cannot reach FalkorDB**: run `redis-cli -h localhost -p 6379 ping` and confirm it returns `PONG`. Check the host, port, and credentials in your configuration.
+- **Nothing is being remembered**: verify your LLM API key is exported in the environment the gateway runs in. Entity extraction fails silently without it.
+- **Graph stays empty**: list graphs with `GRAPH.LIST` to confirm the expected name. Memory is written under the user or agent identifier, so a changed identifier means a new, empty graph.
+
+### Option A: Mem0 Plugin
+
+- **Plugin not loading**: run `openclaw plugins list` and confirm `plugins.slots.memory` is set to `openclaw-mem0`. Without the slot assignment OpenClaw keeps using the default `memory-core`.
+- **Recall returns nothing**: check `openclaw mem0 stats` first. If memories exist, try lowering `searchThreshold` or raising `topK`.
+- **Wrong graph**: memories land in `graphName` underscore `userId`, so confirm both values in your config.
+
+### Option B: Cognee Integration
+
+- **Environment variables alone do not work**: the stock image has no FalkorDB adapter, so `GRAPH_DATABASE_PROVIDER=falkor` fails when the engine is created. The registration check above catches this.
+- **`GRAPH_DATABASE_URL` must resolve to the FalkorDB host**: under the Compose file above that is the service name `falkordb`, not `localhost`.
+- **Stale plugin state**: if datasets look empty or chat lands in the wrong graph after recreating the server, remove `~/.openclaw/memory/cognee/*.json` and restart the gateway so it rebuilds against the fresh server.
+- **Keep credentials stable**: dataset ownership is per user, so changing the plugin's `apiKey` or `username` orphans existing datasets.
+- **Version drift**: bump the base image tag and the adapter pin together when moving Cognee versions.
+
+## Resources
+
+- 📝 [Curing AI Amnesia](https://www.falkordb.com/blog/curing-ai-amnesia/)
+- 💻 [OpenClaw + Mem0 + FalkorDB demo](https://github.com/FalkorDB/openclaw-mem0-demo)
+- 📦 [`@falkordb/openclaw-mem0` on npm](https://www.npmjs.com/package/@falkordb/openclaw-mem0)
+- 📦 [`@falkordb/mem0` on npm](https://www.npmjs.com/package/@falkordb/mem0)
+- 🔌 [Cognee FalkorDB skill for OpenClaw](https://github.com/topoteretes/cognee-integrations/blob/main/integrations/openclaw/skills/falkor/SKILL.md)
+- 🤖 [OpenClaw](https://github.com/openclaw/openclaw)
+- 📚 [Mem0 Documentation](https://docs.mem0.ai)
+- 🔗 [FalkorDB Cloud](https://app.falkordb.cloud)
+
+## Next Steps
+
+- Read the [Mem0](/agentic-memory/mem0) page to use the same graph memory from Python
+- Explore [Cognee](/agentic-memory/cognee) for its processing pipeline and search types
+- Add memory to other AI clients with the [Graphiti MCP Server](/agentic-memory/graphiti-mcp-server)
+- Review [Cypher Query Language](/cypher) to query memory graphs directly
+
+## Frequently Asked Questions
+
+<AccordionGroup>
+  <Accordion title="Should I use the Mem0 plugin or the Cognee integration with OpenClaw?">
+    Use the **Mem0 plugin** for the fastest path: install `@falkordb/openclaw-mem0`, edit one config block, and you have per-user graph memory. Use the **Cognee integration** when you want FalkorDB to serve both vectors and the graph, need Cognee's processing pipeline, or host multiple agents that each require their own isolated memory.
+  </Accordion>
+  <Accordion title="How does OpenClaw memory stay isolated between users or agents?">
+    Both paths rely on FalkorDB's **native multi-graph support**. The Mem0 plugin writes each user to their own graph, named `graphName` followed by the user ID, such as `mem0_alice`. The Cognee integration gives each agent its own dataset, and each dataset maps to its own FalkorDB graph. No user ID filtering is needed in queries, and forgetting someone is a single graph drop.
+  </Accordion>
+  <Accordion title="Do I need a Mem0 Cloud account to use OpenClaw with FalkorDB?">
+    No. The plugin's open-source mode is fully self-hosted: FalkorDB stores the graph and you supply an LLM provider for embeddings and entity extraction. Platform mode is optional and routes memory through Mem0 Cloud instead.
+  </Accordion>
+  <Accordion title="Why does the Cognee integration need a custom Docker image?">
+    The stock `cognee/cognee` image does not include the FalkorDB adapter, and no environment variable enables it. The `falkor` provider is only resolvable after `cognee_community_hybrid_adapter_falkor.register` is imported. The custom image installs the adapter and adds a `sitecustomize.py` that Python imports at startup, so registration happens before any database engine is created.
+  </Accordion>
+  <Accordion title="Can I use FalkorDB Cloud instead of running FalkorDB locally?">
+    Yes. Create an instance at [app.falkordb.cloud](https://app.falkordb.cloud) and use its host, port, username, and password in place of `localhost`. For the Mem0 plugin, put those values in the `graphStore` config. For the Cognee integration, point `GRAPH_DATABASE_URL` and `VECTOR_DB_URL` at your cloud host and supply the credentials.
+  </Accordion>
+  <Accordion title="How do I see what my assistant has remembered?">
+    Open the [FalkorDB Browser](/browser), select the memory graph, and run `MATCH (a)-[r]->(b) RETURN a, r, b` to visualize stored entities and relationships. From the terminal, `GRAPH.LIST` shows every graph and `GRAPH.QUERY` runs Cypher against one. With the Mem0 plugin you can also run `openclaw mem0 search` and `openclaw mem0 stats`.
+  </Accordion>
+</AccordionGroup>
