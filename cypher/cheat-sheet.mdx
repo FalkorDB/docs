@@ -192,7 +192,9 @@ Full reference: [MERGE](/cypher/merge).
 ### SET, REMOVE, DELETE
 
 `SET` and `REMOVE` act on variables bound earlier in the query. The forms below are shown as
-clauses — prefix each with a `MATCH` such as `MATCH (n:Person {name: 'Jim'})` to run it.
+clauses — prefix each with a `MATCH` such as `MATCH (n:Person {name: 'Jim'})` to run it. The
+copy form is the exception: it needs both entities bound, as in
+`MATCH (jim {name: 'Jim'}), (pam {name: 'Pam'})`.
 
 ```cypher
 SET n.age = 33                      // one property
@@ -439,7 +441,8 @@ YIELD node, score
 RETURN node.title, score ORDER BY score DESC
 ```
 
-The same works on relationship properties:
+The same works on relationship properties. This continues from the `Doc` nodes created above,
+so run that example first:
 
 ```cypher
 CREATE VECTOR INDEX FOR ()-[r:REVIEWED]->() ON (r.embedding)
@@ -669,7 +672,8 @@ Full reference: [Known limitations](/cypher/known-limitations).
   <Accordion title="How do I run a vector similarity search?">
     Create a vector index, store embeddings with `vecf32()`, then run
     `CALL db.idx.vector.queryNodes('Label', 'attribute', k, vecf32([...])) YIELD node, score`.
-    Use `CALL db.idx.vector.queryRelationships` for relationship embeddings.
+    Use `CALL db.idx.vector.queryRelationships('TYPE', 'attribute', k, vecf32([...])) YIELD relationship, score`
+    for relationship embeddings.
   </Accordion>
   <Accordion title="Does FalkorDB support Neo4j Cypher syntax?">
     Mostly. FalkorDB implements a growing subset of OpenCypher version 9 with extensions such
