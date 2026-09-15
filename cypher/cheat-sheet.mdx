@@ -640,7 +640,8 @@ Full reference: [Known limitations](/cypher/known-limitations).
   <Accordion title="Does FalkorDB support Neo4j Cypher syntax?">
     Mostly. FalkorDB implements OpenCypher version 9 with extensions such as vector indexes,
     full-text search, and built-in graph algorithms. Neo4j-only features such as label
-    expressions, regular-expression operators, and user-defined functions are not available.
+    expressions and regular-expression operators are not available. FalkorDB supports
+    user-defined functions through the [Flex UDF library](/udfs).
     The named temporal arithmetic *functions* are also missing, though the `+` and `-`
     operators do work on temporal values. See [Cypher coverage](/cypher/cypher-support).
   </Accordion>
