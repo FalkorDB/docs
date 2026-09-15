@@ -1,0 +1,203 @@
+---
+title: "Supply chain"
+description: "Verify the signatures on published images and the chart, and pin images by digest."
+icon: "shield-check"
+---
+
+Every image and chart published to `registry.falkordb.cloud` is signed. This
+page covers verifying those signatures, pinning images by digest, and what
+happens to signatures when you mirror into your own registry.
+
+## What is signed
+
+| Artifact | Reference |
+| --- | --- |
+| Admin Server image | `registry.falkordb.cloud/falkordb/falkordb-enterprise-server` |
+| Admin UI image | `registry.falkordb.cloud/falkordb/falkordb-enterprise-ui` |
+| Admin CLI image | `registry.falkordb.cloud/falkordb/falkordb-enterprise-cli` |
+| Database image | `registry.falkordb.cloud/falkordb/falkordb-enterprise-db` |
+| Helm chart | `registry.falkordb.cloud/falkordb/falkordb-enterprise` |
+
+Third-party images the chart depends on, such as KubeBlocks and `alpine/kubectl`,
+carry whatever signatures their own publishers provide. They are not re-signed.
+
+## Prerequisites
+
+Install `cosign` **v3.1.3 or later**. The commands below use flags that changed
+in v3, so a v2 binary will reject them.
+
+```bash
+brew install cosign
+cosign version
+```
+
+Download the public key, which is published in the chart repository:
+
+```bash
+curl -fsSL -o cosign.pub \
+  https://raw.githubusercontent.com/FalkorDB/FalkorDB-Enterprise/main/cosign.pub
+```
+
+<Note>
+Signing uses a long-lived key rather than a short-lived workflow identity.
+The latter would publish every image name and release timestamp to the public
+Sigstore transparency log, which exposes the release cadence and component
+inventory of a private product. The trade-off is that verification needs the
+public key above, and there is no transparency log to consult.
+</Note>
+
+## Verify an image
+
+Signatures are attached to the image digest, so any tag pointing at that digest
+verifies:
+
+```bash
+cosign verify \
+  --key cosign.pub \
+  --insecure-ignore-tlog=true \
+  registry.falkordb.cloud/falkordb/falkordb-enterprise-server:1.2.0
+```
+
+`--insecure-ignore-tlog=true` is required, not optional. It tells `cosign` not
+to look for a transparency log entry, and there is none by design. Without it
+verification fails even for a perfectly valid signature.
+
+A successful run prints the verified payload. Any other outcome, including
+`no matching signatures`, means the image must not be deployed.
+
+## Verify the chart
+
+The chart is an OCI artifact and verifies the same way. Drop the `oci://`
+prefix that Helm uses, because `cosign` does not accept it:
+
+```bash
+cosign verify \
+  --key cosign.pub \
+  --insecure-ignore-tlog=true \
+  registry.falkordb.cloud/falkordb/falkordb-enterprise:1.2.0
+```
+
+Verify before installing, not after. `helm install` from an OCI registry does
+no signature checking of its own.
+
+## Verify the bill of materials
+
+Each database image carries a CycloneDX bill of materials and build provenance,
+generated at build time and stored inside the image index:
+
+```bash
+cosign verify-attestation \
+  --key cosign.pub \
+  --insecure-ignore-tlog=true \
+  --type cyclonedx \
+  registry.falkordb.cloud/falkordb/falkordb-enterprise-db:v4.20.1
+```
+
+To read the contents rather than just verify them:
+
+```bash
+docker buildx imagetools inspect \
+  registry.falkordb.cloud/falkordb/falkordb-enterprise-db:v4.20.1 \
+  --format '{{ json .SBOM }}'
+```
+
+## Pin images by digest
+
+By default the Admin Server and Admin UI images resolve to the chart's
+`appVersion`, so a given chart version always requests the same image version:
+
+```yaml
+adminServer:
+  image:
+    tag: ""      # falls back to .Chart.AppVersion
+```
+
+A tag is still a mutable pointer. To pin the exact bytes, set a digest instead.
+It takes precedence over `tag`:
+
+```yaml
+adminServer:
+  image:
+    digest: "sha256:9c2b6f6a1f0d..."
+
+adminUi:
+  image:
+    digest: "sha256:41d0a8c73be2..."
+```
+
+Read the digest from the registry:
+
+```bash
+skopeo inspect --raw \
+  docker://registry.falkordb.cloud/falkordb/falkordb-enterprise-server:1.2.0 |
+  openssl dgst -sha256 -r | awk '{print "sha256:" $1}'
+```
+
+<Note>
+`skopeo inspect --format '{{.Digest}}'` looks like the shorter route but
+resolves a multi-architecture index down to the host platform, and fails
+outright when the host platform is absent from the index. Hashing the raw
+manifest returns the index digest, which is what you want to pin.
+</Note>
+
+<Warning>
+A digest pins one chart release to one image build. Remember to update both
+digests when you upgrade the chart, otherwise the new chart runs the old
+application. Leave `digest` empty if you would rather track `appVersion`.
+</Warning>
+
+The chart refuses to render an image reference with no tag, no digest and no
+`appVersion` to fall back on, rather than quietly emitting a floating `:latest`
+reference. Continuous integration also fails the build if any rendered image
+resolves to `:latest`.
+
+## Mirroring keeps signatures
+
+`cosign` stores a signature under a tag derived from the image digest, in the
+same repository. Copying only `repository:tag` leaves that behind, and
+verification against the mirror then fails even though the image itself is
+intact.
+
+`scripts/mirror-images.sh` copies the signature alongside each image, so a
+mirrored registry stays verifiable:
+
+```bash
+scripts/mirror-images.sh \
+  --manifest images.txt \
+  --target-registry registry.internal.example.com \
+  --target-namespace falkordb
+```
+
+The digest is preserved by the copy, so the signature tag has the same name on
+both sides and the original public key still verifies. If you mirror with your
+own tooling, copy the `sha256-<digest>` tags too.
+
+<Note>
+Build provenance and the bill of materials travel inside the image index rather
+than as separate tags, so any copy that preserves every platform, such as
+`skopeo copy --all`, carries them automatically.
+</Note>
+
+## Troubleshooting
+
+<AccordionGroup>
+<Accordion title="Error: no matching signatures">
+Most often the wrong public key, or a tag that has been moved to new content
+since you last verified. Resolve the digest and verify that directly to rule out
+the tag.
+</Accordion>
+
+<Accordion title="Error: no valid tlog entries found">
+The `--insecure-ignore-tlog=true` flag is missing. These signatures are not
+recorded in a public transparency log.
+</Accordion>
+
+<Accordion title="Verification fails only against a mirror">
+The signature tag was not copied. Confirm it exists in the mirror, then re-run
+the mirroring script, which copies signatures alongside images.
+</Accordion>
+
+<Accordion title="unknown flag: --insecure-ignore-tlog">
+A `cosign` v2 binary. Upgrade to v3.1.3 or later.
+</Accordion>
+</AccordionGroup>

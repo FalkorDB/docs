@@ -1,0 +1,217 @@
+---
+title: "Rancher (RKE2 and K3s)"
+description: "Install FalkorDB Enterprise on Rancher-managed clusters with Longhorn storage and bundled ingress."
+icon: "cow"
+---
+
+It covers RKE2 for production and K3s for development. Rancher clusters follow the standard install flow; the differences are in storage (no default snapshot-capable StorageClass on RKE2), load balancing, and Rancher's project/namespace model.
+
+## Prerequisites
+
+- Rancher 2.8+ managing an RKE2 1.28+ cluster (or a standalone RKE2/K3s cluster).
+- A kubeconfig for the downstream cluster: download it from the Rancher UI (Cluster → **Download KubeConfig**) or use `rancher kubectl`. **Use the authorized cluster endpoint (direct) kubeconfig for the installer.** The Rancher API proxy enforces a request body size limit and rejects the two largest KubeBlocks CRDs with `Error from server (InternalError): ... "http: request body too large"`. If only the proxy kubeconfig is available, apply the KubeBlocks CRDs once from a machine with direct cluster access, then run the installer with `--skip-crds`:
+
+  ```bash
+  kubectl apply --server-side -f \
+    https://github.com/apecloud/kubeblocks/releases/download/v<KB_VERSION>/kubeblocks_crds.yaml
+  ```
+
+- `kubectl`, `helm`, and `base64` on the machine that runs the installer, with access to run `kubectl` commands in the cluster's context.
+- A user with cluster-admin on the downstream cluster (the installer creates namespaces, CRDs, ClusterRoles, and webhooks). A Rancher *Cluster Owner* role maps to this.
+- At least 3 worker nodes with 4 CPU and 16 GB of memory each.
+- Outbound access from the cluster to pull images: `registry.falkordb.cloud` (Enterprise images, credentials required), `docker.io`, `apecloud-registry.cn-zhangjiakou.cr.aliyuncs.com`, `registry.k8s.io`, and `ghcr.io` — or `registry.falkordb.cloud` alone, since every image is also mirrored there (see [Private registries](/enterprise/deployment/private-images)).
+
+Verify the context:
+
+```bash
+kubectl config current-context
+kubectl get nodes
+```
+
+## How Rancher/RKE2 differs
+
+| Area | Notes | What to do |
+| --- | --- | --- |
+| Ingress | RKE2 ships `rke2-ingress-nginx` with IngressClass `nginx` marked as default. K3s ships Traefik (class `traefik`, default). | Nothing — the installer detects the default IngressClass and skips its own ingress-nginx install. |
+| Storage | RKE2 has **no default StorageClass**. K3s ships `local-path` (no CSI snapshots). | Install Longhorn (recommended) for snapshot-capable storage, or another CSI driver. |
+| LoadBalancer | RKE2 has no built-in LoadBalancer implementation. K3s ships ServiceLB (klipper). | On RKE2, only use `--no-ingress` if MetalLB or a cloud provider LB is installed. |
+| Pod Security | RKE2 with the `cis` profile enforces the `restricted` Pod Security Admission level. | Chart pods already comply (non-root, seccomp `RuntimeDefault`, dropped capabilities). See notes below. |
+| Projects | Rancher groups namespaces into Projects, optionally with network isolation. | Move `falkordb-system` and `kb-system` into a Project after install; allow cross-namespace traffic if Project Network Isolation is on. |
+
+## 1. Set up snapshot-capable storage (Longhorn)
+
+FalkorDB Enterprise uses persistent volumes for databases and the Admin Server, and CSI volume snapshots for backups. On RKE2/K3s the simplest snapshot-capable option is [Longhorn](https://longhorn.io), installable from the Rancher Apps catalog (Cluster → **Apps** → **Charts** → **Longhorn**) or with Helm:
+
+```bash
+helm repo add longhorn https://charts.longhorn.io
+helm repo update
+helm install longhorn longhorn/longhorn \
+  --namespace longhorn-system \
+  --create-namespace
+```
+
+Confirm the `longhorn` StorageClass exists and is the default:
+
+```bash
+kubectl get storageclass
+```
+
+If it is not marked `(default)`:
+
+```bash
+kubectl patch storageclass longhorn \
+  -p '{"metadata":{"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
+```
+
+The installer applies the external-snapshotter CRDs and runs a snapshot controller in the KubeBlocks namespace, so no extra snapshot setup is needed. If your cluster already runs a snapshot controller, pass `--skip-snapshot-controller`.
+
+Alternatives:
+
+- Cloud-provisioned RKE2 nodes can use the cloud CSI driver (EBS, Azure Disk, GCE PD) instead of Longhorn; the installer auto-detects these.
+- On K3s with only `local-path`, the installer detects the non-CSI provisioner and enables a bundled hostpath CSI driver so snapshots still work. This is fine for development, not for production.
+
+## 2. Check Ingress
+
+RKE2's bundled ingress-nginx serves on ports 80/443 of every node (DaemonSet with host ports). Verify the default class:
+
+```bash
+kubectl get ingressclass
+```
+
+You should see `nginx` (RKE2) or `traefik` (K3s) marked as default. The installer uses it automatically. Point DNS for your Admin UI hostname at one or more node IPs, or at the external load balancer that fronts the nodes.
+
+If you front RKE2 nodes with an external LB (recommended for production), terminate TLS at the Ingress with a certificate secret as shown below.
+
+## 3. Install FalkorDB Enterprise
+
+### Quick install (development)
+
+With the downstream cluster context active:
+
+```bash
+curl -fsSL https://falkordb.github.io/FalkorDB-Enterprise/install.sh | \
+  bash -s -- --yes
+```
+
+The installer detects the default IngressClass and StorageClass, installs KubeBlocks into `kb-system`, and prints the Admin UI URL. See [Quickstart](/enterprise/get-started/quickstart) for defaults and validation.
+
+### Private registry credentials
+
+The Enterprise images are pulled from a private registry. Pass all three flags together so the installer creates the pull Secret and wires it into the chart:
+
+```bash
+... bash -s -- \
+  --image-pull-secret falkordb-pull-secret \
+  --registry-username <username> \
+  --registry-password <token> \
+  --yes
+```
+
+If you pass only `--image-pull-secret` without the username/password, the installer assumes a Secret with that name **already exists** in the release namespace and does not create one — pods then fail with `ImagePullBackOff`. Either provide the credentials flags or create the Secret yourself before installing:
+
+```bash
+kubectl create secret docker-registry falkordb-pull-secret \
+  --namespace falkordb-system \
+  --docker-server=registry.falkordb.cloud \
+  --docker-username=<username> \
+  --docker-password=<token>
+```
+
+### Production install
+
+Prepare a values file with TLS ingress, a stable JWT secret, and a bootstrap admin user as described in [Production install](/enterprise/deployment/production). A ready-to-edit example ships inside the chart at `examples/values-rancher.yaml` — extract it with `helm pull oci://registry.falkordb.cloud/falkordb/falkordb-enterprise --untar`. Example Rancher/RKE2-specific values:
+
+```yaml
+# rancher-values.yaml
+gateway:
+  enabled: true
+  ingress:
+    enabled: true
+    className: nginx
+    hosts:
+      - host: admin.example.com
+    tls:
+      - secretName: falkordb-enterprise-admin-tls
+        hosts:
+          - admin.example.com
+
+adminServer:
+  env:
+    nodeEnv: production
+    corsOrigin: https://admin.example.com
+    cookieSecure: true
+  persistence:
+    enabled: true
+    size: 8Gi
+    storageClassName: longhorn
+```
+
+Then install:
+
+```bash
+curl -fsSL https://falkordb.github.io/FalkorDB-Enterprise/install.sh | \
+  JWT_SECRET="$(openssl rand -hex 32)" bash -s -- \
+    --kube-context "$(kubectl config current-context)" \
+    --namespace falkordb-system \
+    --kubeblocks-namespace kb-system \
+    --values rancher-values.yaml \
+    --yes
+```
+
+## 4. Rancher project placement and network isolation
+
+After install, move the namespaces into a Rancher Project so they inherit project-level monitoring, alerts, and member access (Cluster → **Projects/Namespaces** → move `falkordb-system`, `kb-system`, and any database namespaces).
+
+If **Project Network Isolation** is enabled, Rancher generates NetworkPolicies that block cross-project traffic. Keep the FalkorDB namespaces in the same project, or add policies allowing:
+
+- ingress-nginx (or Traefik) → `falkordb-system` (Admin UI port 80/8080, Admin Server port 3000)
+- `falkordb-system` → `kb-system` and database namespaces (Admin Server manages KubeBlocks resources and connects to databases)
+
+## 5. Validate the install
+
+```bash
+helm status kubeblocks -n kb-system
+helm status falkordb-enterprise -n falkordb-system
+kubectl get pods -n kb-system
+kubectl get pods -n falkordb-system
+kubectl get ingress -n falkordb-system
+kubectl get volumesnapshotclass
+```
+
+Open the Admin UI URL and log in with the bootstrap admin user.
+
+### Pod security admission (CIS/hardened clusters)
+
+RKE2 installed with `profile: cis` enforces the `restricted` PSA level by default, which is stricter than any FalkorDB Enterprise namespace currently reaches. The installer labels its own namespace with `enforce=baseline`, and a namespace label always wins over the cluster-wide default, so the release namespace installs cleanly. The `kb-system` and database namespaces need the same label:
+
+```bash
+kubectl label namespace kb-system pod-security.kubernetes.io/enforce=baseline --overwrite
+
+# Repeat for each namespace you create databases in. Nothing labels these for
+# you: the installer only labels its own release namespace.
+kubectl label namespace <database-namespace> pod-security.kubernetes.io/enforce=baseline --overwrite
+```
+
+`baseline`, not `privileged`, is enough for every namespace in a default (non-CSI) install. See [Pod Security Admission levels](/enterprise/reference/pod-security) for the measured level of each namespace and the specific workloads that cap it — including the CSI drivers, which do require `privileged`.
+
+### Rancher-in-Docker (development only)
+
+When testing against the embedded `local` cluster of a Rancher instance that itself runs in Docker (`docker run rancher/rancher`), two extra quirks apply — neither affects real RKE2/K3s hosts:
+
+- The embedded K3s ships with **no StorageClass, IngressClass, or ServiceLB**. Install a StorageClass (for example [local-path-provisioner](https://github.com/rancher/local-path-provisioner)) and mark it default before running the installer; the installer then enables its bundled hostpath CSI driver for snapshots. `LoadBalancer` services stay `<pending>` — access the Admin UI with `kubectl port-forward`.
+- The bundled hostpath CSI driver fails with `path "/var/lib/kubelet/pods" is mounted on "/var/lib/kubelet" but it is not a shared mount` because the container has a shadowed slave mount on `/var/lib/kubelet`. Fix it inside the Rancher container, then delete the CSI pod so it restarts:
+
+  ```bash
+  docker exec <rancher-container> mount --make-rshared /
+  kubectl delete pod -n falkordb-system falkordb-enterprise-csi-hostpath-driver-0
+  ```
+
+## Operations notes for Rancher
+
+The standard [operations playbooks](/enterprise/operations/scaling) apply unchanged. Rancher-specific caveats:
+
+- **Backups and schedules** ([Backups and schedules](/enterprise/operations/backups)): with Longhorn, snapshot-based backups use the Longhorn CSI snapshot support; verify `kubectl get volumesnapshotclass` shows a Longhorn class before scheduling backups. Longhorn's own volume backup targets (S3/NFS) are separate from FalkorDB Enterprise backups and optional.
+- **Scaling** ([Scale a deployment](/enterprise/operations/scaling)): when scaling database replicas across nodes, make sure Longhorn replica counts and node disk capacity keep up; Longhorn defaults to 3 replicas per volume.
+- **Upgrades** ([Upgrade FalkorDB Enterprise](/enterprise/upgrades/enterprise), [Upgrade KubeBlocks](/enterprise/upgrades/kubeblocks)): run the installer with the same `rancher-values.yaml` on every upgrade. Upgrade Rancher/RKE2 itself independently; after an RKE2 upgrade confirm the bundled ingress-nginx still serves the gateway Ingress.
+- **Cluster access for operators**: Rancher's kubeconfigs expire based on the configured TTL. Use a service-account-based kubeconfig or the authorized cluster endpoint for long-running automation such as scheduled scripts calling `kubectl`.
+- **Troubleshooting** ([Troubleshoot deployments](/enterprise/troubleshooting/deployments), [Support packages](/enterprise/troubleshooting/support-package)): work unchanged. When traffic issues arise on isolated projects, check Rancher-generated NetworkPolicies first (`kubectl get networkpolicy -A`).

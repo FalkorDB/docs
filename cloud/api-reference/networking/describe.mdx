@@ -1,0 +1,114 @@
+---
+title: "Describe custom network"
+sidebarTitle: "Describe"
+api: "GET https://api.omnistrate.cloud/2022-09-01-00/resource-instance/custom-network/{id}"
+description: "Retrieve the details of a custom network."
+---
+
+Returns a custom network, including the cloud provider network instances created inside it.
+
+## Authorization
+
+<ParamField header="Cookie" type="string" required>
+  Session cookie set by [Sign in](/cloud/api-reference/authentication/signin): `omnistrate_token=<jwt>`.
+</ParamField>
+
+## Path parameters
+
+<ParamField path="id" type="string" required>
+  ID of the custom network.
+</ParamField>
+
+## Response
+
+<ResponseField name="id" type="string" required>
+  ID of the custom network.
+</ResponseField>
+
+<ResponseField name="name" type="string">
+  Friendly name of the network.
+</ResponseField>
+
+<ResponseField name="cidr" type="string" required>
+  CIDR block reserved for the network.
+</ResponseField>
+
+<ResponseField name="cloudProviderName" type="string" required>
+  Cloud provider the network belongs to.
+</ResponseField>
+
+<ResponseField name="cloudProviderRegion" type="string" required>
+  Region the network is created in.
+</ResponseField>
+
+<ResponseField name="status" type="string">
+  Status of the network.
+</ResponseField>
+
+<ResponseField name="networkDefinitionType" type="string">
+  Type of the network definition.
+</ResponseField>
+
+<ResponseField name="networkFeaturesConfiguration" type="object">
+  Network feature flags.
+
+  <Expandable title="properties">
+    <ResponseField name="isPrivateLinkEnabled" type="boolean">
+      Whether PrivateLink is enabled for the network.
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="networkInstances" type="object[]">
+  Cloud provider networks created within this custom network.
+
+  <Expandable title="network instance properties">
+    <ResponseField name="cloudProviderNativeNetworkId" type="string">
+      ID of the network inside the cloud provider account.
+    </ResponseField>
+
+    <ResponseField name="awsAccountID" type="string">
+      AWS account ID.
+    </ResponseField>
+
+    <ResponseField name="gcpProjectID" type="string">
+      GCP project ID.
+    </ResponseField>
+
+    <ResponseField name="gcpProjectNumber" type="string">
+      GCP project number.
+    </ResponseField>
+
+    <ResponseField name="azureSubscriptionID" type="string">
+      Azure subscription ID.
+    </ResponseField>
+
+    <ResponseField name="azureTenantID" type="string">
+      Azure tenant ID.
+    </ResponseField>
+
+    <ResponseField name="hostClusterID" type="string">
+      ID of the host cluster.
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="owningUserId" type="string">
+  ID of the user that owns the network.
+</ResponseField>
+
+<ResponseField name="owningUserName" type="string">
+  Name of the user that owns the network.
+</ResponseField>
+
+<ResponseField name="created_at" type="string">
+  Time the network was created.
+</ResponseField>
+
+<ResponseField name="last_modified_at" type="string">
+  Time the network was last updated.
+</ResponseField>
+
+## Errors
+
+See [Error](/cloud/api-reference/schemas#error) for the error response shape.

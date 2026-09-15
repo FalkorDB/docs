@@ -1,0 +1,153 @@
+---
+title: "Admin Server API"
+description: "Authenticate against the FalkorDB Enterprise Admin Server and call its REST API."
+icon: "code"
+---
+
+The Admin Server exposes a REST API that backs the Admin UI and the
+`falkordb-admin` CLI. Anything you can do in the console you can do over this
+API.
+
+<Info>
+  Every endpoint on the following pages is generated from the server's own
+  OpenAPI document, so it always matches the running build.
+</Info>
+
+## Base URL
+
+The gateway routes `/api` to the Admin Server, so the base URL is the same host
+you use for the Admin UI.
+
+```
+https://<admin-host>/api
+```
+
+Without a gateway, port-forward the service instead:
+
+```bash
+kubectl port-forward -n falkordb-system svc/falkordb-enterprise-admin-server 3000:3000
+```
+
+The base URL is then `http://localhost:3000/api`.
+
+## Authenticate
+
+Sign in with `POST /api/auth/login`. On success the server sets a JWT in an
+`httpOnly` cookie named `token`; send that cookie on subsequent requests.
+
+<CodeGroup>
+
+```bash cURL
+# Sign in and save the session cookie
+curl -sS -c cookies.txt -X POST https://admin.example.com/api/auth/login \
+  -H 'Content-Type: application/json' \
+  -d '{"email":"admin@example.com","password":"'"$FALKORDB_ADMIN_PASSWORD"'"}'
+
+# Reuse it
+curl -sS -b cookies.txt https://admin.example.com/api/clusters
+```
+
+```javascript JavaScript
+const base = "https://admin.example.com/api";
+
+await fetch(`${base}/auth/login`, {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  credentials: "include",
+  body: JSON.stringify({ email, password }),
+});
+
+const res = await fetch(`${base}/clusters`, { credentials: "include" });
+```
+
+```python Python
+import os, requests
+
+base = "https://admin.example.com/api"
+s = requests.Session()
+s.post(f"{base}/auth/login", json={
+    "email": "admin@example.com",
+    "password": os.environ["FALKORDB_ADMIN_PASSWORD"],
+})
+
+deployments = s.get(f"{base}/clusters").json()
+```
+
+</CodeGroup>
+
+<Warning>
+  Never hard-code credentials. Read them from environment variables or a secret
+  store, and prefer a dedicated service account over a human's login.
+</Warning>
+
+Other ways in:
+
+- **OAuth** — `GET /api/auth/oauth/{provider}` starts a browser sign-in flow.
+  See [Google](/enterprise/authentication/google-oauth) or
+  [Microsoft Entra ID](/enterprise/authentication/azure-ad-oauth).
+- **Check a session** — `GET /api/auth/validate` returns the current user, or
+  `401` if the cookie is missing or expired.
+- **Sign out** — `POST /api/auth/logout` clears the cookie.
+
+## Authorization
+
+Requests are authorized against the caller's role. A permission is a
+`(resource, action, namespace)` tuple, so the same token may be allowed to
+create deployments in one namespace and only read them in another. A request
+that passes authentication but fails authorization returns `403`.
+
+The chart ships the `admin`, `operator`, and `viewer` roles. See
+[Helm values](/enterprise/reference/helm-values) to customize them.
+
+## Errors
+
+Failures return a JSON body:
+
+```json
+{
+  "statusCode": 403,
+  "error": "Forbidden",
+  "message": "Insufficient permissions for clusters:create in namespace prod"
+}
+```
+
+| Status | Meaning |
+| --- | --- |
+| `400` | The request body or query failed schema validation |
+| `401` | No session cookie, or the JWT expired |
+| `403` | Authenticated, but the role lacks the required permission |
+| `404` | The resource does not exist, or is in a different namespace |
+| `409` | Conflict — usually a name already in use |
+| `422` | Valid JSON that Kubernetes or KubeBlocks rejected |
+| `500` | Unhandled server error. Check the Admin Server logs |
+
+## Asynchronous operations
+
+Mutating a running deployment does not block. Endpoints such as scale, restart,
+and reconfigure create a KubeBlocks OpsRequest and return immediately with its
+name. Poll `GET /api/clusters/{name}/operations` for progress, or watch the
+underlying resource directly — see
+[KubeBlocks resources](/enterprise/api-reference/kubeblocks).
+
+## Get the specification
+
+The running server publishes its own OpenAPI document, which is the most
+accurate source for the version you have deployed:
+
+```bash
+curl -sS https://admin.example.com/swagger.json -o admin-server.json
+```
+
+Interactive Swagger UI is available at `/api-docs` unless it has been disabled
+with `ENABLE_SWAGGER=false`.
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="Command line" icon="terminal" href="/enterprise/reference/cli">
+    Use `falkordb-admin` instead of raw HTTP calls
+  </Card>
+  <Card title="KubeBlocks resources" icon="dharmachakra" href="/enterprise/api-reference/kubeblocks">
+    Work with the underlying custom resources
+  </Card>
+</CardGroup>

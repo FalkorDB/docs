@@ -1,0 +1,81 @@
+---
+title: "Glossary"
+description: "Terms used across the FalkorDB Enterprise documentation and Admin UI."
+icon: "book-a"
+---
+
+<ResponseField name="Admin Server" type="component">
+  The REST API that backs the Admin UI and Admin CLI. It manages deployments, operations, backups, users, RBAC, settings, audit logs, licensing, and diagnostics.
+</ResponseField>
+
+<ResponseField name="Admin UI" type="component">
+  The web console for operators. Served from the same origin as the Admin Server API when the gateway Ingress is enabled.
+</ResponseField>
+
+<ResponseField name="Admin CLI" type="component">
+  A command-line client for scripting Admin Server login, deployment operations, and license management.
+</ResponseField>
+
+<ResponseField name="Deployment" type="resource">
+  A FalkorDB database instance managed by FalkorDB Enterprise. A deployment has a topology (standalone, replicated, Sentinel, or sharded), a node count, resources, and its own storage. Backed by a KubeBlocks `Cluster` resource.
+</ResponseField>
+
+<ResponseField name="Cluster" type="infrastructure">
+  The Kubernetes cluster itself. Reserved for genuine Kubernetes-cluster references — a FalkorDB database instance is a *deployment*, not a cluster.
+</ResponseField>
+
+<ResponseField name="Node" type="resource">
+  A single FalkorDB pod within a deployment. The `replicas` count for a deployment is the total node count and always includes exactly one primary. The Admin UI shows this as "1 primary + N replicas".
+</ResponseField>
+
+<ResponseField name="Primary" type="role">
+  The FalkorDB node that accepts writes. Replicas stream from the primary and serve reads.
+</ResponseField>
+
+<ResponseField name="Shard" type="resource">
+  One partition of a sharded deployment. Each shard has its own primary and replicas, and the node count is expressed per shard.
+</ResponseField>
+
+<ResponseField name="Sentinel" type="component">
+  Redis Sentinel services that monitor a replicated deployment and perform automatic failover when the primary becomes unavailable.
+</ResponseField>
+
+<ResponseField name="KubeBlocks" type="platform">
+  The open-source Kubernetes operator platform that provisions and reconciles FalkorDB deployments. Installed by the installer as a separate Helm release in `kb-system`.
+</ResponseField>
+
+<ResponseField name="FalkorDB addon" type="platform">
+  The KubeBlocks `ComponentDefinition` and related resources that teach KubeBlocks how to run FalkorDB.
+</ResponseField>
+
+<ResponseField name="Snapshot Controller" type="platform">
+  The CSI snapshot controller that enables `VolumeSnapshot` based backups. Installed as a separate Helm release in `kb-system`.
+</ResponseField>
+
+<ResponseField name="VolumeSnapshotClass" type="resource">
+  The Kubernetes resource that binds volume snapshots to a specific CSI driver. Must match the CSI driver behind your storage class for snapshot backups to work.
+</ResponseField>
+
+<ResponseField name="FalkorDB Browser" type="component">
+  A visual query and graph exploration tool deployed alongside the platform.
+</ResponseField>
+
+<ResponseField name="Gateway" type="configuration">
+  The chart's shared routing layer. When `gateway.ingress.enabled` is true, the Admin UI, Admin Server API, and OpenAPI document are served from one hostname under `/`, `/api`, and `/swagger.json`.
+</ResponseField>
+
+<ResponseField name="Install lock" type="configuration">
+  A cluster-scoped resource named `falkordb-enterprise-install-lock` that enforces one FalkorDB Enterprise installation per Kubernetes cluster.
+</ResponseField>
+
+<ResponseField name="Bootstrap admin user" type="configuration">
+  The initial local admin account created by the chart so you can sign in to the Admin UI before configuring an identity provider.
+</ResponseField>
+
+<ResponseField name="Support package" type="artifact">
+  A diagnostics bundle exported from the Admin UI or CLI for FalkorDB support triage. See [Support packages](/enterprise/troubleshooting/support-package).
+</ResponseField>
+
+<ResponseField name="License" type="configuration">
+  A signed token that authorizes FalkorDB Enterprise and encodes resource limits. When the license is expired, invalid, or over limits, the platform becomes read-only. Deployments start on a 14-day free trial when no license is configured, and a license can be activated or replaced at any time from the Admin UI without redeploying Helm.
+</ResponseField>

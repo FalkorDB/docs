@@ -1,0 +1,118 @@
+---
+title: "Quickstart"
+description: "Install FalkorDB Enterprise into any Kubernetes cluster reachable by your current kubectl context."
+icon: "rocket"
+---
+
+## Prerequisites
+
+- Access to run `kubectl` commands in the cluster's context (`kubectl` can reach the target cluster).
+- `helm` is installed.
+- Your Kubernetes user can create namespaces, CRDs, RBAC resources, and workloads.
+- At least 3 worker nodes with 4 CPU and 16 GB of memory each.
+- Outbound access from the cluster to pull images: `registry.falkordb.cloud` (Enterprise images, credentials required), `docker.io`, `apecloud-registry.cn-zhangjiakou.cr.aliyuncs.com`, `registry.k8s.io`, and `ghcr.io` — or `registry.falkordb.cloud` alone, since every image is also mirrored there (see [Private registries](/enterprise/deployment/private-images)).
+
+Verify the active context before installing:
+
+```bash
+kubectl config current-context
+kubectl cluster-info
+```
+
+## Install
+
+Install with the default release and namespaces:
+
+```bash
+curl -fsSL https://falkordb.github.io/FalkorDB-Enterprise/install.sh | bash
+```
+
+By default, the installer:
+
+- Installs or updates KubeBlocks in `kb-system`.
+- Installs or updates Snapshot Controller in `kb-system`.
+- Installs FalkorDB Enterprise in `falkordb-system`.
+- Exposes the Admin UI and Admin Server on a single origin through the chart's gateway Ingress on new installs when no custom values, ingress, service host, or service URL settings are provided. The installer uses the cluster's default `IngressClass` when one exists, and otherwise installs [ingress-nginx](https://kubernetes.github.io/ingress-nginx/) into the `ingress-nginx` namespace.
+- Sets `adminServer.env.cookieSecure=false` because quick access endpoints are plain HTTP. Because the UI and API share one origin, the auth cookie keeps the default `SameSite=Lax` policy. Use `--no-ingress` to fall back to two `LoadBalancer` services on separate origins, which additionally sets `adminServer.env.cookieSameSite=none`.
+- Disables the embedded KubeBlocks and snapshot-controller subcharts in the Enterprise release because those platform components are managed as separate releases.
+- Labels the FalkorDB namespace for [Pod Security Admission](https://kubernetes.io/docs/concepts/security/pod-security-admission/): `enforce=baseline`, plus `audit` and `warn` at `restricted`. Override with `--pod-security-enforce`, `--pod-security-audit`, and `--pod-security-warn`, or pass an empty value to leave a label unset.
+- Generates or reuses the Admin Server JWT signing secret and stores it in a dedicated Secret named `<release>-admin-server-jwt`, then points the chart at it with `adminServer.secret.jwtExistingSecret.name`. The value is never passed through Helm values, so it does not appear in `helm get values` or in the process table.
+- Creates the bootstrap local admin user unless disabled with Helm values.
+
+The script prints an install plan and asks for confirmation. Use `--yes` for non-interactive installs:
+
+```bash
+curl -fsSL https://falkordb.github.io/FalkorDB-Enterprise/install.sh | \
+  bash -s -- --yes
+```
+
+## Install into specific namespaces
+
+```bash
+curl -fsSL https://falkordb.github.io/FalkorDB-Enterprise/install.sh | \
+  bash -s -- \
+    --kube-context my-cluster \
+    --namespace falkordb-system \
+    --kubeblocks-namespace kb-system
+```
+
+## Dry run
+
+Render the chart without changing the cluster:
+
+```bash
+curl -fsSL https://falkordb.github.io/FalkorDB-Enterprise/install.sh | \
+  bash -s -- --dry-run
+```
+
+In dry-run mode, the script skips CRD apply, KubeBlocks install, Snapshot Controller install, image pull Secret creation, and stale definition cleanup. It still renders the Enterprise chart with `helm template`.
+
+## Validate the install
+
+Check the Helm releases:
+
+```bash
+helm status kubeblocks -n kb-system
+helm status snapshot-controller -n kb-system
+helm status falkordb-enterprise -n falkordb-system
+```
+
+Check pods:
+
+```bash
+kubectl get pods -n kb-system
+kubectl get pods -n falkordb-system
+```
+
+For a default quick install, the installer prints the external Admin UI URL after the ingress address is assigned. You can also retrieve it with:
+
+```bash
+kubectl get ingress -n falkordb-system
+```
+
+Open the Admin UI URL in your browser and sign in with the bootstrap local admin user. The Admin Server API is served from the same origin under `/api`.
+
+If your Kubernetes environment does not support `LoadBalancer` services (used by the ingress controller), use port-forwarding instead. Check Admin Server health inside the cluster:
+
+```bash
+kubectl -n falkordb-system port-forward svc/falkordb-enterprise-admin-server 3000:3000
+curl http://localhost:3000/health
+```
+
+Check Admin UI locally:
+
+```bash
+kubectl -n falkordb-system port-forward svc/falkordb-enterprise-admin-ui 8080:80
+open http://localhost:8080
+```
+
+The default bootstrap local admin user is configured in Helm values as `admin@falkordb.local` with password `Test123!@#`. Change this for any shared or production environment.
+
+## Local chart development
+
+From a checked-out repository, use the local chart:
+
+```bash
+bash scripts/install.sh --chart helm/falkordb-enterprise --dry-run
+bash scripts/install.sh --chart helm/falkordb-enterprise --yes
+```

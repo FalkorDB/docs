@@ -1,0 +1,46 @@
+---
+title: "Create subscription"
+sidebarTitle: "Create"
+api: "POST https://api.omnistrate.cloud/2022-09-01-00/subscription"
+description: "Subscribe to a FalkorDB service plan."
+---
+
+Subscribes your account to a service plan (product tier).
+Only one subscription per service plan is allowed. If you already have a subscription to the service plan, the request fails.
+
+Look up `serviceId` and `productTierId` with [List service plans](/cloud/api-reference/account/service-plans).
+
+## Authorization
+
+<ParamField header="Cookie" type="string" required>
+  Session cookie set by [Sign in](/cloud/api-reference/authentication/signin): `omnistrate_token=<jwt>`.
+</ParamField>
+
+## Body
+
+<ParamField body="serviceId" type="string" required>
+  ID of the service to subscribe to, for example `s-123456`.
+</ParamField>
+
+<ParamField body="productTierId" type="string" required>
+  ID of the product tier to subscribe to.
+</ParamField>
+
+```json Request
+{
+  "serviceId": "s-123456",
+  "productTierId": "pt-123456"
+}
+```
+
+## Response
+
+Returns the new subscription ID as a JSON string.
+
+```json 200 OK
+"sub-abc123"
+```
+
+## Errors
+
+See [Error](/cloud/api-reference/schemas#error) for the error response shape.

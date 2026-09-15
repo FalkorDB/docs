@@ -1,0 +1,88 @@
+---
+title: "Requirements"
+description: "Cluster capacity, local tooling, permissions, and network access needed before you install."
+icon: "list-check"
+---
+
+Confirm each item below before running the installer. The installer performs a permission preflight check and prints an install plan, but it cannot provision capacity or open network egress for you.
+
+## Cluster capacity
+
+<Check>At least 3 worker nodes.</Check>
+<Check>4 CPU and 16 GB of memory per worker node.</Check>
+<Check>A default `StorageClass`, ideally CSI-backed so volume snapshot backups work.</Check>
+
+Kubernetes 1.27 or later is recommended. On OpenShift, use OCP 4.14 or later.
+
+## Local tooling
+
+The machine that runs the installer needs:
+
+| Tool | Purpose |
+| --- | --- |
+| `kubectl` | Applies CRDs and inspects the cluster. |
+| `helm` | Installs the Enterprise chart and platform dependencies. |
+| `base64` | Encodes image pull credentials for the registry Secret. |
+
+Verify the active context before installing:
+
+```bash
+kubectl config current-context
+kubectl cluster-info
+```
+
+## Kubernetes permissions
+
+Your Kubernetes user must be able to create:
+
+- Namespaces
+- CRDs
+- RBAC resources (ClusterRoles and bindings)
+- KubeBlocks resources
+- Namespace-scoped workloads, Services, Secrets, and PVCs
+
+The installer verifies these permissions before it changes the cluster. Pass `--skip-auth-check` to bypass the check when your platform restricts `SelfSubjectAccessReview`.
+
+## Network access
+
+The cluster needs outbound access to pull images from:
+
+| Registry | Contents |
+| --- | --- |
+| `registry.falkordb.cloud` | Enterprise images and Helm chart. Credentials required. |
+| `docker.io` | FalkorDB and supporting images. |
+| `apecloud-registry.cn-zhangjiakou.cr.aliyuncs.com` | KubeBlocks images. |
+| `registry.k8s.io` | Kubernetes ecosystem images. |
+| `ghcr.io` | Additional platform images. |
+
+<Tip>
+  Every image above is also mirrored to `registry.falkordb.cloud`, so a cluster that can only reach that one host can still install the full stack. See [Private registries](/enterprise/deployment/private-images).
+</Tip>
+
+## Values to prepare
+
+Production installs go faster if you collect these first:
+
+<AccordionGroup>
+  <Accordion title="Identity and networking" icon="globe">
+    - Kubernetes context name
+    - FalkorDB Enterprise namespace and KubeBlocks namespace
+    - Public Admin UI hostname
+    - TLS certificate or cert-manager issuer for that hostname
+  </Accordion>
+  <Accordion title="Secrets" icon="key">
+    - A stable JWT secret of at least 32 characters — generate one with `openssl rand -hex 32`
+    - Image pull credentials for `registry.falkordb.cloud`
+    - A signed FalkorDB Enterprise license
+  </Accordion>
+  <Accordion title="Storage" icon="hard-drive">
+    - Storage class for Admin Server persistence, if the cluster default is not suitable
+    - The CSI driver name backing that storage class, for volume snapshot backups
+  </Accordion>
+</AccordionGroup>
+
+## Next step
+
+<Card title="Quickstart" icon="rocket" href="/enterprise/get-started/quickstart" horizontal>
+  Install the default stack and sign in to the Admin UI.
+</Card>

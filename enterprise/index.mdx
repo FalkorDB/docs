@@ -1,0 +1,76 @@
+---
+title: "FalkorDB Enterprise"
+sidebarTitle: "Home"
+description: "Run FalkorDB as a self-managed, production-grade graph database platform on your own Kubernetes clusters."
+mode: "wide"
+icon: "house"
+---
+
+FalkorDB Enterprise packages the FalkorDB graph database with a Kubernetes control plane, a web Admin UI, and an operations toolchain so you can provision, secure, back up, and scale graph databases inside your own infrastructure.
+
+<CardGroup cols={2}>
+  <Card title="What's new in 1.0" icon="sparkles" href="/enterprise/releases/1-0" horizontal>
+    Restricted Pod Security, scoped permissions, and signed artifacts.
+  </Card>
+  <Card title="Quickstart" icon="rocket" href="/enterprise/get-started/quickstart" horizontal>
+    Install the default stack into your current `kubectl` context.
+  </Card>
+  <Card title="Production install" icon="shield-check" href="/enterprise/deployment/production" horizontal>
+    Configure secrets, TLS ingress, private images, and persistence.
+  </Card>
+  <Card title="Deploy a database" icon="database" href="/enterprise/databases/standalone" horizontal>
+    Create standalone, replicated, Sentinel, or sharded deployments.
+  </Card>
+  <Card title="Helm values" icon="sliders" href="/enterprise/reference/helm-values" horizontal>
+    Every high-impact chart value, with defaults and purpose.
+  </Card>
+</CardGroup>
+
+## Choose your path
+
+<Steps>
+  <Step title="Evaluate">
+    Read the [platform overview](/enterprise/get-started/overview), confirm your cluster meets the [requirements](/enterprise/get-started/requirements), then run the [quickstart](/enterprise/get-started/quickstart).
+  </Step>
+  <Step title="Install for production">
+    Follow the [production install](/enterprise/deployment/production) guide, or a platform guide for [AKS](/enterprise/deployment/aks), [EKS](/enterprise/deployment/eks), [GKE](/enterprise/deployment/gke), [OpenShift](/enterprise/deployment/openshift), or [Rancher](/enterprise/deployment/rancher).
+  </Step>
+  <Step title="Secure access">
+    Connect an identity provider with [Google OAuth](/enterprise/authentication/google-oauth) or [Microsoft Entra ID](/enterprise/authentication/azure-ad-oauth) and map groups to roles.
+  </Step>
+  <Step title="Operate">
+    Provision databases, then [scale](/enterprise/operations/scaling), [back up](/enterprise/operations/backups), and [monitor](/enterprise/operations/monitoring) them from the Admin UI.
+  </Step>
+</Steps>
+
+## Popular tasks
+
+<Columns cols={3}>
+  <Card title="Back up and restore" icon="floppy-disk" href="/enterprise/operations/backups">
+    Repositories, on-demand backups, and recurring schedules.
+  </Card>
+  <Card title="Upgrade the platform" icon="arrow-up" href="/enterprise/upgrades/enterprise">
+    Upgrade the Enterprise release and KubeBlocks safely.
+  </Card>
+  <Card title="Expose databases externally" icon="globe" href="/enterprise/deployment/external-dns">
+    Publish per-pod DNS names for clients outside the cluster.
+  </Card>
+  <Card title="Pull private images" icon="box" href="/enterprise/deployment/private-images">
+    Configure registry credentials or use the FalkorDB image mirror.
+  </Card>
+  <Card title="Troubleshoot" icon="stethoscope" href="/enterprise/troubleshooting/deployments">
+    Diagnose stuck deployments, failed pods, and storage issues.
+  </Card>
+  <Card title="Collect diagnostics" icon="life-ring" href="/enterprise/troubleshooting/support-package">
+    Export a support package for FalkorDB support triage.
+  </Card>
+  <Card title="Automate with the API" icon="code" href="/enterprise/api-reference/introduction">
+    Drive the platform from the REST API or the command line.
+  </Card>
+</Columns>
+
+## Get help
+
+<Card title="Contact FalkorDB support" icon="envelope" href="mailto:support@falkordb.com" horizontal>
+  Include a [support package](/enterprise/troubleshooting/support-package) so the team can reproduce your environment quickly.
+</Card>

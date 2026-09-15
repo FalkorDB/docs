@@ -1,0 +1,143 @@
+---
+title: "Pod Security Admission levels"
+description: "The measured Pod Security Admission level each FalkorDB Enterprise namespace reaches, and the workloads that cap it."
+icon: "shield-halved"
+---
+
+[Pod Security Admission](https://kubernetes.io/docs/concepts/security/pod-security-admission/)
+(PSA) grades a namespace at one of three levels — `privileged`, `baseline`, or
+`restricted` — and rejects pods that exceed it. This page records the strictest
+level each FalkorDB Enterprise namespace actually reaches, and names the
+specific workloads that stop it going further.
+
+Every level below is measured against a real cluster rather than assumed, using
+`scripts/measure-pod-security.sh`. The `k3d-sanity` CI job re-runs that script
+on every chart change for the release namespace and `kb-system`, so a
+regression in either of those two fails the build. The default StorageClass in
+k3d (`local-path`) is not CSI-capable, so the installer auto-enables the
+bundled `csi-hostpath-driver` there — CI therefore asserts the release
+namespace at `privileged`, not `baseline`. The database row is **not**
+asserted in CI — `k3d-sanity` creates no database — so re-measure that
+yourself with the script if you depend on it.
+
+## What the installer applies
+
+`scripts/install.sh` labels the release namespace with `enforce=baseline`,
+`audit=restricted`, and `warn=restricted`. Enforcement is set to the level that
+works today; audit and warn are set one notch tighter so that any workload
+already capable of `restricted` is not silently allowed to regress, and so the
+gap shows up in the audit log. Override any of the three with
+`--pod-security-enforce`, `--pod-security-audit`, and `--pod-security-warn`.
+
+If the installer detects a non-CSI default StorageClass (as in k3d) and
+auto-enables the bundled `csi-hostpath-driver`, it also raises `enforce` to
+`privileged` for you — the driver's Pods need it and would otherwise be
+rejected by admission before they are ever created. An explicit
+`--pod-security-enforce` is respected instead (with a warning if it is looser
+than `privileged`).
+
+## Measured levels
+
+| Namespace | Strictest level that works | Capped by |
+| --- | --- | --- |
+| Release namespace (default install) | `baseline` | `falkordb-browser` |
+| Release namespace, with any CSI driver enabled | `privileged` | `csi-hostpath-driver`, `csi-s3`, `csi-nfs` |
+| `kb-system` (KubeBlocks) | `baseline` | KubeBlocks manager and dataprotection |
+| Database namespaces | `baseline` | FalkorDB database, cluster, and sentinel pods |
+
+<Warning>
+  Enabling a CSI driver drops the **release** namespace to `privileged`, not
+  some separate CSI namespace — the CSI subcharts are part of the umbrella
+  chart and install alongside the Admin Server. If you need the release
+  namespace at `baseline`, install the CSI driver as its own release in its own
+  namespace instead of enabling the bundled subchart.
+</Warning>
+
+## Why each namespace is capped where it is
+
+### Release namespace — `baseline`
+
+The four workloads the chart owns itself already pass `restricted`:
+
+- `admin-server`
+- `admin-ui`
+- the `browser-encryption-key` job
+- the `preflight` job
+
+They run as non-root, drop all capabilities, set
+`seccompProfile: RuntimeDefault`, disallow privilege escalation, and mount a
+read-only root file system.
+
+The namespace is held at `baseline` by a single workload, `falkordb-browser`,
+which ships empty `podSecurityContext` and `securityContext` defaults in its
+subchart. Under `restricted` it is reported for `allowPrivilegeEscalation !=
+false`, unrestricted capabilities, `runAsNonRoot != true`, and a missing
+`seccompProfile`. It violates nothing at `baseline`. Tracked upstream as
+[falkordb-browser#2054](https://github.com/FalkorDB/falkordb-browser/issues/2054);
+once that lands, the release namespace can move to `restricted`.
+
+### Release namespace with CSI — `privileged`
+
+The bundled CSI drivers are off by default. Each one needs `privileged`, and
+for reasons inherent to how CSI works rather than anything the chart could fix:
+
+| Subchart | Requires |
+| --- | --- |
+| `csi-hostpath-driver` | `privileged: true` on six containers; `hostPath` volumes for the socket, mountpoint, registration, plugins, data, and device directories |
+| `csi-s3` | `privileged: true` and `SYS_ADMIN` on the `csi-s3` node container (FUSE mount); `hostPath` volumes including `fuse-device` and `systemd-control` |
+| `csi-nfs` | `privileged: true` and `SYS_ADMIN` on the `nfs` container; `hostNetwork: true`; `hostPath` volumes for the socket, pod mounts, and registration directories |
+
+A node-level CSI driver has to enter the kubelet mount namespace to attach
+volumes, so no `securityContext` change can bring these to `baseline`.
+
+### `kb-system` — `baseline`
+
+KubeBlocks installs as a separate Helm release into `kb-system`. Both its
+Deployments — the manager and the `dataprotection` controller — are reported
+under `restricted` for `allowPrivilegeEscalation != false`, unrestricted
+capabilities, and a missing `seccompProfile`, on both their `tools`
+`initContainer` and their main container. Neither uses a host namespace, a
+`hostPath` volume, or `privileged`, so `baseline` is clean.
+
+`snapshot-controller`, which the installer also puts in `kb-system`, has the
+same shape: clean at `baseline`, short of `restricted` on
+`allowPrivilegeEscalation` and `seccompProfile`.
+
+### Database namespaces — `baseline`
+
+Database pods are created by KubeBlocks from the `ComponentDefinition`
+resources in the FalkorDB addon, not by this chart. Those definitions set no
+`securityContext` at all, so the resulting `falkordb`, `falkordb-cluster`, and
+`falkordb-sentinel` pods are reported under `restricted` for
+`allowPrivilegeEscalation != false`, unrestricted capabilities, `runAsNonRoot
+!= true`, and a missing `seccompProfile`. They pass `baseline` unchanged.
+
+## Verifying on your own cluster
+
+`scripts/measure-pod-security.sh` asks the API server which PSA level each
+namespace's running pods would pass, without changing anything:
+
+```bash
+# Report the strictest level each namespace reaches
+scripts/measure-pod-security.sh --namespace falkordb-system --namespace kb-system
+
+# Assert the documented levels; exits non-zero on any drift
+scripts/measure-pod-security.sh \
+  --check falkordb-system=privileged \
+  --check kb-system=baseline
+```
+
+The example above matches k3d, where the bundled `csi-hostpath-driver` is
+auto-enabled. On a cluster with a CSI-capable default StorageClass (no bundled
+CSI driver), the release namespace measures `baseline` instead.
+
+The script labels each namespace with `--dry-run=server`, so nothing is
+persisted. The API server evaluates every pod in the namespace and returns the
+violations, which the script attributes back to individual pods.
+
+## Optional subcharts
+
+`dm-sql-to-falkordb` is off by default and reaches `baseline` when enabled; it
+falls short of `restricted` on `allowPrivilegeEscalation`, capabilities,
+`runAsNonRoot`, and `seccompProfile`. Enabling it does not change the release
+namespace's level.

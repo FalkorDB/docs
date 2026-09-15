@@ -1,0 +1,198 @@
+---
+title: "Google Kubernetes Engine"
+description: "Provision GCP infrastructure and install FalkorDB Enterprise on GKE."
+icon: "google"
+---
+
+## Prerequisites
+
+- [Google Cloud CLI](https://cloud.google.com/sdk/docs/install) (`gcloud`), authenticated with `gcloud auth login`.
+- A GCP project with billing enabled and permissions to create GKE clusters, node pools, and firewall rules.
+- `kubectl`, `helm`, and `base64` on the machine that runs the installer.
+- At least 3 worker nodes with 4 CPU and 16 GB of memory each.
+- Outbound access from the cluster to pull images: `registry.falkordb.cloud` (Enterprise images, credentials required), `docker.io`, `apecloud-registry.cn-zhangjiakou.cr.aliyuncs.com`, `registry.k8s.io`, and `ghcr.io` — or `registry.falkordb.cloud` alone, since every image is also mirrored there (see [Private registries](/enterprise/deployment/private-images)).
+
+Select the project and enable the required API:
+
+```bash
+gcloud config set project <project-id>
+gcloud services enable container.googleapis.com
+```
+
+## Required infrastructure
+
+A production GKE install needs:
+
+| Resource | Purpose |
+| --- | --- |
+| VPC network | Network for the GKE cluster (the `default` network works, or bring your own). |
+| GKE Standard cluster | Kubernetes control plane and a small system node pool. Use Standard mode, not Autopilot, for full node sizing control. |
+| Node pool | Dedicated capacity for FalkorDB database workloads. |
+| Compute Engine persistent disk CSI driver | Persistent volumes and snapshot-based backups (enabled by default on current GKE versions). |
+| Load balancer or ingress with public DNS | External access to the Admin UI and Admin Server. |
+
+Set common variables used by the commands below:
+
+```bash
+export GCP_REGION=us-central1
+export CLUSTER_NAME=falkordb-enterprise
+export K8S_VERSION=1.34
+```
+
+### 1. Create the GKE cluster
+
+Create a regional Standard cluster with a small system node pool:
+
+```bash
+gcloud container clusters create "$CLUSTER_NAME" \
+  --region "$GCP_REGION" \
+  --cluster-version "$K8S_VERSION" \
+  --release-channel regular \
+  --machine-type n2-standard-4 \
+  --num-nodes 1 \
+  --enable-autoscaling \
+  --min-nodes 1 \
+  --max-nodes 3 \
+  --workload-pool="$(gcloud config get-value project).svc.id.goog"
+```
+
+Notes:
+
+- `--release-channel regular` pins the cluster to a supported, tested Kubernetes version.
+- The Compute Engine persistent disk CSI driver and `VolumeSnapshot` support ship enabled by default on current GKE versions.
+
+### 2. Create a node pool for databases
+
+Size this pool for your FalkorDB memory footprint. Memory-optimized `n2-highmem` machines are a good fit for graph workloads.
+
+```bash
+gcloud container node-pools create falkordb \
+  --cluster "$CLUSTER_NAME" \
+  --region "$GCP_REGION" \
+  --machine-type n2-highmem-4 \
+  --num-nodes 3 \
+  --enable-autoscaling \
+  --min-nodes 3 \
+  --max-nodes 10 \
+  --node-labels workload=falkordb
+```
+
+### 3. Get cluster credentials
+
+```bash
+gcloud container clusters get-credentials "$CLUSTER_NAME" \
+  --region "$GCP_REGION"
+
+kubectl config current-context
+kubectl get nodes
+```
+
+### 4. Verify storage and snapshot support
+
+FalkorDB Enterprise uses persistent volumes for databases and the Admin Server, and volume snapshots for backups. Verify GKE defaults:
+
+```bash
+kubectl get storageclass
+kubectl get crd volumesnapshots.snapshot.storage.k8s.io
+```
+
+GKE ships the `standard-rwo` (balanced persistent disk) and `premium-rwo` (SSD persistent disk) storage classes, with `standard-rwo` marked default. Use `premium-rwo` for database volumes in production.
+
+If the `volumesnapshots` CRD already exists and a snapshot controller is active, skip the installer's bundled one with `--skip-snapshot-controller`. Otherwise leave the default enabled.
+
+## Install FalkorDB Enterprise
+
+### Quick install
+
+With the GKE context active, run the installer:
+
+```bash
+curl -fsSL https://falkordb.github.io/FalkorDB-Enterprise/install.sh | \
+  bash -s -- --yes
+```
+
+On a default GKE install, the installer deploys ingress-nginx (unless the cluster already has a default `IngressClass`), exposes the Admin UI and Admin Server API on a single public IP through the gateway Ingress, and prints the URL. See [Quickstart](/enterprise/get-started/quickstart) for what the installer does and how to validate it.
+
+### Production install
+
+For production, prepare a values file with TLS ingress, a stable JWT secret, and a bootstrap admin user as described in [Production install](/enterprise/deployment/production). A ready-to-edit GKE example ships inside the chart at `examples/values-gke.yaml` — extract it with `helm pull oci://registry.falkordb.cloud/falkordb/falkordb-enterprise --untar`. Example GKE-specific values:
+
+```yaml
+gateway:
+  enabled: true
+  ingress:
+    enabled: true
+    className: nginx
+    hosts:
+      - host: admin.example.com
+    tls:
+      - secretName: falkordb-enterprise-admin-tls
+        hosts:
+          - admin.example.com
+
+adminServer:
+  env:
+    nodeEnv: production
+    corsOrigin: https://admin.example.com
+    cookieSecure: true
+  persistence:
+    enabled: true
+    size: 8Gi
+    storageClassName: premium-rwo
+```
+
+Then install:
+
+```bash
+curl -fsSL https://falkordb.github.io/FalkorDB-Enterprise/install.sh | \
+  JWT_SECRET="$(openssl rand -hex 32)" bash -s -- \
+    --kube-context "$(kubectl config current-context)" \
+    --namespace falkordb-system \
+    --kubeblocks-namespace kb-system \
+    --values production-values.yaml \
+    --yes
+```
+
+### DNS
+
+Point your Admin UI hostname at the ingress public IP:
+
+```bash
+kubectl get ingress -n falkordb-system
+```
+
+Create an `A` record for `admin.example.com` pointing at the `ADDRESS` shown, either in your DNS provider or in Cloud DNS:
+
+```bash
+gcloud dns record-sets create admin.example.com \
+  --zone "<managed-zone>" \
+  --type A \
+  --ttl 300 \
+  --rrdatas "<ingress-ip>"
+```
+
+## Validate the install
+
+```bash
+helm status kubeblocks -n kb-system
+helm status falkordb-enterprise -n falkordb-system
+kubectl get pods -n kb-system
+kubectl get pods -n falkordb-system
+kubectl get ingress -n falkordb-system
+```
+
+Open the Admin UI URL and sign in with the bootstrap admin user. For OAuth sign-in, see [Google OAuth setup](/enterprise/authentication/google-oauth).
+
+### Pod security admission
+
+The installer labels `falkordb-system` with `enforce=baseline`. `baseline` is also enough for `kb-system` and for database namespaces. See [Pod Security Admission levels](/enterprise/reference/pod-security) for the measured level of each namespace and the workloads that cap it.
+
+## Clean up
+
+Delete the Enterprise release first (see [uninstall](/enterprise/upgrades/uninstall)), then remove the GKE cluster:
+
+```bash
+gcloud container clusters delete "$CLUSTER_NAME" --region "$GCP_REGION" --quiet
+```
+
+Deleting the cluster removes its node pools, disks, and load balancers.

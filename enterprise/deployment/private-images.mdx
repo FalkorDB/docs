@@ -1,0 +1,273 @@
+---
+title: "Private registries"
+description: "Pull every image the chart uses from the FalkorDB mirror, or point the chart at your own private registry."
+icon: "box"
+---
+
+## Where images come from
+
+By default the chart pulls every image from `registry.falkordb.cloud`, so a standard install only needs to reach that one host. Two different things live there:
+
+| Path | Contents | How it gets there |
+| --- | --- | --- |
+| `registry.falkordb.cloud/falkordb/<name>` | FalkorDB Enterprise images (database, Admin Server, Admin UI, CLI) | Published directly by FalkorDB CI |
+| `registry.falkordb.cloud/falkordb/<upstream-path>` | Everything else | Mirrored from the upstream registry, preserving its path |
+
+Mirrored images keep their original repository path and drop only the source host, so `docker.io/apecloud/kubeblocks` becomes `registry.falkordb.cloud/falkordb/apecloud/kubeblocks`. Because upstream images always carry an organization prefix, they can never collide with the FalkorDB images sitting directly under the namespace.
+
+These are the upstream registries the mirror pulls from. A default install does not contact them.
+
+| Registry | Used for |
+| --- | --- |
+| `docker.io` | FalkorDB Browser and supporting images |
+| `ghcr.io` | FalkorDB addon images and Helm charts |
+| `registry.k8s.io` | Kubernetes ecosystem images (e.g. snapshot controller, CSI sidecars) |
+| `cr.yandex` | `csi-s3` driver images |
+| `apecloud-registry.cn-zhangjiakou.cr.aliyuncs.com` | KubeBlocks images |
+
+<Info>
+  Registry credentials are required either way, since the FalkorDB Enterprise images are private. The same credentials authenticate the mirrored third-party images, because they share the registry host.
+</Info>
+
+## Pull from upstream instead
+
+To bypass the mirror, clear `global.imageRegistry` so the chart-owned images fall back to their original registries:
+
+```bash
+helm install falkordb-enterprise oci://registry.falkordb.cloud/falkordb/falkordb-enterprise \
+  --set global.imageRegistry=""
+```
+
+This covers the Admin Server, Admin UI, the kubectl hook jobs, and the FalkorDB addon. The subcharts that ignore `.Values.global` — KubeBlocks, the CSI drivers, snapshot-controller, and Browser — have their own image keys and stay wherever the chart's defaults point them.
+
+## Mirror into your own registry
+
+Two scripts do the work: `collect-images.sh` builds the manifest of every image the chart can pull, and `mirror-images.sh` copies them. You need `helm`, `skopeo` and `openssl` locally, and push access to the target registry.
+
+<Steps>
+  <Step title="Download the chart and the scripts">
+    The scripts read the chart to discover images, so fetch both. `helm pull --untar` gives you the chart with every subchart and example already bundled — there is nothing else to build.
+
+    ```bash
+    export CHART_VERSION=0.4.1
+
+    helm registry login registry.falkordb.cloud --username '<username>' --password '<token>'
+    helm pull oci://registry.falkordb.cloud/falkordb/falkordb-enterprise \
+      --version "$CHART_VERSION" --untar
+
+    for s in collect-images.sh mirror-images.sh verify-mirror-overlay.sh; do
+      curl -fsSL "https://falkordb.github.io/FalkorDB-Enterprise/$s" -o "$s"
+      chmod +x "$s"
+    done
+    ```
+
+    <Note>
+      Keep the three scripts in the same directory. `verify-mirror-overlay.sh` invokes `collect-images.sh` from alongside itself.
+    </Note>
+  </Step>
+
+  <Step title="Collect the image manifest">
+    Point `CHART_DIR` at the chart you just unpacked:
+
+    ```bash
+    CHART_DIR=./falkordb-enterprise ./collect-images.sh --output images.txt
+    ```
+
+    This renders the chart with every optional subchart enabled, so the manifest covers the CSI drivers and snapshot-controller even if you do not plan to use them. It also picks up images KubeBlocks resolves at runtime from `ComponentDefinition` and `ActionSet` resources, and from `*_IMAGE` environment variables — those never appear as an `image:` key and would otherwise be missing from an air-gapped mirror.
+
+    The run also prints the FalkorDB Enterprise images and the exact tags this chart version expects. Note them down for the step after next:
+
+    ```
+    Not mirroring (published directly): registry.falkordb.cloud/falkordb/falkordb-enterprise-db:v4.20.1
+    Not mirroring (published directly): registry.falkordb.cloud/falkordb/falkordb-enterprise-server:0.4.1
+    Not mirroring (published directly): registry.falkordb.cloud/falkordb/falkordb-enterprise-ui:0.4.1
+    ```
+
+    <Warning>
+      An unrecognised `$(VAR)` placeholder is a hard error rather than a warning. It means a new runtime-resolved image exists that the manifest does not know how to expand, so failing loudly is the only way to avoid shipping an incomplete mirror.
+    </Warning>
+  </Step>
+
+  <Step title="Copy the third-party images">
+    ```bash
+    ./mirror-images.sh \
+      --manifest images.txt \
+      --target-registry my-registry.example.com \
+      --target-namespace falkordb
+    ```
+
+    `--target-namespace` defaults to `falkordb`, so omitting it still nests everything under `my-registry.example.com/falkordb/`. Each image keeps its upstream repository path and drops only the source host:
+
+    ```
+    docker.io/apecloud/kubeblocks:1.2.0-alpha.1
+      -> my-registry.example.com/falkordb/apecloud/kubeblocks:1.2.0-alpha.1
+    ```
+
+    Add `--dry-run` to print the copy plan without pushing. If two source images would map onto the same target path the script fails rather than letting one overwrite the other. Pass `--digests-out digests.txt` to record the pushed digests for an audit trail.
+  </Step>
+
+  <Step title="Copy the FalkorDB Enterprise images">
+    The manifest deliberately omits the first-party images, because FalkorDB CI publishes them directly rather than mirroring them, and their tags come from the build rather than the manifest. Copy each one at the tags reported above, into the namespace root so the paths match what the chart renders — `my-registry.example.com/falkordb/falkordb-enterprise-server:0.4.1`, not a doubled `.../falkordb/falkordb/...`:
+
+    ```bash
+    for ref in falkordb-enterprise-db:v4.20.1 \
+               falkordb-enterprise-server:0.4.1 \
+               falkordb-enterprise-ui:0.4.1; do
+      skopeo copy --all \
+        "docker://registry.falkordb.cloud/falkordb/$ref" \
+        "docker://my-registry.example.com/falkordb/$ref"
+    done
+    ```
+
+    Mirror every database tag you intend to offer, not just the default one — each must match a `falkordb-addon.falkordbVersions[].tag` entry.
+  </Step>
+
+  <Step title="Write the values overlay">
+    `global.imageRegistry` covers only the images the chart itself owns, plus the FalkorDB addon. The other subcharts do not read `.Values.global` and each structures its image values differently, so they need explicit keys. Start from the worked example bundled with the chart and replace `registry.falkordb.cloud/falkordb` throughout with your own registry and namespace:
+
+    ```bash
+    cp falkordb-enterprise/examples/mirror-registry-values.yaml my-mirror.yaml
+    ```
+
+    <Warning>
+      The `csi-s3` subchart takes full image references *including tags*, so `my-mirror.yaml` must be revisited whenever those tags change. The other subcharts take a registry prefix and are unaffected by tag bumps.
+    </Warning>
+  </Step>
+
+  <Step title="Verify the overlay covers everything">
+    ```bash
+    CHART_DIR=./falkordb-enterprise \
+    OVERLAY=my-mirror.yaml \
+    TARGET_REGISTRY=my-registry.example.com \
+      ./verify-mirror-overlay.sh
+    ```
+
+    This renders the chart with the overlay and asserts every image points at your registry *and* matches a path the mirror actually pushes. It catches the two ways an overlay silently goes stale: a subchart upgrade adding or renaming an image key, and a rewritten path that does not match what `mirror-images.sh` produced.
+
+    <Note>
+      The check compares the render against what `mirror-images.sh` *would* push, never against the live registry. It passes even when the mirror is empty, so it is not proof that the copy step succeeded.
+    </Note>
+  </Step>
+
+  <Step title="Mirror the chart itself">
+    The Helm chart is an OCI artifact, not a container image, so it is not part of the manifest. Push it across if the cluster cannot reach `registry.falkordb.cloud`:
+
+    ```bash
+    helm push "falkordb-enterprise-${CHART_VERSION}.tgz" oci://my-registry.example.com/falkordb
+    ```
+  </Step>
+
+  <Step title="Install with the overlay">
+    ```bash
+    helm install falkordb-enterprise \
+      oci://my-registry.example.com/falkordb/falkordb-enterprise \
+      --version "$CHART_VERSION" \
+      -f my-mirror.yaml
+    ```
+
+    Or through the installer script:
+
+    ```bash
+    curl -fsSL https://falkordb.github.io/FalkorDB-Enterprise/install.sh | \
+      bash -s -- \
+        --chart oci://my-registry.example.com/falkordb/falkordb-enterprise \
+        --version "$CHART_VERSION" \
+        --values my-mirror.yaml \
+        --registry-server my-registry.example.com \
+        --registry-username '<username>' \
+        --registry-password '<token>' \
+        --yes
+    ```
+  </Step>
+</Steps>
+
+Repeat the whole sequence for each chart upgrade. Image tags move with the chart version, so a mirror populated for an older release will not satisfy a newer one.
+
+## Installer-managed Secret
+
+The installer can create or update a Docker registry Secret in the FalkorDB Enterprise namespace and wire it into the Admin Server and Admin UI deployments.
+
+```bash
+curl -fsSL https://falkordb.github.io/FalkorDB-Enterprise/install.sh | \
+  GITEA_USERNAME='registry-username' \
+  GITEA_TOKEN='registry-token' \
+  bash -s -- \
+    --namespace falkordb-system \
+    --image-pull-secret falkordb-registry-pull-secret \
+    --yes
+```
+
+Equivalent explicit flags, pointed at a different registry (for example GHCR):
+
+```bash
+curl -fsSL https://falkordb.github.io/FalkorDB-Enterprise/install.sh | \
+  bash -s -- \
+    --namespace falkordb-system \
+    --image-pull-secret ghcr-pull-secret \
+    --registry-server ghcr.io \
+    --registry-username 'github-user-or-service-account' \
+    --registry-password 'github-token-with-read-packages' \
+    --yes
+```
+
+If credentials are provided and `--image-pull-secret` is omitted, the installer uses `falkordb-registry-pull-secret` against `registry.falkordb.cloud` by default. `GHCR_USERNAME`/`GHCR_TOKEN` remain supported as aliases for `GITEA_USERNAME`/`GITEA_TOKEN`.
+
+## Existing Secret
+
+If the Secret already exists, pass only its name:
+
+```bash
+curl -fsSL https://falkordb.github.io/FalkorDB-Enterprise/install.sh | \
+  bash -s -- \
+    --namespace falkordb-system \
+    --image-pull-secret existing-pull-secret \
+    --yes
+```
+
+The installer will reference the existing Secret without recreating it.
+
+## Manual Helm values
+
+If you install the chart manually, name the pull Secret once under `global` and repeat it for the addon:
+
+```yaml
+global:
+  imageCredentials:
+    # The Secret must already exist in the release namespace. Set
+    # `create: true` and supply registry/username/password to have the chart
+    # create it instead.
+    name: falkordb-registry-pull-secret
+
+# FalkorDB database pods run the private falkordb-enterprise-db image. The
+# addon subchart cannot read `.Values.global`, so the name has to be repeated.
+falkordb-addon:
+  imagePullSecrets:
+    - name: falkordb-registry-pull-secret
+```
+
+The Secret only needs to exist in the release namespace. The Admin Server copies it into every namespace it provisions a database into and refreshes the copy on each cluster operation, because Kubernetes resolves `imagePullSecrets` in the pod's own namespace and has no cluster-scoped equivalent.
+
+Both keys default to empty, so an install that pulls from a registry allowing anonymous access references no pull Secret at all. See [Helm values](/enterprise/reference/helm-values) for the full list.
+
+The Browser subchart has its own image settings. Configure those through the corresponding dependency values if that image is also private.
+
+## Rotate credentials
+
+Update the Secret in place:
+
+```bash
+kubectl -n falkordb-system create secret docker-registry falkordb-registry-pull-secret \
+  --docker-server=registry.falkordb.cloud \
+  --docker-username='registry-username' \
+  --docker-password='new-registry-token' \
+  --dry-run=client -o yaml | kubectl apply -f -
+```
+
+Restart workloads if the current pods need to pull images immediately:
+
+```bash
+kubectl -n falkordb-system rollout restart deployment -l app.kubernetes.io/component=admin-server
+kubectl -n falkordb-system rollout restart deployment -l app.kubernetes.io/component=admin-ui
+```
+
+Copies of the Secret in database namespaces are refreshed by the Admin Server on the next cluster operation in that namespace. To push the new credentials out immediately, re-apply the same `create secret` command against each database namespace.

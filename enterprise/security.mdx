@@ -1,0 +1,337 @@
+---
+title: "Security"
+description: "The security posture of a FalkorDB Enterprise installation: identity, RBAC, workload hardening, network isolation, secrets and supply chain."
+icon: "shield"
+---
+
+This page is the single description of what a FalkorDB Enterprise installation
+protects, how, and where the limits are. It is written for someone reviewing the
+product before it goes into a cluster.
+
+Every claim below names the values key, template or helper that implements it,
+so you can check it against the chart rather than taking it on trust. The CI job
+`Assert documented security controls` re-checks the claims on every change, so
+removing a control from the chart fails the build.
+
+Three companion pages carry the detail:
+
+<CardGroup cols={3}>
+  <Card title="Pod security" icon="lock" href="/enterprise/reference/pod-security">
+    The measured Pod Security Admission level for each namespace.
+  </Card>
+  <Card title="Network policy" icon="network-wired" href="/enterprise/reference/network-policy">
+    Every rule the shipped policies allow, and what has no rule.
+  </Card>
+  <Card title="Supply chain" icon="shield-check" href="/enterprise/reference/supply-chain">
+    Signature and bill-of-materials verification commands.
+  </Card>
+</CardGroup>
+
+## Boundaries and defense in depth
+
+The most useful thing to know about a control is whether crossing it requires
+defeating something other than the component being constrained. Controls in the
+first list are enforced by the Kubernetes API server, the kubelet or the network
+fabric, so a compromised Admin Server cannot step around them. Controls in the
+second list raise the cost of an attack but are enforced by the component itself.
+
+**Security boundaries**
+
+| Control | Enforced by |
+| --- | --- |
+| The `RoleBinding` that grants Secret access in a database namespace | Kubernetes API server |
+| `resourceNames` on the `bind` verb | Kubernetes API server |
+| Pod Security Admission labels on each namespace | Kubernetes API server |
+| Container security context: user, capabilities, `seccompProfile` | kubelet and container runtime |
+| Session token signature and expiry | Admin Server, for external callers |
+| Identity provider domain and tenant restrictions | The identity provider |
+| Network policies | The cluster CNI plugin, where it implements them |
+
+**Defense in depth**
+
+| Control | Why it is not a boundary |
+| --- | --- |
+| `adminServer.managedNamespaces.pattern` | Enforced in Admin Server code. It stops an operator mistake, not a compromised Admin Server, which holds `namespaces` `create` regardless of the pattern. The `RoleBinding` is the boundary. |
+| `readOnlyRootFilesystem: true` | Makes persistence harder. It does not restrain what the process can already reach through the Kubernetes API. |
+| `automountServiceAccountToken: false` on the Admin UI | Removes a credential the UI has no use for. The UI is reachable over the network either way. |
+| Absence of `list` on `namespaces` | Withholds a convenience. `get` still confirms whether a named namespace exists. |
+| Image and chart signatures | The chart does not verify them at admission time. They are a boundary only once you enforce verification yourself. |
+
+<Warning>
+`adminServer.managedNamespaces.pattern` is a guard rail, not an isolation
+mechanism. If you need a hard guarantee that the product cannot reach a
+namespace, rely on the fact that the Admin Server has no Secret or ConfigMap
+access in any namespace it has not been bound into.
+</Warning>
+
+## Identity and RBAC
+
+The chart creates three `ServiceAccount` objects, one per workload that needs to
+reach the Kubernetes API. The Admin UI gets none, and sets
+`automountServiceAccountToken: false`.
+
+| Workload | Created by | Values key |
+| --- | --- | --- |
+| Admin Server | `falkordb-enterprise.adminServerServiceAccountName` | `adminServer.serviceAccount.create` |
+| Preflight cleanup job | `falkordb-enterprise.preflightServiceAccountName` | `preflight.cleanupStaleOpsDefinitions.serviceAccount.create` |
+| Browser encryption key job | `falkordb-enterprise.browserEncryptionKeyServiceAccountName` | `browserEncryptionKey.serviceAccount.create` |
+
+### What the Admin Server may do cluster-wide
+
+Defined in `templates/admin-server.yaml` under `adminServer.rbac.create`, bound
+by a `ClusterRoleBinding` of the same name. No rule uses a wildcard.
+
+| API group | Resources | Verbs |
+| --- | --- | --- |
+| `apps.kubeblocks.io` | `clusters`, `clusterdefinitions`, `clusterversions`, `componentdefinitions`, `componentversions` | `get`, `list`, `watch`, `create`, `update`, `patch`, `delete` |
+| `dataprotection.kubeblocks.io` | `backups`, `restores`, `backuppolicies`, `backupschedules`, `backuprepos` | `get`, `list`, `watch`, `create`, `update`, `patch`, `delete` |
+| `operations.kubeblocks.io` | `opsrequests` | `get`, `list`, `watch`, `create`, `update`, `patch`, `delete` |
+| core | `pods`, `pods/log`, `pods/proxy`, `services`, `persistentvolumeclaims`, `events` | `get`, `list`, `watch` |
+| core | `nodes`, `persistentvolumes` | `get`, `list`, `watch` |
+| core | `namespaces` | `get`, `create` |
+| `storage.k8s.io` | `storageclasses` | `get`, `list`, `watch` |
+| `snapshot.storage.k8s.io` | `volumesnapshotclasses` | `get`, `list`, `watch` |
+| `extensions.kubeblocks.io` | `addons` | `get`, `list`, `watch` |
+| `rbac.authorization.k8s.io` | `rolebindings` | `get`, `list`, `watch`, `create`, `delete` |
+| `rbac.authorization.k8s.io` | `clusterroles`, restricted by `resourceNames` | `bind` |
+
+Three of these need a justification.
+
+<AccordionGroup>
+  <Accordion title="namespaces: get and create">
+    A `Namespace` is cluster-scoped, so neither verb can be confined by a
+    `RoleBinding`. `create` is what lets the console provision a database into a
+    new namespace without an administrator preparing one first.
+
+    `list` is deliberately absent. The console derives the namespaces it shows
+    from the namespaces that hold a FalkorDB cluster, so the server never
+    enumerates the cluster's namespaces and cannot use this grant to discover
+    what else the cluster runs.
+  </Accordion>
+
+  <Accordion title="rolebindings: create and delete">
+    `create` is how the Admin Server extends its own Secret access into a
+    namespace as it adds that namespace. `delete` cleans up the `RoleBinding`
+    objects KubeBlocks leaves behind when a `ComponentDefinition` changes.
+
+    On its own this pair would be a privilege-escalation path: anything that can
+    create a `RoleBinding` can grant itself any role in the cluster. The next
+    grant is what closes it.
+  </Accordion>
+
+  <Accordion title="clusterroles: bind, restricted by name">
+    Kubernetes requires the `bind` verb before a subject may reference a role it
+    does not already hold. The chart grants `bind` on exactly one name, the
+    namespace-scoped `ClusterRole` generated by
+    `falkordb-enterprise.adminServerNamespacedRoleName`.
+
+    The API server rejects any `RoleBinding` the Admin Server creates that
+    references a different role. The `create` grant above is therefore bounded
+    to a single, known set of permissions.
+  </Accordion>
+</AccordionGroup>
+
+### What the Admin Server may do per namespace
+
+Secret and ConfigMap access is not in the `ClusterRole` above. It lives in a
+second `ClusterRole`, generated by
+`falkordb-enterprise.adminServerNamespacedRoleName`, which is never bound
+cluster-wide:
+
+| API group | Resources | Verbs |
+| --- | --- | --- |
+| core | `configmaps`, `secrets` | `get`, `list`, `watch`, `create`, `update`, `patch`, `delete` |
+
+The chart binds it into the release namespace with a `RoleBinding`, where the
+Admin Server keeps its settings, identity provider credentials and the pull
+secrets it replicates outward. The Admin Server binds it into each database
+namespace as it adds that namespace, using the `create` and `bind` grants above.
+
+The consequence is the one worth writing down: **the Admin Server has no access
+to `Secret` or `ConfigMap` objects in any namespace it has not been bound
+into.** That is enforced by the API server, not by the product.
+
+### Job roles
+
+Both jobs are scoped down from the Admin Server's reach.
+
+| Job | Scope | Grants |
+| --- | --- | --- |
+| Preflight cleanup, `preflight.cleanupStaleOpsDefinitions.rbac.create` | `ClusterRole` | `customresourcedefinitions` `get`; `opsdefinitions` and `parametersdefinitions` `get`, `list`, `patch`, `delete` |
+| Browser encryption key, `browserEncryptionKey.rbac.create` | `Role`, release namespace only | `secrets` `get`, `create`, `patch`; `deployments` `get`, `patch` |
+
+The preflight role is cluster-scoped only because the resources it removes are
+cluster-scoped. The browser encryption key job is a namespace-scoped `Role`,
+because everything it touches is in the release namespace.
+
+### The KubeBlocks operator
+
+<Warning>
+The KubeBlocks operator holds `create`, `update`, `patch` and `delete` on
+`clusterroles`, granted through `kubeblocks.rbac.additionalPolicyRules`.
+</Warning>
+
+KubeBlocks generates a `ClusterRole` per cluster component and binds it to that
+component's `ServiceAccount`, so its operator needs `ClusterRole` write access.
+This grant cannot be narrowed with `resourceNames`: that field has no effect on
+`create`, and the generated names are not known in advance.
+
+Kubernetes' own escalation guard bounds the risk, in that the operator can only
+create a `ClusterRole` whose rules it already holds. But the operator is broadly
+privileged in its own right, so when you review the trust boundary of a cluster
+running FalkorDB Enterprise, treat the KubeBlocks operator `ServiceAccount` as a
+cluster-admin-equivalent identity.
+
+## Workload hardening
+
+All four workloads the chart owns satisfy the `restricted` Pod Security Standard.
+
+| Workload | Runs as | Values keys |
+| --- | --- | --- |
+| Admin Server | `1000` | `adminServer.podSecurityContext`, `adminServer.securityContext` |
+| Admin UI | `101` | `adminUi.podSecurityContext`, `adminUi.securityContext` |
+| Browser encryption key job | `1001` | `browserEncryptionKey.podSecurityContext`, `browserEncryptionKey.securityContext` |
+| Preflight cleanup job | `1001` | `preflight.cleanupStaleOpsDefinitions.podSecurityContext`, `preflight.cleanupStaleOpsDefinitions.securityContext` |
+
+Each sets the same properties:
+
+```yaml
+podSecurityContext:
+  runAsNonRoot: true
+  seccompProfile:
+    type: RuntimeDefault
+
+securityContext:
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: true
+  capabilities:
+    drop:
+      - ALL
+```
+
+A read-only root file system needs somewhere to write, so each pod mounts an
+`emptyDir`:
+
+| Workload | Writable path | Why |
+| --- | --- | --- |
+| Admin Server | `/data`, `/tmp` | The `/data` volume holds the SQLite database, and can be a `PersistentVolumeClaim`. SQLite spills journals and temporary stores to `/tmp` when they outgrow memory. |
+| Admin UI | `/tmp` | Node writes temporary files. |
+| Both jobs | `/tmp` | `kubectl` writes its discovery cache under `$HOME`. |
+
+## Pod Security Admission
+
+The installer labels namespaces (`apply_pod_security_labels` in
+`scripts/install.sh`); the chart does not. The strictest level each namespace
+can run at was measured, not assumed:
+
+| Namespace | Level | Capped by |
+| --- | --- | --- |
+| Release namespace | `baseline` | `falkordb-browser`, which ships empty security context defaults |
+| Release namespace with any CSI driver enabled | `privileged` | The CSI node drivers |
+| `kb-system` | `baseline` | The KubeBlocks `manager` and `dataprotection` controllers |
+| Database namespaces | `baseline` | FalkorDB database, cluster and sentinel pods |
+
+The four workloads the chart owns would each pass `restricted`. The release
+namespace is held at `baseline` by a single subchart. See
+[Pod security](/enterprise/reference/pod-security) for the reported violations per
+workload.
+
+## Network isolation
+
+Network policies are **off by default**, because a cluster whose CNI plugin does
+not implement `NetworkPolicy` would accept the objects and silently enforce
+nothing. Enable them with `networkPolicy.enabled=true` once you have confirmed
+your CNI plugin enforces them.
+
+Two policies are created, one for the Admin Server and one for the Admin UI. Both
+set `policyTypes: [Ingress, Egress]`, so anything not listed is denied:
+
+| Direction | Admin Server | Admin UI |
+| --- | --- | --- |
+| Ingress | TCP 3000 from `networkPolicy.ingressControllerNamespace` | TCP 3000 from `networkPolicy.ingressControllerNamespace` |
+| Egress | DNS to `networkPolicy.dnsNamespace`; `networkPolicy.externalEgress.ports` to `networkPolicy.externalEgress.cidrs` | DNS only |
+
+<Warning>
+`NetworkPolicy` matches on CIDR and never on hostname. Egress to the Kubernetes
+API server and to your identity provider can therefore only be expressed as
+address ranges. The default of `0.0.0.0/0` on ports 443 and 6443 is wide on
+purpose: the control plane endpoint is not knowable from inside the chart, and
+guessing it wrong locks the Admin Server out of the API server entirely.
+</Warning>
+
+Narrowing `networkPolicy.externalEgress.cidrs` to your control plane and identity
+provider ranges is the single most valuable change you can make to the shipped
+policies. See [Network policy](/enterprise/reference/network-policy) for the flows that
+deliberately have no rule.
+
+## Secrets
+
+| Secret | Values keys | Notes |
+| --- | --- | --- |
+| Session signing key | `adminServer.secret.jwtSecret`, or `adminServer.secret.jwtExistingSecret` | The chart refuses to render if it is shorter than 32 characters. Supply an existing Secret to keep it out of your values file. |
+| Google credentials | `adminServer.secret.googleClientId`, `adminServer.secret.googleClientSecret`, `adminServer.secret.googleWorkspaceServiceAccountKey` | Stored in the Admin Server Secret, read as optional environment variables. |
+| Azure credentials | `adminServer.secret.azureClientId`, `adminServer.secret.azureClientSecret` | As above. |
+| License | `adminServer.license.value`, or `adminServer.license.existingSecret` | Only created when a value is supplied. |
+| Metrics credentials | `adminServer.metrics.basicAuth.username` and `.password`, or `.existingSecret` | Setting one without the other fails startup rather than leaving `/metrics` open. |
+| Browser encryption key | `falkordb-browser.browser.encryption.key`, or `.existingSecret` | Generated by the post-install job when absent, and reused on upgrade. |
+
+Set the values that hold credentials through `--set` or a values file you keep
+out of version control, or point the corresponding `existingSecret` key at a
+Secret you manage yourself.
+
+### Registry credentials
+
+`global.imageCredentials.create` makes the chart create a pull secret in the
+release namespace. The Admin Server copies the secrets named in
+`falkordb-enterprise.imagePullSecretNames` into each database namespace, because
+a pull secret is only usable in the namespace it lives in.
+
+This replication is the reason the Admin Server holds `create` on `secrets` in
+the namespace-scoped role rather than read-only access.
+
+## Supply chain
+
+Container images and the Helm chart are signed with `cosign` using a key pair
+held by the release pipeline, and images carry a CycloneDX bill of materials as
+an attestation. Signing does not use the public transparency log, so
+verification needs `--insecure-ignore-tlog=true`:
+
+```bash
+cosign verify \
+  --key cosign.pub \
+  --insecure-ignore-tlog=true \
+  registry.falkordb.cloud/falkordb/falkordb-enterprise-server:1.0.0
+```
+
+Pin images by digest with `adminServer.image.digest` and `adminUi.image.digest`
+to remove the registry's ability to change what a tag points at. See
+[Supply chain](/enterprise/reference/supply-chain) for chart verification, bill-of-materials
+verification and how mirroring preserves signatures.
+
+<Note>
+Verification is not enforced at admission time by the chart. To make a signature
+a boundary rather than a claim, run an admission controller that verifies it,
+such as the Sigstore policy controller or Kyverno.
+</Note>
+
+## What CI enforces
+
+`scripts/assert-security-controls.py` runs against the rendered chart on every
+change to it. It fails the build if any of the following stops being true:
+
+- No role the chart owns uses a wildcard in `apiGroups`, `resources` or `verbs`.
+- The `namespaces` grant is exactly `get` and `create`.
+- The Admin Server `ClusterRole` grants no cluster-wide `secrets` or `configmaps`.
+- The `clusterroles` grant is `bind` only, and carries a `resourceNames` restriction.
+- The namespace-scoped `ClusterRole` is never referenced by a `ClusterRoleBinding`.
+- Every workload the chart owns sets `runAsNonRoot`, `seccompProfile: RuntimeDefault`, `allowPrivilegeEscalation: false`, `readOnlyRootFilesystem: true` and drops all capabilities.
+- The Admin UI does not mount a `ServiceAccount` token.
+- Both network policies restrict egress as well as ingress.
+
+If you intend to remove one of these, update this page in the same change.
+
+## Reporting a vulnerability
+
+Contact FalkorDB support with the affected version, the chart values needed to
+reproduce, and the impact you observed. Please do not open a public issue for a
+suspected vulnerability.

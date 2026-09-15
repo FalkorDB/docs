@@ -1,0 +1,135 @@
+---
+title: "Upgrade FalkorDB Enterprise"
+description: "Upgrade the FalkorDB Enterprise Helm release safely."
+icon: "arrow-up"
+---
+
+## Before you start
+
+<CardGroup cols={2}>
+  <Card title="Changelog" icon="list" href="/enterprise/upgrades/changelog">
+    What changed between your version and the target version.
+  </Card>
+  <Card title="Compatibility matrix" icon="table" href="/enterprise/reference/compatibility">
+    The subchart versions each release pins, and its support channel.
+  </Card>
+</CardGroup>
+
+A release with incompatible changes has a migration guide linked from its changelog
+entry. Work through that guide before running the upgrade.
+
+## Prechecks
+
+Confirm the current release and namespaces:
+
+```bash
+helm status falkordb-enterprise -n falkordb-system
+kubectl get pods -n falkordb-system
+```
+
+Back up mutable admin resources:
+
+```bash
+kubectl -n falkordb-system get secret -l 'falkordb.io/user-type' -o yaml > falkordb-admin-users.backup.yaml
+kubectl -n falkordb-system get configmap falkordb-rbac falkordb-admin-settings -o yaml > falkordb-admin-config.backup.yaml
+```
+
+Save current Helm values:
+
+```bash
+helm get values falkordb-enterprise -n falkordb-system -o yaml > falkordb-enterprise.current-values.yaml
+```
+
+## Recommended upgrade path
+
+Prefer a maintained values file over `--reuse-values`. This avoids carrying old image tag overrides forward accidentally.
+
+```bash
+curl -fsSL https://falkordb.github.io/FalkorDB-Enterprise/install.sh | \
+  bash -s -- \
+    --kube-context production-cluster \
+    --release falkordb-enterprise \
+    --namespace falkordb-system \
+    --kubeblocks-namespace kb-system \
+    --version '<chart-version>' \
+    --values production-values.yaml \
+    --yes
+```
+
+Omit `--version` to install the latest published chart. Passing an older version downgrades the release, since the installer runs `helm upgrade` either way.
+
+The installer uses `helm upgrade --install`, so rerunning it upgrades the Enterprise release. It also updates KubeBlocks and Snapshot Controller unless skipped.
+
+## Enterprise-only upgrade
+
+If KubeBlocks and Snapshot Controller are already managed separately and should not be touched:
+
+```bash
+curl -fsSL https://falkordb.github.io/FalkorDB-Enterprise/install.sh | \
+  bash -s -- \
+    --release falkordb-enterprise \
+    --namespace falkordb-system \
+    --skip-kubeblocks \
+    --skip-snapshot-controller \
+    --skip-crds \
+    --values production-values.yaml \
+    --yes
+```
+
+## Manual Helm upgrade
+
+```bash
+helm upgrade falkordb-enterprise \
+  oci://registry.falkordb.cloud/falkordb/falkordb-enterprise \
+  --version '<chart-version>' \
+  --namespace falkordb-system \
+  -f production-values.yaml \
+  --wait --timeout 20m
+```
+
+If you must use `--reuse-values`, set image tags explicitly:
+
+```bash
+helm upgrade falkordb-enterprise \
+  oci://registry.falkordb.cloud/falkordb/falkordb-enterprise \
+  --version '<chart-version>' \
+  --namespace falkordb-system \
+  --reuse-values \
+  --set adminServer.image.tag='<chart-version>' \
+  --set adminUi.image.tag='<chart-version>' \
+  --wait --timeout 20m
+```
+
+## Post-upgrade validation
+
+```bash
+helm status falkordb-enterprise -n falkordb-system
+kubectl rollout status deployment -n falkordb-system -l app.kubernetes.io/component=admin-server
+kubectl rollout status deployment -n falkordb-system -l app.kubernetes.io/component=admin-ui
+kubectl get pods -n falkordb-system
+```
+
+Port-forward and check health:
+
+```bash
+kubectl -n falkordb-system port-forward svc/falkordb-enterprise-admin-server 3000:3000
+curl http://localhost:3000/health
+```
+
+Open the Admin UI and verify login, deployment list, diagnostics, logs, and metrics.
+
+## Rollback
+
+List revisions:
+
+```bash
+helm history falkordb-enterprise -n falkordb-system
+```
+
+Rollback to a previous revision:
+
+```bash
+helm rollback falkordb-enterprise <revision> -n falkordb-system --wait --timeout 20m
+```
+
+After rollback, rerun the post-upgrade validation commands.

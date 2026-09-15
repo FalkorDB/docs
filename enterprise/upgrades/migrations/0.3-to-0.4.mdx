@@ -1,0 +1,126 @@
+---
+title: "Migrate from 0.3 to 0.4"
+description: "Move image pulls from ghcr.io to registry.falkordb.cloud before upgrading to FalkorDB Enterprise 0.4."
+icon: "right-left"
+---
+
+FalkorDB Enterprise 0.4.0 publishes first-party images and the Helm chart to
+`registry.falkordb.cloud` instead of `ghcr.io`. Clusters that pull from `ghcr.io`,
+or that mirror it, need the changes below before upgrading.
+
+<Warning>
+  Credentials issued for `ghcr.io` do not work against `registry.falkordb.cloud`.
+  Request registry credentials from FalkorDB support before you start.
+</Warning>
+
+## Who is affected
+
+| Situation | Action required |
+| --- | --- |
+| Installed with `install.sh` and no image overrides | Update the image pull secret. |
+| Pinned image references in a values file | Update them, or drop them and use `global.imageRegistry`. |
+| Mirrored registry or air-gapped install | Re-mirror first-party images from the new source. |
+| Chart pulled from `oci://ghcr.io/...` | Pull from `oci://registry.falkordb.cloud/falkordb/falkordb-enterprise`. |
+
+Images already in `ghcr.io` are left in place, so 0.3.x releases keep working. Only
+new releases stop appearing there.
+
+## 1. Replace the image pull secret
+
+The installer creates the secret for you when credentials are supplied. The default
+registry is already `registry.falkordb.cloud`:
+
+```bash
+curl -fsSL https://falkordb.github.io/FalkorDB-Enterprise/install.sh | \
+  bash -s -- \
+    --namespace falkordb-system \
+    --registry-username '<username>' \
+    --registry-password '<token>' \
+    --yes
+```
+
+To rotate the secret by hand instead:
+
+```bash
+kubectl -n falkordb-system delete secret falkordb-registry-pull-secret --ignore-not-found
+kubectl -n falkordb-system create secret docker-registry falkordb-registry-pull-secret \
+  --docker-server=registry.falkordb.cloud \
+  --docker-username='<username>' \
+  --docker-password='<token>'
+```
+
+## 2. Remove pinned ghcr.io image references
+
+Search your values files for `ghcr.io` and remove first-party overrides. The chart
+resolves every first-party image from `global.imageRegistry`, which defaults to
+`registry.falkordb.cloud/falkordb`:
+
+```yaml
+global:
+  imageRegistry: registry.falkordb.cloud/falkordb
+```
+
+<Note>
+  Three subcharts are still hosted on `ghcr.io` as Helm charts: the FalkorDB addon,
+  `falkordb-browser`, and `dm-sql-to-falkordb`. `helm dependency update` reads them
+  from there anonymously. This is a chart source, not an image source, and needs no
+  credentials.
+</Note>
+
+The installer no longer injects a default image registry of its own. A registry set
+through `-f values.yaml` is now used instead of being overridden.
+
+## 3. Re-mirror if you run a private registry
+
+Image tags move with the chart version, so a mirror populated for 0.3 will not satisfy 0.4. Fetch the 0.4 chart and the mirroring scripts, then regenerate the image list and push it:
+
+```bash
+helm pull oci://registry.falkordb.cloud/falkordb/falkordb-enterprise --version 0.4.1 --untar
+
+for s in collect-images.sh mirror-images.sh verify-mirror-overlay.sh; do
+  curl -fsSL "https://falkordb.github.io/FalkorDB-Enterprise/$s" -o "$s" && chmod +x "$s"
+done
+
+CHART_DIR=./falkordb-enterprise ./collect-images.sh --output images.txt
+./mirror-images.sh --manifest images.txt --target-registry <your-registry> --target-namespace falkordb
+CHART_DIR=./falkordb-enterprise OVERLAY=my-mirror.yaml ./verify-mirror-overlay.sh
+```
+
+The first-party images are not in the manifest and must be copied separately, including the renamed database image. Then apply the overlay values, using the bundled
+`falkordb-enterprise/examples/mirror-registry-values.yaml` as the starting point.
+See [Private images](/enterprise/deployment/private-images) for the full procedure.
+
+## 4. Upgrade
+
+```bash
+curl -fsSL https://falkordb.github.io/FalkorDB-Enterprise/install.sh | \
+  bash -s -- \
+    --namespace falkordb-system \
+    --version 0.4.1 \
+    --values production-values.yaml \
+    --yes
+```
+
+## Verify
+
+Confirm no workload still references `ghcr.io`:
+
+```bash
+kubectl -n falkordb-system get pods \
+  -o jsonpath='{range .items[*]}{range .spec.containers[*]}{.image}{"\n"}{end}{end}' \
+  | sort -u
+```
+
+Every line should start with `registry.falkordb.cloud`, or with your mirror host.
+
+## Rollback
+
+Downgrade with the installer and restore the previous pull secret:
+
+```bash
+curl -fsSL https://falkordb.github.io/FalkorDB-Enterprise/install.sh | \
+  bash -s -- --namespace falkordb-system --version 0.3.1 --yes
+```
+
+The 0.3.x images remain available on `ghcr.io`, so a rollback does not need the new
+credentials.

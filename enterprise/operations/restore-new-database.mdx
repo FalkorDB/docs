@@ -1,0 +1,50 @@
+---
+title: "Restore to a new deployment"
+description: "Create a new deployment from an existing backup."
+icon: "clone"
+---
+
+## Current implementation status
+
+The backend has a clone endpoint for this workflow:
+
+```text
+POST /api/clusters/<sourceClusterName>/restores/clone?namespace=<namespace>
+```
+
+The clone service creates a new cluster from the source cluster spec and adds the KubeBlocks restore annotation `kubeblocks.io/restore-from-backup`.
+
+The current Admin UI **Create new instance from backup** option is not wired to this clone endpoint. It currently calls the regular restore endpoint using the new instance name as the target cluster name, which requires that target cluster to already exist. Treat the UI path for new-instance restore as incomplete until it is rewired to the clone endpoint.
+
+## Backend requirements
+
+The backend clone service validates:
+
+- Source cluster exists.
+- Backup exists.
+- Backup method is `full`.
+- Backup is ready for restore.
+- Target cluster name does not already exist in the namespace.
+
+The clone request body uses:
+
+```json
+{
+  "newClusterName": "<new-cluster-name>",
+  "backupName": "<backup-name>",
+  "backupNamespace": "<backup-namespace>",
+  "volumeRestorePolicy": "Parallel"
+}
+```
+
+`volumeRestorePolicy` defaults to `Parallel` when omitted. `Serial` is also accepted by the service type.
+
+## Validate
+
+```bash
+kubectl get clusters.apps.kubeblocks.io -n <namespace>
+kubectl get clusters.apps.kubeblocks.io -n <namespace> <new-cluster-name> -o yaml
+kubectl get pods -n <namespace>
+```
+
+Confirm the created cluster includes the restore annotation and reaches a healthy state.

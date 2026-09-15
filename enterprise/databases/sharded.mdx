@@ -1,0 +1,63 @@
+---
+title: "Sharded deployment"
+description: "Create a sharded FalkorDB deployment for horizontal data distribution."
+icon: "grid-2"
+---
+
+## When to use this
+
+Use sharded topology for workloads that need to distribute data and traffic across multiple shards.
+
+The Admin UI maps this flow to:
+
+- `spec.topology: cluster`
+- `spec.replicas` as replicas per shard
+- `spec.sharding.enabled: true`
+- `spec.sharding.shardCount` from the shard count field
+- `spec.sharding.replicas` as replicas per shard
+
+## Create with quick create
+
+1. Open **Deployments** > **Create Deployment**.
+2. Choose **Sharded**.
+3. Choose **Dev**, **QA**, or **Prod**.
+4. Choose **Quick Create**.
+5. Enter name, namespace, and FalkorDB version.
+6. Submit.
+
+## Create with full setup
+
+1. Open **Deployments** > **Create Deployment**.
+2. Choose **Sharded**.
+3. Choose **Full Setup**.
+4. Complete the wizard:
+   - **General**: name, namespace, version, termination policy, labels.
+   - **Component**: shard count, replicas per shard, CPU, memory, storage class, storage size, node affinity.
+   - **Configuration**: optional FalkorDB runtime parameters.
+   - **Authentication**: ACL username/password or LDAP where supported.
+   - **Encryption**: optional TLS configuration.
+   - **Networking**: optional service for the sharding component, and an optional external domain for stable per-pod DNS names outside the cluster. See [Networking](/enterprise/databases/networking).
+   - **Backup**: optional backup repository and cron schedule.
+   - **Review**: submit.
+
+## Verified defaults and constraints
+
+| Field | Default or constraint |
+| --- | --- |
+| Shard count | `3` |
+| Replicas per shard | `1` for Dev, `2` for QA/Prod |
+| Storage | `10Gi` |
+| Backup schedule | `0 2 * * *` when backup is enabled |
+| CPU minimum sent to API | `250m` for shard resources |
+| Memory minimum sent to API | `100Mi` for shard resources |
+
+Prod enforces at least `2` replicas per shard.
+
+## Validate
+
+```bash
+kubectl get clusters.apps.kubeblocks.io -n <namespace>
+kubectl get pods -n <namespace>
+```
+
+In the Admin UI, open **General** to confirm shard count and replicas per shard, then review **Pods**, **Metrics**, and **Operations**.

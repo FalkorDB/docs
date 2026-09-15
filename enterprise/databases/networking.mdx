@@ -1,0 +1,82 @@
+---
+title: "Networking"
+description: "How FalkorDB deployments are reachable inside the cluster by default, and what it takes to reach them from outside."
+icon: "network-wired"
+---
+
+## Default: cluster-internal access only
+
+Every FalkorDB deployment gets a standard Kubernetes Service and a matching
+DNS name from the cluster's CoreDNS, for example:
+
+```
+orders-falkordb-falkordb.falkordb-system.svc.cluster.local
+```
+
+That name resolves only inside the Kubernetes cluster. Any pod in the same
+cluster can connect to it; nothing outside the cluster — a different cluster,
+a VM tier, a peered VPC, the public internet — can resolve or reach it.
+
+<Note>
+  Without any of the setup below, the only way to reach a database from
+  outside the cluster is to connect directly to a pod IP, and only if your CNI
+  allocates pod IPs from a routable address space (for example the AWS VPC
+  CNI on EKS, Azure CNI on AKS, or GKE's VPC-native mode). Overlay networks
+  (kubenet, Flannel VXLAN, Calico IPIP/VXLAN) never make pod IPs reachable
+  from outside the cluster.
+</Note>
+
+## Making a deployment reachable from outside the cluster
+
+Two independent things both have to be true:
+
+<Steps>
+  <Step title="Give the deployment an externally resolvable name">
+    In the create or edit wizard, open the **Networking** step and set the
+    external domain (FQDN) field — for example `db.internal.example.com`.
+    This sets `spec.externalDomain` on the cluster, which makes the admin
+    server:
+
+    - Set `ANNOUNCE_HOSTNAME_OVERRIDE=$(CURRENT_POD_NAME).<zone>` on the
+      FalkorDB (and Sentinel, if enabled) pods, so each pod announces its own
+      external name instead of its in-cluster address. Depending on topology
+      this becomes `replica-announce-ip`, `sentinel announce-ip`, or
+      `cluster-announce-hostname` — see [External DNS access](/enterprise/deployment/external-dns)
+      for how each topology announces itself.
+    - Create a dedicated headless Service per component (`clusterIP: None`,
+      `publishNotReadyAddresses: true`), annotated with
+      `external-dns.alpha.kubernetes.io/hostname` so its endpoints — the pod
+      IPs — get published under that name.
+
+    This step alone does not create any DNS records. It only makes the
+    deployment announce a name and expose the Service annotations a DNS
+    controller needs to act on.
+  </Step>
+  <Step title="Publish DNS records for that name">
+    Something has to turn the annotated Service into actual DNS records that
+    resolve to the current pod IPs — [ExternalDNS](https://kubernetes-sigs.github.io/external-dns/)
+    is the recommended and directly supported option, watching the annotated
+    headless Services and publishing records to a private or public DNS zone
+    (Route 53, Cloud DNS, Azure DNS, and other supported providers). Without
+    a controller doing this, the announced name has nothing backing it and
+    will not resolve.
+  </Step>
+</Steps>
+
+See [External DNS access](/enterprise/deployment/external-dns) for installing
+ExternalDNS, the full per-component DNS layout, pod-IP routability
+requirements per platform, and a CoreDNS-forwarding alternative for clusters
+that do not want to run ExternalDNS.
+
+## Other ways to expose a database
+
+The **Networking** step also supports adding a plain `ClusterIP`, `NodePort`,
+or `LoadBalancer` Service per component, independent of the external-domain
+feature above. Use this when you want a conventional load-balanced entry
+point (one virtual IP in front of all replicas) rather than stable per-pod
+names — for example a `LoadBalancer` Service for a standalone database
+reachable from the internet, or a `NodePort` for quick access during
+development. See the **Networking** step in
+[Standalone](/enterprise/databases/standalone), [Replicated](/enterprise/databases/replicated),
+[Sentinel](/enterprise/databases/sentinel), and [Sharded](/enterprise/databases/sharded) for
+per-topology notes.

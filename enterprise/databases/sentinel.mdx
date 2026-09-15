@@ -1,0 +1,51 @@
+---
+title: "Replicated deployment with Sentinel"
+description: "Create a replicated FalkorDB deployment with Redis Sentinel high availability."
+icon: "shield"
+---
+
+## When to use this
+
+Use Sentinel when the deployment should support failover from one FalkorDB replica to another.
+
+The Admin UI maps this flow to:
+
+- `spec.topology: replication`
+- `spec.replicas` from the FalkorDB replica count
+- `spec.sentinel.enabled: true`
+- `spec.sentinel.replicas` from the Sentinel node count
+
+## Create from Admin UI
+
+1. Open **Deployments** > **Create Deployment**.
+2. Choose **Standalone**.
+3. Choose **QA** or **Prod** to start from a Sentinel-enabled template, or choose **Full Setup** and enable Sentinel manually.
+4. In **FalkorDB**, set the FalkorDB replica count. Prod requires at least `2`.
+5. In **Sentinel**, enable Sentinel and set an odd number of Sentinel replicas. The UI defaults to `3`.
+6. Configure Sentinel CPU, memory, storage, and optional node affinity.
+7. Optionally add a Sentinel service in **Networking**, or set an external domain for stable per-pod DNS names outside the cluster — see [Networking](/enterprise/databases/networking).
+8. Complete auth, TLS, backup, parameters, and review.
+
+## Template defaults
+
+| Template | FalkorDB replicas | Sentinel | Sentinel replicas | Backup |
+| --- | --- | --- | --- | --- |
+| Dev | `1` | disabled | n/a | disabled |
+| QA | `2` | enabled | `3` | disabled |
+| Prod | at least `2` | required | odd, at least `3` | enabled |
+
+## Failover status
+
+The current Pods tab displays a **Switchover** confirmation for the primary pod, but this UI path currently only shows a success toast. There is no backend switchover operation wired in this codebase yet.
+
+Until that is implemented, handle manual failover through your Kubernetes/KubeBlocks operating procedure and verify the resulting pod roles in the Admin UI.
+
+## Validate
+
+```bash
+kubectl get clusters.apps.kubeblocks.io -n <namespace>
+kubectl get pods -n <namespace>
+kubectl get opsrequests.operations.kubeblocks.io -n <namespace>
+```
+
+In the Admin UI, verify **Pods**, **Operations**, **Logs**, and **Metrics**.

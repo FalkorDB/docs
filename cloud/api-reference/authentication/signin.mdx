@@ -1,0 +1,99 @@
+---
+title: "Sign in"
+api: "POST https://app.falkordb.cloud/api/signin"
+description: "Sign into FalkorDB Cloud and receive session cookies."
+---
+
+Signs the user in. Send your FalkorDB Cloud credentials as a JSON body. The response sets two `HttpOnly` cookies that authorize every other endpoint.
+
+## Body
+
+<ParamField body="email" type="string" required>
+  The email address of your FalkorDB Cloud account.
+</ParamField>
+
+<ParamField body="password" type="string" required>
+  The password of your FalkorDB Cloud account.
+</ParamField>
+
+```json
+{
+  "email": "you@example.com",
+  "password": "your-password"
+}
+```
+
+## Response
+
+### Cookies
+
+<ResponseField name="omnistrate_token" type="string" required>
+  Session JWT. Send it on every subsequent request. Expires after 1 hour (`Max-Age=3600`).
+</ResponseField>
+
+<ResponseField name="omnistrate_refresh_token" type="string" required>
+  Refresh token used to obtain a new session token. Expires after 24 hours (`Max-Age=86400`).
+</ResponseField>
+
+Both cookies are issued with the following attributes:
+
+```http 200 OK
+Set-Cookie: omnistrate_token=eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9...; Path=/; HttpOnly; SameSite=Lax; Max-Age=3600; Domain=.falkordb.cloud; Secure
+Set-Cookie: omnistrate_refresh_token=4610...; Path=/; HttpOnly; SameSite=Lax; Max-Age=86400; Domain=.falkordb.cloud; Secure
+```
+
+| Attribute | Value | Effect |
+| --- | --- | --- |
+| `HttpOnly` | — | The cookies are not readable from JavaScript. |
+| `Secure` | — | The cookies are only sent over HTTPS. |
+| `SameSite` | `Lax` | The cookies are sent on top-level navigations and same-site requests. |
+| `Domain` | `.falkordb.cloud` | The cookies are scoped to FalkorDB Cloud and its subdomains. |
+| `Path` | `/` | The cookies are sent on every path. |
+
+<Warning>
+  Because the cookies are `HttpOnly`, your application cannot read or store them itself. Browser clients should send requests with credentials included; server-side and CLI clients should persist the `Set-Cookie` values and replay `omnistrate_token` as a `Cookie` header.
+</Warning>
+
+## Sending the cookie
+
+Browsers attach the cookies automatically as long as the request includes credentials:
+
+```js
+await fetch("/api/instances", { credentials: "include" });
+```
+
+Other clients must store the cookies and send them back. With `curl`, use a cookie jar:
+
+```bash
+curl -c cookies.txt -X POST \
+  https://app.falkordb.cloud/api/signin \
+  -H "Content-Type: application/json" \
+  -d '{"email": "'"$FALKORDB_EMAIL"'", "password": "'"$FALKORDB_PASSWORD"'"}'
+```
+
+Because the cookies are scoped to `.falkordb.cloud`, `curl` does not replay them to `https://api.omnistrate.cloud`. Read `omnistrate_token` out of the cookie jar and send it as an explicit `Cookie` header instead:
+
+```bash
+TOKEN=$(awk '$6 == "omnistrate_token" { print $7 }' cookies.txt)
+
+curl -H "Cookie: omnistrate_token=$TOKEN" https://api.omnistrate.cloud/...
+```
+
+## Session lifetime
+
+The session token is valid for 1 hour. After it expires, use the refresh token to obtain a new session, or sign in again. The refresh token is valid for 24 hours; once it expires, the user must sign in with their credentials.
+
+### Errors
+
+| Status | Description |
+| --- | --- |
+| 400 | The body is malformed, or the email and password do not match an account. |
+| 500 | The server failed to complete the sign-in. |
+
+Error responses are JSON with a single `message` field:
+
+```json
+{
+  "message": "Invalid request: wrong user email or password"
+}
+```

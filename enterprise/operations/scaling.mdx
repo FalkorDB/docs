@@ -1,0 +1,63 @@
+---
+title: "Scale a deployment"
+description: "Scale FalkorDB deployments horizontally and vertically."
+icon: "arrow-up-right-dots"
+---
+
+## Horizontal scale
+
+1. Open **Deployments**.
+2. Open the target deployment.
+3. Select **Scale** from the deployment header.
+4. Adjust replicas.
+5. For sharded deployments, adjust shard count if needed.
+6. For Sentinel-enabled replicated deployments, adjust Sentinel nodes if needed.
+7. Select **Apply Scale**.
+
+The UI creates one or more KubeBlocks horizontal scaling OpsRequests through the Admin Server:
+
+- Component `falkordb` for standalone or replicated FalkorDB replicas.
+- Component `falkordb-sent` for Sentinel replicas.
+- Component `shard` for sharded deployments.
+
+## Horizontal scale constraints
+
+- Standalone minimum: `1` replica.
+- Replication and sharded minimum: `2` replicas.
+- UI replica maximum: `10`.
+- Sharded deployments have minimum `3` shards.
+- Sentinel nodes must be odd and at least `3`.
+
+## Vertical scale CPU and memory
+
+1. Open the target deployment.
+2. Select **Edit**.
+3. Choose **Resources**.
+4. Enter CPU and memory requests and/or limits.
+5. Select **Apply Resources**.
+
+This creates a KubeBlocks vertical scaling OpsRequest. A rolling restart can occur.
+
+## Expand storage
+
+1. Open the target deployment.
+2. Select **Edit**.
+3. Choose **Storage**.
+4. Enter a larger storage size, for example `50Gi`.
+5. Select **Expand Storage**.
+
+Storage expansion is irreversible and the StorageClass must support volume expansion.
+
+## Validate
+
+```bash
+kubectl get opsrequests.operations.kubeblocks.io -n <namespace>
+kubectl get clusters.apps.kubeblocks.io -n <namespace>
+kubectl get pods -n <namespace>
+```
+
+In the Admin UI, review **Operations**, **Pods**, and **Metrics**.
+
+## Failover status
+
+Automatic or manual switchover is not wired to a backend operation in the current Admin UI. The Pods tab currently shows a confirmation dialog and success toast, but it does not submit a KubeBlocks switchover operation. Use your Kubernetes/KubeBlocks procedure for failover until this path is implemented.

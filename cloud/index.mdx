@@ -1,0 +1,77 @@
+---
+title: "FalkorDB Cloud"
+description: "Provision and manage FalkorDB instances with the FalkorDB Cloud API"
+---
+
+FalkorDB Cloud is the managed service for FalkorDB, the ultra-low-latency graph database. Use the FalkorDB Cloud API to provision instances, change their configuration, take backups, and manage their lifecycle programmatically.
+
+> **Important**
+>
+> This API is in beta. The endpoints and request/response shapes may change without notice. Please contact [support@falkordb.com](mailto:support@falkordb.com) if you have questions or feedback.
+
+<CardGroup cols={2}>
+  <Card title="Quickstart" icon="rocket" href="/cloud/quickstart">
+    Sign in, create your first instance, and connect to it.
+  </Card>
+  <Card title="API reference" icon="code" href="/cloud/api-reference/introduction">
+    Every endpoint, grouped by service tier and deployment component.
+  </Card>
+  <Card title="Dashboard" icon="grid-2" href="https://app.falkordb.cloud">
+    Manage the same resources from the FalkorDB Cloud console.
+  </Card>
+  <Card title="Support" icon="life-ring" href="mailto:contact@falkordb.com">
+    Get help from the FalkorDB team.
+  </Card>
+</CardGroup>
+
+## Service tiers
+
+| Tier | Tenancy | Hosting | Guide |
+| --- | --- | --- | --- |
+| Free | Multi-tenant | FalkorDB-hosted | [Free Tier](/cloud/tiers/free) · [Demo](https://www.youtube.com/watch?v=z0XO4pb2t5Y) |
+| Startup | Multi-tenant | FalkorDB-hosted | [Startup Tier](/cloud/tiers/startup) · [Demo](https://www.youtube.com/watch?v=xjpLPoQgo2s) |
+| Pro | Dedicated | FalkorDB-hosted | [Pro Tier](/cloud/tiers/pro) · [Demo](https://youtu.be/UIzrW9otvYM) |
+| Enterprise | Dedicated | FalkorDB-hosted in your dedicated network | [Enterprise Tier](/cloud/tiers/enterprise) · [Demo](https://youtu.be/fu_8CLFKYSs) |
+| Enterprise BYOA | Dedicated | Your own cloud account | [Enterprise Tier](/cloud/tiers/enterprise) |
+
+Every tier includes multi-graph tenancy and graph access control. Higher tiers add TLS, VPC peering, high availability, automated backups, and dedicated support. See [Features](/cloud/features) for the full breakdown.
+
+## Deployment components
+
+Each tier exposes the deployment components it supports:
+
+- **Standalone** — a single node.
+- **Single-Zone** — a primary with replicas in one availability zone.
+- **Multi-Zone** — a primary with replicas spread across availability zones.
+- **Cluster (Single-Zone)** and **Cluster (Multi-Zone)** — sharded deployments for larger graphs.
+
+## Set up billing
+
+Before you subscribe to a paid tier, add your billing information. It takes two steps:
+
+1. Create a billing account in the [FalkorDB Cloud console](https://app.falkordb.cloud/billing).
+2. Enter your billing details.
+
+![The FalkorDB Cloud billing page, showing where to create a billing account and enter payment details](https://github.com/user-attachments/assets/d5d6ce47-0bbc-4c71-b5fa-60a43677fb3f)
+
+The Free tier does not require billing information.
+
+## Frequently asked questions
+
+<AccordionGroup>
+  <Accordion title="What cloud providers does FalkorDB support?">
+    FalkorDB Cloud is available on **AWS** and **GCP** for the Free, Startup, and Pro tiers. **Azure** is available to Enterprise customers through a Bring-Your-Own-Cloud (BYOC) configuration.
+  </Accordion>
+  <Accordion title="Can I upgrade my plan later?">
+    Yes. You can scale and upgrade your deployment at any time. Start on the Free tier to evaluate, then move to Startup, Pro, or Enterprise as your needs grow.
+  </Accordion>
+  <Accordion title="Do I need to set up billing before subscribing?">
+    Yes. Before you subscribe to a paid tier, create a billing account at [app.falkordb.cloud/billing](https://app.falkordb.cloud/billing) and enter your billing information.
+  </Accordion>
+  <Accordion title="What features are available across all tiers?">
+    Every tier includes **multi-graph tenancy** and **graph access control**. Higher tiers add TLS, VPC peering, high availability, automated backups, and dedicated support.
+  </Accordion>
+  <Accordion title="Is there a free trial available?">
+    Yes. The **Free tier** gives you a fully functional graph database instance with 100 MB of RAM on AWS or GCP, with no credit card required.
+  </Accordion>
+</AccordionGroup>
