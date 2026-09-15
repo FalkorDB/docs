@@ -1,0 +1,663 @@
+---
+title: "Cypher Cheat Sheet: Query Syntax Quick Reference"
+sidebarTitle: "Cheat Sheet"
+description: "A one-page Cypher quick reference for FalkorDB: pattern syntax, MATCH, MERGE, WHERE, aggregation, indexing, constraints, procedures, graph algorithms, and vector search."
+---
+
+Everything you need to write a Cypher query in FalkorDB, on one page. Each section links to
+the full reference if you need the details.
+
+<Note>
+FalkorDB implements a growing subset of [OpenCypher](https://www.opencypher.org/) (version 9)
+plus proprietary extensions. Before using syntax you know from another graph database, check
+[Cypher coverage](/cypher/cypher-support) and [Known limitations](/cypher/known-limitations).
+</Note>
+
+Statements separated by a blank line inside a single block are independent queries — send
+them one at a time rather than pasting the whole block.
+
+## Patterns
+
+Patterns are the ASCII art at the heart of every query. Nodes use parentheses, relationships
+use brackets.
+
+```cypher
+()                                  // anonymous node
+(n)                                 // aliased node
+(:Person)                           // label only
+(n:Person)                          // alias and label
+(n:Person {name: 'Alice'})          // inline property filter
+```
+
+```cypher
+(a)-->(b)                           // any type, outgoing
+(a)<--(b)                           // any type, incoming
+(a)--(b)                            // any type, any direction
+(a)-[r]->(b)                        // aliased relationship
+(a)-[:KNOWS]->(b)                   // typed relationship
+(a)-[r:KNOWS {since: 2020}]->(b)    // typed with property filter
+(a)-[:KNOWS]-(b)                    // typed, any direction
+```
+
+Variable-length and named paths:
+
+```cypher
+(a)-[:KNOWS*]->(b)                  // 1 to infinity hops
+(a)-[:KNOWS*2]->(b)                 // exactly 2 hops
+(a)-[:KNOWS*1..3]->(b)              // between 1 and 3 hops
+(a)-[:KNOWS*..3]->(b)               // up to 3 hops
+
+MATCH p = (a:Person)-[:KNOWS*1..3]->(b:Person)
+RETURN nodes(p), relationships(p), length(p)
+```
+
+Full reference: [MATCH](/cypher/match).
+
+## Reading clauses
+
+| Clause | Purpose |
+|---|---|
+| [`MATCH`](/cypher/match) | Find patterns in the graph |
+| [`OPTIONAL MATCH`](/cypher/optional-match) | Like a `LEFT JOIN` — unmatched elements become `null` |
+| [`WHERE`](/cypher/where) | Filter rows |
+| [`RETURN`](/cypher/return) | Project the result set |
+| [`WITH`](/cypher/with) | Pipe results between query parts |
+| [`UNWIND`](/cypher/unwind) | Expand a list into one row per element |
+| [`UNION`](/cypher/union) | Combine result sets |
+
+```cypher
+MATCH (p:Person {name: 'Alice'})-[:WORKS_AT]->(c:Company)
+RETURN p.name, c.name
+```
+
+```cypher
+MATCH (p:Person)
+OPTIONAL MATCH (p)-[w:WORKS_AT]->(c:Company)
+RETURN p.name, c.name          // c.name is null when unmatched
+```
+
+A mandatory `MATCH` cannot follow an `OPTIONAL MATCH`.
+
+## Filtering with WHERE
+
+| Operator | Meaning |
+|---|---|
+| `=` | Equal to |
+| `<>` | Not equal to |
+| `<` `<=` `>` `>=` | Comparisons |
+| `STARTS WITH` | String prefix |
+| `ENDS WITH` | String suffix |
+| `CONTAINS` | Substring |
+| `IN` | Membership in a list |
+| `IS NULL` / `IS NOT NULL` | Null checks |
+| `AND` `OR` `NOT` `XOR` | Boolean logic |
+
+```cypher
+MATCH (p:Person)
+WHERE p.age >= 18 AND p.name STARTS WITH 'A'
+  AND p.country IN ['US', 'CA']
+  AND p.email IS NOT NULL
+RETURN p
+```
+
+Pattern predicates filter by structure instead of properties:
+
+```cypher
+MATCH (p:Person), (c:Company)
+WHERE (p)-[:WORKS_AT]->(c) AND NOT (p)-[:FOUNDED]->(c)
+RETURN p, c
+```
+
+Label predicates work in `WHERE` too, though putting the label in the pattern is faster:
+
+```cypher
+MATCH (n)-[:REL]->() WHERE n:Person OR n:Company RETURN n
+```
+
+Full reference: [WHERE](/cypher/where).
+
+## Projecting and paging
+
+```cypher
+MATCH (p:Person)-[:KNOWS]->(f:Person)
+RETURN DISTINCT p.name AS person, f.name AS friend
+ORDER BY person ASC, friend DESC
+SKIP 20
+LIMIT 10
+```
+
+`WITH` applies the same modifiers mid-query and controls which variables stay in scope:
+
+```cypher
+MATCH (p:Person)
+WITH avg(p.age) AS average_age
+MATCH (:Person)-[:PARENT_OF]->(child:Person)
+WHERE child.age > average_age
+RETURN child
+```
+
+Combine result sets with `UNION` (deduplicates) or `UNION ALL` (keeps every row). Column
+names and count must match:
+
+```cypher
+MATCH (n:Actor) RETURN n.name AS name
+UNION ALL
+MATCH (n:Movie) RETURN n.title AS name
+```
+
+## Writing clauses
+
+### CREATE
+
+```cypher
+CREATE (n)                                        // empty node
+
+CREATE (:Person {name: 'Kurt', age: 27})          // label and properties
+
+CREATE (a)-[:MEMBER]->(:Band {name: 'Nirvana'})   // relationship to a new node
+
+CREATE (jim:Person {name: 'Jim'})-[:FRIENDS]->(pam:Person {name: 'Pam'})
+```
+
+Full reference: [CREATE](/cypher/create).
+
+### MERGE
+
+`MERGE` matches an existing pattern or creates it. Merge one entity per clause to avoid
+accidental duplicates:
+
+```cypher
+MERGE (a:Person {name: 'Alice'})
+MERGE (b:Person {name: 'Bob'})
+MERGE (a)-[:KNOWS]->(b)
+```
+
+Conditional property updates:
+
+```cypher
+MERGE (p:Person {name: 'Alice'})
+ON CREATE SET p.created = timestamp()
+ON MATCH  SET p.last_seen = timestamp()
+```
+
+<Warning>
+`MERGE` on a whole path either matches the entire path or creates all of it. Merging
+`(a {name: 'Alice'})-[:KNOWS]->(b {name: 'Bob'})` in one clause duplicates Alice and Bob when
+the relationship is missing.
+</Warning>
+
+Full reference: [MERGE](/cypher/merge).
+
+### SET, REMOVE, DELETE
+
+```cypher
+SET n.age = 33                      // one property
+SET n.age = 33, n.name = 'Bob'      // several properties
+SET n = {age: 33, name: 'Bob'}      // replace ALL properties
+SET n += {age: 33}                  // merge properties, keep the rest
+SET jim = pam                       // copy all properties from another entity
+SET n.name = NULL                   // remove a property
+```
+
+```cypher
+REMOVE n.score                      // remove a property
+REMOVE n:Admin                      // remove a label
+REMOVE n:Admin:Player               // remove several labels
+```
+
+```cypher
+MATCH (p:Person {name: 'Jim'}) DELETE p            // node and its relationships
+
+MATCH (:Person)-[r:FRIENDS]->() DELETE r           // relationship only
+
+MATCH (n) DETACH DELETE n                          // wipe the graph
+```
+
+Deleting a node always deletes its relationships — FalkorDB never leaves dangling edges.
+
+Full references: [SET](/cypher/set), [REMOVE](/cypher/remove), [DELETE](/cypher/delete).
+
+### FOREACH
+
+Runs updating clauses (`CREATE`, `MERGE`, `SET`, `REMOVE`, `DELETE`, `FOREACH`) over a list
+without changing the current rows:
+
+```cypher
+FOREACH (i IN [1, 2, 3, 4] | CREATE (n:N {v: i}))
+
+MATCH p = (a:City)-[:ROAD*..5]->(b:City)
+FOREACH (n IN nodes(p) | SET n.part_of_path = true)
+```
+
+Full reference: [FOREACH](/cypher/foreach).
+
+## Subqueries (`CALL {}`)
+
+A subquery runs once per input row. Import outer variables with an opening `WITH`.
+
+```cypher
+MATCH (item:Item)
+CALL {
+  WITH item
+  MATCH (item)-[s:SOLD_TO]->(:Customer)
+  RETURN count(s) AS sales
+}
+RETURN item.name, sales
+```
+
+Non-returning subqueries perform side effects and keep the row count unchanged:
+
+```cypher
+MATCH (item:Item)
+CALL {
+  WITH item
+  MATCH (item)-[s:SOLD_TO]->(:Customer)
+  WITH item, count(s) AS sales
+  WHERE sales > 100
+  SET item.popular = true
+}
+RETURN item
+```
+
+Full reference: [CALL \{\}](/cypher/call).
+
+## Functions
+
+| Category | Examples |
+|---|---|
+| Predicate | `all()`, `any()`, `none()`, `single()`, `exists()`, `isEmpty()` |
+| Scalar | `coalesce()`, `id()`, `labels()`, `type()`, `properties()`, `startNode()`, `endNode()`, `timestamp()`, `randomUUID()`, `typeOf()` |
+| Aggregating | `count()`, `sum()`, `avg()`, `min()`, `max()`, `collect()`, `stDev()`, `percentileCont()` |
+| List | `head()`, `tail()`, `last()`, `size()`, `keys()`, `range()`, `reduce()`, `list.sort()`, `list.dedup()` |
+| Mathematical | `abs()`, `ceil()`, `floor()`, `round()`, `sqrt()`, `pow()`, `exp()`, `log()`, `rand()`, `sign()` |
+| String | `toUpper()`, `toLower()`, `trim()`, `split()`, `replace()`, `reverse()`, `left()`, `right()`, `size()`, `string.join()`, `string.matchRegEx()` |
+| Type conversion | `toInteger()`, `toFloat()`, `toString()`, `toBoolean()`, and their `...OrNull()` and `...List()` variants |
+| Node | `indegree()`, `outdegree()` |
+| Path | `nodes()`, `relationships()`, `length()`, `shortestPath()`, `allShortestPaths()` |
+| Point | `point()`, `distance()` |
+| Vector | `vecf32()`, `vec.cosineDistance()`, `vec.euclideanDistance()` |
+
+Full reference: [Functions](/cypher/functions).
+
+### Aggregation
+
+Non-aggregated expressions in `RETURN` become implicit grouping keys — there is no `GROUP BY`:
+
+```cypher
+MATCH (m:Movie)<-[:ACTED_IN]-(a:Actor)
+RETURN m.title, count(a) AS cast_size, min(a.age), max(a.age)
+ORDER BY cast_size DESC
+```
+
+### Comprehensions, CASE, and reduce
+
+```cypher
+// List comprehension: [element IN list WHERE condition | output]
+MATCH p = ()-[*]->()
+RETURN [node IN nodes(p) WHERE node.rank > 10 | node.name]
+```
+
+```cypher
+// Pattern comprehension
+MATCH (n:Person)
+RETURN n.name, [(n)-[e:FRIEND_OF]->(f:Person) WHERE e.since < 2010 | f.age]
+```
+
+```cypher
+// CASE, simple form: one expression evaluated against each WHEN
+MATCH (n:Employee)
+RETURN CASE n.title WHEN 'Engineer' THEN 100 WHEN 'Scientist' THEN 80 ELSE 0 END
+```
+
+```cypher
+// CASE, generic form: each WHEN carries its own predicate
+MATCH (n:Person)
+RETURN CASE WHEN n.age < 18 THEN '0-18' WHEN n.age < 30 THEN '18-30' ELSE '30+' END
+```
+
+```cypher
+// reduce
+RETURN reduce(total = 0, n IN [1, 2, 3] | total + n)   // 6
+```
+
+## Indexing
+
+### Range index
+
+Accelerates equality, range, geospatial, and array-membership filters.
+
+```cypher
+CREATE INDEX FOR (p:Person) ON (p.age)                  // node label
+
+CREATE INDEX FOR ()-[f:FOLLOW]-() ON (f.created_at)     // relationship type
+
+DROP INDEX ON :Person(age)
+
+DROP INDEX ON :FOLLOW(created_at)
+```
+
+The older `CREATE INDEX ON :Person(age)` form is still accepted and creates the same index.
+
+Range indexes are applied automatically. Confirm with `GRAPH.EXPLAIN`, which shows
+`Index Scan` instead of `Node By Label Scan`. Not-equal (`<>`) filters are not optimized.
+
+Full reference: [Range index](/cypher/indexing/range-index).
+
+### Full-text index
+
+```cypher
+CREATE FULLTEXT INDEX FOR (n:Movie) ON (n.title)
+
+CREATE FULLTEXT INDEX FOR ()-[m:Manager]-() ON (m.name)
+
+DROP FULLTEXT INDEX FOR (n:Movie) ON (n.title)
+```
+
+Pass `OPTIONS` instead to control stemming language and stopwords:
+
+```cypher
+CREATE FULLTEXT INDEX FOR (n:Movie) ON (n.title)
+  OPTIONS { language: 'German', stopwords: ['a', 'ab'] }
+```
+
+Query it with RediSearch syntax — `*` for prefix matching and `%` for fuzzy matching:
+
+```cypher
+CALL db.idx.fulltext.queryNodes('Movie', 'Jun*') YIELD node, score
+RETURN node.title, score ORDER BY score DESC
+```
+
+```cypher
+CALL db.idx.fulltext.queryRelationships('Manager', 'Charlie Munger')
+YIELD relationship RETURN relationship.name
+```
+
+Full reference: [Full-text index](/cypher/indexing/fulltext-index).
+
+### Vector index
+
+```cypher
+CREATE VECTOR INDEX FOR (p:Product) ON (p.embedding)
+  OPTIONS {dimension: 768, similarityFunction: 'cosine'}
+
+CREATE VECTOR INDEX FOR ()-[e:Call]->() ON (e.summary)
+  OPTIONS {dimension: 128, similarityFunction: 'euclidean'}
+
+DROP VECTOR INDEX FOR (p:Product) ON (p.embedding)
+```
+
+| Option | Required | Default | Description |
+|---|---|---|---|
+| `dimension` | Yes | — | Vector length, 1–4096 |
+| `similarityFunction` | Yes | — | `cosine` or `euclidean` |
+| `M` | No | `16` | Max outgoing edges per HNSW node |
+| `efConstruction` | No | `200` | Candidates evaluated while building |
+| `efRuntime` | No | `10` | Candidates evaluated while searching |
+
+Full reference: [Vector index](/cypher/indexing/vector-index).
+
+### Listing indexes
+
+```cypher
+CALL db.indexes()
+```
+
+## Vector search
+
+Store vectors with `vecf32()` and search them with the vector index procedures. The index,
+the stored vectors, and the query vector must all share the same dimension — the
+3-dimensional vectors below are kept short so the example runs as-is.
+
+```cypher
+CREATE VECTOR INDEX FOR (d:Doc) ON (d.embedding)
+  OPTIONS {dimension: 3, similarityFunction: 'cosine'}
+
+CREATE (:Doc {title: 'Laptop review', embedding: vecf32([0.12, 0.83, 0.44])})
+CREATE (:Doc {title: 'Notebook review', embedding: vecf32([0.15, 0.81, 0.40])})
+
+CALL db.idx.vector.queryNodes('Doc', 'embedding', 5, vecf32([0.15, 0.81, 0.40]))
+YIELD node, score
+RETURN node.title, score ORDER BY score DESC
+```
+
+The same works on relationship properties:
+
+```cypher
+CREATE VECTOR INDEX FOR ()-[r:REVIEWED]->() ON (r.embedding)
+  OPTIONS {dimension: 3, similarityFunction: 'euclidean'}
+
+CALL db.idx.vector.queryRelationships('REVIEWED', 'embedding', 5, vecf32([0.1, 0.2, 0.3]))
+YIELD relationship, score
+RETURN relationship, score ORDER BY score
+```
+
+<Tip>
+Order results by what the similarity function means. With `cosine`, a higher score is more
+similar, so sort `DESC`. With `euclidean`, the score is a distance, so sort ascending.
+</Tip>
+
+Compare two vectors directly without an index:
+
+```cypher
+MATCH (a:Doc {title: 'Laptop review'}), (b:Doc {title: 'Notebook review'})
+RETURN vec.cosineDistance(a.embedding, b.embedding) AS cosine,
+       vec.euclideanDistance(a.embedding, b.embedding) AS euclidean
+```
+
+Use `cosine` for normalized embeddings (most text embedding models) and `euclidean` when
+magnitude is meaningful.
+
+## Constraints
+
+Constraints are created with a Redis command rather than a Cypher clause. A unique constraint
+requires a supporting range index on exactly the same properties, so create that index first
+or the command fails.
+
+```bash
+# Prerequisite for the UNIQUE constraint below
+GRAPH.QUERY myGraph "CREATE INDEX FOR (p:Person) ON (p.first_name, p.last_name)"
+
+GRAPH.CONSTRAINT CREATE myGraph UNIQUE NODE Person PROPERTIES 2 first_name last_name
+GRAPH.CONSTRAINT CREATE myGraph MANDATORY NODE Person PROPERTIES 1 id
+GRAPH.CONSTRAINT DROP   myGraph MANDATORY NODE Person PROPERTIES 1 id
+```
+
+Constraints are built asynchronously. The command replies `PENDING` and the constraint is
+enforced gradually while its status is `UNDER CONSTRUCTION`. It becomes `OPERATIONAL` once
+every governed node or relationship conforms, or `FAILED` if a conflict is found — in which
+case it is not enforced at all and has to be recreated after fixing the data.
+
+```cypher
+CALL db.constraints()
+```
+
+Full references: [GRAPH.CONSTRAINT CREATE](/commands/graph.constraint-create),
+[GRAPH.CONSTRAINT DROP](/commands/graph.constraint-drop).
+
+## Procedures
+
+Call a procedure with `CALL`; `YIELD` is optional and selects specific columns.
+
+| Procedure | Yields |
+|---|---|
+| `db.labels()` | `label` |
+| `db.relationshipTypes()` | `relationshipType` |
+| `db.propertyKeys()` | `propertyKey` |
+| `db.indexes()` | `label`, `properties`, `types`, `options`, `language`, `stopwords`, `entitytype`, `status`, `info` |
+| `db.constraints()` | `type`, `label`, `properties`, `entitytype`, `status` |
+| `db.meta.stats()` | `labels`, `relTypes`, `relCount`, `nodeCount`, `labelCount`, `relTypeCount`, `propertyKeyCount` |
+| `db.idx.fulltext.createNodeIndex(label, prop...)` | — |
+| `db.idx.fulltext.queryNodes(label, query)` | `node`, `score` |
+| `db.idx.vector.queryNodes(label, attr, k, query)` | `node`, `score` |
+| `dbms.procedures()` | `name`, `mode` |
+
+```cypher
+CALL db.labels() YIELD label RETURN label ORDER BY label
+```
+
+Full reference: [Procedures](/cypher/procedures).
+
+## Graph algorithms
+
+```cypher
+CALL algo.pageRank('Person', 'KNOWS') YIELD node, score
+RETURN node.name, score ORDER BY score DESC LIMIT 10
+```
+
+Weighted shortest paths:
+
+```cypher
+MATCH (a:City {name: 'A'}), (g:City {name: 'G'})
+CALL algo.SPpaths({
+  sourceNode: a,
+  targetNode: g,
+  relTypes: ['ROAD'],
+  weightProp: 'dist',
+  pathCount: 1
+}) YIELD path, pathWeight
+RETURN path, pathWeight
+```
+
+Also available: [BFS](/algorithms/bfs), [WCC](/algorithms/wcc),
+[label propagation](/algorithms/cdlp), [betweenness centrality](/algorithms/betweenness-centrality),
+[harmonic centrality](/algorithms/harmonic-centrality), [max flow](/algorithms/maxflow),
+[minimum spanning forest](/algorithms/msf), and [single-source shortest paths](/algorithms/sspath).
+
+Full reference: [Algorithms](/algorithms).
+
+## Data types
+
+```cypher
+42                      // integer (64-bit signed)
+3.14                    // float (64-bit double)
+'text'  "text"          // string
+true  false             // boolean
+NULL                    // missing or undefined
+[1, 2, 3]               // list
+{name: 'Alice'}         // map
+point({latitude: 41.40, longitude: -75.69})
+```
+
+Temporal values:
+
+```cypher
+date('2025-09-15')                        // Date
+localtime('07:00:00')                     // LocalTime
+localdatetime('2025-06-29T13:45:00')      // LocalDateTime
+duration('P3DT12H')                       // Duration
+
+RETURN date('2025-09-15').year                             // 2025
+
+RETURN date('2025-01-01') + duration('P1M')                // 2025-02-01
+
+RETURN localdatetime()                                     // current time
+```
+
+Full reference: [Data types](/datatypes).
+
+## Importing CSV data
+
+```cypher
+LOAD CSV FROM 'file://actors.csv' AS row
+MERGE (a:Actor {name: row[0], birth_year: toInteger(row[1])})
+```
+
+With a header row, address columns by name instead of position:
+
+```cypher
+LOAD CSV WITH HEADERS FROM 'file://actors.csv' AS row
+MERGE (a:Actor {name: row['name'], birth_year: toInteger(row['birthyear'])})
+```
+
+Use `FIELDTERMINATOR` for a delimiter other than a comma:
+
+```cypher
+LOAD CSV FROM 'file://actors.csv' AS row FIELDTERMINATOR ';'
+RETURN row LIMIT 10
+```
+
+Every value arrives as a string, so cast with `toInteger()`, `toFloat()`, or `toBoolean()`.
+Local files resolve relative to the configured
+[import folder](/getting-started/configuration#import_folder); remote files must use HTTPS.
+
+Full reference: [LOAD CSV](/cypher/load-csv).
+
+## Parameters
+
+Never concatenate user input into a query. Pass parameters instead:
+
+```bash
+GRAPH.QUERY social 'CYPHER name="Alice" MATCH (n:Person {name: $name}) RETURN n'
+```
+
+Every client library exposes a language-native way to pass parameters.
+
+## Running and profiling queries
+
+| Command | Purpose |
+|---|---|
+| [`GRAPH.QUERY`](/commands/graph.query) | Run a read/write query |
+| [`GRAPH.RO_QUERY`](/commands/graph.ro-query) | Run a read-only query; errors on writes |
+| [`GRAPH.EXPLAIN`](/commands/graph.explain) | Show the execution plan without running it |
+| [`GRAPH.PROFILE`](/commands/graph.profile) | Run the query and report per-operation timings |
+| [`GRAPH.LIST`](/commands/graph.list) | List every graph in the database |
+| [`GRAPH.DELETE`](/commands/graph.delete) | Delete a graph and its keys |
+
+```bash
+GRAPH.EXPLAIN social "MATCH (p:Person) WHERE p.age > 30 RETURN p"
+1) "Results"
+2) "    Project"
+3) "        Index Scan | (p:Person)"
+```
+
+## Gotchas
+
+- Indexes do not optimize `<>` filters — those still fall back to a full scan of the label or
+  relationship type.
+- `LIMIT` does not restrict eager operations. `UNWIND [1,2,3] AS v CREATE (a {property: v}) RETURN a LIMIT 1` creates three nodes and returns one.
+- When a relationship in a pattern is never referenced elsewhere, FalkorDB only verifies that at least one match exists. Reference the alias (for example `WHERE ID(e) >= 0`) when you need every match.
+- Aggregation functions are not allowed inside pattern comprehensions. Aggregate in a preceding `WITH` or use `size()` on the resulting list.
+- Regular-expression operators are unsupported; use `STARTS WITH`, `ENDS WITH`, `CONTAINS`, or `string.matchRegEx()`.
+- Label expressions such as `(n:A|B)` in node patterns are unsupported. Filter with `WHERE n:A OR n:B`.
+- Vector index queries do not combine with property filters.
+
+Full reference: [Known limitations](/cypher/known-limitations).
+
+## Frequently Asked Questions
+
+<AccordionGroup>
+  <Accordion title="What is the difference between MATCH and MERGE?">
+    `MATCH` only finds existing data and returns no rows when the pattern is absent. `MERGE`
+    matches the pattern if it exists and creates it otherwise, so it behaves like an upsert.
+    Use `ON CREATE SET` and `ON MATCH SET` to update properties differently in each case.
+  </Accordion>
+  <Accordion title="How do I create an index in FalkorDB?">
+    Use `CREATE INDEX FOR (p:Person) ON (p.age)` for a range index,
+    `CREATE FULLTEXT INDEX FOR (n:Movie) ON (n.title)` for text search, and
+    `CREATE VECTOR INDEX FOR (p:Product) ON (p.embedding) OPTIONS {dimension: 768, similarityFunction: 'cosine'}`
+    for similarity search. List them all with `CALL db.indexes()`.
+  </Accordion>
+  <Accordion title="How do I check whether my query uses an index?">
+    Run `GRAPH.EXPLAIN <graph> "<query>"`. The plan shows `Index Scan` when an index is used
+    and `Node By Label Scan` when it is not. `GRAPH.PROFILE` adds per-operation timings.
+  </Accordion>
+  <Accordion title="How do I run a vector similarity search?">
+    Create a vector index, store embeddings with `vecf32()`, then call
+    `db.idx.vector.queryNodes('Label', 'attribute', k, vecf32([...])) YIELD node, score`.
+    Use `db.idx.vector.queryRelationships` for relationship embeddings.
+  </Accordion>
+  <Accordion title="Does FalkorDB support Neo4j Cypher syntax?">
+    Mostly. FalkorDB implements a growing subset of OpenCypher version 9 with extensions such
+    as vector indexes, full-text search, and built-in graph algorithms. Neo4j-only features
+    such as label expressions are not available, and the OpenCypher regex operator is
+    unsupported — use `STARTS WITH`, `ENDS WITH`, `CONTAINS`, or `string.matchRegEx()`
+    instead. FalkorDB supports user-defined functions through the
+    [Flex UDF library](/udfs).
+    The named temporal arithmetic *functions* are also missing, though the `+` and `-`
+    operators do work on temporal values. See [Cypher coverage](/cypher/cypher-support).
+  </Accordion>
+  <Accordion title="How do I delete every node in a graph?">
+    Run `MATCH (n) DETACH DELETE n` to empty the graph while keeping it, or use the
+    [`GRAPH.DELETE`](/commands/graph.delete) command to drop the graph entirely.
+  </Accordion>
+</AccordionGroup>
