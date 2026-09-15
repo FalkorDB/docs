@@ -117,7 +117,7 @@ ORDER BY pathWeight
   <Accordion title="What does the maxLen parameter do?">
     It limits the maximum number of *relationships* (hops) in any returned path. This prevents very long paths from being explored, improving performance on dense graphs.
   </Accordion>
-  <Accordion title="Is weightProp required?">
+  <Accordion title="Is weightProp required for algo.SSpaths?">
     No. If omitted, all edges are treated as having equal weight. The algorithm then finds paths with the fewest hops rather than minimal weighted distance.
   </Accordion>
 </AccordionGroup>

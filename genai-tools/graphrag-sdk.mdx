@@ -17,7 +17,7 @@ It holds the top score on [GraphRAG-Bench](https://graphrag-bench.github.io) acr
 ## Quick start
 
 ```bash
-pip install graphrag-sdk[litellm]
+pip install "graphrag-sdk[litellm,pdf]"
 docker run -p 6379:6379 falkordb/falkordb
 ```
 
@@ -103,3 +103,35 @@ GraphRAG first organizes your documents into a [knowledge graph](https://www.fal
 - [Runnable examples](https://github.com/FalkorDB/GraphRAG-SDK/tree/main/graphrag_sdk/examples)
 - [Try GraphRAG Server](https://graphrag.falkordb.com/) — the hosted, no-code version
 - [Understanding Ontologies and Knowledge Graphs](https://www.falkordb.com/blog/understanding-ontologies-knowledge-graph-schemas/)
+
+## Frequently Asked Questions
+
+<AccordionGroup>
+  <Accordion title="What is GraphRAG-SDK?">
+    GraphRAG-SDK builds knowledge graphs from your documents on FalkorDB and answers questions over them using graph-based retrieval-augmented generation. It ingests text, Markdown, and PDF with schema-guided entity extraction, and retrieves cited answers through a hybrid pipeline combining vector search, full-text search, Cypher generation, and relationship expansion.
+  </Accordion>
+  <Accordion title="How do I get started with GraphRAG-SDK?">
+    Install it with `pip install "graphrag-sdk[litellm,pdf]"`, start FalkorDB with `docker run -p 6379:6379 falkordb/falkordb`, then create a `GraphRAG` instance with a `ConnectionConfig`, an LLM, and an embedder. Call `ingest()`, then `finalize()`, then `completion()` to ask your first question. The `pdf` extra is only needed for PDF ingestion — drop it if you are loading text and Markdown. You can also skip the local instance and point it at [FalkorDB Cloud](https://app.falkordb.cloud).
+  </Accordion>
+  <Accordion title="What is the difference between GraphRAG-SDK and GraphRAG Server?">
+    **GraphRAG-SDK** is the self-hosted Python library you run and configure yourself. **GraphRAG Server** is the fully hosted, no-code version: you upload documents through the browser and it builds the graph for you, with no code, no Cypher, and no graph expertise needed.
+  </Accordion>
+  <Accordion title="Which LLMs and embedding models does GraphRAG-SDK support?">
+    Any LLM or embedder reachable through [LiteLLM](https://docs.graphrag.falkordb.com/providers), which covers OpenAI, Anthropic, Google, and locally hosted models. You select them with `LiteLLM(model=...)` and `LiteLLMEmbedder(model=...)`.
+  </Accordion>
+  <Accordion title="What file types can GraphRAG-SDK ingest?">
+    Plain text, Markdown, and PDF. PDF ingestion needs the `pdf` extra (`pip install "graphrag-sdk[litellm,pdf]"`). GraphRAG Server accepts the same three formats through its upload interface.
+  </Accordion>
+  <Accordion title="Do I have to rebuild the whole graph when a document changes?">
+    No. GraphRAG-SDK re-syncs individual documents incrementally. See [Incremental Updates](https://docs.graphrag.falkordb.com/incremental-updates) for `update()`, `delete_document()`, and `apply_changes()`, which are designed for CI-driven syncs.
+  </Accordion>
+  <Accordion title="Why use GraphRAG instead of regular RAG?">
+    Vanilla RAG retrieves text snippets that look similar to your question, which breaks down when an answer depends on how facts connect across documents. GraphRAG first organizes your content into a knowledge graph, so answers connect related facts *across* documents, come with citations back to the sources, and include an explainability subgraph showing why you got that answer.
+  </Accordion>
+  <Accordion title="How accurate is GraphRAG-SDK?">
+    It holds the top score on [GraphRAG-Bench](https://graphrag-bench.github.io) across both the multi-document and single-document question sets. The [Benchmark](https://docs.graphrag.falkordb.com/benchmark) page documents the methodology and how to reproduce the results.
+  </Accordion>
+  <Accordion title="Where is the full GraphRAG-SDK documentation?">
+    This page is a short overview. The complete guides, API reference, and runnable examples live at [docs.falkordb.com/graphrag](https://docs.falkordb.com/graphrag).
+  </Accordion>
+</AccordionGroup>

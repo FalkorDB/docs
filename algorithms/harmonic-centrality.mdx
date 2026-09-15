@@ -145,3 +145,32 @@ John is not given a score, and the connection to John does not affect the score 
 - **`reachable` field**: The `reachable` yield provides an estimated count of nodes reachable from each node via HLL sketch. Yield it explicitly when you need this information.
 - **Label/type filtering**: When `nodeLabels` or `relationshipTypes` are provided, only matching nodes and edges participate in the computation. All named labels and types must exist in the graph, or an error is returned.
 - **Performance**: The algorithm uses sparse matrix operations and scales well on large graphs.
+
+## Frequently Asked Questions
+
+<AccordionGroup>
+  <Accordion title="What is harmonic centrality in a graph?">
+    Harmonic centrality measures how close a node is to every other node it can reach, by summing the **inverse** shortest-path distances: `H(u) = Σ 1 / d(u, v)`. Nodes that reach many others through short paths score highest, which makes them good hubs for information spread, influence, or access.
+  </Accordion>
+  <Accordion title="How do I run harmonic centrality in FalkorDB?">
+    Call `CALL algo.HarmonicCentrality() YIELD node, score`. The configuration map is optional — omit it or pass `NULL` to run on the entire graph.
+  </Accordion>
+  <Accordion title="What is the difference between harmonic centrality and closeness centrality?">
+    Closeness centrality sums distances directly, so a single unreachable node makes the score undefined and the measure breaks on disconnected graphs. Harmonic centrality sums *inverse* distances and scores unreachable nodes as `0`, so it works on **disconnected graphs** without special handling.
+  </Accordion>
+  <Accordion title="Does harmonic centrality work on disconnected graphs?">
+    Yes. This is its main advantage. Unreachable nodes contribute `0` to the sum instead of infinity, so disconnected components are handled naturally.
+  </Accordion>
+  <Accordion title="Why does a node have a harmonic centrality score of 0?">
+    A score of `0` means the node cannot reach any other node along the selected labels and relationship types. Because FalkorDB treats the graph as **directed**, a node with only incoming edges scores `0` even though other nodes can reach it.
+  </Accordion>
+  <Accordion title="Are FalkorDB harmonic centrality scores exact?">
+    No. FalkorDB computes an **approximation** using HyperLogLog sketches and GraphBLAS sparse matrix operations. Scores are estimates, though they are typically very close to the true values on large graphs.
+  </Accordion>
+  <Accordion title="Can I run harmonic centrality on only part of my graph?">
+    Yes. Pass `nodeLabels` and `relationshipTypes` to restrict the computation to a subgraph — only matching nodes receive scores and only matching edges are traversed. Every label and type you name must exist in the graph, or the query returns an error.
+  </Accordion>
+  <Accordion title="What does the reachable field return?">
+    `reachable` is an estimated count of how many nodes can be reached from each node, derived from the HLL sketch. It is only populated when you yield it explicitly, as in `YIELD node, score, reachable`.
+  </Accordion>
+</AccordionGroup>

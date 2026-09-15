@@ -24,12 +24,12 @@ Graphify runs as a skill in AI coding assistants. The examples below cover Claud
 <CodeGroup>
 
 ```bash Claude Code
-uv tool install "graphifyy[falkordb]"
+pip install "graphifyy[falkordb]"
 graphify install
 ```
 
 ```bash Codex
-uv tool install "graphifyy[falkordb]"
+pip install "graphifyy[falkordb]"
 graphify install --platform codex
 ```
 
@@ -103,3 +103,29 @@ LIMIT 50;
 - [Graphify README](https://github.com/Graphify-Labs/graphify/blob/main/README.md)
 - [FalkorDB Python client](https://github.com/FalkorDB/falkordb-py)
 - [Cypher documentation](/cypher)
+
+## Frequently Asked Questions
+
+<AccordionGroup>
+  <Accordion title="What is Graphify?">
+    Graphify turns code, documentation, PDFs, screenshots, and notes into a connected knowledge graph. It runs as a skill inside AI coding assistants, and its FalkorDB export loads that graph into FalkorDB so you can query it persistently with Cypher.
+  </Accordion>
+  <Accordion title="How do I install Graphify with FalkorDB support?">
+    Install and register Graphify with the FalkorDB extra: `pip install "graphifyy[falkordb]" && graphify install`. For Codex, register with `graphify install --platform codex`. The `[falkordb]` extra pulls in the `falkordb` SDK, which the exporter needs for `--falkordb-push`.
+  </Accordion>
+  <Accordion title="Which AI coding assistants does Graphify work with?">
+    The examples on this page cover **Claude Code** and **Codex**. Other assistants are supported too — see the [Graphify README](https://github.com/Graphify-Labs/graphify/blob/main/README.md) for the current list and the matching install command.
+  </Accordion>
+  <Accordion title="How do I load a Graphify knowledge graph into FalkorDB?">
+    Start FalkorDB with `docker run -p 6379:6379 falkordb/falkordb:latest`, then run the skill with the push option, for example `/graphify ./my-project --falkordb-push falkordb://localhost:6379`. The target graph is named `graphify` by default.
+  </Accordion>
+  <Accordion title="Should I use --falkordb-push or --falkordb?">
+    Use `--falkordb-push` in most cases: it writes straight into FalkorDB, which is faster because FalkorDB executes one Cypher statement at a time. Use `--falkordb` when you need a portable artifact instead — Graphify writes the statements to `graphify-out/cypher.txt`.
+  </Accordion>
+  <Accordion title="Does pushing Graphify to FalkorDB twice create duplicate nodes?">
+    No. Graphify uses `MERGE`, so re-pushing unchanged entities does not duplicate them. However, it does **not** remove entities that disappeared from the source — clear or replace the target graph before pushing when deletions must be reflected.
+  </Accordion>
+  <Accordion title="How do I query a graph that Graphify created?">
+    Use ordinary [Cypher](/cypher). For example, `MATCH (n)-[r]->(m) RETURN type(r), count(r) ORDER BY count(r) DESC` summarizes the relationship types Graphify extracted from your corpus.
+  </Accordion>
+</AccordionGroup>
