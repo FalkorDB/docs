@@ -764,7 +764,6 @@ signinUrl
 signout
 signum
 signup
-sidebarTitle
 similarityFunction
 SLAs
 SLOWLOG

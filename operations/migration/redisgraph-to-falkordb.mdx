@@ -28,8 +28,8 @@ keywords:
 * **Same team, same lineage.** FalkorDB continues the RedisGraph codebase and its linear-algebra query engine, led by the people who created it.
 * **Same command API.** `GRAPH.QUERY`, `GRAPH.RO_QUERY`, `GRAPH.EXPLAIN`, `GRAPH.PROFILE`, `GRAPH.DELETE`, and `GRAPH.LIST` behave as they did in RedisGraph. See the [command reference](/commands), and check [Cypher support](/cypher/cypher-support) and [known limitations](/cypher/known-limitations) for the clauses you rely on.
 * **Zero-conversion data migration.** FalkorDB loads RedisGraph RDB snapshots directly. There is no export/import pipeline, no CSV round-trip, and no ETL job.
-* **Little to no application rewrite.** Code that issues `GRAPH.QUERY` and `GRAPH.RO_QUERY` over the Redis protocol generally works as-is. The community clients originally built for RedisGraph are not officially tested or supported, so plan to move to the [official FalkorDB clients](/getting-started/clients) for Python, JavaScript, Java, Go, Rust, and C#.
-* **Actively developed.** Ongoing releases add capabilities RedisGraph never shipped, including [vector indexes](/cypher/indexing/vector-index), [graph algorithms](/algorithms), [UDFs](/udfs), and [GraphRAG tooling](/genai-tools/graphrag-sdk).
+* **Little to no application rewrite.** Code that issues `GRAPH.QUERY` and `GRAPH.RO_QUERY` over the Redis protocol generally works as-is. The community clients originally built for RedisGraph are not officially tested or supported, so plan to move to the [official FalkorDB clients](/getting-started/clients) for Python, JavaScript, Java, Go, Rust, PHP, and C#.
+* **Actively developed.** Ongoing releases add capabilities RedisGraph never shipped, including [vector indexes](/cypher/indexing/vector-index), [centrality, community and flow algorithms](/algorithms), [UDFs](/udfs), and [GraphRAG tooling](/genai-tools/graphrag-sdk).
 
 ### RedisGraph vs. FalkorDB
 
