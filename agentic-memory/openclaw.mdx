@@ -4,9 +4,11 @@ sidebarTitle: "OpenClaw"
 description: "Give your OpenClaw AI assistant long-term, graph-structured memory with FalkorDB, using either the Mem0 memory plugin or the Cognee integration, with per-user and per-agent graph isolation."
 ---
 
-[OpenClaw](https://github.com/openclaw/openclaw) is a personal AI assistant runtime that talks to you over channels like WhatsApp, Telegram, Slack, and the CLI. By default its memory is short-lived: end the session and everything you said is gone, so the next conversation starts from zero.
+[OpenClaw](https://github.com/openclaw/openclaw) is a personal AI assistant runtime that talks to you over channels like WhatsApp, Telegram, Slack, and the CLI. Its built-in `memory-core` backend already keeps state on your own hardware, as `MEMORY.md` and `memory/*.md` files on disk, so memory does survive a restart.
 
-FalkorDB replaces that scratchpad with a persistent knowledge graph. Facts, preferences, and the relationships between them are stored as nodes and edges, so your assistant can recall not just *what* you said but *how it all connects*. For background on why a graph beats flat files and plain vector search for agent memory, see [Curing AI Amnesia](https://www.falkordb.com/blog/curing-ai-amnesia/).
+What those files cannot capture is **relationships**. Flat text has no edges, so the agent re-reads whole files each turn, which is slow and token-hungry, and any question that needs a join stays out of reach. Plain vector search has the same blind spot: it returns similar snippets, never the connection between them.
+
+Pointing OpenClaw's memory slot at a FalkorDB-backed plugin stores facts, preferences, and the links between them as nodes and edges, so your assistant can recall not just *what* you said but *how it all connects*. For background, see [Curing AI Amnesia](https://www.falkordb.com/blog/curing-ai-amnesia/).
 
 ## Why OpenClaw + FalkorDB?
 
@@ -62,7 +64,7 @@ Both options need a FalkorDB instance. Choose one.
 ### Option 1: Docker
 
 ```bash
-docker run -d --name falkordb -p 6379:6379 -p 3000:3000 falkordb/falkordb:latest
+docker run -d --name falkordb -p 127.0.0.1:6379:6379 -p 127.0.0.1:3000:3000 falkordb/falkordb:latest
 ```
 
 Port `6379` serves the database and port `3000` serves the built-in [FalkorDB Browser](/browser). Verify it is up:
@@ -71,6 +73,10 @@ Port `6379` serves the database and port `3000` serves the built-in [FalkorDB Br
 redis-cli -h localhost -p 6379 ping
 # PONG
 ```
+
+<Warning>
+FalkorDB runs without authentication by default, so the ports above are bound to `127.0.0.1` to keep the database off the network. If you need to reach it from another host, do not simply drop the prefix: enable authentication and restrict access with a firewall first. See [Configuration](/getting-started/configuration) for the available options.
+</Warning>
 
 ### Option 2: FalkorDB Cloud
 
@@ -370,6 +376,34 @@ volumes:
 Keep the version pins. The adapter is pinned to `0.3.0` against base image `cognee/cognee:1.1.0`. If the adapter install fails, check PyPI for a version compatible with your Cognee base tag and bump both together, rather than dropping the pin.
 </Warning>
 
+### Using FalkorDB Cloud Instead
+
+The `Dockerfile` above bakes in the local Compose service name `falkordb` and no credentials, which is all a local stack needs. To target a FalkorDB Cloud instance, override the connection settings on the `cognee` service and drop the `falkordb` service entirely. Cognee reads these as environment variables, and the adapter passes the username and password through to the FalkorDB driver:
+
+```yaml
+  cognee:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: cognee-falkor:1.1.0
+    container_name: cognee
+    ports:
+      - "127.0.0.1:8000:8000"
+    environment:
+      - LLM_API_KEY=${LLM_API_KEY}
+      - AUTO_FEEDBACK=true
+      - GRAPH_DATABASE_URL=your-instance.falkordb.cloud
+      - GRAPH_DATABASE_PORT=6379
+      - GRAPH_DATABASE_USERNAME=default
+      - GRAPH_DATABASE_PASSWORD=${FALKORDB_PASSWORD}
+      - VECTOR_DB_URL=your-instance.falkordb.cloud
+      - VECTOR_DB_PORT=6379
+      - VECTOR_DB_USERNAME=default
+      - VECTOR_DB_PASSWORD=${FALKORDB_PASSWORD}
+```
+
+Remove the `depends_on` block along with the `falkordb` service, since there is no local database to wait for, and set `FALKORDB_PASSWORD` in your `.env` file next to `LLM_API_KEY`. Both the graph and vector settings must point at the same instance, because this adapter uses FalkorDB for both.
+
 ### Build and Run
 
 ```bash
@@ -521,7 +555,7 @@ rm -f ~/.openclaw/memory/cognee/*.json
     The stock `cognee/cognee` image does not include the FalkorDB adapter, and no environment variable enables it. The `falkor` provider is only resolvable after `cognee_community_hybrid_adapter_falkor.register` is imported. The custom image installs the adapter and adds a `sitecustomize.py` that Python imports at startup, so registration happens before any database engine is created.
   </Accordion>
   <Accordion title="Can I use FalkorDB Cloud instead of running FalkorDB locally?">
-    Yes. Create an instance at [app.falkordb.cloud](https://app.falkordb.cloud) and use its host, port, username, and password in place of `localhost`. For the Mem0 plugin, put those values in the `graphStore` config. For the Cognee integration, point `GRAPH_DATABASE_URL` and `VECTOR_DB_URL` at your cloud host and supply the credentials.
+    Yes. Create an instance at [app.falkordb.cloud](https://app.falkordb.cloud) and use its host, port, username, and password in place of `localhost`. For the Mem0 plugin, put those values in the `graphStore` config. For the Cognee integration, the `Dockerfile` defaults target the local Compose service, so override the graph and vector connection settings on the `cognee` service as shown in [Using FalkorDB Cloud Instead](#using-falkordb-cloud-instead) and drop the local `falkordb` service.
   </Accordion>
   <Accordion title="How do I see what my assistant has remembered?">
     Open the [FalkorDB Browser](/browser), select the memory graph, and run `MATCH (a)-[r]->(b) RETURN a, r, b` to visualize stored entities and relationships. From the terminal, `GRAPH.LIST` shows every graph and `GRAPH.QUERY` runs Cypher against one. With the Mem0 plugin you can also run `openclaw mem0 search` and `openclaw mem0 stats`.
