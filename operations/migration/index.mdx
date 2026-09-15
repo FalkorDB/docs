@@ -27,7 +27,7 @@ The Migration section provides comprehensive guides for migrating your data to F
     Use the RedisGraph guide if you are replacing an end-of-life RedisGraph deployment — it is an RDB file restore with no data conversion. Use the Neo4j guide for CSV-based export/import, Kuzu guide for automated schema discovery, RDF guide for TTL files, and SQL guide for online sync from relational databases.
   </Accordion>
   <Accordion title="Will my queries work the same after migration?">
-    FalkorDB uses Cypher query language. Queries written for RedisGraph run unchanged in the vast majority of cases, since FalkorDB is the RedisGraph successor and keeps the same command API. Queries from Neo4j should work with minimal changes. For SQL and RDF sources, you will need to write new Cypher queries suited to the graph model.
+    FalkorDB uses Cypher query language. Queries written for RedisGraph run unchanged in the vast majority of cases, since FalkorDB is the RedisGraph successor and keeps the same command API. Review [Cypher support](/cypher/cypher-support) and [known limitations](/cypher/known-limitations) for clauses that may need changes. Queries from Neo4j should work with minimal changes. For SQL and RDF sources, you will need to write new Cypher queries suited to the graph model.
   </Accordion>
   <Accordion title="Can I migrate incrementally without downtime?">
     Yes, for SQL sources. The DM-SQL-to-FalkorDB loaders support daemon mode for continuous incremental sync. For other sources (Neo4j, Kuzu, RDF), migration is typically a one-time batch operation.
