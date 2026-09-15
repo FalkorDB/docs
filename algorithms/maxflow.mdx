@@ -170,3 +170,29 @@ CALL algo.maxFlow({
 YIELD maxFlow
 RETURN maxFlow
 ```
+
+## Frequently Asked Questions
+
+<AccordionGroup>
+  <Accordion title="What is the max flow algorithm used for?">
+    Max Flow computes the greatest amount of flow that can be pushed from source nodes to sink nodes through a capacity-constrained network. It is commonly used for network throughput and bandwidth planning, traffic routing and congestion analysis, supply chain and distribution planning, and bipartite matching or scheduling problems.
+  </Accordion>
+  <Accordion title="How do I run max flow in FalkorDB?">
+    Match your source and target nodes, then call `algo.maxFlow` with a configuration map: `CALL algo.maxFlow(...) YIELD nodes, edges, edgeFlows, maxFlow`. Unlike most FalkorDB algorithms, the configuration map is **required** — `sourceNodes`, `targetNodes`, and `relationshipTypes` must all be supplied.
+  </Accordion>
+  <Accordion title="Can algo.maxFlow handle multiple sources and sinks?">
+    Yes. Both `sourceNodes` and `targetNodes` accept arrays. FalkorDB adds a virtual super-source connected to every source and a virtual super-sink fed by every sink, each with infinite capacity, so multi-source and multi-sink problems work without changing your graph.
+  </Accordion>
+  <Accordion title="Which edge property is used as the capacity?">
+    The property named by `capacityProperty`, which defaults to `'capacity'`. If your edges store capacity under a different name — such as `cap` or `bandwidth` — set `capacityProperty` to that name.
+  </Accordion>
+  <Accordion title="What do the nodes and edges fields returned by algo.maxFlow contain?">
+    They contain only the entities that carry **positive flow** in the solution, not the whole subgraph. `edgeFlows` holds the numeric flow for each edge in `edges`, in the same order, so you can zip them together with `UNWIND range(0, size(edges) - 1)`.
+  </Accordion>
+  <Accordion title="How do I limit max flow to part of my graph?">
+    Use `relationshipTypes` to choose which edges form the flow network, and `nodeLabels` to restrict which nodes participate. Only the induced subgraph is considered, which also keeps the computation faster.
+  </Accordion>
+  <Accordion title="How does max flow perform on large graphs?">
+    The algorithm is **O(V · E²)** in the worst case, where `V` and `E` are the nodes and edges of the selected subgraph. Sparse graphs typically run much faster in practice. Narrowing the subgraph with `nodeLabels` and `relationshipTypes` is the most effective way to speed it up.
+  </Accordion>
+</AccordionGroup>

@@ -388,6 +388,7 @@ htmlcontent
 http
 https
 hydre
+HyperLogLog
 IDE
 IDentifier
 IDF
