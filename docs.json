@@ -332,7 +332,8 @@
                   "agentic-memory/graphiti",
                   "agentic-memory/cognee",
                   "agentic-memory/graphiti-mcp-server",
-                  "agentic-memory/mem0"
+                  "agentic-memory/mem0",
+                  "agentic-memory/openclaw"
                 ],
                 "root": "agentic-memory/index"
               }
