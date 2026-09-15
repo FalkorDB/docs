@@ -579,7 +579,7 @@ Full reference: [LOAD CSV](/cypher/load-csv).
 Never concatenate user input into a query. Pass parameters instead:
 
 ```bash
-GRAPH.QUERY social "CYPHER name='Alice' MATCH (n:Person {name: $name}) RETURN n"
+GRAPH.QUERY social 'CYPHER name="Alice" MATCH (n:Person {name: $name}) RETURN n'
 ```
 
 Every client library exposes a language-native way to pass parameters.
