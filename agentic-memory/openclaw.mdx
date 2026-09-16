@@ -672,11 +672,23 @@ rm -f ~/.openclaw/memory/cognee/*.json
 
 The plugin describes deletion as removing a document's raw data along with the graph knowledge derived from it, so this should leave nothing behind. Confirm it rather than assume it, and drop anything that survives:
 
-```bash
+<CodeGroup>
+
+```bash Local Compose
 docker exec falkordb redis-cli GRAPH.LIST
 docker exec falkordb redis-cli GRAPH.QUERY <graph> "MATCH (n) RETURN count(n)"
 docker exec falkordb redis-cli GRAPH.DELETE <graph>
 ```
+
+```bash FalkorDB Cloud
+redis-cli -h <host> -p <port> --user <username> --askpass GRAPH.LIST
+redis-cli -h <host> -p <port> --user <username> --askpass GRAPH.QUERY <graph> "MATCH (n) RETURN count(n)"
+redis-cli -h <host> -p <port> --user <username> --askpass GRAPH.DELETE <graph>
+```
+
+</CodeGroup>
+
+Add `--tls` to the Cloud commands if the instance has TLS enabled. The graph is `cognee_graph` unless you set `GRAPH_DATABASE_NAME`, so expect one graph rather than one per agent.
 
 ## Troubleshooting
 
