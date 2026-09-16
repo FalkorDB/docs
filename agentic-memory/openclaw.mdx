@@ -495,7 +495,7 @@ As with the Mem0 plugin, this targets an instance that does not require TLS. Ada
 ### Build and Run
 
 <Note>
-This applies to the local Compose stack only. It starts its own FalkorDB service, named `falkordb` on port `6379`, which clashes with a standalone container from [Running FalkorDB](#running-falkordb) on both the container name and the port. Stop and remove that container first with `docker stop falkordb && docker rm falkordb`. Its data is safe: the `falkordb_data` volume outlives the container. Compose does create its own project-scoped volume rather than reusing that one, so the stack starts from an empty graph while the earlier memories stay in the standalone volume. If you followed [Using FalkorDB Cloud Instead](#using-falkordb-cloud-instead), there is no local database service and nothing to remove.
+This applies to the local Compose stack only. It starts its own FalkorDB service, named `falkordb` on port `6379`, which clashes with a standalone container from [Running FalkorDB](#running-falkordb) on both the container name and the port. Remove that container first with `docker rm -f falkordb`, which succeeds whether it is running, already stopped, or was never created. Its data is safe: the `falkordb_data` volume outlives the container. Compose does create its own project-scoped volume rather than reusing that one, so the stack starts from an empty graph while the earlier memories stay in the standalone volume. If you followed [Using FalkorDB Cloud Instead](#using-falkordb-cloud-instead), there is no local database service and nothing to remove.
 </Note>
 
 ```bash
@@ -538,7 +538,9 @@ redis-cli -h <host> -p <port> --user <username> --askpass PING
 </CodeGroup>
 
 <Warning>
-Do not continue unless **all four** checks pass: `graph falkor: True`, `vector falkor: True`, both handlers present, and `PONG`. Graph support can register while vector support does not, and that combination breaks hybrid memory later with no error at setup time, so treating `graph falkor: True` alone as success is what makes this failure hard to diagnose. If any check fails, confirm `/app/sitecustomize.py` exists in the container and that the adapter install succeeded in the build logs, then rebuild.
+Do not continue unless **all four** checks pass: `graph falkor: True`, `vector falkor: True`, both handlers present, and `PONG`. Graph support can register while vector support does not, and that combination breaks hybrid memory later with no error at setup time, so treating `graph falkor: True` alone as success is what makes this failure hard to diagnose.
+
+The two kinds of failure have different fixes. A registration failure — a `False`, or a missing handler — is a build problem: confirm `/app/sitecustomize.py` exists in the container and that the adapter install succeeded in the build logs, then rebuild. A failed `PING` is a connectivity problem, and rebuilding will not change it: on the local stack check that the `falkordb` service is up, and on Cloud check the host, port, username, password, and whether the instance requires TLS, which this adapter cannot do.
 </Warning>
 
 ### Point OpenClaw at Cognee
@@ -745,7 +747,7 @@ Add `--tls` to the Cloud commands if the instance has TLS enabled. Each graph is
 
 <AccordionGroup>
   <Accordion title="Should I use the Mem0 plugin or the Cognee integration with OpenClaw?">
-    Use the **Mem0 plugin** for the fastest path: install `@falkordb/openclaw-mem0`, edit one config block, and you have persistent graph memory. Use the **Cognee integration** when you want FalkorDB to serve both vectors and the graph, or need Cognee's processing pipeline. Neither gives you a per-speaker boundary out of the box: Mem0 tags nodes with a static configured `user_id`, so separating people means a gateway each, while Cognee routes per agent — see [Per-Agent Graphs](#per-agent-graphs).
+    Use the **Mem0 plugin** for the fastest path: install `@falkordb/openclaw-mem0`, edit one config block, and you have persistent graph memory. Use the **Cognee integration** when you want FalkorDB to serve both vectors and the graph, or need Cognee's processing pipeline. Neither gives you a per-speaker boundary out of the box: Mem0 tags nodes with a static configured `user_id`, so separating people means a gateway each, while Cognee routes per agent but can still fall back to a shared agent-scope index on the release documented here, letting one agent read a dataset belonging to a different agent — see [Per-Agent Graphs](#per-agent-graphs).
   </Accordion>
   <Accordion title="How does OpenClaw memory stay isolated between users or agents?">
     The two paths draw the boundary in different places. The Mem0 plugin keeps every memory in one graph, named by `graphStore.config.graphName` and defaulting to `mem0`, and tags each node with a `user_id` property that queries filter on. That `userId` is static gateway configuration, so a shared gateway means a shared memory space and separating people means running a gateway each. The Cognee integration separates per agent instead: each agent gets its own Cognee dataset, and because the recipe here runs with backend access control and the per-dataset handler, each dataset gets its own FalkorDB graph named after the dataset's UUID. See [Per-Agent Graphs](#per-agent-graphs) for the caveats before relying on it. Option A's platform mode is different again: memory lives in Mem0 Cloud, so isolation is whatever Mem0 provides for your account rather than a FalkorDB graph boundary.
