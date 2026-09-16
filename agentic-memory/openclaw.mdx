@@ -18,7 +18,7 @@ Pointing OpenClaw's memory slot at a FalkorDB-backed plugin stores facts, prefer
 - **Native multi-graph support**: Give every user or agent its own isolated graph instead of filtering a shared table
 - **Hybrid retrieval**: Combine vector similarity with graph traversal to pull in connected context
 - **Fast traversals**: Keep memory injection inside the latency budget of a chat turn
-- **Easy cleanup**: Forgetting a user or an agent is a graph drop, not a cascade of deletes
+- **Easy cleanup**: Where memory maps to a graph per tenant, as Option A does per user, forgetting someone is a graph drop rather than a cascade of deletes. Option B routes deletion through Cognee's own API instead, so it can clear derived knowledge alongside the raw data
 - **Cloud and on-premises ready**: Run locally in Docker or on FalkorDB Cloud
 - **Visual inspection**: Browse what your assistant actually remembers in the FalkorDB Browser
 
@@ -39,7 +39,7 @@ There are two supported ways to back OpenClaw memory with FalkorDB. Both are pro
 | **Memory engine** | [Mem0](https://docs.mem0.ai) | [Cognee](https://www.cognee.ai) |
 | **FalkorDB's role** | Graph store | Graph **and** vector store |
 | **Vector store** | Separate, in-memory by default | FalkorDB, via the hybrid adapter |
-| **Isolation model** | Per user, graph `mem0_alice` | Shared across agents on the current release |
+| **Isolation model** | Per user, graph `mem0_<userId>` | Shared across agents on the current release |
 | **What you run** | A Node plugin, plus FalkorDB | A Cognee service and FalkorDB, via Docker Compose |
 | **Setup effort** | Install a plugin, edit one config file | Build a custom image, then configure |
 | **Capture model** | Auto-recall and auto-capture per turn, plus five agent tools | Session cache flushed to Cognee, then processed into the graph |
@@ -194,7 +194,7 @@ Edit `~/.openclaw/openclaw.json` and merge the block below into your existing co
 }
 ```
 
-Change `userId` to your own identifier. Memories are written to the graph `mem0_alice`, following the pattern `graphName` underscore `userId`.
+Graph names follow the pattern `graphName` underscore `userId`, so the `mem0` and `alice` above produce the graph `mem0_alice`. The examples that follow use that name. If you change `userId`, substitute `mem0_<your-userId>` in every one of them.
 
 <Warning>
 The `memory` vector store above keeps embeddings in the gateway process, so they are **lost on every restart** and semantic recall has to re-embed from scratch. Your entities and relationships are safe either way, because those live in FalkorDB, but for anything beyond a trial set `oss.vectorStore.provider` to a persistent backend such as `qdrant` or `chroma` and give it `host`, `port`, and `collectionName` in `oss.vectorStore.config`.
@@ -304,13 +304,13 @@ Auto-recall searches both scopes and presents long-term memories first.
 This applies to open-source mode, where the graph lives in your FalkorDB instance. In [Platform Mode](#platform-mode) there is no `mem0_alice` graph to open, because memory is stored in Mem0 Cloud — browse it from the [Mem0 dashboard](https://app.mem0.ai) instead.
 </Note>
 
-For a local container, open the [FalkorDB Browser](/browser) at [http://localhost:3000](http://localhost:3000); for FalkorDB Cloud, use the Browser in [app.falkordb.cloud](https://app.falkordb.cloud). Select the graph `mem0_alice`, and run:
+For a local container, open the [FalkorDB Browser](/browser) at [http://localhost:3000](http://localhost:3000); for FalkorDB Cloud, use the Browser in [app.falkordb.cloud](https://app.falkordb.cloud). Select the graph `mem0_alice`, substituting your own `userId` if you changed it, and run:
 
 ```cypher
 MATCH (a)-[r]->(b) RETURN a, r, b
 ```
 
-You should see extracted entities such as people, technologies, and hobbies, joined by the relationships between them. The same check from the terminal:
+You should see extracted entities such as people, technologies, and hobbies, joined by the relationships between them. The same check from the terminal, again with `mem0_alice` standing in for your own graph name — `GRAPH.LIST` prints the real one:
 
 <CodeGroup>
 
@@ -335,6 +335,10 @@ GRAPH.QUERY mem0_alice "MATCH (a)-[r]->(b) RETURN a.name, type(r), b.name"
 ## Option B: Cognee Integration
 
 The community [`cognee-falkor-setup` skill](https://github.com/topoteretes/cognee-integrations/blob/main/integrations/openclaw/skills/falkor/SKILL.md) runs [Cognee](/agentic-memory/cognee) as a service with FalkorDB as **both** its graph and vector store, then points OpenClaw's backend-agnostic `cognee-openclaw` plugin at it.
+
+<Warning>
+Follow the recipe on this page rather than that skill where the two disagree. As written, the skill mounts its `falkordb_data` volume at `/data`, but FalkorDB persists to `/var/lib/falkordb/data`, so the volume stays empty and the graph is lost whenever the container is recreated. The skill also states that setting `agentDatasetPrefix` with more than one agent auto-enables per-agent memory; the shipped plugin never enables it automatically. See [Per-Agent Graphs](#per-agent-graphs).
+</Warning>
 
 ### Why a Custom Image Is Required
 
@@ -562,7 +566,7 @@ By default every agent reads and writes the same dataset, `agent_sessions`, and 
 Treat multi-agent memory as **shared** on this version, and do not rely on it to keep one agent's memories away from another. The plugin's release notes record the same defect for `improveOnSessionEnd`, which was fixed by adding the key to the manifest, so expect this to be resolved the same way — check a newer release before assuming isolation is unavailable.
 </Warning>
 
-Once the manifest exposes the flag, setting it alongside `agentDatasetPrefix` routes each agent's files and chat to a dataset named by that prefix followed by a lowercased agent ID, and each dataset gets its own FalkorDB graph. `agentDatasetTemplate`, for example `"{agentId}"`, gives full control over dataset names. Give every agent its own `workspace` in `agents.list`, and seed a one-line `MEMORY.md` in each so its dataset is created when the gateway starts.
+Once the manifest exposes the flag, setting it alongside `agentDatasetPrefix` routes each agent's files and chat to a dataset named `<prefix>-<lowercased-agent-id>`, such as `openclaw-cognee-agent-support`, and each dataset gets its own FalkorDB graph. `agentDatasetTemplate`, for example `"{agentId}"`, gives full control over dataset names. Give every agent its own `workspace` in `agents.list`, and seed a one-line `MEMORY.md` in each so its dataset is created when the gateway starts.
 
 ### Verify End to End
 
@@ -613,7 +617,7 @@ Adding `-v` deletes the stack's volumes. Run it only when you intend to destroy 
 docker compose down -v
 ```
 
-On the local stack that wipes both the Cognee and FalkorDB volumes, taking the assistant's entire graph with them. On the [Cloud](#using-falkordb-cloud-instead) variant there is no `falkordb_data` volume, so `-v` removes only the Cognee volume and leaves the remote graph untouched — clear that through the API below or from the Cloud console.
+On the local stack that wipes both the Cognee and FalkorDB volumes, taking the assistant's entire graph with them. On the [Cloud](#using-falkordb-cloud-instead) variant there is no `falkordb_data` volume, so `-v` removes only the Cognee volume and leaves the remote graph untouched — clear that with the `openclaw cognee forget` command below, which calls Cognee's deletion API, or from the Cloud console.
 </Warning>
 
 To clear memory without destroying the containers, wipe through the API and then reset the plugin's local state:
@@ -644,7 +648,7 @@ rm -f ~/.openclaw/memory/cognee/*.json
 - **Agents can see each other's memories**: expected on `@cognee/cognee-openclaw@2026.9.2`. All agents share the `agent_sessions` dataset and its graph, and the `perAgentMemory` flag that would separate them is missing from the plugin manifest, so adding it makes OpenClaw reject the entry instead. See [Per-Agent Graphs](#per-agent-graphs).
 - **Plugin entry rejected on startup**: the manifest sets `additionalProperties: false`, so any config key it does not declare fails validation. Remove unrecognized keys and check them against `openclaw.plugin.json` in the installed package.
 - **Plugin not found**: the package is installed as `@cognee/cognee-openclaw` but keyed as `cognee-openclaw` in `plugins.entries` and `plugins.slots.memory`. Confirm it appears in `openclaw plugins list`.
-- **`GRAPH_DATABASE_URL` must resolve to the FalkorDB host**: under the Compose file above that is the service name `falkordb`, not `localhost`.
+- **`GRAPH_DATABASE_URL` must resolve to the FalkorDB host**: on the local stack that is the Compose service name `falkordb`, not `localhost`. On the [Cloud](#using-falkordb-cloud-instead) variant it is your instance hostname, so leave it pointing at the remote host.
 - **Stale plugin state**: if datasets look empty or chat lands in the wrong graph after recreating the server, remove `~/.openclaw/memory/cognee/*.json` and restart the gateway so it rebuilds against the fresh server.
 - **Keep credentials stable**: dataset ownership is per user, so changing the plugin's `apiKey` or `username` orphans existing datasets.
 - **Version drift**: bump the base image tag and the adapter pin together when moving Cognee versions.
