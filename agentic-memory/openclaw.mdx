@@ -441,7 +441,7 @@ volumes:
   cognee_data:
 ```
 
-The Browser is published on host port **3001** here, not 3000, so this stack can run alongside the standalone container from [Option 1](#option-1-docker). Open it at [http://localhost:3001](http://localhost:3001). Cognee's API is on `8000`.
+The Browser is published on host port **3001** here, not 3000, so it does not collide with the standalone container's UI. Open it at [http://localhost:3001](http://localhost:3001). Cognee's API is on `8000`. Only the Browser port differs: this stack still uses `container_name: falkordb` and host port `6379`, so it cannot run at the same time as the standalone container from [Option 1](#option-1-docker). [Build and Run](#build-and-run) covers removing that container first.
 
 <Warning>
 Keep the version pins. The adapter is pinned to `0.3.0` against base image `cognee/cognee:1.1.0`. If the adapter install fails, check PyPI for a version compatible with your Cognee base tag and bump both together, rather than dropping the pin.
@@ -668,6 +668,14 @@ To clear memory without destroying the containers, wipe through the API and then
 ```bash
 openclaw cognee forget --everything --confirm
 rm -f ~/.openclaw/memory/cognee/*.json
+```
+
+The plugin describes deletion as removing a document's raw data along with the graph knowledge derived from it, so this should leave nothing behind. Confirm it rather than assume it, and drop anything that survives:
+
+```bash
+docker exec falkordb redis-cli GRAPH.LIST
+docker exec falkordb redis-cli GRAPH.QUERY <graph> "MATCH (n) RETURN count(n)"
+docker exec falkordb redis-cli GRAPH.DELETE <graph>
 ```
 
 ## Troubleshooting
