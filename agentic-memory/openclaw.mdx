@@ -31,7 +31,7 @@ Pointing OpenClaw's memory slot at a FalkorDB-backed plugin stores facts, prefer
 
 ## Choosing an Integration Path
 
-There are two supported ways to back OpenClaw memory with FalkorDB. Both are production-usable and both store relationships in FalkorDB; they differ in the memory engine, the isolation model, and how much infrastructure you run.
+There are two supported ways to back OpenClaw memory with FalkorDB. Both are production-usable and, in the self-hosted configurations documented here, both store relationships in FalkorDB; they differ in the memory engine, the isolation model, and how much infrastructure you run. Option A also offers a [Platform Mode](#platform-mode) variant that keeps the graph in Mem0 Cloud rather than FalkorDB.
 
 | | Option A: Mem0 plugin | Option B: Cognee integration |
 |---|---|---|
@@ -39,7 +39,7 @@ There are two supported ways to back OpenClaw memory with FalkorDB. Both are pro
 | **Memory engine** | [Mem0](https://docs.mem0.ai) | [Cognee](https://www.cognee.ai) |
 | **FalkorDB's role** | Graph store | Graph **and** vector store |
 | **Vector store** | Separate, in-memory by default | FalkorDB, via the hybrid adapter |
-| **Isolation model** | Per user, graph `mem0_alice` | Per agent, one graph per Cognee dataset |
+| **Isolation model** | Per user, graph `mem0_alice` | Shared by default; opt-in per-agent graph per Cognee dataset |
 | **What you run** | A Node plugin, plus FalkorDB | A Cognee service and FalkorDB, via Docker Compose |
 | **Setup effort** | Install a plugin, edit one config file | Build a custom image, then configure |
 | **Capture model** | Auto-recall and auto-capture per turn, plus five agent tools | Session cache flushed to Cognee, then processed into the graph |
@@ -59,7 +59,7 @@ Start with **Option A** if you are adding memory to OpenClaw for the first time.
 
 ## Running FalkorDB
 
-Both options need a FalkorDB instance. Choose one.
+Both options need a FalkorDB instance, with one exception: Option A's [Platform Mode](#platform-mode) stores the graph in Mem0 Cloud, so skip this section if that is the variant you intend to use. Otherwise choose one.
 
 ### Option 1: Docker
 
@@ -526,6 +526,7 @@ The plugin is backend-agnostic, so it only needs the API URL. Configure it in `~
         },
         "config": {
           "baseUrl": "http://localhost:8000",
+          "perAgentMemory": true,
           "agentDatasetPrefix": "openclaw-cognee-agent",
           "recallScopes": ["agent"],
           "defaultWriteScope": "agent"
@@ -544,7 +545,15 @@ Note that the plugin entry is keyed by its short name, `cognee-openclaw`, even t
 
 ### Per-Agent Graphs
 
-When the gateway hosts more than one agent, the plugin enables per-agent memory automatically. Each agent's files and chat route to a dataset named `agentDatasetPrefix` followed by a lowercased agent ID, and each dataset gets its own FalkorDB graph. Give every agent its own `workspace` in `agents.list`, and seed a one-line `MEMORY.md` in each so its dataset is created when the gateway starts. Set `perAgentMemory` to `true` or `false` to force the mode.
+Per-agent isolation is **strictly opt-in and never enabled automatically**, no matter how many agents the gateway hosts. By default every agent reads and writes the same dataset, `agent_sessions`, and therefore the same FalkorDB graph. Agents stay distinguishable inside it, because each session registers under its own Cognee session ID, but they do share knowledge.
+
+<Warning>
+Isolation requires **both** `perAgentMemory: true` and one of `agentDatasetPrefix` or `agentDatasetTemplate`. Setting `perAgentMemory` on its own does nothing, and setting only a prefix leaves the default shared dataset in place. If you expect one graph per agent, verify it rather than assuming: with only one of the two set, every agent keeps writing to the shared graph and one agent can recall memories written by another.
+</Warning>
+
+With both set, as in the configuration above, each agent's files and chat route to a dataset named `agentDatasetPrefix` followed by a lowercased agent ID, and each dataset gets its own FalkorDB graph. Use `agentDatasetTemplate`, for example `"{agentId}"`, instead of the prefix when you need full control over dataset names. Give every agent its own `workspace` in `agents.list`, and seed a one-line `MEMORY.md` in each so its dataset is created when the gateway starts.
+
+Shared memory is often what you want, since agents benefit from each other's knowledge. Choose it deliberately rather than by omission.
 
 ### Verify End to End
 
@@ -576,7 +585,7 @@ Chat-derived memory reaches the graph only after the session cache is bridged in
 openclaw cognee improve --dataset <name>
 ```
 
-For a quick isolation check, tell agent A something, end its session, then ask agent B. Agent B should not know it.
+For a quick isolation check, first confirm that both `perAgentMemory` and a dataset prefix are set, then tell agent A something, end its session, and ask agent B. Agent B should not know it. If it does, isolation is not active and the agents are sharing the default dataset.
 
 ### Operations and Cleanup
 
@@ -587,7 +596,7 @@ docker compose down
 docker compose down -v
 ```
 
-`docker compose down` stops the stack but keeps the data; adding `-v` also wipes the Cognee and FalkorDB volumes. To clear memory without destroying the containers, wipe through the API and then reset the plugin's local state:
+`docker compose down` stops the stack but keeps the data; adding `-v` also deletes the stack's volumes. On the local stack that wipes both the Cognee and FalkorDB volumes. On the [Cloud](#using-falkordb-cloud-instead) variant there is no `falkordb_data` volume, so `-v` removes only the Cognee volume and leaves the remote graph untouched — clear that through the API below or from the Cloud console. To clear memory without destroying the containers, wipe through the API and then reset the plugin's local state:
 
 ```bash
 openclaw cognee forget --everything --confirm
@@ -612,6 +621,7 @@ rm -f ~/.openclaw/memory/cognee/*.json
 
 - **Environment variables alone do not work**: the stock image has no FalkorDB adapter, so `GRAPH_DATABASE_PROVIDER=falkor` fails when the engine is created. The registration check above catches this.
 - **Memory is silently never captured**: check that both `allowConversationAccess` and `allowPromptInjection` are `true` in the plugin's `hooks` block. Missing `allowConversationAccess` blocks conversation capture with no error beyond a gateway diagnostics warning.
+- **Agents can see each other's memories**: per-agent isolation is opt-in. Confirm that both `perAgentMemory: true` and `agentDatasetPrefix` (or `agentDatasetTemplate`) are set. With only one of them, every agent shares the default `agent_sessions` dataset and its graph, and nothing warns you.
 - **Plugin not found**: the package is installed as `@cognee/cognee-openclaw` but keyed as `cognee-openclaw` in `plugins.entries` and `plugins.slots.memory`. Confirm it appears in `openclaw plugins list`.
 - **`GRAPH_DATABASE_URL` must resolve to the FalkorDB host**: under the Compose file above that is the service name `falkordb`, not `localhost`.
 - **Stale plugin state**: if datasets look empty or chat lands in the wrong graph after recreating the server, remove `~/.openclaw/memory/cognee/*.json` and restart the gateway so it rebuilds against the fresh server.
@@ -644,7 +654,7 @@ rm -f ~/.openclaw/memory/cognee/*.json
     Use the **Mem0 plugin** for the fastest path: install `@falkordb/openclaw-mem0`, edit one config block, and you have per-user graph memory. Use the **Cognee integration** when you want FalkorDB to serve both vectors and the graph, need Cognee's processing pipeline, or host multiple agents that each require their own isolated memory.
   </Accordion>
   <Accordion title="How does OpenClaw memory stay isolated between users or agents?">
-    Both paths rely on FalkorDB's **native multi-graph support**. The Mem0 plugin writes each user to their own graph, named `graphName` followed by the user ID, such as `mem0_alice`. The Cognee integration gives each agent its own dataset, and each dataset maps to its own FalkorDB graph. No user ID filtering is needed in queries, and forgetting someone is a single graph drop.
+    In the self-hosted configurations, both paths rely on FalkorDB's **native multi-graph support**. The Mem0 plugin writes each user to their own graph, named `graphName` followed by the user ID, such as `mem0_alice`. The Cognee integration can give each agent its own dataset, and each dataset maps to its own FalkorDB graph, but that isolation is opt-in: it requires both `perAgentMemory: true` and an `agentDatasetPrefix` or `agentDatasetTemplate`, otherwise every agent shares one dataset and one graph. Where isolation is active, no user ID filtering is needed in queries, and forgetting someone is a single graph drop. Option A's platform mode is different again: memory lives in Mem0 Cloud, so isolation is whatever Mem0 provides for your account rather than a FalkorDB graph boundary.
   </Accordion>
   <Accordion title="Do I need a Mem0 Cloud account to use OpenClaw with FalkorDB?">
     No. The plugin's open-source mode is fully self-hosted: FalkorDB stores the graph and you supply an LLM provider for embeddings and entity extraction. Platform mode is optional and routes memory through Mem0 Cloud instead.
