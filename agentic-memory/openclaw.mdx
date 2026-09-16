@@ -133,7 +133,7 @@ flowchart LR
 | **FalkorDB** | Stores entity relationships, tagged with a `user_id` property |
 | **OpenAI** | Embeddings for semantic search and an LLM for entity extraction |
 
-On every turn the plugin **recalls** before the agent answers, injecting relevant memories, and **captures** afterwards, extracting new entities and relationships into the graph under the configured `user_id`.
+On every turn the plugin **recalls** before the agent answers, injecting relevant memories, and **captures** afterwards, extracting new entities and relationships into the graph under the session's effective `user_id`. For the main agent that is the `userId` you configure; a named agent gets `<userId>:agent:<agentId>` instead, and sub-agent sessions are skipped entirely so the main agent captures the consolidated result.
 
 ### Install OpenClaw and the Plugin
 
@@ -205,7 +205,9 @@ Edit `~/.openclaw/openclaw.json` and merge the block below into your existing co
 Graph names come from `graphStore.config.graphName` alone, so the `mem0` above is the whole name. `@falkordb/mem0` selects that one graph at startup and separates users with a `user_id` property on every node, rather than giving each user a graph. The `userId` you set is the value written to that property.
 
 <Warning>
-`userId` is static gateway configuration, not a per-speaker identity. Auto-capture derives `<userId>:agent:<agentId>` for agent and sub-agent sessions, but never per end user, so on a shared gateway everyone talking to the assistant writes and reads the same `user_id`. To keep people apart you need a gateway per person, or an agent that passes an explicit `userId` to the `memory_search` and `memory_add` tools on every call.
+`userId` is static gateway configuration, not a per-speaker identity. On a shared gateway everyone talking to the assistant writes and reads the same `user_id`. To keep people apart you need a gateway per person, or an agent that passes an explicit `userId` to the `memory_search` and `memory_store` tools on every call.
+
+The one value the plugin does derive is per agent, not per person: a named agent captures under `<userId>:agent:<agentId>`, while the main agent uses `userId` unchanged and sub-agent sessions are skipped. So `alice` covers the main agent, and a `research` agent writes `alice:agent:research`.
 </Warning>
 
 <Warning>
@@ -326,10 +328,16 @@ This applies to open-source mode, where the graph lives in your FalkorDB instanc
 For a local container, open the [FalkorDB Browser](/browser) at [http://localhost:3000](http://localhost:3000); for FalkorDB Cloud, use the Browser in [app.falkordb.cloud](https://app.falkordb.cloud). Select the graph `mem0`, substituting your own `graphName` if you changed it, and run:
 
 ```cypher
+MATCH (n) RETURN DISTINCT n.user_id
+```
+
+That lists the IDs actually in use, which is worth doing first: a named agent writes `alice:agent:research` rather than `alice`. Then filter on one of them:
+
+```cypher
 MATCH (a)-[r]->(b) WHERE a.user_id = 'alice' RETURN a, r, b
 ```
 
-You should see extracted entities such as people, technologies, and hobbies, joined by the relationships between them. Drop the `WHERE` clause to see every user's memories at once. The same check from the terminal — `GRAPH.LIST` prints the real graph name:
+You should see extracted entities such as people, technologies, and hobbies, joined by the relationships between them. Drop the `WHERE` clause to see every ID's memories at once. The same check from the terminal — `GRAPH.LIST` prints the real graph name:
 
 <CodeGroup>
 
@@ -337,6 +345,7 @@ You should see extracted entities such as people, technologies, and hobbies, joi
 redis-cli -h localhost -p 6379
 
 GRAPH.LIST
+GRAPH.QUERY mem0 "MATCH (n) RETURN DISTINCT n.user_id"
 GRAPH.QUERY mem0 "MATCH (n) WHERE n.user_id = 'alice' RETURN n.name LIMIT 10"
 GRAPH.QUERY mem0 "MATCH (a)-[r]->(b) WHERE a.user_id = 'alice' RETURN a.name, type(r), b.name"
 ```
@@ -345,6 +354,7 @@ GRAPH.QUERY mem0 "MATCH (a)-[r]->(b) WHERE a.user_id = 'alice' RETURN a.name, ty
 redis-cli -h <host> -p <port> --user <username> --askpass
 
 GRAPH.LIST
+GRAPH.QUERY mem0 "MATCH (n) RETURN DISTINCT n.user_id"
 GRAPH.QUERY mem0 "MATCH (n) WHERE n.user_id = 'alice' RETURN n.name LIMIT 10"
 GRAPH.QUERY mem0 "MATCH (a)-[r]->(b) WHERE a.user_id = 'alice' RETURN a.name, type(r), b.name"
 ```
@@ -709,8 +719,8 @@ Add `--tls` to the Cloud commands if the instance has TLS enabled. Each graph is
 
 - **Plugin not loading**: run `openclaw plugins list` and confirm `plugins.slots.memory` is set to `openclaw-mem0`. Without the slot assignment OpenClaw keeps using the default `memory-core`.
 - **Recall returns nothing**: check `openclaw mem0 stats` first. If memories exist, try lowering `searchThreshold` or raising `topK`.
-- **Memories seem to be missing**: they are filtered by the `user_id` property, not stored in separate graphs, so a changed `userId` hides earlier memories rather than deleting them. Query `mem0` without a `WHERE` clause to see everything, and confirm `graphName` and `userId` in your config.
-- **Two people share one memory**: expected on a single gateway. `userId` is static configuration, and auto-capture only derives a distinct ID for agent and sub-agent sessions, never per speaker. Run a gateway per person, or have the agent pass an explicit `userId` to the memory tools.
+- **Memories seem to be missing**: they are filtered by the `user_id` property, not stored in separate graphs, so a changed `userId` hides earlier memories rather than deleting them. Run `MATCH (n) RETURN DISTINCT n.user_id` against `mem0` to see which IDs exist — a named agent writes `<userId>:agent:<agentId>`, so filtering on the bare `userId` misses its memories.
+- **Two people share one memory**: expected on a single gateway. `userId` is static configuration, and the only ID the plugin derives is per named agent, never per speaker. Run a gateway per person, or have the agent pass an explicit `userId` to the memory tools.
 
 ### Option B: Cognee Integration
 
