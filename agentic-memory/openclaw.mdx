@@ -691,6 +691,6 @@ rm -f ~/.openclaw/memory/cognee/*.json
     Yes. Create an instance at [app.falkordb.cloud](https://app.falkordb.cloud) and use its host, port, username, and password in place of `localhost`. For the Mem0 plugin, put those values in the `graphStore` config. For the Cognee integration, the `Dockerfile` defaults target the local Compose service, so override the graph and vector connection settings on the `cognee` service as shown in [Using FalkorDB Cloud Instead](#using-falkordb-cloud-instead) and drop the local `falkordb` service.
   </Accordion>
   <Accordion title="How do I see what my assistant has remembered?">
-    Open the [FalkorDB Browser](/browser), select the memory graph, and run `MATCH (a)-[r]->(b) RETURN a, r, b` to visualize stored entities and relationships. From the terminal, `GRAPH.LIST` shows every graph and `GRAPH.QUERY` runs Cypher against one. With the Mem0 plugin you can also run `openclaw mem0 search` and `openclaw mem0 stats`.
+    Open the [FalkorDB Browser](/browser), select the memory graph, and run `MATCH (a)-[r]->(b) RETURN a, r, b` to visualize stored entities and relationships. From the terminal, `GRAPH.LIST` shows every graph and `GRAPH.QUERY` runs Cypher against one. With the Mem0 plugin you can also run `openclaw mem0 search` and `openclaw mem0 stats`. The exception is [Platform Mode](#platform-mode), where memory lives in Mem0 Cloud rather than a graph of yours — inspect that from the [Mem0 dashboard](https://app.mem0.ai).
   </Accordion>
 </AccordionGroup>
