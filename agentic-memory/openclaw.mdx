@@ -64,10 +64,13 @@ Both options need a FalkorDB instance. Choose one.
 ### Option 1: Docker
 
 ```bash
-docker run -d --name falkordb -p 127.0.0.1:6379:6379 -p 127.0.0.1:3000:3000 falkordb/falkordb:latest
+docker run -d --name falkordb \
+  -p 127.0.0.1:6379:6379 -p 127.0.0.1:3000:3000 \
+  -v falkordb_data:/var/lib/falkordb/data \
+  falkordb/falkordb:latest
 ```
 
-Port `6379` serves the database and port `3000` serves the built-in [FalkorDB Browser](/browser). Verify it is up:
+Port `6379` serves the database and port `3000` serves the built-in [FalkorDB Browser](/browser). The named volume keeps the assistant's memory on disk, so removing or recreating the container does not discard the graph. FalkorDB stores its data in `/var/lib/falkordb/data`, so mounting a volume anywhere else leaves the graph in the container's writable layer, where it disappears with the container. Verify it is up:
 
 ```bash
 redis-cli -h localhost -p 6379 ping
@@ -80,7 +83,16 @@ FalkorDB runs without authentication by default, so the ports above are bound to
 
 ### Option 2: FalkorDB Cloud
 
-Sign up at [app.falkordb.cloud](https://app.falkordb.cloud), create an instance, and note its **host**, **port**, **username**, and **password**. Use those values wherever the examples below show `localhost`.
+Sign up at [app.falkordb.cloud](https://app.falkordb.cloud), create an instance, and note its **host**, **port**, **username**, and **password**. Verify it is reachable:
+
+```bash
+redis-cli -h <host> -p <port> --user <username> --pass <password> PING
+# PONG
+```
+
+<Note>
+Use those values wherever an example below connects to `localhost`. Commands shown as `docker exec falkordb ...` are different: they address a local container that does not exist in a Cloud setup, so each one below is paired with its Cloud equivalent rather than left for you to translate.
+</Note>
 
 ## Option A: Mem0 Plugin
 
@@ -282,13 +294,25 @@ MATCH (a)-[r]->(b) RETURN a, r, b
 
 You should see extracted entities such as people, technologies, and hobbies, joined by the relationships between them. The same check from the terminal:
 
-```bash
+<CodeGroup>
+
+```bash Local container
 redis-cli -h localhost -p 6379
 
 GRAPH.LIST
 GRAPH.QUERY mem0_alice "MATCH (n) RETURN n.name LIMIT 10"
 GRAPH.QUERY mem0_alice "MATCH (a)-[r]->(b) RETURN a.name, type(r), b.name"
 ```
+
+```bash FalkorDB Cloud
+redis-cli -h <host> -p <port> --user <username> --pass <password>
+
+GRAPH.LIST
+GRAPH.QUERY mem0_alice "MATCH (n) RETURN n.name LIMIT 10"
+GRAPH.QUERY mem0_alice "MATCH (a)-[r]->(b) RETURN a.name, type(r), b.name"
+```
+
+</CodeGroup>
 
 ## Option B: Cognee Integration
 
@@ -343,7 +367,7 @@ services:
       - "127.0.0.1:6379:6379"
       - "127.0.0.1:3001:3000"
     volumes:
-      - falkordb_data:/data
+      - falkordb_data:/var/lib/falkordb/data
     restart: unless-stopped
     healthcheck:
       test: [ "CMD", "redis-cli", "ping" ]
@@ -408,14 +432,23 @@ The `Dockerfile` above bakes in the local Compose service name `falkordb` and no
       - VECTOR_DB_PORT=6379
       - VECTOR_DB_USERNAME=default
       - VECTOR_DB_PASSWORD=${FALKORDB_PASSWORD}
+    volumes:
+      - cognee_data:/app/cognee/.cognee_system
+    restart: unless-stopped
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8000/health" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
 ```
 
-Remove the `depends_on` block along with the `falkordb` service, since there is no local database to wait for, and set `FALKORDB_PASSWORD` in your `.env` file next to `LLM_API_KEY`. Both the graph and vector settings must point at the same instance, because this adapter uses FalkorDB for both.
+Remove the `depends_on` block, the `falkordb` service, and the now-unused `falkordb_data` volume, since there is no local database to wait for, and set `FALKORDB_PASSWORD` in your `.env` file next to `LLM_API_KEY`. Keep the `cognee_data` volume, `restart`, and `healthcheck` as shown: only the database moves to Cloud, and dropping the volume would stop persisting Cognee's dataset metadata under `/app/cognee/.cognee_system`, so a `docker compose down` or a rebuild would lose it. Both the graph and vector settings must point at the same instance, because this adapter uses FalkorDB for both.
 
 ### Build and Run
 
 <Note>
-This Compose file starts its own FalkorDB service, named `falkordb` on port `6379`. If you already started a standalone container in [Running FalkorDB](#running-falkordb), stop and remove it first with `docker rm -f falkordb`, otherwise the build fails on a container name and port clash.
+This applies to the local Compose stack only. It starts its own FalkorDB service, named `falkordb` on port `6379`, which clashes with a standalone container from [Running FalkorDB](#running-falkordb) on both the container name and the port. Stop and remove that container first with `docker stop falkordb && docker rm falkordb`. Its data is safe: the `falkordb_data` volume outlives the container. Compose does create its own project-scoped volume rather than reusing that one, so the stack starts from an empty graph while the earlier memories stay in the standalone volume. If you followed [Using FalkorDB Cloud Instead](#using-falkordb-cloud-instead), there is no local database service and nothing to remove.
 </Note>
 
 ```bash
@@ -439,13 +472,27 @@ from cognee.infrastructure.databases.vector.supported_databases import supported
 from cognee.infrastructure.databases.dataset_database_handler.supported_dataset_database_handlers import supported_dataset_database_handlers as h; \
 print('graph falkor:', 'falkor' in g); print('vector falkor:', 'falkor' in v); \
 print('handlers:', [k for k in h if 'falkor' in k])"
-
-docker exec falkordb redis-cli PING
 ```
 
-Expect `graph falkor: True`, `vector falkor: True`, handlers `falkor_graph_local` and `falkor_vector_local`, and `PONG`.
+Expect `graph falkor: True`, `vector falkor: True`, and handlers `falkor_graph_local` and `falkor_vector_local`. Then confirm the database itself answers:
 
-If `graph falkor` is `False`, the adapter did not register. Confirm `/app/sitecustomize.py` exists in the container and that the adapter install succeeded in the build logs, then rebuild. Do not continue until this prints `True`.
+<CodeGroup>
+
+```bash Local Compose
+docker exec falkordb redis-cli PING
+# PONG
+```
+
+```bash FalkorDB Cloud
+redis-cli -h <host> -p <port> --user <username> --pass <password> PING
+# PONG
+```
+
+</CodeGroup>
+
+<Warning>
+Do not continue unless **all four** checks pass: `graph falkor: True`, `vector falkor: True`, both handlers present, and `PONG`. Graph support can register while vector support does not, and that combination breaks hybrid memory later with no error at setup time, so treating `graph falkor: True` alone as success is what makes this failure hard to diagnose. If any check fails, confirm `/app/sitecustomize.py` exists in the container and that the adapter install succeeded in the build logs, then rebuild.
+</Warning>
 
 ### Point OpenClaw at Cognee
 
@@ -497,9 +544,21 @@ Restart the gateway, then confirm datasets and graphs appear as agents become ac
 
 ```bash
 openclaw gateway stop && openclaw gateway start
+```
 
+Then list the graphs:
+
+<CodeGroup>
+
+```bash Local Compose
 docker exec falkordb redis-cli GRAPH.LIST
 ```
+
+```bash FalkorDB Cloud
+redis-cli -h <host> -p <port> --user <username> --pass <password> GRAPH.LIST
+```
+
+</CodeGroup>
 
 You can also list datasets through the Cognee API by authenticating against `/api/v1/auth/login` with your Cognee credentials and calling `/api/v1/datasets`.
 
@@ -531,7 +590,7 @@ rm -f ~/.openclaw/memory/cognee/*.json
 
 ### Both Options
 
-- **Cannot reach FalkorDB**: run `redis-cli -h localhost -p 6379 ping` and confirm it returns `PONG`. Check the host, port, and credentials in your configuration.
+- **Cannot reach FalkorDB**: for a local container run `redis-cli -h localhost -p 6379 ping`; for FalkorDB Cloud run `redis-cli -h <host> -p <port> --user <username> --pass <password> ping`. Either should return `PONG`. Check the host, port, and credentials in your configuration.
 - **Nothing is being remembered**: verify your LLM API key is exported in the environment the gateway runs in. Entity extraction fails silently without it.
 - **Graph stays empty**: list graphs with `GRAPH.LIST` to confirm the expected name. Memory is written under the user or agent identifier, so a changed identifier means a new, empty graph.
 
