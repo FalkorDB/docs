@@ -15,7 +15,7 @@ Pointing OpenClaw's memory slot at a FalkorDB-backed plugin stores facts, prefer
 ### FalkorDB's Added Value
 
 - **Graph-structured recall**: Answer relational questions that vector search alone cannot, such as which people connect two projects
-- **Native multi-graph support**: Isolate a tenant in its own graph instead of filtering a shared table — Option A uses this to give every user their own graph, and Option B to give every agent's dataset one
+- **Native multi-graph support**: Isolate a tenant in its own graph instead of filtering a shared table — Option A uses this to give every user their own graph, and Option B to give every agent's dataset one, subject to the [Per-Agent Graphs](#per-agent-graphs) caveats
 - **Hybrid retrieval**: Combine vector similarity with graph traversal to pull in connected context
 - **Fast traversals**: Keep memory injection inside the latency budget of a chat turn
 - **Easy cleanup**: Where memory maps to a graph per tenant, as Option A does per user, forgetting someone is a graph drop rather than a cascade of deletes. Option B routes deletion through Cognee's own API instead, so it can clear derived knowledge alongside the raw data
@@ -47,7 +47,7 @@ There are two supported ways to back OpenClaw memory with FalkorDB. Both are pro
 | **Pick it when** | You want the fastest path to persistent memory, or per-user memory | You want one store for vectors and graph, or Cognee's processing pipeline |
 
 <Note>
-The table describes the self-hosted deployments. Option A's [Platform Mode](#platform-mode) differs on every infrastructure row: you run only the Node plugin, Mem0 Cloud owns both the graph and the vector store, FalkorDB has no role, and isolation is whatever your Mem0 account provides. Option B's [Cloud variant](#using-falkordb-cloud-instead) keeps the same roles and swaps the local `falkordb` service for a managed instance.
+The table describes the self-hosted deployments. Option A's [Platform Mode](#platform-mode) differs on every infrastructure row: you run only the Node plugin, Mem0 Cloud owns both the graph and the vector store, FalkorDB has no role, and isolation is whatever your Mem0 account provides. Option B's [Cloud variant](#using-falkordb-cloud-instead) keeps the same roles and swaps the local `falkordb` service for a managed instance. The two isolation models are not equally firm, either: Option A's per-user graph is a boundary you can rely on, while Option B's per-agent separation can still leak through a shared index on the current plugin release — [Per-Agent Graphs](#per-agent-graphs) explains when.
 </Note>
 
 <Tip>
