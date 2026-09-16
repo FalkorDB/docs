@@ -15,7 +15,7 @@ Pointing OpenClaw's memory slot at a FalkorDB-backed plugin stores facts, prefer
 ### FalkorDB's Added Value
 
 - **Graph-structured recall**: Answer relational questions that vector search alone cannot, such as which people connect two projects
-- **Native multi-graph support**: Give every user or agent its own isolated graph instead of filtering a shared table
+- **Native multi-graph support**: Isolate a tenant in its own graph instead of filtering a shared table — Option A uses this to give every user their own graph
 - **Hybrid retrieval**: Combine vector similarity with graph traversal to pull in connected context
 - **Fast traversals**: Keep memory injection inside the latency budget of a chat turn
 - **Easy cleanup**: Where memory maps to a graph per tenant, as Option A does per user, forgetting someone is a graph drop rather than a cascade of deletes. Option B routes deletion through Cognee's own API instead, so it can clear derived knowledge alongside the raw data
@@ -25,7 +25,7 @@ Pointing OpenClaw's memory slot at a FalkorDB-backed plugin stores facts, prefer
 ### Use Cases
 
 - **Personal assistants**: Remember preferences, projects, and people across every session and channel
-- **Multi-agent gateways**: Host several agents on one gateway, each with its own private memory graph
+- **Multi-agent gateways**: Host several agents on one gateway over a shared memory graph, so each builds on what the others learned. Per-agent isolation is not reachable on the current Cognee release — see [Per-Agent Graphs](#per-agent-graphs)
 - **Team assistants**: Share an organizational memory while keeping per-user boundaries
 - **Long-running projects**: Accumulate context over weeks without re-explaining it each turn
 
@@ -47,7 +47,7 @@ There are two supported ways to back OpenClaw memory with FalkorDB. Both are pro
 | **Pick it when** | You want the fastest path to persistent memory, or per-user memory | You want one store for vectors and graph, or Cognee's processing pipeline |
 
 <Tip>
-Start with **Option A** if you are adding memory to OpenClaw for the first time. It is a single plugin install and one config block. Move to **Option B** when you want FalkorDB to serve vectors as well as the graph, or when you host multiple agents that each need their own memory.
+Start with **Option A** if you are adding memory to OpenClaw for the first time. It is a single plugin install and one config block, and it is the only path here that isolates memory today, giving each user their own graph. Move to **Option B** when you want FalkorDB to serve vectors as well as the graph, or when you want Cognee's processing pipeline. Neither option separates memory per agent on its current release.
 </Tip>
 
 ## Prerequisites
