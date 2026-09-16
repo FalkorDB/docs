@@ -95,7 +95,11 @@ redis-cli -h <host> -p <port> --user <username> --askpass PING
 ```
 
 <Note>
-Use those values wherever an example below connects to `localhost`. Commands shown as `docker exec falkordb ...` are different: they address a local container that does not exist in a Cloud setup, so each one below is paired with its Cloud equivalent rather than left for you to translate.
+Add `--tls` to that command, and to every other `redis-cli` example on this page, if your instance has TLS enabled. Check the connection details in the Cloud console: an endpoint that expects TLS refuses a connection that does not use TLS, so a `PING` that hangs or resets rather than returning `PONG` is the usual symptom.
+</Note>
+
+<Note>
+Use those values wherever a later example points at **FalkorDB** on `localhost`, such as `localhost:6379` or a `host` field in a plugin config. Leave other local endpoints alone: Option B reaches the Cognee API on `http://localhost:8000`, which stays local even with a Cloud database. Commands shown as `docker exec falkordb ...` are different again: they address a local container that does not exist in a Cloud setup, so each one below is paired with its Cloud equivalent rather than left for you to translate.
 </Note>
 
 <Warning>
@@ -218,6 +222,10 @@ To use FalkorDB Cloud, replace the `graphStore` config with your instance detail
   }
 }
 ```
+
+<Warning>
+This works against an instance that does not require TLS. `@falkordb/mem0@0.2.0` builds its connection string as `redis://` and passes nothing else to the driver, so it exposes no way to request TLS and cannot reach a TLS-only endpoint. Option B has the same limitation, so if your instance requires TLS, use Option 1's local container until the clients gain a TLS option.
+</Warning>
 
 ### Set Your API Key and Restart
 
@@ -476,6 +484,10 @@ The `Dockerfile` above bakes in the local Compose service name `falkordb` and no
 
 Remove the `depends_on` block, the `falkordb` service, and the now-unused `falkordb_data` volume, since there is no local database to wait for, and set `FALKORDB_PASSWORD` in your `.env` file next to `LLM_API_KEY`. Keep the `cognee_data` volume, `restart`, and `healthcheck` as shown: only the database moves to Cloud, and dropping the volume would stop persisting Cognee's dataset metadata under `/app/cognee/.cognee_system`, so a `docker compose down` or a rebuild would lose it. Both the graph and vector settings must point at the same instance, because this adapter uses FalkorDB for both.
 
+<Warning>
+As with the Mem0 plugin, this targets an instance that does not require TLS. Adapter `0.3.0` calls `FalkorDB(host, port, username, password)` with no `ssl` argument and exposes no environment variable for one, so it cannot reach a TLS-only endpoint. Keep the local `falkordb` service if your instance requires TLS.
+</Warning>
+
 ### Build and Run
 
 <Note>
@@ -575,12 +587,13 @@ By default every agent reads and writes the same dataset, `agent_sessions`, and 
 <Warning>
 **Per-agent isolation cannot be enabled on the current plugin release.** Upstream documents it as requiring both `perAgentMemory: true` and an `agentDatasetPrefix` or `agentDatasetTemplate`, and the runtime does check `perAgentMemory`. But the published `openclaw.plugin.json` in `@cognee/cognee-openclaw@2026.9.2` sets `additionalProperties: false` and does not declare `perAgentMemory`, so OpenClaw rejects the plugin entry as soon as you add it. Leaving it out keeps the shared dataset.
 
-Because the install above tracks the latest release, confirm this still holds for the version you actually got rather than trusting the version number here:
+Because the install above tracks the latest release, confirm this still holds for the version you actually received rather than trusting the version number here. Ask OpenClaw what it installed, then let it validate the config:
 
 ```bash
-npm ls -g @cognee/cognee-openclaw
-grep -c '"perAgentMemory"' "$(npm root -g)/@cognee/cognee-openclaw/openclaw.plugin.json"
+openclaw plugins inspect @cognee/cognee-openclaw
 ```
+
+Then add `"perAgentMemory": true` to the entry and restart the gateway. If OpenClaw rejects the plugin entry on startup, the manifest still omits the key and this limitation applies — remove it again. If the gateway starts cleanly, the key has landed and the rest of this section describes what you get. This check is behavioral, so it stays correct across releases.
 
 A count of `0` means the flag is still absent and this section applies. Any non-zero count means the manifest accepts the flag, and the rest of this section describes what you get by setting it.
 
@@ -661,8 +674,8 @@ rm -f ~/.openclaw/memory/cognee/*.json
 
 ### Both Options
 
-- **Cannot reach FalkorDB**: for a local container run `redis-cli -h localhost -p 6379 ping`; for FalkorDB Cloud run `redis-cli -h <host> -p <port> --user <username> --askpass ping`. Either should return `PONG`. Check the host, port, and credentials in your configuration. Does not apply to [Platform Mode](#platform-mode), which uses no FalkorDB instance.
-- **Nothing is being remembered**: check the key in the right place, which differs by option. Option A extracts entities in the gateway process, so `OPENAI_API_KEY` must be exported where the gateway runs. Option B extracts inside the Cognee container, so `LLM_API_KEY` must reach that container through Compose. Platform mode needs `MEM0_API_KEY` in the gateway instead. Extraction fails silently in every case.
+- **Cannot reach FalkorDB**: for a local container run `redis-cli -h localhost -p 6379 ping`; for FalkorDB Cloud run `redis-cli -h <host> -p <port> --user <username> --askpass ping`, adding `--tls` if the instance has TLS enabled. Either should return `PONG`. Check the host, port, and credentials in your configuration. Does not apply to [Platform Mode](#platform-mode), which uses no FalkorDB instance.
+- **`redis-cli` works but the plugin cannot connect to Cloud**: neither integration can negotiate TLS today. `@falkordb/mem0@0.2.0` builds a `redis://` URL with no TLS option, and the Cognee adapter calls `FalkorDB(...)` without an `ssl` argument. If `redis-cli --tls` succeeds where the plugin fails, a TLS-only endpoint is the likely cause; use a local container until the clients gain the option.- **Nothing is being remembered**: check the key in the right place, which differs by option. Option A extracts entities in the gateway process, so `OPENAI_API_KEY` must be exported where the gateway runs. Option B extracts inside the Cognee container, so `LLM_API_KEY` must reach that container through Compose. Platform mode needs `MEM0_API_KEY` in the gateway instead. Extraction fails silently in every case.
 - **Graph stays empty**: on the self-hosted paths, list graphs with `GRAPH.LIST` to confirm the expected name. Under Option A the graph is keyed by `userId`, so a changed identifier means a new, empty graph. Option B is different: every agent shares the `agent_sessions` dataset and its graph, so changing an agent identifier does **not** create a new one. An empty graph there usually means the session cache has not been bridged into Cognee yet, which only happens on `session_end` or when you run `openclaw cognee improve --dataset <name>`, so expect it to stay empty until one of those runs. In [Platform Mode](#platform-mode) there is no local graph to list — check the [Mem0 dashboard](https://app.mem0.ai) instead.
 
 ### Option A: Mem0 Plugin
@@ -718,7 +731,7 @@ rm -f ~/.openclaw/memory/cognee/*.json
     The stock `cognee/cognee` image does not include the FalkorDB adapter, and no environment variable enables it. The `falkor` provider is only resolvable after `cognee_community_hybrid_adapter_falkor.register` is imported. The custom image installs the adapter and adds a `sitecustomize.py` that Python imports at startup, so registration happens before any database engine is created.
   </Accordion>
   <Accordion title="Can I use FalkorDB Cloud instead of running FalkorDB locally?">
-    Yes. Create an instance at [app.falkordb.cloud](https://app.falkordb.cloud) and use its host, port, username, and password in place of `localhost`. For the Mem0 plugin, put those values in the `graphStore` config. For the Cognee integration, the `Dockerfile` defaults target the local Compose service, so override the graph and vector connection settings on the `cognee` service as shown in [Using FalkorDB Cloud Instead](#using-falkordb-cloud-instead) and drop the local `falkordb` service.
+    Yes. Create an instance at [app.falkordb.cloud](https://app.falkordb.cloud) and use its host, port, username, and password in place of `localhost`. For the Mem0 plugin, put those values in the `graphStore` config. For the Cognee integration, the `Dockerfile` defaults target the local Compose service, so override the graph and vector connection settings on the `cognee` service as shown in [Using FalkorDB Cloud Instead](#using-falkordb-cloud-instead) and drop the local `falkordb` service. One limitation applies to both: the current clients offer no TLS option, so a TLS-only instance needs a local container instead.
   </Accordion>
   <Accordion title="How do I see what my assistant has remembered?">
     Open the [FalkorDB Browser](/browser), select the memory graph, and run `MATCH (a)-[r]->(b) RETURN a, r, b` to visualize stored entities and relationships. From the terminal, `GRAPH.LIST` shows every graph and `GRAPH.QUERY` runs Cypher against one. With the Mem0 plugin you can also run `openclaw mem0 search` and `openclaw mem0 stats`. The exception is [Platform Mode](#platform-mode), where memory lives in Mem0 Cloud rather than a graph of yours — inspect that from the [Mem0 dashboard](https://app.mem0.ai).
