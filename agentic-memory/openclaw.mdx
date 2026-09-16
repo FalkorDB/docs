@@ -632,7 +632,16 @@ Adding `-v` deletes the stack's volumes. Run it only when you intend to destroy 
 docker compose down -v
 ```
 
-On the local stack that wipes both the Cognee and FalkorDB volumes, taking the assistant's entire graph with them. On the [Cloud](#using-falkordb-cloud-instead) variant there is no `falkordb_data` volume, so `-v` removes only the Cognee volume and leaves the remote graph untouched — clear that with the `openclaw cognee forget` command below, which calls Cognee's deletion API, or from the Cloud console.
+On the local stack that wipes both the Cognee and FalkorDB volumes, taking the assistant's entire graph with them.
+
+On the [Cloud](#using-falkordb-cloud-instead) variant there is no `falkordb_data` volume, so `-v` removes only the Cognee volume and leaves the remote graph in place. Clear the remote graph **before** tearing the stack down, while the Cognee API is still reachable:
+
+```bash
+openclaw cognee forget --everything --confirm
+docker compose down -v
+```
+
+`openclaw cognee forget` talks to the `cognee` service, so running it afterwards fails — the container is already gone. If you have torn down first, either bring it back with `docker compose up -d cognee` and then run the command, or clear the graph from the FalkorDB Cloud console.
 </Warning>
 
 To clear memory without destroying the containers, wipe through the API and then reset the plugin's local state:
@@ -648,7 +657,7 @@ rm -f ~/.openclaw/memory/cognee/*.json
 
 - **Cannot reach FalkorDB**: for a local container run `redis-cli -h localhost -p 6379 ping`; for FalkorDB Cloud run `redis-cli -h <host> -p <port> --user <username> --askpass ping`. Either should return `PONG`. Check the host, port, and credentials in your configuration. Does not apply to [Platform Mode](#platform-mode), which uses no FalkorDB instance.
 - **Nothing is being remembered**: check the key in the right place, which differs by option. Option A extracts entities in the gateway process, so `OPENAI_API_KEY` must be exported where the gateway runs. Option B extracts inside the Cognee container, so `LLM_API_KEY` must reach that container through Compose. Platform mode needs `MEM0_API_KEY` in the gateway instead. Extraction fails silently in every case.
-- **Graph stays empty**: on the self-hosted paths, list graphs with `GRAPH.LIST` to confirm the expected name. Memory is written under the user or agent identifier, so a changed identifier means a new, empty graph. In [Platform Mode](#platform-mode) there is no local graph to list — check the [Mem0 dashboard](https://app.mem0.ai) instead.
+- **Graph stays empty**: on the self-hosted paths, list graphs with `GRAPH.LIST` to confirm the expected name. Under Option A the graph is keyed by `userId`, so a changed identifier means a new, empty graph. Option B is different: every agent shares the `agent_sessions` dataset and its graph, so changing an agent identifier does **not** create a new one — an empty graph there usually means the session cache was never bridged, which happens on `session_end` or when you run `openclaw cognee improve --dataset <name>`. In [Platform Mode](#platform-mode) there is no local graph to list — check the [Mem0 dashboard](https://app.mem0.ai) instead.
 
 ### Option A: Mem0 Plugin
 
