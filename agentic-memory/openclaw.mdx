@@ -86,13 +86,21 @@ FalkorDB runs without authentication by default, so the ports above are bound to
 Sign up at [app.falkordb.cloud](https://app.falkordb.cloud), create an instance, and note its **host**, **port**, **username**, and **password**. Verify it is reachable:
 
 ```bash
-redis-cli -h <host> -p <port> --user <username> --pass <password> PING
+redis-cli -h <host> -p <port> --user <username> --askpass PING
 # PONG
 ```
 
 <Note>
 Use those values wherever an example below connects to `localhost`. Commands shown as `docker exec falkordb ...` are different: they address a local container that does not exist in a Cloud setup, so each one below is paired with its Cloud equivalent rather than left for you to translate.
 </Note>
+
+<Warning>
+The Cloud examples use `--askpass`, which prompts for the password on `STDIN`, rather than `--pass`. Passing a password as a command-line argument exposes it to any local user through the process list and writes it into your shell history. For non-interactive use, pass it through the `REDISCLI_AUTH` environment variable from your secret store instead of embedding it in the command:
+
+```bash
+REDISCLI_AUTH="$FALKORDB_PASSWORD" redis-cli -h <host> -p <port> --user <username> PING
+```
+</Warning>
 
 ## Option A: Mem0 Plugin
 
@@ -305,7 +313,7 @@ GRAPH.QUERY mem0_alice "MATCH (a)-[r]->(b) RETURN a.name, type(r), b.name"
 ```
 
 ```bash FalkorDB Cloud
-redis-cli -h <host> -p <port> --user <username> --pass <password>
+redis-cli -h <host> -p <port> --user <username> --askpass
 
 GRAPH.LIST
 GRAPH.QUERY mem0_alice "MATCH (n) RETURN n.name LIMIT 10"
@@ -484,7 +492,7 @@ docker exec falkordb redis-cli PING
 ```
 
 ```bash FalkorDB Cloud
-redis-cli -h <host> -p <port> --user <username> --pass <password> PING
+redis-cli -h <host> -p <port> --user <username> --askpass PING
 # PONG
 ```
 
@@ -555,7 +563,7 @@ docker exec falkordb redis-cli GRAPH.LIST
 ```
 
 ```bash FalkorDB Cloud
-redis-cli -h <host> -p <port> --user <username> --pass <password> GRAPH.LIST
+redis-cli -h <host> -p <port> --user <username> --askpass GRAPH.LIST
 ```
 
 </CodeGroup>
@@ -590,7 +598,7 @@ rm -f ~/.openclaw/memory/cognee/*.json
 
 ### Both Options
 
-- **Cannot reach FalkorDB**: for a local container run `redis-cli -h localhost -p 6379 ping`; for FalkorDB Cloud run `redis-cli -h <host> -p <port> --user <username> --pass <password> ping`. Either should return `PONG`. Check the host, port, and credentials in your configuration.
+- **Cannot reach FalkorDB**: for a local container run `redis-cli -h localhost -p 6379 ping`; for FalkorDB Cloud run `redis-cli -h <host> -p <port> --user <username> --askpass ping`. Either should return `PONG`. Check the host, port, and credentials in your configuration.
 - **Nothing is being remembered**: verify your LLM API key is exported in the environment the gateway runs in. Entity extraction fails silently without it.
 - **Graph stays empty**: list graphs with `GRAPH.LIST` to confirm the expected name. Memory is written under the user or agent identifier, so a changed identifier means a new, empty graph.
 
