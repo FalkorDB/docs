@@ -26,7 +26,7 @@ Pointing OpenClaw's memory slot at a FalkorDB-backed plugin stores facts, prefer
 
 - **Personal assistants**: Remember preferences, projects, and people across every session and channel
 - **Multi-agent gateways**: Host several agents on one gateway over a shared memory graph, so each builds on what the others learned. Per-agent isolation is not reachable on the current Cognee release — see [Per-Agent Graphs](#per-agent-graphs)
-- **Team assistants**: Share an organizational memory while keeping per-user boundaries
+- **Team assistants**: Give each teammate their own memory graph with the Mem0 path, so one assistant serves everyone without mixing their contexts
 - **Long-running projects**: Accumulate context over weeks without re-explaining it each turn
 
 ## Choosing an Integration Path
@@ -521,12 +521,15 @@ Do not continue unless **all four** checks pass: `graph falkor: True`, `vector f
 
 ### Point OpenClaw at Cognee
 
-Install the Cognee memory plugin, which is published under the `@cognee` scope:
+Install the Cognee memory plugin, which is published under the `@cognee` scope. The first line installs the OpenClaw gateway itself, so this sequence works whether or not you followed Option A:
 
 ```bash
+npm install -g openclaw@latest --allow-scripts=openclaw
 openclaw plugins install @cognee/cognee-openclaw
 openclaw plugins list
 ```
+
+Drop `--allow-scripts=openclaw` on npm 11.15 and earlier, as explained under [Install OpenClaw and the Plugin](#install-openclaw-and-the-plugin). If you already have the gateway, skip that line.
 
 The plugin is backend-agnostic, so it only needs the API URL. Configure it in `~/.openclaw/openclaw.json`:
 
@@ -565,6 +568,15 @@ By default every agent reads and writes the same dataset, `agent_sessions`, and 
 
 <Warning>
 **Per-agent isolation cannot be enabled on the current plugin release.** Upstream documents it as requiring both `perAgentMemory: true` and an `agentDatasetPrefix` or `agentDatasetTemplate`, and the runtime does check `perAgentMemory`. But the published `openclaw.plugin.json` in `@cognee/cognee-openclaw@2026.9.2` sets `additionalProperties: false` and does not declare `perAgentMemory`, so OpenClaw rejects the plugin entry as soon as you add it. Leaving it out keeps the shared dataset.
+
+Because the install above tracks the latest release, confirm this still holds for the version you actually got rather than trusting the version number here:
+
+```bash
+npm ls -g @cognee/cognee-openclaw
+grep -c '"perAgentMemory"' "$(npm root -g)/@cognee/cognee-openclaw/openclaw.plugin.json"
+```
+
+A count of `0` means the flag is still absent and this section applies. Any non-zero count means the manifest accepts the flag, and the rest of this section describes what you get by setting it.
 
 Treat multi-agent memory as **shared** on this version, and do not rely on it to keep one agent's memories away from another. The plugin's release notes record the same defect for `improveOnSessionEnd`, which was fixed by adding the key to the manifest, so expect this to be resolved the same way — check a newer release before assuming isolation is unavailable.
 </Warning>
@@ -634,9 +646,9 @@ rm -f ~/.openclaw/memory/cognee/*.json
 
 ### Both Options
 
-- **Cannot reach FalkorDB**: for a local container run `redis-cli -h localhost -p 6379 ping`; for FalkorDB Cloud run `redis-cli -h <host> -p <port> --user <username> --askpass ping`. Either should return `PONG`. Check the host, port, and credentials in your configuration.
+- **Cannot reach FalkorDB**: for a local container run `redis-cli -h localhost -p 6379 ping`; for FalkorDB Cloud run `redis-cli -h <host> -p <port> --user <username> --askpass ping`. Either should return `PONG`. Check the host, port, and credentials in your configuration. Does not apply to [Platform Mode](#platform-mode), which uses no FalkorDB instance.
 - **Nothing is being remembered**: check the key in the right place, which differs by option. Option A extracts entities in the gateway process, so `OPENAI_API_KEY` must be exported where the gateway runs. Option B extracts inside the Cognee container, so `LLM_API_KEY` must reach that container through Compose. Platform mode needs `MEM0_API_KEY` in the gateway instead. Extraction fails silently in every case.
-- **Graph stays empty**: list graphs with `GRAPH.LIST` to confirm the expected name. Memory is written under the user or agent identifier, so a changed identifier means a new, empty graph.
+- **Graph stays empty**: on the self-hosted paths, list graphs with `GRAPH.LIST` to confirm the expected name. Memory is written under the user or agent identifier, so a changed identifier means a new, empty graph. In [Platform Mode](#platform-mode) there is no local graph to list — check the [Mem0 dashboard](https://app.mem0.ai) instead.
 
 ### Option A: Mem0 Plugin
 
