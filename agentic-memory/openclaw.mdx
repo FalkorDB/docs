@@ -46,6 +46,10 @@ There are two supported ways to back OpenClaw memory with FalkorDB. Both are pro
 | **Maintainer** | FalkorDB | Cognee community |
 | **Pick it when** | You want the fastest path to persistent memory, or per-user memory | You want one store for vectors and graph, or Cognee's processing pipeline |
 
+<Note>
+The table describes the self-hosted deployments. Option A's [Platform Mode](#platform-mode) differs on every infrastructure row: you run only the Node plugin, Mem0 Cloud owns both the graph and the vector store, FalkorDB has no role, and isolation is whatever your Mem0 account provides. Option B's [Cloud variant](#using-falkordb-cloud-instead) keeps the same roles and swaps the local `falkordb` service for a managed instance.
+</Note>
+
 <Tip>
 Start with **Option A** if you are adding memory to OpenClaw for the first time. It is a single plugin install and one config block, and it is the only path here that isolates memory today, giving each user their own graph. Move to **Option B** when you want FalkorDB to serve vectors as well as the graph, or when you want Cognee's processing pipeline. Neither option separates memory per agent on its current release.
 </Tip>
@@ -429,6 +433,8 @@ volumes:
   cognee_data:
 ```
 
+The Browser is published on host port **3001** here, not 3000, so this stack can run alongside the standalone container from [Option 1](#option-1-docker). Open it at [http://localhost:3001](http://localhost:3001). Cognee's API is on `8000`.
+
 <Warning>
 Keep the version pins. The adapter is pinned to `0.3.0` against base image `cognee/cognee:1.1.0`. If the adapter install fails, check PyPI for a version compatible with your Cognee base tag and bump both together, rather than dropping the pin.
 </Warning>
@@ -605,7 +611,7 @@ redis-cli -h <host> -p <port> --user <username> --askpass GRAPH.LIST
 
 </CodeGroup>
 
-You can also list datasets through the Cognee API by authenticating against `/api/v1/auth/login` with your Cognee credentials and calling `/api/v1/datasets`.
+You can also list datasets through the Cognee API by authenticating against `/api/v1/auth/login` with your Cognee credentials and calling `/api/v1/datasets`. To inspect the graph visually, open the [FalkorDB Browser](/browser) at [http://localhost:3001](http://localhost:3001) on the local stack, or through [app.falkordb.cloud](https://app.falkordb.cloud) if you took the [Cloud variant](#using-falkordb-cloud-instead).
 
 Chat-derived memory reaches the graph only after the session cache is bridged into Cognee, which happens on `session_end`. Force it with:
 
@@ -657,7 +663,7 @@ rm -f ~/.openclaw/memory/cognee/*.json
 
 - **Cannot reach FalkorDB**: for a local container run `redis-cli -h localhost -p 6379 ping`; for FalkorDB Cloud run `redis-cli -h <host> -p <port> --user <username> --askpass ping`. Either should return `PONG`. Check the host, port, and credentials in your configuration. Does not apply to [Platform Mode](#platform-mode), which uses no FalkorDB instance.
 - **Nothing is being remembered**: check the key in the right place, which differs by option. Option A extracts entities in the gateway process, so `OPENAI_API_KEY` must be exported where the gateway runs. Option B extracts inside the Cognee container, so `LLM_API_KEY` must reach that container through Compose. Platform mode needs `MEM0_API_KEY` in the gateway instead. Extraction fails silently in every case.
-- **Graph stays empty**: on the self-hosted paths, list graphs with `GRAPH.LIST` to confirm the expected name. Under Option A the graph is keyed by `userId`, so a changed identifier means a new, empty graph. Option B is different: every agent shares the `agent_sessions` dataset and its graph, so changing an agent identifier does **not** create a new one — an empty graph there usually means the session cache was never bridged, which happens on `session_end` or when you run `openclaw cognee improve --dataset <name>`. In [Platform Mode](#platform-mode) there is no local graph to list — check the [Mem0 dashboard](https://app.mem0.ai) instead.
+- **Graph stays empty**: on the self-hosted paths, list graphs with `GRAPH.LIST` to confirm the expected name. Under Option A the graph is keyed by `userId`, so a changed identifier means a new, empty graph. Option B is different: every agent shares the `agent_sessions` dataset and its graph, so changing an agent identifier does **not** create a new one. An empty graph there usually means the session cache has not been bridged into Cognee yet, which only happens on `session_end` or when you run `openclaw cognee improve --dataset <name>`, so expect it to stay empty until one of those runs. In [Platform Mode](#platform-mode) there is no local graph to list — check the [Mem0 dashboard](https://app.mem0.ai) instead.
 
 ### Option A: Mem0 Plugin
 
