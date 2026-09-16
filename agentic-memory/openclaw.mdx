@@ -300,6 +300,10 @@ Auto-recall searches both scopes and presents long-term memories first.
 
 ### Inspect the Graph
 
+<Note>
+This applies to open-source mode, where the graph lives in your FalkorDB instance. In [Platform Mode](#platform-mode) there is no `mem0_alice` graph to open, because memory is stored in Mem0 Cloud — browse it from the [Mem0 dashboard](https://app.mem0.ai) instead.
+</Note>
+
 For a local container, open the [FalkorDB Browser](/browser) at [http://localhost:3000](http://localhost:3000); for FalkorDB Cloud, use the Browser in [app.falkordb.cloud](https://app.falkordb.cloud). Select the graph `mem0_alice`, and run:
 
 ```cypher
@@ -598,10 +602,21 @@ For a quick isolation check, tell agent A something, end its session, then ask a
 docker compose logs -f cognee
 docker compose restart cognee
 docker compose down
+```
+
+`docker compose down` stops the stack but keeps the data.
+
+<Warning>
+Adding `-v` deletes the stack's volumes. Run it only when you intend to destroy the memory, which is why it is not part of the routine block above:
+
+```bash
 docker compose down -v
 ```
 
-`docker compose down` stops the stack but keeps the data; adding `-v` also deletes the stack's volumes. On the local stack that wipes both the Cognee and FalkorDB volumes. On the [Cloud](#using-falkordb-cloud-instead) variant there is no `falkordb_data` volume, so `-v` removes only the Cognee volume and leaves the remote graph untouched — clear that through the API below or from the Cloud console. To clear memory without destroying the containers, wipe through the API and then reset the plugin's local state:
+On the local stack that wipes both the Cognee and FalkorDB volumes, taking the assistant's entire graph with them. On the [Cloud](#using-falkordb-cloud-instead) variant there is no `falkordb_data` volume, so `-v` removes only the Cognee volume and leaves the remote graph untouched — clear that through the API below or from the Cloud console.
+</Warning>
+
+To clear memory without destroying the containers, wipe through the API and then reset the plugin's local state:
 
 ```bash
 openclaw cognee forget --everything --confirm
