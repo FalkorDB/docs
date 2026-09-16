@@ -53,8 +53,8 @@ Start with **Option A** if you are adding memory to OpenClaw for the first time.
 ## Prerequisites
 
 - [Node.js](https://nodejs.org/) 24.16 or later within the 24.x line, or 26.1 or later, as required by OpenClaw's `engines` range. Node 26 is recommended; Node 22, 23, and 25 are not supported
-- [Docker](https://docs.docker.com/get-docker/), to run FalkorDB and, for Option B, Cognee
-- An OpenAI API key, or another supported LLM provider, for embeddings and entity extraction
+- [Docker](https://docs.docker.com/get-docker/), to run FalkorDB locally and, for Option B, the Cognee service. Not needed if you use FalkorDB Cloud with Option A, and not needed at all for [Platform Mode](#platform-mode)
+- An LLM provider key, such as an OpenAI API key, for embeddings and entity extraction. [Platform Mode](#platform-mode) is the exception: Mem0 Cloud performs extraction server-side, so it needs a Mem0 API key instead
 - `redis-cli`, optional, for inspecting graphs from the terminal
 
 ## Running FalkorDB
@@ -247,7 +247,13 @@ openclaw mem0 stats
 
 ### Platform Mode
 
-To use Mem0's managed cloud rather than self-hosting the memory engine, switch the plugin to platform mode. Keep `enableGraph` on so entity relationships are still built:
+To use Mem0's managed cloud rather than self-hosting the memory engine, switch the plugin to platform mode. Sign up at [app.mem0.ai](https://app.mem0.ai), create an API key, and export it in the environment the gateway runs in:
+
+```bash
+export MEM0_API_KEY="your-mem0-api-key"
+```
+
+Then switch the plugin over. Keep `enableGraph` on so entity relationships are still built:
 
 ```json
 {
@@ -268,7 +274,7 @@ To use Mem0's managed cloud rather than self-hosting the memory engine, switch t
 ```
 
 <Note>
-Platform mode uses Mem0 Cloud's own graph layer. Use the open-source mode shown above when you want the relationships stored in your own FalkorDB instance.
+Platform mode uses Mem0 Cloud's own graph layer, so it needs neither a FalkorDB instance nor your own LLM provider key — Mem0 performs extraction and embedding server-side. Use the open-source mode shown above when you want the relationships stored in your own FalkorDB instance.
 </Note>
 
 ### Agent Memory Tools
@@ -608,7 +614,7 @@ rm -f ~/.openclaw/memory/cognee/*.json
 ### Both Options
 
 - **Cannot reach FalkorDB**: for a local container run `redis-cli -h localhost -p 6379 ping`; for FalkorDB Cloud run `redis-cli -h <host> -p <port> --user <username> --askpass ping`. Either should return `PONG`. Check the host, port, and credentials in your configuration.
-- **Nothing is being remembered**: verify your LLM API key is exported in the environment the gateway runs in. Entity extraction fails silently without it.
+- **Nothing is being remembered**: check the key in the right place, which differs by option. Option A extracts entities in the gateway process, so `OPENAI_API_KEY` must be exported where the gateway runs. Option B extracts inside the Cognee container, so `LLM_API_KEY` must reach that container through Compose. Platform mode needs `MEM0_API_KEY` in the gateway instead. Extraction fails silently in every case.
 - **Graph stays empty**: list graphs with `GRAPH.LIST` to confirm the expected name. Memory is written under the user or agent identifier, so a changed identifier means a new, empty graph.
 
 ### Option A: Mem0 Plugin
