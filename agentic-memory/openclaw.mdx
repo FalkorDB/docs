@@ -15,7 +15,7 @@ Pointing OpenClaw's memory slot at a FalkorDB-backed plugin stores facts, prefer
 ### FalkorDB's Added Value
 
 - **Graph-structured recall**: Answer relational questions that vector search alone cannot, such as which people connect two projects
-- **Native multi-graph support**: Isolate a tenant in its own graph instead of filtering a shared table — Option A uses this to give every user their own graph
+- **Native multi-graph support**: Isolate a tenant in its own graph instead of filtering a shared table — Option A uses this to give every user their own graph, and Option B to give every agent's dataset one
 - **Hybrid retrieval**: Combine vector similarity with graph traversal to pull in connected context
 - **Fast traversals**: Keep memory injection inside the latency budget of a chat turn
 - **Easy cleanup**: Where memory maps to a graph per tenant, as Option A does per user, forgetting someone is a graph drop rather than a cascade of deletes. Option B routes deletion through Cognee's own API instead, so it can clear derived knowledge alongside the raw data
@@ -25,7 +25,7 @@ Pointing OpenClaw's memory slot at a FalkorDB-backed plugin stores facts, prefer
 ### Use Cases
 
 - **Personal assistants**: Remember preferences, projects, and people across every session and channel
-- **Multi-agent gateways**: Host several agents on one gateway, each with its own slice of memory. Option B gives every agent a dataset of its own inside a shared graph — see [Per-Agent Graphs](#per-agent-graphs) for what that does and does not guarantee
+- **Multi-agent gateways**: Host several agents on one gateway, each with its own slice of memory. Option B gives every agent its own dataset and its own graph — see [Per-Agent Graphs](#per-agent-graphs) for what that does and does not guarantee
 - **Team assistants**: Give each teammate their own memory graph with the Mem0 path, so one assistant serves everyone without mixing their contexts
 - **Long-running projects**: Accumulate context over weeks without re-explaining it each turn
 
@@ -39,7 +39,7 @@ There are two supported ways to back OpenClaw memory with FalkorDB. Both are pro
 | **Memory engine** | [Mem0](https://docs.mem0.ai) | [Cognee](https://www.cognee.ai) |
 | **FalkorDB's role** | Graph store | Graph **and** vector store |
 | **Vector store** | Separate, in-memory by default | FalkorDB, via the hybrid adapter |
-| **Isolation model** | Per user, graph `mem0_<userId>` | Per agent, dataset `<prefix>-<agentId>`, inside one shared graph |
+| **Isolation model** | Per user, graph `mem0_<userId>` | Per agent, dataset `<prefix>-<agentId>` in its own graph |
 | **What you run** | A Node plugin, plus FalkorDB | A Cognee service and FalkorDB, via Docker Compose |
 | **Setup effort** | Install a plugin, edit one config file | Build a custom image, then configure |
 | **Capture model** | Auto-recall and auto-capture per turn, plus five agent tools | Session cache flushed to Cognee, then processed into the graph |
@@ -51,7 +51,7 @@ The table describes the self-hosted deployments. Option A's [Platform Mode](#pla
 </Note>
 
 <Tip>
-Start with **Option A** if you are adding memory to OpenClaw for the first time. It is a single plugin install and one config block. Move to **Option B** when you want FalkorDB to serve vectors as well as the graph, or when you want Cognee's processing pipeline. Both separate memory, but along different axes: Option A gives each user their own FalkorDB graph, while Option B gives each agent its own Cognee dataset inside one shared graph. Read [Per-Agent Graphs](#per-agent-graphs) before treating either as a security boundary.
+Start with **Option A** if you are adding memory to OpenClaw for the first time. It is a single plugin install and one config block. Move to **Option B** when you want FalkorDB to serve vectors as well as the graph, or when you want Cognee's processing pipeline. Both give each tenant its own FalkorDB graph, but along different axes: Option A separates per user, Option B per agent. Read [Per-Agent Graphs](#per-agent-graphs) before treating either as a security boundary.
 </Tip>
 
 ## Prerequisites
@@ -584,7 +584,7 @@ Note that the plugin entry is keyed by its short name, `cognee-openclaw`, even t
 
 The configuration above sets `agentDatasetPrefix`, which switches the plugin into multi-scope mode. In that mode each agent reads and writes its own Cognee dataset, named from the prefix and the agent's runtime ID: an agent called `alice` gets `openclaw-cognee-agent-alice`. The plugin's default `agent_sessions` dataset applies only when no scope prefix or template is configured at all, so it is not the dataset this page's configuration uses.
 
-Separation is enforced by Cognee, not by a graph boundary. The FalkorDB adapter points every dataset at a single graph named `cognee_graph` unless you set `GRAPH_DATABASE_NAME`, so `GRAPH.LIST` shows one graph no matter how many agents you run. Every agent's nodes live in that graph together, and recall stays scoped because Cognee filters by dataset. The adapter does ship a per-dataset handler that names a graph after each dataset ID, but it is opt-in and the stack above does not enable it.
+Separation reaches FalkorDB as well. The Dockerfile above sets `ENABLE_BACKEND_ACCESS_CONTROL=True` with `GRAPH_DATASET_DATABASE_HANDLER=falkor_graph_local`, and Cognee gives every dataset its own database when backend access control is on. The adapter's handler names that database after the dataset's UUID, so each agent ends up in its own FalkorDB graph and `GRAPH.LIST` returns one UUID-named graph per dataset. Without those two settings the adapter would instead put every dataset in a single `cognee_graph`.
 
 <Warning>
 **Do not treat per-agent datasets as a security boundary on this release.** The plugin's full per-agent mode is gated behind `perAgentMemory: true`, and that key is missing from the published `openclaw.plugin.json` in `@cognee/cognee-openclaw@2026.9.2`, whose schema sets `additionalProperties: false` — so OpenClaw rejects the plugin entry as soon as you add it. Two things follow from leaving it out. Agent IDs are not lowercased before the dataset name is built, so a mixed-case ID in config and the lowercased ID the gateway passes at runtime split into two datasets. And the agent scope keeps one shared local index, so when a dataset name cannot be resolved to an ID, recall falls back to that shared entry and can read another agent's dataset.
@@ -592,7 +592,7 @@ Separation is enforced by Cognee, not by a graph boundary. The FalkorDB adapter 
 Because the install above tracks the latest release, confirm this still holds for the version you actually received rather than trusting the version number here. Ask OpenClaw what it installed, then let it validate the config:
 
 ```bash
-openclaw plugins inspect @cognee/cognee-openclaw
+openclaw plugins inspect cognee-openclaw
 ```
 
 Then add `"perAgentMemory": true` to the entry and restart the gateway. If OpenClaw rejects the plugin entry on startup, the manifest still omits the key and the limitation above applies — remove it again. If the gateway starts cleanly, the key has landed and you get lowercased IDs and per-agent indexes as well. This check is behavioral, so it stays correct across releases.
@@ -600,7 +600,7 @@ Then add `"perAgentMemory": true` to the entry and restart the gateway. If OpenC
 The plugin's release notes record the same manifest defect for `improveOnSessionEnd`, which was fixed by declaring the key, so expect this to be resolved the same way — check a newer release before assuming the flag is still unavailable.
 </Warning>
 
-Once the manifest exposes the flag, setting it alongside `agentDatasetPrefix` routes each agent's files and chat to a dataset named `<prefix>-<lowercased-agent-id>`, such as `openclaw-cognee-agent-support`, and each dataset gets its own FalkorDB graph. `agentDatasetTemplate`, for example `"{agentId}"`, gives full control over dataset names. Give every agent its own `workspace` in `agents.list`, and seed a one-line `MEMORY.md` in each so its dataset is created when the gateway starts.
+Once the manifest exposes the flag, setting it alongside `agentDatasetPrefix` adds the lowercasing and the per-agent indexes, so the dataset becomes `<prefix>-<lowercased-agent-id>`, such as `openclaw-cognee-agent-support`, and a mixed-case ID can no longer split one agent across two datasets. `agentDatasetTemplate`, for example `"{agentId}"`, gives full control over dataset names. Give every agent its own `workspace` in `agents.list`, and seed a one-line `MEMORY.md` in each so its dataset is created when the gateway starts.
 
 ### Verify End to End
 
@@ -624,7 +624,7 @@ redis-cli -h <host> -p <port> --user <username> --askpass GRAPH.LIST
 
 </CodeGroup>
 
-You can also list datasets through the Cognee API by authenticating against `/api/v1/auth/login` with your Cognee credentials and calling `/api/v1/datasets`. To inspect the graph visually, open the [FalkorDB Browser](/browser) at [http://localhost:3001](http://localhost:3001) on the local stack, or through [app.falkordb.cloud](https://app.falkordb.cloud) if you took the [Cloud variant](#using-falkordb-cloud-instead).
+You can also list datasets through the Cognee API by authenticating against `/api/v1/auth/login` with your Cognee credentials and calling `/api/v1/datasets`. That listing is how you match a graph to an agent, since each graph is named for its dataset's UUID rather than for the agent. To inspect the graph visually, open the [FalkorDB Browser](/browser) at [http://localhost:3001](http://localhost:3001) on the local stack, or through [app.falkordb.cloud](https://app.falkordb.cloud) if you took the [Cloud variant](#using-falkordb-cloud-instead).
 
 Chat-derived memory reaches the graph only after the session cache is bridged into Cognee, which happens on `session_end`. Force it with:
 
@@ -688,7 +688,7 @@ redis-cli -h <host> -p <port> --user <username> --askpass GRAPH.DELETE <graph>
 
 </CodeGroup>
 
-Add `--tls` to the Cloud commands if the instance has TLS enabled. The graph is `cognee_graph` unless you set `GRAPH_DATABASE_NAME`, so expect one graph rather than one per agent.
+Add `--tls` to the Cloud commands if the instance has TLS enabled. Each graph is named for its dataset's UUID, so expect one per dataset rather than a single well-known name.
 
 ## Troubleshooting
 
@@ -697,7 +697,7 @@ Add `--tls` to the Cloud commands if the instance has TLS enabled. The graph is 
 - **Cannot reach FalkorDB**: for a local container run `redis-cli -h localhost -p 6379 ping`; for FalkorDB Cloud run `redis-cli -h <host> -p <port> --user <username> --askpass ping`, adding `--tls` if the instance has TLS enabled. Either should return `PONG`. Check the host, port, and credentials in your configuration. Does not apply to [Platform Mode](#platform-mode), which uses no FalkorDB instance.
 - **`redis-cli` works but the plugin cannot connect to Cloud**: neither integration can negotiate TLS today. `@falkordb/mem0@0.2.0` builds a `redis://` URL with no TLS option, and the Cognee adapter calls `FalkorDB(...)` without an `ssl` argument. If `redis-cli --tls` succeeds where the plugin fails, a TLS-only endpoint is the likely cause; use a local container until the clients gain the option.
 - **Nothing is being remembered**: check the key in the right place, which differs by option. Option A extracts entities in the gateway process, so `OPENAI_API_KEY` must be exported where the gateway runs. Option B extracts inside the Cognee container, so `LLM_API_KEY` must reach that container through Compose. Platform mode needs `MEM0_API_KEY` in the gateway instead. Extraction fails silently in every case.
-- **Graph stays empty**: on the self-hosted paths, list graphs with `GRAPH.LIST` to confirm the expected name. Under Option A the graph is keyed by `userId`, so a changed identifier means a new, empty graph. Option B is different: the graph name is fixed — `cognee_graph` unless you set `GRAPH_DATABASE_NAME` — and agents are separated by dataset inside it, so changing an agent identifier gives you a new dataset but never a new graph. An empty graph there usually means the session cache has not been bridged into Cognee yet, which only happens on `session_end` or when you run `openclaw cognee improve --dataset <name>`, so expect it to stay empty until one of those runs. In [Platform Mode](#platform-mode) there is no local graph to list — check the [Mem0 dashboard](https://app.mem0.ai) instead.
+- **Graph stays empty**: on the self-hosted paths, list graphs with `GRAPH.LIST` to confirm the expected name. Under Option A the graph is keyed by `userId`, so a changed identifier means a new, empty graph. Option B names each graph after its dataset's UUID rather than after the agent, so match a graph to an agent through the Cognee `/api/v1/datasets` listing rather than by reading the name. An empty graph there usually means the session cache has not been bridged into Cognee yet, which only happens on `session_end` or when you run `openclaw cognee improve --dataset <name>`, so expect it to stay empty until one of those runs. In [Platform Mode](#platform-mode) there is no local graph to list — check the [Mem0 dashboard](https://app.mem0.ai) instead.
 
 ### Option A: Mem0 Plugin
 
@@ -743,7 +743,7 @@ Add `--tls` to the Cloud commands if the instance has TLS enabled. The graph is 
     Use the **Mem0 plugin** for the fastest path: install `@falkordb/openclaw-mem0`, edit one config block, and you have per-user graph memory. Use the **Cognee integration** when you want FalkorDB to serve both vectors and the graph, or need Cognee's processing pipeline. If you need memory kept separate per user, pick Mem0, which gives each user their own graph. The Cognee plugin separates per agent instead, by dataset rather than by graph — see [Per-Agent Graphs](#per-agent-graphs).
   </Accordion>
   <Accordion title="How does OpenClaw memory stay isolated between users or agents?">
-    The two paths draw the boundary in different places. The Mem0 plugin uses FalkorDB's **native multi-graph support**, writing each user to their own graph named `graphName` followed by the user ID, such as `mem0_alice` — so per-user separation is a real graph boundary, no ID filtering is needed in queries, and forgetting someone is a single graph drop. The Cognee integration separates per agent instead, giving each agent its own Cognee dataset while keeping every dataset in one shared graph, so the boundary is enforced by Cognee's dataset filtering rather than by FalkorDB. See [Per-Agent Graphs](#per-agent-graphs) for the caveats before relying on it. Option A's platform mode is different again: memory lives in Mem0 Cloud, so isolation is whatever Mem0 provides for your account rather than a FalkorDB graph boundary.
+    The two paths draw the boundary in different places, but both land on FalkorDB's **native multi-graph support**. The Mem0 plugin writes each user to their own graph named `graphName` followed by the user ID, such as `mem0_alice`, so forgetting someone is a single graph drop. The Cognee integration separates per agent instead: each agent gets its own Cognee dataset, and because the recipe here runs with backend access control and the per-dataset handler, each dataset gets its own FalkorDB graph named after the dataset's UUID. See [Per-Agent Graphs](#per-agent-graphs) for the caveats before relying on it. Option A's platform mode is different again: memory lives in Mem0 Cloud, so isolation is whatever Mem0 provides for your account rather than a FalkorDB graph boundary.
   </Accordion>
   <Accordion title="Do I need a Mem0 Cloud account to use OpenClaw with FalkorDB?">
     No. The plugin's open-source mode is fully self-hosted: FalkorDB stores the graph and you supply an LLM provider for embeddings and entity extraction. Platform mode is optional and routes memory through Mem0 Cloud instead.
