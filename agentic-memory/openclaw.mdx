@@ -258,6 +258,7 @@ Then switch the plugin over. Keep `enableGraph` on so entity relationships are s
 ```json
 {
   "plugins": {
+    "slots": { "memory": "openclaw-mem0" },
     "entries": {
       "openclaw-mem0": {
         "enabled": true,
@@ -272,6 +273,8 @@ Then switch the plugin over. Keep `enableGraph` on so entity relationships are s
   }
 }
 ```
+
+The slot assignment is repeated here deliberately. Platform mode changes only the `config` block; drop `plugins.slots.memory` and OpenClaw falls back to `memory-core` with the entry enabled but unused.
 
 <Note>
 Platform mode uses Mem0 Cloud's own graph layer, so it needs neither a FalkorDB instance nor your own LLM provider key — Mem0 performs extraction and embedding server-side. Use the open-source mode shown above when you want the relationships stored in your own FalkorDB instance.
