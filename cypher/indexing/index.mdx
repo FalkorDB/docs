@@ -22,6 +22,10 @@ Full-text indexes leverage RediSearch capabilities to provide powerful text sear
 
 Vector indexes enable similarity search on vector embeddings. These indexes are essential for AI and machine learning applications, supporting operations like nearest neighbor search with configurable similarity functions (euclidean or cosine).
 
+### [CCH Index](/cypher/indexing/cch-index)
+
+CCH (Customizable Contraction Hierarchies) indexes accelerate weighted point-to-point shortest-path queries over relationship graphs such as road and transport networks. They precompute a routing hierarchy so route lookups between arbitrary node pairs return in microseconds, and support indexing multiple relationship types together.
+
 ---
 
 Choose an index type from the navigation menu to learn more about creating, querying, and managing that specific type of index.
@@ -30,7 +34,7 @@ Choose an index type from the navigation menu to learn more about creating, quer
 
 <AccordionGroup>
   <Accordion title="What types of indexes does FalkorDB support?">
-    FalkorDB supports three index types: **Range indexes** for exact-match and comparison queries, **Full-text indexes** for text search with stemming and scoring, and **Vector indexes** for similarity search on embeddings.
+    FalkorDB supports four index types: **Range indexes** for exact-match and comparison queries, **Full-text indexes** for text search with stemming and scoring, **Vector indexes** for similarity search on embeddings, and **CCH indexes** for weighted point-to-point shortest-path (routing) queries.
   </Accordion>
   <Accordion title="When should I create an index?">
     Create indexes on properties frequently used in WHERE clause filters. Indexes accelerate lookups but add write overhead, so avoid indexing properties that are rarely queried or have very high write frequency.
@@ -39,6 +43,6 @@ Choose an index type from the navigation menu to learn more about creating, quer
     Yes. FalkorDB supports indexing both node label properties and relationship type properties with range and full-text indexes.
   </Accordion>
   <Accordion title="How do I check which indexes exist in my graph?">
-    Use the procedure `CALL db.indexes()` which yields all indexes with their label, properties, type (RANGE, FULLTEXT, or VECTOR), entity type, and status.
+    Use the procedure `CALL db.indexes()` which yields all indexes with their label, properties, type (RANGE, FULLTEXT, VECTOR, or CCH), entity type, and status.
   </Accordion>
 </AccordionGroup>

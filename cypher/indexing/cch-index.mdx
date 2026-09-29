@@ -1,0 +1,392 @@
+---
+title: "CCH Indexing: Fast Point-to-Point Shortest Paths on Weighted Graphs"
+sidebarTitle: "CCH Index"
+description: "CCH (Customizable Contraction Hierarchies) indexes accelerate weighted point-to-point shortest-path queries on relationship graphs such as road and transport networks."
+---
+
+FalkorDB's CCH index implements **Customizable Contraction Hierarchies**, a routing technique for answering weighted point-to-point shortest-path queries in microseconds. It is designed for graphs where relationships carry a numeric weight — road networks, transit systems, utility grids, or any dataset where you repeatedly ask "what is the cheapest route from A to B?".
+
+Unlike a range, full-text, or vector index — which accelerate filtering on a single entity — a CCH index precomputes a hierarchy over an entire weighted relationship graph so that shortest-path queries between arbitrary node pairs avoid a full Dijkstra traversal.
+
+## How CCH Works
+
+A classic contraction hierarchy bakes topology and edge weights together, making it expensive to rebuild when weights change. CCH decouples the work into three phases:
+
+1. **Preprocessing** (topology only) — computes a nested-dissection elimination order and a chordal "upward graph". This phase depends only on the graph structure, not on the weights, so it is reused across many weight updates.
+2. **Customization** (weights only) — applies the concrete edge weights to the precomputed structure, filling in shortcut weights. This is fast and re-runs whenever weights change.
+3. **Query** — a rank-pruned bidirectional Dijkstra over the hierarchy, followed by "unpacking" shortcuts back into the original edges to return a genuine path.
+
+Because the CCH index lives inside the index object, **nothing is written into your graph** — there are no shortcut edges, rank, or helper properties polluting your data. The index also maintains itself incrementally as the graph changes and is fully persisted to RDB and replicated.
+
+## Creating a CCH index
+
+A CCH index is created with DDL over a **relationship pattern**, naming the single edge property that holds the weight:
+
+```cypher
+CREATE CCH INDEX FOR <relationship_pattern> ON (<weight_property>)
+```
+
+For example, to index a road network whose `ROAD` relationships carry a `w` (distance/cost) property:
+
+<CodeGroup>
+
+```python Python
+graph.query("CREATE CCH INDEX FOR ()-[e:ROAD]->() ON (e.w)")
+```
+
+```javascript JavaScript
+await graph.query("CREATE CCH INDEX FOR ()-[e:ROAD]->() ON (e.w)");
+```
+
+```java Java
+graph.query("CREATE CCH INDEX FOR ()-[e:ROAD]->() ON (e.w)");
+```
+
+```rust Rust
+graph.query("CREATE CCH INDEX FOR ()-[e:ROAD]->() ON (e.w)").execute().await?;
+```
+
+```bash Shell
+GRAPH.QUERY DEMO_GRAPH "CREATE CCH INDEX FOR ()-[e:ROAD]->() ON (e.w)"
+```
+
+</CodeGroup>
+
+`CREATE CCH INDEX` returns `indices_created = 1`.
+
+### Indexing multiple relationship types
+
+CCH is the only FalkorDB index type that may span **several relationship types** in a single index. This is useful when a route can traverse more than one kind of edge — for example roads and ferries:
+
+<CodeGroup>
+
+```python Python
+graph.query("CREATE CCH INDEX FOR ()-[e:ROAD|FERRY]->() ON (e.w)")
+```
+
+```javascript JavaScript
+await graph.query("CREATE CCH INDEX FOR ()-[e:ROAD|FERRY]->() ON (e.w)");
+```
+
+```java Java
+graph.query("CREATE CCH INDEX FOR ()-[e:ROAD|FERRY]->() ON (e.w)");
+```
+
+```rust Rust
+graph.query("CREATE CCH INDEX FOR ()-[e:ROAD|FERRY]->() ON (e.w)").execute().await?;
+```
+
+```bash Shell
+GRAPH.QUERY DEMO_GRAPH "CREATE CCH INDEX FOR ()-[e:ROAD|FERRY]->() ON (e.w)"
+```
+
+</CodeGroup>
+
+The set of relationship types together with the weight property forms the **index key**. The set is order-agnostic and deduplicated, so `ROAD|FERRY` and `FERRY|ROAD` name the same index, and `ROAD|ROAD` is just `ROAD`. Two indexes over the same relationship types but different weight properties are distinct.
+
+**Notes and constraints:**
+- A CCH index is only supported on **relationships** — a node pattern such as `(n:Label)` is rejected.
+- Exactly **one property** — the edge weight — may be indexed.
+- Relationship types and the weight attribute referenced at creation are created on demand if they do not yet exist (as with any `CREATE INDEX`).
+- **Edge direction is respected**: a directed edge is never traversed backwards during build or query. Model bidirectional roads as two directed edges.
+- When the weight property is missing on an edge, its weight defaults to `1`. Parallel edges between the same pair collapse to the cheapest one, and self-loops are ignored.
+- Creating a second CCH index with the same key returns an error: `a CCH index already exists over these relationship types and weight attribute`.
+
+## Querying a CCH index
+
+A CCH index is queried with the `db.idx.cch.query` procedure. Bind the source and target nodes with a `MATCH`, then pass them along with the index key:
+
+```cypher
+CALL db.idx.cch.query({
+    sourceNode: NODE,     // required, the bound source node
+    targetNode: NODE,     // required, the bound target node
+    relTypes:   [STRING], // must match an existing CCH index key
+    weightProp: STRING    // must match the index's weight property
+}) YIELD pathWeight, path
+```
+
+The procedure yields:
+- **`pathWeight`** (DOUBLE) — the total weight of the shortest path.
+- **`path`** (PATH) — the shortest path, fully unpacked into the original relationships (no shortcut edges appear in the result).
+
+For example, to find the cheapest route between two junctions:
+
+<CodeGroup>
+
+```python Python
+result = graph.query("""
+    MATCH (a:Junction {id: 0}), (b:Junction {id: 42})
+    CALL db.idx.cch.query({sourceNode: a, targetNode: b, relTypes: ['ROAD'], weightProp: 'w'})
+    YIELD pathWeight, path
+    RETURN pathWeight, path
+""")
+```
+
+```javascript JavaScript
+const result = await graph.query(`
+    MATCH (a:Junction {id: 0}), (b:Junction {id: 42})
+    CALL db.idx.cch.query({sourceNode: a, targetNode: b, relTypes: ['ROAD'], weightProp: 'w'})
+    YIELD pathWeight, path
+    RETURN pathWeight, path
+`);
+```
+
+```java Java
+ResultSet result = graph.query(
+    "MATCH (a:Junction {id: 0}), (b:Junction {id: 42}) " +
+    "CALL db.idx.cch.query({sourceNode: a, targetNode: b, relTypes: ['ROAD'], weightProp: 'w'}) " +
+    "YIELD pathWeight, path RETURN pathWeight, path");
+```
+
+```rust Rust
+let result = graph.query(
+    "MATCH (a:Junction {id: 0}), (b:Junction {id: 42}) \
+     CALL db.idx.cch.query({sourceNode: a, targetNode: b, relTypes: ['ROAD'], weightProp: 'w'}) \
+     YIELD pathWeight, path RETURN pathWeight, path").execute().await?;
+```
+
+```bash Shell
+GRAPH.QUERY DEMO_GRAPH "MATCH (a:Junction {id: 0}), (b:Junction {id: 42}) CALL db.idx.cch.query({sourceNode: a, targetNode: b, relTypes: ['ROAD'], weightProp: 'w'}) YIELD pathWeight, path RETURN pathWeight, path"
+```
+
+</CodeGroup>
+
+When querying an index that spans multiple relationship types, pass the same set in `relTypes` (order and duplicates do not matter):
+
+<CodeGroup>
+
+```python Python
+result = graph.query("""
+    MATCH (a:Junction {id: 0}), (b:Junction {id: 42})
+    CALL db.idx.cch.query({sourceNode: a, targetNode: b, relTypes: ['ROAD', 'FERRY'], weightProp: 'w'})
+    YIELD pathWeight, path
+    RETURN pathWeight, path
+""")
+```
+
+```javascript JavaScript
+const result = await graph.query(`
+    MATCH (a:Junction {id: 0}), (b:Junction {id: 42})
+    CALL db.idx.cch.query({sourceNode: a, targetNode: b, relTypes: ['ROAD', 'FERRY'], weightProp: 'w'})
+    YIELD pathWeight, path
+    RETURN pathWeight, path
+`);
+```
+
+```java Java
+ResultSet result = graph.query(
+    "MATCH (a:Junction {id: 0}), (b:Junction {id: 42}) " +
+    "CALL db.idx.cch.query({sourceNode: a, targetNode: b, relTypes: ['ROAD', 'FERRY'], weightProp: 'w'}) " +
+    "YIELD pathWeight, path RETURN pathWeight, path");
+```
+
+```rust Rust
+let result = graph.query(
+    "MATCH (a:Junction {id: 0}), (b:Junction {id: 42}) \
+     CALL db.idx.cch.query({sourceNode: a, targetNode: b, relTypes: ['ROAD', 'FERRY'], weightProp: 'w'}) \
+     YIELD pathWeight, path RETURN pathWeight, path").execute().await?;
+```
+
+```bash Shell
+GRAPH.QUERY DEMO_GRAPH "MATCH (a:Junction {id: 0}), (b:Junction {id: 42}) CALL db.idx.cch.query({sourceNode: a, targetNode: b, relTypes: ['ROAD', 'FERRY'], weightProp: 'w'}) YIELD pathWeight, path RETURN pathWeight, path"
+```
+
+</CodeGroup>
+
+The `relTypes` and `weightProp` you pass must match an existing index key **exactly** — a query for `['ROAD']` will not fall back to a `['ROAD', 'FERRY']` index.
+
+`db.idx.cch.query` is a **read-only** procedure, so it can also be issued through `GRAPH.RO_QUERY`. (`CREATE`/`DROP CCH INDEX` are write operations and are rejected on read-only connections.)
+
+**Query behavior:**
+- When `sourceNode` and `targetNode` are the same node, the result is `pathWeight = 0` and a single-node path.
+- When the target is **unreachable** from the source, the procedure returns **no rows** (it is not an error).
+- The returned `pathWeight` matches the weight computed by [`algo.SPpaths`](/algorithms/sppath); where the shortest path is unique the paths are identical, and where there are ties either valid shortest path may be returned.
+
+## Deleting a CCH index
+
+Drop a CCH index with the matching relationship pattern and weight property:
+
+```cypher
+DROP CCH INDEX FOR <relationship_pattern> ON (<weight_property>)
+```
+
+<CodeGroup>
+
+```python Python
+graph.query("DROP CCH INDEX FOR ()-[e:ROAD]->() ON (e.w)")
+```
+
+```javascript JavaScript
+await graph.query("DROP CCH INDEX FOR ()-[e:ROAD]->() ON (e.w)");
+```
+
+```java Java
+graph.query("DROP CCH INDEX FOR ()-[e:ROAD]->() ON (e.w)");
+```
+
+```rust Rust
+graph.query("DROP CCH INDEX FOR ()-[e:ROAD]->() ON (e.w)").execute().await?;
+```
+
+```bash Shell
+GRAPH.QUERY DEMO_GRAPH "DROP CCH INDEX FOR ()-[e:ROAD]->() ON (e.w)"
+```
+
+</CodeGroup>
+
+Dropping an index that does not exist returns an error: `no CCH index over these relationship types and weight attribute`.
+
+## Incremental Maintenance
+
+A CCH index keeps itself up to date as the underlying graph changes — you do not need to rebuild it manually. Pending updates are coalesced and applied automatically when a query commits, so a query always reads the last-committed hierarchy.
+
+FalkorDB chooses the cheapest maintenance strategy for each kind of change:
+
+- **Edge weight change** → a scoped re-customization of only the affected shortcuts (fast, weights-only).
+- **Edge added** between a pair that already has a shortcut → a weight-only re-customization; an edge that introduces a **new adjacency** triggers a full rebuild.
+- **Edge deleted** → the shortcut is retained and re-seeded; deletions accumulate toward a staleness threshold, after which the index rebuilds to reclaim stale structure.
+- **Node added or removed** → a full rebuild, since the node id-space changes.
+
+Because preprocessing is topology-only, weight-only changes stay cheap even on large graphs.
+
+## Index Management
+
+### Listing CCH Indexes
+
+To view all indexes (including CCH) in your graph, use the `db.indexes()` procedure:
+
+```cypher
+CALL db.indexes()
+```
+
+A CCH index reports:
+- **`entitytype`**: `RELATIONSHIP`
+- **`types`**: the weight property mapped to `['CCH']` — for example `{w: ['CCH']}`
+- **`properties`**: the weight property, e.g. `['w']`
+- **`label`**: the comma-joined, sorted set of indexed relationship types, e.g. `"FERRY,ROAD"`
+
+## Verifying CCH Index Usage
+
+Because a CCH index is queried explicitly through `db.idx.cch.query`, you can confirm the plan with `GRAPH.EXPLAIN`:
+
+<CodeGroup>
+
+```python Python
+result = graph.explain("""
+    MATCH (a:Junction {id: 0}), (b:Junction {id: 42})
+    CALL db.idx.cch.query({sourceNode: a, targetNode: b, relTypes: ['ROAD'], weightProp: 'w'})
+    YIELD pathWeight, path
+    RETURN pathWeight, path
+""")
+print(result)
+# Output shows: ProcedureCall | db.idx.cch.query
+```
+
+```javascript JavaScript
+const result = await graph.explain(`
+    MATCH (a:Junction {id: 0}), (b:Junction {id: 42})
+    CALL db.idx.cch.query({sourceNode: a, targetNode: b, relTypes: ['ROAD'], weightProp: 'w'})
+    YIELD pathWeight, path
+    RETURN pathWeight, path
+`);
+console.log(result);
+// Output shows: ProcedureCall | db.idx.cch.query
+```
+
+```java Java
+String result = graph.explain(
+    "MATCH (a:Junction {id: 0}), (b:Junction {id: 42}) " +
+    "CALL db.idx.cch.query({sourceNode: a, targetNode: b, relTypes: ['ROAD'], weightProp: 'w'}) " +
+    "YIELD pathWeight, path RETURN pathWeight, path");
+System.out.println(result);
+// Output shows: ProcedureCall | db.idx.cch.query
+```
+
+```rust Rust
+let result = graph.explain(
+    "MATCH (a:Junction {id: 0}), (b:Junction {id: 42}) \
+     CALL db.idx.cch.query({sourceNode: a, targetNode: b, relTypes: ['ROAD'], weightProp: 'w'}) \
+     YIELD pathWeight, path RETURN pathWeight, path").execute().await?;
+println!("{}", result);
+// Output shows: ProcedureCall | db.idx.cch.query
+```
+
+```bash Shell
+GRAPH.EXPLAIN DEMO_GRAPH "MATCH (a:Junction {id: 0}), (b:Junction {id: 42}) CALL db.idx.cch.query({sourceNode: a, targetNode: b, relTypes: ['ROAD'], weightProp: 'w'}) YIELD pathWeight, path RETURN pathWeight, path"
+# Output shows: ProcedureCall | db.idx.cch.query
+```
+
+</CodeGroup>
+
+## Persistence and Replication
+
+A CCH index survives restarts and follows replicas automatically:
+
+- **RDB**: the full hierarchy is serialized with the graph, so a reloaded index answers queries immediately with no rebuild — and still without any shortcut edges in the graph.
+- **Replication / AOF**: index creation and drops replicate as definition-only effects; each replica builds and maintains its own hierarchy. Weight changes replicate and re-customize the replica's index. A full replica synchronization ships the complete hierarchy inside the RDB.
+
+## Performance Tradeoffs and Best Practices
+
+### When to Use CCH Indexes
+
+CCH indexes are ideal for:
+- **Route planning**: repeated shortest-path queries over road, rail, or transit networks
+- **Logistics and delivery**: cheapest-route lookups over weighted distribution graphs
+- **Network/utility graphs**: least-cost paths where edges carry a numeric cost or latency
+- **Interactive applications**: when point-to-point queries must return in microseconds
+
+They are less suited to graphs whose topology changes constantly (frequent node/edge additions), since structural changes trigger rebuilds.
+
+### Performance Considerations
+
+**Benefits:**
+- Microsecond-scale point-to-point shortest-path queries after the index is built
+- Cheap re-customization when only edge weights change — topology preprocessing is reused
+- Keeps the user graph clean — no shortcut edges or helper properties are written
+- Self-maintaining, fully persisted to RDB, and replicated
+
+**Costs:**
+- **Build time**: the initial preprocessing and customization take time proportional to the graph size
+- **Memory**: the hierarchy is held in memory alongside the graph (counted under `indices_sz_mb` in `GRAPH.MEMORY USAGE`)
+- **Rebuild on topology change**: adding new adjacencies, adding/removing nodes, or crossing the deletion staleness threshold triggers a full rebuild
+
+**Recommendations:**
+- Create a CCH index when the same weighted graph is queried for many source/target pairs
+- Model one-way connections as directed edges and bidirectional ones as two directed edges
+- Store the weight on the indexed property; edges without it are treated as weight `1`
+- Keep separate indexes per metric (e.g. distance vs. travel-time) by using different weight properties
+- Batch large topology changes together to amortize the resulting rebuild
+
+### See Also
+
+- [Range Index](/cypher/indexing/range-index) — for numeric and string range queries
+- [Full-text Index](/cypher/indexing/fulltext-index) — for keyword and text-based search
+- [Vector Index](/cypher/indexing/vector-index) — for semantic similarity search
+
+> **Tip:** Use a CCH index for repeated weighted shortest-path (routing) queries, a range index for exact or range-based property lookups, a full-text index for keyword search, and a vector index for semantic similarity search.
+
+## Frequently Asked Questions
+
+<AccordionGroup>
+  <Accordion title="What does CCH stand for?">
+    CCH stands for **Customizable Contraction Hierarchies**, a routing technique that precomputes a hierarchy over a weighted graph so point-to-point shortest-path queries run in microseconds. It separates topology preprocessing from weight customization, so weight changes stay cheap.
+  </Accordion>
+  <Accordion title="How do I query a CCH index?">
+    Bind the source and target nodes with a `MATCH`, then call `db.idx.cch.query({sourceNode: a, targetNode: b, relTypes: ['ROAD'], weightProp: 'w'}) YIELD pathWeight, path`. It returns the total path weight and the full path, unpacked into the original relationships.
+  </Accordion>
+  <Accordion title="Does a CCH index add shortcut edges to my graph?">
+    No. The hierarchy lives inside the index object. Nothing — no shortcut edges, ranks, or helper properties — is written into your graph, and the index maintains itself as the graph changes.
+  </Accordion>
+  <Accordion title="Can a CCH index cover more than one relationship type?">
+    Yes. CCH is the only FalkorDB index type that may span multiple relationship types in a single index, e.g. `CREATE CCH INDEX FOR ()-[e:ROAD|FERRY]->() ON (e.w)`. The relationship-type set plus the weight property forms the index key, which is order-agnostic and deduplicated.
+  </Accordion>
+  <Accordion title="What happens when the target is unreachable, or equals the source?">
+    An unreachable target returns **no rows** (not an error). When the source and target are the same node, the query returns `pathWeight = 0` and a single-node path.
+  </Accordion>
+  <Accordion title="What weight is used when an edge has no weight property?">
+    A missing weight defaults to `1`. Parallel edges between the same pair collapse to the cheapest one, and self-loops are ignored.
+  </Accordion>
+  <Accordion title="Do I need to rebuild the index after changing the graph?">
+    No. The index updates incrementally: weight changes trigger a cheap re-customization, while structural changes (new adjacencies, node add/remove, or many deletions) trigger an automatic rebuild. Updates are applied when a query commits.
+  </Accordion>
+</AccordionGroup>

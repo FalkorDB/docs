@@ -90,6 +90,7 @@ calmcode
 camelCase
 camel_case
 cardinality
+CCH
 CDLP
 ceil
 CentOS
@@ -101,7 +102,10 @@ checkpointer
 Checkpointing
 checkpointing
 checksums
+chordal
 chunkers
+customizable
+customization
 Claude
 CLI
 cli
@@ -193,6 +197,7 @@ DELUSER
 DESC
 destinationGraphName
 dev
+Dijkstra
 n8n
 dimensionality
 directionality
