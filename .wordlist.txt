@@ -970,6 +970,7 @@ haversine
 heuristicScale
 optimality
 cch
+precompute
 precomputes
 precomputed
 adjacencies
