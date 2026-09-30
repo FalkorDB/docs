@@ -263,7 +263,7 @@ A CCH index reports:
 - **`entitytype`**: `RELATIONSHIP`
 - **`types`**: the weight property mapped to `['CCH']` — for example `{w: ['CCH']}`
 - **`properties`**: the weight property, e.g. `['w']`
-- **`label`**: the comma-joined, sorted set of indexed relationship types, e.g. `"FERRY,ROAD"`
+- **`label`**: the deduplicated set of indexed relationship types, comma-joined in the index's internal order (by relationship-type id, which is not necessarily alphabetical), e.g. `"ROAD,FERRY"`
 
 ## Verifying CCH Index Usage
 

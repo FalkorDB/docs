@@ -969,3 +969,7 @@ Dijkstra
 haversine
 heuristicScale
 optimality
+cch
+precomputes
+precomputed
+adjacencies
