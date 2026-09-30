@@ -949,11 +949,5 @@ Embeddable
 reranking
 Swappable
 AStar
-CCH
 Dijkstra
 haversine
-middleProp
-preprocess
-preprocesses
-rankProp
-shortcutRelType

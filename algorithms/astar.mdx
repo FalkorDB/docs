@@ -148,7 +148,4 @@ RETURN pathWeight, [n IN nodes(path) | n.name] AS route
   <Accordion title="What happens if a node is missing its latitude or longitude?">
     A* needs coordinates on every node it visits to compute the heuristic. Ensure `latitudeProperty` and `longitudeProperty` are present and numeric on all nodes reachable during the search.
   </Accordion>
-  <Accordion title="Can I run many point-to-point queries efficiently on a static graph?">
-    For a graph that rarely changes and is queried many times, consider preprocessing it with **[algo.CCH](/algorithms/cch)** (Customizable Contraction Hierarchies), which answers repeated point-to-point queries even faster than A* after a one-time build.
-  </Accordion>
 </AccordionGroup>
