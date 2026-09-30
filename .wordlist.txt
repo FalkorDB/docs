@@ -233,7 +233,9 @@ endtabs
 entrypoint
 enum
 enums
+EOL
 env
+ETL
 epel
 EpisodeType
 ErBEqN
@@ -349,6 +351,9 @@ graphA
 GraphBLAS
 GraphBlas
 GraphCypherQAChain
+Graphify
+graphify
+graphifyy
 Graphiti
 graphiti
 GraphName
@@ -383,6 +388,7 @@ htmlcontent
 http
 https
 hydre
+HyperLogLog
 IDE
 IDentifier
 IDF
@@ -753,6 +759,7 @@ shiftLeft
 shiftRight
 shopfast
 shortestPath
+sidebarTitle
 signin
 signinUrl
 signout
@@ -859,6 +866,7 @@ toTimeZone
 toUpper
 tracebacks
 trackpad
+triplestore
 tradeoff
 tradeoffs
 Transactional
@@ -880,6 +888,7 @@ UI
 unaliased
 undirected
 UNIQIE
+unpatched
 unnormalized
 unparseable
 unserializable
@@ -898,6 +907,7 @@ utf
 util
 UUID
 UUIDStringGenerator
+uv
 Uvicorn
 UX
 ValueType
@@ -920,6 +930,7 @@ weightProp
 whitespace
 Winkler
 WORKS
+workspaces
 WSL
 www
 XCode

@@ -1,5 +1,6 @@
 ---
-title: "text.snakeCase"
+title: "text.snakeCase: Converting Strings to Snake Case in Cypher"
+sidebarTitle: "text.snakeCase"
 description: "Converts a string to snake_case format, separating words with underscores and lowercasing all characters."
 ---
 
@@ -79,7 +80,7 @@ RETURN prop AS camelCase, flex.text.snakeCase(prop) AS dbColumn
   <Accordion title="What separators does flex.text.snakeCase recognize?">
     It recognizes spaces, hyphens, and camelCase/PascalCase word boundaries (transitions between lowercase and uppercase letters).
   </Accordion>
-  <Accordion title="Are all characters lowercased?">
+  <Accordion title="Does flex.text.snakeCase lowercase every character?">
     Yes. All characters in the output are converted to lowercase, with words separated by underscores.
   </Accordion>
 </AccordionGroup>

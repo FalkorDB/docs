@@ -1,5 +1,6 @@
 ---
-title: "WHERE"
+title: "WHERE Clause: Filtering Graph Patterns and Properties"
+sidebarTitle: "WHERE"
 description: "Filter query results in FalkorDB with the Cypher WHERE clause, using comparison operators, string predicates such as CONTAINS and STARTS WITH, and boolean logic."
 ---
 
@@ -52,17 +53,17 @@ Inline predicates are functionally equivalent to predicates specified in the WHE
 
 You can also filter based on graph patterns. These two queries are equivalent and both return presidents and the states they won:
 
-```sh
+```cypher
 MATCH (p:President), (s:State) WHERE (p)-[:WON]->(s) RETURN p, s
 ```
 
-```sh
+```cypher
 MATCH (p:President)-[:WON]->(s:State) RETURN p, s
 ```
 
 Pattern predicates can be negated and combined with logical operators. This query returns presidents who did not win in states where they were governors:
 
-```sh
+```cypher
 MATCH (p:President), (s:State) WHERE NOT (p)-[:WON]->(s) AND (p)-[:GOVERNOR]->(s) RETURN p, s
 ```
 
@@ -70,7 +71,7 @@ MATCH (p:President), (s:State) WHERE NOT (p)-[:WON]->(s) AND (p)-[:GOVERNOR]->(s
 
 Nodes can be filtered by label in the WHERE clause:
 
-```sh
+```cypher
 MATCH (n)-[:R]->() WHERE n:L1 OR n:L2 RETURN n 
 ```
 

@@ -1,5 +1,6 @@
 ---
-title: "Spring Data FalkorDB"
+title: "Spring Data FalkorDB: Java Object-Graph Mapping Reference"
+sidebarTitle: "Spring Data"
 description: "Use FalkorDB with Spring Data for JPA-style object-graph mapping. Repository pattern, derived queries, @Node/@Relationship annotations, and transaction support for Java applications."
 ---
 
@@ -516,7 +517,7 @@ public class FalkorDBTransactionConfig {
   <Accordion title="What dependencies do I need in my Maven project?">
     Add `spring-data-falkordb` (groupId: `org.springframework.data`) and `jfalkordb` (groupId: `com.falkordb`) to your `pom.xml`. Check the repository for the latest versions.
   </Accordion>
-  <Accordion title="Does it support transactions?">
+  <Accordion title="Does Spring Data FalkorDB support transactions?">
     Yes, Spring Data FalkorDB includes built-in **transaction support** via `FalkorDBTransactionManager`. Enable it with `@EnableTransactionManagement` and use `@Transactional` annotations on your service methods.
   </Accordion>
 </AccordionGroup>
