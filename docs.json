@@ -90,6 +90,7 @@
                   "algorithms/cdlp",
                   "algorithms/pagerank",
                   "algorithms/sppath",
+                  "algorithms/astar",
                   "algorithms/sspath",
                   "algorithms/wcc",
                   "algorithms/harmonic-centrality",

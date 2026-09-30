@@ -959,3 +959,8 @@ OOM
 Embeddable
 reranking
 Swappable
+AStar
+Dijkstra
+haversine
+heuristicScale
+optimality
