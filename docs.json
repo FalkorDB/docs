@@ -72,7 +72,8 @@
                     "pages": [
                       "cypher/indexing/range-index",
                       "cypher/indexing/fulltext-index",
-                      "cypher/indexing/vector-index"
+                      "cypher/indexing/vector-index",
+                      "cypher/indexing/cch-index"
                     ],
                     "root": "cypher/indexing/index"
                   },
@@ -906,6 +907,10 @@
     {
       "source": "/cypher/indexing.html",
       "destination": "/cypher/indexing"
+    },
+    {
+      "source": "/cypher/indexing/cch-index.html",
+      "destination": "/cypher/indexing/cch-index"
     },
     {
       "source": "/cypher/indexing/fulltext-index.html",
