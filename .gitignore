@@ -5,3 +5,7 @@ node_modules/
 .mintlify/
 .mint/
 package-lock.json
+
+# Python bytecode from .github/scripts
+__pycache__/
+*.pyc
