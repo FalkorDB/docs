@@ -1,0 +1,54 @@
+---
+title: "Invite user"
+sidebarTitle: "Invite user"
+api: "POST https://api.omnistrate.cloud/2022-09-01-00/resource-instance/subscription/{subscriptionId}/invite-user"
+description: "Grant a user access to a subscription."
+---
+
+Invites a user to a subscription with the role you specify. Only the subscription owner (`root` role) can invite users. If the invitee does not have a FalkorDB Cloud account yet, they receive an invitation email.
+
+## Authorization
+
+<ParamField header="Cookie" type="string" required>
+  Session cookie set by [Sign in](/cloud/api-reference/authentication/signin): `omnistrate_token=<jwt>`.
+</ParamField>
+
+## Path parameters
+
+<ParamField path="subscriptionId" type="string" required>
+  The subscription ID, for example `sub-abc123`.
+</ParamField>
+
+## Body
+
+<ParamField body="email" type="string" required>
+  Email address of the user to invite.
+</ParamField>
+
+<ParamField body="roleType" type="string" required>
+  Role to grant. One of `root`, `admin`, `editor`, `reader`, `service_editor`, `service_reader`, or `service_operator`. Use lowercase values.
+</ParamField>
+
+```json Request
+{
+  "email": "ada@example.com",
+  "roleType": "editor"
+}
+```
+
+## Roles
+
+| Role | Access |
+| --- | --- |
+| `reader` | Read-only access to deployment instances in the subscription. |
+| `editor` | Create, update, and delete deployment instances in the subscription. |
+| `admin` | Manage the subscription, including inviting and removing users. |
+| `root` | The subscription owner. Assigned automatically at subscription creation. |
+
+## Response
+
+Returns `200 OK` with an empty body.
+
+## Errors
+
+See [Error](/cloud/api-reference/schemas#error) for the error response shape.

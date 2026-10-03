@@ -1,0 +1,37 @@
+---
+title: "List instances"
+sidebarTitle: "List"
+api: "GET https://api.omnistrate.cloud/2022-09-01-00/resource-instance/sp-JvkxkPhinN/falkordb/v1/prod/falkordb-pro-customer-hosted/falkordb-pro-falkordb-customer-hosted-model-omnistrate-dedicated-tenancy/standalone"
+description: "List the IDs of all Pro Standalone instances in your subscription."
+---
+
+Returns the IDs of every Pro Standalone instance you can access. Use [Describe](/cloud/api-reference/pro/standalone/describe) to fetch the details of an individual instance.
+
+## Authorization
+
+<ParamField header="Cookie" type="string" required>
+  Session cookie set by [Sign in](/cloud/api-reference/authentication/signin): `omnistrate_token=<jwt>`.
+  Browsers send it automatically; other clients must forward it on every request.
+</ParamField>
+
+## Query parameters
+
+<ParamField query="subscriptionId" type="string">
+  ID of the subscription that owns the instance.
+</ParamField>
+
+## Response
+
+<ResponseField name="ids" type="string[]">
+  IDs of the resource instances.
+</ResponseField>
+
+```json 200 OK
+{
+  "ids": ["instance-abc123", "instance-def456"]
+}
+```
+
+## Errors
+
+See [Error](/cloud/api-reference/schemas#error) for the shared error response shape.

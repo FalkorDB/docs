@@ -1,0 +1,40 @@
+---
+title: "Update custom network"
+sidebarTitle: "Update"
+api: "PATCH https://api.omnistrate.cloud/2022-09-01-00/resource-instance/custom-network/{id}"
+description: "Rename a custom network."
+---
+
+Updates the friendly name of a custom network. The CIDR block, cloud provider, and region cannot be changed after creation.
+
+## Authorization
+
+<ParamField header="Cookie" type="string" required>
+  Session cookie set by [Sign in](/cloud/api-reference/authentication/signin): `omnistrate_token=<jwt>`.
+</ParamField>
+
+## Path parameters
+
+<ParamField path="id" type="string" required>
+  ID of the custom network.
+</ParamField>
+
+## Body
+
+<ParamField body="name" type="string">
+  New friendly name for the network.
+</ParamField>
+
+```json Request
+{
+  "name": "prod-vpc-eu"
+}
+```
+
+## Response
+
+Returns the updated custom network. See [Describe custom network](/cloud/api-reference/networking/describe) for the field list.
+
+## Errors
+
+See [Error](/cloud/api-reference/schemas#error) for the error response shape.

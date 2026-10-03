@@ -1,0 +1,114 @@
+---
+title: "Describe subscription"
+sidebarTitle: "Describe"
+api: "GET https://api.omnistrate.cloud/2022-09-01-00/subscription/{id}"
+description: "Retrieve the details of a single subscription."
+---
+
+Returns the full details of a subscription, including the plan it is attached to, your role in it, and its billing state.
+
+## Authorization
+
+<ParamField header="Cookie" type="string" required>
+  Session cookie set by [Sign in](/cloud/api-reference/authentication/signin): `omnistrate_token=<jwt>`.
+</ParamField>
+
+## Path parameters
+
+<ParamField path="id" type="string" required>
+  The subscription ID, for example `sub-abc123`.
+</ParamField>
+
+## Response
+
+<ResponseField name="id" type="string" required>
+  ID of the subscription.
+</ResponseField>
+
+<ResponseField name="status" type="string" required>
+  Subscription status: `ACTIVE`, `SUSPENDED`, `CANCELLED`, or `TERMINATED`.
+</ResponseField>
+
+<ResponseField name="roleType" type="string" required>
+  Your role in this subscription, for example `root`, `editor`, or `reader`.
+</ResponseField>
+
+<ResponseField name="defaultSubscription" type="boolean" required>
+  Whether this is the default subscription for the user.
+</ResponseField>
+
+<ResponseField name="serviceId" type="string" required>
+  ID of the subscribed service.
+</ResponseField>
+
+<ResponseField name="serviceName" type="string" required>
+  Name of the service.
+</ResponseField>
+
+<ResponseField name="serviceLogoURL" type="string" required>
+  Logo for the service.
+</ResponseField>
+
+<ResponseField name="serviceOrgId" type="string" required>
+  ID of the organization that owns the service.
+</ResponseField>
+
+<ResponseField name="serviceOrgName" type="string" required>
+  Name of the organization that owns the service.
+</ResponseField>
+
+<ResponseField name="productTierId" type="string" required>
+  ID of the subscribed product tier.
+</ResponseField>
+
+<ResponseField name="productTierName" type="string" required>
+  Name of the product tier.
+</ResponseField>
+
+<ResponseField name="cloudProviderNames" type="string[]" required>
+  Cloud providers available to this subscription.
+</ResponseField>
+
+<ResponseField name="rootUserId" type="string" required>
+  ID of the user that owns the subscription.
+</ResponseField>
+
+<ResponseField name="rootUserName" type="string">
+  Name of the user that owns the subscription.
+</ResponseField>
+
+<ResponseField name="rootUserOrgId" type="string">
+  ID of the owning user's organization.
+</ResponseField>
+
+<ResponseField name="rootUserOrgName" type="string">
+  Name of the owning user's organization.
+</ResponseField>
+
+<ResponseField name="subscriptionOwnerName" type="string" required>
+  Name of the subscription owner.
+</ResponseField>
+
+<ResponseField name="accountConfigIdentityId" type="string" required>
+  ID of the organization the account configuration belongs to.
+</ResponseField>
+
+<ResponseField name="maxNumberOfInstances" type="number">
+  Maximum number of deployment instances allowed for this subscription.
+</ResponseField>
+
+<ResponseField name="paymentMethodConfigured" type="boolean">
+  `true` when a payment method is configured, or when none is required.
+</ResponseField>
+
+<ResponseField name="allowCreatesWhenPaymentNotConfigured" type="boolean">
+  Whether instances can be created before a payment method is configured.
+</ResponseField>
+
+<ResponseField name="createdAt" type="string" required>
+  Time the subscription was created.
+</ResponseField>
+
+## Errors
+
+See [Error](/cloud/api-reference/schemas#error) for the error response shape.

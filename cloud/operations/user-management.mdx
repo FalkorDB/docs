@@ -1,0 +1,79 @@
+---
+title: "User Management"
+description: "Guide to managing database users on a FalkorDB Cloud instance. Learn how to create, update, and delete users, assign ACL presets, and apply custom Redis ACL rules."
+---
+
+import AclPresetClauses from '/snippets/cloud/acl-preset-clauses.mdx';
+
+FalkorDB Cloud lets you manage database users directly from the instance page. You can create additional users, assign them a built-in ACL preset or a custom Redis ACL rule, update their credentials or permissions, and delete users you no longer need.
+
+> **Prerequisite:** The instance must be in a **running** state before you can manage its users.
+
+To manage the same users programmatically, see the [Database users API](/cloud/api-reference/database-users/overview).
+
+## Opening the User Access Tab
+
+1. Go to [app.falkordb.cloud](https://app.falkordb.cloud) and sign in.
+2. Select your instance from the list.
+3. Click the **User Access** tab on the instance detail page.
+
+The tab shows a table of all users configured on the instance, along with their assigned preset or ACL rule.
+
+## Default User
+
+Every instance has a **default user** that is created automatically during deployment. This user cannot be deleted — its credentials can only be changed by modifying the instance configuration.
+
+## Creating a User
+
+1. From the **User Access** tab, click **Add User**.
+2. Fill in the required fields:
+   - **Username** — the login name for the new user.
+   - **Password** — a secure password for the user.
+3. Assign permissions using one of the two options:
+   - **ACL preset** — select one of the built-in presets from the dropdown:
+     - `Admin` — full read/write access and operations.
+     - `Read` — read-only access to graphs.
+     - `Write` — full read/write access to graphs.
+
+     Each preset expands to a fixed ACL clause:
+
+     <AclPresetClauses />
+
+     See [Presets](/cloud/api-reference/database-users/overview#presets) for a breakdown of what these commands allow.
+   - **Custom ACL** — enter a Redis ACL rule string directly to define fine-grained access control. See [ACL](/commands/acl) for available rule syntax.
+4. Click **Save** to create the user.
+
+## Updating a User
+
+1. From the **User Access** tab, locate the user you want to update in the table.
+2. Click the **Edit** (pencil) icon next to the user.
+3. Modify the **password**, **preset**, or **custom ACL** as needed.
+4. Click **Save** to apply the changes.
+
+## Deleting a User
+
+1. From the **User Access** tab, locate the user you want to remove.
+2. Click the **Delete** (trash) icon next to the user.
+3. Confirm the deletion in the dialog that appears.
+
+> The **default user** cannot be deleted.
+
+## Frequently Asked Questions
+
+<AccordionGroup>
+  <Accordion title="Can I delete the default user?">
+    No. The default user is created during deployment and cannot be deleted. Its credentials can only be changed by modifying the instance configuration.
+  </Accordion>
+  <Accordion title="What ACL presets are available?">
+    Three presets are available: **Read** (graph read access only), **Write** (full graph read/write), and **Admin** (every allowed command, including administrative ones such as `FLUSHALL` and `GRAPH.CONFIG`). No preset lets a database user manage other database users.
+  </Accordion>
+  <Accordion title="How do I apply fine-grained access control?">
+    Select **Custom ACL** when creating or editing a user and enter a Redis ACL rule string. See the [ACL command reference](/commands/acl) for the full rule syntax.
+  </Accordion>
+  <Accordion title="Does the instance need to be running to manage users?">
+    Yes. The instance must be in a **running** state before you can open the User Access tab and make changes.
+  </Accordion>
+  <Accordion title="Can I change a user's password after creation?">
+    Yes. Click the **Edit** icon next to the user in the User Access tab, enter a new password, and save.
+  </Accordion>
+</AccordionGroup>
