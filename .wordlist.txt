@@ -588,6 +588,9 @@ ontology
 OpenAI
 OpenAIClient
 OpenAPI
+OpenClaw
+openclaw
+OpenClaw's
 OpenCypher
 openCypher
 opencypher
@@ -932,6 +935,7 @@ WaitingQueries
 walkthrough
 WCC
 weightProp
+WhatsApp
 whitespace
 Winkler
 WORKS
