@@ -1,0 +1,27 @@
+name: Notify Search Engines
+
+on:
+  workflow_run:
+    workflows: ["pages-build-deployment"]
+    types:
+      - completed
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    permissions: {}
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    steps:
+      # Google Indexing
+      - name: Notify Google
+        uses: robingenz/google-indexing-action@v1.0.2
+        with:
+          siteUrl: 'https://docs.falkordb.com'
+          gcpServiceAccountKey: ${{ secrets.GCP_SERVICE_ACCOUNT_JSON }}
+
+      # Bing + DuckDuckGo + Yandex via IndexNow
+      - name: Notify Bing (IndexNow)
+        uses: bojieyang/indexnow-action@v2.1.0
+        with:
+          sitemap-location: 'https://docs.falkordb.com/sitemap.xml'
+          key: ${{ secrets.INDEXNOW_KEY }}
