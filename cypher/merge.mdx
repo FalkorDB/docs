@@ -8,11 +8,11 @@ The MERGE clause ensures that a path exists in the graph (either the path alread
 
 MERGE either matches existing nodes and binds them, or it creates new data and binds that.
 
-It’s like a combination of MATCH and CREATE that also allows you to specify what happens if the data was matched or created.
+It's like a combination of MATCH and CREATE that also allows you to specify what happens if the data was matched or created.
 
 For example, you can specify that the graph must contain a node for a user with a certain name.
 
-If there isn’t a node with the correct name, a new node will be created and its name property set.
+If there isn't a node with the correct name, a new node will be created and its name property set.
 
 Any aliases in the MERGE path that were introduced by earlier clauses can only be matched; MERGE will not create them.
 

@@ -77,7 +77,7 @@ When a header row exists and `WITH HEADERS` is specified, the `row` variable bec
 
 ### Importing data from multiple CSVs
 
-Building on the previous example, we’ll introduce a second CSV file, `acted_in.csv`, which connects actors to movies.
+Building on the previous example, we'll introduce a second CSV file, `acted_in.csv`, which connects actors to movies.
 
 ### acted_in.csv
 
@@ -111,7 +111,7 @@ MERGE (a)-[:ACTED_IN]->(m)
 
 ### Importing remote files
 
-FalkorDB supports importing remote CSVs via HTTPS. Here’s an example loading the Big Mac dataset from calmcode.io:
+FalkorDB supports importing remote CSVs via HTTPS. Here's an example loading the Big Mac dataset from calmcode.io:
 
 ```cypher
 LOAD CSV WITH HEADERS FROM 'https://calmcode.io/static/data/bigmac.csv' AS row
