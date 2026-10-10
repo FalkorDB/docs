@@ -1,0 +1,14 @@
+/* Sidebar navigation
+ *
+ * Mintlify spaces top-level groups with `mt-6 lg:mt-8` (32px). That default
+ * assumes a handful of expanded groups. This site has 14 collapsible groups in
+ * the FalkorDB product, so the separators dominate the sidebar and push most of
+ * the navigation below the fold. Tighten them into a scannable list.
+ */
+#sidebar-content .sidebar-group {
+  margin-top: 0.5rem;
+}
+
+#sidebar-content .sidebar-group:first-child {
+  margin-top: 0;
+}

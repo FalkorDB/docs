@@ -1,0 +1,67 @@
+---
+title: "Create custom network"
+sidebarTitle: "Create"
+api: "POST https://api.omnistrate.cloud/2022-09-01-00/resource-instance/custom-network"
+description: "Reserve a CIDR block for a custom network in a cloud provider region."
+---
+
+Creates a custom network. FalkorDB provisions the underlying VPC or VNet in the requested region using the CIDR block you reserve. Once the network reaches `READY`, pass its ID as `custom_network_id` when creating an Enterprise deployment instance.
+
+<Note>
+  VPC peering is not available through the API. After the network is `READY`, open a support ticket at [support.falkordb.com](https://support.falkordb.com) or email [support@falkordb.com](mailto:support@falkordb.com) to request peering with your own VPC. Choose a CIDR block that does not overlap with the networks you plan to peer.
+</Note>
+
+## Authorization
+
+<ParamField header="Cookie" type="string" required>
+  Session cookie set by [Sign in](/cloud/api-reference/authentication/signin): `omnistrate_token=<jwt>`.
+</ParamField>
+
+## Body
+
+<ParamField body="cloudProviderName" type="string" required>
+  Cloud provider to create the network in, for example `aws` or `gcp`.
+</ParamField>
+
+<ParamField body="cloudProviderRegion" type="string" required>
+  Region to create the network in, for example `us-east-1`.
+</ParamField>
+
+<ParamField body="cidr" type="string" required>
+  CIDR block for the network, for example `10.0.0.0/16`.
+</ParamField>
+
+<ParamField body="name" type="string">
+  Friendly name to distinguish networks that share a CIDR.
+</ParamField>
+
+<ParamField body="networkFeaturesConfiguration" type="object">
+  Optional network feature flags.
+
+  <Expandable title="properties">
+    <ParamField body="isPrivateLinkEnabled" type="boolean">
+      Enable PrivateLink for the network.
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+<ParamField body="orgId" type="string">
+  ID of the organization that owns the custom network. Defaults to your organization.
+</ParamField>
+
+```json Request
+{
+  "cloudProviderName": "aws",
+  "cloudProviderRegion": "us-east-1",
+  "cidr": "10.0.0.0/16",
+  "name": "prod-vpc"
+}
+```
+
+## Response
+
+Returns the created custom network. See [Describe custom network](/cloud/api-reference/networking/describe) for the field list.
+
+## Errors
+
+See [Error](/cloud/api-reference/schemas#error) for the error response shape.

@@ -1,0 +1,35 @@
+---
+title: "Trigger backup"
+sidebarTitle: "Backup"
+api: "POST https://api.omnistrate.cloud/2022-09-01-00/resource-instance/sp-JvkxkPhinN/falkordb/v1/prod/falkordb-pro-customer-hosted/falkordb-pro-falkordb-customer-hosted-model-omnistrate-dedicated-tenancy/multi-Zone/{id}/backup"
+description: "Trigger an on-demand backup of a Pro Multi-Zone instance."
+---
+
+Starts an on-demand backup. Backups run asynchronously and do not interrupt the instance.
+
+## Authorization
+
+<ParamField header="Cookie" type="string" required>
+  Session cookie set by [Sign in](/cloud/api-reference/authentication/signin): `omnistrate_token=<jwt>`.
+  Browsers send it automatically; other clients must forward it on every request.
+</ParamField>
+
+## Path parameters
+
+<ParamField path="id" type="string" required>
+  ID of the resource instance.
+</ParamField>
+
+## Query parameters
+
+<ParamField query="subscriptionId" type="string">
+  ID of the subscription that owns the instance.
+</ParamField>
+
+## Response
+
+Returns `202 Accepted` with an empty body when the operation is queued.
+
+## Errors
+
+See [Error](/cloud/api-reference/schemas#error) for the shared error response shape.

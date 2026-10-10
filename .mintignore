@@ -1,0 +1,13 @@
+README.md
+AGENTS.md
+existing_routes.txt
+scripts/
+build/
+node_modules/
+cloud/**/drafts/
+cloud/**/*.draft.mdx
+enterprise/**/internal/
+enterprise/**/README.md
+enterprise/**/AGENTS.md
+graphrag/**/README.md
+graphrag/**/benchmark/

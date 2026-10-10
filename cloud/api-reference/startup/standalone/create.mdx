@@ -1,0 +1,121 @@
+---
+title: "Create instance"
+sidebarTitle: "Create"
+api: "POST https://api.omnistrate.cloud/2022-09-01-00/resource-instance/sp-JvkxkPhinN/falkordb/v1/prod/falkordb-startup-customer-hosted/falkordb-startup-falkordb-customer-hosted-model-omnistrate-multi-tenancy/standalone"
+description: "Provision a new Startup Standalone instance."
+---
+
+Provisions a new Startup Standalone instance in the requested cloud provider and region. The instance is created asynchronously; poll [Describe](/cloud/api-reference/startup/standalone/describe) until `status` is `RUNNING`.
+
+## Authorization
+
+<ParamField header="Cookie" type="string" required>
+  Session cookie set by [Sign in](/cloud/api-reference/authentication/signin): `omnistrate_token=<jwt>`.
+  Browsers send it automatically; other clients must forward it on every request.
+</ParamField>
+
+## Query parameters
+
+<ParamField query="subscriptionId" type="string">
+  ID of the subscription that owns the instance.
+</ParamField>
+
+## Body
+
+<ParamField body="cloud_provider" type="string" required>
+  Cloud provider to provision the instance on, for example `aws` or `gcp`.
+</ParamField>
+
+<ParamField body="region" type="string" required>
+  Region to provision the instance in, for example `us-east-1`.
+</ParamField>
+
+<ParamField body="requestParams" type="object" required>
+  Instance configuration.
+
+  <Expandable title="requestParams properties">
+    <ParamField body="enableTLS" type="boolean" default={false} required>
+      Enable TLS for database connections. Set at creation only.
+    </ParamField>
+
+    <ParamField body="falkordbPassword" type="string" required>
+      Default password for the database. Updating this value after deployment restarts the instance.
+    </ParamField>
+
+    <ParamField body="falkordbUser" type="string" default="falkordb" required>
+      Default username for the database. Set at creation only.
+    </ParamField>
+
+    <ParamField body="AOFPersistenceConfig" type="string" default="everysec">
+      Append-only file persistence mode. One of `everysec` or `always`. Set at creation only.
+    </ParamField>
+
+    <ParamField body="description" type="string" default="Description">
+      Description of the instance.
+    </ParamField>
+
+    <ParamField body="falkorDBCacheSize" type="number" default={25}>
+      Number of cached query executions. Between `1` and `256`. Set at creation only. Maps to [`CACHE_SIZE`](/getting-started/configuration.html#cache_size) in the FalkorDB configuration.
+    </ParamField>
+
+    <ParamField body="falkorDBMaxQueuedQueries" type="number" default={50}>
+      Maximum number of queries that can be queued. Between `1` and `512`. Set at creation only. Maps to [`MAX_QUEUED_QUERIES`](/getting-started/configuration.html#max_queued_queries) in the FalkorDB configuration.
+    </ParamField>
+
+    <ParamField body="falkorDBNodeCreationBuffer" type="number" default={16384}>
+      Node creation buffer size. Between `256` and `32768`. Set at creation only. Maps to [`NODE_CREATION_BUFFER`](/getting-started/configuration.html#node_creation_buffer) in the FalkorDB configuration.
+    </ParamField>
+
+    <ParamField body="falkorDBQueryMemCapacity" type="number" default={21474836480}>
+      Maximum memory a single query may use, in bytes. Between `5242880` (5 MiB) and `21474836480` (20 GiB). Set at creation only. Maps to [`QUERY_MEM_CAPACITY`](/getting-started/configuration.html#query_mem_capacity) in the FalkorDB configuration.
+    </ParamField>
+
+    <ParamField body="falkorDBResultSetSize" type="number" default={10000}>
+      Maximum number of records returned by a query. Between `0` and `1000000`, where `0` means unlimited. Set at creation only. Maps to [`RESULTSET_SIZE`](/getting-started/configuration.html#resultset_size) in the FalkorDB configuration.
+    </ParamField>
+
+    <ParamField body="falkorDBTimeoutDefault" type="number" default={0}>
+      Default query timeout in milliseconds. Between `0` and `45000`, where `0` disables the timeout. Set at creation only. Maps to [`TIMEOUT_DEFAULT`](/getting-started/configuration.html#timeout_default) in the FalkorDB configuration.
+    </ParamField>
+
+    <ParamField body="falkorDBTimeoutMax" type="number" default={0}>
+      Maximum query timeout in milliseconds. Between `0` and `45000`, where `0` disables the limit. Set at creation only. Maps to [`TIMEOUT_MAX`](/getting-started/configuration.html#timeout_max) in the FalkorDB configuration.
+    </ParamField>
+
+    <ParamField body="memoryRequestsAndLimits" type="string" default="1GB">
+      Memory requested for and allocated to the database, for example `1GB`. Set at creation only.
+    </ParamField>
+
+    <ParamField body="name" type="string" default="My favorite database">
+      Human-readable name for the instance.
+    </ParamField>
+
+    <ParamField body="RDBPersistenceConfig" type="string" default="low">
+      How often the RDB snapshot is written to disk. One of `low`, `medium`, or `high`. Set at creation only.
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+## Sizing and tier availability
+
+The Startup tier does not expose `nodeInstanceType`. Size the database with `memoryRequestsAndLimits` instead, which accepts `1200M` (1 GB, the default) or `2200M` (2 GB).
+
+`nodeInstanceType`, `numReplicas`, `maxMemory`, and `enableEnterpriseModule` are **not** available on the Startup tier.
+
+See [Instance configuration](/cloud/api-reference/schemas#instance-configuration) for the full field reference.
+
+## Response
+
+<ResponseField name="id" type="string">
+  ID of the resource instance.
+</ResponseField>
+
+```json 202 Accepted
+{
+  "id": "instance-abc123"
+}
+```
+
+## Errors
+
+See [Error](/cloud/api-reference/schemas#error) for the shared error response shape.

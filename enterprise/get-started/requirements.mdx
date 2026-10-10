@@ -1,0 +1,171 @@
+---
+title: "Prerequisites and system requirements for FalkorDB Enterprise"
+sidebarTitle: "Requirements"
+description: "Portal access, cluster capacity, ingress controller, local tooling, permissions, and network access needed before you install."
+icon: "list-check"
+---
+
+Confirm each item below before running the installer. The installer performs a permission preflight check and prints an install plan, but it cannot provision capacity, install a production ingress controller, or open network egress for you.
+
+## FalkorDB Enterprise Portal access
+
+Registry credentials and licenses come from the [FalkorDB Enterprise Portal](https://portal.enterprise.falkordb.cloud). Request access from your FalkorDB account manager before you start.
+
+<Check>You can sign in to the portal at `https://portal.enterprise.falkordb.cloud`.</Check>
+<Check>Your organization has quota assigned, so you can register a cluster.</Check>
+<Check>Your portal role is **developer** or **org-admin**, so you can see the registry access token.</Check>
+
+See [Enterprise Portal](/enterprise/get-started/enterprise-portal) for how to register a cluster and get its install command.
+
+## Cluster capacity
+
+<Check>At least 3 worker nodes.</Check>
+<Check>4 CPU and 16 GB of memory per worker node.</Check>
+<Check>A default `StorageClass`, ideally CSI-backed so volume snapshot backups work.</Check>
+
+Kubernetes 1.27 or later is recommended. On OpenShift, use OCP 4.14 or later.
+
+Only one FalkorDB Enterprise installation is supported per Kubernetes cluster.
+
+## Ingress controller
+
+The Admin UI and the Admin Server API are published through a single Kubernetes `Ingress` object, the chart's gateway Ingress. It routes `/api` to the Admin Server and everything else to the Admin UI on one hostname. An `Ingress` object does nothing on its own: the cluster needs an ingress controller that serves its `IngressClass`.
+
+<Check>An ingress controller is installed and serving an `IngressClass`.</Check>
+<Check>The controller is exposed outside the cluster, usually through a `LoadBalancer` Service.</Check>
+
+Check which classes are available, and which one is the default:
+
+```bash
+kubectl get ingressclass
+```
+
+The class marked `(default)` is used when `gateway.ingress.className` is empty. Set `gateway.ingress.className` explicitly when the cluster has no default class or has more than one controller.
+
+| Platform | Typical controller |
+| --- | --- |
+| Any cluster | [ingress-nginx](https://kubernetes.github.io/ingress-nginx/) |
+| Amazon EKS | [AWS Load Balancer Controller](https://kubernetes-sigs.github.io/aws-load-balancer-controller/) or ingress-nginx |
+| Google GKE | GKE Ingress (`gce`) or ingress-nginx |
+| Azure AKS | Application routing add-on or ingress-nginx |
+| OpenShift | The built-in OpenShift router |
+
+<Note>
+  For a quick install with no custom values, the installer uses the cluster's default `IngressClass` when one exists. Otherwise it installs ingress-nginx into the `ingress-nginx` namespace and marks it as the default class. For production, install and manage the controller yourself so its upgrades are not tied to the FalkorDB Enterprise installer. On such a quick install, pass `--no-ingress` to skip the Ingress and use two `LoadBalancer` Services instead.
+</Note>
+
+When you enable the [network policy](/enterprise/reference/network-policy), it admits ingress traffic to the Admin Server and Admin UI only from the controller's namespace, `ingress-nginx` by default. Set `networkPolicy.ingressControllerNamespace` if your controller runs elsewhere.
+
+<Warning>
+  If clients reach the Admin Server and Admin UI through `LoadBalancer` Services rather than through a controller, and you also enable the network policy, that traffic is dropped. `--no-ingress` sets this up only on a quick install with no custom values or access overrides. With your own values file, set `adminServer.service.type`, `adminUi.service.type`, and `gateway.ingress.enabled` yourself. Add rules for those clients under `networkPolicy.adminServer.extraIngress` and `networkPolicy.adminUi.extraIngress`, or leave the policy disabled.
+</Warning>
+
+## Local tooling
+
+The machine that runs the installer needs:
+
+| Tool | Purpose |
+| --- | --- |
+| `kubectl` | Applies CRDs and inspects the cluster. |
+| `helm` | Pulls the Enterprise chart from the OCI registry and installs it with its platform dependencies. |
+| `curl` | Downloads the installer script. |
+| `base64` | Encodes image pull credentials for the registry Secret. |
+
+To mirror images into your own registry you also need `skopeo` and `openssl`. See [Private registries](/enterprise/deployment/private-images).
+
+Verify the active context before installing:
+
+```bash
+kubectl config current-context
+kubectl cluster-info
+```
+
+## Kubernetes permissions
+
+Your Kubernetes user must be able to create:
+
+- Namespaces
+- CRDs
+- RBAC resources (ClusterRoles and bindings)
+- KubeBlocks resources
+- Namespace-scoped workloads, Services, Ingresses, Secrets, and PVCs
+
+The installer verifies these permissions before it changes the cluster. Pass `--skip-auth-check` to bypass the check when your platform restricts `SelfSubjectAccessReview`.
+
+## Network access
+
+### Image registry
+
+The chart pulls every image it templates from `registry.falkordb.cloud`. That covers the Admin Server, Admin UI, FalkorDB Browser, the FalkorDB database image, the KubeBlocks operator, and the hook jobs. The FalkorDB images are published there directly, and third-party images are mirrored there under their upstream path.
+
+| Host | Contents |
+| --- | --- |
+| `registry.falkordb.cloud` | Enterprise Helm chart, Enterprise images, and mirrored third-party images. Credentials required for every pull. |
+
+<Info>
+  The same username and access token authenticate the chart pull and every image pull, because they share the registry host. Copy them from the cluster's install guide in the [Enterprise Portal](/enterprise/get-started/enterprise-portal).
+</Info>
+
+### Installer downloads
+
+The installer script installs KubeBlocks and the snapshot controller as their own Helm releases from their upstream chart repositories, and applies their CRDs from GitHub. Those releases pull images from their upstream registries rather than from `registry.falkordb.cloud`. The machine running the installer and the cluster need outbound access to:
+
+| Host | Used for | Skipped with |
+| --- | --- | --- |
+| `falkordb.github.io` | The installer script and mirroring scripts. | — |
+| `github.com`, `raw.githubusercontent.com` | KubeBlocks CRDs. | `--skip-crds` |
+| `raw.githubusercontent.com` | VolumeSnapshot CRDs, only with `--install-snapshot-crds`. By default the snapshot controller chart installs them. | Omit `--install-snapshot-crds` |
+| `apecloud.github.io` | KubeBlocks Helm chart. | `--skip-kubeblocks` |
+| `docker.io`, `apecloud-registry.cn-zhangjiakou.cr.aliyuncs.com` | KubeBlocks images. | `--skip-kubeblocks` |
+| `piraeus.io` | Snapshot controller Helm chart. | `--skip-snapshot-controller` |
+| `registry.k8s.io`, `ghcr.io` | Snapshot controller images. | `--skip-snapshot-controller` |
+| `kubernetes.github.io`, `registry.k8s.io` | ingress-nginx chart and images, only when the installer installs ingress-nginx. | `--no-ingress`, or an existing default `IngressClass` |
+
+<Tip>
+  A cluster that can reach only `registry.falkordb.cloud` can still install the full stack. Install with `helm` directly instead of the installer, or mirror everything into your own registry. See [Private registries](/enterprise/deployment/private-images).
+</Tip>
+
+### Optional components
+
+These subcharts are disabled by default. When you enable one, it pulls from its upstream registry unless you retarget it with `examples/mirror-registry-values.yaml`.
+
+| Component | Upstream registry |
+| --- | --- |
+| `csi-hostpath-driver`, `csi-nfs` | `registry.k8s.io` |
+| `snapshot-controller` | `registry.k8s.io`, and `ghcr.io` for the conversion webhook |
+| `csi-s3` | `cr.yandex` and `registry.k8s.io` |
+
+## Values to prepare
+
+Production installs go faster if you collect these first:
+
+<AccordionGroup>
+  <Accordion title="Identity and networking" icon="globe">
+    - Kubernetes context name
+    - The Kubernetes cluster ID, from `kubectl get ns kube-system -o jsonpath='{.metadata.uid}'`
+    - FalkorDB Enterprise namespace and KubeBlocks namespace
+    - Public Admin UI hostname, with DNS pointing at the ingress controller
+    - The `IngressClass` to use
+    - TLS certificate or cert-manager issuer for that hostname
+  </Accordion>
+  <Accordion title="Secrets" icon="key">
+    - A stable JWT secret of at least 32 characters — generate one with `openssl rand -hex 32`
+    - Registry username and access token for `registry.falkordb.cloud`, from the Enterprise Portal
+    - A signed FalkorDB Enterprise license, issued when you register the cluster in the Enterprise Portal
+  </Accordion>
+  <Accordion title="Storage" icon="hard-drive">
+    - Storage class for Admin Server persistence, if the cluster default is not suitable
+    - The CSI driver name backing that storage class, for volume snapshot backups
+  </Accordion>
+</AccordionGroup>
+
+## Next step
+
+<CardGroup cols={2}>
+  <Card title="Enterprise Portal" icon="id-card" href="/enterprise/get-started/enterprise-portal">
+    Register the cluster and get its license and install command.
+  </Card>
+  <Card title="Quickstart" icon="rocket" href="/enterprise/get-started/quickstart">
+    Install the default stack and sign in to the Admin UI.
+  </Card>
+</CardGroup>

@@ -1,0 +1,165 @@
+---
+title: "Use the FalkorDB Enterprise Portal"
+sidebarTitle: "Enterprise Portal"
+description: "Get portal access, register Kubernetes clusters, issue licenses, get registry credentials and install commands, and manage your organization."
+icon: "id-card"
+---
+
+The [FalkorDB Enterprise Portal](https://portal.enterprise.falkordb.cloud) is the FalkorDB-hosted site where your team registers Kubernetes clusters, issues licenses, gets registry credentials, and follows releases. It runs on FalkorDB infrastructure and never connects to your clusters. You carry what a cluster needs from the portal yourself: the license string and the registry access token the install command uses.
+
+<Card title="Open the Enterprise Portal" icon="arrow-up-right-from-square" href="https://portal.enterprise.falkordb.cloud" horizontal>
+  `https://portal.enterprise.falkordb.cloud`
+</Card>
+
+## Get access
+
+Request access from your FalkorDB account manager. FalkorDB creates your organization, sets the quota it can draw against, and invites your first administrator.
+
+To avoid a round trip, include:
+
+| Detail | Why it is needed |
+| --- | --- |
+| Organization name | Identifies the organization and is recorded in every license. |
+| Email of the first administrator | That person administers the organization and invites everyone else. |
+| Expected CPU cores, memory, and deployments | Sets the quota all your clusters draw against. |
+| Number of Kubernetes clusters | Quota is capped per cluster count, not only in total. |
+| Number of people who need Admin UI access | Sets the user seat limit written into each license. |
+| Contract term | Caps how far out a license may be dated. |
+
+The invitation email lets the administrator set up sign-in. After that, sign in at the portal with your work email. If your organization has connected its own identity provider, the portal sends you there instead.
+
+<Note>
+  Until FalkorDB assigns quota, the portal shows **No quota has been assigned yet** and you cannot register a cluster.
+</Note>
+
+## Roles
+
+Every member of your organization has one role.
+
+| Capability | `viewer` | `developer` | `org-admin` |
+| --- | :---: | :---: | :---: |
+| See clusters, licenses, quota, and releases | ✓ | ✓ | ✓ |
+| Register, update, and retire clusters | | ✓ | ✓ |
+| Issue and regenerate licenses | | ✓ | ✓ |
+| Reveal registry access tokens | | ✓ | ✓ |
+| Request quota changes | | | ✓ |
+| Invite and remove members | | | ✓ |
+| Configure single sign-on and SCIM | | | ✓ |
+| Configure notifications | | | ✓ |
+| Read the audit log | | | ✓ |
+
+## Register a cluster
+
+Register each Kubernetes cluster before you install FalkorDB Enterprise on it. Registration issues the cluster's first license and also tries to issue a registry access token for it. See [Install from the portal](#install-from-the-portal) for what happens if the token could not be issued.
+
+<Steps>
+  <Step title="Get the cluster ID">
+    The license is bound to the UID of the cluster's `kube-system` namespace. Run this against the cluster you are registering:
+
+    ```bash
+    kubectl get ns kube-system -o jsonpath='{.metadata.uid}'
+    ```
+
+    See [Binding to a cluster](/enterprise/licensing#binding-to-a-cluster) for why this value is used.
+  </Step>
+  <Step title="Start the wizard">
+    Go to **Clusters** and click **Register a cluster**.
+  </Step>
+  <Step title="Choose the platform">
+    Pick where the cluster runs: Amazon EKS, Google GKE, Azure AKS, OpenShift, Rancher, or **Something else**. The wizard shows the requirement that platform adds and links to the matching guide under **Platform guides** in these docs.
+  </Step>
+  <Step title="Choose the environment and release channel">
+    Pick **Production**, **Staging**, or **Development**. The environment sets the starting release channel (`STABLE`, `BETA`, or `LTS`), which you can change now or at any time afterwards.
+  </Step>
+  <Step title="Identify the install">
+    Enter a display name, the Kubernetes cluster ID, the namespace, and the Helm release name. If you pull images through your own mirror, enter its **Image registry prefix**. Otherwise leave it blank.
+  </Step>
+  <Step title="Declare capacity">
+    Enter the CPU cores, memory, and deployments this cluster may run. The wizard shows how much quota remains. These numbers are written into the license and enforced inside the cluster, so declaring less than you need throttles the cluster at what you declared.
+  </Step>
+  <Step title="Register">
+    Review the summary and click **Register and issue a license**. If the capacity exceeds your remaining quota, the button reads **Register and request the capacity** instead: the cluster is saved as **Waiting for capacity**, and FalkorDB reviews the request.
+  </Step>
+</Steps>
+
+## Install from the portal
+
+Once a cluster is licensed, its page shows an install guide built from what you entered. A cluster that is **Waiting for capacity** has no license yet, so its install guide appears only after FalkorDB approves the quota request. The guide produces three artifacts:
+
+| Artifact | Contents | Handling |
+| --- | --- | --- |
+| `falkordb-secrets.yaml` | A Secret holding the license key. | Apply it first. Keep it out of version control. |
+| `falkordb-values.yaml` | Chart values that reference the Secret by name. | Safe to commit. |
+| Install command | The installer invocation, including `--registry-username` and `--registry-password`. | Run it from the folder where the two files are saved. Keep it out of scripts you commit. |
+
+The registry access token is hidden until you reveal it, and only **developer** and **org-admin** members can reveal it. The same username and token log Helm in to `registry.falkordb.cloud` to pull the chart and authenticate every image pull. The installer creates the image pull Secret from them.
+
+Token issuing is best-effort, so check the install guide before you run the command. If the cluster has no token of its own, the guide fills in your organization's token instead. If neither exists, the guide says so and the command cannot complete: contact [support](https://support.falkordb.com) to have a token issued.
+
+The install settings include **Expose with LoadBalancer services instead of an Ingress**. Turn it on to add `--no-ingress` to the command when the cluster has no ingress controller.
+
+<Warning>
+  The access token belongs to the cluster it was issued with. Use each cluster's own token rather than sharing one across clusters.
+</Warning>
+
+Confirm the cluster meets the [requirements](/enterprise/get-started/requirements), including an ingress controller unless you chose LoadBalancer services, then run the command. See [Quickstart](/enterprise/get-started/quickstart) for what the installer does.
+
+## Manage licenses
+
+A cluster's page lists every license signed for it. Click **Regenerate** next to a license to issue a new one, for example before the current one expires or after the string was mishandled. Activate the new string in the cluster as described in [Licensing](/enterprise/licensing).
+
+Licenses are verified offline inside the cluster. Regenerating a license does not disable the previous one, and nothing in the portal reaches a running cluster.
+
+## Track versions and upgrades
+
+**Releases** lists every published FalkorDB Enterprise version with its release notes. Each cluster follows one release channel, and its page lists the versions published on that channel.
+
+The portal cannot see into your cluster. To keep its records accurate, pick the version a cluster is running on its page and save it. Saving records the version and installs nothing.
+
+Before an upgrade, use **Compare values**, linked from the cluster's page, to check what a new values file changes about the release you are running. Both files stay in your browser tab.
+
+<Steps>
+  <Step title="Read the installed values">
+    Run the command the page shows against the cluster you are upgrading, for example:
+
+    ```bash
+    helm get values falkordb-enterprise -n falkordb-system -o yaml
+    ```
+  </Step>
+  <Step title="Paste and compare">
+    Paste the output into the page, next to the values file the cluster page generates. The portal lists what would change, keyed by value path.
+  </Step>
+</Steps>
+
+Then follow [Upgrade FalkorDB Enterprise](/enterprise/upgrades/enterprise).
+
+## Quota
+
+The **Capacity** page totals the capacity declared across your registered clusters. These are the numbers written into your licenses, not observed usage.
+
+**Quota** shows your current entitlement: Kubernetes clusters, deployments, CPU cores, memory, user seats, and term end. To grow beyond it, an **org-admin** fills in **Request a quota change** with the new values and a reason. The request stays listed until FalkorDB approves or rejects it. A cluster waiting for capacity is licensed automatically when the request is approved.
+
+## Retire a cluster
+
+When an install is finished with, retire it from its page. A retired cluster moves to the **Retired** section of the cluster list but keeps consuming its declared capacity, so putting it back spends no quota.
+
+## Administer your organization
+
+<AccordionGroup>
+  <Accordion title="Members" icon="users">
+    An **org-admin** invites people from **Members** and picks their role. Invitees receive an email to set up sign-in. Removing someone takes effect immediately, including for a session they already have open.
+  </Accordion>
+  <Accordion title="Single sign-on" icon="shield-check">
+    Connect any identity provider that supports OpenID Connect discovery from **Single sign-on**. People who sign in through it are matched to existing accounts by email address. Enable SCIM directory provisioning there too, so your identity provider creates and deactivates portal accounts directly.
+  </Accordion>
+  <Accordion title="Notifications" icon="bell">
+    Add delivery targets (email, Slack, Microsoft Teams, Google Chat, or a webhook) and routing rules that choose which events reach which target. Events include licenses issued, expiring, or expired, quota changes, registry credential rotations, and published releases. Every event is also recorded in the portal, whatever you configure.
+  </Accordion>
+  <Accordion title="Audit log" icon="file-clock">
+    **Audit** records every action taken against your organization, including actions by FalkorDB staff. Staff entries carry the reason they gave.
+  </Accordion>
+</AccordionGroup>
+
+## Get help
+
+The portal's **Support** link opens [support.falkordb.com](https://support.falkordb.com). For access, quota, or contract questions, contact your FalkorDB account manager.
