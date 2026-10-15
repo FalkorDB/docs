@@ -186,6 +186,7 @@ public class FalkorDBExample {
 
 ```rust Rust
 use falkordb::{FalkorClientBuilder, FalkorConnectionInfo};
+use futures::StreamExt;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -203,7 +204,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let mut graph = client.select_graph("MotoGP");
 
     // Clear out this graph in case you've run this script before.
-    graph.delete().await?;
+    let _ = graph.delete().await;
 
     graph
         .query(
@@ -225,8 +226,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .execute()
         .await?;
 
-    for node in nodes.data.by_ref() {
-        println!("{:?}", node);
+    // `nodes.data` is a `RowStream` (a `futures::Stream`), not a synchronous
+    // `Iterator`, so draining it needs `.next().await` rather than a plain `for` loop.
+    while let Some(row) = nodes.data.next().await {
+        println!("{:?}", row?);
     }
 
     // Query how many riders represent team Ducati?
@@ -235,8 +238,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .execute()
         .await?;
 
-    for node in nodes.data.by_ref() {
-        println!("{:?}", node);
+    while let Some(row) = nodes.data.next().await {
+        println!("{:?}", row?);
     }
 
     Ok(())
