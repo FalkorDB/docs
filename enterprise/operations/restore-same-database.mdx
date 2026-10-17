@@ -1,0 +1,34 @@
+---
+title: "Restoring a FalkorDB backup over an existing deployment"
+sidebarTitle: "Restore in place"
+description: "Why a backup can't be restored into a running deployment, and how to replace a deployment's data by restoring to a new one."
+icon: "clock-rotate-left"
+---
+
+## Not supported
+
+A backup can't be restored into a deployment that already exists. The Admin UI doesn't offer it, and the API rejects it: `POST /api/clusters/<name>/restores` always answers `400 Bad Request` and points to the clone endpoint.
+
+KubeBlocks restores FalkorDB data only while it creates a deployment:
+
+- **Standalone and replication.** The backup is unpacked into the new, empty data volumes before FalkorDB starts. The restore step refuses a volume that already holds data, so it can't overwrite a running deployment.
+- **Sharded.** The backup is loaded into the new shards once they form, so the deployment can show as running before every shard has its data. Check the data on the new deployment before you switch to it.
+
+KubeBlocks' own restore operation also creates a new cluster. A restore aimed at a running deployment would finish without changing its data, so it's refused instead of reporting a restore that never happened.
+
+## Replace a deployment's data
+
+To bring a deployment back to the state of a backup, restore the backup to a new deployment and move your applications to it:
+
+1. [Restore the backup to a new deployment](/enterprise/operations/restore-new-database). The new deployment gets the source's settings and the backup's data.
+2. Wait until the new deployment is **Running**, then check the data on it, for example by counting the nodes in a graph you know.
+3. Point your applications at the new deployment. It has its own service names and its own generated password: open the deployment in the Admin UI and copy them from **Connection Details** on the **General** tab.
+4. Once nothing uses the old deployment, delete it.
+
+Writes made to the old deployment after the backup was taken aren't in the new one. Stop writes to the old deployment, or take a fresh backup, before you switch over if you need them.
+
+The new deployment needs its own name while the old one exists, because the clone copies its settings from the old deployment.
+
+## Load data into an existing deployment
+
+To load data into a running deployment without creating a new one, use an [RDB import](/enterprise/operations/rdb-export-import) instead of a backup. It writes from an RDB export, another deployment, or any Redis-protocol server into the deployment in place.

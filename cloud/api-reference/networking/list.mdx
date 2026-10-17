@@ -1,0 +1,61 @@
+---
+title: "List custom networks"
+sidebarTitle: "List"
+api: "GET https://api.omnistrate.cloud/2022-09-01-00/resource-instance/custom-network"
+description: "List the custom networks available to your subscriptions."
+---
+
+Lists the custom networks you can deploy into. Pass a network ID as `custom_network_id` when creating an Enterprise deployment instance.
+
+<Note>
+  VPC peering is not available through the API. To peer a custom network with your own VPC, open a support ticket at [support.falkordb.com](https://support.falkordb.com) or email [support@falkordb.com](mailto:support@falkordb.com).
+</Note>
+
+## Authorization
+
+<ParamField header="Cookie" type="string" required>
+  Session cookie set by [Sign in](/cloud/api-reference/authentication/signin): `omnistrate_token=<jwt>`.
+</ParamField>
+
+## Query parameters
+
+<ParamField query="subscriptionId" type="string">
+  Only return custom networks available to this subscription.
+</ParamField>
+
+<ParamField query="cloudProviderName" type="string">
+  Filter by cloud provider, for example `aws` or `gcp`.
+</ParamField>
+
+<ParamField query="cloudProviderRegion" type="string">
+  Filter by cloud provider region, for example `us-east-1`.
+</ParamField>
+
+<ParamField query="customNetworksOnly" type="boolean">
+  Return only custom networks. When `false`, default and imported networks are included as well.
+</ParamField>
+
+## Response
+
+<ResponseField name="customNetworks" type="object[]" required>
+  The custom networks. See [Describe custom network](/cloud/api-reference/networking/describe) for the full field list.
+</ResponseField>
+
+```json 200 OK
+{
+  "customNetworks": [
+    {
+      "id": "net-abc123",
+      "name": "prod-vpc",
+      "cidr": "10.0.0.0/16",
+      "cloudProviderName": "aws",
+      "cloudProviderRegion": "us-east-1",
+      "status": "READY"
+    }
+  ]
+}
+```
+
+## Errors
+
+See [Error](/cloud/api-reference/schemas#error) for the error response shape.

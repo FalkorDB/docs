@@ -1,0 +1,173 @@
+---
+title: "FalkorDB Admin CLI reference (falkordb-admin)"
+sidebarTitle: "Command line"
+description: "Operate FalkorDB Enterprise from the terminal with the falkordb-admin CLI."
+icon: "terminal"
+---
+
+`falkordb-admin` drives the same
+[Admin Server API](/enterprise/api-reference/introduction) as the console, which makes it a
+good fit for scripting, CI, and support sessions.
+
+## Run it
+
+The CLI ships inside the Admin Server and Admin UI images, so the quickest way
+to use it is from a pod that is already running:
+
+```bash
+kubectl exec -it -n falkordb-system deploy/falkordb-enterprise-admin-server -- \
+  falkordb-admin --help
+```
+
+You can also build the standalone CLI image from a checkout of the repository:
+
+```bash
+docker build -f packages/admin-cli/Dockerfile -t falkordb-admin-cli:local .
+docker run --rm -e FALKORDB_ADMIN_URL=https://admin.example.com falkordb-admin-cli:local --help
+```
+
+## Connect
+
+The CLI keeps the server URL and session cookie in
+`~/.falkordb/admin-cli/config.json`.
+
+```bash
+falkordb-admin login --url https://admin.example.com --email admin@example.com --password-stdin
+falkordb-admin whoami
+```
+
+<Warning>
+  Use `--password-stdin` and pipe the password in, so it never lands in your
+  shell history or in a process listing.
+</Warning>
+
+| Setting | Flag | Environment variable |
+| --- | --- | --- |
+| Server URL | `--url` | `FALKORDB_ADMIN_URL` |
+| Config file | `--config` | `FALKORDB_ADMIN_CLI_CONFIG` |
+| Login email | `--email` | `FALKORDB_ADMIN_EMAIL` |
+| Login password | `--password` | `FALKORDB_ADMIN_PASSWORD` |
+
+Add `--output json` to any command to get machine-readable output.
+
+<Note>
+  Commands that act on a deployment require `--namespace`. Only the top-level
+  listings, such as `deployments list`, treat it as optional.
+</Note>
+
+## Common tasks
+
+<CodeGroup>
+
+```bash Deployments
+falkordb-admin deployments list --schema-version 1
+falkordb-admin deployments get falkordb --namespace demo --schema-version 1
+falkordb-admin deployments create --file deployment.json
+falkordb-admin deployments update falkordb --namespace demo --file patch.json --generation 7
+falkordb-admin deployments scale falkordb --namespace demo --replicas 3
+falkordb-admin deployments upgrade falkordb --namespace demo --version 4.24.0
+falkordb-admin deployments credentials falkordb --namespace demo
+falkordb-admin deployments delete falkordb --namespace demo
+```
+
+```bash Operations
+falkordb-admin operations restart falkordb --namespace demo
+falkordb-admin operations stop falkordb --namespace demo
+falkordb-admin operations start falkordb --namespace demo
+falkordb-admin operations vertical-scale falkordb --namespace demo --cpu 2 --memory 4Gi
+falkordb-admin operations volume-expand falkordb --namespace demo --storage 50Gi
+falkordb-admin operations reconfigure falkordb --namespace demo --parameter maxmemory-policy=allkeys-lru
+falkordb-admin operations switchover falkordb --namespace demo --instanceName falkordb-falkordb-0
+falkordb-admin operations rebalance falkordb --namespace demo
+falkordb-admin operations reshard falkordb --namespace demo --slots 0-999 --to shard-98x
+falkordb-admin operations list falkordb --namespace demo
+```
+
+```bash Backups
+falkordb-admin backups list falkordb --namespace demo
+falkordb-admin backups create falkordb --namespace demo --file backup.json
+falkordb-admin backups repos list
+falkordb-admin backups policies falkordb list --namespace demo
+falkordb-admin backups schedules falkordb list --namespace demo
+falkordb-admin backups restores falkordb list --namespace demo
+```
+
+```bash Users and roles
+falkordb-admin users list --role operator --status active
+falkordb-admin users create --email dev@example.com --role viewer
+falkordb-admin users reset-password dev@example.com
+falkordb-admin rbac roles list
+falkordb-admin rbac group-mappings create --groupEmail sre@example.com --roleName operator
+```
+
+```bash Support
+falkordb-admin system namespaces
+falkordb-admin diagnostics health
+falkordb-admin diagnostics support-package
+falkordb-admin logs get falkordb falkordb-falkordb-0 --namespace demo --tailLines 200
+falkordb-admin license status
+```
+
+</CodeGroup>
+
+Run `falkordb-admin --help` for the full command list.
+
+## Change a deployment
+
+The CLI changes deployments with the
+[deployment body](/enterprise/api-reference/deployments):
+
+- `deployments create --file` takes a body with `schemaVersion: 1`.
+- `deployments update --file` takes a merge patch with `schemaVersion: 1`;
+  `deployments replace --file` takes a whole body. Add `--generation` with the
+  `metadata.generation` you read, so a change made since is refused instead of
+  overwritten, and `--dry-run` to see the plan without applying it.
+- `deployments scale`, `deployments upgrade`, and `operations start`, `stop`,
+  `vertical-scale`, `volume-expand` and `reconfigure` read the deployment and
+  send only what changes, with its generation. `scale` takes `--replicas`
+  (nodes, per shard when sharded), `--shards`, and `--component falkordb-sent`
+  for the sentinels; as before, sentinels keep at least 3 replicas and a
+  deployment with sentinels or shards keeps at least 2 nodes. `--generation`
+  makes them refuse the change if the deployment moved past the generation
+  you name.
+- `vertical-scale --cpu` and `--memory` set both the request and the limit;
+  `--requests-cpu`, `--limits-memory` and the like set one side.
+- `reconfigure` takes `--parameter key=value` once per setting, so values may
+  contain commas. `--parameter key` on its own sets a `falkordbe.*` setting
+  back to its default, and `key=` empties one whose default is empty, or a
+  `redis.conf` directive the pods apply without a restart. See
+  [how settings are applied](/enterprise/api-reference/deployments#how-settings-are-applied).
+- Reconfiguring Sentinel (`--component falkordb-sent`), `restart`,
+  `switchover`, `rebalance` and `reshard` still run as KubeBlocks operations.
+- `reshard` moves the slots in `--slots` (such as `0-999,5000`) to the shard in
+  `--to`, and with `--from` only if that shard owns them.
+- `rebalance` spreads the hash slots evenly across the shards of a sharded
+  deployment. Adding or removing shards already moves slots; use it when the
+  spread is uneven afterwards.
+
+A file without `schemaVersion` still works with `create` and `update`. The
+Admin Server marks that request deprecated, and the CLI prints a warning to
+`stderr`.
+
+## Call an endpoint directly
+
+Anything the CLI does not wrap yet is reachable through `raw`, which reuses the
+stored session:
+
+```bash
+falkordb-admin raw --method GET --path /api/system/namespaces
+```
+
+## Next steps
+
+`falkordb-admin --help` lists every command, and `falkordb-admin <command> --help`
+every flag for that command.
+
+<CardGroup cols={2}>
+  <Card title="Admin Server API" icon="code" href="/enterprise/api-reference/introduction">
+    The REST API the CLI talks to
+  </Card>
+  <Card title="Installer reference" icon="terminal" href="/enterprise/reference/installer-flags">
+    Options for install.sh and uninstall.sh
+  </Card>
+</CardGroup>

@@ -1,0 +1,53 @@
+---
+title: "List snapshots"
+sidebarTitle: "List"
+api: "GET https://api.omnistrate.cloud/2022-09-01-00/resource-instance/snapshot"
+description: "List the snapshots taken across your deployment instances."
+---
+
+Lists every snapshot available to your subscriptions, both automated backups and manually created snapshots.
+
+## Authorization
+
+<ParamField header="Cookie" type="string" required>
+  Session cookie set by [Sign in](/cloud/api-reference/authentication/signin): `omnistrate_token=<jwt>`.
+</ParamField>
+
+## Query parameters
+
+<ParamField query="snapshotType" type="string">
+  Filter by snapshot type: `ManualSnapshot` or `AutomatedSnapshot`.
+</ParamField>
+
+<ParamField query="environmentType" type="string">
+  Environment type to filter by, for example `PROD`.
+</ParamField>
+
+## Response
+
+<ResponseField name="snapshots" type="object[]">
+  The snapshots. See [Describe snapshot](/cloud/api-reference/snapshots/describe) for the full field list.
+</ResponseField>
+
+```json 200 OK
+{
+  "snapshots": [
+    {
+      "snapshotId": "snapshot-abc123",
+      "sourceInstanceId": "instance-abc123",
+      "snapshotType": "ManualSnapshot",
+      "status": "completed",
+      "progress": 100,
+      "encrypted": true,
+      "cloudProvider": "aws",
+      "region": "us-east-1",
+      "createdTime": "2025-01-15T10:04:22Z",
+      "completeTime": "2025-01-15T10:09:51Z"
+    }
+  ]
+}
+```
+
+## Errors
+
+See [Error](/cloud/api-reference/schemas#error) for the error response shape.

@@ -1,0 +1,75 @@
+---
+title: "Restore a FalkorDB backup to a new Kubernetes deployment"
+sidebarTitle: "Restore to new"
+description: "Create a new deployment from an existing backup."
+icon: "clone"
+---
+
+Restoring a backup always creates a new deployment, a clone of the deployment the backup was taken from. The source deployment isn't changed. A backup can't be restored [into an existing deployment](/enterprise/operations/restore-same-database).
+
+## What the new deployment gets
+
+The new deployment copies the source deployment's settings:
+
+- Topology, replicas, sentinel, and shard count.
+- FalkorDB version and the exact component version the source runs.
+- CPU and memory, storage, modules and their arguments, services, external DNS domain, placement rules, and the metrics exporter setting.
+- Labels and annotations you added. Those that KubeBlocks or `kubectl` keep about the source itself are dropped.
+
+It doesn't copy credentials: the new deployment gets its own generated password, as on any new deployment.
+
+If the source has no data volumes, the new deployment gets them anyway, sized at twice the backup (split across shards for a sharded deployment) and at least 8 GiB, so the restored data survives a pod restart.
+
+## Restore from the Admin UI
+
+1. Open **Deployments**, then the deployment the backup was taken from.
+2. Go to **Backups**.
+3. Select **Restore** on the backup to use.
+4. Enter a name for the new deployment. It must be a valid Kubernetes name and not already used in the namespace.
+5. Select **Restore Now**.
+
+The new deployment appears in **Deployments** and starts with the backup's data.
+
+## Restore with the API
+
+```text
+POST /api/clusters/<sourceClusterName>/restores/clone?namespace=<namespace>
+```
+
+```json
+{
+  "newClusterName": "<new-cluster-name>",
+  "backupName": "<backup-name>",
+  "backupNamespace": "<backup-namespace>",
+  "volumeRestorePolicy": "Parallel"
+}
+```
+
+`backupNamespace` defaults to the source's namespace. `volumeRestorePolicy` defaults to `Parallel`; `Serial` restores one volume at a time.
+
+With the CLI:
+
+```bash
+falkordb-admin backups clone <sourceClusterName> --namespace <namespace> \
+  --newClusterName <new-cluster-name> --backupName <backup-name>
+```
+
+The request is rejected when:
+
+- The source deployment or the backup doesn't exist (`404`).
+- The backup isn't a full backup, or isn't ready to restore (`400`).
+- A deployment with the new name already exists in the namespace (`409`).
+
+## Sharded deployments
+
+A sharded backup is loaded into the new shards after they form, by a different mechanism from standalone and replication restores. The new deployment can show as running before every shard has its data, so check that the data arrived before you switch clients to it.
+
+## Validate
+
+```bash
+kubectl get clusters.apps.kubeblocks.io -n <namespace> <new-cluster-name>
+kubectl get restores.dataprotection.kubeblocks.io -n <namespace>
+kubectl get pods -n <namespace>
+```
+
+The new cluster carries the `kubeblocks.io/restore-from-backup` annotation. A standalone or replication clone reaches `Running` once the data is restored; a sharded clone reaches it before its data is loaded, so `Running` alone doesn't mean the data is there. Either way, check the data itself, for example with a query you know the answer to.
