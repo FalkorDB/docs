@@ -265,8 +265,8 @@ $ redis-cli GRAPH.QUERY G "MATCH (n) RETURN n {.name, .age} AS projection"
 >
 > ```cypher
 > OPTIONAL MATCH (p)-[:WORKS_FOR]->(o:Organization)
-> RETURN collect(DISTINCT o \{ .name, .uuid \}) AS orgs
-> // If o is unmatched (null): orgs = []   (not [\{name: null, uuid: null\}])
+> RETURN collect(DISTINCT o { .name, .uuid }) AS orgs
+> // If o is unmatched (null): orgs = []   (not [{name: null, uuid: null}])
 > ```
 >
 > Because the projection itself is `null`, `collect()` skips it, producing an empty list rather than a list containing a map of nulls.
