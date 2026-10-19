@@ -15,9 +15,12 @@ The variables in the scope before the CALL \{\} clause are available after the c
 Variables may be imported from the outer scope **only** in an opening `WITH` clause, via simple projections (e.g. `WITH n, m`), or via `WITH *` (which imports all bound variables). The variables returned from a subquery may not override existing variables in the outer scope.
 
 
-### Imported variables in UNION subqueries
+## Imported variables in UNION subqueries
 
-When `CALL {}` contains `UNION` or `UNION ALL`, an opening `WITH` import in the first branch does not automatically make the imported variables available in later branches in FalkorDB 4.20.7 and 6.0.2.
+When `CALL {}` contains `UNION` or `UNION ALL`, an opening `WITH` import
+in the first branch does not automatically make the imported variables
+available in later branches in FalkorDB 4.20.7 and 6.0.2.
+
 
 For example, the following query fails with `'n' not defined` because the second branch references `n` without importing it:
 
