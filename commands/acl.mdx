@@ -188,9 +188,27 @@ Usage: `ACL LOG [count]`
   <Accordion title="What is the difference between the ~ and %RW~ key patterns?">
     The `~<pattern>` rule grants full read-write access to matching graphs. The `%<permission>~<pattern>` syntax allows fine-grained control: `%R~` for read-only, `%W~` for write-only, or `%RW~` for full access (equivalent to `~`).
   </Accordion>
+
+  
   <Accordion title="Can I restrict a user to only run read-only queries?">
-    Yes. Grant only the `GRAPH.RO_QUERY` command and use the `%R~*` permission pattern: `ACL SETUSER reader on >pass +GRAPH.RO_QUERY %R~*`
+
+    Yes. You can restrict a user to `GRAPH.RO_QUERY`, but FalkorDB 6.0.2 has a known compatibility issue with read-only Redis ACL key patterns.
+
+    For example, `ACL SETUSER reader on >pass +GRAPH.RO_QUERY %R~*` may cause `GRAPH.RO_QUERY` to fail with `NOPERM No permissions to access a key`.
+
+    **Workaround:** Use a Redis ACL selector to grant access to the intended graph keys:
+
+    `ACL SETUSER reader on >pass resetkeys -@all +@connection +INFO (~app2:* +GRAPH.RO_QUERY)`
+
+    This selector permits `GRAPH.RO_QUERY` on keys matching `app2:*` without granting `GRAPH.QUERY`. The additional connection and INFO permissions support common client operations.
+
+    Verify permissions with `ACL DRYRUN` and test against your FalkorDB version before deployment. This workaround does not fix the underlying key-specification issue.
+
+    See [FalkorDB Issue #3356](https://github.com/FalkorDB/FalkorDB/issues/3356) for details.
+
   </Accordion>
+
+
   <Accordion title="What happens if a user tries to execute a command they do not have permission for?">
     The server returns a permission denied error, and the operation is logged in the ACL log (viewable with `ACL LOG`).
   </Accordion>
