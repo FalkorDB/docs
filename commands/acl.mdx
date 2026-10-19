@@ -209,7 +209,16 @@ Usage: `ACL LOG [count]`
 
     
    
-    This ACL-selector configuration was tested on FalkorDB 6.0.2 using Docker. An authenticated restricted user successfully executed `GRAPH.RO_QUERY`, returning `count(n) = 1`, while an actual `GRAPH.QUERY` write attempt was denied with `NOPERM`. Validate permissions using `ACL DRYRUN` and an authenticated restricted client before production use.
+  
+    This ACL-selector configuration was tested on FalkorDB 6.0.2 using Docker.
+    An authenticated restricted user successfully executed `GRAPH.RO_QUERY`,
+    returning `count(n) = 1`, while an actual `GRAPH.QUERY` write attempt was
+    denied with `NOPERM`. Validate permissions using `ACL DRYRUN` and an
+    authenticated restricted client before production use.
+
+    See [FalkorDB Issue #3356](https://github.com/FalkorDB/FalkorDB/issues/3356)
+    for reproduction steps and further discussion.
+
 
 
   </Accordion>
