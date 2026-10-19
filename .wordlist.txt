@@ -786,6 +786,7 @@ SPpaths
 Spring
 sprintf
 SQL's
+sqlite
 SQLServer
 SPCS
 Snowpark
