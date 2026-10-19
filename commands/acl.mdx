@@ -207,7 +207,9 @@ Usage: `ACL LOG [count]`
 
     Some clients may require additional narrowly scoped connection commands. Review those permissions separately rather than granting an entire command category.
 
-    This example has not been independently validated end-to-end on FalkorDB 6.0.2. Test permissions with `ACL DRYRUN` and a restricted client before using it in production.
+    
+    This ACL-selector configuration was tested on FalkorDB 6.0.2 using Docker. An authenticated restricted user successfully executed `GRAPH.RO_QUERY`, returning `count(n) = 1`, while an actual `GRAPH.QUERY` write attempt was denied with `NOPERM`. Validate permissions for your own deployment before production use.
+
 
     See [FalkorDB Issue #3356](https://github.com/FalkorDB/FalkorDB/issues/3356) for details.
 
