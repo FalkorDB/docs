@@ -239,12 +239,12 @@ System.out.println("Graph created successfully!");
 
 ```rust Rust
 let create_query = r#"
-CREATE (alice:User {id: 1, name: \"Alice\", email: \"alice@example.com\"})
-CREATE (bob:User {id: 2, name: \"Bob\", email: \"bob@example.com\"})
-CREATE (charlie:User {id: 3, name: \"Charlie\", email: \"charlie@example.com\"})
+CREATE (alice:User {id: 1, name: "Alice", email: "alice@example.com"})
+CREATE (bob:User {id: 2, name: "Bob", email: "bob@example.com"})
+CREATE (charlie:User {id: 3, name: "Charlie", email: "charlie@example.com"})
 
-CREATE (post1:Post {id: 101, content: \"Hello World!\", date: 1701388800})
-CREATE (post2:Post {id: 102, content: \"Graph Databases are awesome!\", date: 1701475200})
+CREATE (post1:Post {id: 101, content: "Hello World!", date: 1701388800})
+CREATE (post2:Post {id: 102, content: "Graph Databases are awesome!", date: 1701475200})
 
 CREATE (alice)-[:FRIENDS_WITH {since: 1640995200}]->(bob)
 CREATE (bob)-[:FRIENDS_WITH {since: 1684108800}]->(charlie)
@@ -252,7 +252,7 @@ CREATE (alice)-[:CREATED {time: 1701388800}]->(post1)
 CREATE (bob)-[:CREATED {time: 1701475200}]->(post2)
 "#;
 
-graph.query(create_query).execute().await?;
+graph.query(create_query).execute().expect("Failed to create graph");
 println!("Graph created successfully!");
 ```
 
@@ -285,7 +285,9 @@ RETURN friend.name AS Friend
 `;
 const result = await graph.roQuery(query);
 console.log("Alice's friends:");
-for (const record of result) {
+// Query results are returned on the `data` array; each row is an object
+// keyed by the RETURN aliases (here, `Friend`).
+for (const record of result.data) {
   console.log(record["Friend"]);
 }
 ```
@@ -298,20 +300,23 @@ RETURN friend.name AS Friend
 ResultSet result = graph.readOnlyQuery(query);
 System.out.println("Alice's friends:");
 for (Record record : result) {
-    System.out.println(record.get("Friend"));
+    // Record exposes values via getValue(...), not get(...)
+    System.out.println(record.getValue("Friend"));
 }
 ```
 
 ```rust Rust
 let query = r#"
-MATCH (alice:User {name: \"Alice\"})-[:FRIENDS_WITH]->(friend)
+MATCH (alice:User {name: "Alice"})-[:FRIENDS_WITH]->(friend)
 RETURN friend.name AS Friend
 "#;
-let result = graph.ro_query(query).execute().await?;
+let result = graph.ro_query(query).execute().expect("Failed to run query");
 
 println!("Alice's friends:");
-for record in result.data.by_ref() {
-    println!("{}", record["Friend"]);
+for row in result.data {
+    let row = row.expect("row failed to parse");
+    let friend: String = row.try_get("Friend").expect("Friend column");
+    println!("{friend}");
 }
 ```
 
@@ -342,7 +347,9 @@ RETURN post.content AS PostContent
 `;
 const result = await graph.roQuery(query);
 console.log("Posts created by Bob:");
-for (const record of result) {
+// Query results are returned on the `data` array; each row is an object
+// keyed by the RETURN aliases (here, `PostContent`).
+for (const record of result.data) {
   console.log(record["PostContent"]);
 }
 ```
@@ -355,19 +362,22 @@ RETURN post.content AS PostContent
 ResultSet result = graph.readOnlyQuery(query);
 System.out.println("Posts created by Bob:");
 for (Record record : result) {
-    System.out.println(record.get("PostContent"));
+    // Record exposes values via getValue(...), not get(...)
+    System.out.println(record.getValue("PostContent"));
 }
 ```
 
 ```rust Rust
 let query = r#"
-MATCH (bob:User {name: \"Bob\"})-[:CREATED]->(post:Post)
+MATCH (bob:User {name: "Bob"})-[:CREATED]->(post:Post)
 RETURN post.content AS PostContent
 "#;
-let result = graph.ro_query(query).execute().await?;
+let result = graph.ro_query(query).execute().expect("Failed to run query");
 println!("Posts created by Bob:");
-for record in result.data.by_ref() {
-    println!("{}", record["PostContent"]);
+for row in result.data {
+    let row = row.expect("row failed to parse");
+    let content: String = row.try_get("PostContent").expect("PostContent column");
+    println!("{content}");
 }
 ```
 
