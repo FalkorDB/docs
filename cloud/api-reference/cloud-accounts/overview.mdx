@@ -1,0 +1,44 @@
+---
+title: "Cloud accounts"
+sidebarTitle: "Overview"
+description: "Connect your own AWS, GCP, Azure, or OCI account for Enterprise BYOA deployments."
+---
+
+Enterprise BYOA deployments run inside **your** cloud account. Before you can create a BYOA instance you register a cloud account, run the bootstrap script or CloudFormation template that grants FalkorDB the required permissions, and wait for the account configuration to reach `READY`.
+
+A cloud account is modelled as a deployment instance of the account configuration resource in a BYOA service plan. It has two identities:
+
+| ID | Where it comes from | Used for |
+| --- | --- | --- |
+| Cloud account instance ID | Returned by [Create cloud account](/cloud/api-reference/cloud-accounts/create) | Deleting the cloud account |
+| Account config ID | `result_params.cloud_provider_account_config_id` on the instance | [Describe account configuration](/cloud/api-reference/cloud-accounts/describe), and `cloud_provider_account_config_id` when creating a BYOA instance |
+
+## Onboarding flow
+
+<Steps>
+  <Step title="Subscribe to a BYOA plan">
+    Use [Create subscription](/cloud/api-reference/account/subscriptions/create) with an Enterprise BYOA product tier.
+  </Step>
+  <Step title="Register the cloud account">
+    Call [Create cloud account](/cloud/api-reference/cloud-accounts/create) with your AWS account ID, GCP project, Azure subscription, or OCI tenancy.
+  </Step>
+  <Step title="Grant permissions">
+    Call [Describe account configuration](/cloud/api-reference/cloud-accounts/describe) and run the returned CloudFormation template or bootstrap shell command in your cloud account.
+  </Step>
+  <Step title="Wait for READY">
+    Poll the account configuration until `status` is `READY`, then create BYOA instances with `cloud_provider_account_config_id`.
+  </Step>
+</Steps>
+
+## Cloud provider identifiers
+
+| Cloud provider | Required request parameters | Default configuration method |
+| --- | --- | --- |
+| `aws` | `aws_account_id`, `aws_bootstrap_role_arn` | `CloudFormation` |
+| `gcp` | `gcp_project_id`, `gcp_project_number`, `gcp_service_account_email` | `GCPScript` |
+| `azure` | `azure_subscription_id`, `azure_tenant_id` | `AzureScript` |
+| `oci` | `oci_tenancy_id`, `oci_domain_id` | `OCIScript` |
+
+<Note>
+  The AWS bootstrap role ARN follows the pattern `arn:aws:iam::<AWS_ACCOUNT_ID>:role/omnistrate-bootstrap-role`. The GCP service account email follows `bootstrap-<ORG_ID>@<GCP_PROJECT_ID>.iam.gserviceaccount.com`, using your lowercase organization ID.
+</Note>

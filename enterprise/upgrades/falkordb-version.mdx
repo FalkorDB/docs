@@ -1,0 +1,159 @@
+---
+title: "Upgrade database engine version for FalkorDB deployments"
+sidebarTitle: "Upgrade FalkorDB version"
+description: "Move an existing deployment to a newer FalkorDB version, addon release, or both."
+icon: "code-branch"
+---
+
+A deployment runs the FalkorDB version it was created with, or last upgraded
+to. [Upgrading FalkorDB Enterprise](/enterprise/upgrades/enterprise) with `install.sh`
+makes newer versions available, but it doesn't change any existing
+deployment: each one stays on its version until you upgrade it as described
+here.
+
+An upgrade can change two things, separately or together:
+
+- **FalkorDB version** (`spec.version`, for example `4.22.2`): the database
+  engine the pods run. The versions on offer are the ones in your
+  installation's version catalog, listed by
+  `GET /api/system/falkordb-versions`.
+- **Addon component definition** (`spec.componentDefinition`, for example
+  `falkordb-4-1.7.13`): the FalkorDB addon release that defines how
+  KubeBlocks runs the pods. See [Upgrade the addon](/enterprise/upgrades/addon).
+
+<Warning>
+  Upgrade through the Admin UI, CLI, or API only. Don't edit
+  `serviceVersion` or `componentDef` on the KubeBlocks `Cluster` resource with
+  `kubectl`. That skips the checks below: the version catalog, the downgrade
+  guard, and the matching shard and Sentinel component definitions of sharded
+  and replicated deployments.
+</Warning>
+
+## Before you start
+
+- Take a backup and confirm it restores. See [Backups](/enterprise/operations/backups).
+  FalkorDB upgrades are one-way: a newer version can write data that older
+  versions can't load. For example, FalkorDB `4.22.0` writes RDB encoding v20,
+  which earlier releases can't read.
+- The deployment must not be in a `Failed` state. Fix it first.
+- An upgrade recreates every pod, one at a time. Settings made with raw
+  `redis-cli CONFIG SET` are lost; see
+  [Parameters & resources](/enterprise/operations/parameters#settings-made-with-config-set).
+- Check that every data node has a persistent volume:
+
+  ```bash
+  kubectl get pods -n <namespace> -l app.kubernetes.io/instance=<deployment> \
+    -o custom-columns='POD:.metadata.name,COMPONENT:.metadata.labels.apps\.kubeblocks\.io/component-name,DATA-CLAIM:.spec.volumes[?(@.name=="data")].persistentVolumeClaim.claimName'
+  ```
+
+  Every pod whose component isn't `falkordb-sent` must list a claim, including
+  every shard's replicas. Sentinel claims don't count: Sentinels get a volume
+  even when the data nodes don't. A data pod that shows `<none>` runs on
+  pod-local storage: an upgrade recreates it empty and its data is lost. That
+  is the case for any deployment created without storage (`spec.nodes.storage`
+  left out), and for sharded deployments created with the Admin UI wizard
+  before 1.0.0-beta.4, which ignored the storage settings. Move the data to a new
+  deployment with persistent volumes first, as the 1.0.0-beta.4 **Fixed**
+  notes in the [changelog](/enterprise/upgrades/changelog) describe.
+
+## Upgrade a deployment
+
+<Tabs>
+  <Tab title="Admin UI">
+    1. Open **Deployments**, then the deployment.
+    2. Select **Upgrade**.
+    3. Under **Target version**, choose the FalkorDB version. Only versions
+       newer than the current one are listed, and the newest is selected.
+    4. Under **Target component definition version**, choose the addon
+       release. Only releases newer than the current one are listed, and the
+       newest is selected.
+    5. Select **Confirm Upgrade**.
+
+    The **Upgrade** button shows only when the catalog has a newer version or
+    addon release than the deployment runs, and you have permission to update
+    deployments. A field is shown only when there is something newer to move to. The
+    dialog warns that the deployment restarts pod by pod and that brief
+    downtime may occur.
+  </Tab>
+  <Tab title="CLI">
+    ```bash
+    falkordb-admin deployments upgrade <name> \
+      --namespace <namespace> \
+      --version 4.22.2 \
+      --component-definition falkordb-4-1.7.13
+    ```
+
+    Pass either flag alone to change only that. Add `--dry-run` to see the
+    change without making it.
+  </Tab>
+  <Tab title="API">
+    Read the deployment's `metadata.generation`, then patch it:
+
+    ```bash
+    curl -s -b cookies.txt \
+      "http://localhost:3000/api/clusters/<name>?namespace=<namespace>&schemaVersion=1" |
+      jq '.metadata.generation'
+
+    curl -s -b cookies.txt -X PATCH \
+      "http://localhost:3000/api/clusters/<name>?namespace=<namespace>" \
+      -H 'Content-Type: application/merge-patch+json' \
+      -H 'If-Match: "<metadata.generation>"' \
+      -d '{ "schemaVersion": 1, "spec": { "version": "4.22.2", "componentDefinition": "falkordb-4-1.7.13" } }'
+    ```
+
+    Send either field alone to change only that. `componentDefinition` takes
+    the data nodes' name (`falkordb-4-…`) for every topology; the Admin Server
+    sets the shard (`falkordb-cluster-4-…`) and Sentinel (`falkordb-sent-4-…`)
+    definitions to match. See [Deployments API](/enterprise/api-reference/deployments).
+
+    `POST /api/clusters/<name>/upgrade` with
+    `{ "version": "…", "componentDefinition": "…" }` still works but is
+    deprecated. Use the `PATCH` above.
+  </Tab>
+</Tabs>
+
+The Admin Server refuses an upgrade when:
+
+- the version or component definition isn't in the installation's catalog;
+- the deployment is in a `Failed` state;
+- the version is older than the one the deployment runs, prereleases included
+  (`4.22.0-rc1` is older than `4.22.0`);
+- it can't tell which version the deployment runs, because then it can't rule
+  out a downgrade.
+
+The request fails with `400` or `422` and says why. An unknown deployment
+returns `404`.
+
+## Validate
+
+The deployment returns to `Running` once every pod runs the new version.
+
+```bash
+curl -s -b cookies.txt \
+  "http://localhost:3000/api/clusters/<name>?namespace=<namespace>&schemaVersion=1" |
+  jq '{version: .spec.version, componentDefinition: .spec.componentDefinition, state: .status.state}'
+
+kubectl get components.apps.kubeblocks.io -n <namespace> \
+  -l app.kubernetes.io/instance=<name> \
+  -o custom-columns=NAME:.metadata.name,VERSION:.spec.serviceVersion,DEFINITION:.spec.compDef,PHASE:.status.phase
+```
+
+Confirm what each pod actually runs. `MODULE LIST` reports the graph module's
+version as one number: `42202` is `4.22.2`.
+
+```bash
+kubectl exec -n <namespace> <pod> -c falkordb -- sh -c \
+  'redis-cli -a "$REDIS_DEFAULT_PASSWORD" --no-auth-warning MODULE LIST'
+```
+
+For a sharded deployment, use the `falkordb-cluster` container name instead
+of `falkordb`. A TLS-enabled deployment refuses plain connections, so add
+`--tls --cacert /etc/pki/tls/ca.crt` to the `redis-cli` command. Then check your data and,
+in the Admin UI, the deployment's **Pods**, **Operations**, and **Events**.
+
+## Rolling back
+
+There is no downgrade. Requesting an older FalkorDB version than a deployment
+runs is refused, because the older version may not be able to read the data
+the newer one wrote, and its pods would fail to start. To go back, restore a
+backup taken before the upgrade into a deployment on the older version.

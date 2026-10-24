@@ -1,0 +1,164 @@
+---
+title: "Create cloud account"
+sidebarTitle: "Create"
+api: "POST https://api.omnistrate.cloud/2022-09-01-00/resource-instance/sp-JvkxkPhinN/falkordb/v1/prod/{serviceModelKey}/{productTierKey}/{resourceKey}"
+description: "Register your own cloud account for Enterprise BYOA deployments."
+---
+
+Registers a cloud account by creating a deployment instance of the account configuration resource in a BYOA service plan.
+
+## Finding the resource key
+
+`resourceKey` is the `urlKey` of the offering resource whose `resourceId` starts with `r-injectedaccountconfig`. Read it from [List service plans](/cloud/api-reference/account/service-plans):
+
+```json
+{
+  "resourceParameters": [
+    { "resourceId": "r-injectedaccountconfig-abc", "urlKey": "account-config", "name": "Account Config" }
+  ]
+}
+```
+
+`serviceModelKey` and `productTierKey` come from the same service plan entry.
+
+## Authorization
+
+<ParamField header="Cookie" type="string" required>
+  Session cookie set by [Sign in](/cloud/api-reference/authentication/signin): `omnistrate_token=<jwt>`.
+</ParamField>
+
+## Path parameters
+
+<ParamField path="serviceModelKey" type="string" required>
+  Service model key of the BYOA plan, for example `byoa`.
+</ParamField>
+
+<ParamField path="productTierKey" type="string" required>
+  Product tier key of the BYOA plan.
+</ParamField>
+
+<ParamField path="resourceKey" type="string" required>
+  URL key of the account configuration resource.
+</ParamField>
+
+## Query parameters
+
+<ParamField query="subscriptionId" type="string" required>
+  Subscription to the BYOA product tier.
+</ParamField>
+
+## Body
+
+<ParamField body="cloud_provider" type="string" required>
+  Cloud provider: `aws`, `gcp`, `azure`, or `oci`.
+</ParamField>
+
+<ParamField body="requestParams" type="object" required>
+  Provider-specific parameters.
+
+  <Expandable title="AWS">
+    <ParamField body="cloud_provider" type="string" required>
+      `aws`.
+    </ParamField>
+
+    <ParamField body="aws_account_id" type="string" required>
+      Your 12-digit AWS account ID.
+    </ParamField>
+
+    <ParamField body="aws_bootstrap_role_arn" type="string" required>
+      `arn:aws:iam::<AWS_ACCOUNT_ID>:role/omnistrate-bootstrap-role`.
+    </ParamField>
+
+    <ParamField body="account_configuration_method" type="string" required>
+      `CloudFormation` or `Terraform`.
+    </ParamField>
+
+    <ParamField body="private_link" type="string">
+      Enable PrivateLink for the account.
+    </ParamField>
+  </Expandable>
+
+  <Expandable title="GCP">
+    <ParamField body="gcp_project_id" type="string" required>
+      Your GCP project ID.
+    </ParamField>
+
+    <ParamField body="gcp_project_number" type="string" required>
+      Your GCP project number.
+    </ParamField>
+
+    <ParamField body="gcp_service_account_email" type="string" required>
+      `bootstrap-<ORG_ID>@<GCP_PROJECT_ID>.iam.gserviceaccount.com`.
+    </ParamField>
+
+    <ParamField body="account_configuration_method" type="string" required>
+      `GCPScript` or `Terraform`.
+    </ParamField>
+  </Expandable>
+
+  <Expandable title="Azure">
+    <ParamField body="azure_subscription_id" type="string" required>
+      Your Azure subscription ID.
+    </ParamField>
+
+    <ParamField body="azure_tenant_id" type="string" required>
+      Your Azure tenant ID.
+    </ParamField>
+
+    <ParamField body="account_configuration_method" type="string" required>
+      `AzureScript` or `Terraform`.
+    </ParamField>
+  </Expandable>
+
+  <Expandable title="OCI">
+    <ParamField body="oci_tenancy_id" type="string" required>
+      Your OCI tenancy OCID.
+    </ParamField>
+
+    <ParamField body="oci_domain_id" type="string" required>
+      Your OCI identity domain OCID.
+    </ParamField>
+
+    <ParamField body="account_configuration_method" type="string" required>
+      `OCIScript` or `Terraform`.
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+```json AWS request
+{
+  "cloud_provider": "aws",
+  "requestParams": {
+    "cloud_provider": "aws",
+    "aws_account_id": "123456789012",
+    "aws_bootstrap_role_arn": "arn:aws:iam::123456789012:role/omnistrate-bootstrap-role",
+    "account_configuration_method": "CloudFormation",
+    "allow_new_cloud_native_network_creation": true
+  }
+}
+```
+
+```json GCP request
+{
+  "cloud_provider": "gcp",
+  "requestParams": {
+    "gcp_project_id": "my-project",
+    "gcp_project_number": "123456789012",
+    "gcp_service_account_email": "bootstrap-org-abc123@my-project.iam.gserviceaccount.com",
+    "account_configuration_method": "GCPScript",
+    "allow_new_cloud_native_network_creation": true
+  }
+}
+```
+
+## Response
+
+<ResponseField name="id" type="string">
+  ID of the cloud account deployment instance. Use it to delete the cloud account.
+</ResponseField>
+
+Once created, describe the instance to read `result_params.cloud_provider_account_config_id`, then call [Describe account configuration](/cloud/api-reference/cloud-accounts/describe) to get the bootstrap instructions.
+
+## Errors
+
+See [Error](/cloud/api-reference/schemas#error) for the error response shape.

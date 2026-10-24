@@ -1,0 +1,201 @@
+---
+title: "Upgrade FalkorDB Enterprise control plane and Helm release"
+sidebarTitle: "Upgrade Enterprise"
+description: "Upgrade the FalkorDB Enterprise Helm release safely."
+icon: "arrow-up"
+---
+
+## Before you start
+
+<CardGroup cols={2}>
+  <Card title="Changelog" icon="list" href="/enterprise/upgrades/changelog">
+    What changed between your version and the target version.
+  </Card>
+  <Card title="Compatibility matrix" icon="table" href="/enterprise/reference/compatibility">
+    The subchart versions each release pins, and its support channel.
+  </Card>
+</CardGroup>
+
+A release with incompatible changes has a migration guide linked from its changelog
+entry. Work through that guide before running the upgrade.
+
+## Prechecks
+
+Confirm the current release and namespaces:
+
+```bash
+helm status falkordb-enterprise -n falkordb-system
+kubectl get pods -n falkordb-system
+```
+
+Back up mutable admin resources:
+
+```bash
+kubectl -n falkordb-system get secret -l 'falkordb.io/user-type' -o yaml > falkordb-admin-users.backup.yaml
+kubectl -n falkordb-system get configmap falkordb-rbac falkordb-admin-settings -o yaml > falkordb-admin-config.backup.yaml
+```
+
+Save current Helm values:
+
+```bash
+helm get values falkordb-enterprise -n falkordb-system -o yaml > falkordb-enterprise.current-values.yaml
+```
+
+## Recommended upgrade path
+
+Rerun the installer. It reapplies the values you passed on earlier runs, so pass only what changes.
+
+```bash
+curl -fsSL https://falkordb.github.io/FalkorDB-Enterprise/install.sh | \
+  bash -s -- \
+    --registry-username '<username>' \
+    --registry-password '<token>' \
+    --kube-context production-cluster \
+    --release falkordb-enterprise \
+    --namespace falkordb-system \
+    --kubeblocks-namespace kb-system \
+    --version '<chart-version>' \
+    --values production-values.yaml \
+    --yes
+```
+
+Omit `--version` to install the latest published chart. Passing an older version downgrades the release, since the installer runs `helm upgrade` either way.
+
+The installer uses `helm upgrade --install`, so rerunning it upgrades the Enterprise release. It also updates KubeBlocks and Snapshot Controller unless skipped.
+
+### How the installer keeps your values
+
+Values passed with `--values`, `--set` and `--set-string` are stored in the Secret `<release>-installer-values` in the release namespace. Each run upgrades from the new chart's defaults, then the stored values, then that run's own values, and stores the result after a successful upgrade. You don't need to keep a values file to upgrade, and settings you never passed always come from the new chart.
+
+The installer never stores these, even when you pass them: the chart release sets them, so each upgrade takes them from the new chart:
+
+- `falkordb-addon.falkordbVersions`, the FalkorDB versions deployments can use
+- image tags (`*.image.tag`)
+
+Passing one still applies it to that run only. The installer also leaves out values it works out on every run, such as `kubeblocks.enabled` and the Admin Server JWT Secret name.
+
+To see or change what is stored:
+
+| Task | Flag |
+| --- | --- |
+| Print the stored values | `--show-values` (prints YAML to stdout and exits) |
+| Change or add a value | Pass it again with `--values`, `--set` or `--set-string` |
+| Remove a value so the chart default applies | `--unset-value <dotted.path>` (repeatable) |
+| Replace everything with this run's values | `--replace-values` |
+
+Values passed with `--helm-arg` are not stored. Passing `--helm-arg --reuse-values` (or `--reset-values`, `--reset-then-reuse-values`) switches stored values off for that run.
+
+<Note>
+  The first upgrade with an installer that stores values migrates the values Helm recorded for the release. It logs what it carried over and what it dropped. It drops the chart-owned values above, the values the installer works out itself, and image `registry`/`repository` values that match a default from an earlier chart. Run `--show-values` beforehand to preview the result.
+</Note>
+
+## Enterprise-only upgrade
+
+If KubeBlocks and Snapshot Controller are already managed separately and should not be touched:
+
+```bash
+curl -fsSL https://falkordb.github.io/FalkorDB-Enterprise/install.sh | \
+  bash -s -- \
+    --registry-username '<username>' \
+    --registry-password '<token>' \
+    --release falkordb-enterprise \
+    --namespace falkordb-system \
+    --skip-kubeblocks \
+    --skip-snapshot-controller \
+    --skip-crds \
+    --values production-values.yaml \
+    --yes
+```
+
+## Manual Helm upgrade
+
+```bash
+helm upgrade falkordb-enterprise \
+  oci://registry.falkordb.cloud/falkordb/falkordb-enterprise \
+  --version '<chart-version>' \
+  --namespace falkordb-system \
+  -f production-values.yaml \
+  --wait --timeout 20m
+```
+
+A manual upgrade does not read the installer's stored values; pass them in your values file. Print them with the installer's `--show-values`.
+
+If you must use `--reuse-values`, set image tags explicitly. Also check `helm get values` for a `falkordb-addon.falkordbVersions` list. If one is there, `--reuse-values` keeps it over the new chart's list, and deployments can't move to the new FalkorDB versions:
+
+```bash
+helm upgrade falkordb-enterprise \
+  oci://registry.falkordb.cloud/falkordb/falkordb-enterprise \
+  --version '<chart-version>' \
+  --namespace falkordb-system \
+  --reuse-values \
+  --set adminServer.image.tag='<chart-version>' \
+  --set adminUi.image.tag='<chart-version>' \
+  --wait --timeout 20m
+```
+
+## Post-upgrade validation
+
+```bash
+helm status falkordb-enterprise -n falkordb-system
+kubectl rollout status deployment -n falkordb-system -l app.kubernetes.io/component=admin-server
+kubectl rollout status deployment -n falkordb-system -l app.kubernetes.io/component=admin-ui
+kubectl get pods -n falkordb-system
+```
+
+Port-forward and check health:
+
+```bash
+kubectl -n falkordb-system port-forward svc/falkordb-enterprise-admin-server 3000:3000
+curl http://localhost:3000/health
+```
+
+Open the Admin UI and verify login, deployment list, diagnostics, logs, and metrics.
+
+## Upgrade your deployments
+
+Upgrading FalkorDB Enterprise upgrades the control plane only. Existing
+deployments keep the FalkorDB version and the addon release they run, even
+when the release makes newer ones available. Upgrade each deployment
+yourself, from the Admin UI (**Upgrade** on the deployment page), the CLI
+(`falkordb-admin deployments upgrade`), or the API:
+
+- [Upgrade FalkorDB version](/enterprise/upgrades/falkordb-version) moves a deployment
+  to a newer FalkorDB version.
+- [Upgrade the addon](/enterprise/upgrades/addon) moves it to the newer addon release.
+  Check [Tested upgrade paths](/enterprise/reference/compatibility#tested-upgrade-paths)
+  for the addon jumps CI tests.
+
+One upgrade can do both.
+
+<Warning>
+  Don't upgrade a deployment by editing `serviceVersion` or `componentDef` on
+  its KubeBlocks `Cluster` resource with `kubectl`. That bypasses the version
+  catalog, the downgrade guard, and the shard and Sentinel component
+  definitions the Admin Server keeps in step.
+</Warning>
+
+## Rollback
+
+<Warning>
+  Roll back before you upgrade any deployment to a version or addon release
+  the new chart brought. The older chart's version catalog may not list the
+  newer FalkorDB versions, which would leave deployments already moved to one
+  on a version the installation no longer offers. FalkorDB versions can't be
+  downgraded.
+</Warning>
+
+List revisions:
+
+```bash
+helm history falkordb-enterprise -n falkordb-system
+```
+
+Rollback to a previous revision:
+
+```bash
+helm rollback falkordb-enterprise <revision> -n falkordb-system --wait --timeout 20m
+```
+
+After rollback, rerun the post-upgrade validation commands.
+
+`helm rollback` restores the release's earlier values but not the installer's stored values. If the failed upgrade also changed settings, use `--unset-value` or pass the earlier values on the next run.
