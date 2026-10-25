@@ -112,7 +112,7 @@ The app requests these privileges during installation or upgrade:
 |---|---|
 | `BIND SERVICE ENDPOINT` | Exposing the FalkorDB Browser endpoint and internal SPCS service endpoints |
 | `CREATE COMPUTE POOL` | Creating the default compute pool used by the FalkorDB container |
-| `CREATE WAREHOUSE` | Creating the default SQL warehouse used by setup and Agent tool execution |
+| `CREATE WAREHOUSE` | Creating the default SQL warehouse used as the service query warehouse |
 | `IMPORTED PRIVILEGES ON SNOWFLAKE DB` | Allowing the app to resolve Snowflake Cortex functions used by Agent `text_to_cypher` |
 
 For Cortex Agent text-to-Cypher, also grant the Cortex database role directly to the application:
@@ -155,7 +155,7 @@ CALL <app_instance_name>.app_public.get_service_status();
 Wait for `get_service_status()` to report `"serving": true` before proceeding (typically 3-5 minutes). Interpreting the output:
 
 - `serving` is the only signal that FalkorDB is reachable. Snowflake marks a container `READY` as soon as its process starts, which happens well before the database accepts connections, so querying a merely-`READY` service can fail with `503 ... Connection refused`.
-- `"containers": null` means the service is still starting. This is not an error; wait and call the procedure again.
+- `"containers": null` means the service is still starting, or does not exist (for example after `stop_app()`). Right after `start_app()` this is not an error; wait and call the procedure again.
 - When the service is ready to use:
 
 ```json
@@ -187,6 +187,25 @@ CALL <app_instance_name>.app_public.start_app(
 | `memoryLimit` | Maximum memory the FalkorDB container can use before it is constrained by SPCS | `4G`, `8Gi` |
 
 Requests must fit on the selected compute pool node. If the requested CPU/memory is larger than the pool can schedule, Snowflake fails to schedule the service or reports insufficient resources.
+
+If you need a larger compute pool or warehouse than the defaults, create them yourself **before** calling `start_app()`. The app uses existing resources with the names you pass:
+
+```sql
+CREATE COMPUTE POOL FALKORDB_POOL
+  MIN_NODES = 1
+  MAX_NODES = 1
+  INSTANCE_FAMILY = CPU_X64_M
+  AUTO_RESUME = TRUE;
+
+CREATE WAREHOUSE FALKORDB_WH WITH
+  WAREHOUSE_SIZE = 'MEDIUM'
+  AUTO_SUSPEND = 600
+  AUTO_RESUME = TRUE;
+
+CALL <app_instance_name>.app_public.start_app('FALKORDB_POOL', 'FALKORDB_WH');
+```
+
+The app cannot suspend a compute pool that you created, so suspend it yourself when you stop the app (see [Cost Management](#cost-management)).
 
 `start_app()` also creates or refreshes the SQL wrappers used by the Native App, including Agent tools. After installing a new app patch that adds procedures or tools, run `start_app()` again before recreating the Agent or testing new tools.
 
@@ -342,6 +361,12 @@ Multi-part loads are sequential and are not rolled back as a single transaction.
 
 ### Querying Graphs
 
+| Parameter | Type | Meaning |
+|---|---|---|
+| `graph_name` | VARCHAR | Name of the graph to query |
+| `cypher_query` | VARCHAR | The Cypher query to run. Query parameters go here, with the `CYPHER` prefix (see [Query parameters](#query-parameters)) |
+| `options` | OBJECT (optional) | Write-back only: `OBJECT_CONSTRUCT('write', OBJECT_CONSTRUCT('outputTable', 'DATABASE.SCHEMA.TABLE'))`. Other keys are ignored, so query parameters cannot be passed here |
+
 Use `graph_query()` to run Cypher queries:
 
 ```sql
@@ -362,6 +387,37 @@ CALL <app_instance_name>.app_public.graph_query('social_graph',
    RETURN path'
 );
 ```
+
+#### Query results
+
+`graph_query()` returns the column names and the rows as JSON:
+
+```json
+{"columns": ["name", "age"], "data": [["Alice", 30], ["Bob", null]]}
+```
+
+- `null` values are returned as JSON `null`, so they are distinct from the string `"None"`.
+- Maps are JSON objects, for example `{"x": null, "y": "None", "z": 1}`.
+- Nodes and relationships are objects with a `"type"` of `"node"` or `"edge"`, plus their id, labels or relationship type, and properties.
+- Points are `{"latitude": ..., "longitude": ...}` and vectors are arrays of numbers.
+- Temporal values are `{"type": "date" | "time" | "datetime" | "duration", "seconds": ...}`.
+- NaN and infinity are returned as the strings `"NaN"`, `"Infinity"` and `"-Infinity"`.
+
+The service applies a default query timeout of 60 seconds (maximum 120 seconds) and returns at most 10,000 rows per query. Add `LIMIT`, filters, or aggregation for larger result sets.
+
+#### Query parameters
+
+Pass parameters with the `CYPHER` prefix at the start of the query and reference them with `$name`:
+
+```sql
+CALL <app_instance_name>.app_public.graph_query('social_graph',
+  'CYPHER name="Alice" min_age=30
+   MATCH (p:Person {name: $name}) WHERE p.age >= $min_age
+   RETURN p.name AS name, p.age AS age'
+);
+```
+
+Use double quotes for string values, because the query is inside single quotes in SQL. The third argument of `graph_query()` is for write-back options only and does not accept query parameters. Parameter values are part of the query text, so escape any user-supplied values before building the query.
 
 ### Writing Query Results Back to Snowflake
 
@@ -395,6 +451,8 @@ The output table is created or replaced with:
 ROW_INDEX NUMBER
 ROW_DATA  VARIANT
 ```
+
+Each row of the query result's `data` array is stored in `ROW_DATA` as a JSON array of values, in the order of the `RETURN` columns. Column names are not stored. Write-back is subject to the same 10,000-row result limit as `graph_query()`.
 
 You can inspect the stored result like this:
 
@@ -619,7 +677,7 @@ CALL <app_instance_name>.app_public.start_app('FALKORDB_POOL', 'FALKORDB_WH');
 CALL <app_instance_name>.app_public.get_service_status();
 ```
 
-Remember: `"containers": null` means the service is still starting. Re-run `get_service_status()` until it reports `"serving": true`.
+Remember: `"containers": null` means the service is still starting (or does not exist yet). Re-run `get_service_status()` until it reports `"serving": true`.
 
 ### Step 5: Create indexes
 
@@ -989,7 +1047,7 @@ FalkorDB runs on Snowflake Compute Pools, which charge based on usage:
 - **ACTIVE** and **IDLE** pools charge continuously, even with no service running on them
 - **SUSPENDED** pools don't charge
 
-The app manages this for you. `stop_app()` drops the service and suspends the compute pool it created, so no separate `ALTER COMPUTE POOL` step is needed. Use `suspend_app()` to pause without dropping the service, and `resume_app()` to bring it back:
+The app manages this for you. `stop_app()` drops the service and suspends the compute pool it created, so no separate `ALTER COMPUTE POOL` step is needed. Use `suspend_app()` to pause without dropping the service, and `resume_app()` to bring it back. If you created the compute pool yourself, the app cannot suspend it; the procedures say so, and you must run `ALTER COMPUTE POOL <pool_name> SUSPEND;` yourself:
 
 ```sql
 -- Pause: suspends the service and its compute pool, keeping the service definition
@@ -1101,10 +1159,16 @@ The Agent can:
 
 | Tool | What it does |
 |---|---|
+| `get_context` | Returns the Agent configuration (source and working schema) and usage guidance |
 | `list_graphs` | Shows existing FalkorDB graphs |
+| `inspect_graph` | Lists the labels, relationship types, and property keys of a graph |
+| `graph_stats` | Returns node and relationship counts for a graph |
 | `run_cypher` | Runs an explicit Cypher query and returns both the query and result |
-| `load_csv` | Loads the currently bound Snowflake table into a graph using `LOAD CSV` Cypher |
 | `text_to_cypher` | Uses Snowflake Cortex to generate Cypher from a natural-language question and FalkorDB graph schema. Defaults to `claude-4-sonnet`, with an optional `model_name` override. |
+| `load_csv_guidance` | Returns guidance for writing `LOAD CSV` mappings for the bound table |
+| `load_csv` | Loads the currently bound Snowflake table into a graph using `LOAD CSV` Cypher |
+
+Agent tools run on the default warehouse of the role that uses the Agent.
 
 ### Agent Setup
 
@@ -1124,17 +1188,29 @@ GRANT IMPORTED PRIVILEGES ON DATABASE SNOWFLAKE TO APPLICATION <app_instance_nam
 GRANT DATABASE ROLE SNOWFLAKE.CORTEX_AGENT_USER TO ROLE <consumer_role>;
 ```
 
-Create the Agent:
+Create the Agent. Pass the Agent name, the Snowflake source schema, and a working schema, each schema as `DATABASE.SCHEMA`:
 
 ```sql
-CALL <app_instance_name>.app_public.create_agent('falkordb_agent');
+CALL <app_instance_name>.graph.create_agent(
+  'FALKORDB_GRAPH_AGENT',
+  'SOURCE_DB.SOURCE_SCHEMA',
+  'WORKING_DB.WORKING_SCHEMA'
+);
 ```
 
-After the Agent is created, open Snowflake Cortex Agents and select the generated FalkorDB Agent.
+After the Agent is created, open **AI & ML → Agents** (or Snowflake Intelligence) and select `FALKORDB_GRAPH_AGENT`.
 
 ![Snowflake AI and ML Agents screen showing the FalkorDB Graph Agent](/images/snowflake-falkordb-agent.webp)
 
 If you install an app patch that changes Agent tools, run `start_app()` again and recreate the Agent so Snowflake receives the updated tool spec.
+
+To print optional caller grants for the configured source and working schemas, or to remove the Agent and its app-owned artifacts:
+
+```sql
+CALL <app_instance_name>.graph.get_agent_caller_grants('FALKORDB_GRAPH_AGENT');
+
+CALL <app_instance_name>.graph.drop_agent('FALKORDB_GRAPH_AGENT');
+```
 
 ### Asking Natural-language Graph Questions
 
@@ -1191,6 +1267,7 @@ SHOW GRANTS TO APPLICATION <app_instance_name>;
 | `start_app(pool_name, warehouse_name)` | Creates or refreshes the FalkorDB service, compute pool, warehouse, SQL wrappers, and Agent tool objects |
 | `start_app(pool_name, warehouse_name, options)` | Starts the app with custom container CPU/memory resource options |
 | `stop_app()` | Stops the FalkorDB service and suspends the compute pool it created |
+| `stop_app(pool_name)` | Same as `stop_app()`, for a pool name the app did not record |
 | `suspend_app()` | Suspends the service and its compute pool without dropping the service |
 | `resume_app()` | Resumes a suspended compute pool and its service |
 | `get_compute_status()` | Reports the state of the compute pool and warehouse the app created |
@@ -1202,18 +1279,29 @@ SHOW GRANTS TO APPLICATION <app_instance_name>;
 | `graph_query(graph_name, cypher)` | Runs Cypher against a graph |
 | `graph_query(graph_name, cypher, options)` | Runs Cypher and optionally writes results to a Snowflake table |
 | `load_csv(graph_name, cypher)` | Loads the currently bound Snowflake table into FalkorDB using `LOAD CSV` Cypher |
+| `check_bound_table()` | Reports whether a table is bound to `consumer_data_table` |
+| `load_sample_social_network()` | Creates the `demo_social_network` sample graph |
 | `shortest_path(graph_name, node_label, node_prop, source_value, target_value, rel_type, weight_prop)` | Finds the path minimizing a numeric relationship property between two nodes (`algo.SPpaths`) |
 | `page_rank(graph_name, node_label, rel_type, node_prop, limit_count)` | Ranks nodes by connectivity importance and returns the top `limit_count` (`algo.pageRank`) |
-| `create_agent(agent_name)` | Creates or refreshes the Cortex Agent definition |
+| `graph.create_agent(agent_name, source_schema, working_schema)` | Creates or refreshes the Cortex Agent definition |
+| `graph.get_agent_caller_grants(agent_name)` | Prints optional caller grants for the Agent's source and working schemas |
+| `graph.drop_agent(agent_name)` | Removes the Cortex Agent and its app-owned artifacts |
+| `agent_tools.text_to_cypher(agent_name, graph_name, question[, model_name])` | Generates Cypher from a natural-language question with Snowflake Cortex |
 | `register_callback(ref_name, operation, ref_or_alias)` | Handles Native App reference binding callbacks |
 
 ## Troubleshooting
 
-### "Reference NOT bound" Error
+### Bound Table Error
 
-**Problem**: `load_csv()` fails with reference error.
+**Problem**: `load_csv()` fails with `Failed to export data from bound table. Ensure a table is bound in the app configuration.`
 
-**Solution**: Ensure you've bound a table via the UI (Apps → FalkorDB → Security → References → Add).
+**Solution**: Bind a table via the UI (**Data Products → Apps → FalkorDB → Permissions → Consumer Data Table → + Add**), then check the binding:
+
+```sql
+CALL <app_instance_name>.app_public.check_bound_table();
+```
+
+It returns `Reference IS bound and accessible`, or `Reference NOT bound or error: ...` with the reason.
 
 ### Service Not Starting or Returning 503
 
@@ -1256,7 +1344,11 @@ GRANT DATABASE ROLE SNOWFLAKE.CORTEX_USER TO APPLICATION <app_instance_name>;
 GRANT IMPORTED PRIVILEGES ON DATABASE SNOWFLAKE TO APPLICATION <app_instance_name>;
 
 CALL <app_instance_name>.app_public.start_app('FALKORDB_POOL', 'FALKORDB_WH');
-CALL <app_instance_name>.app_public.create_agent('falkordb_agent');
+CALL <app_instance_name>.graph.create_agent(
+  'FALKORDB_GRAPH_AGENT',
+  'SOURCE_DB.SOURCE_SCHEMA',
+  'WORKING_DB.WORKING_SCHEMA'
+);
 ```
 
 ### Agent Tool Does Not Exist
