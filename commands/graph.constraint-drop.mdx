@@ -58,10 +58,10 @@ print(result)
 ```
 
 ```javascript JavaScript
-import { FalkorDB, ConstraintType, EntityType } from 'falkordb';
+import { FalkorDB } from 'falkordb';
 const client = await FalkorDB.connect();
 const graph = client.selectGraph('g');
-await graph.constraintDrop(ConstraintType.UNIQUE, EntityType.NODE, 'Person', 'first_name', 'last_name');
+await graph.dropNodeUniqueConstraint('Person', 'first_name', 'last_name');
 ```
 
 ```java Java
