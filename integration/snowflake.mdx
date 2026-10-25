@@ -762,7 +762,21 @@ The app ships SQL wrappers for two FalkorDB graph algorithms, shown here on the 
 
 ### Weighted Shortest Path
 
-A passenger flies Sydney (SYD) to New York (JFK). What is the route with the fewest total kilometers, including every stop along the way? `shortest_path` uses FalkorDB's `algo.SPpaths` to minimize a numeric relationship property:
+A passenger flies Sydney (SYD) to New York (JFK). What is the route with the fewest total kilometers, including every stop along the way? `shortest_path` uses FalkorDB's `algo.SPpaths` to minimize a numeric relationship property.
+
+The routes data has no distance column, so first derive `distance_km` on every `ROUTE` from the airport coordinates (`distance()` returns meters between two `point()` values). Re-run this after reloading routes:
+
+```sql
+CALL <app_instance_name>.app_public.graph_query(
+  'airroutes',
+  'MATCH (src:Airport)-[r:ROUTE]->(dst:Airport)
+   SET r.distance_km = round(distance(
+         point({latitude: src.latitude, longitude: src.longitude}),
+         point({latitude: dst.latitude, longitude: dst.longitude})) / 1000)'
+);
+```
+
+Then find the shortest route by distance:
 
 ```sql
 CALL <app_instance_name>.app_public.shortest_path(
