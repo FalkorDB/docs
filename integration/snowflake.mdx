@@ -363,9 +363,9 @@ Multi-part loads are sequential and are not rolled back as a single transaction.
 
 | Parameter | Type | Meaning |
 |---|---|---|
-| `graph_name` | VARCHAR | Name of the graph to query |
-| `cypher_query` | VARCHAR | The Cypher query to run. Query parameters go here, with the `CYPHER` prefix (see [Query parameters](#query-parameters)) |
-| `options` | OBJECT (optional) | Write-back only: `OBJECT_CONSTRUCT('write', OBJECT_CONSTRUCT('outputTable', 'DATABASE.SCHEMA.TABLE'))`. Other keys are ignored, so query parameters cannot be passed here |
+| `graph_name` | `VARCHAR` | Name of the graph to query |
+| `cypher_query` | `VARCHAR` | The Cypher query to run. Query parameters go here, with the `CYPHER` prefix (see [Query parameters](#query-parameters)) |
+| `options` | `OBJECT` (optional) | Write-back only: `OBJECT_CONSTRUCT('write', OBJECT_CONSTRUCT('outputTable', 'DATABASE.SCHEMA.TABLE'))`. Other keys are ignored, so query parameters cannot be passed here |
 
 Use `graph_query()` to run Cypher queries:
 
