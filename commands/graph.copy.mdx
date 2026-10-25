@@ -40,7 +40,7 @@ const graphA = client.selectGraph('A');
 await graphA.query("CREATE (:Account {number: 516637})");
 
 // Copy Graph 'A' to 'Z'
-await client.copyGraph('A', 'Z');
+await graphA.copy('Z');
 
 // Query Graph 'Z'
 const graphZ = client.selectGraph('Z');

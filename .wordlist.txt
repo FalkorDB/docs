@@ -975,3 +975,7 @@ precompute
 precomputes
 precomputed
 adjacencies
+constraintCreate
+constraintDrop
+ConstraintType
+EntityType
