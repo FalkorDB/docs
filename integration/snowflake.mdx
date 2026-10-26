@@ -188,10 +188,10 @@ CALL <app_instance_name>.app_public.start_app(
 
 Requests must fit on the selected compute pool node. If the requested CPU/memory is larger than the pool can schedule, Snowflake fails to schedule the service or reports insufficient resources.
 
-If you need a larger compute pool or warehouse than the defaults, create them yourself **before** calling `start_app()`. The app uses existing resources with the names you pass:
+If you need a larger compute pool or warehouse than the defaults, create them yourself **before** calling `start_app()`, and grant the app `USAGE` on both. The app uses existing resources with the names you pass:
 
 ```sql
-CREATE COMPUTE POOL FALKORDB_POOL
+CREATE COMPUTE POOL FALKORDB_POOL FOR APPLICATION <app_instance_name>
   MIN_NODES = 1
   MAX_NODES = 1
   INSTANCE_FAMILY = CPU_X64_M
@@ -202,10 +202,13 @@ CREATE WAREHOUSE FALKORDB_WH WITH
   AUTO_SUSPEND = 600
   AUTO_RESUME = TRUE;
 
+GRANT USAGE ON COMPUTE POOL FALKORDB_POOL TO APPLICATION <app_instance_name>;
+GRANT USAGE ON WAREHOUSE FALKORDB_WH TO APPLICATION <app_instance_name>;
+
 CALL <app_instance_name>.app_public.start_app('FALKORDB_POOL', 'FALKORDB_WH');
 ```
 
-The app cannot suspend a compute pool that you created, so suspend it yourself when you stop the app (see [Cost Management](#cost-management)).
+The app cannot suspend or resume a compute pool that you created, so suspend and resume it yourself (see [Cost Management](#cost-management)).
 
 `start_app()` also creates or refreshes the SQL wrappers used by the Native App, including Agent tools. After installing a new app patch that adds procedures or tools, run `start_app()` again before recreating the Agent or testing new tools.
 
@@ -1047,7 +1050,7 @@ FalkorDB runs on Snowflake Compute Pools, which charge based on usage:
 - **ACTIVE** and **IDLE** pools charge continuously, even with no service running on them
 - **SUSPENDED** pools don't charge
 
-The app manages this for you. `stop_app()` drops the service and suspends the compute pool it created, so no separate `ALTER COMPUTE POOL` step is needed. Use `suspend_app()` to pause without dropping the service, and `resume_app()` to bring it back. If you created the compute pool yourself, the app cannot suspend it; the procedures say so, and you must run `ALTER COMPUTE POOL <pool_name> SUSPEND;` yourself:
+The app manages this for you. `stop_app()` drops the service and suspends the compute pool it created, so no separate `ALTER COMPUTE POOL` step is needed. Use `suspend_app()` to pause without dropping the service, and `resume_app()` to bring it back. If you created the compute pool yourself, the app cannot suspend or resume it; the procedures report a warning instead. Run `ALTER COMPUTE POOL <pool_name> SUSPEND;` yourself when pausing or stopping, and `ALTER COMPUTE POOL <pool_name> RESUME;` before calling `resume_app()` (or `start_app()` after `stop_app()`), because an explicitly suspended pool does not auto-resume:
 
 ```sql
 -- Pause: suspends the service and its compute pool, keeping the service definition
