@@ -46,6 +46,11 @@ is a list of `propCount` property names.
 
 ## Examples
 
+<Note>
+The JavaScript examples use constraint helpers added in `falkordb` 7.0. With earlier versions, use
+`graph.constraintCreate` and `graph.constraintDrop` with the `ConstraintType` and `EntityType` enums.
+</Note>
+
 To delete a unique constraint for all nodes with label `Person` enforcing uniqueness on the combination of values of attributes `first_name` and `last_name`, issue the following command:
 
 <CodeGroup>
