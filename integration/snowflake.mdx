@@ -831,9 +831,9 @@ The routes data has no distance column, so first derive `distance_km` on every `
 CALL <app_instance_name>.app_public.graph_query(
   'airroutes',
   'MATCH (src:Airport)-[r:ROUTE]->(dst:Airport)
-   SET r.distance_km = round(distance(
+   SET r.distance_km = distance(
          point({latitude: src.latitude, longitude: src.longitude}),
-         point({latitude: dst.latitude, longitude: dst.longitude})) / 1000)'
+         point({latitude: dst.latitude, longitude: dst.longitude})) / 1000'
 );
 ```
 
@@ -1050,13 +1050,14 @@ FalkorDB runs on Snowflake Compute Pools, which charge based on usage:
 - **ACTIVE** and **IDLE** pools charge continuously, even with no service running on them
 - **SUSPENDED** pools don't charge
 
-The app manages this for you. `stop_app()` drops the service and suspends the compute pool it created, so no separate `ALTER COMPUTE POOL` step is needed. Use `suspend_app()` to pause without dropping the service, and `resume_app()` to bring it back. If you created the compute pool yourself, the app cannot suspend or resume it; the procedures report a warning instead. Run `ALTER COMPUTE POOL <pool_name> SUSPEND;` yourself when pausing or stopping, and `ALTER COMPUTE POOL <pool_name> RESUME;` before calling `resume_app()` (or `start_app()` after `stop_app()`), because an explicitly suspended pool does not auto-resume:
+The app manages this for you. `stop_app()` drops the service and suspends the compute pool it created, so no separate `ALTER COMPUTE POOL` step is needed. Use `suspend_app()` to pause without dropping the service, and `resume_app()` to bring it back. If you created the compute pool yourself, the app cannot suspend or resume it; the procedures report a warning instead. Run `ALTER COMPUTE POOL <pool_name> SUSPEND;` yourself when pausing or stopping. With `AUTO_RESUME = TRUE`, starting the service normally resumes the pool; if it was created with `AUTO_RESUME = FALSE`, or the service does not come back, run `ALTER COMPUTE POOL <pool_name> RESUME;` before calling `resume_app()` or `start_app()`:
 
 ```sql
 -- Pause: suspends the service and its compute pool, keeping the service definition
 CALL <app_instance_name>.app_public.suspend_app();
 
 -- Resume, then poll until the service is serving again
+-- (pool you created: run ALTER COMPUTE POOL <pool_name> RESUME; first if needed)
 CALL <app_instance_name>.app_public.resume_app();
 CALL <app_instance_name>.app_public.get_service_status();
 
