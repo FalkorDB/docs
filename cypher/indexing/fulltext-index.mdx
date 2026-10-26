@@ -715,8 +715,8 @@ print(result)
 
 ```javascript JavaScript
 // Check if full-text index is used
-const result = await graph.explain("CALL db.idx.fulltext.queryNodes('Movie', 'Book') YIELD node RETURN node");
-console.log(result);
+const plan = await graph.explain("CALL db.idx.fulltext.queryNodes('Movie', 'Book') YIELD node RETURN node");
+console.log(plan.toString());
 // Output shows: ProcedureCall | db.idx.fulltext.queryNodes
 ```
 

@@ -125,12 +125,11 @@ print(result)
 ```
 
 ```javascript JavaScript
-import { FalkorDB, ConstraintType, EntityType } from 'falkordb';
+import { FalkorDB } from 'falkordb';
 const client = await FalkorDB.connect();
 const graph = client.selectGraph('g');
-await graph.query("CREATE INDEX FOR (p:Person) ON (p.first_name, p.last_name)");
-// Resolves once the server accepts the constraint (PENDING)
-await graph.constraintCreate(ConstraintType.UNIQUE, EntityType.NODE, 'Person', 'first_name', 'last_name');
+// Also creates the range index the constraint requires
+await graph.createNodeUniqueConstraint('Person', 'first_name', 'last_name');
 ```
 
 ```java Java
@@ -178,7 +177,7 @@ print(result)
 
 ```javascript JavaScript
 // Resolves once the server accepts the constraint (PENDING)
-await graph.constraintCreate(ConstraintType.MANDATORY, EntityType.RELATIONSHIP, 'Visited', 'date');
+await graph.createEdgeMandatoryConstraint('Visited', 'date');
 ```
 
 ```java Java
@@ -210,8 +209,9 @@ print(result)
 ```
 
 ```javascript JavaScript
-const result = await graph.roQuery("call db.constraints()");
-console.log(result.data);
+// Runs CALL db.constraints() and returns typed rows
+const constraints = await graph.listConstraints();
+console.log(constraints);
 ```
 
 ```java Java

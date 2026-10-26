@@ -979,3 +979,8 @@ constraintCreate
 constraintDrop
 ConstraintType
 EntityType
+createEdgeMandatoryConstraint
+createNodeUniqueConstraint
+dropNodeUniqueConstraint
+listConstraints
+slowLogReset

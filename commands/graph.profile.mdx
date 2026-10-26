@@ -41,8 +41,10 @@ MATCH (actor_a:Actor)-[:ACT]->(:Movie)<-[:ACT]-(actor_b:Actor)
 WHERE actor_a <> actor_b
 CREATE (actor_a)-[:COSTARRED_WITH]->(actor_b)
 `;
-const result = await graph.profile(query);
-result.forEach(line => console.log(line));
+const plan = await graph.profile(query);
+for (const op of plan) {
+  console.log(op.name, op.recordsProduced, op.executionTime);
+}
 ```
 
 ```java Java

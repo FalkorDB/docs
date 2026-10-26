@@ -72,12 +72,10 @@ GRAPH.MEMORY USAGE myGraph SAMPLES 500
 
 </CodeGroup>
 
-<Warning>
-The `falkordb` TypeScript client up to version 6.9.2 sends the sample count without the `SAMPLES` keyword, so the
-server rejects `memoryUsage({ SAMPLES })`. Until you can use a release with the
-[fix](https://github.com/FalkorDB/falkordb-ts/pull/696), call `memoryUsage()` without options for the default
-sampling, or run the command directly.
-</Warning>
+<Note>
+`memoryUsage({ SAMPLES })` requires `falkordb` 7.0 or later: earlier versions sent the sample count without the
+`SAMPLES` keyword, and the server rejected it.
+</Note>
 
 ### Sample Output
 
