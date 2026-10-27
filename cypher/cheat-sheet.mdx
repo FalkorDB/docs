@@ -438,7 +438,7 @@ CREATE (:Doc {title: 'Notebook review', embedding: vecf32([0.15, 0.81, 0.40])})
 
 CALL db.idx.vector.queryNodes('Doc', 'embedding', 5, vecf32([0.15, 0.81, 0.40]))
 YIELD node, score
-RETURN node.title, score ORDER BY score DESC
+RETURN node.title, score ORDER BY score ASC
 ```
 
 The same works on relationship properties. This continues from the `Doc` nodes created above,
@@ -457,8 +457,8 @@ RETURN relationship, score ORDER BY score
 ```
 
 <Tip>
-Order results by what the similarity function means. With `cosine`, a higher score is more
-similar, so sort `DESC`. With `euclidean`, the score is a distance, so sort ascending.
+With both `cosine` and `euclidean`, the score is a distance. Lower is closer, so sort with
+`ORDER BY score ASC` to get the best matches first.
 </Tip>
 
 Compare two vectors directly without an index:

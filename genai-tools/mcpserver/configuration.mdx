@@ -13,6 +13,7 @@ FALKORDB_PORT=6379
 FALKORDB_USERNAME=          # Optional
 FALKORDB_PASSWORD=          # Optional
 FALKORDB_DEFAULT_READONLY=false  # Set to 'true' for read-only mode
+FALKORDB_STRICT_READONLY=false   # Set to 'true' to block all writes
 
 # Transport Mode
 MCP_TRANSPORT=stdio         # 'stdio' (default) or 'http'
@@ -51,6 +52,19 @@ Enable read-only mode by default to prevent writes to replica instances:
 FALKORDB_DEFAULT_READONLY=true
 ```
 
+<Warning>
+`FALKORDB_DEFAULT_READONLY` only sets the default. An agent can still write by passing `readOnly: false` to the `query_graph` tool. To block every write, also set `FALKORDB_STRICT_READONLY=true`.
+</Warning>
+
+### Strict read-only mode
+
+```bash
+FALKORDB_DEFAULT_READONLY=true
+FALKORDB_STRICT_READONLY=true
+```
+
+With strict mode on, `query_graph` runs read-only queries only. It rejects a call if `readOnly` is `false`, or if `readOnly` is left out and `FALKORDB_DEFAULT_READONLY` is not `true`. It also rejects `delete_graph`. Use strict mode when you give an agent access to data it must not change.
+
 **Use cases:**
 - **Replica instances**: Prevent writes to read replicas in replication setups
 - **Production safety**: Ensure critical data isn't accidentally modified
@@ -77,7 +91,8 @@ You can configure multiple MCP servers for different FalkorDB instances:
       "args": ["-y", "@falkordb/mcpserver@latest"],
       "env": {
         "FALKORDB_HOST": "replica.falkordb.com",
-        "FALKORDB_DEFAULT_READONLY": "true"
+        "FALKORDB_DEFAULT_READONLY": "true",
+        "FALKORDB_STRICT_READONLY": "true"
       }
     }
   }
