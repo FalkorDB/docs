@@ -186,7 +186,14 @@ GRAPH.QUERY DEMO_GRAPH "CREATE FULLTEXT INDEX FOR (n:Movie) ON (n.title) OPTIONS
 </CodeGroup>
 
 <Warning>
-In FalkorDB 6.0, `OPTIONS` are ignored if the label already has a range index. No error is returned. Create the full-text index before any range index on that label.
+In FalkorDB 6.0, `OPTIONS` are ignored if the label already has a range index. No error is returned. Create the full-text index before any range index on that label. If the range index already exists, drop both indexes, create the full-text index, then create the range index again:
+
+```cypher
+DROP FULLTEXT INDEX FOR (n:Movie) ON (n.title)
+DROP INDEX FOR (n:Movie) ON (n.year)
+CREATE FULLTEXT INDEX FOR (n:Movie) ON (n.title) OPTIONS { stopwords: ['a', 'ab'] }
+CREATE INDEX FOR (n:Movie) ON (n.year)
+```
 </Warning>
 
 ## Query Syntax and Features
