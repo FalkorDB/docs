@@ -58,9 +58,9 @@ FALKORDB_DEFAULT_READONLY=true
 
 **Use cases:**
 - **Replica instances**: Prevent writes to read replicas in replication setups
-- **Production safety**: Ensure critical data isn't accidentally modified
+- **Production safety**: Ensure critical data isn't accidentally modified. Use [strict mode](#strict-read-only-mode) so an agent can't override it.
 - **Reporting/analytics**: Run queries for dashboards without risk of data changes
-- **Multi-tenant environments**: Provide read-only access to certain users
+- **Multi-tenant environments**: Provide read-only access to certain users. Use [strict mode](#strict-read-only-mode) so they can't override it.
 
 ### Strict read-only mode
 
