@@ -118,7 +118,7 @@ services:
       - REDIS_ARGS=--requirepass ${FALKORDB_PASSWORD:-falkordb} --appendonly yes
       - FALKORDB_ARGS=THREAD_COUNT 8 TIMEOUT_MAX 30000
     volumes:
-      - falkordb_data:/data
+      - falkordb_data:/var/lib/falkordb/data
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
@@ -154,7 +154,7 @@ services:
       - REDIS_ARGS=--requirepass falkordb
       - FALKORDB_ARGS=THREAD_COUNT 4
     volumes:
-      - falkordb_data:/data
+      - falkordb_data:/var/lib/falkordb/data
     restart: unless-stopped
     networks:
       - falkordb-network
@@ -201,7 +201,7 @@ services:
       # FalkorDB Configuration
       - FALKORDB_ARGS=THREAD_COUNT 8 CACHE_SIZE 50 TIMEOUT_MAX 60000 TIMEOUT_DEFAULT 30000 QUERY_MEM_CAPACITY 104857600
     volumes:
-      - falkordb_data:/data
+      - falkordb_data:/var/lib/falkordb/data
       - ./falkordb-config:/etc/falkordb
     restart: unless-stopped
     healthcheck:
@@ -289,6 +289,12 @@ See the [Configuration](/getting-started/configuration) page for all available F
 
 ## Data Persistence
 
+FalkorDB stores its data in `/var/lib/falkordb/data` inside the container. Mount your volume at that path.
+
+<Warning>
+Do not mount at `/data` on current images. In 6.0 images, `/data` is a link to `/var/lib/falkordb/data`, so it still works. In v4.10 to v4.22 images, including `latest-alpine`, `/data` is a separate empty folder. A volume there saves nothing, and your graphs are lost when the container is recreated. Images v4.8 and older are the exception. They store data in `/data`, so mount there.
+</Warning>
+
 ### Using Named Volumes
 
 Named volumes are the recommended approach for data persistence:
@@ -298,7 +304,7 @@ services:
   falkordb:
     image: falkordb/falkordb-server:latest
     volumes:
-      - falkordb_data:/data
+      - falkordb_data:/var/lib/falkordb/data
 
 volumes:
   falkordb_data:
@@ -313,7 +319,7 @@ services:
   falkordb:
     image: falkordb/falkordb-server:latest
     volumes:
-      - ./falkordb-data:/data
+      - ./falkordb-data:/var/lib/falkordb/data
 ```
 
 Create the directory first:
@@ -396,7 +402,7 @@ services:
 2. **Enable Persistence**: Always use volumes for production data:
    ```yaml
    volumes:
-     - falkordb_data:/data
+     - falkordb_data:/var/lib/falkordb/data
    ```
 
 3. **Set Resource Limits**: Prevent resource exhaustion:
