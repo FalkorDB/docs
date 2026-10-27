@@ -46,7 +46,7 @@ When using HTTP transport, clients connect via the MCP Streamable HTTP protocol.
 
 ## Read-Only Mode for Replica Instances
 
-Enable read-only mode by default to prevent writes to replica instances:
+Make queries read-only by default:
 
 ```bash
 FALKORDB_DEFAULT_READONLY=true
@@ -60,7 +60,7 @@ FALKORDB_DEFAULT_READONLY=true
 - **Replica instances**: Prevent writes to read replicas in replication setups
 - **Production safety**: Ensure critical data isn't accidentally modified. Use [strict mode](#strict-read-only-mode) so an agent can't override it.
 - **Reporting/analytics**: Run queries for dashboards without risk of data changes
-- **Multi-tenant environments**: Provide read-only access to certain users. Use [strict mode](#strict-read-only-mode) so they can't override it.
+- **Multi-tenant environments**: Provide read-only access to certain users. Strict mode applies to every client of a server, so give those users their own MCP server with [strict mode](#strict-read-only-mode) on.
 
 ### Strict read-only mode
 
@@ -115,6 +115,6 @@ You can configure multiple MCP servers for different FalkorDB instances:
     Yes. Configure multiple MCP server entries in your client config, each with different `FALKORDB_HOST` values and settings. For example, have a `falkordb-dev` instance with writes enabled and a `falkordb-prod-replica` in read-only mode.
   </Accordion>
   <Accordion title="When should I use read-only mode?">
-    Enable `FALKORDB_DEFAULT_READONLY=true` for replica instances, production environments where accidental writes must be prevented, reporting/analytics dashboards, and multi-tenant setups where certain users should only have read access.
+    Use it for replica instances, production environments, reporting dashboards, and users who should only read. `FALKORDB_DEFAULT_READONLY=true` only sets the default, and an agent can override it per call. When writes must be blocked, also set `FALKORDB_STRICT_READONLY=true`. Strict mode applies to the whole server, so give read-only users their own MCP server.
   </Accordion>
 </AccordionGroup>
