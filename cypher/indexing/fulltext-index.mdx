@@ -186,7 +186,7 @@ GRAPH.QUERY DEMO_GRAPH "CREATE FULLTEXT INDEX FOR (n:Movie) ON (n.title) OPTIONS
 </CodeGroup>
 
 <Warning>
-In FalkorDB 6.0, custom `stopwords` are not applied if the label already has a range or vector index. No error is returned, and `db.indexes()` still lists the stopwords. Create the full-text index before any other index on that label. See [FalkorDB#2449](https://github.com/FalkorDB/FalkorDB/issues/2449) for status.
+In FalkorDB 6.0, custom `stopwords` are not applied if the label already has a range or vector index. No error is returned, and `db.indexes()` still lists the stopwords. Create the full-text index before any other index on that label.
 </Warning>
 
 ## Query Syntax and Features
