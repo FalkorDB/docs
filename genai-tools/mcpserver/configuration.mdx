@@ -56,6 +56,12 @@ FALKORDB_DEFAULT_READONLY=true
 `FALKORDB_DEFAULT_READONLY` only sets the default. An agent can still write by passing `readOnly: false` to the `query_graph` tool. To block every write, also set `FALKORDB_STRICT_READONLY=true`.
 </Warning>
 
+**Use cases:**
+- **Replica instances**: Prevent writes to read replicas in replication setups
+- **Production safety**: Ensure critical data isn't accidentally modified
+- **Reporting/analytics**: Run queries for dashboards without risk of data changes
+- **Multi-tenant environments**: Provide read-only access to certain users
+
 ### Strict read-only mode
 
 ```bash
@@ -64,12 +70,6 @@ FALKORDB_STRICT_READONLY=true
 ```
 
 With strict mode on, `query_graph` runs read-only queries only. It rejects a call if `readOnly` is `false`, or if `readOnly` is left out and `FALKORDB_DEFAULT_READONLY` is not `true`. It also rejects `delete_graph`. Use strict mode when you give an agent access to data it must not change.
-
-**Use cases:**
-- **Replica instances**: Prevent writes to read replicas in replication setups
-- **Production safety**: Ensure critical data isn't accidentally modified
-- **Reporting/analytics**: Run queries for dashboards without risk of data changes
-- **Multi-tenant environments**: Provide read-only access to certain users
 
 ## Running Multiple Instances
 
