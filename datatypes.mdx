@@ -86,6 +86,12 @@ $ redis-cli GRAPH.QUERY G "RETURN 1 = true"
 
 All FalkorDB integers are treated as 64-bit signed integers.
 
+<Note>
+JavaScript numbers cannot represent every integer outside the range `-(2^53 - 1)` to `2^53 - 1` exactly, so by
+default the `falkordb` TypeScript client may lose precision on integers of larger magnitude. Connect with
+`integers: 'bigint'` to read every integer in query results as an exact `bigint`.
+</Note>
+
 ### Floating-point values
 
 All FalkorDB floating-point values are treated as 64-bit signed doubles.

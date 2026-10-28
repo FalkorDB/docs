@@ -109,6 +109,18 @@ is a list of `propCount` property names.
 
 ## Examples
 
+<Note>
+The JavaScript examples use constraint helpers added in `falkordb` 7.0. With earlier versions, use
+`graph.constraintCreate` and `graph.constraintDrop` with the `ConstraintType` and `EntityType` enums:
+
+```javascript
+import { FalkorDB, ConstraintType, EntityType } from 'falkordb';
+const client = await FalkorDB.connect();
+const graph = client.selectGraph('g');
+await graph.constraintCreate(ConstraintType.UNIQUE, EntityType.NODE, 'Person', 'first_name', 'last_name');
+```
+</Note>
+
 ### Creating a unique constraint for a node label
 
 To create a unique constraint for all nodes with label `Person` enforcing uniqueness on the combination of values of attributes `first_name` and `last_name`, issue the following commands:
@@ -128,9 +140,8 @@ print(result)
 import { FalkorDB } from 'falkordb';
 const client = await FalkorDB.connect();
 const graph = client.selectGraph('g');
-await graph.query("CREATE INDEX FOR (p:Person) ON (p.first_name, p.last_name)");
-const result = await client.createConstraint('g', 'UNIQUE', 'NODE', 'Person', ['first_name', 'last_name']);
-console.log(result);
+// Also creates the range index the constraint requires
+await graph.createNodeUniqueConstraint('Person', 'first_name', 'last_name');
 ```
 
 ```java Java
@@ -177,8 +188,8 @@ print(result)
 ```
 
 ```javascript JavaScript
-const result = await client.createConstraint('g', 'MANDATORY', 'RELATIONSHIP', 'Visited', ['date']);
-console.log(result);
+// Resolves once the server accepts the constraint (PENDING)
+await graph.createEdgeMandatoryConstraint('Visited', 'date');
 ```
 
 ```java Java
@@ -210,8 +221,9 @@ print(result)
 ```
 
 ```javascript JavaScript
-const result = await graph.roQuery("call db.constraints()");
-console.log(result);
+// Runs CALL db.constraints() and returns typed rows
+const constraints = await graph.listConstraints();
+console.log(constraints);
 ```
 
 ```java Java

@@ -341,6 +341,7 @@ geospatial
 getConfig
 getMessage
 GETUSER
+getValue
 getzep
 gg
 GitHub
@@ -975,3 +976,12 @@ precompute
 precomputes
 precomputed
 adjacencies
+constraintCreate
+constraintDrop
+ConstraintType
+EntityType
+createEdgeMandatoryConstraint
+createNodeUniqueConstraint
+dropNodeUniqueConstraint
+listConstraints
+slowLogReset

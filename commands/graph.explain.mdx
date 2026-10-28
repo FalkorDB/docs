@@ -27,8 +27,8 @@ import { FalkorDB } from 'falkordb';
 const client = await FalkorDB.connect();
 const graph = client.selectGraph('us_government');
 const query = "MATCH (p:President)-[:BORN]->(h:State {name:'Hawaii'}) RETURN p";
-const result = await graph.explain(query);
-console.log(result);
+const plan = await graph.explain(query);
+console.log(plan.toString());
 ```
 
 ```java Java
