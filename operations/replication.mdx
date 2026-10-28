@@ -60,7 +60,7 @@ Start the master FalkorDB instance:
 ```bash
 docker run -d \
   --name falkordb-master \
-  -v falkordb_data:/data \
+  -v falkordb_data:/var/lib/falkordb/data \
   -p 6379:6379 \
   --network falkordb-network \
   falkordb/falkordb

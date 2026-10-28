@@ -72,10 +72,10 @@ This creates a `dump.rdb` file in your Redis data directory.
 
 #### Using Docker
 
-When using the FalkorDB Docker image, mount your RDB file and configure Redis to load it:
+When using the FalkorDB Docker image, mount the folder that holds your RDB file at the data directory, `/var/lib/falkordb/data`. FalkorDB loads `dump.rdb` from there on startup:
 
    ```bash
-   docker run -it -p 6379:6379 -v $(pwd):/data -e REDIS_ARGS="--dir /data --dbfilename dump.rdb" falkordb/falkordb
+   docker run -it -p 6379:6379 -v $(pwd):/var/lib/falkordb/data falkordb/falkordb
    ```
 
    Make sure to place the RDB file in the directory mapped to the Docker volume.
