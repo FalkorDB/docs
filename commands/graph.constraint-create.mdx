@@ -111,7 +111,14 @@ is a list of `propCount` property names.
 
 <Note>
 The JavaScript examples use constraint helpers added in `falkordb` 7.0. With earlier versions, use
-`graph.constraintCreate` and `graph.constraintDrop` with the `ConstraintType` and `EntityType` enums.
+`graph.constraintCreate` and `graph.constraintDrop` with the `ConstraintType` and `EntityType` enums:
+
+```javascript
+import { FalkorDB, ConstraintType, EntityType } from 'falkordb';
+const client = await FalkorDB.connect();
+const graph = client.selectGraph('g');
+await graph.constraintCreate(ConstraintType.UNIQUE, EntityType.NODE, 'Person', 'first_name', 'last_name');
+```
 </Note>
 
 ### Creating a unique constraint for a node label

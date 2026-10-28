@@ -145,6 +145,10 @@ console.log(await db.info())
 db.close()
 ```
 
+The JavaScript examples use the `falkordb` 7.0 API. For all breaking changes when upgrading from v6, including
+query replies (`metadata` to `stats`), query parameter validation, vector-index options, and replica reads, see the
+[v6-to-v7 migration guide](https://github.com/FalkorDB/falkordb-ts/blob/7.0.0/MIGRATION.md).
+
 ```java Java
 package com.falkordb;
 
