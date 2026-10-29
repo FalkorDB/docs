@@ -10,7 +10,9 @@ This guide covers how to run FalkorDB using Docker and Docker Compose, providing
   For production upgrades, pin the image to an explicit release or digest
   rather than `latest`. Review [Upgrades, Downgrades, and
   Compatibility](/operations/upgrades-downgrades-compatibility) before changing
-  the image used with an existing data volume.
+  the image used with an existing data volume. The server-only examples below
+  use `6.0.3`; select a release compatible with your existing data before
+  applying them.
 </Note>
 
 ## Docker Images
@@ -50,7 +52,7 @@ Access the browser at [http://localhost:3000](http://localhost:3000)
 ### Running Server Only (Production)
 
 ```bash
-docker run -p 6379:6379 -it --rm falkordb/falkordb-server:latest
+docker run -p 6379:6379 -it --rm falkordb/falkordb-server:6.0.3
 ```
 
 ### Running with Authentication
@@ -117,7 +119,7 @@ version: '3.8'
 
 services:
   falkordb:
-    image: falkordb/falkordb-server:latest
+    image: falkordb/falkordb-server:6.0.3
     container_name: falkordb-server
     ports:
       - "6379:6379"
@@ -153,7 +155,7 @@ version: '3.8'
 
 services:
   falkordb-server:
-    image: falkordb/falkordb-server:latest
+    image: falkordb/falkordb-server:6.0.3
     container_name: falkordb-server
     ports:
       - "6379:6379"
@@ -198,7 +200,7 @@ version: '3.8'
 
 services:
   falkordb:
-    image: falkordb/falkordb-server:latest
+    image: falkordb/falkordb-server:6.0.3
     container_name: falkordb-production
     ports:
       - "6379:6379"
@@ -309,7 +311,7 @@ Named volumes are the recommended approach for data persistence:
 ```yaml
 services:
   falkordb:
-    image: falkordb/falkordb-server:latest
+    image: falkordb/falkordb-server:6.0.3
     volumes:
       - falkordb_data:/var/lib/falkordb/data
 
@@ -324,7 +326,7 @@ For specific host directory mapping:
 ```yaml
 services:
   falkordb:
-    image: falkordb/falkordb-server:latest
+    image: falkordb/falkordb-server:6.0.3
     volumes:
       - ./falkordb-data:/var/lib/falkordb/data
 ```
@@ -381,7 +383,7 @@ Use `expose` for internal communication and `ports` for external access:
 ```yaml
 services:
   falkordb:
-    image: falkordb/falkordb-server:latest
+    image: falkordb/falkordb-server:6.0.3
     expose:
       - "6379"  # Only accessible within Docker network
     # Or use ports for external access:
@@ -448,7 +450,7 @@ services:
 
 7. **Use Specific Tags**: Pin to specific versions for stability:
    ```yaml
-   image: falkordb/falkordb-server:4.0.0
+   image: falkordb/falkordb-server:6.0.3
    ```
 
 ## Troubleshooting
