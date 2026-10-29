@@ -6,6 +6,15 @@ description: "Run FalkorDB with Docker and Docker Compose, covering the falkordb
 
 This guide covers how to run FalkorDB using Docker and Docker Compose, providing flexible deployment options for both development and production environments.
 
+<Note>
+  The examples below use `latest` for convenience. For production, replace
+  `latest` with a tested release tag in `x.y.z` form, such as
+  `falkordb/falkordb-server:x.y.z`, or pin an image digest.
+  Review [Upgrades, Downgrades, and
+  Compatibility](/operations/upgrades-downgrades-compatibility) before changing
+  the image used with an existing data volume.
+</Note>
+
 ## Docker Images
 
 FalkorDB provides two main Docker images:
@@ -439,10 +448,9 @@ services:
    - Development: `falkordb/falkordb` (with browser)
    - Production: `falkordb/falkordb-server` (server only)
 
-7. **Use Specific Tags**: Pin to specific versions for stability:
-   ```yaml
-   image: falkordb/falkordb-server:4.0.0
-   ```
+7. **Use Specific Tags**: The examples use `latest` for convenience. For
+   production stability, replace it with a tested release tag in `x.y.z` form or
+   pin an image digest.
 
 ## Troubleshooting
 

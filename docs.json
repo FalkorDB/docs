@@ -219,6 +219,7 @@
               {
                 "group": "Operations",
                 "pages": [
+                  "operations/upgrades-downgrades-compatibility",
                   {
                     "group": "Migration",
                     "pages": [

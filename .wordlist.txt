@@ -231,6 +231,7 @@ employeeCount
 EMPLOYS
 EnableFalkorDBRepositories
 EnableTransactionManagement
+encodings
 endcapture
 endNode
 endtab
@@ -916,6 +917,7 @@ UUIDStringGenerator
 uv
 Uvicorn
 UX
+Valkey
 ValueType
 vec
 vecf
