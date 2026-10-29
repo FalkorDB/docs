@@ -97,8 +97,10 @@ Restore a pre-upgrade backup with the original FalkorDB, Redis/Valkey, and other
 
 1. Stop writes and stop the upgraded deployment. Preserve its data separately for investigation or a controlled migration.
 2. Prepare a clean data directory or a new volume. Do not mix the backup with RDB or AOF files produced after the upgrade.
-3. Restore the complete backup and its matching configuration and ACL files. If restoring an RDB-only backup, ensure AOF is disabled for that restore and that no stale AOF overrides the snapshot. Re-enable the intended persistence configuration after validating the restore.
-4. Start the original deployment in isolation and verify the restored graphs and application behavior. Rebuild replication or cluster membership using the appropriate deployment procedure before resuming traffic.
+3. Restore the complete backup and its matching configuration and ACL files. If restoring an RDB-only backup, ensure AOF is disabled for the initial startup and that no stale AOF overrides the snapshot.
+4. Start the original deployment in isolation and verify the restored graphs and application behavior.
+5. If AOF is required after an RDB-only restore, enable it on the **validated, running instance** with `CONFIG SET appendonly yes`. Watch `INFO persistence` until `aof_enabled` is `1`, both `aof_rewrite_in_progress` and `aof_rewrite_scheduled` are `0`, and `aof_last_bgrewrite_status` is `ok`. Persist `appendonly yes` in the actual startup configuration, or use `CONFIG REWRITE` when supported, before any restart. Do not enable AOF solely by editing the configuration and restarting: this can lose the restored data. See [Redis's RDB-to-AOF procedure](https://redis.io/docs/latest/operate/oss_and_stack/management/persistence/#how-i-can-switch-to-aof-if-im-currently-using-dumprdb-snapshots).
+6. Rebuild replication or cluster membership using the appropriate deployment procedure before resuming traffic.
 
 <Warning>
   Backup-based rollback returns the database to the backup's recovery point.
