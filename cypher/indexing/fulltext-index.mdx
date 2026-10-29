@@ -8,6 +8,10 @@ FalkorDB leverages the indexing capabilities of [RediSearch](https://redis.io/do
 
 ## Creating a full-text index for a node label
 
+<Warning>
+The procedure syntax below does not work in FalkorDB 6.0 yet. On 6.0, `db.idx.fulltext.createNodeIndex('Movie', 'title')` returns `Received 2 arguments to procedure 'db.idx.fulltext.createNodeIndex', expected at most 1`. Use the [DDL syntax](#using-ddl-syntax) instead. It works on both v4.x and 6.0.
+</Warning>
+
 ### Using procedure syntax
 
 To construct a full-text index on the `title` property of all nodes with label `Movie`, use the syntax:
@@ -153,6 +157,8 @@ GRAPH.QUERY DEMO_GRAPH "CREATE FULLTEXT INDEX FOR (n:Movie) ON (n.title)"
 
 </CodeGroup>
 
+To index more than one property, list them all: `CREATE FULLTEXT INDEX FOR (n:Person) ON (n.firstName, n.lastName)`.
+
 An `OPTIONS` block can be provided to specify additional configuration such as language and stopwords:
 
 <CodeGroup>
@@ -178,6 +184,10 @@ GRAPH.QUERY DEMO_GRAPH "CREATE FULLTEXT INDEX FOR (n:Movie) ON (n.title) OPTIONS
 ```
 
 </CodeGroup>
+
+<Warning>
+In FalkorDB 6.0, custom `stopwords` are not applied if the label already has a range or vector index. No error is returned, and `db.indexes()` still lists the stopwords. Create the full-text index before any other index on that label.
+</Warning>
 
 ## Query Syntax and Features
 
@@ -746,7 +756,7 @@ GRAPH.EXPLAIN DEMO_GRAPH "CALL db.idx.fulltext.queryNodes('Movie', 'Book') YIELD
 
 <AccordionGroup>
   <Accordion title="How do I create a full-text index?">
-    Use the procedure `CALL db.idx.fulltext.createNodeIndex('Label', 'property1', 'property2')`. You can index one or more properties on a given label.
+    Use `CREATE FULLTEXT INDEX FOR (n:Label) ON (n.property1, n.property2)`. You can index one or more properties on a given label. The older procedure form, `db.idx.fulltext.createNodeIndex`, does not work in FalkorDB 6.0 yet.
   </Accordion>
   <Accordion title="How do I query a full-text index?">
     Use `CALL db.idx.fulltext.queryNodes('Label', 'search term') YIELD node, score`. The score reflects TF-IDF relevance ranking.
