@@ -117,6 +117,8 @@ The JavaScript examples use constraint helpers added in `falkordb` 7.0. With ear
 import { FalkorDB, ConstraintType, EntityType } from 'falkordb';
 const client = await FalkorDB.connect();
 const graph = client.selectGraph('g');
+await graph.query('CREATE INDEX FOR (p:Person) ON (p.first_name)');
+await graph.query('CREATE INDEX FOR (p:Person) ON (p.last_name)');
 await graph.constraintCreate(ConstraintType.UNIQUE, EntityType.NODE, 'Person', 'first_name', 'last_name');
 ```
 </Note>
