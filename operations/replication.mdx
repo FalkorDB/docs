@@ -31,6 +31,15 @@ flowchart LR
 
 Writes always flow through the master, while replicas mirror the master's state and absorb read traffic. Because replication is asynchronous, replicas may lag the master slightly under heavy write load — see the [Best Practices](#best-practices) section for tips on monitoring lag.
 
+<Warning>
+  Do not mix FalkorDB `4.x` and `6.0` in one primary/replica group. Their
+  replication effects are incompatible, even when a snapshot format is
+  readable. See [Upgrades, Downgrades, and
+  Compatibility](/operations/upgrades-downgrades-compatibility) and the
+  [6.0.0 release notes](https://github.com/FalkorDB/FalkorDB/releases/tag/v6.0.0)
+  before planning a rolling upgrade or downgrade.
+</Warning>
+
 ## Prerequisites
 
 Before you begin, ensure you have the following:

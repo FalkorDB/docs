@@ -6,6 +6,13 @@ description: "Run FalkorDB with Docker and Docker Compose, covering the falkordb
 
 This guide covers how to run FalkorDB using Docker and Docker Compose, providing flexible deployment options for both development and production environments.
 
+<Note>
+  For production upgrades, pin the image to an explicit release or digest
+  rather than `latest`. Review [Upgrades, Downgrades, and
+  Compatibility](/operations/upgrades-downgrades-compatibility) before changing
+  the image used with an existing data volume.
+</Note>
+
 ## Docker Images
 
 FalkorDB provides two main Docker images:
