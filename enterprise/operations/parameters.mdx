@@ -1,0 +1,179 @@
+---
+title: "Configure FalkorDB engine parameters and Kubernetes pod resources"
+sidebarTitle: "Parameters & resources"
+description: "Change FalkorDB parameters, network services, CPU, memory, and storage."
+icon: "gear"
+---
+
+## FalkorDB runtime parameters
+
+1. Open the deployment.
+2. Go to **Parameters**.
+3. Edit values under **FalkorDB Parameters**.
+4. Select **Save FalkorDB**.
+
+The UI stores FalkorDB parameters on the cluster spec under the FalkorDB module config. Only supported FalkorDB config keys are sent.
+
+## Redis parameters
+
+1. Open the deployment.
+2. Go to **Parameters**.
+3. Wait for Redis parameters to load from the ConfigMap.
+4. Edit changed values.
+5. Select **Save Redis**.
+
+The UI saves only the changed parameters, and a KubeBlocks reconfigure OpsRequest applies them. Most directives, such as `maxmemory-policy`, `maxclients` and `save`, are applied to the running pods. Any other directive, such as `databases` or `io-threads`, restarts the pods one at a time. The directives the addon manages, such as `port`, `dir` and the TLS files, can't be changed.
+
+A parameter's default isn't known to the UI, so to undo a change, enter the directive's default. Clearing a field empties the directive when it is applied without a restart. Otherwise the UI refuses to save it.
+
+## Enterprise module parameters
+
+The FalkorDB Enterprise module adds graph offloading and LDAP authentication. Its settings live under the `falkordbe.` prefix in `redis.conf`.
+
+1. Open the deployment.
+2. Go to **Parameters**.
+3. Edit values under **Enterprise Module Parameters**, in **Graph Offloading** or **LDAP Authentication**.
+4. Select **Save Enterprise**.
+
+Every enterprise setting is applied to the running pods without a restart. Fields left at their default are not written to `redis.conf`. Clearing a field sets it back to the module default shown in the tables below. Clearing a setting whose default is empty, such as the LDAP ones, empties it, so clearing **LDAP servers** turns LDAP authentication off.
+
+### Graph offloading
+
+| Parameter | Default | Notes |
+| --- | --- | --- |
+| `falkordbe.idle-threshold-ms` | `0` | LRU idle time before a graph is offloaded. `0` disables background eviction. |
+| `falkordbe.evict-interval-ms` | `10000` | Scan interval of the eviction thread. Minimum `1000`. |
+| `falkordbe.memory-pressure` | `0` | Watermark in `[0.0, 1.0]`. Requires Redis `maxmemory` to be set, otherwise the ratio is always `0` and any positive value suppresses eviction entirely. |
+| `falkordbe.load-evict-budget` | `0` | Graphs the module may offload to make room for one `GRAPH.LOAD`. `0` disables it, `-1` allows unlimited evictions. |
+
+For how the feature works and its commands, see [Graph offloading](/enterprise/operations/graph-offloading).
+
+The directory the dumps are written to is not in this list. Every enterprise
+cluster gets `/data/offload` on the data volume, so the primary and its
+replicas cannot collide on a dump file name. When the deployment has persistent
+volumes, the dumps survive a restart and do not count against the pod
+ephemeral-storage limit; without them, the dumps use the pod's ephemeral
+storage and are lost when the pod is recreated. The module creates the
+directory when it is missing. The path is passed on the `redis-server` command
+line through `FALKORDB_EXTRA_MODULES_ARGS`, next to the flag that loads the
+module, because the addon also runs without the enterprise module and a
+`falkordbe.` directive that no module registers stops the server from starting.
+Changing it therefore means changing that environment variable on the
+deployment, which restarts the pods; a reconfigure operation rejects the key
+with `400`.
+
+### LDAP authentication
+
+Set `falkordbe.ldap_servers` to a comma separated list of `ldap[s]://host:port` to enable LDAP; leaving it empty keeps LDAP off. Pick the mode with `falkordbe.ldap_auth_mode`:
+
+- `bind` builds the user DN from `falkordbe.ldap_bind_dn_prefix` and `falkordbe.ldap_bind_dn_suffix`.
+- `search+bind` first looks the user up with `falkordbe.ldap_search_bind_dn` and `falkordbe.ldap_search_bind_passwd` under `falkordbe.ldap_search_base`.
+
+Keep the operational accounts out of LDAP with `falkordbe.ldap_exempted_users_regex`, for example `^(default|exporter|replication)$`, so monitoring and replication keep working when the directory is unreachable.
+
+Two settings need care:
+
+- `falkordbe.ldap_search_bind_passwd` is stored in clear text in the KubeBlocks managed ConfigMap of the cluster, so anyone who can read that ConfigMap can read the password. Use a dedicated read-only directory account, and restrict read access to the deployment namespace.
+- `falkordbe.ldap_tls_skip_verify` accepts any certificate the LDAP server presents, which removes the protection against man-in-the-middle attacks. Use it only in development.
+
+### How the values are applied
+
+The module reads its configuration from `redis.conf` at start-up; arguments on the `--loadmodule` line are ignored. Saving therefore submits a reconfigure OpsRequest, which rewrites the ConfigMap and then applies each changed key to the running server with `CONFIG SET`, without a restart.
+
+Only the keys listed above are accepted. Redis refuses to start when `redis.conf` holds a `falkordbe.` key the module does not register, so the admin server rejects unknown keys and malformed values with `400` instead of writing them.
+
+## Settings made with CONFIG SET
+
+<Warning>
+  Don't change settings with `redis-cli CONFIG SET` (or `GRAPH.CONFIG SET`) against the pods. That changes only the running server: the value isn't written to the deployment's configuration, so it is lost whenever a pod is recreated, such as on a restart, a [FalkorDB version upgrade](/enterprise/upgrades/falkordb-version), a node drain, or a reschedule. It also applies only to the node you ran it on.
+</Warning>
+
+Set them through the deployment instead, so every pod keeps them:
+
+- Admin UI: **Parameters**, as described above.
+- API: `PATCH /api/clusters/{name}` with `spec.config.enterprise` (the `falkordbe.` settings), `spec.config.server` (`redis.conf` directives), or `spec.config.graph` (FalkorDB settings). See [Deployments API](/enterprise/api-reference/deployments#how-settings-are-applied). The older `POST /api/clusters/{name}/ops/configure` also persists enterprise and server settings, and is deprecated. It writes every key it gets to `redis.conf`, so don't send FalkorDB settings to it: use `spec.config.graph` or the Admin UI for those.
+
+If you already set something with `CONFIG SET`, save the same value this way before the next restart or upgrade.
+
+## Sharded deployments
+
+KubeBlocks `1.2.0-alpha.1`, which the installer deploys, does not finish a reconfigure on a sharded deployment ([KubeBlocks issue 10459](https://github.com/apecloud/kubeblocks/issues/10459); `1.2.0-alpha.2` and `alpha.3` have the same problem). It rewrites the `redis.conf` of every shard, but runs `CONFIG SET` on only one of them, and the OpsRequest stays `Running` with no error. While it runs, KubeBlocks holds every later reconfigure or restart of the deployment behind it.
+
+The Admin Server works around it. When you save parameters on a sharded deployment, through the UI, `POST /api/clusters/{name}/ops/configure` or a `PATCH` of the deployment:
+
+- It also submits a second OpsRequest, `<deployment>-config-apply-<id>`, that runs `CONFIG SET` on every pod of every shard. It applies the settings that take effect without a restart, which are every enterprise setting except `falkordbe.ldap_search_bind_passwd`, and the Redis directives the UI applies to running pods. It runs through the `falkordb-enterprise-cluster-config-apply` OpsDefinition, which the Admin Server creates. The pods keep running. Each pod first waits, for up to 30 minutes, until its mounted `redis.conf` holds the new values, so a pod never runs a value `redis.conf` doesn't have. If the reconfigure is rejected or never runs, this OpsRequest fails and sets nothing. Each key is set as soon as `redis.conf` holds it, so a key that a later change has replaced doesn't hold back the others. That key is left for the later change to set, so an earlier change can't overwrite it, and this OpsRequest then ends `Failed`, naming it. If this OpsRequest ends without succeeding, the Admin Server records it in the audit log. The API response names it in `liveApplyOpsName`, or says in `liveApplyError` why it could not be submitted.
+- It gives the reconfigure OpsRequest a timeout of 10 minutes. After that KubeBlocks marks it `Aborted`, and the next operation can run. `Aborted` is expected here: the settings are already in every shard's `redis.conf`.
+- Before a reconfigure or a restart of the shards, it gives the same timeout to a reconfigure OpsRequest on the shards that has been `Running` for longer than that, so KubeBlocks aborts it. Such an OpsRequest was submitted before this fix and would never finish, and the restart would wait behind it. Deleting it yourself doesn't help: KubeBlocks keeps a `Running` OpsRequest, still holding the queue, until it ends.
+
+Settings that only take effect on a restart, and `falkordbe.ldap_search_bind_passwd`, reach `redis.conf` but not the running pods. To load them, restart the shards one at a time:
+
+```bash
+curl -X POST "$ADMIN_URL/api/clusters/<deployment>/ops/restart?namespace=<namespace>" \
+  -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json" \
+  -d '{"componentName": "shard"}'
+```
+
+A rolling restart also applies the settings if the second OpsRequest failed. You don't need to run `CONFIG SET` by hand. A `CONFIG SET` by hand is lost when a pod is recreated, and a restart puts back the values in `redis.conf`.
+
+### Check what the pods are running
+
+`GET /api/clusters/{name}/config?live=true` returns `redis.conf` and compares it with what each shard pod is running. A short read-only Job in the deployment's namespace runs `CONFIG GET` on every pod.
+
+```bash
+curl "$ADMIN_URL/api/clusters/<deployment>/config?namespace=<namespace>&live=true" \
+  -H "Authorization: Bearer $TOKEN"
+```
+
+`live.drift` lists each pod and key whose running value differs from its shard's `redis.conf`. `live.unreachablePods` lists the pods that didn't answer or couldn't be read. Only settings that apply without a restart are compared, and credentials never are. Values are compared the way Redis reads them: sizes in size directives such as `maxmemory` in bytes, so `1gb` matches `1073741824`, the numbers of `save` regardless of spacing, and the yes/no and named values of Redis directives, such as `allkeys-lru`, in any case. Everything else, including every `falkordbe.` setting, must match exactly, case and spaces included. If the pods can't be read, the response still has `redis.conf`, and `liveError` says why. A deployment that isn't sharded gets `liveError` and no `live`.
+
+To fix drift, send the drifted settings again with `POST /api/clusters/{name}/ops/configure`, which applies them on every shard pod even when `redis.conf` already holds them, or restart the shards as shown above. Saving the same value from the UI or a `PATCH` of the deployment does not help here: those leave out settings `redis.conf` already holds.
+
+```bash
+curl -X POST "$ADMIN_URL/api/clusters/<deployment>/ops/configure?namespace=<namespace>" \
+  -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json" \
+  -d '{"parameters": [{"key": "falkordbe.idle-threshold-ms", "value": "60000"}]}'
+```
+
+## CPU and memory
+
+1. Open the deployment.
+2. Select **Edit**.
+3. Choose **Resources**.
+4. Enter CPU and memory requests or limits.
+5. Select **Apply Resources**.
+
+Examples accepted by the UI:
+
+- CPU: `100m`, `500m`, `1`, `2`
+- Memory: `256Mi`, `1Gi`, `2Gi`
+
+## Storage
+
+1. Open the deployment.
+2. Select **Edit**.
+3. Choose **Storage**.
+4. Enter a larger size, for example `50Gi`.
+5. Select **Expand Storage**.
+
+## Network configuration
+
+Initial network services are configured during creation in the **Networking** step. Service types supported by the UI are:
+
+- `ClusterIP`
+- `NodePort`
+- `LoadBalancer`
+
+For existing deployments, use the deployment edit flow for networking changes where available. The backend also exposes an OpsRequest-based expose operation for service exposure changes.
+
+## Authentication settings
+
+During creation, the UI supports ACL authentication with username and password fields, and LDAP as a selectable auth method where supported by the backend and deployment configuration. For existing deployments, credential retrieval is available from deployment details through the credentials API.
+
+## Validate
+
+```bash
+kubectl get opsrequests.operations.kubeblocks.io -n <namespace>
+kubectl get clusters.apps.kubeblocks.io -n <namespace> <deployment-name> -o yaml
+```
+
+In the Admin UI, review **Operations**, **Parameters**, **Networking**, and **Events**.

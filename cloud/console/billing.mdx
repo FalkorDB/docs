@@ -1,0 +1,66 @@
+---
+title: "Add a payment method"
+description: "Add or change the payment method for paid FalkorDB Cloud tiers, and review your balance, usage, and invoices."
+---
+
+Paid tiers (Startup, Pro, and Enterprise) need a payment method on file before their instances can run. The Free tier doesn't need one. If your billing is arranged by contract, as it often is for Enterprise, you may not need to add one; check with your account manager.
+
+If a paid subscription has no payment method, the **Instances** page shows a banner that says the subscription requires a payment method, with a **Go to Billing** link.
+
+## Add a payment method
+
+1. In the sidebar, open **Account Management** > **Payment Settings**.
+2. Select **Add payment method**.
+3. Enter your card details and country.
+4. Select **Save Payment Method**.
+
+<Frame>
+  ![The Payment Settings page with the Saved payment methods card and the Add payment method button](/cloud/images/console/payment-settings.png)
+</Frame>
+
+<Frame>
+  ![The Add Payment Method dialog with the card number, expiration date, security code, and country fields](/cloud/images/console/add-payment-method.png)
+</Frame>
+
+Payments are processed by Stripe. FalkorDB Cloud doesn't store your card details.
+
+<Note>
+  If you see a **Configure** button instead of **Add payment method**, select it. It opens the Stripe billing portal, where you add and manage payment methods.
+</Note>
+
+## Change the default payment method
+
+The default method is charged first for each invoice.
+
+1. Open **Account Management** > **Payment Settings**.
+2. Next to the method you want, select **Set default**.
+
+To remove a method, select its remove action and type `remove` to confirm.
+
+## Review your balance and invoices
+
+Open **Account Management** > **Billing** to see the **Billing & Invoices** page:
+
+- **Current Usage** shows what you've used so far this month: memory, storage, CPU, replicas, and more. Select **Show Usage Breakdown** for the details.
+- **Payment Summary** shows your **Outstanding Balance** and your **Default Payment Method**. Select **Pay outstanding balance** to pay it now, or **Add payment method** if you don't have one yet.
+- **Invoices** lists past invoices with their status, dates, and total amount.
+
+<Frame>
+  ![The Billing & Invoices page with Current Usage, Outstanding Balance, Default Payment Method, and the Invoices table](/cloud/images/console/billing-invoices.png)
+</Frame>
+
+For a breakdown of costs by instance over time, open **Account Management** > **Cost Explorer**.
+
+## Frequently asked questions
+
+<AccordionGroup>
+  <Accordion title="How am I charged?">
+    Paid tiers are billed by usage per hour. See the pricing on each tier page: [Startup](/cloud/tiers/startup), [Pro](/cloud/tiers/pro), and [Enterprise](/cloud/tiers/enterprise).
+  </Accordion>
+  <Accordion title="What happens if my payment method is missing?">
+    Instances on a paid subscription need a payment method to keep running. Add one from **Payment Settings** as soon as you see the banner on the **Instances** page.
+  </Accordion>
+  <Accordion title="I can't see Billing or Payment Settings in the sidebar.">
+    These pages show only when billing applies to your account. If you're on the Free tier only, or your billing is handled by contract, contact [support@falkordb.com](mailto:support@falkordb.com).
+  </Accordion>
+</AccordionGroup>

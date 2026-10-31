@@ -1,0 +1,232 @@
+---
+title: "Deployment bodies"
+sidebarTitle: "Deployment bodies"
+description: "Create, read and change FalkorDB deployments with one versioned body, and move off the deprecated requests."
+icon: "file-code"
+---
+
+A deployment is described by one body: you create a deployment with it, read
+the deployment back in the same shape, and change it with it. The body carries
+`schemaVersion: 1`, so the schema can evolve without new routes: the endpoints
+stay `/api/clusters` and `/api/clusters/{name}`. The Admin UI and every example
+on this page use it.
+
+## The body
+
+```json
+{
+  "schemaVersion": 1,
+  "metadata": { "name": "graph-prod", "namespace": "team-a", "labels": { "team": "search" } },
+  "spec": {
+    "version": "4.22.0",
+    "topology": { "mode": "replication", "replicas": 3 },
+    "nodes": {
+      "resources": { "requests": { "cpu": "1", "memory": "4Gi" }, "limits": { "memory": "4Gi" } },
+      "storage": { "size": "50Gi", "storageClass": "gp3" }
+    },
+    "sentinels": { "replicas": 3 },
+    "config": {
+      "graph": { "THREAD_COUNT": "8" },
+      "enterprise": { "falkordbe.idle-threshold-ms": "60000" },
+      "server": { "maxmemory-policy": "noeviction" }
+    },
+    "networking": {
+      "externalDomain": "db.example.com",
+      "services": [{ "name": "public", "target": "nodes", "type": "LoadBalancer" }]
+    },
+    "security": { "tls": { "issuer": "Enterprise" }, "auth": { "password": "…" } },
+    "backup": { "schedule": "0 2 * * *" },
+    "observability": { "exporter": true },
+    "lifecycle": { "state": "Running", "deletionPolicy": "DoNotTerminate" }
+  }
+}
+```
+
+| Field | Meaning |
+| --- | --- |
+| `version` | FalkorDB release. Omit it to run the release the ComponentDefinition defaults to. |
+| `componentDefinition` | KubeBlocks ComponentDefinition of the data nodes, such as `falkordb-4-1.7.7`. Optional; omit it to get the newest installed one. |
+| `topology` | `mode` is `standalone` (one node), `replication` (`replicas` counts every node, 1 primary + replicas), or `cluster` (`shards` and `replicasPerShard`). |
+| `nodes` | The FalkorDB nodes, or every shard's nodes: `resources`, `storage` (omit for ephemeral storage), and `scheduling` (`nodeSelector`, `tolerations`). |
+| `sentinels` | Replication only: `replicas` (default 3), `resources`, `storage`, `scheduling`. |
+| `config.graph` | FalkorDB module settings. Changing one restarts the nodes. |
+| `config.enterprise` | FalkorDB Enterprise module settings. A credential can be a string or `{ "secretRef": { "name", "key" } }`. |
+| `config.server` | Any `redis.conf` directive, except the ones the addon manages (`port`, `tls-*`, announce settings, and similar). |
+| `networking` | `externalDomain`, and `services` with a `target` of `nodes` or `sentinels`, a `type`, and optionally `perPod` and `annotations`. |
+| `security` | `tls` (`issuer`: `Enterprise`, `CertManager` with `issuerRef`, `UserProvided` with `secretRef`, or `KubeBlocks`) and `auth` (`password` or `passwordSecretRef`). Fixed once the deployment exists. |
+| `backup` | A recurring backup `schedule`. Set at create time; change it later with the backup schedule endpoints. |
+| `lifecycle` | `state` (`Running` or `Stopped`) and `deletionPolicy` (`DoNotTerminate`, `Delete`, or `WipeOut`). |
+
+A read adds `status`: `state` and `ready`, node and sentinel counts,
+`endpoints`, the TLS certificate's expiry, `pendingChanges` (accepted but not
+applied yet), and `unmanagedFields` (settings made outside this API, such as
+with the YAML editor).
+
+A read leaves out what is not kept on the deployment itself:
+`config.enterprise` and `config.server` (they live in `redis.conf`) and
+`backup`. An inline `security.auth.password` reads back as the
+`passwordSecretRef` of the Secret it was moved into.
+
+## Create, read and change
+
+<CodeGroup>
+
+```bash Create
+curl -sS -b cookies.txt -X POST https://admin.example.com/api/clusters \
+  -H 'Content-Type: application/json' -d @graph-prod.json
+```
+
+```bash Read
+curl -sS -b cookies.txt \
+  'https://admin.example.com/api/clusters/graph-prod?namespace=team-a&schemaVersion=1'
+```
+
+```bash Change
+curl -sS -b cookies.txt -X PATCH \
+  'https://admin.example.com/api/clusters/graph-prod?namespace=team-a' \
+  -H 'Content-Type: application/merge-patch+json' -H 'If-Match: "7"' \
+  -d '{"schemaVersion":1,"spec":{"topology":{"replicas":5}}}'
+```
+
+</CodeGroup>
+
+- `GET /api/clusters?schemaVersion=1` lists deployments as
+  `{ "schemaVersion": 1, "deployments": [...], "total": N }`.
+- `PATCH` takes a JSON Merge Patch: send only what changes. Objects merge, lists
+  are replaced whole, and `null` removes a field.
+- `PUT` takes a whole body. Fields it leaves out are removed, with these
+  exceptions:
+  - `config.enterprise` and `config.server`: only the settings it names
+    change.
+  - `version`, `componentDefinition`, and `lifecycle`'s `state` and
+    `deletionPolicy`: these keep their current values, so leaving them out
+    doesn't upgrade, start a stopped deployment, or drop `DoNotTerminate`.
+  - Labels and annotations that other tools manage. These keep their current
+    values when the body leaves them out. Their key prefix is one of:
+    - `kubeblocks.io/` or `falkordb.cloud/`, or a subdomain of one, such as
+      `apps.kubeblocks.io/` or `keel.falkordb.cloud/`.
+    - `app.kubernetes.io/`, exactly.
+    - A domain in the Admin Server's `ADMIN_SERVER_PRESERVED_LABEL_PREFIXES`,
+      or a subdomain of one.
+
+    Legacy `falkordb.io/` and `falkordb.com/` keys are moved to
+    `falkordb.cloud/` with the same name, and kept there.
+
+  To remove a tool-managed label or annotation, `PATCH` it to `null` by name,
+  for example `{"schemaVersion": 1, "metadata": {"labels": {"keel.falkordb.cloud/cell": null}}}`.
+  Setting the whole map to `null` (`"labels": null`) removes only the other
+  labels; the tool-managed ones stay. Reserved annotations can't be removed at
+  all, even by name: those under `kubeblocks.io/` or `apps.kubeblocks.io/`,
+  and the Admin Server's own TLS and pending-settings annotations. A `null`
+  for one of them is ignored.
+
+  A `PUT` of what a read returns changes nothing. That includes a Sentinel
+  left on an older addon release: to bring it to the data nodes' definition,
+  `PATCH` `spec.componentDefinition`. Don't send `backup` or an
+  inline password again: both are set at create time only.
+- `If-Match` takes the `metadata.generation` you read. When the deployment
+  changed since, the update is refused with `412` instead of overwriting the
+  other change.
+- `?dryRun=true` returns what the update would do without doing it.
+
+An update answers with `{ "schemaVersion": 1, "deployment": {...}, "plan": {...} }`.
+It answers `202` when part of the change is applied after the write: volume
+growth, and `config.enterprise` or `config.server` settings. Those show in
+`status.pendingChanges` until they are applied.
+
+### Rules an update follows
+
+- Volumes only grow, and their storage class can't change.
+- A deployment can't move between sharded and not sharded, or gain or lose
+  sentinels. A primary with replicas and no sentinels can become a single node
+  and back.
+- The FalkorDB version can't go back.
+- `config.enterprise` and `config.server` change only while the deployment is
+  running. See [how settings are applied](#how-settings-are-applied) for
+  which ones restart the pods, and how to reset or empty one.
+- Settings and volume growth are applied after the write, and only while the
+  deployment is running: otherwise they answer `409`.
+- While earlier settings or volume growth still wait to be applied, another
+  update that queues some answers `409`. Retry once they are applied.
+- While a Reconfiguring operation runs, an update that sets one of its
+  settings to another value answers `409`; the same value is taken as already
+  on its way.
+- A request that stops the deployment can't also change settings or grow
+  volumes: that answers `422`.
+- `config.server` can't set the directives the FalkorDB addon manages: the
+  listening port and TLS, accounts (`requirepass`, `user`, …), modules, the
+  data directory and file names, replication and cluster wiring, announced
+  addresses, `logfile`, `pidfile`, and the switches that open `MODULE` and
+  `DEBUG`.
+- `GET /api/clusters/{name}/config` shows credentials set as enterprise
+  settings only to users who may read the deployment's credentials
+  (`clusters:update`). Anyone else sees `(redacted)`.
+- A field set outside this API is not overwritten: the update answers `422`
+  naming it. Add `?overwriteUnmanaged=true` to replace it.
+
+### How settings are applied
+
+Each setting falls into one of three categories:
+
+| Category | Settings | What a change does |
+| --- | --- | --- |
+| Applied on the fly | Every `config.enterprise` setting, and the `config.server` directives the addon reloads with `CONFIG SET`, such as `maxmemory-policy`, `maxclients`, `save`, `loglevel` and `notify-keyspace-events` | The pods take the new value without restarting. |
+| Needs a restart | Every `config.graph` setting, and any other `config.server` directive, such as `databases` and `io-threads` | The pods restart, one at a time, as part of the same operation. |
+| Can't be modified | The `config.server` directives the addon manages (see above), and TLS and the default account's password | Refused with `422`. |
+
+To undo a change:
+
+- An enterprise setting set to `null` goes back to its default. When the
+  default is empty, as with the LDAP settings, `null` or `""` empties it, so
+  setting `falkordbe.ldap_servers` to `null` turns LDAP authentication off.
+  An empty value for any other enterprise setting answers `422`.
+- A `config.graph` setting set to `null` is removed, and the server uses its
+  default.
+- A `config.server` directive has no default the API knows, so `null`
+  answers `422`: set the value you want. `""` empties a directive that is
+  applied on the fly. A directive that needs a restart can't be emptied,
+  because a bad empty value could keep the pods from starting.
+- A whole section (`config.server: null`) can't be removed.
+
+### Errors
+
+A `400` or `422` lists each problem:
+
+```json
+{
+  "statusCode": 422,
+  "error": "Unprocessable Entity",
+  "message": "Invalid deployment: spec.topology.replicas: required for mode 'replication'",
+  "issues": [{ "path": "spec.topology.replicas", "message": "required for mode 'replication'" }]
+}
+```
+
+## Deprecated requests
+
+These requests still work. Their answers carry a `Deprecation` header
+([RFC 9745](https://www.rfc-editor.org/rfc/rfc9745)) and a `Link` to this
+section, and the Admin Server logs the callers that still use them. Move to
+the replacement.
+
+| Deprecated | Replacement |
+| --- | --- |
+| `POST /api/clusters` without `schemaVersion` | `POST /api/clusters` with a deployment body |
+| `PATCH /api/clusters/{name}` without `schemaVersion` | `PATCH` with a merge patch carrying `schemaVersion: 1`, or `PUT` a whole body |
+| `POST /api/clusters/{name}/upgrade` | `PATCH` `spec.version` or `spec.componentDefinition` |
+| `POST /api/clusters/{name}/ops/start` | `PATCH` `spec.lifecycle.state` to `Running` |
+| `POST /api/clusters/{name}/ops/stop` | `PATCH` `spec.lifecycle.state` to `Stopped` |
+| `POST /api/clusters/{name}/ops/horizontal-scale` | `PATCH` `spec.topology` (`replicas`, or `shards` and `replicasPerShard`) or `spec.sentinels.replicas` |
+| `POST /api/clusters/{name}/ops/vertical-scale` | `PATCH` `spec.nodes.resources` or `spec.sentinels.resources` |
+| `POST /api/clusters/{name}/ops/volume-expand` | `PATCH` `spec.nodes.storage.size` or `spec.sentinels.storage.size` |
+| `POST /api/clusters/{name}/ops/configure` for the FalkorDB nodes | `PATCH` `spec.config.server` or `spec.config.enterprise` |
+
+Restart, switchover, rebalancing a sharded deployment (`/ops/rebalance`),
+moving its slots (`/ops/reshard`),
+reconfiguring Sentinel (`/ops/configure` with `componentName: falkordb-sent`),
+and reading or deleting OpsRequests are not deprecated: they have no
+counterpart in the deployment body.
+
+<Note>
+  Reading a deployment without `?schemaVersion=1` still returns the earlier
+  shape and is not deprecated.
+</Note>

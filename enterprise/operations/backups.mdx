@@ -1,0 +1,118 @@
+---
+title: "Configure automated backups and schedules in FalkorDB Enterprise"
+sidebarTitle: "Backups & schedules"
+description: "Configure backup repositories, run on-demand backups, and create recurring schedules."
+icon: "floppy-disk"
+---
+
+<Warning>
+The chart's default repository, `falkordb-enterprise-pvc`, is a volume in the same Kubernetes cluster as your databases. A cluster or storage failure can take the backups with the data. For production, create a repository on object storage (S3, GCS, Azure Blob or MinIO) and mark it as the default.
+</Warning>
+
+The default repository is kept when you uninstall the release, and its volumes use the `Retain` reclaim policy, so `helm uninstall` doesn't delete your backups.
+
+## Multi-zone clusters
+
+The default repository is a `ReadWriteOnce` volume in each database namespace. On zonal block storage (EBS, Persistent Disk, Azure Disk) that volume stays in the zone it is created in. Local storage (`local-path`, hostpath) is worse: its volume stays on one node. Storage that can attach a volume in any zone, such as Longhorn, does not have this problem, and the installer does not flag it. A backup pod has to run next to the database it backs up, so the backup of a database whose volume is in another zone can never be scheduled: its pod stays `Pending` and the backup never finishes.
+
+When the nodes span more than one zone and the repository would be on zonal block storage, a new install stops and asks for one of:
+
+- **Object storage (recommended).** Install with `--set backupRepository.enabled=false`, then create an S3, GCS or Azure Blob repository and mark it as the default.
+- **A `ReadWriteMany` `StorageClass`** such as EFS, Azure Files, Filestore or NFS:
+
+  ```bash
+  --set-string backupRepository.config.storageClassName=<class> \
+  --set-string backupRepository.config.accessMode=ReadWriteMany
+  ```
+
+  In the terminal UI, the installer lists the `ReadWriteMany` classes it finds and sets these for you.
+- **`--allow-zonal-backup-repo`**, to keep the `ReadWriteOnce` volume and accept that backups only work for databases in the same zone as the repository.
+
+The `StorageClass` has to provide `ReadWriteMany` volumes itself: asking for `ReadWriteMany` on EBS, Persistent Disk or Azure Disk (including the fallback `kb-default-sc` there) is also refused, because the volume can never be created.
+
+Repository volumes from an earlier install are kept, and keep their access mode when the repository's settings change. If the installer reports zonal `ReadWriteOnce` volumes left from before, delete them (after saving any backups you need) so they are created again with the new settings.
+
+Upgrades of an existing release only print a warning, judged by both the cluster's current default repository and the settings the upgrade applies to it. So does an install whose account cannot list nodes, since the installer cannot tell how many zones there are.
+
+## Create a backup repository
+
+1. Open **Backup Repositories**.
+2. Select **New Backup Repository**.
+3. Enter a repository name.
+4. Choose a storage provider.
+5. Fill the required provider fields.
+6. Add credentials if the repository cannot use ambient credentials such as IAM role or workload identity.
+7. Optionally mark the repository as the default repository.
+8. Select **Create Repository**.
+
+Supported repository provider types in the UI are:
+
+- `s3`
+- `s3-compatible`
+- `gcs-s3comp`
+- `azureblob`
+- `minio`
+- `nfs`
+- `pvc`
+- `cos`
+- `obs`
+- `oss`
+- `ftp`
+
+Credentials are stored as Kubernetes Secrets by the backend repository implementation.
+
+## Create an on-demand backup
+
+1. Open **Deployments**.
+2. Open the target deployment.
+3. Go to **Backups**.
+4. Select **Create Backup**.
+5. Choose a backup type allowed by the selected backup policy.
+6. Choose a backup policy.
+7. Select **Start Backup**.
+
+The UI creates backup names using this pattern:
+
+```text
+<deployment-name>-manual-<timestamp>
+```
+
+The backend checks that the cluster exists, that the cluster is `Running`, that the backup policy exists, and that the requested backup method is supported by the selected policy.
+
+## Create a backup schedule
+
+1. Open the target deployment.
+2. Go to **Schedules**.
+3. Select **New Schedule**.
+4. Enter schedule name, cron frequency, retention, backup policy, and backup method.
+5. Select **Create Schedule**.
+
+The schedule dialog defaults to:
+
+| Field | Default |
+| --- | --- |
+| Cron frequency | `0 3 * * *` |
+| Retention | `30d` |
+| Backup method | `datafile` |
+
+The backend validates that the cluster exists, the cluster is `Running`, the cron expression has five fields, the backup policy exists, and the backup method is supported by the policy.
+
+## Supported backup methods
+
+The UI exposes these methods depending on the selected policy:
+
+- `datafile`
+- `aof`
+- `volume-snapshot`
+
+On-demand backups currently allow `datafile` and `volume-snapshot` in the dialog. Schedules allow `datafile`, `aof`, and `volume-snapshot` when the selected backup policy supports them.
+
+## Validate
+
+```bash
+kubectl get backuprepos.dataprotection.kubeblocks.io
+kubectl get backups.dataprotection.kubeblocks.io -n <namespace>
+kubectl get backupschedules.dataprotection.kubeblocks.io -n <namespace>
+```
+
+In the Admin UI, review **Backups**, **Schedules**, **Operations**, and **Events**.

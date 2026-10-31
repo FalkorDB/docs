@@ -1,0 +1,214 @@
+---
+title: "Scale FalkorDB deployments horizontally and vertically on Kubernetes"
+sidebarTitle: "Scaling"
+description: "Scale FalkorDB deployments horizontally and vertically."
+icon: "arrow-up-right-dots"
+---
+
+## Horizontal scale
+
+1. Open **Deployments**.
+2. Open the target deployment.
+3. Select **Scale** from the deployment header.
+4. Adjust replicas.
+5. For sharded deployments, adjust shard count if needed.
+6. For Sentinel-enabled replicated deployments, adjust Sentinel nodes if needed.
+7. Select **Apply Scale**.
+
+The UI creates one or more KubeBlocks horizontal scaling OpsRequests through the Admin Server:
+
+- Component `falkordb` for standalone or replicated FalkorDB replicas.
+- Component `falkordb-sent` for Sentinel replicas.
+- Component `shard` for sharded deployments.
+
+## Horizontal scale constraints
+
+- Standalone minimum: `1` replica.
+- Replication and sharded minimum: `2` replicas.
+- UI replica maximum: `10`.
+- Sharded deployments have minimum `3` shards.
+- Sentinel nodes must be odd and at least `3`.
+
+## Rebalance a sharded deployment
+
+A sharded deployment splits its data into 16,384 hash slots spread across its
+shards. Changing the shard count moves slots on its own:
+
+- Each new shard takes its share of slots from the existing shards as soon as
+  it joins.
+- A shard you remove hands its slots to the shards that remain, which leaves
+  them evenly balanced.
+
+Adding shards moves slots only into the new shards, so the existing shards can
+end up with uneven shares. An interrupted scale-out can also leave the spread
+wherever it stopped. A rebalance gives every shard an even share of the slots.
+
+<Steps>
+  <Step title="Open the deployment">
+    Open **Deployments**, then open the sharded deployment.
+  </Step>
+  <Step title="Start the rebalance">
+    Select **Rebalance** from the deployment header, then confirm.
+  </Step>
+  <Step title="Follow it">
+    The rebalance appears on the **Operations** tab as **Rebalance**. It's
+    finished when its phase is `Succeed`.
+  </Step>
+</Steps>
+
+From the Admin CLI or the API:
+
+<CodeGroup>
+
+```bash Admin CLI
+falkordb-admin operations rebalance graph-prod --namespace team-a
+```
+
+```bash API
+curl -sS -b cookies.txt -X POST \
+  'https://admin.example.com/api/clusters/graph-prod/ops/rebalance?namespace=team-a' \
+  -H 'Content-Type: application/json' -d '{}'
+```
+
+</CodeGroup>
+
+The rebalance runs `redis-cli --cluster rebalance` once, against one of the
+deployment's shard pods, over TLS when the deployment uses TLS. It leaves the spread alone
+when every shard is within 2% of an even share. A shard with no slots, such as
+one whose scale-out was interrupted, gets its share too.
+
+Slots and their keys move between shards while the deployment keeps serving
+clients, which adds load until the rebalance finishes. While it runs, the
+deployment's `status.pendingChanges` lists it with `type: Rebalance`.
+
+The Admin Server refuses a rebalance in these cases:
+
+| Case | Response |
+| --- | --- |
+| The deployment isn't sharded | `400` |
+| The deployment isn't `Running` | `400` |
+| Another operation is still running on the deployment | `409` |
+
+While a rebalance runs, the Admin Server also refuses to change the shard
+count, with `409`.
+
+## Move slots between shards
+
+To decide yourself which shard serves which slots, move them by hand. A
+sharded deployment has a **Slots** tab that shows which slots each shard owns,
+and moves slots to one of them.
+
+<Steps>
+  <Step title="Open the Slots tab">
+    Open the sharded deployment, then select **Slots**.
+  </Step>
+  <Step title="Choose the slots and the shards">
+    In **Move slots**, enter the slots as single slots and ranges separated by
+    commas, such as `0-999,5000`. Choose the shard to move them **To**.
+    Optionally choose the shard they must come **From**: the move is then
+    refused unless that shard owns every slot that the target doesn't
+    already own. Below the form, the tab says how many slots will move and
+    from which shards, or why the move would be refused.
+  </Step>
+  <Step title="Move them">
+    Select **Move slots**, then confirm. The move appears on the
+    **Operations** tab as **Move slots**.
+  </Step>
+</Steps>
+
+From the Admin CLI or the API:
+
+<CodeGroup>
+
+```bash Admin CLI
+falkordb-admin operations reshard graph-prod --namespace team-a --slots 0-999,5000 --to shard-98x --from shard-4z9
+```
+
+```bash API
+curl -sS -b cookies.txt -X POST \
+  'https://admin.example.com/api/clusters/graph-prod/ops/reshard?namespace=team-a' \
+  -H 'Content-Type: application/json' \
+  -d '{"slots":"0-999,5000","to":"shard-98x","from":"shard-4z9"}'
+```
+
+</CodeGroup>
+
+Shards are named `shard-<id>`, as the **Slots** and **Pods** tabs show them.
+The move resolves each shard to whichever node is its primary when it runs,
+and leaves alone the slots the target shard already owns.
+
+Slots move with their keys while the deployment keeps serving clients. If a
+move fails part way, it doesn't retry: repair the open slots with
+`redis-cli --cluster fix` before you move slots again.
+
+### How the slot map is read
+
+The Admin Server doesn't connect to databases. To read which shard owns which
+slots, it runs a short read-only Job in the deployment's namespace, on the
+deployment's own FalkorDB image. The Job asks each pod `CLUSTER MYID` and
+reads `CLUSTER NODES` and `CLUSTER INFO`, then the Admin Server deletes it.
+The Job:
+
+- reads the password from the deployment's own credentials Secret, so the
+  password never passes through the Admin Server;
+- connects with TLS when the deployment uses it;
+- runs as user `65532`, with a read-only root filesystem, no service account
+  token and the chart's image pull secrets;
+- has 60 seconds to finish and isn't retried.
+
+A read takes a few seconds. The Admin Server reuses a read for 10 seconds, and
+`GET /api/clusters/{name}/slots?namespace=…` returns it.
+
+### Checks before a move starts
+
+The Admin Server reads the slot map again before it submits a move, and
+refuses the move instead of letting it fail part way:
+
+| Case | Response |
+| --- | --- |
+| The deployment isn't sharded or isn't `Running` | `400` |
+| `to` or `from` isn't one of the deployment's shards, or they're the same shard | `400` |
+| The target shard already owns every slot | `400` |
+| No shard owns some of the slots | `400` |
+| `from` doesn't own every slot that has to move | `400` |
+| The cluster isn't `cluster_state:ok`, or has slots left open by an earlier move | `409` |
+| The target shard has no primary | `409` |
+| Another operation is still running on the deployment | `409` |
+| The slot map couldn't be read | `503` |
+
+While a move runs, the Admin Server refuses a rebalance, another move or a
+shard-count change, with `409`.
+
+## Vertical scale CPU and memory
+
+1. Open the target deployment.
+2. Select **Edit**.
+3. Choose **Resources**.
+4. Enter CPU and memory requests and/or limits.
+5. Select **Apply Resources**.
+
+This creates a KubeBlocks vertical scaling OpsRequest. A rolling restart can occur.
+
+## Expand storage
+
+1. Open the target deployment.
+2. Select **Edit**.
+3. Choose **Storage**.
+4. Enter a larger storage size, for example `50Gi`.
+5. Select **Expand Storage**.
+
+Storage expansion is irreversible and the StorageClass must support volume expansion.
+
+## Validate
+
+```bash
+kubectl get opsrequests.operations.kubeblocks.io -n <namespace>
+kubectl get clusters.apps.kubeblocks.io -n <namespace>
+kubectl get pods -n <namespace>
+```
+
+In the Admin UI, review **Operations**, **Pods**, and **Metrics**.
+
+## Failover status
+
+Automatic or manual switchover is not wired to a backend operation in the current Admin UI. The Pods tab currently shows a confirmation dialog and success toast, but it does not submit a KubeBlocks switchover operation. Use your Kubernetes/KubeBlocks procedure for failover until this path is implemented.

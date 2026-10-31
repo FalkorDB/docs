@@ -1,0 +1,195 @@
+---
+title: "Export and import RDB files"
+sidebarTitle: "RDB export and import"
+description: "Export a deployment to portable RDB files, and import RDB data into an existing deployment from an export, another deployment, or any Redis-protocol server."
+icon: "right-left"
+---
+
+RDB export and import move data between deployments without creating a new one. An export copies a deployment's data to RDB files in a backup repository. An import loads RDB data into an existing deployment, in place. The source and target can have different topologies and shard counts, and the source can be a FalkorDB or Redis server that FalkorDB Enterprise doesn't manage.
+
+Backups and restores are a separate feature. A [backup](/enterprise/operations/backups) can only be [restored to a new deployment](/enterprise/operations/restore-new-database), while an RDB import writes into a running one.
+
+## How it works
+
+The Admin Server runs the FalkorDB fork of [`redis-rdb-cli`](https://github.com/FalkorDB/redis-rdb-cli) in Kubernetes Jobs:
+
+- **Export.** For each shard, the Job reads a snapshot from a replica (or the primary) over the replication protocol and writes it to `<shard>.rdb` in the backup repository. Each export gets its own folder, `falkordb-rdb/<namespace>/<deployment>/<manual or schedule name>/<export name>/`, which also holds a `manifest.json`.
+- **Import.** The Job replays every key of the source into the target's primary. In a sharded target, keys are routed to the shard that owns them.
+- **Schedules.** A scheduled export is a Kubernetes CronJob. After each successful run, it deletes all but the newest exports of that schedule.
+
+Connection details, including passwords, are passed to each Job through its own Secret. The Secret is deleted with the Job.
+
+## Requirements
+
+- A [backup repository](/enterprise/operations/backups) with the access method **Mount**. The default PVC repository qualifies. Repositories that use the **Tool** access method can't be used.
+- A ready primary in every shard of the target.
+- For a deployment with TLS, the Admin Server must be able to read its CA certificate. This is always true for the **Enterprise** and **cert-manager** issuers.
+
+<Note>
+A PVC repository keeps a separate volume in each namespace. An export written in one namespace is imported by a Job that runs in that namespace and connects to the target over the cluster network. If you use NetworkPolicies, allow traffic from pods labeled `app.kubernetes.io/component=rdb-transfer` to the target's FalkorDB port.
+</Note>
+
+## Export a deployment
+
+<Steps>
+  <Step title="Open the deployment">
+    In the Admin UI, open the deployment and select **Data transfer**.
+  </Step>
+  <Step title="Start the export">
+    Click **Export**. Choose the repository and whether to read from a **Replica** (the default; falls back to the primary when a shard has no ready replica) or always from the **Primary**. Optionally, enter a key pattern.
+  </Step>
+  <Step title="Wait for it to finish">
+    The export appears in the list as **Pending**, then **Running**, then **Succeeded** with its files, size, and key count. Click the logs icon to follow it.
+  </Step>
+</Steps>
+
+From the Admin CLI:
+
+```bash
+falkordb-admin rdb export my-graph --namespace prod --wait
+```
+
+Options: `--repository <name>`, `--node replica|primary`, `--db 0,1`, `--key-pattern <regex>`, `--cpu <limit>`, `--memory <limit>`.
+
+<Warning>
+A key pattern is a regular expression that can match anywhere in the key; anchor it with `^` and `$`. It must also match a graph's other keys: FalkorDB stores a graph as its own key plus a `telemetry{graph}` stream and, for a large graph, keys named `{graph}graph_<id>`. A pattern like `^social$` drops those keys, and the exported graph can't be loaded. `social` matches all of them.
+</Warning>
+
+Exports of a sharded deployment are taken shard by shard. They aren't a consistent point-in-time copy across shards. Pause writes first if you need one.
+
+## Schedule exports
+
+In **Data transfer**, click **Add schedule**, or choose **On a schedule** in the export dialog. Set:
+
+| Field | Meaning |
+| --- | --- |
+| Name | Lowercase letters, digits and hyphens. The exports are written under a folder of this name. |
+| Cron expression | Five fields, in the Kubernetes cluster's time zone. `0 2 * * *` runs daily at 02:00. |
+| Exports kept | After a successful run, older exports of this schedule are deleted, files included. |
+
+Runs never overlap: a run that is due while the previous one is still going is skipped. Use **Run now** to start one immediately, and the pause button to suspend the schedule.
+
+```bash
+falkordb-admin rdb schedules create my-graph nightly --namespace prod --schedule "0 2 * * *" --retention 7
+falkordb-admin rdb schedules run my-graph nightly --namespace prod --wait
+```
+
+## Import into a deployment
+
+<Steps>
+  <Step title="Choose the source">
+    Open the target deployment, select **Data transfer**, and click **Import**. Choose one of:
+
+    | Source | What is imported |
+    | --- | --- |
+    | **Export** | A completed export of any deployment. **Import here** on an export of this deployment selects it for you. |
+    | **Deployment** | A live copy of another deployment, read from a replica of each shard when there is one. |
+    | **Repository file** | An `.rdb` file, or every `.rdb` file in a folder, at a path in a repository volume. |
+    | **Redis URI** | Any FalkorDB or Redis server, as `redis://host:port` or `rediss://host:port`. The username and password go in their own fields, never in the URI. The server must allow replication (`PSYNC`) from the Job. |
+  </Step>
+  <Step title="Choose what happens to existing data">
+    - **Merge** keeps every key that already exists in the target and skips the imported value. A graph that already exists in the target can't be merged: the import checks for this first and fails without writing anything.
+    - **Replace** deletes every key in the target, on every primary, before it imports. The target is only emptied once the source has been read successfully. Type the deployment's name to confirm.
+  </Step>
+  <Step title="Choose a snapshot and rollback">
+    - **Snapshot before importing** (checked by default) saves the target before changing it, so the import can be rolled back.
+    - **Roll back automatically if the import fails** (checked by default) restores that snapshot by itself when the import fails. Clear it to decide yourself.
+
+    Without a snapshot the import is faster and uses no repository space, but it can't be undone. See [Snapshots and rollback](#snapshots-and-rollback).
+  </Step>
+  <Step title="Check the result">
+    When the import succeeds, it shows how many keys were imported and how many were skipped because they already existed.
+  </Step>
+</Steps>
+
+From the Admin CLI, choose exactly one source:
+
+```bash
+falkordb-admin rdb import my-graph --namespace prod --from-export rdb-export-prod-graph-1a2b3 --from-namespace prod
+falkordb-admin rdb import staging --namespace staging --from-deployment my-graph --from-namespace prod --mode replace --yes
+falkordb-admin rdb import my-graph --namespace prod --from-repository default-repo --path imports/legacy.rdb
+FALKORDB_SOURCE_PASSWORD=... falkordb-admin rdb import my-graph --namespace prod --from-uri redis://legacy.example.com:6379
+```
+
+The CLI reads a `--from-uri` password from `FALKORDB_SOURCE_PASSWORD`, or from standard input with `--source-password-stdin`, so it never appears in your shell history. `--rollback auto|manual|none` chooses what happens on failure, and `--snapshot-repository <name>` where the snapshot of a live copy is kept. For a live copy into an older target, `--rdb-version <n>` writes data in an older RDB format.
+
+<Warning>
+Importing a graph over an existing graph of the same name is not supported in either mode. On FalkorDB 4.20 it crashes the target. Merge mode refuses it, and replace mode deletes the existing graph first.
+</Warning>
+
+Every import reads its source once before writing anything: a merge to check for existing graphs, a replace to make sure the source can be read before the target is emptied. A live copy from another deployment or a Redis URI therefore makes the source take two snapshots.
+
+### Checks before an import
+
+Before anything else, an import from an export or a repository file checks every file with `redis-check-rdb`, run from the target deployment's own image. The import stops without changing the target when a file:
+
+- fails its checksum, or has a value that can't be read, for example because it is truncated;
+- uses an RDB format version the target's server can't read, for example an export of a newer FalkorDB.
+
+Because the check uses the target's own server, a file that passes can be loaded by that deployment. Files are never converted to an older RDB format: export the data from a deployment running the same or an older version, or copy it live with `rdbVersion`. Live sources are read directly and aren't checked first.
+
+## Snapshots and rollback
+
+Unless **Snapshot before importing** is unchecked, an import saves the target before changing it. The snapshot is taken from the primary of each shard, after every check passed, into `falkordb-rdb/<namespace>/<deployment>/pre-import/<import name>/` in a repository volume:
+
+- for an import from a file, in the repository holding the file;
+- for a live copy, in the default repository, or the one you choose.
+
+The target is only changed after the snapshot is complete. An import that fails before then left the target as it was, and shows **Data unchanged**.
+
+To restore a snapshot, the Admin Server deletes every key in the target and imports the snapshot, as a replace-mode import listed with the target's other imports. With **Roll back automatically if the import fails**, this starts within about 30 seconds of a failure. Otherwise, or to undo an import that succeeded, click **Roll back** on the import, or run:
+
+```bash
+falkordb-admin rdb rollback my-graph rdb-import-my-graph-1a2b3 --namespace prod --wait
+```
+
+Writes made to the target after the snapshot are lost when it is restored. Deleting an import deletes its snapshot too, unless you keep its files; an import can't be deleted while its rollback runs.
+
+## Delete exports and imports
+
+Deleting an export also deletes its files from the repository, unless you choose **Keep the RDB files in the repository** (`--keep-files` in the CLI). Deleting an import deletes its snapshot the same way. Deleting a running export or import stops it. A stopped import leaves the keys it has already written; roll it back first if it took a snapshot.
+
+Deleting a schedule deletes the history of its exports and, unless you keep them, their files.
+
+### Retention
+
+Finished exports and imports are deleted automatically after a number of days set in the Admin UI, under **Settings > Retention**:
+
+| Setting | Applies to | Default |
+| --- | --- | --- |
+| **RDB Import Retention** | Imports and rollbacks, with their snapshots, and exports that failed | 14 days |
+| **RDB Export Retention** | Exports that succeeded, with their RDB files | 0: kept until you delete them |
+
+0 turns either one off. The count starts when the transfer finishes, and the Admin Server checks every 10 minutes. It deletes transfers exactly as **Delete** does, and records each deletion in the audit log as `system`. It never deletes a transfer that is still running, an import whose rollback is running or about to start, or an export from a schedule: a schedule keeps its newest exports by its own retention.
+
+Once an import is deleted, its snapshot is gone and the import can no longer be rolled back. To keep that option longer, raise **RDB Import Retention**.
+
+The Helm values `adminServer.bootstrap.settingsConfig.settings.retention.rdb_import_retention_days` and `rdb_export_retention_days` set the initial values when the chart creates the settings (`adminServer.bootstrap.settingsConfig.create: true`).
+
+## Permissions
+
+RDB export and import use the `clusters.transfers` resource:
+
+| Action | Allows |
+| --- | --- |
+| `list`, `get` | Viewing exports, imports, schedules, and their logs |
+| `create` | Starting exports and imports, creating schedules, and running them |
+| `update` | Changing, pausing, and resuming schedules |
+| `delete` | Deleting exports, imports, and schedules |
+
+An import that reads from another namespace, whether an export, a repository volume, or a deployment there, also needs `create` in that namespace. The predefined **operator** role has every action, and the **viewer** role has `list` and `get`.
+
+## Troubleshooting
+
+| Message | Cause |
+| --- | --- |
+| `cannot be loaded by this deployment: RDB CRC error` | The file is corrupt or incomplete. Export it again. |
+| `cannot be loaded by this deployment: Can't handle RDB format version` | The file was written by a newer server than the target runs. Export from a deployment on the same or an older version, or copy the data live. |
+| `rdbVersion applies to live sources only` | Files are imported only in a format the target reads as is. |
+| `Rollback failed` | The import could not be undone automatically. Check the rollback's logs, then click **Roll back** to try again: the snapshot is kept until you delete the import. |
+| `These graphs already exist in the target` | A merge would overwrite existing graphs. Delete them from the target, or import in replace mode. |
+| `uses the Tool access method` | The repository isn't mounted as a volume. Use a repository with the access method **Mount**. |
+| `has no ready primary` | A shard of the target is failing over or starting. Retry once the deployment is **Running**. |
+| `WRONGPASS` | The source credentials are wrong. For a Redis URI, check the username and password fields. |
+| `The repository volume is not writable` | The Jobs run as a non-root user and rely on `fsGroup` to write to the repository volume. Some storage drivers, for example NFS, ignore it. Make the volume writable by the user named in the message, or use a repository whose driver supports `fsGroup`. |
+| `FLUSHALL on ... failed` | Replace mode couldn't empty a primary, for example after a failover. Retry once the deployment is **Running**. |
