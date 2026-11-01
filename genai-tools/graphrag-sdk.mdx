@@ -10,7 +10,7 @@ description: "Build intelligent GraphRAG applications with FalkorDB and LLMs —
 
 ## Build intelligent GraphRAG applications with FalkorDB and LLMs
 
-GraphRAG-SDK builds knowledge graphs from your documents and answers questions over them using graph-based retrieval-augmented generation, on FalkorDB. It ingests text, Markdown, and PDF with schema-guided entity extraction, retrieves cited answers through a hybrid pipeline that combines vector search, full-text search, Cypher generation, and relationship expansion, and re-syncs individual documents incrementally without rebuilding the graph.
+GraphRAG-SDK builds knowledge graphs from your documents and tables and answers questions over them using graph-based retrieval-augmented generation, on FalkorDB. It ingests text, Markdown, and PDF with schema-guided entity extraction, and CSV and other delimited tables through a declared mapping, so a table row and a paragraph about the same thing become one node. It retrieves cited answers through a hybrid pipeline that combines vector search, full-text search, and relationship expansion, with optional text-to-Cypher for counts and aggregates. It merges duplicate entities across documents with an LLM judge that checks only what is new, and re-syncs individual documents and tables incrementally without rebuilding the graph.
 
 It holds the top score on [GraphRAG-Bench](https://graphrag-bench.github.io) across both the multi-document and single-document question sets, and works with any LLM or embedder reachable through LiteLLM.
 
@@ -18,8 +18,12 @@ It holds the top score on [GraphRAG-Bench](https://graphrag-bench.github.io) acr
 
 ```bash
 pip install "graphrag-sdk[litellm,pdf]"
-docker run -p 6379:6379 falkordb/falkordb
+docker run -p 6379:6379 falkordb/falkordb:v4.22.2
 ```
+
+<Note>
+  GraphRAG-SDK needs FalkorDB **4.20 or later** (FalkorDB 6.0 is supported) and refuses an older server at its first query with `FalkorDBVersionError`. Keep the image tag: a bare `falkordb/falkordb` reuses whatever image Docker has cached, which may be older.
+</Note>
 
 ```python
 import asyncio
@@ -29,10 +33,11 @@ async def main():
     async with GraphRAG(
         connection=ConnectionConfig(host="localhost", graph_name="my_graph"),
         llm=LiteLLM(model="openai/gpt-4o"),
-        embedder=LiteLLMEmbedder(model="openai/text-embedding-3-small"),
+        # 256 dimensions, to match GraphRAG's default embedding_dimension
+        embedder=LiteLLMEmbedder(model="openai/text-embedding-3-small", dimensions=256),
     ) as rag:
         await rag.ingest("my_document.pdf")
-        await rag.finalize()
+        await rag.finalize()  # merge duplicate entities, embed, and index
         answer = await rag.completion("What is the main topic?")
         print(answer.answer)
 
@@ -45,21 +50,25 @@ Or skip the local instance and connect to [FalkorDB Cloud](https://app.falkordb.
 
 | Guide | Description |
 |-------|-------------|
-| [Getting Started](https://docs.graphrag.falkordb.com/getting-started) | Full tutorial from install to first query |
-| [Architecture](https://docs.graphrag.falkordb.com/architecture) | How the ingestion and retrieval pipeline works |
-| [Configuration](https://docs.graphrag.falkordb.com/configuration) | Connection, providers, and tuning reference |
-| [Graph Schema](https://docs.graphrag.falkordb.com/graph-schema) | Constrain the entity and relation types the extractor produces |
-| [Ingestion](https://docs.graphrag.falkordb.com/ingestion) | Document loading, chunking, extraction, and resolution |
-| [Retrieval](https://docs.graphrag.falkordb.com/retrieval) | Hybrid retrieval, expansion, and reranking |
-| [Strategies](https://docs.graphrag.falkordb.com/strategies) | Swappable strategy interfaces and built-in implementations |
-| [Providers](https://docs.graphrag.falkordb.com/providers) | LLM and embedder configuration |
-| [Storage](https://docs.graphrag.falkordb.com/storage) | How the graph is laid out in FalkorDB |
-| [Extraction](https://docs.graphrag.falkordb.com/extraction) | Entity and relation extraction internals |
-| [Incremental Updates](https://docs.graphrag.falkordb.com/incremental-updates) | `update()`, `delete_document()`, and `apply_changes()` for CI-driven syncs |
-| [Ontology Discovery](https://docs.graphrag.falkordb.com/ontology-discovery) | Auto-draft a schema from a corpus |
-| [Ontology Evolution](https://docs.graphrag.falkordb.com/ontology-evolution) | Safely change a schema on a populated graph |
-| [Benchmark](https://docs.graphrag.falkordb.com/benchmark) | Methodology, results, and reproduction instructions |
-| [API Reference](https://docs.graphrag.falkordb.com/api-reference) | Full API documentation |
+| [Getting Started](https://docs.falkordb.com/graphrag/getting-started) | Full tutorial from install to first query |
+| [Architecture](https://docs.falkordb.com/graphrag/architecture) | How the ingestion and retrieval pipeline works |
+| [Configuration](https://docs.falkordb.com/graphrag/configuration) | Connection, providers, and tuning reference |
+| [Graph Schema](https://docs.falkordb.com/graphrag/graph-schema) | The node types, edges, properties, and indexes in the graph, and how to declare your own ontology |
+| [Ingestion](https://docs.falkordb.com/graphrag/ingestion) | Document loading, chunking, extraction, and resolution |
+| [Structured Ingestion](https://docs.falkordb.com/graphrag/structured-ingestion) | Load CSV and other tables through a declared mapping, as typed entities in the same graph |
+| [Retrieval](https://docs.falkordb.com/graphrag/retrieval) | Hybrid retrieval, expansion, and reranking |
+| [Strategies](https://docs.falkordb.com/graphrag/strategies) | Swappable strategy interfaces and built-in implementations |
+| [Providers](https://docs.falkordb.com/graphrag/providers) | LLM and embedder configuration |
+| [Storage](https://docs.falkordb.com/graphrag/storage) | How nodes, embeddings, and indexes are stored, how `finalize()` merges duplicate entities, and the FalkorDB server requirements |
+| [Extraction](https://docs.falkordb.com/graphrag/extraction) | Entity and relation extraction internals |
+| [Incremental Updates](https://docs.falkordb.com/graphrag/incremental-updates) | `update()`, `delete_document()`, and `apply_changes()` for CI-driven syncs |
+| [Ontology Discovery](https://docs.falkordb.com/graphrag/ontology-discovery) | Auto-draft a schema from a corpus |
+| [Ontology Evolution](https://docs.falkordb.com/graphrag/ontology-evolution) | Safely change a schema on a populated graph |
+| [Reliability and Grounding](https://docs.falkordb.com/graphrag/reliability-and-grounding) | Provenance, evidence trails, confidence thresholds, and abstention, mapped to the APIs |
+| [Reducing LLM Hallucinations](https://docs.falkordb.com/graphrag/reducing-llm-hallucinations) | Grounded retrieval and an explicit abstention path for verifiable answers |
+| [Benchmark](https://docs.falkordb.com/graphrag/benchmark) | Methodology, results, and reproduction instructions |
+| [Accuracy Benchmark](https://docs.falkordb.com/graphrag/graphrag-accuracy-benchmark) | GraphRAG-SDK compared with vector RAG on GraphRAG-Bench, with full reproduction details |
+| [API Reference](https://docs.falkordb.com/graphrag/api-reference) | Full API documentation |
 
 ## GraphRAG Server — the hosted, no-code option
 
@@ -98,7 +107,7 @@ GraphRAG first organizes your documents into a [knowledge graph](https://www.fal
 - **A view of your knowledge**: explore everything the system learned from your documents as an interactive graph.
 
 **Resources:**
-- [GraphRAG-SDK documentation](https://docs.graphrag.falkordb.com)
+- [GraphRAG-SDK documentation](https://docs.falkordb.com/graphrag)
 - [GraphRAG-SDK GitHub repository](https://github.com/FalkorDB/GraphRAG-SDK)
 - [Runnable examples](https://github.com/FalkorDB/GraphRAG-SDK/tree/main/graphrag_sdk/examples)
 - [Try GraphRAG Server](https://graphrag.falkordb.com/) — the hosted, no-code version
@@ -108,28 +117,37 @@ GraphRAG first organizes your documents into a [knowledge graph](https://www.fal
 
 <AccordionGroup>
   <Accordion title="What is GraphRAG-SDK?">
-    GraphRAG-SDK builds knowledge graphs from your documents on FalkorDB and answers questions over them using graph-based retrieval-augmented generation. It ingests text, Markdown, and PDF with schema-guided entity extraction, and retrieves cited answers through a hybrid pipeline combining vector search, full-text search, Cypher generation, and relationship expansion.
+    GraphRAG-SDK builds knowledge graphs from your documents and tables on FalkorDB and answers questions over them using graph-based retrieval-augmented generation. It ingests text, Markdown, and PDF with schema-guided entity extraction, loads CSV and other tables through a declared mapping, and retrieves cited answers through a hybrid pipeline combining vector search, full-text search, and relationship expansion, with optional text-to-Cypher.
   </Accordion>
   <Accordion title="How do I get started with GraphRAG-SDK?">
-    Install it with `pip install "graphrag-sdk[litellm,pdf]"`, start FalkorDB with `docker run -p 6379:6379 falkordb/falkordb`, then create a `GraphRAG` instance with a `ConnectionConfig`, an LLM, and an embedder. Call `ingest()`, then `finalize()`, then `completion()` to ask your first question. The `pdf` extra is only needed for PDF ingestion — drop it if you are loading text and Markdown. You can also skip the local instance and point it at [FalkorDB Cloud](https://app.falkordb.cloud).
+    Install it with `pip install "graphrag-sdk[litellm,pdf]"`, start FalkorDB 4.20 or later with `docker run -p 6379:6379 falkordb/falkordb:v4.22.2`, then create a `GraphRAG` instance with a `ConnectionConfig`, an LLM, and an embedder. Call `ingest()`, then `finalize()`, then `completion()` to ask your first question. The `pdf` extra is only needed for PDF ingestion — drop it if you are loading plain text, and add the `markdown` extra for Markdown files. You can also skip the local instance and point it at [FalkorDB Cloud](https://app.falkordb.cloud).
   </Accordion>
   <Accordion title="What is the difference between GraphRAG-SDK and GraphRAG Server?">
     **GraphRAG-SDK** is the self-hosted Python library you run and configure yourself. **GraphRAG Server** is the fully hosted, no-code version: you upload documents through the browser and it builds the graph for you, with no code, no Cypher, and no graph expertise needed.
   </Accordion>
   <Accordion title="Which LLMs and embedding models does GraphRAG-SDK support?">
-    Any LLM or embedder reachable through [LiteLLM](https://docs.graphrag.falkordb.com/providers), which covers OpenAI, Anthropic, Google, and locally hosted models. You select them with `LiteLLM(model=...)` and `LiteLLMEmbedder(model=...)`.
+    Any LLM or embedder reachable through [LiteLLM](https://docs.falkordb.com/graphrag/providers), which covers OpenAI, Anthropic, Google, and locally hosted models. You select them with `LiteLLM(model=...)` and `LiteLLMEmbedder(model=...)`.
   </Accordion>
   <Accordion title="What file types can GraphRAG-SDK ingest?">
-    Plain text, Markdown, and PDF. PDF ingestion needs the `pdf` extra (`pip install "graphrag-sdk[litellm,pdf]"`). GraphRAG Server accepts the same three formats through its upload interface.
+    Plain text, Markdown, and PDF as documents. PDF ingestion needs the `pdf` extra and Markdown the `markdown` extra (`pip install "graphrag-sdk[litellm,pdf,markdown]"`). Tables in `.csv`, `.tsv`, `.psv`, or `.tab` files are read as records rather than prose: you declare what the columns mean with a `TableMapping` in the ontology, and each row becomes a typed entity with no LLM involved. If no mapping is declared, the SDK proposes one. See [Structured Ingestion](https://docs.falkordb.com/graphrag/structured-ingestion). GraphRAG Server accepts plain text, Markdown, and PDF through its upload interface.
+  </Accordion>
+  <Accordion title="Which FalkorDB version does GraphRAG-SDK need?">
+    FalkorDB 4.20 or later, including FalkorDB 6.0. The SDK checks the server version once per connection and refuses an older server with `FalkorDBVersionError`, because earlier versions dropped vector-index entries on writes to embedded nodes, so search and deduplication missed entities. Upgrade the server before upgrading the SDK.
+  </Accordion>
+  <Accordion title="How does GraphRAG-SDK handle duplicate entities?">
+    `finalize()` merges duplicates across documents. It checks only the entities added since the last run, compares each with its nearest names in the vector index, and asks an LLM judge to decide which candidates are the same entity. Every merge keeps all descriptions, records the other names as aliases, and moves every relationship to the surviving entity. An interrupted run is finished by the next one. See [Storage](https://docs.falkordb.com/graphrag/storage) and [Incremental Updates](https://docs.falkordb.com/graphrag/incremental-updates).
+  </Accordion>
+  <Accordion title="Can GraphRAG-SDK answer counting and aggregate questions?">
+    Yes, with text-to-Cypher turned on: `GraphRAG(..., enable_cypher=True)`. It generates a Cypher query for questions no passage answers directly, such as counts and averages, and uses the column types a table mapping declares. It is off by default because it adds an LLM call per question (up to 3 when a generated query fails validation and is regenerated). You can also run your own read query with `rag.query(cypher, params)`.
   </Accordion>
   <Accordion title="Do I have to rebuild the whole graph when a document changes?">
-    No. GraphRAG-SDK re-syncs individual documents incrementally. See [Incremental Updates](https://docs.graphrag.falkordb.com/incremental-updates) for `update()`, `delete_document()`, and `apply_changes()`, which are designed for CI-driven syncs.
+    No. GraphRAG-SDK re-syncs individual documents incrementally, and re-ingesting a table re-syncs it as a snapshot: deleted rows are removed and changed cells are updated. See [Incremental Updates](https://docs.falkordb.com/graphrag/incremental-updates) for `update()`, `delete_document()`, and `apply_changes()`, which are designed for CI-driven syncs, and `drop_table()` to remove a table and everything it wrote.
   </Accordion>
   <Accordion title="Why use GraphRAG instead of regular RAG?">
     Vanilla RAG retrieves text snippets that look similar to your question, which breaks down when an answer depends on how facts connect across documents. GraphRAG first organizes your content into a knowledge graph, so answers connect related facts *across* documents, come with citations back to the sources, and include an explainability subgraph showing why you got that answer.
   </Accordion>
   <Accordion title="How accurate is GraphRAG-SDK?">
-    It holds the top score on [GraphRAG-Bench](https://graphrag-bench.github.io) across both the multi-document and single-document question sets. The [Benchmark](https://docs.graphrag.falkordb.com/benchmark) page documents the methodology and how to reproduce the results.
+    It holds the top score on [GraphRAG-Bench](https://graphrag-bench.github.io) across both the multi-document and single-document question sets. The [Benchmark](https://docs.falkordb.com/graphrag/benchmark) page documents the methodology and how to reproduce the results.
   </Accordion>
   <Accordion title="Where is the full GraphRAG-SDK documentation?">
     This page is a short overview. The complete guides, API reference, and runnable examples live at [docs.falkordb.com/graphrag](https://docs.falkordb.com/graphrag).

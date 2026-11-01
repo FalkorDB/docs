@@ -162,7 +162,7 @@ docs/
 
 The documentation is licensed under [Creative Commons Attribution 4.0 International (CC BY 4.0)](https://creativecommons.org/licenses/by/4.0/).
 
-FalkorDB itself is licensed under the [Server Side Public License v1 (SSPLv1)](https://github.com/FalkorDB/FalkorDB/blob/master/LICENSE.txt).
+FalkorDB itself is licensed under the [Server Side Public License v1 (SSPLv1)](https://github.com/FalkorDB/FalkorDB/blob/main/LICENSE).
 
 ## Support
 

@@ -86,6 +86,8 @@ Docker volume configuration ensures your data persists across container restarts
 
 For a comprehensive guide on configuring RDB, AOF, and graph-specific backup options, see [Data Durability](/operations/durability).
 
+Before reusing a data volume with a different FalkorDB version, check [Upgrades, Downgrades, and Compatibility](/operations/upgrades-downgrades-compatibility). Volume persistence does not guarantee downgrade compatibility; retain a separate pre-upgrade backup.
+
 ## ACL User Persistence
 
 Docker volume configuration persists your graph data, but ACL users created with `ACL SETUSER` are stored separately in an ACL file. To persist users, passwords, and permissions across restarts, see [ACL Persistence on Docker](/operations/durability/acl-persistence).

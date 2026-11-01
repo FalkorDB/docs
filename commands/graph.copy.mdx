@@ -40,10 +40,9 @@ const graphA = client.selectGraph('A');
 await graphA.query("CREATE (:Account {number: 516637})");
 
 // Copy Graph 'A' to 'Z'
-await client.copyGraph('A', 'Z');
+const graphZ = await graphA.copy('Z');
 
 // Query Graph 'Z'
-const graphZ = client.selectGraph('Z');
 const result = await graphZ.query("MATCH (a:Account) RETURN a.number");
 console.log(result);
 ```

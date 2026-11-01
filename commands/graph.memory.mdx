@@ -62,7 +62,7 @@ GRAPH.MEMORY USAGE myGraph
 <CodeGroup>
 
 ```javascript JavaScript
-const memoryInfo = await graph.memoryUsage({ samples: 500 });
+const memoryInfo = await graph.memoryUsage({ SAMPLES: 500 });
 console.log(memoryInfo);
 ```
 
@@ -71,6 +71,11 @@ GRAPH.MEMORY USAGE myGraph SAMPLES 500
 ```
 
 </CodeGroup>
+
+<Note>
+`memoryUsage({ SAMPLES })` requires `falkordb` 7.0 or later: earlier versions sent the sample count without the
+`SAMPLES` keyword, and the server rejected it.
+</Note>
 
 ### Sample Output
 

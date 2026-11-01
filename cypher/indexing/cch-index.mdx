@@ -283,13 +283,13 @@ print(result)
 ```
 
 ```javascript JavaScript
-const result = await graph.explain(`
+const plan = await graph.explain(`
     MATCH (a:Junction {id: 0}), (b:Junction {id: 42})
     CALL db.idx.cch.query({sourceNode: a, targetNode: b, relTypes: ['ROAD'], weightProp: 'w'})
     YIELD pathWeight, path
     RETURN pathWeight, path
 `);
-console.log(result);
+console.log(plan.toString());
 // Output shows: ProcedureCall | db.idx.cch.query
 ```
 

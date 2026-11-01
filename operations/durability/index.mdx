@@ -15,6 +15,14 @@ FalkorDB supports two primary persistence mechanisms:
 
 You can use either mechanism independently or combine both for enhanced durability.
 
+<Warning>
+  A successful backup does not guarantee that an older release can read it.
+  Before changing versions, review [Upgrades, Downgrades, and
+  Compatibility](/operations/upgrades-downgrades-compatibility) for the patch
+  rollback guarantee, graph encoding compatibility, and separate Redis/Valkey
+  restrictions. Keep a verified pre-upgrade backup outside the live data volume.
+</Warning>
+
 ## RDB Snapshots
 
 ### How RDB Works

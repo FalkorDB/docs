@@ -84,8 +84,8 @@ print(result)
 ```
 
 ```javascript JavaScript
-const result = await graph.explain("MATCH (p:Person) WHERE p.age > 80 RETURN p");
-console.log(result);
+const plan = await graph.explain("MATCH (p:Person) WHERE p.age > 80 RETURN p");
+console.log(plan.toString());
 // Output:
 // Results
 //     Project
@@ -218,8 +218,8 @@ print(result)
 ```
 
 ```javascript JavaScript
-const result = await graph.explain("MATCH (p:Person {id: 0})-[f:FOLLOW]->(fp) WHERE 0 < f.created_at AND f.created_at < 1000 RETURN fp");
-console.log(result);
+const plan = await graph.explain("MATCH (p:Person {id: 0})-[f:FOLLOW]->(fp) WHERE 0 < f.created_at AND f.created_at < 1000 RETURN fp");
+console.log(plan.toString());
 // Output:
 // Results
 //     Project
@@ -403,15 +403,15 @@ print(result)  # Now shows: Index Scan | (p:Person)
 
 ```javascript JavaScript
 // Before creating the index
-let result = await graph.explain("MATCH (p:Person) WHERE p.age > 30 RETURN p");
-console.log(result);  // Shows: Label Scan | (p:Person)
+let plan = await graph.explain("MATCH (p:Person) WHERE p.age > 30 RETURN p");
+console.log(plan.toString());  // Shows: Label Scan | (p:Person)
 
 // Create the index
 await graph.query("CREATE INDEX FOR (p:Person) ON (p.age)");
 
 // After creating the index
-result = await graph.explain("MATCH (p:Person) WHERE p.age > 30 RETURN p");
-console.log(result);  // Now shows: Index Scan | (p:Person)
+plan = await graph.explain("MATCH (p:Person) WHERE p.age > 30 RETURN p");
+console.log(plan.toString());  // Now shows: Index Scan | (p:Person)
 ```
 
 ```java Java

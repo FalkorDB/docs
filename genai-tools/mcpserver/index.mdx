@@ -46,7 +46,7 @@ The [Model Context Protocol (MCP)](https://modelcontextprotocol.io) is an open p
     The MCP Server works with any MCP-compatible client including **Claude Desktop**, **Cursor IDE**, **VS Code with GitHub Copilot**, and other AI tools that support the Model Context Protocol.
   </Accordion>
   <Accordion title="Can I use the MCP Server in read-only mode?">
-    Yes. Set `FALKORDB_DEFAULT_READONLY=true` to prevent write operations. This is ideal for replica instances, production safety, reporting dashboards, and multi-tenant environments where certain users should only have read access.
+    Yes. Set `FALKORDB_DEFAULT_READONLY=true` to make queries read-only by default. An agent can still override this per call, so also set `FALKORDB_STRICT_READONLY=true` to block every write. This is ideal for replica instances, production safety, and reporting dashboards. Both settings apply to the whole server, so give users who should only read their own MCP server.
   </Accordion>
   <Accordion title="What transport modes are available?">
     The MCP Server supports two transport modes: **stdio** (default) for direct integration with AI clients like Claude Desktop via standard input/output, and **HTTP** for remote or networked access with optional API key authentication.
