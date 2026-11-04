@@ -1,5 +1,5 @@
-# Incrementally updates the FalkorDB docs knowledge graph whenever .mdx
-# files change on main. Computes the diff against the previous HEAD,
+# Incrementally updates the FalkorDB docs knowledge graph whenever a
+# document changes on main. Computes the diff against the previous HEAD,
 # POSTs it to GraphRAG-UI's /api/admin/update-graph endpoint, which does
 # the SDK ingestion + smoke test + atomic alias flip server-side.
 
@@ -10,9 +10,18 @@ on:
     branches:
       - main
     paths:
+      # .mdx is what gets ingested; .md is here so that *deletions* of
+      # pre-migration pages still trigger a run. Without it a commit that
+      # only removes .md files never reaches the graph and those documents
+      # stay in it permanently.
       - "**/*.mdx"
+      - "**/*.md"
+      - ".github/scripts/build_diff_payload.py"
 
-# `github.ref_name` is "main"; all pushes to main share one queue.
+# `github.ref_name` is "main"; all pushes to main share one queue. Note
+# this only serialises the *CI jobs*: the server keeps working after this
+# job exits, so two runs can still overlap server-side. The real guard has
+# to live in the endpoint.
 concurrency:
   group: update-graph-${{ github.ref_name }}
   cancel-in-progress: false
@@ -40,12 +49,76 @@ jobs:
         run: python3 .github/scripts/build_diff_payload.py
 
       - name: Call admin update-graph endpoint
+        id: call
         if: steps.payload.outputs.skip != 'true'
+        env:
+          # Via env rather than inline `${{ secrets... }}`: interpolating a
+          # secret into the script text puts it in the process table and in
+          # anything that echoes the command.
+          UPDATE_GRAPH_TOKEN: ${{ secrets.UPDATE_GRAPH_TOKEN }}
         run: |
-          curl -X POST "$GRAPHRAG_UI_URL/api/admin/update-graph" \
-            -H "Authorization: Bearer ${{ secrets.UPDATE_GRAPH_TOKEN }}" \
+          set -euo pipefail
+
+          if [ -z "${GRAPHRAG_UI_URL:-}" ]; then
+            echo "::error::GRAPHRAG_UI_URL repository variable is not set" >&2
+            exit 1
+          fi
+          if [ -z "${UPDATE_GRAPH_TOKEN:-}" ]; then
+            echo "::error::UPDATE_GRAPH_TOKEN secret is not set" >&2
+            exit 1
+          fi
+
+          # --max-time is not the real ceiling: the platform closes this
+          # connection at ~300s while the server keeps ingesting, so a
+          # timeout here means "outcome unknown", not "did not run". A 190
+          # file diff took 2h23m server-side and published long after this
+          # job had gone red. Do not add --retry: without an idempotency
+          # key on the endpoint, a retry starts a second full ingest.
+          code=$(curl -X POST "$GRAPHRAG_UI_URL/api/admin/update-graph" \
+            -H "Authorization: Bearer $UPDATE_GRAPH_TOKEN" \
             -H "Content-Type: application/json" \
             --data-binary @payload.json \
-            --fail-with-body \
+            --no-progress-meter \
             --show-error \
-            --max-time 1800
+            --max-time 1800 \
+            -o response.json -w '%{http_code}') || code=000
+
+          echo "http_code=$code" >> "$GITHUB_OUTPUT"
+          echo "$code" > http_code.txt
+          if [ "$code" != "200" ]; then
+            echo "::error::update-graph returned HTTP $code" >&2
+            exit 1
+          fi
+
+      - name: Report outcome
+        if: always() && steps.payload.outputs.skip != 'true'
+        run: |
+          set -uo pipefail
+          code=$(cat http_code.txt 2>/dev/null || echo "000")
+          {
+            echo "### Docs graph update"
+            echo
+            echo "| | |"
+            echo "|---|---|"
+            echo "| Commit | \`${GITHUB_SHA}\` |"
+            echo "| Diff | +${{ steps.payload.outputs.added }} ~${{ steps.payload.outputs.modified }} -${{ steps.payload.outputs.deleted }} |"
+            echo "| Manifest | ${{ steps.payload.outputs.manifest }} files |"
+            echo "| Payload | ${{ steps.payload.outputs.bytes }} bytes |"
+            echo "| HTTP | \`${code}\` |"
+            echo
+            if [ "$code" = "200" ]; then
+              echo "Published:"
+            elif [ "$code" = "000" ]; then
+              echo "**No response.** The connection closed before the server answered."
+              echo "The run may still be in progress or may have published — check the"
+              echo "server log for \`Alias flipped\` before re-running, because a re-run"
+              echo "starts a second full ingest."
+            else
+              echo "**Failed.** Server said:"
+            fi
+            echo
+            echo '```json'
+            head -c 2000 response.json 2>/dev/null || echo '(no response body)'
+            echo
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
