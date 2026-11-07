@@ -1,0 +1,60 @@
+---
+title: "Restore from snapshot"
+sidebarTitle: "Restore"
+api: "POST https://api.omnistrate.cloud/2022-09-01-00/resource-instance/snapshot/{snapshotId}/restore"
+description: "Create a new deployment instance from a snapshot."
+---
+
+Restores a snapshot into a **new** deployment instance. The original instance is left untouched. Restoring is asynchronous: the response returns the new instance ID, which starts in `DEPLOYING` and becomes `RUNNING` when the restore completes.
+
+## Authorization
+
+<ParamField header="Cookie" type="string" required>
+  Session cookie set by [Sign in](/cloud/api-reference/authentication/signin): `omnistrate_token=<jwt>`.
+</ParamField>
+
+## Path parameters
+
+<ParamField path="snapshotId" type="string" required>
+  ID of the snapshot to restore.
+</ParamField>
+
+## Query parameters
+
+<ParamField query="subscriptionId" type="string">
+  Subscription that owns the snapshot.
+</ParamField>
+
+## Body
+
+<ParamField body="network_type" type="string">
+  Network type for the restored instance, for example `PUBLIC`.
+</ParamField>
+
+<ParamField body="custom_network_id" type="string">
+  ID of the [custom network](/cloud/api-reference/networking/list) to restore into.
+</ParamField>
+
+```json Request
+{
+  "network_type": "PUBLIC"
+}
+```
+
+## Response
+
+Returns `202 Accepted`.
+
+<ResponseField name="instanceId" type="string">
+  ID of the restored deployment instance.
+</ResponseField>
+
+```json 202 Accepted
+{
+  "instanceId": "instance-def456"
+}
+```
+
+## Errors
+
+See [Error](/cloud/api-reference/schemas#error) for the error response shape.

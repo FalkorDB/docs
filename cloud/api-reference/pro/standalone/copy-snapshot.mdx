@@ -1,0 +1,53 @@
+---
+title: "Copy snapshot"
+sidebarTitle: "Copy snapshot"
+api: "POST https://api.omnistrate.cloud/2022-09-01-00/resource-instance/sp-JvkxkPhinN/falkordb/v1/prod/falkordb-pro-customer-hosted/falkordb-pro-falkordb-customer-hosted-model-omnistrate-dedicated-tenancy/standalone/{id}/copy-snapshot"
+description: "Copy a snapshot of a Pro Standalone instance to another region."
+---
+
+Copies an existing snapshot into another region, for example to seed a disaster-recovery deployment.
+
+## Authorization
+
+<ParamField header="Cookie" type="string" required>
+  Session cookie set by [Sign in](/cloud/api-reference/authentication/signin): `omnistrate_token=<jwt>`.
+  Browsers send it automatically; other clients must forward it on every request.
+</ParamField>
+
+## Path parameters
+
+<ParamField path="id" type="string" required>
+  ID of the resource instance.
+</ParamField>
+
+## Query parameters
+
+<ParamField query="subscriptionId" type="string">
+  ID of the subscription that owns the instance.
+</ParamField>
+
+## Body
+
+<ParamField body="source_snapshot_id" type="string">
+  ID of the snapshot to copy from.
+</ParamField>
+
+<ParamField body="target_region" type="string" required>
+  Region to copy the snapshot to.
+</ParamField>
+
+## Response
+
+<ResponseField name="snapshot_id" type="string">
+  ID of the snapshot that was created.
+</ResponseField>
+
+```json 200 OK
+{
+  "snapshot_id": "snapshot-abc123"
+}
+```
+
+## Errors
+
+See [Error](/cloud/api-reference/schemas#error) for the shared error response shape.

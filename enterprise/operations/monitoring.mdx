@@ -1,0 +1,138 @@
+---
+title: "Monitor FalkorDB with Prometheus, Grafana, and Admin UI metrics"
+sidebarTitle: "Monitoring & Grafana"
+description: "View logs, live metrics, and optional Grafana dashboards."
+icon: "chart-line"
+---
+
+## Admin UI logs
+
+1. Open **Deployments**.
+2. Open the target deployment.
+3. Go to **Logs**.
+4. Select a pod.
+5. Use **Reconnect** to restart the stream or **Export** to download the captured output as `<pod-name>-logs.txt`.
+
+The Logs tab streams pod logs in real time. If the stream disconnects, existing captured logs remain visible and the status badge changes to disconnected.
+
+## Admin UI metrics
+
+1. Open the target deployment.
+2. Go to **Metrics**.
+3. Select a non-Sentinel pod.
+4. Use **Reconnect** to restart the live metrics stream.
+
+The Metrics tab builds live charts from pod metric snapshots. Current panels include CPU, memory, clients, network I/O, command rates, command latency, graph command latency, graph command rates, DB keys, and uptime.
+
+## Grafana link in the UI
+
+The **Open in Grafana** button appears only when `settings.ui.grafana_url` is configured.
+
+1. Open **System Settings**.
+2. Open the UI/settings section.
+3. Set the Grafana URL.
+4. Save settings.
+5. Return to deployment **Metrics** and select **Open in Grafana**.
+
+When opening Grafana, the UI appends:
+
+- `var-namespace=<namespace>`
+- `var-pod=<selected-pod>`
+- `var-pod_scope=<selected-pod>`
+
+## Helm observability resources
+
+The chart has these optional observability toggles:
+
+| Value | Default | Effect |
+| --- | --- | --- |
+| `podMonitor.enabled` | `false` | Creates PodMonitor resources. |
+| `alertRules.enabled` | `false` | Creates PrometheusRule resources for Admin Server and database alerts. |
+| `grafanaDashboards.enabled` | `false` | Creates GrafanaDashboard resources from configured dashboard JSON. |
+
+When `podMonitor.enabled=true`, the chart creates:
+
+- An Admin Server PodMonitor that scrapes `/metrics` on the `http` port.
+- A FalkorDB PodMonitor when the FalkorDB addon is enabled. It selects KubeBlocks-managed non-Sentinel pods and scrapes `/metrics` on `http-metrics` and `graph-metrics`.
+
+`PodMonitor` and `PrometheusRule` require Prometheus Operator CRDs. `GrafanaDashboard` requires the Grafana Operator CRD.
+
+## Database alerts
+
+With `alertRules.enabled=true`, the chart also creates database health alerts. Turn them off with `alertRules.databaseRules.enabled=false`. Enable both `podMonitor.enabled` and `alertRules.enabled` in production.
+
+| Alert | Severity | Fires when |
+| --- | --- | --- |
+| `FalkorDBMetricsDown` | critical | Prometheus can't scrape a FalkorDB pod. |
+| `FalkorDBNodeDown` | critical | The exporter can't reach FalkorDB in its pod. |
+| `FalkorDBShardedClusterFailed` | critical | A sharded deployment reports `cluster_state:fail`, so some hash slots aren't served. |
+| `FalkorDBReplicaLinkDown` | critical | A replica isn't replicating from its primary. |
+| `FalkorDBReplicaLost` | warning | A primary has fewer connected replicas than it had in the last hour. |
+| `FalkorDBMemoryNearLimit` | warning | Used memory is above `alertRules.databaseRules.memoryUsedRatio` (default `0.9`) of `maxmemory`. |
+| `FalkorDBPersistenceFailing` | warning | The last `BGSAVE` failed, so snapshots and `datafile` backups may be stale. |
+| `FalkorDBVolumeNearlyFull` | warning | A data volume has less than `alertRules.databaseRules.volumeFreeRatio` (default `0.15`) free. |
+| `FalkorDBBackupFailed` | warning | A KubeBlocks backup Job failed. |
+
+Each alert waits `alertRules.databaseRules.for` (default `5m`) before firing, except `FalkorDBBackupFailed`. `FalkorDBMetricsDown` and the `redis_*` alerts need `podMonitor.enabled=true`, which creates the FalkorDB scrape target. `FalkorDBVolumeNearlyFull` reads the kubelet series `kubelet_volume_stats_*` and `FalkorDBBackupFailed` reads kube-state-metrics' `kube_job_status_failed`; kube-prometheus-stack collects both by default.
+
+## Protecting the Admin Server metrics endpoint
+
+`/metrics` is served on the same port as the API but outside the authenticated `/api` prefix, so by default anything that can reach the pod can read it. Set HTTP Basic credentials to close that:
+
+```yaml
+adminServer:
+  metrics:
+    basicAuth:
+      username: prometheus
+      password: a-strong-password
+```
+
+The chart then creates a Secret named `<release>-falkordb-enterprise-admin-server-metrics`, wires it into the Admin Server, and adds a matching `basicAuth` block to the Admin Server PodMonitor, so `podMonitor.enabled=true` keeps scraping without further changes. Any scraper you configure yourself must send the same credentials, or it will get `401`.
+
+To keep the credentials out of Helm values, create the Secret yourself with `username` and `password` keys and reference it:
+
+```yaml
+adminServer:
+  metrics:
+    basicAuth:
+      existingSecret: falkordb-metrics-credentials
+```
+
+The Admin Server refuses to start if only one of the username and password is set, so a partial configuration cannot silently leave the endpoint open.
+
+## Example values
+
+```yaml
+podMonitor:
+  enabled: true
+  interval: 30s
+  scrapeTimeout: 10s
+
+alertRules:
+  enabled: true
+  defaultRules:
+    enabled: true
+  databaseRules:
+    enabled: true
+
+grafanaDashboards:
+  enabled: true
+  dashboards:
+    - name: falkordb-enterprise
+      folder: FalkorDB
+      json: |
+        { "title": "FalkorDB Enterprise" }
+```
+
+Use a real Grafana dashboard JSON for production. The chart requires each configured dashboard to include `name` and `json`.
+
+## Validate
+
+```bash
+kubectl get podmonitors.monitoring.coreos.com -A
+kubectl get prometheusrules.monitoring.coreos.com -A
+kubectl get grafanadashboards.grafana.integreatly.org -A
+kubectl get pods -n <namespace>
+```
+
+In the Admin UI, verify **Logs**, **Metrics**, and **Open in Grafana** from a deployment details page.

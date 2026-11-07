@@ -1,0 +1,95 @@
+---
+title: "Introduction"
+description: "Overview of the FalkorDB Cloud API"
+---
+
+The FalkorDB Cloud API lets you provision and manage FalkorDB instances across service tiers and deployment models.
+
+## Base URL
+
+```text
+https://api.omnistrate.cloud
+```
+
+Every resource path is prefixed with `/2022-09-01-00/resource-instance/sp-JvkxkPhinN/falkordb/v1/prod/`, followed by the service tier, the deployment model, and the component.
+
+Sign-in is the exception: it is served from the FalkorDB Cloud app at `https://app.falkordb.cloud/api/signin`.
+
+## Authentication
+
+All endpoints except sign-in are authenticated with a session cookie.
+
+```http
+Cookie: omnistrate_token=<jwt>
+```
+
+[Sign in](/cloud/api-reference/authentication/signin) at `https://app.falkordb.cloud/api/signin` with your FalkorDB Cloud email and password. The response sets two `HttpOnly` cookies scoped to `.falkordb.cloud`:
+
+| Cookie | Lifetime | Purpose |
+| --- | --- | --- |
+| `omnistrate_token` | 1 hour | Authorizes API requests. |
+| `omnistrate_refresh_token` | 24 hours | Obtains a new session token. |
+
+Browsers send the cookies automatically when requests include credentials. Because the cookies are scoped to `.falkordb.cloud`, server-side and CLI clients must read `omnistrate_token` from the `Set-Cookie` values and send it as an explicit `Cookie` header on every request to `https://api.omnistrate.cloud`.
+
+## Account management
+
+Before you can create a deployment instance you need a subscription to a service plan. The [account management](/cloud/api-reference/account/subscriptions/list) endpoints let you:
+
+- Discover the available plans with [List service plans](/cloud/api-reference/account/service-plans).
+- Subscribe to a plan with [Create subscription](/cloud/api-reference/account/subscriptions/create).
+- Share a subscription with teammates using [Invite user](/cloud/api-reference/account/access/invite-user) and [Revoke user role](/cloud/api-reference/account/access/revoke-user).
+
+Every deployment instance belongs to a subscription. Pass the subscription ID as the `subscriptionId` query parameter on instance requests.
+
+## Service tiers
+
+The API is organized by service tier and hosting model:
+
+| Tier | Tenancy | Components |
+| --- | --- | --- |
+| [Enterprise BYOA](/cloud/api-reference/enterprise-byoa/standalone/list) | Dedicated | Standalone, Single-Zone, Multi-Zone, Cluster (Single-Zone), Cluster (Multi-Zone) |
+| [Enterprise](/cloud/api-reference/enterprise/standalone/list) | Dedicated | Standalone, Single-Zone, Multi-Zone, Cluster (Single-Zone), Cluster (Multi-Zone) |
+| [Pro](/cloud/api-reference/pro/standalone/list) | Dedicated | Standalone, Single-Zone, Multi-Zone, Cluster (Multi-Zone) |
+| [Startup](/cloud/api-reference/startup/standalone/list) | Multi-tenant | Standalone |
+| [Free](/cloud/api-reference/free/free/list) | Multi-tenant | Free |
+
+Enterprise BYOA deploys into your own cloud account, so create requests take a `cloud_provider_account_config_id`. Enterprise deploys into a custom network you provide with `custom_network_id`.
+
+## Infrastructure
+
+| Area | Description |
+| --- | --- |
+| [Cloud accounts](/cloud/api-reference/cloud-accounts/overview) | Register and bootstrap your own AWS, GCP, Azure, or OCI account for Enterprise BYOA. Produces the `cloud_provider_account_config_id` used at instance creation. |
+| [Custom networks](/cloud/api-reference/networking/list) | Reserve CIDR blocks per cloud provider region. Produces the `custom_network_id` used at instance creation and on snapshot restore. |
+| [Snapshots](/cloud/api-reference/snapshots/list) | Take, copy, and restore point-in-time snapshots of a deployment instance. |
+
+## Database users
+
+[Database users](/cloud/api-reference/database-users/overview) are the credentials your application uses to connect to an instance. They are managed through a **separate FalkorDB API host** at `https://api.falkordb.cloud/v1/customer-ldap` using bearer token authentication rather than the session cookie.
+
+## Operations
+
+Every component supports the same set of operations.
+
+| Operation | Method | Path |
+| --- | --- | --- |
+| List | `GET` | `/{component}` |
+| Create | `POST` | `/{component}` |
+| Describe | `GET` | `/{component}/{id}` |
+| Update | `PUT` | `/{component}/{id}` |
+| Delete | `DELETE` | `/{component}/{id}` |
+| Backup | `POST` | `/{component}/{id}/backup` |
+| Copy snapshot | `POST` | `/{component}/{id}/copy-snapshot` |
+| Failover | `POST` | `/{component}/{id}/failover` |
+| Start | `POST` | `/{component}/{id}/start` |
+| Stop | `POST` | `/{component}/{id}/stop` |
+| Restart | `POST` | `/{component}/{id}/restart` |
+
+## Asynchronous behavior
+
+Create and lifecycle operations return `202 Accepted` and complete in the background. Poll the Describe endpoint until `status` reflects the state you expect.
+
+## Errors
+
+All endpoints return errors with the `application/vnd.goa.error` content type. See [Error](/cloud/api-reference/schemas#error) for the shape.

@@ -1,0 +1,48 @@
+---
+title: "Indexing in FalkorDB: Accelerating Graph Queries"
+sidebarTitle: "Overview"
+description: "FalkorDB supports single-property indexes for node labels and for relationship type. String, numeric, and geospatial data types can be indexed."
+---
+
+FalkorDB provides multiple types of indexes to optimize query performance and enable efficient data retrieval. Each index type is designed for specific use cases and data patterns.
+
+## Index Types
+
+FalkorDB supports the following index types:
+
+### [Range Index](/cypher/indexing/range-index)
+
+Range indexes support single-property indexes for node labels and relationship types. String, numeric, and geospatial data types can be indexed. These indexes automatically optimize queries with filters on indexed properties.
+
+### [Full-text Index](/cypher/indexing/fulltext-index)
+
+Full-text indexes leverage RediSearch capabilities to provide powerful text search functionality. They support features like stemming, stopwords, phonetic search, and scoring based on TF-IDF.
+
+### [Vector Index](/cypher/indexing/vector-index)
+
+Vector indexes enable similarity search on vector embeddings. These indexes are essential for AI and machine learning applications, supporting operations like nearest neighbor search with configurable similarity functions (euclidean or cosine).
+
+### [CCH Index](/cypher/indexing/cch-index)
+
+CCH (Customizable Contraction Hierarchies) indexes accelerate weighted point-to-point shortest-path queries over relationship graphs such as road and transport networks. They precompute a routing hierarchy so route lookups between arbitrary node pairs return in microseconds, and support indexing multiple relationship types together.
+
+---
+
+Choose an index type from the navigation menu to learn more about creating, querying, and managing that specific type of index.
+
+## Frequently Asked Questions
+
+<AccordionGroup>
+  <Accordion title="What types of indexes does FalkorDB support?">
+    FalkorDB supports four index types: **Range indexes** for exact-match and comparison queries, **Full-text indexes** for text search with stemming and scoring, **Vector indexes** for similarity search on embeddings, and **CCH indexes** for weighted point-to-point shortest-path (routing) queries.
+  </Accordion>
+  <Accordion title="When should I create an index?">
+    Create indexes on properties frequently used in WHERE clause filters. Indexes accelerate lookups but add write overhead, so avoid indexing properties that are rarely queried or have very high write frequency.
+  </Accordion>
+  <Accordion title="Can I index relationship properties?">
+    Yes. FalkorDB supports indexing both node label properties and relationship type properties with range and full-text indexes.
+  </Accordion>
+  <Accordion title="How do I check which indexes exist in my graph?">
+    Use the procedure `CALL db.indexes()` which yields all indexes with their label, properties, type (RANGE, FULLTEXT, VECTOR, or CCH), entity type, and status.
+  </Accordion>
+</AccordionGroup>

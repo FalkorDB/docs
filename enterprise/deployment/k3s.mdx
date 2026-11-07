@@ -1,0 +1,231 @@
+---
+title: "Deploy FalkorDB Enterprise on K3s"
+sidebarTitle: "K3s"
+description: "Install FalkorDB Enterprise on a standalone K3s cluster, from a single-node evaluation to a multi-node install with Longhorn storage."
+icon: "cube"
+---
+
+This guide covers standalone [K3s](https://k3s.io) clusters, with or without Rancher. K3s follows the standard install flow. The differences are in storage, because the bundled `local-path` provisioner has no CSI snapshot support, and in ingress, because K3s ships Traefik instead of ingress-nginx. If Rancher manages your cluster, also read [Rancher](/enterprise/deployment/rancher) for kubeconfig and project placement.
+
+## Prerequisites
+
+- Linux hosts supported by K3s, running K3s 1.28 or later.
+- `kubectl`, `helm`, and `base64` on the machine that runs the installer.
+- Root or `sudo` on the K3s hosts, to install K3s and read its kubeconfig (`/etc/rancher/k3s/k3s.yaml`, readable only by root).
+- Outbound access from the cluster to pull images: `registry.falkordb.cloud` (Enterprise images, credentials required), `docker.io`, `apecloud-registry.cn-zhangjiakou.cr.aliyuncs.com`, `registry.k8s.io`, and `ghcr.io` — or `registry.falkordb.cloud` alone, since every image is also mirrored there (see [Private registries](/enterprise/deployment/private-images)).
+
+Pick a topology:
+
+| Topology | Nodes | Storage | Use for |
+| --- | --- | --- | --- |
+| Single node | 1 server, which also runs the control plane, Traefik, and KubeBlocks | `local-path` plus the installer's bundled hostpath CSI driver | Evaluation and development only |
+| Multi-node | 1 or 3 servers, at least 3 agents with 4 CPU and 16 GB of memory each | [Longhorn](https://longhorn.io) | Production |
+
+<Note>
+  A single-node cluster is below the [supported minimum](/enterprise/get-started/requirements) of 3 worker nodes. Use it to evaluate FalkorDB Enterprise, not to run production data.
+</Note>
+
+## How K3s differs
+
+| Area | K3s default | What to do |
+| --- | --- | --- |
+| Ingress | Traefik, IngressClass `traefik` marked as default, in `kube-system`. | Nothing for quick access — the installer reuses the default class. Set `className: traefik` in a values file. |
+| Storage | `local-path` (`rancher.io/local-path`), no CSI snapshots. | Single node: nothing, the installer adds snapshot-capable storage. Multi-node: install Longhorn. |
+| LoadBalancer | ServiceLB (klipper) publishes `LoadBalancer` Services on every node's IP. | Nothing. Traefik already holds ports 80 and 443, so don't install a second ingress controller on them. |
+| NetworkPolicy | Enforced by the built-in network policy controller. | Set `networkPolicy.ingressControllerNamespace: kube-system` when you enable the [network policy](/enterprise/reference/network-policy). |
+| Pod Security | No cluster-wide enforcement unless you configure it. | Nothing for a default install. See [Pod security](#pod-security). |
+
+<Steps>
+  <Step title="Install K3s">
+    Install the K3s server. Set `--tls-san` to the IP address or hostname you will use to reach the API server from other machines, so its certificate is valid for that address:
+
+    ```bash
+    curl -sfL https://get.k3s.io | sh -s - --tls-san <server-address>
+    ```
+
+    For a multi-node cluster, read the join token on the server, then run the agent install on each worker:
+
+    ```bash
+    # On the server
+    sudo cat /var/lib/rancher/k3s/server/node-token
+
+    # On each agent
+    curl -sfL https://get.k3s.io | \
+      K3S_URL=https://<server-address>:6443 K3S_TOKEN=<node-token> sh -
+    ```
+
+    See the [K3s high-availability docs](https://docs.k3s.io/datastore/ha-embedded) for a three-server control plane.
+  </Step>
+
+  <Step title="Get cluster credentials">
+    K3s writes a cluster-admin kubeconfig to `/etc/rancher/k3s/k3s.yaml`, readable only by root. Copy it to the machine that runs the installer and replace `127.0.0.1` in its `server` field with the server's address:
+
+    ```bash
+    mkdir -p ~/.kube
+    ssh <user>@<server-address> sudo cat /etc/rancher/k3s/k3s.yaml > ~/.kube/k3s.yaml
+    chmod 600 ~/.kube/k3s.yaml
+    sed -i.bak 's/127.0.0.1/<server-address>/' ~/.kube/k3s.yaml
+    export KUBECONFIG=~/.kube/k3s.yaml
+    ```
+
+    Verify access:
+
+    ```bash
+    kubectl get nodes
+    kubectl get storageclass
+    kubectl get ingressclass
+    ```
+
+    You should see `local-path (default)` and `traefik`.
+  </Step>
+
+  <Step title="Set up storage">
+    FalkorDB Enterprise uses persistent volumes for databases and the Admin Server, and CSI volume snapshots for backups.
+
+    **Single node.** Skip this step. When the default StorageClass is `local-path` on a one-node cluster, the installer enables a bundled hostpath CSI driver, makes its `csi-hostpath-sc` the default StorageClass, and raises the release namespace's Pod Security level to `privileged` because the driver needs it. All volumes stay on that node.
+
+    **Multi-node.** Install Longhorn. Each node needs an iSCSI initiator (`open-iscsi` on Debian/Ubuntu, `iscsi-initiator-utils` on RHEL), and `nfs-common` or `nfs-utils` for RWX volumes. Check the [Longhorn installation requirements](https://longhorn.io/docs/latest/deploy/install/#installation-requirements), then:
+
+    ```bash
+    helm repo add longhorn https://charts.longhorn.io
+    helm repo update
+    helm install longhorn longhorn/longhorn \
+      --namespace longhorn-system \
+      --create-namespace
+    ```
+
+    Make `longhorn` the only default StorageClass:
+
+    ```bash
+    kubectl patch storageclass local-path \
+      -p '{"metadata":{"annotations":{"storageclass.kubernetes.io/is-default-class":"false"}}}'
+    kubectl patch storageclass longhorn \
+      -p '{"metadata":{"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
+    ```
+
+    <Warning>
+      If you leave `local-path` as the default on a multi-node cluster, the installer keeps it and prints a warning. Database volumes are then pinned to whichever node first ran each pod, and volume-snapshot backups are unavailable. Pass `--local-csi-hostpath enable` only if you accept that every volume lives on a single node.
+    </Warning>
+
+    The installer runs a snapshot controller in the KubeBlocks namespace, installs the `VolumeSnapshot` CRDs when they are missing, and creates a default `VolumeSnapshotClass` for Longhorn with `type: snap`, so backups take in-cluster Longhorn snapshots.
+
+    <Note>
+      If a default `VolumeSnapshotClass` for `driver.longhorn.io` already exists, the installer uses it instead. Make sure it sets `parameters.type: snap`. Without a `type`, Longhorn takes a Longhorn backup, which fails unless you have configured a Longhorn backup target.
+    </Note>
+  </Step>
+
+  <Step title="Install FalkorDB Enterprise">
+    For an evaluation, run the installer with default settings:
+
+    ```bash
+    curl -fsSL https://falkordb.github.io/FalkorDB-Enterprise/install.sh | \
+      bash -s -- \
+        --registry-username '<username>' \
+        --registry-password '<token>' \
+        --yes
+    ```
+
+    The installer prints the `kubectl port-forward` command for the Admin UI. Add `--quick-access` to publish it over plain HTTP through Traefik instead; it is then reachable on any node's IP. See [Quickstart](/enterprise/get-started/quickstart) for defaults and validation.
+
+    For production, start from the values in [Production install](/enterprise/deployment/production) and add the K3s-specific settings below:
+
+    ```yaml
+    # k3s-values.yaml
+    gateway:
+      enabled: true
+      ingress:
+        enabled: true
+        className: traefik
+        hosts:
+          - host: admin.example.com
+        tls:
+          - secretName: falkordb-enterprise-admin-tls
+            hosts:
+              - admin.example.com
+
+    adminServer:
+      env:
+        nodeEnv: production
+        corsOrigin: https://admin.example.com
+        cookieSecure: true
+      persistence:
+        enabled: true
+        size: 8Gi
+        storageClassName: longhorn
+
+    networkPolicy:
+      enabled: true
+      ingressControllerNamespace: kube-system
+    ```
+
+    Create the TLS Secret that the Ingress references, from a certificate for `admin.example.com`. Without it, Traefik serves its self-signed default certificate.
+
+    ```bash
+    kubectl create namespace falkordb-system
+    kubectl -n falkordb-system create secret tls falkordb-enterprise-admin-tls \
+      --cert=admin.example.com.crt \
+      --key=admin.example.com.key
+    ```
+
+    Then install:
+
+    ```bash
+    curl -fsSL https://falkordb.github.io/FalkorDB-Enterprise/install.sh | \
+      JWT_SECRET="$(openssl rand -hex 32)" bash -s -- \
+        --registry-username '<username>' \
+        --registry-password '<token>' \
+        --namespace falkordb-system \
+        --kubeblocks-namespace kb-system \
+        --values k3s-values.yaml \
+        --yes
+    ```
+
+    Point DNS for `admin.example.com` at one or more node IPs, or at an external load balancer in front of the nodes.
+  </Step>
+
+  <Step title="Validate the install">
+    ```bash
+    helm status kubeblocks -n kb-system
+    helm status falkordb-enterprise -n falkordb-system
+    kubectl get pods -n kb-system
+    kubectl get pods -n falkordb-system
+    kubectl get volumesnapshotclass
+    kubectl get ingress -n falkordb-system
+    ```
+
+    `kubectl get volumesnapshotclass` should list `falkordb-enterprise-driver-longhorn-io` as the default on a multi-node cluster, or `falkordb-enterprise-csi-hostpath` on a single node. An evaluation install without `--quick-access` creates no Ingress, so `kubectl get ingress` returns nothing.
+
+    Sign in with the bootstrap admin user. On a first install the chart generates its password:
+
+    ```bash
+    kubectl -n falkordb-system get secret falkordb-enterprise-initial-admin-password \
+      -o jsonpath='{.data.password}' | base64 -d; echo
+    ```
+  </Step>
+</Steps>
+
+## Pod security
+
+K3s does not enforce a cluster-wide Pod Security Admission level unless you pass it an admission config, as in the [K3s CIS hardening guide](https://docs.k3s.io/security/hardening-guide). The installer labels its own namespace `enforce=baseline`, or `privileged` when it enables the bundled hostpath CSI driver. If your cluster enforces `restricted` by default, label `kb-system` and each database namespace yourself. Longhorn also needs `privileged` in `longhorn-system`:
+
+```bash
+kubectl label namespace kb-system pod-security.kubernetes.io/enforce=baseline --overwrite
+kubectl label namespace <database-namespace> pod-security.kubernetes.io/enforce=baseline --overwrite
+kubectl label namespace longhorn-system pod-security.kubernetes.io/enforce=privileged --overwrite
+```
+
+See [Pod Security Admission levels](/enterprise/reference/pod-security) for the measured level of each namespace.
+
+## Troubleshooting
+
+| Symptom | Cause | Fix |
+| --- | --- | --- |
+| With `--quick-access`, the installer times out after `Waiting for gateway Ingress external address` and logs `Gateway Ingress address is still pending` | Another ingress controller is marked as the default class or is named `nginx`, and ServiceLB cannot give it ports 80/443 because Traefik already holds them. | Make `traefik` the default class, or start K3s with `--disable=traefik` before installing another controller. |
+| PVCs stay `Pending` on a multi-node cluster | The iSCSI initiator is missing on a node. | Install the packages and check `kubectl get pods -n longhorn-system`. |
+| Admin UI unreachable after enabling the network policy | `ingressControllerNamespace` still points at `ingress-nginx`. | Set `networkPolicy.ingressControllerNamespace: kube-system`. |
+
+For anything else, see [Troubleshoot deployments](/enterprise/troubleshooting/deployments).
+
+## Clean up
+
+Remove FalkorDB Enterprise first (see [Uninstall](/enterprise/upgrades/uninstall)). To remove K3s itself, run `/usr/local/bin/k3s-uninstall.sh` on servers and `/usr/local/bin/k3s-agent-uninstall.sh` on agents. This deletes all cluster data, including `local-path` volumes.

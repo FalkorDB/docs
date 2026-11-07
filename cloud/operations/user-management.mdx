@@ -1,0 +1,92 @@
+---
+title: "User Management"
+description: "Guide to managing database users on a FalkorDB Cloud instance. Learn how to create, update, and delete users, assign ACL presets, and apply custom Redis ACL rules."
+---
+
+import AclPresetClauses from '/snippets/cloud/acl-preset-clauses.mdx';
+
+FalkorDB Cloud lets you manage database users directly from the instance page. You can create additional users, give them a built-in role or custom permissions, update their credentials or permissions, and delete users you no longer need.
+
+> **Prerequisite:** The instance must be in a **running** state before you can manage its users.
+
+To manage the same users programmatically, see the [Database users API](/cloud/api-reference/database-users/overview).
+
+## Opening the User Access Tab
+
+1. Go to [app.falkordb.cloud](https://app.falkordb.cloud) and sign in.
+2. Select your instance from the list.
+3. Click the **User Access** tab on the instance detail page.
+
+The tab shows a table of all users configured on the instance, along with their assigned role or ACL rule.
+
+<Frame>
+  ![The User Access tab with the Users table showing the default falkordb user and the Add User button](/cloud/images/console/user-access-tab.png)
+</Frame>
+
+<Note>
+  If you don't see the **User Access** tab, your instance was created on an older version of its tier. Contact [support@falkordb.com](mailto:support@falkordb.com) to have it upgraded.
+</Note>
+
+## Default User
+
+Every instance has a **default user** that is created automatically during deployment. It's marked with a star in the **Users** table. This user can't be deleted or renamed. You can change its password or role with the **Edit** icon, like any other user.
+
+## Creating a User
+
+1. From the **User Access** tab, click **Add User**.
+2. Fill in the required fields:
+   - **Username** — the login name for the new user.
+   - **Password** — a secure password for the user.
+3. Under **Role**, choose a built-in role or **Custom**. The role starts as **Admin**, so change it if the user needs less access:
+   - `Admin` — full read/write access and operations.
+   - `Read` — read-only access to graphs.
+   - `Write` — full read/write access to graphs.
+   - `Custom` — set the permissions yourself:
+     - **Key Patterns** — the keys the user can access, for example `~*` for all keys.
+     - **Commands** — choose commands from the list, or type them, for example `+GRAPH.RO_QUERY`. See [ACL](/commands/acl) for the rule syntax.
+
+   Each built-in role expands to a fixed ACL clause:
+
+   <AclPresetClauses />
+
+   See [Presets](/cloud/api-reference/database-users/overview#presets) for a breakdown of what these commands allow.
+4. Select **Create** to create the user.
+
+<Frame>
+  ![The Add User dialog with the Username, Password, and Role fields](/cloud/images/console/add-user-dialog.png)
+</Frame>
+
+## Updating a User
+
+1. From the **User Access** tab, locate the user you want to update in the table.
+2. Click the **Edit** (pencil) icon next to the user.
+3. Change the **Password**, **Role**, or custom permissions as needed. Leave the password blank to keep the current one.
+4. Select **Update** to apply the changes.
+
+## Deleting a User
+
+1. From the **User Access** tab, locate the user you want to remove.
+2. Click the **Delete** (trash) icon next to the user.
+3. Confirm the deletion in the dialog that appears.
+
+> The **default user** cannot be deleted.
+
+## Frequently Asked Questions
+
+<AccordionGroup>
+  <Accordion title="Can I delete the default user?">
+    No. The default user is created during deployment and can't be deleted or renamed. You can still change its password or role with the **Edit** icon.
+  </Accordion>
+  <Accordion title="What roles are available?">
+    Three built-in roles are available: **Read** (graph read access only), **Write** (full graph read/write), and **Admin** (every allowed command, including administrative ones such as `FLUSHALL` and `GRAPH.CONFIG`). No built-in role lets a database user manage other database users.
+  </Accordion>
+  <Accordion title="How do I apply fine-grained access control?">
+    Select the **Custom** role when creating or editing a user, then set the **Key Patterns** and **Commands**. See the [ACL command reference](/commands/acl) for the full rule syntax.
+  </Accordion>
+  <Accordion title="Does the instance need to be running to manage users?">
+    Yes. The instance must be in a **running** state before you can open the User Access tab and make changes.
+  </Accordion>
+  <Accordion title="Can I change a user's password after creation?">
+    Yes. Click the **Edit** icon next to the user in the User Access tab, enter a new password, and select **Update**.
+  </Accordion>
+</AccordionGroup>

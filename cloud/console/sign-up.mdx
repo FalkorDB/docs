@@ -1,0 +1,96 @@
+---
+title: "Sign up and subscribe"
+description: "Create a FalkorDB Cloud account, verify your email, and subscribe to a service plan from the FalkorDB Cloud console."
+---
+
+To create instances in FalkorDB Cloud, you need an account and a subscription to a service plan. A subscription links your account to a tier, such as **FalkorDB Free** or **FalkorDB Pro**, and controls who on your team can use it.
+
+## Create an account
+
+1. Go to [app.falkordb.cloud/signup](https://app.falkordb.cloud/signup).
+2. Enter your work email and select **Next**.
+3. Sign up with **Continue with GitHub** or **Continue with Google**, or fill in the form:
+   - **Name**
+   - **Company Name**
+   - **Company URL** (optional)
+   - **Password** and **Confirm Password**
+4. Select **Create Account**.
+
+<Frame>
+  ![The Get Started Today sign-up form with the GitHub and Google buttons and the Name, Email, Company Name, Company URL, and Password fields](/cloud/images/console/signup-form.png)
+</Frame>
+
+### Verify your email
+
+If you signed up with a password, FalkorDB Cloud sends a confirmation link to your email. Open the link to activate your account. You see **Validation Successful** when the account is active, and you can then sign in.
+
+Sign-ups with single sign-on don't need this step.
+
+## Sign in
+
+1. Go to [app.falkordb.cloud/signin](https://app.falkordb.cloud/signin).
+2. Enter your email and select **Next**.
+3. Choose a single sign-on button, such as **Continue with Google**. To use a password, open **Other sign in options** and select **Sign In with Password**.
+
+<Frame>
+  ![The FalkorDB Cloud sign-in page, with the email entered and the Continue with Google button](/cloud/images/console/signin.png)
+</Frame>
+
+Forgot your password? Select **Forgot Password** on the password step and follow the link sent to your email.
+
+## Subscribe to a plan
+
+1. In the sidebar, open **Account Management** > **Subscriptions**.
+2. Select **Manage Subscriptions**.
+3. Under **List of Plans**, find the tier you want and select **Subscribe**.
+
+<Frame>
+  ![The Manage Subscriptions panel listing the FalkorDB Enterprise, Enterprise BYOA, Free, Pro, and Startup plans with their Subscribe buttons](/cloud/images/console/manage-subscriptions.png)
+</Frame>
+
+Plans marked **Auto Approval** (Free, Startup, and Pro) are active right away. Plans marked **Approval Required** (Enterprise and Enterprise BYOA) show **Pending Approval** until the FalkorDB team approves the request. To speed this up, [contact sales](https://www.falkordb.com/get-a-demo/).
+
+You can also subscribe while you create an instance. The plan cards in the **Create** form have the same **Subscribe** button. See [Create an instance](/cloud/console/create-instance).
+
+<Note>
+  Paid tiers need a payment method before instances can run, unless your billing is arranged by contract, as it often is for Enterprise. See [Add a payment method](/cloud/console/billing). The Free tier doesn't need one.
+</Note>
+
+## Invite your team
+
+Subscriptions are shared through roles:
+
+| Role | What it can do |
+| :--- | :--- |
+| **Root** | Owns the subscription. Manages instances, users, and billing, and can unsubscribe. Each subscription has one Root, the person who subscribed, and the role can't be transferred to someone else. |
+| **Admin** | Manages the subscription and its instances, including inviting and removing users, and can unsubscribe. |
+| **Editor** | Creates, modifies, and deletes instances. |
+| **Reader** | Views instances and their details. |
+
+To invite someone:
+
+1. In the sidebar, open **Governance Hub** > **Access Control**.
+2. Under **Invite Users**, enter their email and choose the **Product**, **Subscription Plan**, and **Role** (**Admin**, **Editor**, or **Reader**).
+3. Select **Send Invites**. Use **Add Another** to invite several people at once.
+
+## Unsubscribe
+
+First delete every instance in the subscription; unsubscribing fails while any are left. Then, on the **Subscriptions** page, select the subscription, choose **Unsubscribe**, and type `unsubscribe` to confirm. Only a **Root** or **Admin** user can unsubscribe, and you can't remove your default subscription.
+
+<Warning>
+  Unsubscribing can't be undone. To use the plan again, you subscribe again.
+</Warning>
+
+## Frequently asked questions
+
+<AccordionGroup>
+  <Accordion title="Do I need a credit card to sign up?">
+    No. You can create an account and use the **Free** tier without a payment method. Add one only when you subscribe to a paid tier.
+  </Accordion>
+  <Accordion title="Why is my subscription pending?">
+    The Enterprise and Enterprise BYOA plans need approval from the FalkorDB team. The plan shows **Pending Approval** until then. Contact [support@falkordb.com](mailto:support@falkordb.com) if it stays pending.
+  </Accordion>
+  <Accordion title="Can I subscribe to more than one tier?">
+    Yes. Each tier is a separate subscription, and you choose which one to use each time you create an instance.
+  </Accordion>
+</AccordionGroup>
