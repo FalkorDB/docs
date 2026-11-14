@@ -1,0 +1,85 @@
+---
+title: "Backups and snapshots"
+description: "Review automatic backups, take snapshots, and restore a FalkorDB Cloud instance from a backup, a snapshot, or a point in time."
+---
+
+FalkorDB Cloud backs up Startup, Pro, and Enterprise instances automatically. On those tiers you can also take a snapshot at any time, and restore from either one. A restore creates a **new instance**, so your current instance keeps running.
+
+| Tier | Automatic backups | Kept for |
+| :--- | :--- | :--- |
+| Free | None | — |
+| Startup | Every 12 hours | 7 days |
+| Pro | Every 12 hours | 7 days |
+| Enterprise | Every 2 hours | 2 days |
+
+Snapshots are kept for 14 days.
+
+<Note>
+  The Free tier has no backups or snapshots, so its instances don't have the **Backups** and **Snapshots** tabs. To keep a copy of Free data, [export an RDB file](/cloud/operations/export-import#export).
+</Note>
+
+<Tip>
+  To keep a copy of your data for longer, or to move it somewhere else, [export an RDB file](/cloud/operations/export-import) to your own storage.
+</Tip>
+
+## Review backups
+
+Open your instance and select the **Backups** tab. **Backup Summary** shows:
+
+- **Last Backup Time** and **Earliest Restore Time**
+- **Retention duration**
+- **Recovery Point Objective** and **Recovery Time Objective**
+
+Below it is the **List of completed backups**, with each backup's status, region, times, and encryption status.
+
+<Frame>
+  ![The Backups tab with a completed, encrypted backup and the Filter by Date, Restore, and Create Snapshot buttons](/cloud/images/console/backups-tab.png)
+</Frame>
+
+## Take a snapshot
+
+1. On the **Backups** tab, select **Create Snapshot**.
+2. Choose the **Target Region** for the snapshot and confirm.
+
+The snapshot appears on the instance's **Snapshots** tab and on the **Deployments** > **Instance Snapshots** page. From the **Snapshots** tab you can **Restore**, **Copy**, or **Delete** a snapshot. Use **Filter by Date** to find one.
+
+<Frame>
+  ![The Snapshots tab with the Filter by Date, Delete, Restore, and Copy buttons](/cloud/images/console/snapshots-tab.png)
+</Frame>
+
+When you delete an instance, you can also select **Take final snapshot before deletion** to keep its data.
+
+## Restore from a backup or snapshot
+
+1. Open the **Backups** or **Snapshots** tab on the instance. You can also open **Deployments** > **Instance Snapshots** to see snapshots from every instance.
+2. Select the backup or snapshot you want and choose **Restore**.
+3. If the instance uses a customer network, choose the network for the restored instance.
+4. Type `restore` to confirm, then select **Restore**.
+
+When the restore finishes, the dialog shows the new instance's ID. Find it in the **Instances** list, check the data, and then point your application at its endpoint.
+
+## Restore to a point in time
+
+1. In the **Instances** list, open the actions menu for the instance and select **Restore**.
+2. Choose a **Select Date** and **Select Time** (UTC) between the earliest restore time and now.
+3. Select **Restore**.
+
+If you see **No restore points available**, the instance doesn't have a backup yet.
+
+## Copy a snapshot to another region
+
+On the **Snapshots** tab or the **Instance Snapshots** page, select a snapshot, choose **Copy**, and pick the **Target Region**. Use this to restore an instance in a different region.
+
+## Frequently asked questions
+
+<AccordionGroup>
+  <Accordion title="Does a restore overwrite my instance?">
+    No. Restoring a backup or snapshot creates a new instance. Your original instance isn't changed. To load data into an existing instance, use [Import RDB](/cloud/operations/export-import#import).
+  </Accordion>
+  <Accordion title="What's the difference between a backup, a snapshot, and an export?">
+    Backups are taken automatically on a schedule. Snapshots are taken when you ask, when an instance stays stopped for too long, or when you choose **Take final snapshot before deletion**. Both stay inside FalkorDB Cloud. An export writes an RDB file to a download link or your own cloud storage, where you control how long it's kept.
+  </Accordion>
+  <Accordion title="Does the Free tier have backups?">
+    No. The Free tier has no persistence and no backups. Use [Export RDB](/cloud/operations/export-import#export) to keep a copy of your data.
+  </Accordion>
+</AccordionGroup>

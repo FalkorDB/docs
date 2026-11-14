@@ -1,0 +1,54 @@
+---
+title: "Connect or disconnect cloud account"
+sidebarTitle: "Connection"
+api: "POST https://api.omnistrate.cloud/2022-09-01-00/resource-instance/account-config/{id}"
+description: "Reconnect a cloud account or temporarily disconnect it from FalkorDB."
+---
+
+Controls whether FalkorDB maintains an active connection to your cloud account. Disconnecting stops FalkorDB from managing infrastructure in the account without deleting the registration; reconnecting resumes management.
+
+<Note>
+  Disconnecting moves the instance through `DISCONNECTING` to `DISCONNECTED`. Reconnecting moves it through `CONNECTING` back to `READY`.
+</Note>
+
+## Authorization
+
+<ParamField header="Cookie" type="string" required>
+  Session cookie set by [Sign in](/cloud/api-reference/authentication/signin): `omnistrate_token=<jwt>`.
+</ParamField>
+
+## Path parameters
+
+<ParamField path="id" type="string" required>
+  ID of the cloud account deployment instance.
+</ParamField>
+
+## Body
+
+<ParamField body="serviceId" type="string" required>
+  ID of the service the cloud account belongs to.
+</ParamField>
+
+<ParamField body="subscriptionId" type="string" required>
+  Subscription that owns the cloud account.
+</ParamField>
+
+<ParamField body="setConnection" type="boolean">
+  `true` to connect, `false` to disconnect.
+</ParamField>
+
+```json Disconnect
+{
+  "serviceId": "s-abc123",
+  "subscriptionId": "sub-abc123",
+  "setConnection": false
+}
+```
+
+## Response
+
+Returns `200 OK` with an empty body.
+
+## Errors
+
+See [Error](/cloud/api-reference/schemas#error) for the error response shape.

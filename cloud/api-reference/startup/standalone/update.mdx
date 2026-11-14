@@ -1,0 +1,65 @@
+---
+title: "Update instance"
+sidebarTitle: "Update"
+api: "PUT https://api.omnistrate.cloud/2022-09-01-00/resource-instance/sp-JvkxkPhinN/falkordb/v1/prod/falkordb-startup-customer-hosted/falkordb-startup-falkordb-customer-hosted-model-omnistrate-multi-tenancy/standalone/{id}"
+description: "Update the configuration of a Startup Standalone instance."
+---
+
+Applies configuration changes to a running instance. Only the fields you send are changed. Changing `falkordbPassword` or `nodeInstanceType` restarts the instance.
+
+## Authorization
+
+<ParamField header="Cookie" type="string" required>
+  Session cookie set by [Sign in](/cloud/api-reference/authentication/signin): `omnistrate_token=<jwt>`.
+  Browsers send it automatically; other clients must forward it on every request.
+</ParamField>
+
+## Path parameters
+
+<ParamField path="id" type="string" required>
+  ID of the resource instance.
+</ParamField>
+
+## Query parameters
+
+<ParamField query="subscriptionId" type="string">
+  ID of the subscription that owns the instance.
+</ParamField>
+
+## Body
+
+<ParamField body="requestParams" type="object" required>
+  Instance configuration.
+
+  <Expandable title="requestParams properties">
+    <ParamField body="falkordbPassword" type="string" required>
+      Default password for the database. Updating this value after deployment restarts the instance.
+    </ParamField>
+
+    <ParamField body="description" type="string" default="Description">
+      Description of the instance.
+    </ParamField>
+
+    <ParamField body="name" type="string" default="FalkorDB Instance">
+      Human-readable name for the instance.
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+## Sizing and tier availability
+
+The Startup tier does not expose `nodeInstanceType`. Size the database with `memoryRequestsAndLimits` instead, which accepts `1200M` (1 GB, the default) or `2200M` (2 GB).
+
+`nodeInstanceType`, `numReplicas`, `maxMemory`, and `enableEnterpriseModule` are **not** available on the Startup tier.
+
+See [Instance configuration](/cloud/api-reference/schemas#instance-configuration) for the full field reference.
+
+## Response
+
+<ResponseField name="id" type="string">
+  ID of the resource instance.
+</ResponseField>
+
+## Errors
+
+See [Error](/cloud/api-reference/schemas#error) for the shared error response shape.

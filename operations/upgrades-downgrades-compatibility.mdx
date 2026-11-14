@@ -1,0 +1,133 @@
+---
+title: "Upgrades, Downgrades, and Compatibility"
+sidebarTitle: "Upgrades and Compatibility"
+description: "FalkorDB's patch rollback guarantee, release-specific graph storage compatibility, Redis/Valkey restrictions, and safe upgrade and backup-based rollback procedures."
+---
+
+FalkorDB guarantees graph storage-format compatibility for upgrades and rollbacks between patch releases within the same major and minor version line. For example, moving between `4.22.2` and `4.22.3` is a patch change. Moving from `4.20.7` to `4.22.3` is a minor-version change, and moving from `4.x` to `6.x` is a major-version change.
+
+Across minor or major releases, upgrade and rollback compatibility require explicit confirmation for the source and target releases. A newer release's ability to read an older backup does **not** mean the older release can read data saved by the newer one.
+
+<Warning>
+  The patch guarantee covers FalkorDB's graph serialization format. It is not a
+  guarantee that an older Redis/Valkey server, another bundled module, or a
+  mixed-version replication group can consume everything produced by a newer
+  deployment. Check each layer before reusing upgraded persistence files.
+</Warning>
+
+## Upgrade and rollback policy
+
+| Version change | Graph storage compatibility | Rollback procedure |
+| --- | --- | --- |
+| Patch releases within the same major.minor line | Guaranteed in both directions for FalkorDB's graph format. | Reuse persisted data only after confirming the underlying server and other modules are also compatible. Keep a pre-upgrade backup as a recovery safeguard. |
+| Minor releases within the same major version | Requires explicit source-to-target compatibility confirmation; do not assume either direction. | Use the upgraded data only when the older release can read its format and all other persistence dependencies are compatible. Otherwise restore a pre-upgrade backup. |
+| Major releases | Requires explicit confirmation of storage, feature, configuration, and replication compatibility. | Follow the release-specific migration instructions. If in-place rollback is not confirmed, restore a pre-upgrade backup into the original deployment. |
+
+These are storage compatibility rules, not a promise of identical query behavior, configuration support, or bug fixes across versions. Review the [release notes](https://github.com/FalkorDB/FalkorDB/releases) for every version crossed, in both directions.
+
+## Persistence has separate compatibility layers
+
+### FalkorDB graph serialization
+
+FalkorDB stores graph values using a versioned module encoding inside Redis persistence. This **graph encoding version** is separate from the FalkorDB release number and the outer RDB file version.
+
+An older FalkorDB binary cannot be assumed to decode a newer graph encoding. The following table records specific tagged releases, not every release in each version line:
+
+| FalkorDB release | Graph encoding written | Graph encodings readable |
+| --- | --- | --- |
+| `4.20.7` | `19` | `10` through `19`. |
+| `4.22.3` | `20` | `14` through `20`. |
+| `6.0.3` | `19` | `19`; do not assume support for `4.22`'s encoding `20`. |
+
+Sources: the tagged `4.20.7` [encoding definitions](https://github.com/FalkorDB/FalkorDB/blob/v4.20.7/src/serializers/encoding_version.h), [RDB loader](https://github.com/FalkorDB/FalkorDB/blob/v4.20.7/src/serializers/graphcontext_type.c), and [legacy decoder dispatcher](https://github.com/FalkorDB/FalkorDB/blob/v4.20.7/src/serializers/decoders/decode_previous.c); the `4.22.3` [encoding definitions](https://github.com/FalkorDB/FalkorDB/blob/v4.22.3/src/serializers/encoding_version.h) and [decoder dispatcher](https://github.com/FalkorDB/FalkorDB/blob/v4.22.3/src/serializers/decoders/decode_graph.c); and the `6.0.3` [encoding definitions](https://github.com/FalkorDB/FalkorDB/blob/v6.0.3/src/serializers/mod.rs) and [decoder](https://github.com/FalkorDB/FalkorDB/blob/v6.0.3/src/serializers/decoder/mod.rs).
+
+For example, the [4.22.0 release notes](https://github.com/FalkorDB/FalkorDB/releases/tag/v4.22.0) announce the change from graph encoding `19` to `20` for CCH index serialization. `4.22.3` can read encoding `19`, but `4.20.7` cannot read encoding `20`. Rolling back from `4.22.3` to `4.20.7` after saving data therefore requires a pre-upgrade backup rather than opening the new snapshot with the old binary.
+
+A larger FalkorDB release number does not necessarily mean a larger graph encoding number: `6.0.3` writes encoding `19`, while `4.22.3` writes encoding `20`. Use the source and target releases' actual encodings, supported features, and release notes to plan the transition.
+
+This table describes graph decoding only, not a complete deployment compatibility certification. For versions or formats not listed, confirm compatibility before upgrading; do not infer support from the release number. Test loading a copy of your own backup with the exact target deployment.
+
+### Redis/Valkey and other bundled modules
+
+The database server owns the outer RDB format, AOF layout, command replay, and replication protocol. FalkorDB owns the graph payload inside that persistence.
+
+Before upgrading or rolling back, check:
+
+- The exact Redis or Valkey version in each deployment, including versions bundled in Docker images.
+- Whether the target server can read the source server's RDB format and AOF layout.
+- Whether other loaded modules can read their persisted data on the target.
+- Whether the target supports the required module APIs, configuration, and commands.
+
+Graph encoding compatibility alone does not establish Redis-to-Valkey portability or server downgrade support. Check the relevant [Redis persistence documentation](https://redis.io/docs/latest/operate/oss_and_stack/management/persistence/) or [Valkey persistence documentation](https://valkey.io/topics/persistence/) and the exact server release notes. Do not treat a server's minimum supported version as a persistence rollback guarantee.
+
+### AOF, DUMP/RESTORE, and replication
+
+AOF is **not** a workaround for an incompatible storage format. An AOF may contain an RDB preamble or serialized graph payloads, and replay may depend on commands or replication effects unavailable in the older release. An AOF rewrite can also replace older data with the current serialization.
+
+Likewise, `DUMP` and `RESTORE` use serialized values; they are not a version-independent graph export format.
+
+Replication compatibility is separate from snapshot compatibility. The [6.0.0 release notes](https://github.com/FalkorDB/FalkorDB/releases/tag/v6.0.0) explicitly prohibit mixing `4.x` and `6.0` in the same primary/replica group because their replication effects are incompatible. Do not attempt a rolling upgrade or downgrade across that boundary by changing one node at a time. Follow the release-specific instructions for the entire group.
+
+## Before upgrading
+
+1. **Record the original deployment.** Save the exact FalkorDB version, Docker image digest or module binary, Redis/Valkey version, other module versions, configuration, and ACL files. Use `INFO server` and `MODULE LIST` to inspect the running server and modules; their version numbers are not the graph encoding version.
+2. **Confirm both directions.** Check the release notes and graph encoding support for the upgrade target and the intended rollback target. For replicated or clustered deployments, confirm compatibility for every node and shard rather than assuming a single-node procedure applies.
+3. **Create and verify a pre-upgrade backup.** Follow the [durability guide](/operations/durability). For RDB, wait for the background save to finish successfully before copying the snapshot. For AOF-based backups, preserve the complete required file set, including any manifest, base, and incremental files, using a consistent backup procedure. Keep an immutable copy outside the live data volume.
+4. **Rehearse on isolated copies.** Restore the backup using the exact upgrade target, verify graphs, indexes, constraints, UDFs, and representative application queries, then save and restart. Test the planned rollback with a separate copy of the upgraded persistence. If compatibility is not confirmed, rehearse restoring the original backup instead.
+5. **Plan the cutover.** Define the maintenance window, pause writes for the final consistent backup and cutover, and record the recovery point. Use a coordinated procedure for replicas and shards. Pin production images to an explicit release or digest rather than a moving tag such as `latest`.
+
+<Note>
+  Once the new version starts, a scheduled snapshot, shutdown save, or AOF
+  rewrite may persist its format even if the application has not issued a
+  write. Keep the pre-upgrade backup separate from files the new version can
+  overwrite.
+</Note>
+
+## Rolling back
+
+### When the upgraded persistence is compatible
+
+Stop application writes and shut down the upgraded deployment cleanly. Preserve a separate copy of its persistence before making any change. Start the intended older deployment against a copy only after confirming **all** graph, server, module, and AOF compatibility requirements. Verify loading, graph contents, indexes, and application behavior before reopening traffic.
+
+Do not connect old replicas to a newer primary unless that exact replication combination is supported.
+
+### When compatibility is absent or unconfirmed
+
+Restore a pre-upgrade backup with the original FalkorDB, Redis/Valkey, and other module versions:
+
+1. Stop writes and stop the upgraded deployment. Preserve its data separately for investigation or a controlled migration.
+2. Prepare a clean data directory or a new volume. Do not mix the backup with RDB or AOF files produced after the upgrade.
+3. Restore the complete backup and its matching configuration and ACL files. If restoring an RDB-only backup, ensure AOF is disabled for the initial startup and that no stale AOF overrides the snapshot.
+4. Start the original deployment in isolation and verify the restored graphs and application behavior.
+5. If AOF is required after an RDB-only restore, enable it on the **validated, running instance**
+   with `CONFIG SET appendonly yes`. Watch `INFO persistence` until `aof_enabled` is `1`,
+   both `aof_rewrite_in_progress` and `aof_rewrite_scheduled` are `0`, and
+   `aof_last_bgrewrite_status` is `ok`. Persist `appendonly yes` in the actual startup
+   source, including Docker `REDIS_ARGS` or Compose settings, before any restart.
+   Use `CONFIG REWRITE` only when the server has a writable startup configuration
+   and no command-line or environment option overrides `appendonly`.
+   Do not enable AOF solely by editing the configuration and restarting: this can
+   lose the restored data. See [Redis's RDB-to-AOF procedure](https://redis.io/docs/latest/operate/oss_and_stack/management/persistence/#how-i-can-switch-to-aof-if-im-currently-using-dumprdb-snapshots).
+6. Rebuild replication or cluster membership using the appropriate deployment procedure before resuming traffic.
+
+<Warning>
+  Backup-based rollback returns the database to the backup's recovery point.
+  Writes accepted after that point are not recovered automatically. If they
+  must be retained, plan and validate a separate data migration or replay
+  process before proceeding; do not replay a newer AOF into an older release
+  without confirmed compatibility.
+</Warning>
+
+See [Docker persistence](/operations/durability/persistence) for volume configuration and [replication](/operations/replication) for primary/replica setup.
+
+## Compatibility information in release notes
+
+Each FalkorDB release must link to this policy and explicitly state:
+
+- The graph encoding written and the graph encodings readable.
+- Whether the storage format changed, including an explicit **no storage-format change** statement when it did not.
+- The supported upgrade sources and rollback targets, including whether rollback can reuse upgraded persistence or requires a pre-upgrade backup.
+- The bundled Redis/Valkey and other module versions, and any separate persistence or downgrade restrictions.
+- Any replication, configuration, or feature restrictions that affect the transition.
+
+An omitted compatibility statement is not confirmation of cross-minor or cross-major rollback support. Use this policy together with the source and target release notes, and confirm any missing information before changing a production deployment.

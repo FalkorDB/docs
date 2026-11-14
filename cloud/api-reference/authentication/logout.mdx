@@ -1,0 +1,27 @@
+---
+title: "Sign out"
+sidebarTitle: "Sign out"
+api: "POST https://api.omnistrate.cloud/2022-09-01-00/logout"
+description: "End the current session and clear the session cookies."
+---
+
+Invalidates the current session. The response clears the `omnistrate_token` and `omnistrate_refresh_token` cookies.
+
+## Authorization
+
+<ParamField header="Cookie" type="string" required>
+  Session cookie set by [Sign in](/cloud/api-reference/authentication/signin): `omnistrate_token=<jwt>`.
+</ParamField>
+
+## Response
+
+Returns `200 OK` with an empty body.
+
+```bash cURL
+curl -X POST https://api.omnistrate.cloud/2022-09-01-00/logout \
+  -b cookies.txt -c cookies.txt
+```
+
+## Errors
+
+See [Error](/cloud/api-reference/schemas#error) for the error response shape.

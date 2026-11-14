@@ -1,0 +1,114 @@
+---
+title: "Create an instance"
+description: "Create a FalkorDB Cloud instance from the console: choose a tier, deployment type, cloud provider, and region, then set your database credentials."
+---
+
+An instance is a running FalkorDB deployment. It can be a single node or a replicated or clustered setup, depending on the tier. This guide uses the FalkorDB Cloud console. To do the same with the API, see the [Quickstart](/cloud/quickstart).
+
+## Before you begin
+
+- [Sign up](/cloud/console/sign-up) for a FalkorDB Cloud account.
+- For a paid tier, [add a payment method](/cloud/console/billing).
+- For a private Enterprise deployment, [create a customer network](/cloud/operations/customer-networks) first.
+
+## Create the instance
+
+<Steps>
+  <Step title="Open the create form">
+    In the sidebar, open **Deployments** > **Instances** and select **Create**. The **Create Deployment Instance** form opens.
+
+    <Frame>
+      ![The Deployment Instances page with the Stop, Start, Modify, Delete, Connect, Create, and Actions buttons](/cloud/images/console/instances-list.png)
+    </Frame>
+  </Step>
+  <Step title="Choose a plan">
+    Under **Subscription Plan**, choose a tier: **FalkorDB Free**, **FalkorDB Startup**, **FalkorDB Pro**, **FalkorDB Enterprise**, or **FalkorDB Enterprise BYOA**. If you haven't subscribed to the plan yet, select **Subscribe** on its card.
+
+    If you have more than one subscription to the plan, pick one under **Subscription**.
+
+    <Frame>
+      ![The Standard Information card of the Create Deployment Instance form, with the subscription plan cards, Subscription, Cloud Provider, and Region](/cloud/images/console/create-instance-plan.png)
+    </Frame>
+  </Step>
+  <Step title="Choose a deployment type">
+    Under **Resource Name**, choose how the instance is deployed. The list shows only the types your tier supports. Free and Startup instances are always Standalone, so the field doesn't appear for them.
+
+    | Deployment type | What you get | Tiers |
+    | :--- | :--- | :--- |
+    | **Standalone** | A single node | Free, Startup, Pro, Enterprise |
+    | **Single-Zone** | A primary and a replica in one availability zone | Pro, Enterprise |
+    | **Multi-Zone** | A primary and a replica in different availability zones | Pro, Enterprise |
+    | **Cluster-Single-Zone** | A sharded cluster in one availability zone | Enterprise |
+    | **Cluster-Multi-Zone** | A sharded cluster across availability zones | Enterprise |
+
+    You can't change the deployment type later. To move to another type, create a new instance and [import your data](/cloud/operations/export-import#another-instance).
+  </Step>
+  <Step title="Choose a cloud provider and region">
+    Select the **Cloud Provider** logo, then choose a **Region**. Free, Startup, and Pro run on AWS or GCP. Hosted Enterprise adds Azure. Enterprise BYOA runs in your own AWS account. Pick the region closest to your application to keep latency low.
+  </Step>
+  <Step title="Choose the network (Enterprise)">
+    On hosted Enterprise plans, a **Network Configuration** card appears. Other plans don't show it, because their instances always use a public endpoint.
+
+    - **Public** gives the instance a public endpoint.
+    - **Private** places it in a customer network. Choose the network under **Customer Network ID**.
+
+    See [Customer networks](/cloud/operations/customer-networks).
+  </Step>
+  <Step title="Configure the database">
+    Under **Deployment Configuration**, fill in:
+
+    - **Name** and **Description**: help you find the instance later.
+    - **FalkorDB User**: the default username. It's set to `falkordb`.
+    - **FalkorDB Password**: the password for the default user. Use at least 6 characters.
+
+    <Frame>
+      ![The Deployment Configuration card for a Free instance with the Name, Description, FalkorDB User, and FalkorDB Password fields, next to the Deployment Instance Summary](/cloud/images/console/create-instance-config.png)
+    </Frame>
+
+    Paid tiers show more fields:
+
+    - **Memory** or instance size: how much RAM the instance has. See your tier page for sizes and prices.
+    - **Enable TLS**: encrypts connections to the instance. You can't change this after the instance is created.
+    - Persistence and FalkorDB tuning options, such as **FalkorDB Cache Size** and **FalkorDB Result Set Size**. Their defaults work for most workloads.
+
+    You can't change **Enable TLS**, **FalkorDB User**, persistence, or the tuning options after the instance is created.
+
+    <Frame>
+      ![FalkorDB tuning options in the create form for a Startup instance, such as Cache Size, Max Queued Queries, Timeout, and Result Set Size](/cloud/images/console/create-instance-tuning.png)
+    </Frame>
+
+    <Tip>
+      Store the password in a password manager. You can also view it later on the instance's **Instance Details** tab.
+    </Tip>
+  </Step>
+  <Step title="Create">
+    Check the **Deployment Instance Summary** panel and select **Create**.
+
+    The **Launching Your Instance** dialog shows the new **Instance ID** and its **Lifecycle Status**. Most instances are ready within a few minutes.
+  </Step>
+</Steps>
+
+## Check the status
+
+Your instance appears in the **Instances** list with the **Lifecycle Status** **Deploying**. Wait until it's **Running**, then [connect to it](/cloud/console/connect). While the instance deploys, its **Health Status** can show **Unhealthy**. That's expected.
+
+Select the instance name to open its detail page. The tabs on that page include:
+
+| Tab | What it's for |
+| :--- | :--- |
+| **Instance Details** | Configuration, FalkorDB version, and parameters such as the username |
+| **Connectivity** | The endpoint you connect to. See [Connect to your instance](/cloud/console/connect). |
+| **Nodes** | Each node's endpoint, zone, and health |
+| **User Access** | Extra database users. See [User management](/cloud/operations/user-management). |
+| **Metrics** | The monitoring dashboard (not on Free or Enterprise BYOA). See [Monitoring dashboard](/cloud/operations/monitoring-dashboard). |
+| **Audit Logs** | Who changed the instance, and when |
+| **Backups** and **Snapshots** | Automatic backups and restores (Startup and above). See [Backups and snapshots](/cloud/operations/backups-snapshots). |
+| **Import/Export RDB** | Load or save your data as an RDB file. See [Export and import](/cloud/operations/export-import). |
+
+## Change, stop, or delete an instance
+
+From the **Instances** list, select the instance and use the toolbar:
+
+- **Modify** changes the name, description, or FalkorDB password. On the Startup, Pro, and Enterprise tiers it can also change the instance size. See [Upgrading instances](/cloud/operations/upgrading-instances).
+- **Stop** and **Start** pause and resume the instance. On paid tiers, an instance that stays stopped is removed after 14 days. Free instances are stopped after 1 day without use and deleted after 7 days. See your tier page for details.
+- **Delete** removes the instance. Type `deleteme` to confirm. On paid tiers, you can choose **Take final snapshot before deletion** to keep a copy of the data.
