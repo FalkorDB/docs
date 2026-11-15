@@ -7,7 +7,7 @@ description: "Install Auryn and build a knowledge graph from a local repository 
 No server and no Docker. Quickstart starts an embedded FalkorDB, builds a graph, and opens the viewer at `http://127.0.0.1:8080`. Install Auryn first:
 
 ```bash
-uv tool install "falkordb-auryn[all,embedded]"
+pip install falkordb-auryn
 ```
 
 Then point it at a repository on your machine:
@@ -19,7 +19,7 @@ auryn quickstart path/to/your/repo
 Your repository opens in the viewer. Search, expand, and trace any symbol.
 
 <Info>
-  **Requires** Python 3.12+ and [uv](https://docs.astral.sh/uv/). **Platforms:** macOS, Linux, and Windows via WSL2.
+  **Requires** Python 3.12+. Runs on macOS and Linux (Windows via WSL2). `falkordb-auryn` is batteries-included — every language plus the in-process embedded database, no extras needed. Add live-database drivers with `pip install "falkordb-auryn[all]"`, or do an isolated tool install with `uv tool install falkordb-auryn`.
 </Info>
 
 ## Next steps

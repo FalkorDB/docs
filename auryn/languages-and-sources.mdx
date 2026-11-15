@@ -1,10 +1,10 @@
 ---
 title: "Auryn Languages & Sources"
 sidebarTitle: "Languages & sources"
-description: "Auryn detects every file-based language automatically in one pass across sixteen languages, plus live SQL and Oracle schemas. Install only the extras you need."
+description: "Auryn auto-detects every file-based language in one pass across sixteen languages, plus live SQL and Oracle schemas — all bundled in one install, with lean single-language installs available."
 ---
 
-Every file-based language is detected automatically in one pass. Install only the ones you need, e.g. `uv tool install "falkordb-auryn[python,csharp]"`, or everything with `[all]`. Languages marked `deep` also get a full semantic analysis on top of the structural pass.
+Every file-based language is detected automatically in one pass. `pip install falkordb-auryn` includes **every** language below plus the embedded database — nothing else to install. For a lean, single-language setup, install just that language's package instead (e.g. `pip install auryn-python`). Languages marked `deep` also get a full semantic analysis on top of the structural pass.
 
 | Source | Extra | Analysis |
 | :--- | :--- | :--- |
@@ -19,4 +19,4 @@ Every file-based language is detected automatically in one pass. Install only th
 | Oracle (live database) | `[oracle-live]` | full grammar |
 | SQL schema (live, any dialect) | `[sql]` `[sql-all]` | schema reflection |
 
-Live databases are read with `auryn run sql` or `auryn run oracle`. Without the .NET SDK, C# falls back to the structural pass automatically.
+Live databases are read with `auryn run sql` or `auryn run oracle`; their drivers (`oracledb` / `postgres` / `mysql`) are the one thing not bundled by default — add them with `pip install "falkordb-auryn[all]"` (or `[oracle-live]` / `[sql-all]`). Without the .NET SDK, C# falls back to the structural pass automatically.
