@@ -1,0 +1,21 @@
+---
+title: "Auryn Languages & Sources"
+sidebarTitle: "Languages & sources"
+description: "Auryn detects every file-based language automatically in one pass across fifteen languages, plus live SQL and Oracle schemas. Install only the extras you need."
+---
+
+Every file-based language is detected automatically in one pass. Install only the ones you need, e.g. `uv tool install "falkordb-auryn[python,csharp]"`, or everything with `[all]`. Languages marked `deep` also get a full semantic analysis on top of the structural pass.
+
+| Source | Extra | Analysis |
+| :--- | :--- | :--- |
+| Python | `[python]` | deep |
+| C# | `[csharp]` | deep · needs the .NET SDK |
+| TypeScript · JavaScript | `[typescript]` | structural |
+| Java · C · C++ | `[java]` `[c]` `[cpp]` | structural |
+| Go · Rust · PHP · Julia | `[go]` `[rust]` `[php]` `[julia]` | structural |
+| Ruby · Kotlin · Swift · Bash | `[ruby]` `[kotlin]` `[swift]` `[bash]` | structural |
+| PL/SQL files | `[oracle]` | full grammar |
+| Oracle (live database) | `[oracle-live]` | full grammar |
+| SQL schema (live, any dialect) | `[sql]` `[sql-all]` | schema reflection |
+
+Live databases are read with `auryn run sql` or `auryn run oracle`. Without the .NET SDK, C# falls back to the structural pass automatically.

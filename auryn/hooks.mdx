@@ -1,0 +1,17 @@
+---
+title: "Auryn Hooks: Add Your Own Graph Connections"
+sidebarTitle: "Hooks"
+description: "A hook adds your own connections to the Auryn graph after every ingest and refresh — for example, linking each test to the function it covers."
+---
+
+A hook adds your own connections to the graph after every ingest and refresh — say, linking each test to the function it covers. Drop a Python file with a `run(writer, repo, target_sha)` function into `~/.auryn/hooks/`. No packaging needed.
+
+```bash
+auryn hooks new link-tests                # scaffold ~/.auryn/hooks/link_tests.py
+auryn hooks list                          # every hook and whether it's on
+auryn hooks disable link-tests --repo .   # off for this repo only
+```
+
+<Note>
+  Hooks only ever load from your home folder, never from a repository, so ingesting code you don't trust can't run one. The worked example is in `docs/authoring-a-hook.md` in the [Auryn repository](https://github.com/FalkorDB/Auryn).
+</Note>

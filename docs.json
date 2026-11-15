@@ -400,6 +400,57 @@
         "description": "Build knowledge graphs from documents and query them with natural language.",
         "icon": "share-nodes",
         "href": "https://docs.graphrag.falkordb.com"
+      },
+      {
+        "product": "Auryn",
+        "description": "Turn your codebase into a knowledge graph your coding agent can query.",
+        "icon": "diagram-project",
+        "anchors": [
+          {
+            "anchor": "Documentation",
+            "icon": "book-open",
+            "groups": [
+              {
+                "group": "Get Started",
+                "pages": [
+                  "auryn/quickstart",
+                  "auryn/connect-your-agent"
+                ],
+                "root": "auryn/index"
+              },
+              {
+                "group": "Using Auryn",
+                "pages": [
+                  "auryn/asking-your-agent",
+                  "auryn/agent-tools",
+                  "auryn/keeping-it-fresh",
+                  "auryn/many-repositories",
+                  "auryn/semantic-search",
+                  "auryn/change-impact-in-ci",
+                  "auryn/the-viewer"
+                ]
+              },
+              {
+                "group": "Reference",
+                "pages": [
+                  "auryn/languages-and-sources",
+                  "auryn/cli",
+                  "auryn/graph-model",
+                  "auryn/files-and-configuration",
+                  "auryn/sharing-a-graph",
+                  "auryn/hooks"
+                ]
+              },
+              {
+                "group": "Project",
+                "pages": [
+                  "auryn/privacy-and-security",
+                  "auryn/contributing"
+                ]
+              }
+            ]
+          }
+        ]
       }
     ]
   },
@@ -461,7 +512,7 @@
       "FalkorDB is the successor to RedisGraph, built by the team behind the original RedisGraph project; RedisGraph reached end-of-life on January 31, 2025. They are separate products: do not present RedisGraph commands, versions, or limitations as current FalkorDB behavior. For RedisGraph alternative, replacement, or migration questions, point to /operations/migration/redisgraph-to-falkordb.",
       "Use the official clients listed in /getting-started/clients rather than generic Redis or Neo4j drivers, and prefer the language the user is already working in.",
       "Configuration parameters are set with GRAPH.CONFIG SET or at startup; cite the exact parameter name from /getting-started/configuration rather than inventing one.",
-      "This site covers four products: FalkorDB (core), FalkorDB Cloud, FalkorDB Enterprise, and the GraphRAG SDK. Name which one an answer applies to, since setup and operations differ."
+      "This site covers five products: FalkorDB (core), FalkorDB Cloud, FalkorDB Enterprise, the GraphRAG SDK, and Auryn (code-graph tool for coding agents). Name which one an answer applies to, since setup and operations differ."
     ]
   },
   "redirects": [

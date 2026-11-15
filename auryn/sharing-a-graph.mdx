@@ -1,0 +1,22 @@
+---
+title: "Sharing an Auryn Graph"
+sidebarTitle: "Sharing a graph"
+description: "An Auryn graph is a single file, so sharing one is a copy. Whoever receives it gets the indexes and embeddings too, without re-ingesting."
+---
+
+A graph is a single file, so sharing one is a copy. Whoever receives it gets everything — indexes and embeddings included — without re-ingesting.
+
+```bash
+# send
+auryn stop
+cp ~/.auryn/store.db my-project.rdb
+
+# receive
+auryn stop
+cp my-project.rdb ~/.auryn/store.db
+auryn list
+```
+
+<Warning>
+  Stop the database on both ends first, and use matching FalkorDB versions on both sides. Details are in `docs/portability.md` in the [Auryn repository](https://github.com/FalkorDB/Auryn).
+</Warning>

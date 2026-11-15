@@ -11,12 +11,14 @@ acyclic
 Addon
 addon
 addons
+ADRs
 AG2
 ag2
 agentic
 AgentOS
 AGPLv
 AGPLv3
+Aider
 ai
 Aldis
 algo
@@ -28,6 +30,7 @@ Analytics
 analytics
 ANN
 Anthropic
+Antigravity
 AOF
 ApeCloud
 apecloud
@@ -51,6 +54,8 @@ atomicity
 auth
 autocomplete
 autocompletion
+Auryn
+auryn
 AutoGen
 autogen
 Autowired

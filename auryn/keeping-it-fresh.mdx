@@ -1,0 +1,17 @@
+---
+title: "Keeping Your Auryn Graph Fresh"
+sidebarTitle: "Keeping it fresh"
+description: "Auryn never rebuilds from scratch. Each refresh works out what changed and updates only that, so unchanged code costs nothing and switching branches is fast."
+---
+
+Auryn never rebuilds from scratch. Each refresh works out what changed and updates only that, so unchanged code costs nothing and switching branches is as fast as moving forward. Pick the trigger at install, or run it yourself:
+
+```bash
+auryn sync .            # refresh this repo now
+auryn watch --status    # is the on-save watcher running?
+auryn list              # what's ingested, at which commit
+```
+
+<Tip>
+  Choose when refreshes happen — on every commit, on every save, or only when you run `auryn sync` — while connecting your agent. See [Connect your agent](/auryn/connect-your-agent).
+</Tip>

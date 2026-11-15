@@ -1,0 +1,32 @@
+---
+title: "Auryn Graph Model"
+sidebarTitle: "Graph model"
+description: "Every language Auryn reads writes into the same graph vocabulary of nodes and relationships, so queries like who calls this work the same across languages."
+---
+
+Every language writes into the same vocabulary, so "who calls this" works the same in Go as in C#. Useful if you write your own Cypher.
+
+## Nodes
+
+| Group | Labels |
+| :--- | :--- |
+| Code | `Function` · `Method` · `Parameter` |
+| Types | `Class` · `Interface` · `Struct` · `Enum` |
+| Structure | `Project` · `Package` · `Module` · `File` |
+| Web | `APIEndpoint` · `DTO` · `View` |
+| Database routines | `Procedure` · `Trigger` |
+| Data | `Database` · `Schema` · `Table` · `Column` |
+
+## Relationships
+
+`CALLS` · `EXTENDS` · `IMPLEMENTS` · `DEPENDS_ON` · `DEFINED_IN` · `HAS_*` · `READS` · `WRITES` · `REFERENCES` · `EXPOSES_ENDPOINT` · `DISPATCHES_TO`
+
+Every function and type carries its `source`, its `doc` comment, and its line span. Each node has a stable `id` that stays the same across refreshes. To see what's in your own graph:
+
+```cypher
+CALL db.labels()
+CALL db.relationshipTypes()
+MATCH (n) RETURN labels(n)[0] AS label, count(*) ORDER BY count(*) DESC
+```
+
+The full per-language schema is in `docs/graph-model.md` in the [Auryn repository](https://github.com/FalkorDB/Auryn).
