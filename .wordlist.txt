@@ -167,6 +167,7 @@ csv
 CSVs
 CTE
 Ctrl
+CUDA
 Cursor
 Customizable
 customizable
