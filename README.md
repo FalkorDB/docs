@@ -7,13 +7,15 @@
 
 Welcome to the FalkorDB documentation repository. This repository contains the source files for [https://docs.falkordb.com](https://docs.falkordb.com), published with [Mintlify](https://mintlify.com).
 
-FalkorDB documentation spans three repositories, presented to readers as three products in a single site:
+FalkorDB documentation spans several repositories, presented to readers as multiple products in a single site:
 
 | Product | Repository |
 | --- | --- |
 | FalkorDB (this repo) | [FalkorDB/docs](https://github.com/FalkorDB/docs) |
 | FalkorDB Cloud | [FalkorDB/falkordb-cloud-docs](https://github.com/FalkorDB/falkordb-cloud-docs) |
 | FalkorDB Enterprise | [FalkorDB/FalkorDB-Enterprise](https://github.com/FalkorDB/FalkorDB-Enterprise) |
+| GraphRAG SDK | [FalkorDB/GraphRAG-SDK](https://github.com/FalkorDB/GraphRAG-SDK) |
+| Auryn | [FalkorDB/docs](https://github.com/FalkorDB/docs) (this repo, `auryn/`) |
 
 The product switcher is configured under `navigation.products` in `docs.json`.
 

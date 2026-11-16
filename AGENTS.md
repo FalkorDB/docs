@@ -5,7 +5,7 @@ This repository holds the **FalkorDB core documentation**, published with
 
 FalkorDB documentation is split across four repositories and aggregated into a
 single Mintlify deployment, so search and the AI assistant index every product
-together. Each repository owns one entry in `navigation.products`:
+together. Each repository owns at least one entry in `navigation.products`:
 
 | Product | Repository | Mounted at |
 | --- | --- | --- |
@@ -13,9 +13,12 @@ together. Each repository owns one entry in `navigation.products`:
 | FalkorDB Cloud | `FalkorDB/mintlify-docs` | `/cloud` |
 | FalkorDB Enterprise | `FalkorDB/FalkorDB-Enterprise` (`docs/`) | `/enterprise` |
 | GraphRAG SDK | `FalkorDB/GraphRAG-SDK` (`docs/`) | `/graphrag` |
+| Auryn | `FalkorDB/docs` (this repo, `auryn/`) | `/auryn` |
 
 Only edit FalkorDB core content here. The other products live in their own
-repositories.
+repositories. **Auryn is the exception**: its pages are maintained inline in
+this repo under `auryn/` (not aggregated from a separate source), so it has no
+`scripts/sources.json` entry.
 
 ## Aggregation
 
