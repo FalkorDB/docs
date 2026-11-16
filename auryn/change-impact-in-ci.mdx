@@ -18,3 +18,7 @@ Pick what trips the gate with `--fail-on` (default `none`); when a gate trips, t
 - `any` — fails when the change affects anything at all.
 - `cross-service` — fails only when the change reaches another service.
 - `endpoint` — fails only when the change reaches an API endpoint.
+
+<Note>
+  Impact is read from the graph, so ingest the repository first — changes in files that aren't indexed yet map to no symbols and won't show up in the report.
+</Note>
