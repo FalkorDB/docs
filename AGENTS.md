@@ -23,8 +23,9 @@ this repo under `auryn/` (not aggregated from a separate source), so it has no
 ## Aggregation
 
 Each repository keeps the full `navigation.products` list and populates only its
-own product, linking to the others with `href`. That way every repository still
-builds and previews on its own.
+own product(s) — this repo populates both FalkorDB and the inline Auryn product —
+linking to the others with `href`. That way every repository still builds and
+previews on its own.
 
 `scripts/aggregate_docs.py` turns those four repositories into one site: it
 clones each source listed in `scripts/sources.json`, copies its content under
@@ -43,8 +44,9 @@ python3 scripts/aggregate_docs.py --output build                  # clone the so
 `docs-updated` repository dispatch from a source repository, and nightly. It
 publishes to the `docs-site` branch, which is the branch Mintlify deploys.
 
-Adding a product means adding it to `navigation.products` here as an `href`
-placeholder and appending an entry to `scripts/sources.json`.
+Adding a product normally means adding it to `navigation.products` here as an
+`href` placeholder and appending an entry to `scripts/sources.json` (Auryn is the
+inline exception described above).
 
 ## Authoring rules
 
