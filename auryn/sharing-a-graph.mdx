@@ -1,0 +1,24 @@
+---
+title: "Sharing an Auryn Graph"
+sidebarTitle: "Sharing a graph"
+description: "The Auryn store is a single file holding every graph; copying it shares them all — indexes and embeddings included — and replaces the recipient's store, so back it up first."
+---
+
+Auryn keeps its graphs in a single FalkorDB database file, so sharing is a file copy — the recipient loads it instantly, indexes and embeddings included, with no re-ingest.
+
+<Warning>
+  The file is the **whole store**, not one graph. It holds **every** graph you've ingested — don't share it if it contains private repositories — and importing it **replaces** the recipient's entire store. Back up the destination first.
+</Warning>
+
+```bash
+# send — flush to disk, then copy the store
+auryn stop
+cp "${AURYN_HOME:-$HOME/.auryn}/store.db" my-project.rdb
+
+# receive — stop the database, then replace the store
+auryn stop
+cp my-project.rdb "${AURYN_HOME:-$HOME/.auryn}/store.db"
+auryn list
+```
+
+Stop the database on both ends first, and use matching FalkorDB versions on both sides. For a remote backend, snapshot the server's `dump.rdb` instead. Details are in `docs/portability.md` in the [Auryn repository](https://github.com/FalkorDB/Auryn).

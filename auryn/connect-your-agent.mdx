@@ -1,0 +1,54 @@
+---
+title: "Connect Your Coding Agent to Auryn over MCP"
+sidebarTitle: "Connect your agent"
+description: "Run auryn install once to register the Auryn MCP server with every coding agent on your machine, choose where the graph lives, and set when it refreshes."
+---
+
+The viewer is a one-off look. The real payoff is your agent using the graph on its own. Run install once:
+
+```bash
+auryn install
+```
+
+Install asks two questions, then registers the `auryn` MCP server with every agent it finds: Claude Code, Codex, Cursor, Windsurf, GitHub Copilot, VS Code Copilot Chat, Gemini CLI, and Antigravity. Aider and `AGENTS.md`-aware agents get written instructions instead. It only writes to `~/.auryn` and your agent's own config, never to your repository.
+
+### 1 · Where the graph lives
+
+| Option | What it means |
+| :--- | :--- |
+| `local` | A bundled FalkorDB that starts when needed. No server, no Docker, no account. |
+| `remote` | A FalkorDB you already run, shared by your team. |
+
+### 2 · When it refreshes
+
+| Trigger | What it means |
+| :--- | :--- |
+| `commit` | After every git commit. |
+| `save` | Whenever a file changes. |
+| `manual` | Only when you run `auryn sync`. |
+
+Restart your agent and you're done. Each repository you open gets its own graph, built the first time you ask about it.
+
+For a scripted setup, answer both questions up front. This uses the local database and refreshes on every commit:
+
+```bash
+auryn install -y --trigger commit
+```
+
+To use your own FalkorDB instead, add `--backend remote --host <host> --port <port>`.
+
+## Any other MCP client
+
+If your agent isn't detected, point it at the server yourself. Most clients take a config like this:
+
+```json
+{
+  "mcpServers": {
+    "auryn": { "command": "auryn", "args": ["mcp"] }
+  }
+}
+```
+
+<Tip>
+  Not sure what to ask once it's connected? See [Asking your agent](/auryn/asking-your-agent) and the full list of [Agent tools](/auryn/agent-tools).
+</Tip>

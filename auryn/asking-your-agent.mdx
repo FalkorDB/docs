@@ -1,0 +1,24 @@
+---
+title: "Asking Your Agent: Querying Code with Auryn"
+sidebarTitle: "Asking your agent"
+description: "You don't call Auryn directly. Ask your coding agent in plain language and it decides which graph lookups to make, answering with the files and lines it relied on."
+---
+
+You don't call Auryn directly. Ask your agent in plain language; it decides which lookups to make and answers with the files and lines it relied on.
+
+## Example
+
+> **You:** What breaks if I change the signature of `charge_card`?
+
+Behind the scenes, the agent walks the graph:
+
+```text
+auryn_status()                  → no graph for this repo yet
+index_repository(path='.')      → functions, calls, endpoints, inheritance
+locate(name="charge_card")      → app/billing.py:9
+impact_of(id=…)                 → create_charge  →  POST /charges
+```
+
+> **Agent:** One direct caller: `create_charge` in `app/api.py`, which handles **POST /charges** — so that endpoint's contract changes too. Update both together.
+
+The agent picks the tools; you just ask. See the full set in [Agent tools](/auryn/agent-tools), and [Semantic search](/auryn/semantic-search) for when it doesn't know what a thing is called.

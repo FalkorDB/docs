@@ -1,0 +1,19 @@
+---
+title: "Working Across Many Repositories with Auryn"
+sidebarTitle: "Many repositories"
+description: "Ingest several repositories under one graph name so calls from one repository into another connect, and your coding agent can follow a request across the whole system."
+---
+
+By default every repository gets its own graph. When a system spans several repositories — a web front end, an API, a database — ingest them under one name. Calls from one repository into another connect, so your agent can follow a request across the whole system.
+
+```bash
+auryn ingest dir ../web-portal     --graph-name shop
+auryn ingest dir ../api-gateway    --graph-name shop
+auryn ingest dir ../platform-core  --graph-name shop
+```
+
+Order doesn't matter. A call into a repository that isn't ingested yet is kept as a placeholder and connects itself once that repository arrives.
+
+<Tip>
+  See `demo/multi-repo` in the [Auryn repository](https://github.com/FalkorDB/Auryn) for a working example.
+</Tip>
