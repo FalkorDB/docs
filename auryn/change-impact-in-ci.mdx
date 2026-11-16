@@ -12,4 +12,9 @@ auryn impact --base main --head HEAD --json        # for a PR bot
 auryn impact --base main --fail-on cross-service   # fail the build
 ```
 
-`--fail-on` accepts `none`, `any`, `cross-service`, or `endpoint`.
+Pick what trips the gate with `--fail-on` (default `none`); when a gate trips, the command exits with status `2`:
+
+- `none` — never fails; report only.
+- `any` — fails when the change affects anything at all.
+- `cross-service` — fails only when the change reaches another service.
+- `endpoint` — fails only when the change reaches an API endpoint.

@@ -21,12 +21,18 @@ Every language writes into the same vocabulary, so "who calls this" works the sa
 
 `CALLS` · `EXTENDS` · `IMPLEMENTS` · `DEPENDS_ON` · `DEFINED_IN` · `HAS_*` · `READS` · `WRITES` · `REFERENCES` · `EXPOSES_ENDPOINT` · `DISPATCHES_TO`
 
-Every function and type carries its `source`, its `doc` comment, and its line span. Each node has a stable `id` that stays the same across refreshes. To see what's in your own graph:
+Every function and type carries its `source`, its `doc` comment, and its line span. Each node has a stable `id` that stays the same across refreshes. To see what's in your own graph, run these one at a time:
 
 ```cypher
 CALL db.labels()
+```
+
+```cypher
 CALL db.relationshipTypes()
-MATCH (n) RETURN labels(n)[0] AS label, count(*) ORDER BY count(*) DESC
+```
+
+```cypher
+MATCH (n) RETURN labels(n)[0] AS label, count(*) AS count ORDER BY count DESC
 ```
 
 The full per-language schema is in `docs/graph-model.md` in the [Auryn repository](https://github.com/FalkorDB/Auryn).

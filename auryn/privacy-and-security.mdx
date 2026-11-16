@@ -10,11 +10,11 @@ Your code stays yours.
   <Card title="Runs where you do" icon="server">
     On your machine or your own FalkorDB. No hosted service, no telemetry.
   </Card>
-  <Card title="Your agent can't write" icon="lock">
-    Read tools only issue read-only queries; the database rejects anything else.
+  <Card title="Read tools can't write" icon="lock">
+    Read tools only issue read-only queries the database enforces; only the two indexing tools build the graph.
   </Card>
   <Card title="Your repo stays clean" icon="broom">
-    Install touches only `~/.auryn` and your agent's config.
+    Install touches only your Auryn home (`~/.auryn` by default) and your agent's config — never your repository.
   </Card>
   <Card title="Local only" icon="location-dot">
     The bundled database and the viewer listen on localhost.
@@ -27,5 +27,5 @@ Install records everything it changed, and uninstall reverses exactly that.
 
 ```bash
 auryn uninstall            # keeps your graphs
-auryn uninstall --purge    # also deletes ~/.auryn and every graph
+auryn uninstall --purge    # also deletes ~/.auryn and the graphs it holds
 ```
