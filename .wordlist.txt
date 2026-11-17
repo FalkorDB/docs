@@ -845,6 +845,7 @@ tenantId
 TenantLabel
 Text2SQL
 TF
+themeable
 thpool
 TLS
 toBoolean
@@ -898,6 +899,7 @@ UDF
 UDFs
 udf
 UI
+ui
 unaliased
 undirected
 UNIQIE
