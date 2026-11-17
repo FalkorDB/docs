@@ -11,7 +11,8 @@ toolkit of themeable, accessible React components. Use
 [`@falkordb/ui`](https://www.npmjs.com/package/@falkordb/ui) to build your own
 FalkorDB-styled React interfaces. FalkorDB Browser also uses this toolkit.
 
-Install the package and import its styles once in your app:
+React 18.3+ or 19 is a peer dependency. Install the package and import its
+styles once in your app:
 
 ```bash
 npm install @falkordb/ui
@@ -28,9 +29,9 @@ covers setup and component usage. Browse the components and live examples in
 
 ## Graph visualization with Canvas
 
-The same repository also publishes
-[`@falkordb/canvas`](https://www.npmjs.com/package/@falkordb/canvas), a
-standalone web component for graph visualization. It is a separate package
-from `@falkordb/ui`; FalkorDB Browser uses both. Install it with
-`npm install @falkordb/canvas`, then follow the [Canvas guide](/browser/canvas)
-to render graph data.
+[`@falkordb/canvas`](https://www.npmjs.com/package/@falkordb/canvas) is a
+standalone web component for graph visualization, published from the
+[Canvas package in the `falkordb-ui` repository](https://github.com/FalkorDB/falkordb-ui/tree/main/web-components/canvas).
+It is a separate package from `@falkordb/ui`; FalkorDB Browser uses both.
+Install it with `npm install @falkordb/canvas`, then follow the
+[Canvas guide](/browser/canvas) to render graph data.
