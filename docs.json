@@ -375,7 +375,8 @@
                     ],
                     "root": "browser/ui/index"
                   },
-                  "browser/canvas"
+                  "browser/canvas",
+                  "browser/ui-toolkit"
                 ],
                 "root": "browser/index"
               }
