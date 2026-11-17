@@ -23,6 +23,17 @@ import "@falkordb/ui/styles.css";
 import { Button } from "@falkordb/ui";
 ```
 
+The base rules remove focus outlines. To keep keyboard focus visible, add
+this rule to your app CSS. It is outside CSS layers, so it overrides the
+layered reset:
+
+```css
+:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+```
+
 The [getting-started guide](https://github.com/FalkorDB/falkordb-ui/blob/main/docs/getting-started.md)
 covers setup and component usage. Browse the components and live examples in
 [Storybook](https://falkordb.github.io/falkordb-ui/).
