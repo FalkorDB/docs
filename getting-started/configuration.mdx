@@ -4,7 +4,7 @@ sidebarTitle: "Configuration"
 description: "Configure FalkorDB with Redis settings and module parameters for threads, cache, timeouts, query limits, and persistence. Adjust settings at load-time or runtime."
 ---
 
-FalkorDB supports the configuration of its host server, [Valkey](https://valkey.io/topics/valkey.conf/) or [Redis](https://redis.io/docs/management/config/), and multiple module configuration parameters. Module parameters work the same on both servers.
+FalkorDB 6.2 supports the configuration of its host server, [Valkey](https://valkey.io/topics/valkey.conf/) or [Redis](https://redis.io/docs/management/config/) 8.0.0 or later, and multiple module configuration parameters. Module parameters work the same on both servers.
 Some of these parameters can only be set at load-time, while other parameters can be set either on load-time or on run-time.
 
 For example, the following command will run the server with global authentication password and 4 threads (on a Valkey image, `VALKEY_ARGS` can be used instead of `REDIS_ARGS`; see [Redis and Valkey](/operations/redis-and-valkey)):
