@@ -12,7 +12,7 @@ What the MCP server gives your agent. Every read tool is read-only by constructi
 | `index_repository` | write | Build or update the graph for a local directory. |
 | `ingest_repository` | write | Build or update the graph from a git repository. |
 | `locate` | read | Find symbols by name — the usual way in once a graph exists. |
-| `search_code` | read | Search by meaning when you don't know the name. Needs [`auryn embed`](/auryn/semantic-search) first. |
+| `search_code` | read | Search by meaning when you don't know the name. Uses the [semantic index](/auryn/semantic-search), built automatically after each ingest. |
 | `get_context` | read | One symbol's details, source, and immediate neighbors. |
 | `who_calls` | read | Everything that calls a symbol, as many hops deep as needed. |
 | `callees` | read | Everything a symbol calls, as many hops deep as needed. |

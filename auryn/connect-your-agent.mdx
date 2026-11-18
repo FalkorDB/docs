@@ -10,7 +10,7 @@ The viewer is a one-off look. The real payoff is your agent using the graph on i
 auryn install
 ```
 
-Install asks two questions, then registers the `auryn` MCP server with every agent it finds: Claude Code, Codex, Cursor, Windsurf, GitHub Copilot, VS Code Copilot Chat, Gemini CLI, and Antigravity. Aider and `AGENTS.md`-aware agents get written instructions instead. It only writes to `~/.auryn` and your agent's own config, never to your repository.
+Install asks two questions, then sets up the `auryn` MCP server for every agent it finds: Claude Code, Codex, Cursor, Windsurf, GitHub Copilot, VS Code Copilot Chat, Gemini CLI, Antigravity, and Aider — plus any agent that reads `AGENTS.md` or connects over MCP. The MCP-native agents get the server registered automatically; Aider and other `AGENTS.md`-aware agents get written instructions instead. It only writes to `~/.auryn` and your agent's own config, never to your repository.
 
 ### 1 · Where the graph lives
 
