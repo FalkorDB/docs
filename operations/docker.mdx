@@ -41,11 +41,12 @@ FalkorDB provides two main Docker images:
 
 ### Valkey and Redis variants
 
-The server images ship either [Valkey](https://valkey.io/) or Redis. Use a
-`-valkey` tag (for example `latest-valkey` or `<version>-valkey`) or a `-redis`
-tag (`latest-redis`, `<version>-redis`) to choose explicitly. On releases
-published with these server-named tags, the plain `latest` and `<version>` tags
-run Valkey; older images, including `6.0.4` and all `4.x` images, run Redis.
+Each server image ships either [Valkey](https://valkey.io/) or Redis. `latest`
+and released `<version>` tags (including `6.0.4` and all `4.x` images) run
+Redis. Valkey images are currently published as `edge` development builds
+(`edge`, `edge-rs`, `edge-rs-valkey`); `edge-rs-redis` is the matching Redis
+development build. See [Redis and Valkey](/operations/redis-and-valkey) for
+details.
 
 <Warning>
   Valkey cannot load save files written by Redis 7.4 and later. Before you run a
@@ -526,7 +527,7 @@ docker-compose config
     The `falkordb/falkordb` image includes both the FalkorDB server and the Browser UI (ports 6379 and 3000). The `falkordb/falkordb-server` image includes only the server (port 6379), making it lighter for production use.
   </Accordion>
   <Accordion title="Do the FalkorDB images run Redis or Valkey?">
-    Either. Use `-valkey` or `-redis` tags to choose. On releases with server-named tags, `latest` and `<version>` run Valkey; older images run Redis. See [Redis and Valkey](/operations/redis-and-valkey).
+    `latest` and released `<version>` tags run Redis. Valkey images are currently available as `edge` development builds (`edge`, `edge-rs`, `edge-rs-valkey`). See [Redis and Valkey](/operations/redis-and-valkey).
   </Accordion>
   <Accordion title="How do I set a password for FalkorDB in Docker?">
     Pass `--requirepass <password>` via the `REDIS_ARGS` environment variable: `-e REDIS_ARGS='--requirepass mypassword'`. For Docker Compose, add it to the environment section.
