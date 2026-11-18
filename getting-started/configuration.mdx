@@ -4,10 +4,10 @@ sidebarTitle: "Configuration"
 description: "Configure FalkorDB with Redis settings and module parameters for threads, cache, timeouts, query limits, and persistence. Adjust settings at load-time or runtime."
 ---
 
-FalkorDB supports [Redis configuration](https://redis.io/docs/management/config/) and multiple module configuration parameters. 
+FalkorDB supports the configuration of its host server, [Valkey](https://valkey.io/topics/valkey.conf/) or [Redis](https://redis.io/docs/management/config/), and multiple module configuration parameters. Module parameters work the same on both servers.
 Some of these parameters can only be set at load-time, while other parameters can be set either on load-time or on run-time.
 
-For example, the following command will run the server with global authentication password and 4 threads:
+For example, the following command will run the server with global authentication password and 4 threads (on a Valkey image, `VALKEY_ARGS` can be used instead of `REDIS_ARGS`; see [Redis and Valkey](/operations/redis-and-valkey)):
 
 ```sh
 docker run -p 6379:6379 -p 3000:3000 -it -e REDIS_ARGS="--requirepass falkordb" -e FALKORDB_ARGS="THREAD_COUNT 4" --rm falkordb/falkordb:latest
@@ -20,7 +20,7 @@ docker run -p 6379:6379 -p 3000:3000 -it -e REDIS_ARGS="--requirepass falkordb" 
 
 ## Setting Configuration Parameters on Module Load
 
-Configuration parameters can be set at load-time by appending arguments after the `--loadmodule` argument when starting a server from the command line or after the `loadmodule` directive in a Redis config file. 
+Configuration parameters can be set at load-time by appending arguments after the `--loadmodule` argument when starting a server from the command line or after the `loadmodule` directive in a Valkey or Redis config file. The examples below use `redis-server`; with Valkey, run `valkey-server` with the same arguments.
 
 ### Examples
 
@@ -522,7 +522,7 @@ Helps prevent excessive JS stack usage.
     **Load-time** parameters can only be set when the FalkorDB module is loaded (via Docker env vars, redis.conf, or MODULE LOAD command). **Run-time** parameters can also be changed while the server is running using `GRAPH.CONFIG SET`. Note that run-time changes are not persisted after server restart.
   </Accordion>
   <Accordion title="How do I set configuration parameters with Docker?">
-    Use the `FALKORDB_ARGS` environment variable: `docker run -p 6379:6379 -e FALKORDB_ARGS='THREAD_COUNT 4 CACHE_SIZE 50' --rm falkordb/falkordb:latest`. For Redis settings like authentication, use the `REDIS_ARGS` variable: `-e REDIS_ARGS='--requirepass mypassword'`.
+    Use the `FALKORDB_ARGS` environment variable: `docker run -p 6379:6379 -e FALKORDB_ARGS='THREAD_COUNT 4 CACHE_SIZE 50' --rm falkordb/falkordb:latest`. For server settings like authentication, use the `REDIS_ARGS` variable (or `VALKEY_ARGS` on a Valkey image): `-e REDIS_ARGS='--requirepass mypassword'`.
   </Accordion>
   <Accordion title="How many threads should I configure for FalkorDB?">
     The `THREAD_COUNT` parameter defaults to your system's logical core count. This controls the maximum concurrent queries. For production workloads, tune this based on your query patterns and available CPU cores. Note that `OMP_THREAD_COUNT` separately controls parallelism *within* individual queries for GraphBLAS computations.

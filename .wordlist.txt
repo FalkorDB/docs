@@ -994,3 +994,5 @@ createNodeUniqueConstraint
 dropNodeUniqueConstraint
 listConstraints
 slowLogReset
+BSD
+RESP

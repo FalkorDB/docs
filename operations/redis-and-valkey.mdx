@@ -1,0 +1,179 @@
+---
+title: "Run FalkorDB on Redis or Valkey"
+sidebarTitle: "Redis and Valkey"
+description: "FalkorDB runs as a module on both Redis and Valkey. Choose a server, pick the matching Docker image tag, pass server arguments, and move a Redis data volume to Valkey."
+---
+
+FalkorDB is a module that loads into a server speaking the Redis protocol
+(RESP). It supports two servers:
+
+- **[Valkey](https://valkey.io/)**, the open source (BSD-licensed) fork of Redis
+  maintained under the Linux Foundation.
+- **[Redis](https://redis.io/)** 8.0.0 or later.
+
+The `GRAPH.*` commands, Cypher support, client libraries, and FalkorDB
+configuration parameters are the same on both servers. Clients connect on port
+`6379` either way, so application code does not change when you switch servers.
+
+## Choosing a server
+
+Both servers run FalkorDB with the same feature set. Things that differ:
+
+- **Licensing.** Valkey is BSD-licensed. Check the Redis license that applies to
+  the Redis version you deploy.
+- **Server options.** Each server has options the other does not. A server
+  refuses to start on an option it does not recognize.
+- **Persistence files.** Valkey cannot load save files written by Redis 7.4 and
+  later. Moving existing data from Redis to Valkey needs a one-time migration.
+  See [Moving a data volume from Redis to Valkey](#moving-a-data-volume-from-redis-to-valkey).
+
+## Docker images
+
+FalkorDB images ship one server, Valkey or Redis. Each FalkorDB release is
+published with server-named tags on both `falkordb/falkordb` and
+`falkordb/falkordb-server`:
+
+| Tag | Server |
+| --- | --- |
+| `<version>-valkey`, `latest-valkey` | Valkey |
+| `<version>-redis`, `latest-redis` | Redis |
+| `<version>`, `latest` | Valkey |
+
+<Warning>
+  Images published before server-named tags existed, including `6.0.4` and
+  all `4.x` images, run Redis. When you move an existing data volume to a
+  release whose plain `<version>` or `latest` tag runs Valkey, the data must be
+  migrated first. Pin the `-redis` tag to keep running Redis on that volume.
+</Warning>
+
+### Check which server an image runs
+
+Images label the server they ship and its version:
+
+```bash
+docker image inspect -f '{{index .Config.Labels "com.falkordb.server.name"}} {{index .Config.Labels "com.falkordb.server.version"}}' falkordb/falkordb-server:<tag>
+```
+
+The output is `valkey <version>` or `redis <version>`. An image built before the
+label existed prints `<no value>` and runs Redis.
+
+On a running server, `INFO server` reports the server and its version, and
+`MODULE LIST` shows the loaded FalkorDB module.
+
+### Running a Valkey or Redis image
+
+```bash
+# Valkey
+docker run -p 6379:6379 -it --rm falkordb/falkordb-server:latest-valkey
+
+# Redis
+docker run -p 6379:6379 -it --rm falkordb/falkordb-server:latest-redis
+```
+
+For production, replace `latest-valkey` or `latest-redis` with a tested
+`<version>-valkey` or `<version>-redis` tag.
+
+### Server arguments: `VALKEY_ARGS` and `REDIS_ARGS`
+
+Pass server options with `VALKEY_ARGS` on a Valkey image and `REDIS_ARGS` on a
+Redis image. If the variable for the image's own server is unset or empty, the
+image uses the other one, so an existing `REDIS_ARGS` setting keeps working on a
+Valkey image. The two variables are never combined.
+
+```bash
+docker run -p 6379:6379 -it \
+  -e VALKEY_ARGS="--requirepass yourpassword --appendonly yes" \
+  -e FALKORDB_ARGS="THREAD_COUNT 4" \
+  --rm falkordb/falkordb-server:latest-valkey
+```
+
+<Note>
+  Options that only one server understands make the other refuse to start.
+  Remove Redis-only options from `REDIS_ARGS` before running it on a Valkey
+  image, or set `VALKEY_ARGS` explicitly.
+</Note>
+
+`FALKORDB_ARGS` configures the FalkorDB module and works the same on both
+servers. See [Configuration](/getting-started/configuration).
+
+The `redis-cli` command is available in both images, so health checks such as
+`redis-cli ping` work unchanged. Valkey images also include `valkey-cli`.
+
+## Self-hosting without Docker
+
+Load the FalkorDB module into either server with `--loadmodule` or the
+`loadmodule` configuration directive:
+
+<CodeGroup>
+
+```bash Valkey
+valkey-server --loadmodule /path/to/falkordb.so
+```
+
+```bash Redis
+redis-server --loadmodule /path/to/falkordb.so
+```
+
+</CodeGroup>
+
+Module configuration parameters follow the module path the same way on both
+servers, for example `--loadmodule /path/to/falkordb.so THREAD_COUNT 4`. For
+production, use the server version bundled with the official image of the same
+FalkorDB release, reported by the `com.falkordb.server.version` image label.
+
+## Moving a data volume from Redis to Valkey
+
+Valkey cannot load save files (RDB version 12 and later) written by Redis 7.4
+and later, and FalkorDB's earlier images ran Redis 8. A data volume written by a
+Redis image therefore needs a one-time migration before a Valkey image can use
+it.
+
+A Valkey image checks the data directory before Valkey starts. If it finds files
+written by Redis, the container stops, prints the file names, and leaves the
+volume untouched. You then have two options:
+
+- **Keep the data on Redis.** Run the `-redis` tag of the same release on the
+  volume.
+- **Migrate to Valkey.** In summary:
+  1. Back up the volume and stop application writes.
+  2. On the Redis image, delete FalkorDB's `telemetry{<graph>}` query-statistics
+     streams and any other data type Valkey cannot read, then `SAVE` (and
+     rewrite the AOF if AOF is on).
+  3. Start the Valkey image on the same volume with
+     `-e FALKORDB_REDIS_MIGRATION=1`, verify your graphs with `GRAPH.LIST`, and
+     run `SAVE` to rewrite the data in Valkey's format.
+  4. Remove the container and start the Valkey image again without
+     `FALKORDB_REDIS_MIGRATION`.
+
+Follow the full, step-by-step procedure in
+[Moving a data volume from Redis to Valkey](https://github.com/FalkorDB/FalkorDB/blob/main/docs/valkey-migration.md)
+before migrating production data. Query statistics start again from empty after
+the migration.
+
+<Warning>
+  Graph encoding compatibility does not make Redis and Valkey persistence files
+  interchangeable, and moving back from Valkey to Redis is not covered by this
+  migration. Keep the pre-migration backup and review [Upgrades, Downgrades, and
+  Compatibility](/operations/upgrades-downgrades-compatibility) before changing
+  the server used with an existing volume.
+</Warning>
+
+## Frequently Asked Questions
+
+<AccordionGroup>
+  <Accordion title="Does FalkorDB support Valkey?">
+    Yes. FalkorDB runs as a module on both Valkey and Redis 8.0.0 or later, with the same commands, Cypher support, and configuration parameters. Official Docker images are published for both servers.
+  </Accordion>
+  <Accordion title="Which server does the latest Docker image use?">
+    Releases with server-named tags publish `latest` and `<version>` with Valkey, alongside `latest-valkey`/`<version>-valkey` and `latest-redis`/`<version>-redis`. Older images, including `6.0.4` and all `4.x` images, run Redis. Check the `com.falkordb.server.name` image label to be sure.
+  </Accordion>
+  <Accordion title="Do I need to change my application or client library to use Valkey?">
+    No. Valkey speaks the same RESP protocol, so the FalkorDB client libraries and any Redis client work without changes.
+  </Accordion>
+  <Accordion title="Can I keep using REDIS_ARGS on a Valkey image?">
+    Yes, if `VALKEY_ARGS` is not set. The image falls back to `REDIS_ARGS`. Options that Valkey does not recognize prevent it from starting, so remove Redis-only options or set `VALKEY_ARGS` instead.
+  </Accordion>
+  <Accordion title="Why does my Valkey container refuse to start on an existing volume?">
+    The volume holds save files written by Redis 7.4 or later, which Valkey cannot load. Run the `-redis` image tag on that volume, or migrate the data as described in [Moving a data volume from Redis to Valkey](#moving-a-data-volume-from-redis-to-valkey).
+  </Accordion>
+</AccordionGroup>
