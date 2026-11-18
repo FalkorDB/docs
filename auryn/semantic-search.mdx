@@ -1,14 +1,18 @@
 ---
 title: "Semantic Search in Auryn"
 sidebarTitle: "Semantic search"
-description: "auryn embed adds a local search index over each function's code and docs, so search_code can find a symbol by what it does when the name is unknown."
+description: "Auryn builds a local search index over each function's code and docs automatically after every ingest, so search_code can find a symbol by what it does when the name is unknown."
 ---
 
-Sometimes your agent doesn't know what a thing is called. `auryn embed` adds a search index over each function's code and docs, so [`search_code`](/auryn/agent-tools) can find it by what it does. It's optional, and the embedding model runs locally.
+Sometimes your agent doesn't know what a thing is called. Semantic search lets [`search_code`](/auryn/agent-tools) find a symbol by what it does, over a local index of each function's code and docs.
+
+It's on by default. After every ingest, Auryn builds the embeddings automatically in the background, off the ingest critical path — the graph is queryable the moment ingest finishes, and semantic search sharpens as the vector index fills in. The embedding model runs locally, and `install` no longer asks whether to enable it.
+
+You rarely need to run anything by hand, but `auryn embed` is there to force a build on demand — to finish indexing offline, or to rebuild after switching models:
 
 ```bash
 auryn embed              # only new symbols are processed
 auryn embed --reembed    # rebuild after changing the model
 ```
 
-The local embedding model is set up automatically the first time you run `auryn embed`. Set `AURYN_AUTO_INSTALL=0` to opt out of that automatic install.
+The local embedding model is set up automatically the first time embeddings are built. Set `AURYN_AUTO_INSTALL=0` to opt out of that automatic install.
