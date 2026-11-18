@@ -37,7 +37,7 @@ It works with Claude Code, Codex, Cursor, Windsurf, GitHub Copilot, VS Code Copi
     Auryn is a FalkorDB-powered tool that indexes a codebase into a knowledge graph of functions, types, tables, and endpoints, and exposes it to coding agents over the Model Context Protocol (MCP). Your agent queries the graph to answer questions about how your code fits together.
   </Accordion>
   <Accordion title="Which coding agents does Auryn support?">
-    Auryn sets itself up for Claude Code, Codex, Cursor, Windsurf, GitHub Copilot, VS Code Copilot Chat, Gemini CLI, Antigravity, and Aider — plus any agent that reads `AGENTS.md` or connects over MCP. The MCP-native agents get the `auryn` server registered automatically; Aider and other `AGENTS.md`-aware agents get written instructions instead. See [Connect your agent](/auryn/connect-your-agent).
+    Auryn registers the `auryn` MCP server automatically with the MCP-native agents it detects: Claude Code, Codex, Cursor, Windsurf, GitHub Copilot, VS Code Copilot Chat, Gemini CLI, and Antigravity. Aider and other `AGENTS.md`-aware agents get written instructions instead, and any other MCP client can be configured manually. See [Connect your agent](/auryn/connect-your-agent).
   </Accordion>
   <Accordion title="Does Auryn send my code anywhere?">
     No. Auryn runs on your machine against a bundled FalkorDB or your own instance, with no hosted service and no telemetry. Read tools only ever issue read-only queries. See [Privacy & security](/auryn/privacy-and-security).
