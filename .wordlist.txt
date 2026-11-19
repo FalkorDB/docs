@@ -88,6 +88,7 @@ booleans
 bottlenecked
 Brin
 Bundler
+bundler
 BYOC
 Cailliau
 callbackUrl
@@ -584,6 +585,7 @@ numerics
 NumItems
 ObjectPool
 observability
+offscreen
 OGM
 ogm
 Ollama
@@ -718,6 +720,8 @@ reltypeList
 relTypes
 removeKey
 removeKeys
+renderer
+renderers
 replaceRegEx
 replicas
 Reranking
@@ -942,6 +946,7 @@ VPNs
 WaitingQueries
 walkthrough
 WCC
+WebGL
 weightProp
 whitespace
 Winkler
