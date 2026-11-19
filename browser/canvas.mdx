@@ -12,6 +12,7 @@ description: "FalkorDB Canvas – a standalone web component for visualizing Fal
 
 - **Force-directed graph layout** – Automatic positioning using D3 force simulation with smart collision detection
 - **Multiple layout modes** – Switch between `force`, `tree`, and `radial` graph views
+- **2D and 3D** – Render a flat graph or explore it in 3D using WebGL
 - **Interactive** – Click, hover, and right-click interactions on nodes, links, and background
 - **Theme support** – Light and dark mode with customizable colors
 - **Performance** – Optimized rendering with HTML5 Canvas, including viewport culling and low-zoom draw skipping for large graphs
@@ -34,6 +35,10 @@ npm install @falkordb/canvas
 ## Quick Start
 
 ### Vanilla JavaScript
+
+Use a bundler or development server that resolves npm package imports, such
+as Vite, for this example. The bare `@falkordb/canvas` import does not resolve
+in a browser loading this HTML directly from a file.
 
 ```html
 <!DOCTYPE html>
@@ -77,10 +82,29 @@ npm install @falkordb/canvas
 
 ### React / TypeScript
 
+The published package declares a global `JSX` element, but React 19 uses
+`React.JSX`. Add the module declaration below so the custom element and its
+ref are typed with React 19. It also works with React 18.
+
 ```tsx
 import { useEffect, useRef } from 'react';
+import type { DetailedHTMLProps, HTMLAttributes } from 'react';
 import '@falkordb/canvas';
-import type { FalkorDBCanvas, Data, GraphNode } from '@falkordb/canvas';
+import type { CanvasRenderMode, FalkorDBCanvas, Data, GraphNode } from '@falkordb/canvas';
+
+declare module 'react' {
+  namespace JSX {
+    interface IntrinsicElements {
+      'falkordb-canvas': DetailedHTMLProps<
+        HTMLAttributes<FalkorDBCanvas> & {
+          'node-mode'?: CanvasRenderMode;
+          'link-mode'?: CanvasRenderMode;
+        },
+        FalkorDBCanvas
+      >;
+    }
+  }
+}
 
 function GraphVisualization() {
   const canvasRef = useRef<FalkorDBCanvas | null>(null);
@@ -139,15 +163,17 @@ function GraphVisualization() {
 | `setPinOnDragEnd(pin)` | Enable or disable pinning nodes after dragging. |
 | `setLayout(layoutMode)` | Switch layout mode: `'force'`, `'tree'`, or `'radial'`. |
 | `setLayoutOptions(options)` | Update per-layout options (tree, radial, force). Triggers re-layout. |
+| `setDimension(dimension)` | Switch to `'2d'` or `'3d'`. Returns a promise that settles when the switch completes. |
+| `getDimension()` | Get the current dimension or the dimension being selected. |
 | `setDebug(enabled)` | Enable or disable debug logging to console. |
 | `refresh()` | Trigger a repaint after in-place property mutations (visibility, color, size). |
-| `getViewport()` | Get current zoom and center position as `ViewportState`. |
-| `setViewport(viewport)` | Restore a previously saved viewport state. |
+| `getViewport()` | Get the 2D zoom and center as `ViewportState`; returns `undefined` in 3D. |
+| `setViewport(viewport)` | Restore a saved 2D viewport; has no effect in 3D. |
 | `getZoom()` | Get current zoom level. |
 | `zoom(zoomLevel)` | Set zoom level. |
 | `zoomToFit(paddingMultiplier, filter)` | Auto-fit all visible nodes in view. Optional padding multiplier and node filter function. |
-| `getGraph()` | Get the underlying force-graph instance for advanced control. |
-| `getCullingStats()` | Get viewport culling statistics (bounds, visible vs total node/link counts). |
+| `getGraph()` | Get the underlying 2D force-graph instance; returns `undefined` in 3D. |
+| `getCullingStats()` | Get 2D viewport culling statistics; this does not report the 3D camera view. |
 
 ---
 
@@ -163,18 +189,29 @@ Configuration is passed to `setConfig()` as a `ForceGraphConfig` object.
 | `height` | window height | Canvas height in pixels |
 | `backgroundColor` | `'#FFFFFF'` | Background color |
 | `foregroundColor` | `'#1A1A1A'` | Foreground color for borders and text |
+| `dimension` | `'2d'` | Render in `'2d'` or `'3d'` (see [2D and 3D](#2d-and-3d)) |
 | `layoutMode` | `'force'` | Layout algorithm: `'force'`, `'tree'`, or `'radial'` |
 | `layoutOptions` | `{}` | Per-layout options (see [Layout Modes](#layout-modes)) |
 | `animation` | | Enable or disable layout animation |
-| `captionsKeys` | `[]` | Node property keys to display as labels |
+| `captionsKeys` | `[]` | Ordered property keys for node labels. Use strings for case-insensitive fuzzy matching or `[key, true]` for an exact match; falls back to the node ID. |
 | `showPropertyKeyPrefix` | `false` | Show property key prefix in node labels |
 | `pinOnDragEnd` | `false` | Pin nodes after dragging |
 | `isNodeSelected` | | Function: `(node: GraphNode) => boolean` |
 | `isLinkSelected` | | Function: `(link: GraphLink) => boolean` |
-| `linkLineDash` | | Function: `(link: GraphLink) => number[]` |
-| `node` | | Custom node rendering (see [Custom Rendering](#custom-rendering)) |
-| `link` | | Custom link rendering (see [Custom Rendering](#custom-rendering)) |
+| `dimmed` | `false` | Enable dimming based on `isNodeDimmed` and `isLinkDimmed`. |
+| `isNodeDimmed`, `isLinkDimmed` | | Predicates selecting nodes or links to dim when `dimmed` is enabled. |
+| `dimOpacity` | `0.15` | Opacity multiplier for dimmed elements. |
+| `linkLineDash` | | Function: `(link: GraphLink) => number[]` (2D only). |
+| `node`, `link` | | Custom 2D rendering callbacks (see [Custom Rendering](#custom-rendering)). |
+| `nodeStyle`, `linkStyle` | | Label, border, arrow, and other visual style options. |
+| `simulation` | | Force simulation options, including `workerLayout` for large 3D graphs. |
+| `interaction` | | Tooltip and zoom-to-fit behavior. |
 | `largeGraph` | | Large-graph optimizations (see [Large-Graph Optimizations](#large-graph-optimizations)) |
+| `eventHandlers` | | Callbacks for graph interaction and lifecycle events. |
+
+For the complete list and defaults of the nested style, simulation, and
+interaction options, see the [Canvas configuration reference](https://github.com/FalkorDB/falkordb-ui/blob/main/web-components/canvas/README.md#configuration-options)
+and the [TypeScript definitions](https://github.com/FalkorDB/falkordb-ui/blob/main/web-components/canvas/src/canvas-types.ts).
 
 #### Event Handlers
 
@@ -193,6 +230,7 @@ Configuration is passed to `setConfig()` as a `ForceGraphConfig` object.
 | `onZoom` | `(transform: Transform) => void` |
 | `onEngineStop` | `() => void` |
 | `onLayoutChange` | `(layout: LayoutMode) => void` |
+| `onDimensionChange` | `(dimension: CanvasDimension) => void` – called when the new dimension is displayed. |
 
 ---
 
@@ -235,6 +273,35 @@ canvas.setConfig({
 
 ---
 
+### 2D and 3D
+
+The default view is 2D. To switch to a 3D WebGL view, await
+`setDimension('3d')`; the 3D renderer loads on first use:
+
+```typescript
+try {
+  await canvas.setDimension('3d');
+  console.log('View:', canvas.getDimension());
+} catch (error) {
+  console.error('Unable to switch to 3D:', error);
+}
+```
+
+Use `await canvas.setDimension('2d')` to return to the flat view, or configure
+the initial view with `setConfig({ dimension: '3d' })`. If 3D cannot load or
+WebGL cannot start, the promise rejects and the canvas stays in or falls back
+to 2D. When called before the element connects, `setDimension` records the
+requested dimension and resolves before rendering.
+
+Switching dimensions recomputes the layout and fits the view. Data, selection,
+colors, captions, and event handlers carry over. In 3D, drag the background to
+rotate, right-drag to pan, and scroll to zoom. The 2D viewport methods,
+`getGraph()`, custom canvas renderers, and `linkLineDash` are not available in
+3D. See the [upstream 3D guide](https://github.com/FalkorDB/falkordb-ui/blob/main/web-components/canvas/README.md#2d-and-3d)
+for details and performance considerations.
+
+---
+
 ### Data Types
 
 #### Node
@@ -246,7 +313,9 @@ canvas.setConfig({
 | `color` | *required* | Node color (hex or CSS color) |
 | `visible` | *required* | Whether the node is visible |
 | `size` | `9` | Node radius (world units) |
-| `caption` | `'id'` | Property key to use from the data for display text |
+| `shape` | `'circle'` | Node shape: `'circle'` or `'square'` |
+| `borderColor` | | Optional node border color; otherwise uses the configured foreground color |
+| `expand` | | Optional expanded state for the glow effect |
 | `data` | *required* | Node properties as key-value pairs |
 
 #### Link
@@ -259,13 +328,16 @@ canvas.setConfig({
 | `source` | *required* | Source node ID |
 | `target` | *required* | Target node ID |
 | `visible` | *required* | Whether the link is visible |
+| `width` | `1` | Line width in screen pixels |
+| `fontSize` | `6` | Relationship caption size in world units |
+| `arrowSize` | `8` | Arrowhead length in world units |
 | `data` | *required* | Link properties as key-value pairs |
 
 ---
 
 ## Custom Rendering
 
-You can provide custom rendering functions for nodes and links:
+You can provide custom rendering functions for nodes and links in 2D:
 
 ```typescript
 canvas.setConfig({
@@ -311,6 +383,10 @@ The `node-mode` and `link-mode` HTML attributes control how custom rendering com
 
 For graphs with thousands of nodes and links, configure viewport culling and low-zoom draw skipping:
 
+These settings are enabled by default. In 3D, offscreen optimizations defer
+some styling and caption work rather than removing nodes or links from the
+simulation. Custom 2D rendering callbacks must implement their own culling.
+
 ```typescript
 canvas.setConfig({
   largeGraph: {
@@ -326,8 +402,9 @@ canvas.setConfig({
 | Option | Default | Description |
 | :--- | :--- | :--- |
 | `enabled` | `true` | Master switch for large-graph optimizations |
+| `nodeInstancing` | `true` | Batch opaque 3D node bodies for graphs with at least 1,000 nodes; no effect in 2D. |
 | `viewportPadding` | `0` | World-unit padding around the visible viewport |
-| `lowZoomThreshold` | `1` | Zoom level below which expensive details are skipped |
+| `lowZoomThreshold` | `1` | Zoom level at or below which expensive details are skipped |
 | `skipLabelsAtLowZoom` | `true` | Skip node labels at low zoom |
 | `skipArrowsAtLowZoom` | `true` | Skip link arrowheads at low zoom |
 | `skipLinkLabelsAtLowZoom` | `true` | Skip link relationship labels at low zoom |
@@ -351,8 +428,10 @@ import {
 const graphData = dataToGraphData(data);
 const simpleData = graphDataToData(graphData);
 
-// Get display text for a node
-const text = getNodeDisplayText(node);
+// Get display text and the matching data key for a node
+const captionKeys: [string, boolean][] = [['name', false]];
+const text = getNodeDisplayText(node, captionKeys, false);
+const key = getNodeDisplayKey(node, captionKeys);
 
 // Wrap text for circular nodes
 const [line1, line2] = wrapTextForCircularNode(ctx, text, radius);
@@ -365,8 +444,8 @@ const [line1, line2] = wrapTextForCircularNode(ctx, text, radius);
 1. **Large graphs** – Disable animation (`setAnimation(false)`) once the layout stabilizes
 2. **Static graphs** – Use a deterministic layout (`setLayout('tree')`) to avoid simulation overhead
 3. **Custom rendering** – Optimize your custom `nodeCanvasObject` and `linkCanvasObject` functions
-4. **Viewport** – Use `getViewport()` and `setViewport()` to preserve the user's view when updating data
-5. **Very large graphs** – Enable viewport culling via the `largeGraph` option
+4. **2D viewport** – Use `getViewport()` and `setViewport()` to preserve the user's view when updating data
+5. **Very large graphs** – Tune the default `largeGraph` optimizations; 3D force layouts with at least 1,000 nodes use a worker by default
 
 ---
 
@@ -376,13 +455,13 @@ const [line1, line2] = wrapTextForCircularNode(ctx, text, radius);
 - Firefox (latest)
 - Safari (latest)
 
-Requires support for Web Components (Custom Elements), ES Modules, Shadow DOM, and HTML5 Canvas.
+Requires support for Web Components (Custom Elements), ES Modules, Shadow DOM, and HTML5 Canvas. The 3D view also requires WebGL.
 
 ---
 
 ## Links
 
-- [GitHub Repository](https://github.com/FalkorDB/falkordb-canvas)
+- [Canvas source and README](https://github.com/FalkorDB/falkordb-ui/tree/main/web-components/canvas)
 - [npm Package](https://www.npmjs.com/package/@falkordb/canvas)
 
 ---
@@ -405,11 +484,14 @@ Requires support for Web Components (Custom Elements), ES Modules, Shadow DOM, a
   <Accordion title="What layout modes does FalkorDB Canvas support?">
     Three: `force` (the default D3 force simulation), `tree` (hierarchical), and `radial`. Switch between them with `setLayout('tree')` and tune each one through `setLayoutOptions()`.
   </Accordion>
+  <Accordion title="Can I display the graph in 3D?">
+    Yes. Call `await canvas.setDimension('3d')` to switch to WebGL rendering, or set `dimension: '3d'` in the configuration. The 3D renderer loads on first use; if it cannot start, the canvas falls back to 2D.
+  </Accordion>
   <Accordion title="How do I visualize a large graph without slowing down the browser?">
-    Enable the `largeGraph` options to turn on viewport culling and skip expensive details at low zoom, call `setAnimation(false)` once the layout settles to stop the simulation, and prefer a deterministic layout such as `tree` for static graphs. `getCullingStats()` shows how many nodes and links are actually being drawn.
+    Tune the default `largeGraph` options to skip expensive details at low zoom, call `setAnimation(false)` once the layout settles, and consider a deterministic layout such as `tree` for static graphs. In 2D, `getCullingStats()` reports viewport culling.
   </Accordion>
   <Accordion title="How do I keep the user's zoom and position when I update the data?">
-    Save the view with `getViewport()` before replacing the data, then restore it with `setViewport()` afterwards. This prevents the jarring re-fit that otherwise happens on every `setData()` call.
+    In 2D, save the view with `getViewport()` before replacing the data, then restore it with `setViewport()` afterwards. These viewport methods do not describe the 3D camera.
   </Accordion>
   <Accordion title="Which browsers does FalkorDB Canvas support?">
     The latest versions of Chrome, Edge, Firefox, and Safari. It needs Custom Elements, Shadow DOM, ES Modules, and HTML5 Canvas support.
