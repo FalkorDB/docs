@@ -40,8 +40,9 @@ Each FalkorDB image ships one server, Valkey or Redis. Both
 | `6.0.4`, `v4.x` | Redis (older releases) |
 
 This guide assumes the 6.2 tags are published on both image repositories before
-the docs are deployed. Verify the tag and server with the image-label procedure
-below.
+the docs are deployed. The image-label procedure below confirms only the server
+name and server version, not the FalkorDB release. Confirm the FalkorDB 6.2
+release using its release notes or an explicit 6.2 image tag.
 
 <Warning>
   Before using a Valkey image with an existing Redis volume, check for
@@ -153,20 +154,25 @@ then have two options:
      delete or convert data Valkey cannot read, including other streams and
      hashes with field expiry. Delete a telemetry key only if its `TYPE` is
      `stream`; leave keys of other types untouched. Run `SAVE`. If AOF is
-     enabled, wait for any existing rewrite to finish and check
-     `aof_rewrite_in_progress` and `aof_rewrite_scheduled` in `INFO persistence`
-     before stopping Redis. Do not start a new AOF rewrite on Redis.
+     enabled, first wait for any existing rewrite to finish by checking that
+     `aof_rewrite_in_progress` and `aof_rewrite_scheduled` are both `0` in
+     `INFO persistence`. Then run `BGREWRITEAOF` on Redis and wait until both
+     fields are again `0` and `aof_last_bgrewrite_status` is `ok` before
+     stopping Redis.
   3. Stop and remove the Redis container without deleting the volume. Start the
      Valkey image on that volume with `-e FALKORDB_REDIS_MIGRATION=1`, keeping
      the existing persistence settings, such as `--appendonly yes` when AOF
      is enabled.
   4. Verify your graphs with `GRAPH.LIST` and a query, then run `SAVE`. If AOF
-     is enabled, run `BGREWRITEAOF` and check `INFO persistence` for
-     `aof_last_bgrewrite_status:ok` to confirm the rewrite completed
-     successfully on Valkey. If it does not succeed, keep the migration
-     container running and writes paused while you retry the rewrite. Do not
+     is enabled, run `BGREWRITEAOF` and confirm Valkey accepted the command.
+     Wait until `aof_rewrite_in_progress` and `aof_rewrite_scheduled` in
+     `INFO persistence` are both `0`, then confirm
+     `aof_last_bgrewrite_status` is `ok`. If the rewrite fails, keep the
+     migration container running and writes paused while you retry. Do not
      remove migration mode or restart without it until the rewrite succeeds.
-     If you cannot recover the volume in place, restore the step 1 backup.
+     If the volume cannot be recovered in place, stop the Valkey container,
+     restore the step 1 backup to a clean volume, and verify it using the
+     original Redis image before resuming writes.
   5. Stop and remove the migration container, then start the Valkey image again
      without `FALKORDB_REDIS_MIGRATION`, retaining the persistence settings.
      While application writes are still paused, wait for the container to
