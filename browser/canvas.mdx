@@ -163,7 +163,7 @@ function GraphVisualization() {
 | `setPinOnDragEnd(pin)` | Enable or disable pinning nodes after dragging. |
 | `setLayout(layoutMode)` | Switch layout mode: `'force'`, `'tree'`, or `'radial'`. |
 | `setLayoutOptions(options)` | Update per-layout options (tree, radial, force). Triggers re-layout. |
-| `setDimension(dimension)` | Switch to `'2d'` or `'3d'`. Returns a promise that settles when the switch completes. |
+| `setDimension(dimension)` | Request a switch to `'2d'` or `'3d'`. Returns a promise; see [2D and 3D](#2d-and-3d) for details. |
 | `getDimension()` | Get the current dimension or the dimension being selected. |
 | `setDebug(enabled)` | Enable or disable debug logging to console. |
 | `refresh()` | Trigger a repaint after in-place property mutations (visibility, color, size). |
@@ -291,7 +291,9 @@ Use `await canvas.setDimension('2d')` to return to the flat view, or configure
 the initial view with `setConfig({ dimension: '3d' })`. If 3D cannot load or
 WebGL cannot start, the promise rejects and the canvas stays in or falls back
 to 2D. When called before the element connects, `setDimension` records the
-requested dimension and resolves before rendering.
+requested dimension and resolves before rendering. A later dimension request
+supersedes a pending earlier request; the earlier promise may resolve without
+its requested dimension being displayed.
 
 Switching dimensions recomputes the layout and fits the view. Data, selection,
 colors, captions, and event handlers carry over. In 3D, drag the background to
@@ -328,7 +330,7 @@ for details and performance considerations.
 | `source` | *required* | Source node ID |
 | `target` | *required* | Target node ID |
 | `visible` | *required* | Whether the link is visible |
-| `width` | `1` | Line width in screen pixels |
+| `width` | `1` | In 2D, line width in screen pixels. In 3D, links that are not selected are hairlines; selected links use `width` to size a world-space tube, not a constant screen-pixel stroke. |
 | `fontSize` | `6` | Relationship caption size in world units |
 | `arrowSize` | `8` | Arrowhead length in world units |
 | `data` | *required* | Link properties as key-value pairs |
