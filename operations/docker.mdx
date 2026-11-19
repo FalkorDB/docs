@@ -23,14 +23,14 @@ FalkorDB provides two main Docker images:
 - **Includes**: FalkorDB server + FalkorDB Browser
 - **Use case**: Development, quick start, interactive exploration
 - **Ports**: 
-  - `6379` - Redis/FalkorDB server
+  - `6379` - FalkorDB server (Valkey or Redis)
   - `3000` - FalkorDB Browser UI
 
 ### 2. `falkordb/falkordb-server`
 - **Includes**: FalkorDB server only
 - **Use case**: Production deployments, lighter footprint
 - **Ports**: 
-  - `6379` - Redis/FalkorDB server
+  - `6379` - FalkorDB server (Valkey or Redis)
 
 ### 3. `falkordb/falkordb-browser`
 - **Includes**: FalkorDB Browser UI only
@@ -38,6 +38,19 @@ FalkorDB provides two main Docker images:
 - **Ports**: 
   - `3000` - FalkorDB Browser UI
 - **Configuration**: Requires `FALKORDB_URL` environment variable to connect to a FalkorDB server
+
+### Valkey and Redis variants
+
+Each server image ships either [Valkey](https://valkey.io/) or Redis. FalkorDB
+6.2's `latest` image runs Valkey 9.2; use `latest-redis` to run Redis. Older
+images, including `6.0.4` and `4.x` releases, run Redis. See [Redis and
+Valkey](/operations/redis-and-valkey) for details.
+
+<Warning>
+  Valkey cannot normally load RDB save files written by Redis 7.4 and later.
+  Before you run a Valkey image on an existing Redis volume, see [Redis and
+  Valkey](/operations/redis-and-valkey#moving-a-data-volume-from-redis-to-valkey).
+</Warning>
 
 ## Quick Start with Docker
 
@@ -271,15 +284,21 @@ docker-compose exec falkordb redis-cli
 
 ## Environment Variables
 
-### REDIS_ARGS
-Pass arguments directly to the Redis server:
+### REDIS_ARGS and VALKEY_ARGS
+Pass arguments directly to the server. Use `REDIS_ARGS` on a Redis image and
+`VALKEY_ARGS` on a Valkey image:
 
 ```yaml
 environment:
   - REDIS_ARGS=--requirepass mypassword --maxmemory 1gb --appendonly yes
 ```
 
-Common Redis arguments:
+If the variable for the image's own server is unset, empty, or only whitespace,
+the image falls back to the other one, so `REDIS_ARGS` also works on a Valkey
+image. The two are never combined, and an option the server does not recognize
+stops it from starting.
+
+Common server arguments (supported by both Redis and Valkey):
 - `--requirepass <password>` - Set authentication password
 - `--appendonly yes` - Enable AOF persistence
 - `--appendfsync everysec` - AOF sync frequency
@@ -497,12 +516,16 @@ docker-compose config
 - Configure a [Cluster](/operations/cluster) for scalability
 - Review [Configuration](/getting-started/configuration) options
 - Deploy to [Kubernetes](/operations/k8s-support) for orchestration
+- Choose between [Redis and Valkey](/operations/redis-and-valkey) images
 
 ## Frequently Asked Questions
 
 <AccordionGroup>
   <Accordion title="What is the difference between falkordb/falkordb and falkordb/falkordb-server images?">
     The `falkordb/falkordb` image includes both the FalkorDB server and the Browser UI (ports 6379 and 3000). The `falkordb/falkordb-server` image includes only the server (port 6379), making it lighter for production use.
+  </Accordion>
+  <Accordion title="Do the FalkorDB images run Redis or Valkey?">
+    FalkorDB 6.2's `latest` image runs Valkey 9.2; `latest-redis` runs Redis. See [Redis and Valkey](/operations/redis-and-valkey).
   </Accordion>
   <Accordion title="How do I set a password for FalkorDB in Docker?">
     Pass `--requirepass <password>` via the `REDIS_ARGS` environment variable: `-e REDIS_ARGS='--requirepass mypassword'`. For Docker Compose, add it to the environment section.

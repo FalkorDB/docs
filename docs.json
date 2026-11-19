@@ -255,7 +255,8 @@
                   "operations/lightning-ai",
                   "operations/building-docker",
                   "operations/kubeblocks",
-                  "operations/docker"
+                  "operations/docker",
+                  "operations/redis-and-valkey"
                 ],
                 "root": "operations/index"
               },
