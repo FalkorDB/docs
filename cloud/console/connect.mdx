@@ -1,0 +1,111 @@
+---
+title: "Connect to your instance"
+description: "Find your FalkorDB Cloud instance endpoint and credentials, open it in FalkorDB Browser, and connect from redis-cli or a client library."
+---
+
+To connect to an instance, you need its **endpoint** (host and port), a **username**, and its **password**. You also need to know whether the instance uses **TLS**.
+
+## Find your connection details
+
+1. In the sidebar, open **Deployments** > **Instances** and select your instance.
+2. Open the **Connectivity** tab. The **Endpoint** card shows the endpoint as `host:port`. Select the copy icon to copy it.
+3. Open the **Instance Details** tab. Under **Parameter**, find the **FalkorDB User** (by default `falkordb`) and the **FalkorDB Password**. Select **Show** to see the password, or the copy icon to copy it. On paid tiers, this section also shows whether TLS is enabled.
+
+<Frame>
+  ![The Connectivity tab with the Network Type, Availability zones, and the Endpoint card showing the host and port](/cloud/images/console/connectivity-tab.png)
+</Frame>
+
+<Frame>
+  ![The Instance Details tab with Instance Info and the Parameter section showing the FalkorDB User and the masked FalkorDB Password](/cloud/images/console/instance-details-parameters.png)
+</Frame>
+
+<Note>
+  Use the port shown on the endpoint. It's often not the default `6379`.
+</Note>
+
+To use a different user, create one in the [User Access tab](/cloud/operations/user-management).
+
+<Note>
+  The Connectivity tab appears only while the instance is running. Instances in a **Private** network have no public endpoint. Connect to them from inside your peered network. See [Customer networks](/cloud/operations/customer-networks).
+</Note>
+
+## Open FalkorDB Browser
+
+FalkorDB Browser is a web UI for running queries and exploring your graphs visually.
+
+1. Wait until the instance status is **Running**.
+2. On the instance page, or on the **Instances** list with the instance selected, select **Connect**.
+3. FalkorDB Browser opens in a new tab with the **Host**, **Port**, **Username**, and **TLS Secured Connection** setting filled in. Enter your **Password** and select **Log in**.
+
+<Frame>
+  ![The Instances list with a running instance selected and the Connect button enabled](/cloud/images/console/connect-button.png)
+</Frame>
+
+<Frame>
+  ![The FalkorDB Browser login page opened from Connect, with the host, port, and username filled in and the password empty](/cloud/images/console/browser-login-prefilled.png)
+</Frame>
+
+The **Connect** button is turned off for instances in a **Private** network, because the browser can't reach them.
+
+To learn the Browser itself, see the [FalkorDB Browser guide](/browser).
+
+## Connect with redis-cli
+
+Replace `<host>`, `<port>`, and the password with the values from the console. Add `--tls` if the instance has TLS enabled.
+
+```bash
+redis-cli -h <host> -p <port> --user falkordb --pass "$FALKORDB_PASSWORD" \
+  GRAPH.QUERY social "CREATE (:Person {name: 'Alice'}) RETURN 1"
+```
+
+## Connect with a client library
+
+Each example connects to a TLS-enabled instance. For an instance without TLS, including every Free instance, remove the TLS option (`ssl=True` or `tls: true`).
+
+<CodeGroup>
+```python Python
+from falkordb import FalkorDB
+
+db = FalkorDB(
+    host="<host>",
+    port=<port>,
+    username="falkordb",
+    password="<password>",
+    ssl=True,
+)
+graph = db.select_graph("social")
+result = graph.query("MATCH (p:Person) RETURN p.name")
+print(result.result_set)
+```
+
+```javascript Node.js
+import { FalkorDB } from "falkordb";
+
+const db = await FalkorDB.connect({
+  username: "falkordb",
+  password: "<password>",
+  socket: { host: "<host>", port: <port>, tls: true },
+});
+const graph = db.selectGraph("social");
+const result = await graph.query("MATCH (p:Person) RETURN p.name");
+console.log(result.data);
+await db.close();
+```
+</CodeGroup>
+
+For other languages, see [Client libraries](/getting-started/clients).
+
+<Warning>
+  Read the password from an environment variable or a secret manager. Don't hardcode it in your code or commit it to source control.
+</Warning>
+
+## Troubleshooting
+
+| Problem | What to check |
+| :--- | :--- |
+| Connection refused or timeout | The instance status is **Running**, and the host and port match the **Connectivity** tab. For Private networks, connect from inside the peered network. |
+| TLS or SSL error | Turn on TLS in your client if the instance has **Enable TLS** set, and turn it off if it doesn't. The Free tier has no TLS. |
+| Authentication failed | The username and password are correct. Users created in **User Access** need the right role for the commands you run. |
+| **Connect** is disabled | The instance isn't running yet, or it's in a **Private** network. |
+
+Still stuck? Email [support@falkordb.com](mailto:support@falkordb.com) with your instance ID.

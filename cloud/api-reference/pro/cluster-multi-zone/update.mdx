@@ -1,0 +1,93 @@
+---
+title: "Update instance"
+sidebarTitle: "Update"
+api: "PUT https://api.omnistrate.cloud/2022-09-01-00/resource-instance/sp-JvkxkPhinN/falkordb/v1/prod/falkordb-pro-customer-hosted/falkordb-pro-falkordb-customer-hosted-model-omnistrate-dedicated-tenancy/cluster-Multi-Zone/{id}"
+description: "Update the configuration of a Pro Cluster (Multi-Zone) instance."
+---
+
+Applies configuration changes to a running instance. Only the fields you send are changed. Changing `falkordbPassword` or `nodeInstanceType` restarts the instance.
+
+## Authorization
+
+<ParamField header="Cookie" type="string" required>
+  Session cookie set by [Sign in](/cloud/api-reference/authentication/signin): `omnistrate_token=<jwt>`.
+  Browsers send it automatically; other clients must forward it on every request.
+</ParamField>
+
+## Path parameters
+
+<ParamField path="id" type="string" required>
+  ID of the resource instance.
+</ParamField>
+
+## Query parameters
+
+<ParamField query="subscriptionId" type="string">
+  ID of the subscription that owns the instance.
+</ParamField>
+
+## Body
+
+<ParamField body="requestParams" type="object" required>
+  Instance configuration.
+
+  <Expandable title="requestParams properties">
+    <ParamField body="nodeInstanceType" type="string" default="e2-custom-4-8192" required>
+      Compute instance type used for each node. See [Instance configuration](/cloud/api-reference/schemas#instance-configuration).
+    </ParamField>
+
+    <ParamField body="description" type="string" default="Description">
+      Description of the instance.
+    </ParamField>
+
+    <ParamField body="name" type="string" default="My favorite database">
+      Human-readable name for the instance.
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+## Sizing and tier availability
+
+`nodeInstanceType` is required and must be one of the instance types below. The list differs from the Enterprise tiers, which accept any instance type available to the plan.
+
+| Cloud provider | `nodeInstanceType` | vCPU | Memory |
+| --- | --- | --- | --- |
+| AWS | `t4g.medium` | 2 | 4 GB |
+| AWS | `m7g.large` | 2 | 8 GB |
+| AWS | `r7g.large` | 2 | 16 GB |
+| AWS | `c7g.xlarge` | 4 | 8 GB |
+| AWS | `m7g.xlarge` | 4 | 16 GB |
+| AWS | `r7g.xlarge` | 4 | 32 GB |
+| AWS | `c7g.2xlarge` | 8 | 16 GB |
+| AWS | `m7g.2xlarge` | 8 | 32 GB |
+| AWS | `r7g.2xlarge` | 8 | 64 GB |
+| AWS | `c7g.4xlarge` | 16 | 32 GB |
+| AWS | `m7g.4xlarge` | 16 | 64 GB |
+| AWS | `r7g.4xlarge` | 16 | 128 GB |
+| AWS | `c7g.8xlarge` | 32 | 64 GB |
+| AWS | `m7g.8xlarge` | 32 | 128 GB |
+| GCP | `e2-medium` | 2 | 4 GB |
+| GCP | `e2-standard-2` | 2 | 8 GB |
+| GCP | `e2-highmem-2` | 2 | 16 GB |
+| GCP | `e2-custom-4-8192` | 4 | 8 GB |
+| GCP | `e2-standard-4` | 4 | 16 GB |
+| GCP | `e2-highmem-4` | 4 | 32 GB |
+| GCP | `e2-custom-8-16384` | 8 | 16 GB |
+| GCP | `e2-standard-8` | 8 | 32 GB |
+| GCP | `e2-highmem-8` | 8 | 64 GB |
+| GCP | `e2-custom-16-32768` | 16 | 32 GB |
+| GCP | `e2-custom-32-65536` | 32 | 64 GB |
+
+`maxMemory` and `enableEnterpriseModule` are **not** available on the Pro tier. Memory is determined by the selected `nodeInstanceType`.
+
+See [Instance configuration](/cloud/api-reference/schemas#instance-configuration) for the full field reference.
+
+## Response
+
+<ResponseField name="id" type="string">
+  ID of the resource instance.
+</ResponseField>
+
+## Errors
+
+See [Error](/cloud/api-reference/schemas#error) for the shared error response shape.

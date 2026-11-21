@@ -1,0 +1,50 @@
+---
+title: "Copy snapshot"
+sidebarTitle: "Copy"
+api: "POST https://api.omnistrate.cloud/2022-09-01-00/resource-instance/snapshot/{sourceSnapshotId}"
+description: "Copy a snapshot to another region."
+---
+
+Copies an existing snapshot into another region, for example to prepare a cross-region restore. Copying is asynchronous.
+
+## Authorization
+
+<ParamField header="Cookie" type="string" required>
+  Session cookie set by [Sign in](/cloud/api-reference/authentication/signin): `omnistrate_token=<jwt>`.
+</ParamField>
+
+## Path parameters
+
+<ParamField path="sourceSnapshotId" type="string" required>
+  ID of the snapshot to copy.
+</ParamField>
+
+## Query parameters
+
+<ParamField query="subscriptionId" type="string">
+  Subscription that owns the snapshot.
+</ParamField>
+
+## Body
+
+<ParamField body="targetRegion" type="string" required>
+  Region to copy the snapshot to, for example `eu-west-1`.
+</ParamField>
+
+```json Request
+{
+  "targetRegion": "eu-west-1"
+}
+```
+
+## Response
+
+Returns `202 Accepted`.
+
+<ResponseField name="id" type="string">
+  ID of the orchestration that copies the snapshot.
+</ResponseField>
+
+## Errors
+
+See [Error](/cloud/api-reference/schemas#error) for the error response shape.

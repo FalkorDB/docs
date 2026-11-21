@@ -1,0 +1,106 @@
+---
+title: "Move FalkorDB deployments to a newer addon release"
+sidebarTitle: "Upgrade the addon"
+description: "Bring each deployment to the FalkorDB addon release that a chart upgrade installed."
+icon: "puzzle-piece"
+---
+
+Each FalkorDB Enterprise release ships one release of the FalkorDB addon, which
+defines how KubeBlocks runs FalkorDB pods. The addon release a deployment runs
+on is its `spec.componentDefinition`, for example `falkordb-4-1.7.11`.
+
+[Upgrading FalkorDB Enterprise](/enterprise/upgrades/enterprise) with `install.sh` installs
+the new addon release and then moves every `Running` deployment to it, one at a
+time (see [Deployments move to the new addon](/enterprise/upgrades/enterprise#deployments-move-to-the-new-addon)).
+Move a deployment yourself, as this page describes, when the installer left it
+out:
+
+- It wasn't `Running` during the upgrade, for example `Failed` or stopped.
+- The upgrade ran with `--skip-deployment-upgrade`, or stopped at a deployment
+  that didn't come back to `Running` in time.
+- You upgraded with `helm upgrade` instead of the installer.
+
+Until it moves, a deployment stays on the release it runs. The older release
+stays installed, so nothing breaks in the meantime. A deployment only gets what
+a newer addon brings once it runs on it. For example, emptying a setting needs
+addon 1.7.11 or later.
+
+<Tip>
+  Rerunning the installer moves every `Running` deployment that is still on an
+  older addon release, even when the chart is already at the target version.
+</Tip>
+
+## Before you start
+
+- Take a backup, and confirm it restores. See [Backups](/enterprise/operations/backups).
+- Check which addon releases you're moving between. A move goes straight to
+  the new release: nothing an addon release in between would have done runs.
+  CI tests that jump from the addon release of every supported earlier
+  Enterprise release to the newest one, so a deployment doesn't need to visit
+  the releases in between. [Tested upgrade paths](/enterprise/reference/compatibility#tested-upgrade-paths)
+  lists the starting points, and any release that must not be skipped. An
+  upgrade through the installer moves your deployments for you, and stops at
+  each [required stop](/enterprise/upgrades/enterprise#what-an-upgrade-does) on the way.
+- The deployment must not be in a `Failed` state.
+
+See which release a deployment runs:
+
+```bash
+curl -s -b cookies.txt \
+  "http://localhost:3000/api/clusters/<name>?namespace=<namespace>&schemaVersion=1" |
+  jq -r '.spec.componentDefinition'
+```
+
+See which releases are installed:
+
+```bash
+kubectl get componentdefinitions.apps.kubeblocks.io | grep '^falkordb-4-'
+```
+
+## Move a deployment
+
+<Tabs>
+  <Tab title="Admin UI">
+    1. Open **Deployments**, then the deployment.
+    2. Select **Upgrade**.
+    3. Choose the addon component definition. The newest installed one is
+       selected.
+    4. Select **Confirm Upgrade**.
+  </Tab>
+  <Tab title="CLI">
+    ```bash
+    falkordb-admin deployments upgrade <name> \
+      --namespace <namespace> \
+      --component-definition falkordb-4-1.7.11
+    ```
+  </Tab>
+  <Tab title="API">
+    Send `falkordb-4` alone for the newest installed release. The Admin Server
+    replaces it with that release's full name.
+
+    ```bash
+    curl -s -b cookies.txt -X PATCH \
+      "http://localhost:3000/api/clusters/<name>?namespace=<namespace>" \
+      -H 'Content-Type: application/merge-patch+json' \
+      -H 'If-Match: "<metadata.generation>"' \
+      -d '{ "schemaVersion": 1, "spec": { "componentDefinition": "falkordb-4" } }'
+    ```
+  </Tab>
+</Tabs>
+
+Every component moves together: the data nodes, the Sentinels of a replicated
+deployment, and every shard of a sharded one.
+
+## Validate
+
+The deployment is back to `Running` once every component runs on the new
+release. Check each component's definition:
+
+```bash
+kubectl get components.apps.kubeblocks.io -n <namespace> \
+  -l app.kubernetes.io/instance=<name> \
+  -o custom-columns=NAME:.metadata.name,DEFINITION:.spec.compDef,PHASE:.status.phase
+```
+
+Then confirm your data is intact, as you would after a
+[FalkorDB version upgrade](/enterprise/upgrades/falkordb-version).

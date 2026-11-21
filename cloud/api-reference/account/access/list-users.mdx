@@ -1,0 +1,66 @@
+---
+title: "List subscription users"
+sidebarTitle: "List users"
+api: "GET https://api.omnistrate.cloud/2022-09-01-00/resource-instance/subscription-users"
+description: "List the users who have access to your subscriptions."
+---
+
+Lists every user with access to the subscriptions you own, together with the role granted in each subscription.
+
+## Authorization
+
+<ParamField header="Cookie" type="string" required>
+  Session cookie set by [Sign in](/cloud/api-reference/authentication/signin): `omnistrate_token=<jwt>`.
+</ParamField>
+
+## Query parameters
+
+<ParamField query="environmentType" type="string">
+  Environment type to filter by, for example `PROD`.
+</ParamField>
+
+## Response
+
+<ResponseField name="subscriptionUsers" type="object[]" required>
+  Users associated with each subscription.
+
+  <Expandable title="user properties">
+    <ResponseField name="userId" type="string" required>
+      ID of the user.
+    </ResponseField>
+
+    <ResponseField name="name" type="string" required>
+      Name of the user.
+    </ResponseField>
+
+    <ResponseField name="email" type="string" required>
+      Email of the user.
+    </ResponseField>
+
+    <ResponseField name="roleType" type="string" required>
+      Role granted to the user in this subscription.
+    </ResponseField>
+
+    <ResponseField name="subscriptionId" type="string" required>
+      ID of the subscription.
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+```json 200 OK
+{
+  "subscriptionUsers": [
+    {
+      "userId": "user-abc123",
+      "name": "Ada Lovelace",
+      "email": "ada@example.com",
+      "roleType": "editor",
+      "subscriptionId": "sub-abc123"
+    }
+  ]
+}
+```
+
+## Errors
+
+See [Error](/cloud/api-reference/schemas#error) for the error response shape.

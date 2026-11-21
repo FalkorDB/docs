@@ -1,0 +1,81 @@
+---
+title: "Describe instance"
+sidebarTitle: "Describe"
+api: "GET https://api.omnistrate.cloud/2022-09-01-00/resource-instance/sp-JvkxkPhinN/falkordb/v1/prod/falkordb-enterprise-byoa-byoa/falkordb-enterprise-byoa-falkordb-byoa-model-omnistrate-dedicated-tenancy/multi-Zone/{id}"
+description: "Get the current configuration and status of an Enterprise BYOA Multi-Zone instance."
+---
+
+Returns the deployment metadata, connection details, and current lifecycle status of a single instance.
+
+## Authorization
+
+<ParamField header="Cookie" type="string" required>
+  Session cookie set by [Sign in](/cloud/api-reference/authentication/signin): `omnistrate_token=<jwt>`.
+  Browsers send it automatically; other clients must forward it on every request.
+</ParamField>
+
+## Path parameters
+
+<ParamField path="id" type="string" required>
+  ID of the resource instance.
+</ParamField>
+
+## Query parameters
+
+<ParamField query="subscriptionId" type="string">
+  ID of the subscription that owns the instance.
+</ParamField>
+
+## Response
+
+<ResponseField name="cloud_provider" type="string">
+  Cloud provider the instance runs on.
+</ResponseField>
+
+<ResponseField name="created_at" type="string">
+  Time the instance was created.
+</ResponseField>
+
+<ResponseField name="id" type="string">
+  ID of the resource instance.
+</ResponseField>
+
+<ResponseField name="last_modified" type="string">
+  Time the instance was last modified.
+</ResponseField>
+
+<ResponseField name="network_type" type="string">
+  Network type of the instance.
+</ResponseField>
+
+<ResponseField name="region" type="string">
+  Region the instance runs in.
+</ResponseField>
+
+<ResponseField name="result_params" type="object">
+  Deployment outputs, including connection endpoints and credentials.
+</ResponseField>
+
+<ResponseField name="status" type="string">
+  Lifecycle status of the instance, for example `RUNNING` or `STOPPED`.
+</ResponseField>
+
+```json 200 OK
+{
+  "id": "instance-abc123",
+  "status": "RUNNING",
+  "cloud_provider": "aws",
+  "region": "us-east-1",
+  "network_type": "PUBLIC",
+  "created_at": "2026-01-15T10:30:00Z",
+  "last_modified": "2026-01-20T08:12:00Z",
+  "result_params": {
+    "falkordbHostname": "abc123.instances.omnistrate.cloud",
+    "falkordbPort": 6379
+  }
+}
+```
+
+## Errors
+
+See [Error](/cloud/api-reference/schemas#error) for the shared error response shape.

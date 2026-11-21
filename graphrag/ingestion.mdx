@@ -1,0 +1,422 @@
+---
+title: "Document Ingestion Pipeline in GraphRAG SDK"
+sidebarTitle: "Ingestion"
+description: "How GraphRAG SDK turns raw documents into a knowledge graph through a 9-step ingestion pipeline, from chunking to entity resolution."
+---
+
+When you call `rag.ingest("document.txt")`, the SDK transforms your raw text into a structured knowledge graph through a **9-step sequential pipeline**. Think of it as an assembly line: each step takes the output of the previous one, refines it, and passes it forward.
+
+This document explains what each step does, why it exists, and how to tune it.
+
+<Note>
+This pipeline is built for prose. For CSVs and other tabular sources, see
+[Structured Ingestion](/graphrag/structured-ingestion): you declare what the columns mean
+and the graph is written deterministically, with no model in the loop, into the
+same graph your documents live in.
+</Note>
+
+---
+
+## The Big Picture
+
+```
+                         Your Document
+                              |
+                    ┌─────────┴─────────┐
+                    v                    v
+              1. Load Text         (or pass text= directly)
+                    |
+              2. Chunk Text
+                    |
+              3. Build Lexical Graph
+              (Document + Chunk nodes, provenance edges)
+                    |
+              4. Extract Entities & Relationships
+                    |
+              4b. Quality Filter
+              (remove bad nodes/dangling edges)
+                    |
+              5. Prune Against Schema
+              (keep only schema-conforming data)
+                    |
+              6. Resolve Duplicates
+              (merge same-entity mentions)
+                    |
+              7. Write to Graph
+              (batched MERGE into FalkorDB)
+                    |
+         ┌─────────┴─────────┐
+         v                    v
+   8. Write Mentions    9. Index Chunks
+   (MENTIONED_IN edges)  (embed + store vectors)
+         └─────────┬─────────┘
+                   v
+            Done — IngestionResult
+```
+
+Steps 1-7 run **sequentially** (each depends on the previous). Steps 8-9 run **in parallel** since they're independent.
+
+---
+
+## Step-by-Step Explanation
+
+### Step 1 — Load
+
+**What it does:** Reads raw text from a file, URL, or string.
+
+**How:** The `LoaderStrategy` ABC handles this. The SDK auto-detects the loader based on file extension:
+- `.pdf` files use `PdfLoader`
+- Everything else uses `TextLoader`
+- If you pass `text=` directly, the loader step is skipped entirely
+
+**Output:** `DocumentOutput` containing the raw text and a `DocumentInfo` with a unique ID and file path.
+
+**Code:** `LoaderStrategy.load()` in [`ingestion/loaders/base.py`](https://github.com/FalkorDB/GraphRAG-SDK/blob/main/graphrag_sdk/src/graphrag_sdk/ingestion/loaders/base.py)
+
+---
+
+### Step 2 — Chunk
+
+**What it does:** Splits the document text into smaller overlapping windows called chunks. Each chunk is small enough for the LLM to process, but large enough to contain meaningful context.
+
+**How:** The default `FixedSizeChunking` uses a sliding window:
+- Window size: 1000 characters (configurable)
+- Overlap: 100 characters between consecutive chunks
+- Step size: `chunk_size - chunk_overlap` = 900 characters
+
+**Why overlap?** Without overlap, an entity mentioned right at the boundary between two chunks might be split across them and lost. Overlap ensures entities near boundaries appear in at least one complete chunk.
+
+**Output:** `TextChunks` — a list of `TextChunk` objects, each with a unique ID (`uid`), the text content, and an index number.
+
+**Code:** `ChunkingStrategy.chunk()` in [`ingestion/chunking_strategies/base.py`](https://github.com/FalkorDB/GraphRAG-SDK/blob/main/graphrag_sdk/src/graphrag_sdk/ingestion/chunking_strategies/base.py)
+
+---
+
+### Step 3 — Build Lexical Graph (Mandatory)
+
+**What it does:** Creates the provenance backbone of the knowledge graph — this is how every answer traces back to its source document.
+
+**Creates:**
+- 1 **Document** node (with the file path and metadata)
+- N **Chunk** nodes (one per text chunk, storing the chunk text and index)
+- N **PART_OF** edges (Document → each Chunk)
+- N-1 **NEXT_CHUNK** edges (Chunk → next Chunk, preserving reading order)
+
+**The result looks like:**
+```
+Document
+├── PART_OF → Chunk 0
+├── PART_OF → Chunk 1
+└── PART_OF → Chunk 2
+
+Chunk 0 ──NEXT_CHUNK──> Chunk 1 ──NEXT_CHUNK──> Chunk 2
+```
+
+**Why mandatory?** This is the Zero-Loss Data principle — every piece of source material is traceable in the graph. When the retrieval system finds a chunk, it can always trace back to the source document.
+
+**Code:** `IngestionPipeline._build_lexical_graph()` in [`ingestion/pipeline.py`](https://github.com/FalkorDB/GraphRAG-SDK/blob/main/graphrag_sdk/src/graphrag_sdk/ingestion/pipeline.py)
+
+---
+
+### Step 4 — Extract Entities & Relationships
+
+**What it does:** The most important step — an LLM reads each chunk and extracts structured knowledge: entities (people, places, organizations, etc.) and the relationships between them.
+
+**How:** The default `GraphExtraction` strategy uses a 2-step process:
+
+1. **Step 1 (NER):** A pluggable entity extractor identifies entities in the text. Default: GLiNER (a local transformer model, no API calls needed). Alternative: `LLMExtractor` (uses the LLM for NER).
+
+2. **Step 2 (Verify + Relationships):** The LLM receives the pre-extracted entities and the original text. It verifies the entities (fixing errors, adding missed ones) and extracts all relationships between them.
+
+For a detailed explanation of the extraction process, see [Extraction](/graphrag/extraction).
+
+**Output:** `GraphData` containing nodes (entities), relationships, and mention records.
+
+**Code:** `ExtractionStrategy.extract()` in [`ingestion/extraction_strategies/base.py`](https://github.com/FalkorDB/GraphRAG-SDK/blob/main/graphrag_sdk/src/graphrag_sdk/ingestion/extraction_strategies/base.py)
+
+---
+
+### Step 4b — Quality Filter
+
+**What it does:** Removes bad data that slipped through extraction — nodes with empty or `None` IDs, and relationships whose endpoints don't exist.
+
+**Why:** LLMs sometimes produce malformed output (empty entity names, references to entities that weren't extracted). This step catches those before they reach the graph.
+
+**Code:** `IngestionPipeline._filter_quality()` in [`ingestion/pipeline.py`](https://github.com/FalkorDB/GraphRAG-SDK/blob/main/graphrag_sdk/src/graphrag_sdk/ingestion/pipeline.py)
+
+---
+
+### Step 5 — Prune Against Schema
+
+**What it does:** Filters extracted data to only keep entities and relationships that match your schema definition.
+
+**How it works:**
+- If your schema defines entity types (e.g., Person, Organization, Location), only entities with those labels pass through
+- If your schema defines relationship types, only those relationship types pass through
+- Relationships whose endpoints were pruned are also removed
+- **Special cases:** `"Unknown"` entities (low-confidence NER) and `"RELATES"` edges (the unified relationship type) always pass through
+
+**Open schema mode:** If you define no entity or relationship types (empty `GraphSchema()`), this step is skipped entirely — everything passes through.
+
+**Code:** `IngestionPipeline._prune()` in [`ingestion/pipeline.py`](https://github.com/FalkorDB/GraphRAG-SDK/blob/main/graphrag_sdk/src/graphrag_sdk/ingestion/pipeline.py)
+
+---
+
+**What was pruned.** `IngestionResult.metadata["pruned"]` says what this step removed, so you can see what the ontology misses: `entities` (undeclared label → count), `relations` (undeclared type → count), `pattern_mismatches` (type → `"Source->Target"` → count), `dangling` (relations whose endpoint was dropped) and `unknown` (entities kept as `Unknown`, which is how extraction stores a type outside the declared ones). Only non-empty keys appear; `{}` means nothing was pruned.
+
+### Step 6 — Resolve Duplicates
+
+**What it does:** Merges entities that refer to the same real-world thing. When the LLM extracts "Alice" from chunk 1 and "Alice" from chunk 5, this step recognizes they're the same entity and merges them.
+
+**Default at ingest: ExactMatchResolution**
+- Groups by `(normalized name, label)` only — same name but different labels stay separate (e.g., Person "Paris" vs Location "Paris"); the judge decides those at `finalize()`
+- Survivor keeps every member's description joined with `" | "` (no LLM summary); all relationship endpoints are re-pointed to the survivor before the write, so no edge is lost
+- No embeddings, no LLM calls; zero added cost
+- Ingest is per document, so a resolver here can only compare one file's entities with each other — the cross-document duplicates that matter are handled once, at `finalize()`
+
+**Alternative: LLMVerifiedResolution**
+- Runs the same exact-match pass first, then compares the surviving names by embedding similarity within each label
+- Pairs at or above `hard_threshold` (0.95) merge outright; pairs down to `soft_threshold` (0.65) go to the LLM for a YES/NO verdict
+- Useful when the same entity is named inconsistently within a document (e.g., "Acme Corp" vs "Acme Corporation")
+
+**At `finalize()`: incremental cross-document dedup**
+- Ingest writes a new entity without a name vector and marks nothing on it: having no vector is what makes it pending. A table row a re-sync renames or folds into another node loses its vector, so it is checked under its new name
+- `finalize()` checks only the pending entities, against the whole graph through FalkorDB indexes — it never reads every entity. It lists each one in a system record, then embeds its name once (stored as `e.embedding`, the vector search also uses), and the `__Entity__` vector index returns its nearest names (no LLM)
+- Same spelling once normalised, or a unique acronym of it, as a same-label **table row** → merged into the row by rule, no LLM (an extracted entity under a guessed label can also be adopted by a declared label of the same name). Same spelling between extracted mentions only, an acronym that spells several long forms, and the 5 nearest names at cosine ≥ 0.5, become candidate pairs; candidates form dense sets of ≤ 8
+- The judge — `LLMJudge` by default, or any [`DedupJudge`](/graphrag/strategies#7-dedupjudge) — partitions each set **once** into same-referent groups, reading names, labels, descriptions, existing aliases and declared attribute values, and may name each merged group
+- Same → **merge**, by the same rules as every finalize merge: a table's row survives a mention, every member's description is kept in `descriptions` (joined with `" | "` in `description`; after dedup, `finalize()` summarises any entity holding more than 5 into one), other names kept in `aliases`, every edge moved in the same query that deletes the loser; the survivor gains every member's label and takes the judge's name for the group (a table row keeps its declared name). Groups chain: A = B and B = C become one node
+- Different → **nothing** is written; the pair is judged again only if a later new entity brings it into a set
+- Every merge is decided before any is written, sealed in a merge plan, and applied one atomic query per merge — an interrupted `finalize()` is finished by the next one
+- An entity's check is cleared once it completes — except one that did not (a failed lookup or judge call, an answer that was not a clean partition, a group held for one, a merge an `update()` changed), which stays pending; after 3 judged runs without a usable verdict it is reported in `dedup_unresolved` — so `finalize()` with nothing pending does no dedup work. Run `finalize(dedup_all=True)` once to check every entity of a graph whose entity vectors were written outside `finalize()`
+- Two keyed rows of a table, and a mention two such rows could own, are never asked or grouped
+- Every run has a judge: `finalize(judge=LLMJudge(other_llm))` picks the model (gpt-4.1-class recommended), `finalize(judge=MyJudge())` plugs in your own; pass `resolver=LLMVerifiedResolution(...)` to `ingest()` to also resolve per document
+
+For details on resolution strategies, see [Strategies](/graphrag/strategies).
+
+**Code:** `ResolutionStrategy.resolve()` in [`ingestion/resolution_strategies/base.py`](https://github.com/FalkorDB/GraphRAG-SDK/blob/main/graphrag_sdk/src/graphrag_sdk/ingestion/resolution_strategies/base.py)
+
+---
+
+### Step 7 — Write to Graph
+
+**What it does:** Persists all the extracted and resolved data into FalkorDB using batched Cypher queries.
+
+**How:**
+- Nodes are written via `UNWIND $batch AS item MERGE (n:Label {id: item.id}) SET n += item.properties`
+- Relationships are written similarly, using label hints for efficient MATCH operations
+- Batch size: 500 items per query
+- Entity nodes automatically get the `__Entity__` secondary label (structural nodes like Chunk and Document do not)
+
+For details on the storage layer, see [Storage](/graphrag/storage).
+
+**Code:** `GraphStore.upsert_nodes()` and `GraphStore.upsert_relationships()` in [`storage/graph_store.py`](https://github.com/FalkorDB/GraphRAG-SDK/blob/main/graphrag_sdk/src/graphrag_sdk/storage/graph_store.py)
+
+---
+
+### Steps 8 & 9 — Mentions + Index Chunks (Parallel)
+
+These two steps run simultaneously since they're independent:
+
+#### Step 8 — Write Mentions
+
+**What it does:** Creates `MENTIONED_IN` edges linking every entity to every chunk it was extracted from. These edges are critical for retrieval — they let the system find text passages for any entity.
+
+**Details:** Uncapped — every entity-chunk pair gets an edge. Duplicates are deduplicated by `(entity_id, chunk_id)`.
+
+#### Step 9 — Index Chunks
+
+**What it does:** Embeds each chunk's text into a vector and stores it on the Chunk node. These embeddings power the vector similarity search during retrieval.
+
+**How:**
+1. Batch-embed all chunk texts in one API call (`aembed_documents`)
+2. Write vectors to Chunk nodes via `SET c.embedding = vecf32(vector)`
+3. Falls back to sequential embedding if the batch call fails
+
+**Code:**
+- Mentions: `IngestionPipeline._write_mentions()` in [`ingestion/pipeline.py`](https://github.com/FalkorDB/GraphRAG-SDK/blob/main/graphrag_sdk/src/graphrag_sdk/ingestion/pipeline.py)
+- Chunk indexing: `VectorStore.index_chunks()` in [`storage/vector_store.py`](https://github.com/FalkorDB/GraphRAG-SDK/blob/main/graphrag_sdk/src/graphrag_sdk/storage/vector_store.py)
+
+---
+
+## Post-Ingestion: finalize()
+
+After all documents are ingested, call `finalize()` to prepare the graph for querying. This is a separate step because some operations (like deduplication) work best when run globally across all documents, not per-document.
+
+**`finalize()` runs 6 steps in order:**
+
+| Step | What it does | Why |
+|------|-------------|-----|
+| 1. NULL cleanup | Removes entities with `NULL` names | Legacy edge cases from MERGE operations |
+| 2. Deduplicate | The pending entities: exact-name match, then one judge pass over nearest names; also writes each entity's name embedding | "Alice" from doc 1 and "Alice Smith" from doc 5 become one node; the name vectors power entity vector search |
+| 3. Relationship embeddings | Embeds fact text on RELATES edges | Powers RELATES edge vector search during retrieval |
+| 4. Ensure indexes | Creates all 5 standard indexes | Vector + fulltext indexes for search |
+| 5. Name chunks | Gives each unnamed chunk the name `<document id> · chunk <index>`, except a table row and a chunk of a document being replaced by `update()` (its id carries `__pending__`); pass `name_chunks=False` to skip it | A chunk reads as `note.txt · chunk 0` in a graph browser instead of a UUID |
+| 6. Consistency report | Checks the whole graph and reports what it finds | Shows what is left to fix before querying |
+
+```python
+# After ingesting ALL documents:
+stats = await rag.finalize()  # a FinalizeResult
+stats.entities_deduplicated   # 142
+stats.entities_embedded       # 3200
+stats.relationships_embedded  # 8500
+stats.indexes                 # {"vector_Chunk": True, "vector___Entity__": True, ...}
+```
+
+**Important:** Do not call `finalize()` after each document — call it once after all ingestion is complete: one run judges the whole batch's new entities together, in fewer judge calls than a run per document.
+
+---
+
+## Agentic Strategy Selection (`auto=True`)
+
+By default `ingest()` uses fixed strategies (see [Configuration Quick Reference](#configuration-quick-reference)). Pass `auto=True` to let a **planner** inspect a sample of each document and pick the chunker, entity-extraction backend, and resolver *per document* — the ingestion-side analogue of retrieval-side routing.
+
+```python
+# LLM planner (default): one small call decides the strategies per document,
+# among the cheap options unless plan_limits allows more
+await rag.ingest(source="handbook.md", auto=True)
+
+# Allow the LLM extractor and contextual chunking too (auto is implied);
+# keys left out (here resolvers, max_llm_pairs, max_chunks) keep their cheap values
+await rag.ingest(
+    source="handbook.md",
+    plan_limits={"chunkers": ("sentence", "structural", "contextual"), "extractors": ("gliner", "llm")},
+)
+
+# Zero-cost heuristic planner instead of an LLM call (passing a planner turns auto on)
+from graphrag_sdk import HeuristicIngestionPlanner
+await rag.ingest(source="handbook.md", planner=HeuristicIngestionPlanner())
+
+# Explicit strategies always win — the planner only fills the rest
+from graphrag_sdk import ExactMatchResolution
+await rag.ingest(source="handbook.md", auto=True, resolver=ExactMatchResolution())
+```
+
+**What the planner may pick:**
+
+| Component | Options | Cost |
+|-----------|---------|------|
+| Chunker | `sentence` (default), `fixed`, `structural`, `contextual` | No LLM call, except `contextual`: one more LLM call per chunk, each sending the whole document |
+| Extractor backend | `gliner` (default), `llm` | One extraction LLM call per chunk with `gliner`, two with `llm` |
+| Resolver | `exact` (default), `llm_verified` | No LLM call with `exact`; `llm_verified` checks up to `max_llm_pairs` pairs per document with the LLM |
+
+With `auto=True` and no `plan_limits`, the default planner may pick only the cheap options, `CHEAP_PLAN_LIMITS`: `sentence`, `fixed` or `structural` chunking, `gliner` extraction and `exact` resolution, with at most 1,000 chunks per document. Pass `plan_limits` (the `LLMIngestionPlanner` limits: `chunkers`, `extractors`, `resolvers`, `max_llm_pairs`, `tune_params`, `max_chunks`) to allow more. It is merged over `CHEAP_PLAN_LIMITS`: a key you leave out keeps its cheap value, so `max_chunks` stays 1,000 and resolution stays `exact` unless you set them. A `resolvers` that allows `llm_verified` without a `max_llm_pairs` gets the resolver's default budget (500), not the cheap 0. `plan_limits` and `planner` cannot be passed together: a planner you build carries its own limits.
+
+The planner may also tune parameters inside the chosen strategy (e.g. `max_tokens`, the `llm` extractor's `threshold`; GLiNER's threshold is model-specific and is not tuned); all values are coerced and clamped to safe ranges, so the model can never produce an unsafe config. The ranges also bound cost: every chunk costs extraction LLM calls, so chunk sizes have floors (256 tokens for the sentence-based chunkers, with at most 4 sentences of overlap; 500 characters for `fixed`, with overlap at most a quarter of the size; a tuned sentence-based window repeats at most half its tokens, so it advances by at least half), and `llm_verified`'s `hard_threshold` stays at 0.8 or above, so candidate pairs between `unified_threshold` (0.65 by default) and `hard_threshold` are still checked by the LLM (pairs below `unified_threshold` are not candidates at all).
+
+`structural` needs the document's structure: `.md` files carry it, and Markdown-looking text (headings and lists in a `.txt`, or text mode) is parsed for it when the planner picks `structural`. Anything else falls back to `sentence`, and a note says so.
+
+**Safety guarantees:**
+
+- **Explicit wins** — any `chunker` / `extractor` / `resolver` you pass is kept as-is; the planner only fills the ones left unset.
+- **Never silently broken** — an empty/invalid plan or any planner error falls back to the default strategies (`sentence` / `gliner` / `exact`), reproducing today's behavior. The exceptions: a `planner` that is not an instance with an async `plan()` method raises `TypeError` before anything is ingested, and an exhausted latency budget (`LatencyBudgetExceededError`, also when the planner call itself outlives `ctx`'s budget) is raised like everywhere else in the SDK.
+- **Opt-in** — `auto=False` is the default; nothing changes unless you enable it.
+- **Bounded blast radius on malicious content** — the `LLMIngestionPlanner` prompt includes a sample of the document itself, so adversarial document content could in principle try to steer the planner's choice. The sample is quoted in a `<document>` block the prompt marks as data, with instructions inside it to be ignored, but the worst case is still one of the options you allow (cheap by default, below) with clamped parameters (see `PARAM_SPECS`) — never an arbitrary strategy or an out-of-range value.
+
+**Cost ceiling.** An `LLMIngestionPlanner` you build yourself may pick any option above unless you limit it, and the `llm_verified` pair budget it sets is capped at 500 (the resolver's default; `RuleBasedIngestionPlanner` caps it at 500 too). To keep document text from choosing the strategies that add LLM calls, allow only the cheap options, pass `tune_params=False` so chunk sizes stay at their defaults, and set `max_chunks` to cap the chunks per document, which bounds its extraction calls (`ingest(auto=True)` does the first and last of these for you):
+
+```python
+from graphrag_sdk import LLMIngestionPlanner
+
+cheap = LLMIngestionPlanner(
+    rag.llm,
+    chunkers=("sentence", "fixed", "structural"),
+    extractors=("gliner",),
+    resolvers=("exact",),
+    tune_params=False,
+    max_chunks=1000,
+)
+await rag.ingest(source="upload.pdf", planner=cheap)
+```
+
+What the ceiling covers, per document:
+
+- **The planner call.** `LLMIngestionPlanner` makes one LLM call per document; `HeuristicIngestionPlanner` and `RuleBasedIngestionPlanner` make none.
+- **Extraction.** Each chunk costs one extraction LLM call with `gliner` and two with the `llm` backend (entities, then verification and relations), before retries, so the chunk count sets the cost. `max_chunks` is a chunk limit, not a request ceiling: `max_chunks=N` means at most `N` extraction requests with `gliner` and about `2N` with `llm`, before retries. It refuses a document that splits into more than `N` chunks before anything of it is written or extracted (`ChunkBudgetExceededError`, exported from `graphrag_sdk`, a `ChunkingError`; in a batch, that file fails and the others go on). It wraps whatever chunker is used — the planner's, yours or the default — and `IngestionResult.metadata["plan"]["max_chunks"]` records it. For `contextual` chunking the base chunks are counted before the per-chunk context calls, so a refused document costs none of them either. The default, `None`, sets no limit (`ingest(auto=True)` sets 1,000).
+- **Resolution.** A choice outside the allowed options falls back to the default (or the first allowed option) and is never built; the prompt only lists the allowed options. `max_llm_pairs=` caps the `llm_verified` pair budget, also with `tune_params=False`, and `max_llm_pairs=0` disallows `llm_verified`. The cap applies **per document**: a plan's `LLMVerifiedResolution` runs its default unified stage, which compares every entity in one group and verifies up to that many candidate pairs, whatever their types. On top of it come a second ask for each confirmed match between two entity types, one check per name shared by entities of different types, and the description-summary calls. The separate 200-pair cross-label pass (`cross_label_max_pairs`) runs only with `unified_stage=False`, which plans do not set. With `resolvers=("exact",)` resolution makes no LLM calls.
+
+The ceiling does not cover `finalize()` (embedding, and the LLM judge it uses for deduplication) or the questions you ask afterwards.
+
+Three planners ship in the SDK:
+
+| Planner | Cost | How it decides |
+|---------|------|----------------|
+| `LLMIngestionPlanner` (default when `auto=True`) | One small LLM call per document | Guided prompt over a document sample |
+| `HeuristicIngestionPlanner` | Zero (no LLM call) | Cheap document features (file extension, headings, lists) |
+| `RuleBasedIngestionPlanner` | Zero (no LLM call) | Your rules: the first `{"match": "*.md", "chunker": ...}` whose glob matches the file path (relative to `root=`, when given) |
+
+`RuleBasedIngestionPlanner` is what the agent tools use for `ingest(files=..., plan=[...])` (see [Agentic retrieval](/graphrag/agentic-retrieval#building-the-graph-from-a-folder)). It takes the same `chunkers` / `extractors` / `resolvers` / `max_llm_pairs` / `max_chunks` limits; `CHEAP_PLAN_LIMITS` (exported from `graphrag_sdk`, read-only) holds the cheap ones, with `max_chunks=1000` (about 380,000 tokens at the default chunk size).
+
+**What was chosen.** With `auto=True`, each `IngestionResult` records the decision in `metadata["plan"]`:
+
+```python
+result = await rag.ingest(source="handbook.md", auto=True)
+result.metadata["plan"]
+# {"planner": "LLMIngestionPlanner",
+#  "plan": {"chunker": "structural", "extractor": "gliner", "resolver": "exact",
+#           "chunker_params": {}, "extractor_params": {}, "resolver_params": {},
+#           "reason": "Markdown with headings"},
+#  "slots": {"chunker": "planner", "extractor": "planner", "resolver": "planner"},
+#  "notes": []}
+```
+
+`slots` says where each strategy came from: `"caller"` (you passed it), `"planner"` (built from the returned plan) or `"default"` (the planner raised or returned no plan, or that strategy could not be built — the other slots still follow the plan). `LLMIngestionPlanner` does not raise when its LLM call fails or its reply is not a plan: it returns the default plan, so the slots read `"planner"` and `plan.reason` starts with `default:`. Re-ingesting unchanged content skips the planner as well (a note says so). `notes` explains any fallback or adjustment, e.g. `structural` becoming `sentence` when the document has no structural elements (text mode). Planner failures are also logged at WARNING. Structured sources (`.csv`, `.tsv`, …) never run the planner: no chunker, extractor or resolver applies to them. A document that cannot be loaded is not planned either; its load error is raised as a `LoaderError` (a loader's own `IngestionError` as is), so nothing was written.
+
+**Limitation: `update()` does not re-plan.** The chosen strategies are recorded only in the ingest result's `metadata["plan"]`; they are not stored on the Document. `update()` has no `auto` and re-ingests changed content with the strategies you pass (or the defaults), so a document ingested as `structural` + `llm` is re-chunked with `sentence` + `gliner` unless you pass those strategies to `update()` yourself. The update result's `metadata["plan_note"]` says which strategies were defaulted, and after a planned ingest on the same `GraphRAG` it is also logged at WARNING.
+
+**Code:** [`ingestion_planner.py`](https://github.com/FalkorDB/GraphRAG-SDK/blob/main/graphrag_sdk/src/graphrag_sdk/ingestion/ingestion_planner.py) · wired into `GraphRAG.ingest()` in [`api/main.py`](https://github.com/FalkorDB/GraphRAG-SDK/blob/main/graphrag_sdk/src/graphrag_sdk/api/main.py).
+
+---
+
+## Configuration Quick Reference
+
+### Chunking
+
+| Parameter | Default | Benchmark Value | Effect |
+|-----------|---------|-----------------|--------|
+| `chunk_size` | 1000 | 1500 | Larger = richer extraction context, more LLM tokens |
+| `chunk_overlap` | 100 | 200 | Larger = fewer boundary losses, more redundancy |
+
+### Extraction
+
+| Parameter | Default | Effect |
+|-----------|---------|--------|
+| `entity_extractor` | `GLiNERExtractor()` | Local NER model (fast, no API calls) |
+| `coref_resolver` | `None` | Optional coreference resolution (resolves pronouns) |
+| `entity_types` | 11 defaults | Custom ontology for your domain |
+| `max_concurrency` | LLM default (12) | Parallel LLM calls during extraction |
+
+### Resolution
+
+| Strategy | When to use |
+|----------|-------------|
+| `ExactMatchResolution` (default) | Fast, deterministic. Good when extraction is consistent |
+| `LLMVerifiedResolution` | One document names the same entity inconsistently. Costs embedding calls, plus LLM calls for ambiguous pairs. Cross-document dedup is `finalize()`'s job |
+
+---
+
+## Performance Notes
+
+- **Slowest step:** Extraction (Step 4) — involves LLM calls for every chunk. Expect ~2-5 seconds per chunk.
+- **Fastest step:** Quality filter, prune, and resolve — all in-memory, sub-second.
+- **Parallelism:** Steps 8-9 run in parallel. Step 1 NER uses a semaphore (default 12 concurrent calls).
+- **Batch size:** The benchmark uses 1500-character chunks. 20 documents (~4.7 MB total) take ~47 minutes to ingest.
+
+---
+
+## File Reference
+
+| File | What it contains |
+|------|-----------------|
+| [`pipeline.py`](https://github.com/FalkorDB/GraphRAG-SDK/blob/main/graphrag_sdk/src/graphrag_sdk/ingestion/pipeline.py) | The 9-step pipeline orchestrator |
+| [`api/main.py`](https://github.com/FalkorDB/GraphRAG-SDK/blob/main/graphrag_sdk/src/graphrag_sdk/api/main.py) | `GraphRAG.ingest()` and `finalize()` — user-facing API |
+| [`ingestion_planner.py`](https://github.com/FalkorDB/GraphRAG-SDK/blob/main/graphrag_sdk/src/graphrag_sdk/ingestion/ingestion_planner.py) | Agentic strategy selection (`auto=True`) — LLM/heuristic planners |
+| [`loaders/text_loader.py`](https://github.com/FalkorDB/GraphRAG-SDK/blob/main/graphrag_sdk/src/graphrag_sdk/ingestion/loaders/text_loader.py) | TextLoader implementation |
+| [`loaders/pdf_loader.py`](https://github.com/FalkorDB/GraphRAG-SDK/blob/main/graphrag_sdk/src/graphrag_sdk/ingestion/loaders/pdf_loader.py) | PdfLoader implementation |
+| [`chunking_strategies/fixed_size.py`](https://github.com/FalkorDB/GraphRAG-SDK/blob/main/graphrag_sdk/src/graphrag_sdk/ingestion/chunking_strategies/fixed_size.py) | FixedSizeChunking implementation |
+| [`extraction_strategies/graph_extraction.py`](https://github.com/FalkorDB/GraphRAG-SDK/blob/main/graphrag_sdk/src/graphrag_sdk/ingestion/extraction_strategies/graph_extraction.py) | 2-step extraction (NER + LLM verify/rels) |
+| [`resolution_strategies/exact_match.py`](https://github.com/FalkorDB/GraphRAG-SDK/blob/main/graphrag_sdk/src/graphrag_sdk/ingestion/resolution_strategies/exact_match.py) | ExactMatchResolution |
+| [`resolution_strategies/llm_verified_resolution.py`](https://github.com/FalkorDB/GraphRAG-SDK/blob/main/graphrag_sdk/src/graphrag_sdk/ingestion/resolution_strategies/llm_verified_resolution.py) | LLMVerifiedResolution |
+| [`storage/judge_dedup.py`](https://github.com/FalkorDB/GraphRAG-SDK/blob/main/graphrag_sdk/src/graphrag_sdk/storage/judge_dedup.py) | Incremental cross-document dedup at `finalize()`: nearest names from the vector index, one judge pass, every answer checked |
+| [`storage/dedup_judges/`](https://github.com/FalkorDB/GraphRAG-SDK/blob/main/graphrag_sdk/src/graphrag_sdk/storage/dedup_judges) | `DedupJudge` ABC and the default `LLMJudge` |
+| [`storage/graph_store.py`](https://github.com/FalkorDB/GraphRAG-SDK/blob/main/graphrag_sdk/src/graphrag_sdk/storage/graph_store.py) | Batched node/relationship writes |
+| [`storage/vector_store.py`](https://github.com/FalkorDB/GraphRAG-SDK/blob/main/graphrag_sdk/src/graphrag_sdk/storage/vector_store.py) | Chunk embedding + indexing |

@@ -1,0 +1,442 @@
+---
+title: "Install and upgrade FalkorDB Enterprise with Argo CD or Flux"
+sidebarTitle: "Argo CD and Flux"
+description: "Run FalkorDB Enterprise from Git: apply its CRD bundle, then KubeBlocks, then the chart."
+icon: "code-branch"
+---
+
+With Argo CD or Flux, you manage FalkorDB Enterprise as three pieces, each
+reconciled from Git and applied in this order:
+
+| Order | Piece | Source |
+| --- | --- | --- |
+| 1 | The CRDs | `oci://registry.falkordb.cloud/falkordb/falkordb-enterprise-crds`, at the chart's version |
+| 2 | The KubeBlocks operator | The `kubeblocks` chart from `https://apecloud.github.io/helm-charts` |
+| 3 | FalkorDB Enterprise | `oci://registry.falkordb.cloud/falkordb/falkordb-enterprise` |
+
+The CRDs come first because the KubeBlocks operator and the chart create
+objects of the kinds they define, and they can't ship inside the chart: the
+KubeBlocks CRDs are 11 MB, and Helm keeps each release in a Secret capped at
+about 1 MB. `install.sh` applies them for you; with Argo CD or Flux, the
+`falkordb-enterprise-crds` bundle does. It holds the same CRD versions the
+installer and the chart's CRD hook apply, as plain manifests in two
+directories, each with a `kustomization.yaml`:
+
+| Directory | CRDs | Apply it when |
+| --- | --- | --- |
+| `kubeblocks` | KubeBlocks | Always |
+| `volume-snapshots` | `VolumeSnapshot` and `VolumeGroupSnapshot` | You run your own snapshot controller and its conversion webhook, but not their CRDs (see [Volume snapshots](#volume-snapshots)) |
+
+The bundle and the chart share a version number. Pin both to the same one.
+
+<Warning>
+  Never let Argo CD or Flux prune these CRDs. Deleting a CRD deletes every
+  object of its kind, which for KubeBlocks means every FalkorDB deployment and
+  backup. The examples below turn pruning off.
+</Warning>
+
+## Before you start
+
+`install.sh` sets up a few things that you now set up yourself. Keep the
+namespaces in Git. Never commit the Secrets' values: create the Secrets with
+`kubectl`, or through a secrets operator such as External Secrets or Sealed
+Secrets.
+
+- **Namespaces.** The release namespace (`falkordb-system` below) and
+  `kb-system`, with the Pod Security labels in
+  [Pod security](/enterprise/reference/pod-security).
+- **Registry credentials.** A `kubernetes.io/dockerconfigjson` Secret for
+  `registry.falkordb.cloud` in the release namespace, named in
+  `global.imageCredentials.name` with `create: false`, and one your GitOps
+  controller uses to pull the bundle and the chart.
+- **The Admin Server's JWT signing secret.** A Secret in the release namespace,
+  named in `adminServer.secret.jwtExistingSecret`.
+
+## Values for the chart
+
+Whichever controller you use, give the chart these values on top of your own:
+
+```yaml
+# KubeBlocks runs as its own release (step 2), not as a subchart.
+kubeblocks:
+  enabled: false
+
+# The bundle applies the CRDs, so the chart's CRD hook stays off: nothing in
+# the cluster then holds its grant to rewrite CRDs.
+upgrader:
+  crds:
+    kubeblocks: false
+    volumeSnapshots: false
+
+global:
+  imageCredentials:
+    create: false
+    name: falkordb-registry
+
+# The database and Browser subcharts can't read global.imageCredentials, so
+# they repeat the name. The Admin Server copies the Secret into each namespace
+# it creates a database in.
+falkordb-addon:
+  imagePullSecrets:
+    - name: falkordb-registry
+falkordb-browser:
+  imagePullSecrets:
+    - name: falkordb-registry
+
+# The default VolumeSnapshotClass is for the bundled CSI hostpath driver;
+# see "Volume snapshots" below.
+volumeSnapshotClass:
+  enabled: false
+
+adminServer:
+  secret:
+    jwtExistingSecret:
+      name: falkordb-enterprise-jwt
+      key: jwt-secret
+  rbac:
+    admissionPolicy:
+      # Refuse, rather than warn about, what the Admin Server must not do.
+      # Kubernetes 1.30 or later.
+      validationActions: [Deny]
+```
+
+Give KubeBlocks the values `install.sh` gives it:
+
+```yaml
+autoInstalledAddons: []
+rbac:
+  # The FalkorDB addon manages ClusterRoles for each deployment, which the
+  # stock KubeBlocks manager role does not cover.
+  additionalPolicyRules:
+    - apiGroups: [rbac.authorization.k8s.io]
+      resources: [clusterroles]
+      verbs: [create, delete, get, list, patch, update, watch]
+```
+
+Use the KubeBlocks chart version listed for your FalkorDB Enterprise version
+in [Compatibility](/enterprise/reference/compatibility).
+
+### Volume snapshots
+
+Volume-snapshot backups need the `VolumeSnapshot` CRDs, a snapshot controller,
+and a `VolumeSnapshotClass` for your CSI driver. `install.sh` sets these up
+from what it finds in the cluster; with Argo CD or Flux, choose yourself:
+
+- **Your cluster already runs a snapshot controller** (most managed
+  Kubernetes services do). Set `volumeSnapshotClass.enabled: true`, with
+  `volumeSnapshotClass.driver` set to your CSI driver, or leave it `false`
+  and use a `VolumeSnapshotClass` you already have.
+- **It doesn't.** Set `snapshot-controller.enabled: true` and leave
+  `snapshot-controller.installCRDs` at its default, `true`, plus the
+  `VolumeSnapshotClass` values above. The chart then installs the controller,
+  its conversion webhook and the CRDs together, with the CRDs pointing at that
+  webhook and its CA. Don't apply the bundle's `volume-snapshots` directory
+  as well.
+- **You run your own snapshot controller without its CRDs.** Apply the
+  bundle's `volume-snapshots` directory in its own Application or
+  `Kustomization` next to `kubeblocks`. Its `VolumeGroupSnapshotContent` CRD
+  converts through a webhook, and names the upstream placeholder Service
+  (`default/snapshot-conversion-webhook-service`) with no CA, so patch its
+  `spec.conversion.webhook.clientConfig` to your webhook from Git as well,
+  for example with a `kustomization.yaml` patch, or conversions fail.
+- **You don't take volume-snapshot backups.** Keep
+  `volumeSnapshotClass.enabled: false`.
+
+Without the CRDs, a `VolumeSnapshotClass` in the chart fails the sync, since
+its kind doesn't exist.
+
+## Argo CD
+
+Argo CD 3.1 or later reads the bundle straight from the OCI registry. Register
+the registry once, as a repository Secret in Argo CD's namespace. Like the
+other Secrets, create it outside Git:
+
+```yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: falkordb-registry
+  namespace: argocd
+  labels:
+    argocd.argoproj.io/secret-type: repository
+stringData:
+  type: oci
+  url: oci://registry.falkordb.cloud/falkordb/falkordb-enterprise-crds
+  username: <registry-username>
+  password: <registry-token>
+```
+
+Then one Application per piece. The CRDs need server-side apply: the largest
+KubeBlocks CRDs exceed the size of the annotation a client-side apply keeps.
+
+```yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: falkordb-enterprise-crds
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "-2"
+spec:
+  project: default
+  source:
+    repoURL: oci://registry.falkordb.cloud/falkordb/falkordb-enterprise-crds
+    targetRevision: <chart-version>
+    path: kubeblocks
+  destination:
+    server: https://kubernetes.default.svc
+  syncPolicy:
+    automated:
+      prune: false
+    syncOptions:
+      - ServerSideApply=true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kubeblocks
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "-1"
+spec:
+  project: default
+  source:
+    repoURL: https://apecloud.github.io/helm-charts
+    chart: kubeblocks
+    targetRevision: <kubeblocks-version>
+    helm:
+      valuesObject: {} # the KubeBlocks values above
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: kb-system
+  syncPolicy:
+    automated: {}
+    syncOptions:
+      - ServerSideApply=true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: falkordb-enterprise
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/compare-options: ServerSideDiff=true
+spec:
+  project: default
+  source:
+    repoURL: registry.falkordb.cloud/falkordb
+    chart: falkordb-enterprise
+    targetRevision: <chart-version>
+    helm:
+      valuesObject: {} # the chart values above
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: falkordb-system
+  # Empty values KubeBlocks adds or drops once the chart applies them; see
+  # below.
+  ignoreDifferences:
+    - group: apps.kubeblocks.io
+      kind: ComponentDefinition
+      jqPathExpressions:
+        - '.. | .resources? | select(. == {})'
+        - '.spec.vars[]?.value | select(. == "")'
+    - group: dataprotection.kubeblocks.io
+      kind: ActionSet
+      jqPathExpressions:
+        - '.spec.backup.preBackup | select(. == [])'
+        - '.spec.backup.postBackup | select(. == [])'
+    - group: operations.kubeblocks.io
+      kind: OpsDefinition
+      jqPathExpressions:
+        - '.. | .resources? | select(. == {})'
+  syncPolicy:
+    automated: {}
+    syncOptions:
+      - ServerSideApply=true
+```
+
+The chart's Application diffs and applies server-side. Its
+`ignoreDifferences` skip only empty values that KubeBlocks adds to or drops
+from the chart's `ComponentDefinition`, `ActionSet` and `OpsDefinition`
+objects once they're applied, such as `resources: {}`. They mean the same
+either way, but without these rules the Application never shows as synced.
+
+The chart is a Helm OCI repository: register `registry.falkordb.cloud/falkordb`
+as a Helm repository with `enableOCI: "true"` and the same credentials.
+
+The sync waves order the three Applications only when an app of apps creates
+them, and only once Argo CD reports an Application's health, which it doesn't
+by default; see Argo CD's
+[sync waves](https://argo-cd.readthedocs.io/en/stable/user-guide/sync-waves/)
+documentation. Otherwise, create them in order the first time, and wait for
+each to sync before the next. Until the CRDs exist, the other two fail their
+dry run with `the server could not find the requested resource`.
+
+Argo CD renders the chart with `helm template`, so the chart's hooks become
+Argo CD hooks that run on every sync. That is why the values above keep the
+CRD hook off. The chart's other checks that look the cluster up, such as the
+guards on the Admin Server's ServiceAccount, can't run under `helm template`
+either.
+
+## Flux
+
+Flux reads the bundle as an `OCIRepository` and applies it with a
+`Kustomization`. The bundle's layer is a plain tar archive, so select it by
+its media type:
+
+```yaml
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: OCIRepository
+metadata:
+  name: falkordb-enterprise-crds
+  namespace: flux-system
+spec:
+  interval: 1h
+  url: oci://registry.falkordb.cloud/falkordb/falkordb-enterprise-crds
+  ref:
+    tag: <chart-version>
+  secretRef:
+    name: falkordb-registry
+  layerSelector:
+    mediaType: application/vnd.oci.image.layer.v1.tar+gzip
+    operation: extract
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: falkordb-enterprise-crds
+  namespace: flux-system
+spec:
+  interval: 1h
+  sourceRef:
+    kind: OCIRepository
+    name: falkordb-enterprise-crds
+  path: ./kubeblocks
+  prune: false
+  wait: true
+```
+
+Flux applies server-side, so the CRDs' size is no problem. Put the KubeBlocks
+and FalkorDB Enterprise `HelmRelease` objects in a second `Kustomization` that
+depends on the first, so they wait for the CRDs:
+
+```yaml
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: falkordb-enterprise
+  namespace: flux-system
+spec:
+  dependsOn:
+    - name: falkordb-enterprise-crds
+  interval: 10m
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  path: ./falkordb-enterprise # holds the two HelmReleases below
+  prune: true
+```
+
+```yaml
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: falkordb
+  namespace: flux-system
+spec:
+  type: oci
+  interval: 1h
+  url: oci://registry.falkordb.cloud/falkordb
+  secretRef:
+    name: falkordb-registry
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: kubeblocks
+  namespace: flux-system
+spec:
+  interval: 1h
+  url: https://apecloud.github.io/helm-charts
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: kubeblocks
+  namespace: kb-system
+spec:
+  interval: 1h
+  chart:
+    spec:
+      chart: kubeblocks
+      version: <kubeblocks-version>
+      sourceRef:
+        kind: HelmRepository
+        name: kubeblocks
+        namespace: flux-system
+  values: {} # the KubeBlocks values above
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: falkordb-enterprise
+  namespace: falkordb-system
+spec:
+  interval: 1h
+  dependsOn:
+    - name: kubeblocks
+      namespace: kb-system
+  chart:
+    spec:
+      chart: falkordb-enterprise
+      version: <chart-version>
+      sourceRef:
+        kind: HelmRepository
+        name: falkordb
+        namespace: flux-system
+  install:
+    timeout: 20m
+  upgrade:
+    timeout: 20m
+  values: {} # the chart values above
+```
+
+## Upgrade
+
+Read the [changelog](/enterprise/upgrades/changelog) for the versions you skip first, as
+for any upgrade. Then upgrade in two commits, as `install.sh` does:
+
+<Steps>
+  <Step title="Upgrade the CRDs">
+    Change the bundle's version to the new chart version, and wait until the
+    CRDs are applied: the Argo CD Application is synced, or the Flux
+    `Kustomization` reports the new revision as its last applied one. The new
+    CRDs serve the KubeBlocks and chart you run now.
+  </Step>
+  <Step title="Upgrade KubeBlocks and the chart">
+    Change the chart to the new version, and KubeBlocks to the version
+    [Compatibility](/enterprise/reference/compatibility) lists for it.
+  </Step>
+</Steps>
+
+In one commit, the order above isn't enough: Argo CD's sync waves and Flux's
+`dependsOn` wait until the CRDs are healthy or ready, which the old CRDs
+already are, so KubeBlocks or the chart can start upgrading before the new
+CRDs are applied.
+
+## Air-gapped registries
+
+Copy the bundle into your registry next to the chart and images, for example
+with [ORAS](https://oras.land):
+
+```bash
+oras copy \
+  registry.falkordb.cloud/falkordb/falkordb-enterprise-crds:<chart-version> \
+  my-registry.example.com/falkordb/falkordb-enterprise-crds:<chart-version>
+```
+
+Then point the Argo CD Application or Flux `OCIRepository` at your copy. See
+[Private registries](/enterprise/deployment/private-images) for the chart and images.
+
+The bundle is signed like the chart; verify it as
+[Supply chain](/enterprise/reference/supply-chain) describes for the chart.

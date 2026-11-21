@@ -1,0 +1,34 @@
+---
+title: "Delete snapshot"
+sidebarTitle: "Delete"
+api: "DELETE https://api.omnistrate.cloud/2022-09-01-00/resource-instance/snapshot/{id}"
+description: "Delete a snapshot."
+---
+
+Deletes a snapshot. Deleted snapshots cannot be restored.
+
+## Authorization
+
+<ParamField header="Cookie" type="string" required>
+  Session cookie set by [Sign in](/cloud/api-reference/authentication/signin): `omnistrate_token=<jwt>`.
+</ParamField>
+
+## Path parameters
+
+<ParamField path="id" type="string" required>
+  ID of the snapshot.
+</ParamField>
+
+## Query parameters
+
+<ParamField query="subscriptionId" type="string">
+  Subscription that owns the snapshot.
+</ParamField>
+
+## Response
+
+Returns `202 Accepted` with an empty body.
+
+## Errors
+
+See [Error](/cloud/api-reference/schemas#error) for the error response shape.

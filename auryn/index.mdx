@@ -1,0 +1,51 @@
+---
+title: "Auryn: Turn Your Codebase into a Knowledge Graph for Coding Agents"
+sidebarTitle: "Overview"
+description: "Auryn indexes your codebase into a FalkorDB knowledge graph of functions, types, tables, and endpoints, then serves it to your coding agent over MCP — on infrastructure you control."
+---
+
+Auryn turns a codebase into a knowledge graph of its functions, types, tables, and endpoints, and the connections between them. It stores that graph in [FalkorDB](https://www.falkordb.com) and hands it to your coding agent, so the agent answers from how your code actually fits together.
+
+It works with Claude Code, Codex, Cursor, Windsurf, GitHub Copilot, VS Code Copilot Chat, Gemini CLI, Antigravity, and Aider — plus any agent that reads `AGENTS.md` or connects over MCP — reads sixteen languages plus live SQL and Oracle schemas, and runs on your own machine or a FalkorDB you manage.
+
+<CardGroup cols={2}>
+  <Card title="Quickstart" icon="bolt" href="/auryn/quickstart">
+    See a real graph in about a second.
+  </Card>
+  <Card title="Connect your agent" icon="plug" href="/auryn/connect-your-agent">
+    One install, then just ask.
+  </Card>
+  <Card title="Agent tools" icon="wrench" href="/auryn/agent-tools">
+    What your agent can ask the graph.
+  </Card>
+  <Card title="Source on GitHub" icon="github" href="https://github.com/FalkorDB/Auryn">
+    Auryn is open source. Browse the code, open issues, and contribute.
+  </Card>
+</CardGroup>
+
+## Why Auryn
+
+- **Graph-grounded answers.** Your agent reasons over real call graphs, inheritance, endpoints, and table access instead of guessing from a handful of open files.
+- **Sixteen languages, one vocabulary.** Every language writes into the same [graph model](/auryn/graph-model), so "who calls this" works the same in Go as in C#.
+- **Fast, incremental refresh.** Auryn never rebuilds from scratch — each refresh updates only what changed. See [Keeping it fresh](/auryn/keeping-it-fresh).
+- **Local and private.** No hosted service and no telemetry. See [Privacy & security](/auryn/privacy-and-security).
+
+## Frequently Asked Questions
+
+<AccordionGroup>
+  <Accordion title="What is Auryn?">
+    Auryn is a FalkorDB-powered tool that indexes a codebase into a knowledge graph of functions, types, tables, and endpoints, and exposes it to coding agents over the Model Context Protocol (MCP). Your agent queries the graph to answer questions about how your code fits together.
+  </Accordion>
+  <Accordion title="Which coding agents does Auryn support?">
+    Auryn registers the `auryn` MCP server automatically with the MCP-native agents it detects: Claude Code, Codex, Cursor, Windsurf, GitHub Copilot, VS Code Copilot Chat, Gemini CLI, and Antigravity. Aider and other `AGENTS.md`-aware agents get written instructions instead, and any other MCP client can be configured manually. See [Connect your agent](/auryn/connect-your-agent).
+  </Accordion>
+  <Accordion title="Does Auryn send my code anywhere?">
+    No. Auryn runs on your machine against a bundled FalkorDB or your own instance, with no hosted service and no telemetry. Read tools only ever issue read-only queries. See [Privacy & security](/auryn/privacy-and-security).
+  </Accordion>
+  <Accordion title="Do I need to run a server or Docker?">
+    No. Quickstart starts an embedded FalkorDB for you. You can also point Auryn at a FalkorDB you already run. See the [Quickstart](/auryn/quickstart).
+  </Accordion>
+  <Accordion title="Can I use Auryn on native Windows or an older Linux?">
+    The embedded FalkorDB needs a recent Linux or macOS (on Windows, use WSL2). On native Windows or older Linux, point Auryn at a FalkorDB server you run: `auryn install --backend remote --host <host> --port <port>`. See [Connect your agent](/auryn/connect-your-agent).
+  </Accordion>
+</AccordionGroup>

@@ -1,0 +1,121 @@
+---
+title: "Troubleshoot FalkorDB Enterprise licensing"
+sidebarTitle: "Troubleshoot licensing"
+description: "Fix license activation errors, read-only mode, exceeded limits, and cluster binding failures."
+icon: "key"
+---
+
+This page covers the license errors the Admin Server reports, what each means, and how to recover. For how licenses work, see [Licensing](/enterprise/licensing).
+
+Start by checking the current state:
+
+```bash
+falkordb-admin license status
+```
+
+The **Licensing** page of the Admin UI shows the same state, the limits next to current usage, and any violations.
+
+## Changes are refused with 423 Locked
+
+```json
+{
+  "statusCode": 423,
+  "error": "Locked",
+  "message": "License read-only mode is active: License has expired."
+}
+```
+
+The license is `expired` or `invalid`, so the management plane is read-only. Your databases keep serving traffic. Restart, start, stop, switchover, on-demand backups and deployment deletes still work. The text after the colon gives the reason:
+
+| Message | Cause | Fix |
+| --- | --- | --- |
+| `License has expired.` | The license's `expiresAt` date has passed. | Regenerate the cluster's license in the [Enterprise Portal](/enterprise/get-started/enterprise-portal) and activate it. |
+| `Trial expired. Activate a license to continue.` | The 14-day trial ended with no license activated. | Register the cluster in the Enterprise Portal and activate its license. |
+| Any other message | The installed license failed validation. See [Activation errors](#activation-errors). | Activate a valid license for this cluster. |
+
+Activate the replacement from **Licensing** in the Admin UI, or with the CLI:
+
+```bash
+falkordb-admin license activate --license 'falkor.license.v1.<payload>.<signature>'
+```
+
+Sign-in and licensing stay available in read-only mode, so you can always activate a license.
+
+## A change fails with License limit exceeded
+
+```text
+License limit exceeded: ...
+```
+
+The change would take usage past one of the license's limits: deployments, CPU, memory or users. The message names the resource. Nothing was applied.
+
+- Free capacity: delete or scale down a deployment, or lower its resources. CPU and memory count the requests of every node, including Sentinels and every shard.
+- Or raise the limit: resize the cluster's license in the Enterprise Portal, within your organization's quota, and activate the new license.
+
+When usage is already over a limit, the state is `locked`. Actions that keep usage flat or reduce it still work, so you can bring it back within the license.
+
+## Activation errors
+
+Activating a license, from the Admin UI, CLI, API or Helm, validates it first. These are the reasons it can fail:
+
+| Message | Cause | Fix |
+| --- | --- | --- |
+| `Invalid license format` | The string is not `falkor.license.v1.<payload>.<signature>`. It was usually truncated or wrapped when copied. | Copy the whole string again, on one line. |
+| `License signature validation failed` | The payload or signature was changed after signing. | Copy the license again from the Enterprise Portal. Don't edit it. |
+| `License payload is incomplete` | Required fields are missing from the payload. | Regenerate the license in the Enterprise Portal. |
+| `Unsupported license payload version: <n>` | The license format is newer than this Admin Server understands. | Upgrade FalkorDB Enterprise, or contact support. |
+| `License is not valid for this Kubernetes cluster` | The license is bound to a different cluster ID. | Check the ID below, and register this cluster to get its own license. |
+| `License verifier integrity check failed` | The public key in the Admin Server image doesn't match its checksum. The image is damaged or was modified. | Reinstall from a verified image. See [Supply chain](/enterprise/reference/supply-chain). |
+
+## The license is bound to another cluster
+
+A license works only on the cluster whose `kube-system` namespace `uid` it was issued for. Compare the two:
+
+```bash
+kubectl get namespace kube-system -o jsonpath='{.metadata.uid}'; echo
+```
+
+Decode the license payload to read its `k8sClusterId`:
+
+```bash
+echo '<license>' | cut -d. -f4 | tr '_-' '/+' \
+  | awk '{ while (length($0) % 4) $0 = $0 "="; print }' | base64 -d | jq -r .k8sClusterId
+```
+
+If they differ, register this cluster in the Enterprise Portal with its ID. A rebuilt cluster has a new ID, so it needs a new license. See [Disaster recovery into a replacement cluster](/enterprise/licensing#disaster-recovery-into-a-replacement-cluster).
+
+## The cluster ID can't be read
+
+```text
+The Kubernetes cluster ID could not be read to verify the license binding. The license stays valid until the grace period ends.
+```
+
+The Admin Server couldn't read the `kube-system` namespace, because of an API server outage, a timeout or missing RBAC. The license stays valid for the grace period, 24 hours by default, and the Admin UI shows when it ends. Once it ends, the license becomes `invalid` with:
+
+```text
+License is bound to a Kubernetes cluster ID that has not been verified since <time>, and the verification grace period has ended
+```
+
+Check that the Admin Server can reach the API server and read the namespace:
+
+```bash
+kubectl logs -n falkordb-system deploy/falkordb-enterprise-admin-server -c admin-server | grep -i "cluster ID"
+kubectl auth can-i get namespace/kube-system \
+  --as=system:serviceaccount:falkordb-system:falkordb-enterprise-admin-server
+```
+
+The license becomes valid again with the next successful check. Change the grace period with `adminServer.license.verificationGracePeriodHours`.
+
+## A license supplied through Helm isn't applied
+
+The Admin Server reads a Helm-supplied license when it starts. If that license is invalid, expired or bound to another cluster while the installed license is still valid, it keeps the installed one and logs:
+
+```text
+Ignoring FALKORDB_LICENSE: it is invalid, expired or bound to another cluster, and the installed license is still valid
+```
+
+Fix the value in `adminServer.license.value`, or in the Secret named by `adminServer.license.existingSecret.name`, and upgrade the release. See [Enterprise license](/enterprise/deployment/production#enterprise-license).
+
+## The license is lost after a restart
+
+A license activated in the Admin UI, CLI or API is stored in `/data/license-state.json` on the Admin Server's volume. With `adminServer.persistence.enabled: false`, it is lost on every restart. Keep persistence enabled, or supply the license through Helm. To protect the file, see [Admin Server backup](/enterprise/operations/admin-server-backup).

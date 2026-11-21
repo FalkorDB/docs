@@ -1,0 +1,75 @@
+---
+title: "Update instance"
+sidebarTitle: "Update"
+api: "PUT https://api.omnistrate.cloud/2022-09-01-00/resource-instance/sp-JvkxkPhinN/falkordb/v1/prod/falkordb-enterprise-byoa-byoa/falkordb-enterprise-byoa-falkordb-byoa-model-omnistrate-dedicated-tenancy/single-Zone/{id}"
+description: "Update the configuration of an Enterprise BYOA Single-Zone instance."
+---
+
+Applies configuration changes to a running instance. Only the fields you send are changed. Changing `falkordbPassword` or `nodeInstanceType` restarts the instance.
+
+## Authorization
+
+<ParamField header="Cookie" type="string" required>
+  Session cookie set by [Sign in](/cloud/api-reference/authentication/signin): `omnistrate_token=<jwt>`.
+  Browsers send it automatically; other clients must forward it on every request.
+</ParamField>
+
+## Path parameters
+
+<ParamField path="id" type="string" required>
+  ID of the resource instance.
+</ParamField>
+
+## Query parameters
+
+<ParamField query="subscriptionId" type="string">
+  ID of the subscription that owns the instance.
+</ParamField>
+
+## Body
+
+<ParamField body="requestParams" type="object" required>
+  Instance configuration.
+
+  <Expandable title="requestParams properties">
+    <ParamField body="falkordbPassword" type="string" required>
+      Default password for the database. Updating this value after deployment restarts the instance.
+    </ParamField>
+
+    <ParamField body="nodeInstanceType" type="string" default="e2-custom-4-8192" required>
+      Compute instance type used for each node. See [Instance configuration](/cloud/api-reference/schemas#instance-configuration).
+    </ParamField>
+
+    <ParamField body="description" type="string" default="Description">
+      Description of the instance.
+    </ParamField>
+
+    <ParamField body="maxMemory" type="string" default="6GB">
+      Maximum memory available to the database, for example `6GB`. Do not exceed the memory of the selected instance type.
+    </ParamField>
+
+    <ParamField body="name" type="string" default="My favorite database">
+      Human-readable name for the instance.
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+## Sizing and tier availability
+
+`nodeInstanceType` accepts any compute instance type available to your Enterprise BYOA plan in the selected cloud provider and region, for example `e2-custom-4-8192` on GCP or `m7g.xlarge` on AWS. It defaults to `e2-custom-4-8192`. Use `maxMemory` to cap the memory the database itself uses; it must not exceed the memory of the selected instance type.
+
+`maxMemory` and `enableEnterpriseModule` are available on this tier.
+
+`numReplicas` is fixed at `2` for this component and cannot be changed.
+
+See [Instance configuration](/cloud/api-reference/schemas#instance-configuration) for the full field reference.
+
+## Response
+
+<ResponseField name="id" type="string">
+  ID of the resource instance.
+</ResponseField>
+
+## Errors
+
+See [Error](/cloud/api-reference/schemas#error) for the shared error response shape.

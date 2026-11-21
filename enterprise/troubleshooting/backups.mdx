@@ -1,0 +1,97 @@
+---
+title: "Troubleshoot FalkorDB backups and restores"
+sidebarTitle: "Troubleshoot backups"
+description: "Fix backups that are refused, stay pending or fail, and restores that are refused or don't finish."
+icon: "floppy-disk"
+---
+
+This page covers the errors the Admin Server returns when it refuses a backup or restore, and how to diagnose a backup or restore that KubeBlocks started but didn't finish. For how backups work, see [Backups & schedules](/enterprise/operations/backups).
+
+## Inspect a backup or restore
+
+The Admin UI shows each backup's status on the deployment's **Backups** tab. For the details, look at the KubeBlocks resources and the pods that do the work:
+
+```bash
+kubectl get backups.dataprotection.kubeblocks.io -n <namespace>
+kubectl describe backups.dataprotection.kubeblocks.io -n <namespace> <backup>
+kubectl get pods -n <namespace> -l dataprotection.kubeblocks.io/backup-name=<backup>
+kubectl logs -n <namespace> <backup-pod> --all-containers
+```
+
+For a restore:
+
+```bash
+kubectl get restores.dataprotection.kubeblocks.io -n <namespace>
+kubectl describe restores.dataprotection.kubeblocks.io -n <namespace> <restore>
+```
+
+The KubeBlocks data protection controller logs the reason for most failures:
+
+```bash
+kubectl logs -n kb-system -l app.kubernetes.io/component=dataprotection --tail 200
+```
+
+## A backup is refused
+
+The Admin Server checks a backup or schedule before it creates it.
+
+| Message | Fix |
+| --- | --- |
+| `Cannot create backup: no default backup repository is configured. ...` | Create a backup repository, or mark an existing one as the default. See [Create a backup repository](/enterprise/operations/backups#create-a-backup-repository). |
+| `Cannot create backup: deployment '<name>' is not running (current state: ...)` | Wait until the deployment is `Running`, or fix what keeps it from running. See [Troubleshoot deployments](/enterprise/troubleshooting/deployments). |
+| `Backup method '<method>' is not supported by backup policy '<policy>'. Supported methods: ...` | Choose one of the listed methods. A sharded deployment created before continuous backups were added gets `aof` after KubeBlocks reconciles it again. See [Point-in-time restore](/enterprise/operations/restore-point-in-time). |
+| `AOF backups are only supported through backup schedules. Create a backup schedule instead.` | Create an `aof` schedule instead of an on-demand backup. |
+
+## Volume-snapshot backups are refused
+
+A `volume-snapshot` backup needs CSI-backed volumes and a `VolumeSnapshotClass` for their driver. The Admin Server checks this and names what is missing:
+
+| Message | Fix |
+| --- | --- |
+| `... volume-snapshot backups require persistent volume claims for deployment '<name>'.` | The deployment runs without persistent volumes. Use a `datafile` backup, and move the data to a deployment with storage. |
+| `... require a VolumeSnapshotClass for the cluster storage class, but none are installed.` | Install a `VolumeSnapshotClass` for the storage driver, or set `volumeSnapshotClass.driver` in the chart values. |
+| `... its bound PersistentVolume is not CSI-backed. ...` | The storage class doesn't use a CSI driver, so it can't snapshot. Use `datafile` or `aof` backups, or recreate the deployment on CSI storage. |
+| `... no VolumeSnapshotClass is available for storageClass '<class>' CSI driver '<driver>'.` | Add a `VolumeSnapshotClass` whose `driver` is the one named. |
+
+Check the classes and drivers in the cluster:
+
+```bash
+kubectl get storageclass
+kubectl get volumesnapshotclass
+```
+
+## A backup stays Pending or Running
+
+If the backup pod is `Pending`, read its events:
+
+```bash
+kubectl describe pod -n <namespace> <backup-pod> | grep -A10 Events
+```
+
+- **`volume node affinity conflict`, or no node can be found.** The default backup repository is a `ReadWriteOnce` volume in one zone, and the database is in another. Use an object storage repository or a `ReadWriteMany` class. See [Multi-zone clusters](/enterprise/operations/backups#multi-zone-clusters).
+- **Insufficient CPU or memory.** The node that holds the database volume has no room for the backup pod. Free capacity on that node.
+- **Image pull errors.** Backups run the `datasafed` image. Check the pull Secret, or your mirror if you mirror images.
+
+If the pod runs but the backup doesn't finish, read the pod's logs for errors writing to the repository, such as rejected credentials or a missing bucket. Check the repository's settings in **Backup Repos** in the Admin UI.
+
+## A restore is refused
+
+| Message | Fix |
+| --- | --- |
+| `Restoring a backup into an existing deployment is not supported. ...` | Every restore creates a new deployment. See [Restore to a new deployment](/enterprise/operations/restore-new-database), and [Restore in place](/enterprise/operations/restore-same-database) for how to replace a deployment's data. |
+| `Deployment '<name>' already exists in namespace '<namespace>'` | Choose a name that isn't in use for the new deployment. |
+| `Backup '<backup>' is not ready for restore` | The backup hasn't completed. Wait for it, or choose a completed backup. |
+| `Backup '<backup>' is a continuous backup, which restores to a point in time: give restoreTime, ...` | Restore a continuous backup to a point in time. See [Point-in-time restore](/enterprise/operations/restore-point-in-time). |
+| `Restore time '<time>' is not a valid UTC date and time (e.g. 2026-11-02T14:30:00Z).` | Give the time in UTC, in the format shown. |
+
+A license in `expired` or `invalid` state also refuses restores, because a restore creates a deployment. See [Troubleshoot licensing](/enterprise/troubleshooting/licensing).
+
+## A restored deployment has no data yet
+
+A sharded deployment loads its backup once the shards form, so it can show as running before every shard has its data. Wait for the restore to report `Completed`, then check the data before you switch clients to it:
+
+```bash
+kubectl get restores.dataprotection.kubeblocks.io -n <namespace>
+```
+
+If the restore fails, the `describe` output and the data protection controller's logs give the reason. Collect a [support package](/enterprise/troubleshooting/support-package) for the deployment before you delete anything.

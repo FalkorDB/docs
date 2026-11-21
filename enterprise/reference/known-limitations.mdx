@@ -1,0 +1,47 @@
+---
+title: "Known limitations of FalkorDB Enterprise"
+sidebarTitle: "Known limitations"
+description: "Constraints of the current release that affect planning: platform, Admin Server, authentication, networking, TLS, backups and licensing."
+icon: "triangle-exclamation"
+---
+
+This page collects the limitations of the current release in one place, so you can plan around them before you install. Each entry links to the page that covers it in detail.
+
+## Platform
+
+- **One installation per Kubernetes cluster.** Only one FalkorDB Enterprise installation is supported in a Kubernetes cluster. See [Requirements](/enterprise/get-started/requirements).
+- **The admission policy needs Kubernetes 1.30.** On Kubernetes 1.27 to 1.29 the chart installs without the Admin Server's admission policy, and only RBAC constrains the Admin Server. See [Requirements](/enterprise/get-started/requirements#kubernetes-version).
+- **KubeBlocks version.** The supported KubeBlocks version is `1.2.0-alpha.1`, the version the chart pins and the installer deploys. The FalkorDB addon needs KubeBlocks 1.2 or later. Its sharding definition accepts `spec.tls.shared` and ignores it. See [KubeBlocks upgrades](/enterprise/upgrades/kubeblocks).
+- **FalkorDB versions can't be downgraded.** Upgrading a deployment to a newer FalkorDB version is one-way. See [Upgrade FalkorDB Enterprise](/enterprise/upgrades/enterprise#rollback).
+
+## Admin Server
+
+- **Single replica.** The Admin Server runs as one replica. Its audit log is a SQLite database on a `ReadWriteOnce` volume, so it can't be scaled out. An Admin Server restart or upgrade makes the Admin UI and API briefly unavailable. Your deployments keep serving traffic. To protect its state, see [Admin Server backup](/enterprise/operations/admin-server-backup).
+- **No self-service password reset.** There is no "forgot password" flow. An admin resets other users' passwords, and the admin account is recovered through its Kubernetes Secret. See [Reset admin password](/enterprise/operations/reset-admin-password).
+
+## Authentication
+
+- **Two single sign-on providers.** Google and Microsoft Entra ID (Azure AD) are supported. Okta, Auth0, generic OpenID Connect, SAML and LDAP are not supported yet. See [Google OAuth](/enterprise/authentication/google-oauth) and [Microsoft Entra ID](/enterprise/authentication/azure-ad-oauth).
+
+## Networking
+
+- **Sentinels aren't published through node addresses.** With `externalAddress` set to `NodeExternalIP` or `HostIP`, only data pods are published. Expose Sentinels with a `LoadBalancer` service instead. See [ExternalDNS](/enterprise/deployment/external-dns).
+- **One data pod per node with node addresses.** Node addresses use fixed host ports, which also need the deployment's namespace to run at the `privileged` Pod Security level. See [ExternalDNS](/enterprise/deployment/external-dns).
+- **GKE direct pod access needs VPC-native clusters.** Routes-based GKE clusters are not supported for direct pod access. See [VPC access](/enterprise/deployment/vpc-access).
+
+## TLS
+
+- **TLS is set at creation.** You can't turn TLS on or off for an existing deployment. See [TLS](/enterprise/databases/tls).
+- **KubeBlocks-issued certificates are limited.** The **Issued by KubeBlocks** option works only for standalone deployments and replication without Sentinel, and can't be used with an external domain. Use the default FalkorDB Enterprise issuer, cert-manager or your own Secret for the other topologies. See [TLS](/enterprise/databases/tls#choose-who-issues-the-certificates).
+- **Sharded deployments without persistent volumes aren't restarted for a new certificate.** If reloading a certificate in place fails, restart the deployment yourself. See [TLS](/enterprise/databases/tls#renewal).
+
+## Backups and restore
+
+- **No restore into an existing deployment.** Every restore, including a point-in-time restore, creates a new deployment. See [Restore in place](/enterprise/operations/restore-same-database).
+- **Backups restore only in the Kubernetes cluster that took them.** The Admin UI and API can't restore a lost cluster's backups into a replacement cluster. FalkorDB support can help. To plan for that case yourself, see [Disaster recovery](/enterprise/operations/disaster-recovery).
+- **Point-in-time restore.** Continuous backups don't package offloaded graphs, and writes within the replication lag before the restore time can be left out. See [Point-in-time restore](/enterprise/operations/restore-point-in-time#limitations).
+- **RDB exports.** Exports of a sharded deployment aren't a consistent copy across shards. Repositories that rely on cloud IAM roles instead of keys aren't supported for RDB exports, and importing a graph over an existing graph of the same name is not supported. See [RDB export and import](/enterprise/operations/rdb-export-import) and [Disaster recovery](/enterprise/operations/disaster-recovery#limitations).
+
+## Licensing
+
+- **A license is bound to one Kubernetes cluster.** Rebuilding a cluster creates a new cluster ID, which needs a new license. See [Licensing](/enterprise/licensing#binding-to-a-cluster).

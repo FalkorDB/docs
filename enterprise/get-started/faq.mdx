@@ -1,0 +1,73 @@
+---
+title: "FalkorDB Enterprise frequently asked questions"
+sidebarTitle: "FAQ"
+description: "Short answers to common questions about licensing, platform support, availability, backups and getting help."
+icon: "circle-question"
+---
+
+Short answers to the questions platform teams ask most often before and after installing. Each answer links to the page with the details.
+
+## Licensing
+
+<AccordionGroup>
+  <Accordion title="Do I need a license to try FalkorDB Enterprise?">
+    No. An unlicensed Admin Server starts a 14-day trial with no limits. When the trial ends, the management plane goes read-only until you activate a license. See [Licensing](/enterprise/licensing).
+  </Accordion>
+  <Accordion title="Does licensing need internet access?">
+    No. A license is a signed string that the Admin Server verifies locally, so an air-gapped cluster is licensed the same way as a connected one. See [How licenses are generated](/enterprise/licensing#how-licenses-are-generated).
+  </Accordion>
+  <Accordion title="Do my databases stop when the license expires?">
+    No. An expired or invalid license makes the management plane read-only. Your deployments keep serving traffic, and you can still restart, stop, back up and delete them. See [Troubleshoot licensing](/enterprise/troubleshooting/licensing).
+  </Accordion>
+</AccordionGroup>
+
+## Platform
+
+<AccordionGroup>
+  <Accordion title="Which Kubernetes versions are supported?">
+    Kubernetes 1.27 or later, and OpenShift 4.14 or later. The Admin Server's admission policy needs Kubernetes 1.30. See [Requirements](/enterprise/get-started/requirements#kubernetes-version).
+  </Accordion>
+  <Accordion title="Which KubeBlocks version does FalkorDB Enterprise use?">
+    KubeBlocks `1.2.0-alpha.1`. The installer deploys it, and it is the supported version. See [KubeBlocks upgrades](/enterprise/upgrades/kubeblocks).
+  </Accordion>
+  <Accordion title="Can I install FalkorDB Enterprise more than once in a cluster?">
+    No. Only one installation is supported per Kubernetes cluster.
+  </Accordion>
+  <Accordion title="Can I install in a cluster with no internet access?">
+    Yes. Mirror the images into a registry the cluster can reach, and install with `helm` directly. See [Private registries](/enterprise/deployment/private-images).
+  </Accordion>
+  <Accordion title="How much capacity do I need?">
+    See [Sizing](/enterprise/deployment/sizing) for the platform components' requests and starting points for each topology.
+  </Accordion>
+</AccordionGroup>
+
+## Operations
+
+<AccordionGroup>
+  <Accordion title="What happens to my databases if the Admin Server is down?">
+    They keep running. The Admin Server is the management plane: while it is down, you can't change deployments from the Admin UI, CLI or API, but clients keep reading and writing. It runs as a single replica. See [Known limitations](/enterprise/reference/known-limitations#admin-server).
+  </Accordion>
+  <Accordion title="Can I restore a backup into an existing deployment?">
+    No. Every restore creates a new deployment. See [Restore in place](/enterprise/operations/restore-same-database) for how to replace a deployment's data.
+  </Accordion>
+  <Accordion title="Which single sign-on providers are supported?">
+    Google and Microsoft Entra ID (Azure AD). Other providers are not supported yet. See [Google OAuth](/enterprise/authentication/google-oauth) and [Microsoft Entra ID](/enterprise/authentication/azure-ad-oauth).
+  </Accordion>
+  <Accordion title="How do I upgrade?">
+    Run the installer again. It keeps the values you installed with. See [Upgrade FalkorDB Enterprise](/enterprise/upgrades/enterprise).
+  </Accordion>
+  <Accordion title="Are my backups deleted when I uninstall?">
+    No. The uninstall script keeps backups, and the default backup repository's volumes use the `Retain` reclaim policy. See [Uninstall](/enterprise/upgrades/uninstall).
+  </Accordion>
+</AccordionGroup>
+
+## Getting help
+
+<AccordionGroup>
+  <Accordion title="How do I contact support?">
+    Email [support@falkordb.com](mailto:support@falkordb.com). Attach a [support package](/enterprise/troubleshooting/support-package), which collects the logs and resources support needs and redacts secrets.
+  </Accordion>
+  <Accordion title="How do I report a security vulnerability?">
+    Privately, by email, as described in [Vulnerability disclosure](/enterprise/reference/vulnerability-disclosure). Don't open a public issue.
+  </Accordion>
+</AccordionGroup>
