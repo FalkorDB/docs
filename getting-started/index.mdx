@@ -406,7 +406,7 @@ For questions or support, visit our [community forums](https://www.falkordb.com/
     FalkorDB 6.2 requires **Redis 8.0.0 or later**, or **Valkey**. The quickest setup is via Docker: `docker run -p 6379:6379 -p 3000:3000 --rm falkordb/falkordb:latest`. Alternatively, use [FalkorDB Cloud](https://app.falkordb.cloud) to skip local setup entirely.
   </Accordion>
   <Accordion title="Do I need to install Redis or Valkey separately?">
-    No. The FalkorDB 6.2 Docker images include everything needed: `latest` bundles Valkey 9.2 and `latest-redis` bundles Redis. If you are self-hosting without Docker, install Valkey or Redis 8.0.0+ and load a compatible FalkorDB module. See [Redis and Valkey](/operations/redis-and-valkey).
+    No. The FalkorDB 6.2 Docker images include everything needed: `latest` bundles Valkey 9.2 and `latest-redis` bundles Redis 8.10.2. If you are self-hosting without Docker, install Valkey or Redis 8.0.0+ and load a compatible FalkorDB module. See [Redis and Valkey](/operations/redis-and-valkey).
   </Accordion>
   <Accordion title="Which client libraries can I use with FalkorDB?">
     FalkorDB has official clients for **Python**, **Node.js**, **Java**, **Rust**, **Go**, **PHP**, and **C#**. Install them via pip, npm, Maven, Cargo, or the respective package managers. See the [Client Libraries](/getting-started/clients) page for full details.

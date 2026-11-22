@@ -42,7 +42,7 @@ FalkorDB provides two main Docker images:
 ### Valkey and Redis variants
 
 Each server image ships either [Valkey](https://valkey.io/) or Redis. FalkorDB
-6.2's `latest` image runs Valkey 9.2; use `latest-redis` to run Redis. Older
+6.2's `latest` image runs Valkey 9.2; use `latest-redis` to run Redis 8.10.2. Older
 images, including `6.0.4` and `4.x` releases, run Redis. See [Redis and
 Valkey](/operations/redis-and-valkey) for details.
 
@@ -525,7 +525,7 @@ docker-compose config
     The `falkordb/falkordb` image includes both the FalkorDB server and the Browser UI (ports 6379 and 3000). The `falkordb/falkordb-server` image includes only the server (port 6379), making it lighter for production use.
   </Accordion>
   <Accordion title="Do the FalkorDB images run Redis or Valkey?">
-    FalkorDB 6.2's `latest` image runs Valkey 9.2; `latest-redis` runs Redis. See [Redis and Valkey](/operations/redis-and-valkey).
+    FalkorDB 6.2's `latest` image runs Valkey 9.2; `latest-redis` runs Redis 8.10.2. See [Redis and Valkey](/operations/redis-and-valkey).
   </Accordion>
   <Accordion title="How do I set a password for FalkorDB in Docker?">
     Pass `--requirepass <password>` via the `REDIS_ARGS` environment variable: `-e REDIS_ARGS='--requirepass mypassword'`. For Docker Compose, add it to the environment section.

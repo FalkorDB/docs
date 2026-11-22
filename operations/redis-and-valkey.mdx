@@ -10,7 +10,8 @@ FalkorDB is a module that loads into a server speaking the Redis protocol
 - **[Valkey](https://valkey.io/)**, the open source (BSD-licensed) fork of Redis
   maintained under the Linux Foundation. The default FalkorDB 6.2 images use
   Valkey 9.2.
-- **[Redis](https://redis.io/)** 8.0.0 or later for FalkorDB 6.2.
+- **[Redis](https://redis.io/)** 8.0.0 or later for FalkorDB 6.2. The
+  Redis-based FalkorDB 6.2 images bundle Redis 8.10.2.
 
 The `GRAPH.*` commands, Cypher support, client libraries, and FalkorDB
 configuration parameters are the same on both servers. Clients connect on port
@@ -36,7 +37,7 @@ Each FalkorDB image ships one server, Valkey or Redis. Both
 | Tag | Server |
 | --- | --- |
 | `latest` | Valkey 9.2 (FalkorDB 6.2) |
-| `latest-redis` | Redis (FalkorDB 6.2) |
+| `latest-redis` | Redis 8.10.2 (FalkorDB 6.2) |
 | `6.0.4`, `v4.x` | Redis (older releases) |
 
 This guide assumes the 6.2 tags are published on both image repositories before
@@ -199,7 +200,7 @@ the migration.
     Yes. FalkorDB 6.2 runs as a module on both Valkey and Redis 8.0.0 or later, with the same commands, Cypher support, and configuration parameters.
   </Accordion>
   <Accordion title="Which server does the latest Docker image use?">
-    FalkorDB 6.2's `latest` image uses Valkey 9.2. Use `latest-redis` to run Redis. Older images, including `6.0.4` and `4.x` releases, run Redis.
+    FalkorDB 6.2's `latest` image uses Valkey 9.2. Use `latest-redis` to run Redis 8.10.2. Older images, including `6.0.4` and `4.x` releases, run Redis.
   </Accordion>
   <Accordion title="Do I need to change my application or client library to use Valkey?">
     No. Valkey speaks the same RESP protocol, so FalkorDB client libraries work without changes. Redis and Valkey clients can also send FalkorDB commands if they support custom commands.
