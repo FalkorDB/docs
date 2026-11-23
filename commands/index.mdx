@@ -34,6 +34,6 @@ Most commands require a graph key name as their first argument.
     No. FalkorDB automatically creates a graph when you first run a `GRAPH.QUERY` command against a new graph key name. There is no separate 'CREATE GRAPH' command.
   </Accordion>
   <Accordion title="Can I use FalkorDB with any Redis client?">
-    Yes. Since FalkorDB is a Redis module, you can use any Redis client to send commands. However, dedicated FalkorDB client libraries (Python, JavaScript, Java, Rust) provide higher-level abstractions for easier use.
+    Yes. FalkorDB 6.2 is a module for Valkey or Redis 8.0.0 or later. Clients for either server can send FalkorDB commands if they support custom commands. Dedicated FalkorDB client libraries (Python, JavaScript, Java, Rust) provide higher-level abstractions for easier use.
   </Accordion>
 </AccordionGroup>

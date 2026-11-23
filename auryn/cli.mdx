@@ -1,0 +1,29 @@
+---
+title: "Auryn CLI Reference"
+sidebarTitle: "CLI"
+description: "A map of the Auryn command line: set up, ingest, keep fresh, manage, use the graph, and hooks. Every command explains itself with its own --help flag."
+---
+
+You rarely need it — your agent does most of this. Every command explains itself with `auryn <command> --help`. Leave out `--host` and `--port` and it uses the backend you chose at install.
+
+| Group | Commands |
+| :--- | :--- |
+| Set up | `install` · `uninstall` · `serve` · `stop` |
+| Ingest | `ingest dir` · `ingest repo` · `quickstart` · `run <ingestor>` · `git-sync` · `enrich` |
+| Keep fresh | `sync` · `watch` |
+| Manage | `list` · `forget` · `stats` |
+| Use the graph | `view` · `mcp` · `embed` · `impact` |
+| Hooks | `hooks list` · `hooks new` · `hooks enable` · `hooks disable` |
+
+## Common commands
+
+```bash
+auryn ingest dir . --project-name MyApp                        # every language under a folder
+auryn ingest repo https://github.com/you/repo.git --ref main
+auryn ingest dir . --deep background                           # query the fast graph right away
+auryn run sql --dsn postgresql+psycopg2://u:p@host/db --database-name shop
+auryn stats --since 24h                                        # how your agent used the graph
+auryn forget . --dry-run                                       # preview removing a repo
+```
+
+Every flag for every command is in `docs/cli.md` in the [Auryn repository](https://github.com/FalkorDB/Auryn).

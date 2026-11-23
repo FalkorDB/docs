@@ -11,12 +11,15 @@ acyclic
 Addon
 addon
 addons
+ADRs
+Affero
 AG2
 ag2
 agentic
 AgentOS
 AGPLv
 AGPLv3
+Aider
 ai
 Aldis
 algo
@@ -28,6 +31,7 @@ Analytics
 analytics
 ANN
 Anthropic
+Antigravity
 AOF
 ApeCloud
 apecloud
@@ -51,6 +55,8 @@ atomicity
 auth
 autocomplete
 autocompletion
+Auryn
+auryn
 AutoGen
 autogen
 Autowired
@@ -162,6 +168,7 @@ csv
 CSVs
 CTE
 Ctrl
+CUDA
 Cursor
 Customizable
 customizable
@@ -798,6 +805,7 @@ sse
 SSL
 SSpath
 SSpaths
+SSPL
 SSPLv
 startNode
 stateful
@@ -839,6 +847,7 @@ tenantId
 TenantLabel
 Text2SQL
 TF
+themeable
 thpool
 TLS
 toBoolean
@@ -892,6 +901,7 @@ UDF
 UDFs
 udf
 UI
+ui
 unaliased
 undirected
 UNIQIE
@@ -986,3 +996,11 @@ createNodeUniqueConstraint
 dropNodeUniqueConstraint
 listConstraints
 slowLogReset
+borderRadius
+img
+src
+svg
+BSD
+RESP
+valkey
+Valkey's

@@ -5,7 +5,7 @@ This repository holds the **FalkorDB core documentation**, published with
 
 FalkorDB documentation is split across four repositories and aggregated into a
 single Mintlify deployment, so search and the AI assistant index every product
-together. Each repository owns one entry in `navigation.products`:
+together. Each repository owns at least one entry in `navigation.products`:
 
 | Product | Repository | Mounted at |
 | --- | --- | --- |
@@ -13,15 +13,19 @@ together. Each repository owns one entry in `navigation.products`:
 | FalkorDB Cloud | `FalkorDB/mintlify-docs` | `/cloud` |
 | FalkorDB Enterprise | `FalkorDB/FalkorDB-Enterprise` (`docs/`) | `/enterprise` |
 | GraphRAG SDK | `FalkorDB/GraphRAG-SDK` (`docs/`) | `/graphrag` |
+| Auryn | `FalkorDB/docs` (this repo, `auryn/`) | `/auryn` |
 
 Only edit FalkorDB core content here. The other products live in their own
-repositories.
+repositories. **Auryn is the exception**: its pages are maintained inline in
+this repo under `auryn/` (not aggregated from a separate source), so it has no
+`scripts/sources.json` entry.
 
 ## Aggregation
 
 Each repository keeps the full `navigation.products` list and populates only its
-own product, linking to the others with `href`. That way every repository still
-builds and previews on its own.
+own product(s) — this repo populates both FalkorDB and the inline Auryn product —
+linking to the others with `href`. That way every repository still builds and
+previews on its own.
 
 `scripts/aggregate_docs.py` turns those four repositories into one site: it
 clones each source listed in `scripts/sources.json`, copies its content under
@@ -40,8 +44,9 @@ python3 scripts/aggregate_docs.py --output build                  # clone the so
 `docs-updated` repository dispatch from a source repository, and nightly. It
 publishes to the `docs-site` branch, which is the branch Mintlify deploys.
 
-Adding a product means adding it to `navigation.products` here as an `href`
-placeholder and appending an entry to `scripts/sources.json`.
+Adding a product normally means adding it to `navigation.products` here as an
+`href` placeholder and appending an entry to `scripts/sources.json` (Auryn is the
+inline exception described above).
 
 ## Authoring rules
 

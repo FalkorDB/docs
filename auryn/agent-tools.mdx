@@ -1,0 +1,30 @@
+---
+title: "Auryn Agent Tools: What Your Coding Agent Can Ask the Graph"
+sidebarTitle: "Agent tools"
+description: "Every tool the Auryn MCP server gives your coding agent. Read tools are read-only by construction; only the two indexing tools can write to the graph."
+---
+
+What the MCP server gives your agent. Every read tool is read-only by construction; only the two indexing tools can write.
+
+| Tool | Mode | What it does |
+| :--- | :--- | :--- |
+| `auryn_status` | read | Is there a graph yet, and what's in it? Called first. |
+| `index_repository` | write | Build or update the graph for a local directory. |
+| `ingest_repository` | write | Build or update the graph from a git repository. |
+| `locate` | read | Find symbols by name — the usual way in once a graph exists. |
+| `search_code` | read | Search by meaning when you don't know the name. Uses the [semantic index](/auryn/semantic-search), built automatically after each ingest. |
+| `get_context` | read | One symbol's details, source, and immediate neighbors. |
+| `who_calls` | read | Everything that calls a symbol, as many hops deep as needed. |
+| `callees` | read | Everything a symbol calls, as many hops deep as needed. |
+| `find_path` | read | Does X reach Y, and how? The shortest connection between two symbols. |
+| `impact_of` | read | Everything a change could affect: callers, dependents, table access. |
+| `trace_entrypoint` | read | Everything an endpoint or handler runs, plus every table it touches. |
+| `impact_of_diff` | read | What your current changes could break, straight from the diff. |
+| `get_schema` | read | The graph's shape: which kinds of nodes and relationships it holds. |
+| `run_cypher` | read | Run any read-only Cypher query. |
+| `list_graphs` | read | List the graphs on the database. |
+| `use_graph` | read | Switch to a different graph. |
+
+<Note>
+  Read tools only ever issue read-only queries, and the database rejects anything else. See [Privacy & security](/auryn/privacy-and-security).
+</Note>
