@@ -49,6 +49,8 @@ This table describes graph decoding only, not a complete deployment compatibilit
 
 ### Redis/Valkey and other bundled modules
 
+FalkorDB images can ship either Redis or Valkey. See [Redis and Valkey](/operations/redis-and-valkey) for image tags and for moving a Redis data volume to Valkey.
+
 The database server owns the outer RDB format, AOF layout, command replay, and replication protocol. FalkorDB owns the graph payload inside that persistence.
 
 Before upgrading or rolling back, check:
