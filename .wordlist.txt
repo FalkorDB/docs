@@ -12,6 +12,7 @@ Addon
 addon
 addons
 ADRs
+Affero
 AG2
 ag2
 agentic
@@ -804,6 +805,7 @@ sse
 SSL
 SSpath
 SSpaths
+SSPL
 SSPLv
 startNode
 stateful
