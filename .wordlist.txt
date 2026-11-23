@@ -996,3 +996,7 @@ createNodeUniqueConstraint
 dropNodeUniqueConstraint
 listConstraints
 slowLogReset
+BSD
+RESP
+valkey
+Valkey's
