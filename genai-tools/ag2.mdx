@@ -10,7 +10,7 @@ The integration of AG2 with FalkorDB brings powerful GraphRAG capabilities to mu
 
 ## Installation
 
-Install AG2 with FalkorDB GraphRAG support:
+Install AG2 with FalkorDB GraphRAG support. This needs Python 3.10 through 3.13, because the `graphrag-sdk==0.8.2` it pins does not install on Python 3.14:
 
 ```bash
 pip install "ag2[openai,graph-rag-falkor-db]==0.13.4"
@@ -45,7 +45,6 @@ export OPENAI_API_KEY="your-openai-api-key"
 ### 3. Create a GraphRAG Agent
 
 ```python
-import os
 from autogen import ConversableAgent
 from autogen.agentchat.contrib.graph_rag.document import Document, DocumentType
 from autogen.agentchat.contrib.graph_rag.falkor_graph_query_engine import (
@@ -61,6 +60,7 @@ input_documents = [
 ]
 
 # Connect to FalkorDB and initialize knowledge graph
+# (the engine calls OpenAI's gpt-4o with OPENAI_API_KEY unless you pass model=)
 query_engine = FalkorGraphQueryEngine(
     name="company_knowledge",
     host="localhost",
@@ -70,15 +70,16 @@ query_engine = FalkorGraphQueryEngine(
 # Ingest documents into the knowledge graph
 query_engine.init_db(input_doc=input_documents)
 
-# Create AG2 agent
+# A GraphRAG agent answers from the graph, so it takes no LLM configuration:
+# add_to_agent() rejects an agent whose llm_config is set.
 agent = ConversableAgent(
     name="knowledge_agent",
-    llm_config={"config_list": [{"model": "gpt-4", "api_key": os.getenv("OPENAI_API_KEY")}]},
     human_input_mode="NEVER",
+    llm_config=False,
 )
 
-# Attach GraphRAG capability to the agent
-FalkorGraphRagCapability.attach(agent, query_engine)
+# Add the GraphRAG capability to the agent
+FalkorGraphRagCapability(query_engine).add_to_agent(agent)
 
 # Query the knowledge graph
 response = agent.generate_reply(
@@ -91,34 +92,34 @@ print(response)
 
 ### Multi-Agent Collaboration
 
-Build a multi-agent system where agents collaborate using shared knowledge:
+Build a multi-agent system where one agent answers from the knowledge graph and the others reason over its answers with their own LLMs:
 
 ```python
+import os
 from autogen import ConversableAgent, GroupChat, GroupChatManager
 
-# Create multiple agents with different roles
+llm_config = {"config_list": [{"model": "gpt-4o", "api_key": os.getenv("OPENAI_API_KEY")}]}
+
+# The researcher answers from the knowledge graph, so it has no LLM configuration
 researcher = ConversableAgent(
     name="researcher",
-    system_message="You are a research analyst. Extract and analyze information from the knowledge graph.",
-    llm_config={"config_list": [{"model": "gpt-4", "api_key": os.getenv("OPENAI_API_KEY")}]},
+    description="Answers questions from the company knowledge graph.",
+    human_input_mode="NEVER",
+    llm_config=False,
 )
+FalkorGraphRagCapability(query_engine).add_to_agent(researcher)
 
 planner = ConversableAgent(
     name="planner",
-    system_message="You are a strategic planner. Use research findings to create actionable plans.",
-    llm_config={"config_list": [{"model": "gpt-4", "api_key": os.getenv("OPENAI_API_KEY")}]},
+    system_message="You are a strategic planner. Ask the researcher for facts, then create actionable plans.",
+    llm_config=llm_config,
 )
 
 critic = ConversableAgent(
     name="critic",
     system_message="You are a critical reviewer. Evaluate plans and provide constructive feedback.",
-    llm_config={"config_list": [{"model": "gpt-4", "api_key": os.getenv("OPENAI_API_KEY")}]},
+    llm_config=llm_config,
 )
-
-# Attach GraphRAG to all agents
-FalkorGraphRagCapability.attach(researcher, query_engine)
-FalkorGraphRagCapability.attach(planner, query_engine)
-FalkorGraphRagCapability.attach(critic, query_engine)
 
 # Create group chat
 groupchat = GroupChat(
@@ -127,10 +128,10 @@ groupchat = GroupChat(
     max_round=10,
 )
 
-manager = GroupChatManager(groupchat=groupchat, llm_config={"config_list": [{"model": "gpt-4"}]})
+manager = GroupChatManager(groupchat=groupchat, llm_config=llm_config)
 
 # Start the conversation
-researcher.initiate_chat(
+planner.initiate_chat(
     manager,
     message="Analyze our company's market position and suggest growth strategies.",
 )
@@ -161,9 +162,9 @@ query_engine.init_db(input_doc=documents)
 ### Custom Query Engine Configuration
 
 ```python
+import os
 from autogen.agentchat.contrib.graph_rag.falkor_graph_query_engine import (
     FalkorGraphQueryEngine,
-    GraphStoreQueryResult,
 )
 
 # Configure query engine with custom settings
@@ -175,30 +176,25 @@ query_engine = FalkorGraphQueryEngine(
     password=os.getenv("FALKORDB_PASSWORD"),
 )
 
-# Query with custom Cypher
-cypher_query = """
-MATCH (p:Person)-[:WORKS_AT]->(c:Company)
-WHERE c.industry = 'Technology'
-RETURN p.name, c.name, c.founded_year
-ORDER BY c.founded_year DESC
-LIMIT 10
-"""
+# Reconnect to a graph that init_db() built earlier (loads its stored ontology)
+query_engine.connect_db()
 
-result = query_engine.query(cypher_query)
-print(result)
+# query() takes a natural-language question; the SDK generates the Cypher
+result = query_engine.query("Which technology companies were founded most recently, and who works at them?")
+print(result.answer)
 ```
 
 ### Conversational Context Management
 
 ```python
-# Agent maintains context across multiple queries
+# The query engine keeps one chat session, so follow-up questions keep their context
 agent = ConversableAgent(
     name="contextual_agent",
-    llm_config={"config_list": [{"model": "gpt-4", "api_key": os.getenv("OPENAI_API_KEY")}]},
     human_input_mode="NEVER",
+    llm_config=False,
 )
 
-FalkorGraphRagCapability.attach(agent, query_engine)
+FalkorGraphRagCapability(query_engine).add_to_agent(agent)
 
 # First question
 response1 = agent.generate_reply(
@@ -226,13 +222,14 @@ human_agent = ConversableAgent(
     llm_config=False,
 )
 
+# The GraphRAG agent's system message is added to every graph question it asks
 ai_agent = ConversableAgent(
     name="ai_assistant",
     system_message="You help humans make data-driven decisions using the knowledge graph.",
-    llm_config={"config_list": [{"model": "gpt-4", "api_key": os.getenv("OPENAI_API_KEY")}]},
+    llm_config=False,
 )
 
-FalkorGraphRagCapability.attach(ai_agent, query_engine)
+FalkorGraphRagCapability(query_engine).add_to_agent(ai_agent)
 
 # AI agent proposes, human approves
 ai_agent.initiate_chat(
@@ -243,8 +240,16 @@ ai_agent.initiate_chat(
 
 ### Integrating External Tools
 
+A GraphRAG agent has no LLM to call tools with, and the capability replaces its other reply functions. Register tools on an LLM agent instead, and put it in a group chat with the GraphRAG agent:
+
 ```python
-from autogen import register_function
+import os
+from autogen import ConversableAgent, register_function
+
+assistant = ConversableAgent(
+    name="assistant",
+    llm_config={"config_list": [{"model": "gpt-4o", "api_key": os.getenv("OPENAI_API_KEY")}]},
+)
 
 # Define custom tools for agents
 def analyze_sentiment(text: str) -> str:
@@ -260,19 +265,19 @@ def fetch_market_data(company: str) -> dict:
 # Register tools with agents
 register_function(
     analyze_sentiment,
-    caller=agent,
-    executor=agent,
+    caller=assistant,
+    executor=assistant,
     description="Analyze sentiment of text",
 )
 
 register_function(
     fetch_market_data,
-    caller=agent,
-    executor=agent,
+    caller=assistant,
+    executor=assistant,
     description="Fetch market data for a company",
 )
 
-# Agent can now use both GraphRAG and custom tools
+# The assistant uses the tools; the GraphRAG agent answers from the graph
 ```
 
 ## Use Cases
@@ -348,10 +353,10 @@ register_function(
     Install with pip: `pip install "ag2[openai,graph-rag-falkor-db]==0.13.4"`. This installs AG2 with OpenAI and FalkorDB GraphRAG capabilities. AG2's FalkorDB engine uses the legacy `graphrag-sdk` 0.8.x API, and 0.13.4 is the last AG2 release that pins it (AG2 1.0 removed the integration); the current `graphrag-sdk` 1.x does not work with it.
   </Accordion>
   <Accordion title="What is FalkorGraphRagCapability?">
-    `FalkorGraphRagCapability` is the AG2 capability that attaches GraphRAG-powered knowledge retrieval to any AG2 agent. Once attached, the agent can automatically query the FalkorDB knowledge graph to ground its responses in factual data.
+    `FalkorGraphRagCapability` is the AG2 capability that makes a `ConversableAgent` answer from a FalkorDB knowledge graph. Create it with a query engine and call `add_to_agent(agent)`; the agent must have no LLM configuration (`llm_config=False`), and every reply it gives is a query to the graph.
   </Accordion>
   <Accordion title="Can multiple agents share the same knowledge graph?">
-    Yes. You can create multi-agent systems where different agents (e.g., researcher, analyst, writer) all access the same FalkorDB knowledge graph through their own `FalkorGraphRagCapability` instances, enabling collaborative workflows grounded in shared knowledge.
+    Yes. Give the capability to one or more agents, each with `llm_config=False`, and they all answer from the same FalkorDB knowledge graph. Put them in a group chat with LLM agents (such as a planner or writer) that reason over their answers.
   </Accordion>
   <Accordion title="Does AG2 support human-in-the-loop workflows with FalkorDB?">
     Yes. Set `human_input_mode='ALWAYS'` on a supervisor agent to require human approval for critical decisions while AI agents use GraphRAG for data-driven recommendations. This enables safe, supervised multi-agent systems.
