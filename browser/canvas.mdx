@@ -6,13 +6,6 @@ description: "FalkorDB Canvas – a standalone web component for visualizing Fal
 
 [FalkorDB Canvas](https://github.com/FalkorDB/falkordb-ui/tree/main/web-components/canvas) is a standalone web component for visualizing FalkorDB graphs using force-directed layouts. It is published as an npm package at [@falkordb/canvas](https://www.npmjs.com/package/@falkordb/canvas) and powers the graph visualization in FalkorDB Browser.
 
-<Warning>
-This guide describes the planned Canvas 0.5.0 API. It includes breaking changes
-and depends on [3D parity](https://github.com/FalkorDB/falkordb-ui/pull/45)
-and [caption controls](https://github.com/FalkorDB/falkordb-ui/pull/46).
-Use the documentation for your installed version until 0.5.0 is released.
-</Warning>
-
 ---
 
 ## Features
@@ -34,7 +27,7 @@ Use the documentation for your installed version until 0.5.0 is released.
 ## Installation
 
 ```bash
-npm install @falkordb/canvas@0.5.0
+npm install @falkordb/canvas
 ```
 
 ---
@@ -190,13 +183,14 @@ Renderer-specific operations use namespaces:
 | `canvas.threeD.getCullingStats()` | Get 3D frustum counts; see [Large-Graph Optimizations](#large-graph-optimizations). |
 
 These operations require their renderer to be active and normally throw if it
-is unavailable. After disconnection, the read method for the last active mode can
-still return its saved viewport or camera snapshot. `setViewport(undefined)`
+is unavailable. After disconnection, only `getViewport()` or
+`getCameraState()` for the mode that was active returns a copy of its saved
+view; other mode-specific operations still throw. `setViewport(undefined)`
 does nothing.
 
 ### Migrating from the flat API
 
-Canvas 0.5.0 removes `ForceGraphConfig` and the old flat renderer-specific
+The breaking Canvas major release removes `ForceGraphConfig` and the old flat renderer-specific
 configuration and methods; there are no compatibility aliases. Change the
 type to `CanvasConfig`, move 2D-only settings into `twoD`, and move 3D settings
 into `threeD`. Shared settings remain at the top level:
@@ -222,6 +216,11 @@ top level. Old flat mode-specific settings, including nested fields, throw a
 [Canvas README](https://github.com/FalkorDB/falkordb-ui/blob/main/web-components/canvas/README.md)
 and its linked migration guide for the complete mapping.
 
+If you mutate computed `GraphLink` objects returned by the native graph
+instance, `curve` now controls 3D curvature and `curve2D` controls 2D
+curvature. Both are computed runtime fields and are omitted from input `Link`
+and `Data` values.
+
 ---
 
 ### Configuration Options
@@ -245,7 +244,7 @@ retained when switching dimensions.
 | `animation` | | Enable or disable layout animation |
 | `captionsKeys` | `[]` | Ordered property keys for node labels. Use strings for case-insensitive fuzzy matching or `[key, true]` for an exact match; falls back to the node ID. |
 | `showPropertyKeyPrefix` | `false` | Show property key prefix in node labels |
-| `pinOnDragEnd` | `false` | Pin nodes after dragging |
+| `pinOnDragEnd` | `false` | When enabled, pin an unpinned node at its drop position after dragging |
 | `isNodeSelected` | | Function: `(node: GraphNode) => boolean` |
 | `isLinkSelected` | | Function: `(link: GraphLink) => boolean` |
 | `dimmed` | `false` | Enable dimming based on `isNodeDimmed` and `isLinkDimmed`. |
@@ -273,13 +272,14 @@ canvas.setConfig({
 });
 ```
 
-`twoD.nodeStyle.captionPosition` defaults to `'inside'`; it also accepts
-`'above'`, `'below'`, `'left'`, and `'right'`. The outside-caption gap is
+`twoD.nodeStyle.captionPosition` defaults to `'above'`; set it to `'inside'`
+to keep captions inside nodes. Other accepted positions are `'below'`, `'left'`,
+and `'right'`. The outside-caption gap is
 `1` world unit by default and must be finite and non-negative, or `setConfig`
 throws `RangeError`. Outside captions use the foreground color and the fixed
-`fontSize`, which defaults to `6` world units. The upstream interactive
-example starts with captions inside; when its outside toggle is enabled, its
-initial side is above. In 3D, captions are below the node.
+`fontSize`, which defaults to `6` world units. The interactive example starts
+with outside captions enabled and `'above'` selected. In 3D, captions are below
+the node.
 
 For inside captions, the default `textFillRatio: 0.85` auto-sizes the full
 caption onto one line. Set `textFillRatio: 0` to use the fixed `fontSize`
@@ -369,9 +369,17 @@ supersedes a pending earlier request; the earlier promise may resolve without
 its requested dimension being displayed.
 
 Switching dimensions recomputes the layout. Mode-specific configurations and
-saved views are retained. Data, selection, colors, captions, and event handlers
-carry over. In 3D, drag the background to rotate, right-drag to pan, and
-scroll to zoom.
+saved views are retained; switching back restores a saved view when available
+and otherwise fits the graph. A full `setData()` replacement clears both saved
+views: active 2D auto-fits, and active 3D refits after the new layout is applied.
+Incremental `setGraphData()` updates retain the inactive view. Data,
+selection, colors, captions, and event handlers carry over when switching
+dimensions. In 3D, left-drag the background to rotate and right-drag to pan
+one projected CSS pixel per pointer pixel without changing the viewing angle.
+Start camera gestures on empty space; dragging a node moves the node. Scroll
+to zoom. With `pinOnDragEnd` enabled, a node that was already pinned before
+dragging returns to its starting position; an unpinned node stays pinned at its
+drop position.
 
 ```typescript
 const viewport = canvas.twoD.getViewport();
@@ -491,9 +499,10 @@ canvas.setConfig({
 `linkDashPattern` returns alternating positive, finite dash and gap lengths in
 world units; `[]` uses the solid renderer. Odd-length patterns repeat to form
 an even-length pattern. The dashed shaft follows the link curve and
-stops before the target node and arrow. A position update that would produce
-more than 4096 rendered segments throws `RangeError`. A custom `linkObject`
-takes precedence over the built-in dash renderer. Use
+stops before the target node and arrow. If a link would exceed 4096 rendered
+segments, Canvas scales the dash and gap lengths proportionally and coarsens
+curve tessellation as needed, emitting one warning per 3D renderer. A custom
+`linkObject` takes precedence over the built-in dash renderer. Use
 `linkObjectPositionUpdate(object, { start, end }, link)` to update custom
 link geometry as its world-space endpoints move.
 
@@ -648,7 +657,7 @@ Requires support for Web Components (Custom Elements), ES Modules, Shadow DOM, a
     FalkorDB Canvas is a standalone web component for visualizing FalkorDB graphs with force-directed layouts. It is published on npm as [@falkordb/canvas](https://www.npmjs.com/package/@falkordb/canvas) and is the same component that powers graph visualization inside [FalkorDB Browser](/browser).
   </Accordion>
   <Accordion title="How do I install FalkorDB Canvas?">
-    Once version 0.5.0 is released, install it with `npm install @falkordb/canvas@0.5.0`, import the package, and place a `falkordb-canvas` element in your page. Importing the module registers the custom element for you.
+    Install it with `npm install @falkordb/canvas`, import the package, and place a `falkordb-canvas` element in your page. Importing the module registers the custom element for you.
   </Accordion>
   <Accordion title="Can I use FalkorDB Canvas with React, Vue, or Angular?">
     Yes. It is a standard Web Component, so it works with any framework or with plain JavaScript. The package ships full TypeScript definitions, and the Quick Start above includes both a vanilla JavaScript and a React/TypeScript example.
