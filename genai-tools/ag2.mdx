@@ -244,11 +244,24 @@ A GraphRAG agent has no LLM to call tools with, and the capability replaces its 
 
 ```python
 import os
-from autogen import ConversableAgent, register_function
+from autogen import ConversableAgent, GroupChat, GroupChatManager, register_function
 
+llm_config = {"config_list": [{"model": "gpt-4o", "api_key": os.getenv("OPENAI_API_KEY")}]}
+
+# Answers from the knowledge graph (no LLM configuration)
+graph_agent = ConversableAgent(
+    name="graph_agent",
+    description="Answers questions from the company knowledge graph.",
+    human_input_mode="NEVER",
+    llm_config=False,
+)
+FalkorGraphRagCapability(query_engine).add_to_agent(graph_agent)
+
+# Calls the tools with its LLM
 assistant = ConversableAgent(
     name="assistant",
-    llm_config={"config_list": [{"model": "gpt-4o", "api_key": os.getenv("OPENAI_API_KEY")}]},
+    description="Uses the sentiment and market-data tools.",
+    llm_config=llm_config,
 )
 
 # Define custom tools for agents
@@ -278,6 +291,13 @@ register_function(
 )
 
 # The assistant uses the tools; the GraphRAG agent answers from the graph
+groupchat = GroupChat(agents=[graph_agent, assistant], messages=[], max_round=6)
+manager = GroupChatManager(groupchat=groupchat, llm_config=llm_config)
+
+assistant.initiate_chat(
+    manager,
+    message="What does the knowledge graph say about TechCorp, and how is its stock doing?",
+)
 ```
 
 ## Use Cases
