@@ -10,9 +10,9 @@ description: "Build intelligent GraphRAG applications with FalkorDB and LLMs —
 
 ## Build intelligent GraphRAG applications with FalkorDB and LLMs
 
-GraphRAG-SDK builds knowledge graphs from your documents and tables and answers questions over them using graph-based retrieval-augmented generation, on FalkorDB. It ingests text, Markdown, and PDF with schema-guided entity extraction, and CSV and other delimited tables through a declared mapping, so a table row and a paragraph about the same thing become one node. It retrieves cited answers through a hybrid pipeline that combines vector search, full-text search, and relationship expansion, with optional text-to-Cypher for counts and aggregates. It merges duplicate entities across documents with an LLM judge that checks only what is new, and re-syncs individual documents and tables incrementally without rebuilding the graph.
+GraphRAG-SDK builds knowledge graphs from your documents and tables and answers questions over them using graph-based retrieval-augmented generation, on FalkorDB. It ingests text, Markdown, and PDF with schema-guided entity extraction, and CSV and other delimited tables through a declared mapping, so a table row and a paragraph about the same thing become one node. It retrieves cited answers through a hybrid pipeline that combines vector search, full-text search, and relationship expansion, with optional text-to-Cypher for counts and aggregates. It merges duplicate entities across documents with an LLM judge that checks only what is new, and re-syncs individual documents and tables incrementally without rebuilding the graph. It can also give your own agent graph tools, in Python or through the `graphrag-mcp` MCP server: question-answering tools that only read the graph and return numbered evidence with a citation check, and, unless the server runs read-only, tools that build the graph from documents.
 
-It holds the top score on [GraphRAG-Bench](https://graphrag-bench.github.io) across both the multi-document and single-document question sets, and works with any LLM or embedder reachable through LiteLLM.
+It holds the top score on [GraphRAG-Bench](https://graphrag-bench.github.io) across both the multi-document and single-document question sets, and works with any LLM or embedder reachable through LiteLLM, including reasoning models, with no extra setting.
 
 ## Quick start
 
@@ -32,9 +32,9 @@ from graphrag_sdk import GraphRAG, ConnectionConfig, LiteLLM, LiteLLMEmbedder
 async def main():
     async with GraphRAG(
         connection=ConnectionConfig(host="localhost", graph_name="my_graph"),
-        llm=LiteLLM(model="openai/gpt-4o"),
+        llm=LiteLLM(model="openai/gpt-5.5"),
         # 256 dimensions, to match GraphRAG's default embedding_dimension
-        embedder=LiteLLMEmbedder(model="openai/text-embedding-3-small", dimensions=256),
+        embedder=LiteLLMEmbedder(model="openai/text-embedding-3-large", dimensions=256),
     ) as rag:
         await rag.ingest("my_document.pdf")
         await rag.finalize()  # merge duplicate entities, embed, and index
@@ -57,6 +57,7 @@ Or skip the local instance and connect to [FalkorDB Cloud](https://app.falkordb.
 | [Ingestion](https://docs.falkordb.com/graphrag/ingestion) | Document loading, chunking, extraction, and resolution |
 | [Structured Ingestion](https://docs.falkordb.com/graphrag/structured-ingestion) | Load CSV and other tables through a declared mapping, as typed entities in the same graph |
 | [Retrieval](https://docs.falkordb.com/graphrag/retrieval) | Hybrid retrieval, expansion, and reranking |
+| [Agentic Retrieval](https://docs.falkordb.com/graphrag/agentic-retrieval) | Graph tools for your own agent, in Python or over the `graphrag-mcp` MCP server |
 | [Strategies](https://docs.falkordb.com/graphrag/strategies) | Swappable strategy interfaces and built-in implementations |
 | [Providers](https://docs.falkordb.com/graphrag/providers) | LLM and embedder configuration |
 | [Storage](https://docs.falkordb.com/graphrag/storage) | How nodes, embeddings, and indexes are stored, how `finalize()` merges duplicate entities, and the FalkorDB server requirements |
@@ -126,7 +127,10 @@ GraphRAG first organizes your documents into a [knowledge graph](https://www.fal
     **GraphRAG-SDK** is the self-hosted Python library you run and configure yourself. **GraphRAG Server** is the fully hosted, no-code version: you upload documents through the browser and it builds the graph for you, with no code, no Cypher, and no graph expertise needed.
   </Accordion>
   <Accordion title="Which LLMs and embedding models does GraphRAG-SDK support?">
-    Any LLM or embedder reachable through [LiteLLM](https://docs.falkordb.com/graphrag/providers), which covers OpenAI, Anthropic, Google, and locally hosted models. You select them with `LiteLLM(model=...)` and `LiteLLMEmbedder(model=...)`.
+    Any LLM or embedder reachable through [LiteLLM](https://docs.falkordb.com/graphrag/providers), which covers OpenAI, Anthropic, Google, and locally hosted models. You select them with `LiteLLM(model=...)` and `LiteLLMEmbedder(model=...)`. Reasoning models (the o-series, gpt-5 and later, or any model behind an Azure deployment name) need no extra setting: when a model rejects `temperature` or `max_tokens`, the SDK resends the request without the temperature or with `max_completion_tokens` and remembers that for later calls.
+  </Accordion>
+  <Accordion title="Can I use GraphRAG-SDK from my own agent or over MCP?">
+    Yes. The SDK gives an agent graph tools: question-answering tools that only read the graph (hybrid search over entities, relations and passages, with numbered evidence and a citation check), and tools that build the graph from documents (`ingest`, `set_ontology`, `finalize`). Use them from Python, or install the `mcp` extra and run the `graphrag-mcp` server, which defaults to `openai/gpt-6-luna` unless `GRAPHRAG_MODEL` names another model; `--read-only` (or `GRAPHRAG_MCP_READ_ONLY`) leaves out the tools that write. See [Agentic Retrieval](https://docs.falkordb.com/graphrag/agentic-retrieval).
   </Accordion>
   <Accordion title="What file types can GraphRAG-SDK ingest?">
     Plain text, Markdown, and PDF as documents. PDF ingestion needs the `pdf` extra and Markdown the `markdown` extra (`pip install "graphrag-sdk[litellm,pdf,markdown]"`). Tables in `.csv`, `.tsv`, `.psv`, or `.tab` files are read as records rather than prose: you declare what the columns mean with a `TableMapping` in the ontology, and each row becomes a typed entity with no LLM involved. If no mapping is declared, the SDK proposes one. See [Structured Ingestion](https://docs.falkordb.com/graphrag/structured-ingestion). GraphRAG Server accepts plain text, Markdown, and PDF through its upload interface.
