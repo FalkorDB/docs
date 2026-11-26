@@ -14,6 +14,32 @@ The variables in the scope before the CALL \{\} clause are available after the c
 
 Variables may be imported from the outer scope **only** in an opening `WITH` clause, via simple projections (e.g. `WITH n, m`), or via `WITH *` (which imports all bound variables). The variables returned from a subquery may not override existing variables in the outer scope.
 
+
+## Imported variables in UNION subqueries
+
+When `CALL {}` contains `UNION` or `UNION ALL`, an opening `WITH` import
+in the first branch does not automatically make the imported variables
+available in later branches in FalkorDB 4.20.7 and 6.0.2.
+
+
+For example, the following query fails with `'n' not defined` because the second branch references `n` without importing it:
+
+```cypher
+MATCH (n:Person)
+CALL {
+  WITH n
+  RETURN n.name AS value
+  UNION ALL
+  RETURN n.id AS value
+}
+RETURN value;
+```
+
+This behavior has been reproduced in FalkorDB 4.20.7 and 6.0.2. See [Issue #3317](https://github.com/FalkorDB/FalkorDB/issues/3317) for the test results.
+
+For queries that use outer-scope variables in multiple branches, explicitly account for variable imports in each branch rather than assuming the first branch's import is shared.
+
+
 The CALL \{\} clause may be used for numerous purposes, such as: Post-`UNION` processing, local environment for aggregations and actions on every input row, efficient operations using a limited namespace (via imports) and performing side-effects using non-returning subqueries. Let's see some examples.
 
 * Post-`UNION` processing.
