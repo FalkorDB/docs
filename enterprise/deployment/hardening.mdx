@@ -1,0 +1,79 @@
+---
+title: "Production hardening checklist for FalkorDB Enterprise"
+sidebarTitle: "Hardening checklist"
+description: "The settings to change from their defaults before a FalkorDB Enterprise installation goes into production."
+icon: "shield-halved"
+---
+
+The defaults are chosen so a first install works on any cluster. Several of them trade security for that. Work through this checklist before an installation holds production data. Each item names the setting and links to the page that explains it.
+
+## Access to the Admin UI and API
+
+<Check>
+  **Publish the Admin UI over HTTPS.** Don't install with `--quick-access` or `--no-ingress`: both serve the Admin UI over plain HTTP. Set `gateway.ingress` with a hostname and a TLS certificate. See [Production install](/enterprise/deployment/production).
+</Check>
+<Check>
+  **Keep secure cookies on.** Leave `adminServer.env.cookieSecure` unset, so cookies are `Secure` in production, and serve the Admin UI only over TLS.
+</Check>
+<Check>
+  **Use a stable JWT secret from a Secret.** Generate one of at least 32 characters with `openssl rand -hex 32`, and reference it with `adminServer.secret.jwtExistingSecret` rather than a Helm value. See [Secrets](/enterprise/security#secrets).
+</Check>
+<Check>
+  **Replace the bootstrap admin password.** Change it at first sign-in, then delete the Secret that holds the generated password. If you set `adminServer.bootstrap.adminUser.password` yourself, keep `mustChangePassword: true`.
+</Check>
+<Check>
+  **Protect the metrics endpoint.** `/metrics` is served without authentication by default. Set `adminServer.metrics.basicAuth.existingSecret`, or `username` and `password`. The chart's `PodMonitor` uses the same credentials.
+</Check>
+
+## Identity
+
+<Check>
+  **Sign in through your identity provider.** Configure [Google](/enterprise/authentication/google-oauth) or [Microsoft Entra ID (Azure AD)](/enterprise/authentication/azure-ad-oauth), and map groups to roles.
+</Check>
+<Check>
+  **Turn off local sign-in once single sign-on works.** Set `adminServer.env.disableLocalAuth: "true"`. Keep the steps in [Reset admin password](/enterprise/operations/reset-admin-password) for recovery.
+</Check>
+<Check>
+  **Grant least privilege.** Give each user the narrowest role in **RBAC** in the Admin UI. Running queries from the query console needs the `clusters.query` permission; `write` lets a query change data. If you don't use the console, set `adminServer.queryConsole.enabled: false`.
+</Check>
+
+## Kubernetes boundaries
+
+<Check>
+  **Enforce the admission policy.** On Kubernetes 1.30 or later, make sure `adminServer.rbac.admissionPolicy.validationActions` is `[Deny]`, so the policy refuses violations instead of only warning. See [What the admission policy refuses](/enterprise/security#what-the-admission-policy-refuses).
+</Check>
+<Check>
+  **Confine databases to a namespace prefix.** Set `adminServer.managedNamespaces.pattern`, for example `"falkordb-.*"`, and list any other namespaces to protect in `adminServer.managedNamespaces.denied`. See [Database namespaces](/enterprise/deployment/production#database-namespaces).
+</Check>
+<Check>
+  **Turn on network policies.** Set `networkPolicy.enabled: true` on a CNI that enforces them, set `networkPolicy.ingressControllerNamespace` to where your ingress controller runs, and set `networkPolicy.ingressControllerPodSelector` to its pod labels so nothing else in that namespace can reach the Admin Server. See [Network policy](/enterprise/reference/network-policy).
+</Check>
+<Check>
+  **Keep Pod Security Admission labels.** The installer labels the release namespace `enforce=restricted` (`baseline` only while `dm-sql-to-falkordb` is enabled). Keep it there, and label the database namespaces at `baseline`. Don't enable the bundled CSI drivers in production, because they need `privileged`. See [Pod security](/enterprise/reference/pod-security).
+</Check>
+
+## Data
+
+<Check>
+  **Turn on TLS for deployments.** Choose TLS in the **Encryption** step when you create each deployment. It can't be added later. See [TLS](/enterprise/databases/tls).
+</Check>
+<Check>
+  **Back up to object storage.** Create an S3, GCS or Azure Blob repository, mark it as the default, and test a restore. The default repository is a volume in the same cluster. See [Backups & schedules](/enterprise/operations/backups).
+</Check>
+<Check>
+  **Back up the Admin Server's volume.** It holds the audit log and the license state. See [Admin Server backup](/enterprise/operations/admin-server-backup).
+</Check>
+<Check>
+  **Keep credentials out of values files.** Supply the license with `adminServer.license.existingSecret`, the Browser key with `falkordb-browser.browser.encryption.existingSecret`, and the registry credentials with an existing pull Secret. See [Enterprise license](/enterprise/deployment/production#enterprise-license) and [Private registries](/enterprise/deployment/private-images).
+</Check>
+
+## Supply chain and monitoring
+
+<Check>
+  **Verify and pin images.** Verify the chart and image signatures before you install, and pin images by digest. See [Supply chain](/enterprise/reference/supply-chain).
+</Check>
+<Check>
+  **Turn on alerts.** Set `podMonitor.enabled` and `alertRules.enabled`, so failed backups, broken replication and full volumes reach you. See [Monitoring](/enterprise/operations/monitoring).
+</Check>
+
+For how each control works and where its limits are, read [Security](/enterprise/security).

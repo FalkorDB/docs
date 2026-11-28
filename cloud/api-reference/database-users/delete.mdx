@@ -1,0 +1,48 @@
+---
+title: "Delete database user"
+sidebarTitle: "Delete"
+api: "DELETE https://api.falkordb.cloud/v1/customer-ldap/instances/{instanceId}/users/{username}"
+description: "Remove a database user from a deployment instance."
+---
+
+Deletes a database user. Applications still using those credentials fail to authenticate immediately.
+
+<Warning>
+  The [default user](/cloud/api-reference/database-users/overview#default-user) created with the instance cannot be deleted.
+</Warning>
+
+<Note>
+  This endpoint uses the FalkorDB API host and bearer token authentication. See [Database users overview](/cloud/api-reference/database-users/overview).
+</Note>
+
+## Authorization
+
+<ParamField header="Authorization" type="string" required>
+  `Bearer <jwt>`, using the token issued by [Sign in](/cloud/api-reference/authentication/signin).
+</ParamField>
+
+## Path parameters
+
+<ParamField path="instanceId" type="string" required>
+  ID of the deployment instance.
+</ParamField>
+
+<ParamField path="username" type="string" required>
+  Username of the database user to delete.
+</ParamField>
+
+## Query parameters
+
+<ParamField query="subscriptionId" type="string" required>
+  Subscription that owns the instance.
+</ParamField>
+
+## Response
+
+<ResponseField name="message" type="string">
+  Confirmation message.
+</ResponseField>
+
+## Errors
+
+Returns `401 Unauthorized` when the bearer token is missing or expired.

@@ -1,0 +1,173 @@
+---
+title: "Troubleshoot FalkorDB Enterprise installs and upgrades"
+sidebarTitle: "Troubleshoot installs"
+description: "Fix installer failures: missing tools, cluster access, permissions, registry credentials, storage classes, timeouts, and a stuck Helm release."
+icon: "screwdriver-wrench"
+---
+
+This page lists the errors the installer reports most often, what causes them, and how to fix them. The messages are quoted as `install.sh` prints them with `--plain`. The terminal UI shows the same text without the `[falkordb-enterprise]` prefix.
+
+## Find the installer log
+
+In the interactive terminal UI, Helm's and `kubectl`'s own output goes to a log file, not to the screen. When a step fails, the installer shows the end of the log and its path:
+
+```text
+Full log: /tmp/falkordb-enterprise-install-20261116-101500-AbC123
+```
+
+The file is under `$TMPDIR`, or `/tmp` when that is unset. To see every line on the terminal instead, run the installer with `--plain`. Attach the log to a support ticket together with a [support package](/enterprise/troubleshooting/support-package) if the Admin Server is running.
+
+## A required tool is missing
+
+```text
+[falkordb-enterprise] ERROR: kubectl is required but was not found in PATH
+```
+
+Install the tool the message names and run the installer again. See [Local tooling](/enterprise/get-started/requirements#local-tooling) for the full list.
+
+## The cluster can't be reached
+
+```text
+[falkordb-enterprise] ERROR: No Kubernetes context is configured. Point kubectl at a cluster, or pass --kube-context.
+[falkordb-enterprise] ERROR: Cannot reach the cluster in context <context>. Check that the context is right and its credentials are current.
+```
+
+The installer checks the connection before it changes anything. Confirm the context and refresh its credentials, for example with your cloud provider's `get-credentials` command:
+
+```bash
+kubectl config current-context
+kubectl cluster-info
+```
+
+Pass `--kube-context` to target a context other than the current one.
+
+## The permission check fails
+
+```text
+[falkordb-enterprise] ERROR: Kubernetes authorization check failed. Missing permissions:
+  - ...
+[falkordb-enterprise] Re-run with a context that has these permissions, or pass --skip-auth-check if permissions are delegated another way.
+```
+
+Before it changes the cluster, the installer asks the API server whether your user can create namespaces, CRDs, ClusterRoles and bindings, webhooks, StorageClasses and the namespaced resources it installs. Each missing permission is listed by resource and verb.
+
+- Run the installer as a user with those permissions, usually `cluster-admin`. See [Kubernetes permissions](/enterprise/get-started/requirements#kubernetes-permissions).
+- If your platform refuses `SelfSubjectAccessReview` requests, but your user has the permissions, pass `--skip-auth-check`.
+
+## Registry credentials are rejected
+
+In the interactive UI, the installer checks the credentials with `helm registry login` and gives you three tries:
+
+```text
+registry.falkordb.cloud rejected the credentials three times. Check them in the Enterprise Portal.
+```
+
+With `--registry-username` and `--registry-password`, Helm reports the failed login when the chart is pulled, for example `401 Unauthorized`. In both cases, copy the username and access token again from the cluster's install guide in the [Enterprise Portal](/enterprise/get-started/enterprise-portal). The token is visible only to the **developer** and **org-admin** portal roles.
+
+If you run without credentials, the installer warns:
+
+```text
+[falkordb-enterprise] WARNING: no image pull Secret: falkordb-registry-pull-secret not found in falkordb-system and no registry credentials given. Enterprise images will fail to pull unless the cluster can pull them another way.
+```
+
+Pods then stay in `ImagePullBackOff`. Confirm the cause in the pod's events:
+
+```bash
+kubectl get pods -n falkordb-system
+kubectl describe pod -n falkordb-system <pod> | grep -A5 Events
+```
+
+An `unauthorized` or `401` in the events means the pull Secret is missing, wrong or expired. Run the installer again with `--registry-username` and `--registry-password`, or point it at your own Secret with `--image-pull-secret`. See [Private registries](/enterprise/deployment/private-images#rotate-credentials).
+
+## The Admin Server volume stays Pending
+
+The Admin Server stores its database on a PersistentVolumeClaim. Without a default `StorageClass`, or with a class that can't provision a volume, the claim stays `Pending` and so does the Admin Server pod.
+
+```bash
+kubectl get pvc -n falkordb-system
+kubectl get storageclass
+```
+
+Mark a class as the default, or set the class for the Admin Server explicitly:
+
+```yaml
+adminServer:
+  persistence:
+    storageClassName: <storage-class>
+```
+
+The installer also reports what it detected about the default class. A line such as `No default or uniquely detectable CSI StorageClass found; disabling chart-managed VolumeSnapshotClass` doesn't stop the install, but it means volume-snapshot backups are unavailable until you set `volumeSnapshotClass.driver`. See [Storage](/enterprise/deployment/production#storage).
+
+## KubeBlocks doesn't become available
+
+```text
+[falkordb-enterprise] ERROR: KubeBlocks deployments did not become available within 15m
+```
+
+The installer prints the state of the KubeBlocks namespace before it stops. The usual causes are images that can't be pulled and nodes without room for the operator pods:
+
+```bash
+kubectl get pods -n kb-system
+kubectl get events -n kb-system --sort-by=.lastTimestamp | tail -20
+```
+
+The KubeBlocks release pulls its images from its upstream registries, not from `registry.falkordb.cloud`. Check that the cluster can reach the hosts in [Installer downloads](/enterprise/get-started/requirements#installer-downloads), or mirror the images as described in [Private registries](/enterprise/deployment/private-images).
+
+## The Helm release times out
+
+While Helm waits, the installer logs `Still waiting for FalkorDB Enterprise Helm release falkordb-enterprise` and prints the release's pods, claims, jobs and recent events. Read those events for the pod that isn't ready: a pending claim, an image pull error or a failed hook job.
+
+The default wait is `15m`. A slow cluster, for example one that provisions nodes on demand, may need more: pass `--timeout 30m`.
+
+## The Helm release is stuck
+
+An interrupted install or upgrade can leave the release in a pending state. Every later run then fails with Helm's error:
+
+```text
+Error: UPGRADE FAILED: another operation (install/upgrade/rollback) is in progress
+```
+
+<Steps>
+  <Step title="Make sure nothing is still running">
+    Check that no other installer, `helm` command or GitOps controller is working on the release.
+  </Step>
+  <Step title="Find the last good revision">
+    ```bash
+    helm status falkordb-enterprise -n falkordb-system
+    helm history falkordb-enterprise -n falkordb-system
+    ```
+
+    The status is `pending-install`, `pending-upgrade` or `pending-rollback`.
+  </Step>
+  <Step title="Release the lock">
+    For `pending-upgrade` or `pending-rollback`, roll back to the newest revision whose status is `deployed` or `superseded`:
+
+    ```bash
+    helm rollback falkordb-enterprise <revision> -n falkordb-system --wait --timeout 20m
+    ```
+
+    For `pending-install` on a first install, there is no earlier revision. Uninstall the release, then run the installer again:
+
+    ```bash
+    helm uninstall falkordb-enterprise -n falkordb-system
+    ```
+  </Step>
+  <Step title="Run the installer again">
+    Run the same installer command as before. It upgrades from the revision you rolled back to.
+  </Step>
+</Steps>
+
+<Warning>
+  Don't uninstall a release that has a `deployed` revision to clear a pending state. Uninstalling removes the Admin Server and its volume. Roll back instead. See [Rollback](/enterprise/upgrades/enterprise#rollback).
+</Warning>
+
+## Related pages
+
+<CardGroup cols={2}>
+  <Card title="Troubleshoot deployments" icon="stethoscope" href="/enterprise/troubleshooting/deployments">
+    Deployments stuck in updating, and pods that can't reach the API server.
+  </Card>
+  <Card title="Troubleshoot licensing" icon="key" href="/enterprise/troubleshooting/licensing">
+    Read-only mode, expired licenses and cluster binding errors.
+  </Card>
+</CardGroup>

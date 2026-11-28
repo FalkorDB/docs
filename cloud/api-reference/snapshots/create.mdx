@@ -1,0 +1,48 @@
+---
+title: "Create snapshot"
+sidebarTitle: "Create"
+api: "POST https://api.omnistrate.cloud/2022-09-01-00/resource-instance/snapshot"
+description: "Take a manual snapshot of a deployment instance."
+---
+
+Creates a manual snapshot of a deployment instance. Snapshotting is asynchronous: the call returns immediately and the snapshot progresses from `pending` to `completed`. Poll [Describe snapshot](/cloud/api-reference/snapshots/describe) to follow the `progress` field.
+
+## Authorization
+
+<ParamField header="Cookie" type="string" required>
+  Session cookie set by [Sign in](/cloud/api-reference/authentication/signin): `omnistrate_token=<jwt>`.
+</ParamField>
+
+## Query parameters
+
+<ParamField query="subscriptionId" type="string">
+  Subscription that owns the instance. Required when you belong to more than one subscription.
+</ParamField>
+
+## Body
+
+<ParamField body="instanceId" type="string" required>
+  ID of the deployment instance to snapshot.
+</ParamField>
+
+<ParamField body="targetRegion" type="string">
+  Region to store the snapshot in. Defaults to the instance region.
+</ParamField>
+
+```json Request
+{
+  "instanceId": "instance-abc123"
+}
+```
+
+## Response
+
+Returns `202 Accepted`.
+
+<ResponseField name="id" type="string">
+  ID of the orchestration that creates the snapshot.
+</ResponseField>
+
+## Errors
+
+See [Error](/cloud/api-reference/schemas#error) for the error response shape.

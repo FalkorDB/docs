@@ -1,0 +1,24 @@
+---
+title: "Change Impact Analysis in CI with Auryn"
+sidebarTitle: "Change impact in CI"
+description: "auryn impact answers what will this diff break without an agent — mapping changed lines to callers, endpoints, tests, and dependent services to gate a merge."
+---
+
+`auryn impact` answers "what will this diff break?" without an agent. It maps the changed lines to symbols and reports their callers, the endpoints they reach, the tests that cover them, and other services that depend on them. Use it to gate a merge:
+
+```bash
+auryn impact --staged                              # before you commit
+auryn impact --base main --head HEAD --json        # for a PR bot
+auryn impact --base main --fail-on cross-service   # fail the build
+```
+
+Pick what trips the gate with `--fail-on` (default `none`); when a gate trips, the command exits with status `2`:
+
+- `none` — never fails; report only.
+- `any` — fails when the change affects anything at all.
+- `cross-service` — fails only when the change reaches another service.
+- `endpoint` — fails only when the change reaches an API endpoint.
+
+<Note>
+  Impact is read from the graph, so ingest the repository first (`auryn ingest dir .`, or let your [refresh trigger](/auryn/keeping-it-fresh) keep it current) — changes in files that aren't indexed yet map to no symbols and won't show up in the report.
+</Note>

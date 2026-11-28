@@ -1,0 +1,199 @@
+---
+title: "Back up and restore the Admin Server database"
+sidebarTitle: "Admin Server backup"
+description: "Back up the Admin Server's SQLite database and license state, and restore them after data loss."
+icon: "box-archive"
+---
+
+The Admin Server keeps a small amount of state on its own persistent volume. This page covers what is on that volume, and how to back it up and restore it. Your FalkorDB deployments and their data are separate; back those up as described in [Backups & schedules](/enterprise/operations/backups).
+
+## What the volume holds
+
+The chart mounts the PersistentVolumeClaim `<release>-admin-server` at `/data` in the Admin Server pod. With the installer's defaults, that is `falkordb-enterprise-admin-server` in the `falkordb-system` namespace, an 8 GiB `ReadWriteOnce` volume.
+
+| File | Contents |
+| --- | --- |
+| `/data/admin.db` | SQLite database with the audit log and the records that make retried deployment requests idempotent. It runs in WAL mode, so `admin.db-wal` and `admin.db-shm` sit next to it. |
+| `/data/license-state.json` | The validated license state, including a license activated in the Admin UI, CLI or API. |
+
+Everything else the Admin Server manages lives in Kubernetes objects: deployments, backups, users (Secrets named `falkordb-user-*`), settings and RBAC configuration. A Kubernetes-level backup of the release namespace, or your GitOps repository, covers those.
+
+<Note>
+  The database path is set by `adminServer.env.databasePath` and the mount by `adminServer.persistence.mountPath`. The commands below use the defaults: release `falkordb-enterprise`, namespace `falkordb-system`, path `/data/admin.db`. Adjust them if you changed any of these.
+</Note>
+
+<Tip>
+  A license supplied through Helm (`adminServer.license.value` or `adminServer.license.existingSecret`) is applied again on every start, so it does not depend on `/data/license-state.json`. Supplying the license that way makes the license state the one thing on this volume you never need to restore.
+</Tip>
+
+## Back up with a volume snapshot
+
+If the volume's StorageClass is CSI-backed and the cluster has a `VolumeSnapshotClass` for its driver, snapshot the claim. SQLite in WAL mode recovers from a crash-consistent copy, so you can snapshot while the Admin Server runs.
+
+```bash
+kubectl apply -n falkordb-system -f - <<'EOF'
+apiVersion: snapshot.storage.k8s.io/v1
+kind: VolumeSnapshot
+metadata:
+  name: admin-server-backup
+spec:
+  volumeSnapshotClassName: <snapshot-class>
+  source:
+    persistentVolumeClaimName: falkordb-enterprise-admin-server
+EOF
+
+kubectl get volumesnapshot -n falkordb-system admin-server-backup
+```
+
+The snapshot is ready when `READYTOUSE` is `true`. List the classes with `kubectl get volumesnapshotclass`.
+
+## Back up with a database copy
+
+The Admin Server image has no `sqlite3` binary, but it does have Node.js and the SQLite library the server uses. Its online backup API copies a consistent database while the server keeps running.
+
+<Steps>
+  <Step title="Write a copy next to the database">
+    ```bash
+    kubectl exec -n falkordb-system deploy/falkordb-enterprise-admin-server -c admin-server -- \
+      node -e "require('better-sqlite3')('/data/admin.db', { fileMustExist: true })
+        .backup('/data/admin-backup.db').then(() => console.log('backup complete'))"
+    ```
+  </Step>
+  <Step title="Copy it and the license state out of the pod">
+    ```bash
+    POD=$(kubectl get pod -n falkordb-system \
+      -l app.kubernetes.io/instance=falkordb-enterprise,app.kubernetes.io/component=admin-server \
+      -o jsonpath='{.items[0].metadata.name}')
+
+    kubectl cp -n falkordb-system -c admin-server "$POD:/data/admin-backup.db" ./admin-backup.db
+    kubectl cp -n falkordb-system -c admin-server "$POD:/data/license-state.json" ./license-state.json
+    ```
+  </Step>
+  <Step title="Remove the copy from the volume">
+    ```bash
+    kubectl exec -n falkordb-system "$POD" -c admin-server -- rm /data/admin-backup.db
+    ```
+  </Step>
+</Steps>
+
+Store both files somewhere outside the cluster. The audit log can hold user email addresses and resource names, so treat the copy like any other audit record.
+
+## Restore from a volume snapshot
+
+Create a claim from the snapshot and point the chart at it with `adminServer.persistence.existingClaim`.
+
+```bash
+kubectl apply -n falkordb-system -f - <<'EOF'
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: admin-server-restored
+spec:
+  accessModes: ["ReadWriteOnce"]
+  storageClassName: <storage-class>
+  resources:
+    requests:
+      storage: 8Gi
+  dataSource:
+    apiGroup: snapshot.storage.k8s.io
+    kind: VolumeSnapshot
+    name: admin-server-backup
+EOF
+```
+
+Then set the claim in your values and run the installer or `helm upgrade` as usual:
+
+```yaml
+adminServer:
+  persistence:
+    existingClaim: admin-server-restored
+```
+
+The Admin Server restarts on the restored volume. The chart does not delete the original claim.
+
+## Restore from a database copy
+
+The database can't be replaced while the Admin Server has it open. Stop the Admin Server, copy the files in through a temporary pod that mounts the same volume, then start it again.
+
+<Steps>
+  <Step title="Stop the Admin Server">
+    ```bash
+    kubectl scale -n falkordb-system deploy/falkordb-enterprise-admin-server --replicas=0
+    kubectl get pod -n falkordb-system \
+      -l app.kubernetes.io/instance=falkordb-enterprise,app.kubernetes.io/component=admin-server
+    ```
+
+    Wait until the second command lists no pods, so the volume is released. The Admin UI and API are unavailable until you scale it back up. Your FalkorDB deployments keep serving traffic.
+  </Step>
+  <Step title="Start a temporary pod on the volume">
+    The pod uses the Admin Server image and pull Secrets, so it needs no other registry access, and the same non-root security context.
+
+    ```bash
+    IMAGE=$(kubectl get deploy -n falkordb-system falkordb-enterprise-admin-server \
+      -o jsonpath='{.spec.template.spec.containers[?(@.name=="admin-server")].image}')
+    PULL_SECRETS=$(kubectl get deploy -n falkordb-system falkordb-enterprise-admin-server \
+      -o jsonpath='{.spec.template.spec.imagePullSecrets}')
+
+    kubectl apply -n falkordb-system -f - <<EOF
+    apiVersion: v1
+    kind: Pod
+    metadata:
+      name: admin-server-restore
+    spec:
+      imagePullSecrets: ${PULL_SECRETS:-[]}
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: restore
+          image: ${IMAGE}
+          command: ["sleep", "3600"]
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
+          volumeMounts:
+            - name: data
+              mountPath: /data
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: falkordb-enterprise-admin-server
+    EOF
+
+    kubectl wait -n falkordb-system --for=condition=Ready pod/admin-server-restore --timeout=5m
+    ```
+  </Step>
+  <Step title="Replace the database">
+    Copy the backup in, then remove the WAL files that belong to the old database before moving the copy into place:
+
+    ```bash
+    kubectl cp -n falkordb-system ./admin-backup.db admin-server-restore:/data/admin-restore.db
+    kubectl exec -n falkordb-system admin-server-restore -- sh -c \
+      'rm -f /data/admin.db-wal /data/admin.db-shm && mv /data/admin-restore.db /data/admin.db'
+    ```
+
+    To restore the license state as well:
+
+    ```bash
+    kubectl cp -n falkordb-system ./license-state.json admin-server-restore:/data/license-state.json
+    ```
+  </Step>
+  <Step title="Remove the temporary pod and start the Admin Server">
+    ```bash
+    kubectl delete pod -n falkordb-system admin-server-restore
+    kubectl scale -n falkordb-system deploy/falkordb-enterprise-admin-server --replicas=1
+    kubectl rollout status -n falkordb-system deploy/falkordb-enterprise-admin-server
+    ```
+
+    On start, the Admin Server applies any database migrations the running version needs, so a copy taken by an earlier release is brought up to date.
+  </Step>
+</Steps>
+
+## Validate
+
+Sign in to the Admin UI and open **Audit Logs**. The newest entries should be the ones from before the backup, followed by your sign-in. Check **Licensing** for the expected license state.

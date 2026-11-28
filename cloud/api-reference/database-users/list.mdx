@@ -1,0 +1,59 @@
+---
+title: "List database users"
+sidebarTitle: "List"
+api: "GET https://api.falkordb.cloud/v1/customer-ldap/instances/{instanceId}/users"
+description: "List the database users configured on a deployment instance."
+---
+
+Returns every database user on the instance with its ACL.
+
+<Note>
+  This endpoint uses the FalkorDB API host and bearer token authentication. See [Database users overview](/cloud/api-reference/database-users/overview).
+</Note>
+
+## Authorization
+
+<ParamField header="Authorization" type="string" required>
+  `Bearer <jwt>`, using the token issued by [Sign in](/cloud/api-reference/authentication/signin).
+</ParamField>
+
+## Path parameters
+
+<ParamField path="instanceId" type="string" required>
+  ID of the deployment instance.
+</ParamField>
+
+## Query parameters
+
+<ParamField query="subscriptionId" type="string" required>
+  Subscription that owns the instance.
+</ParamField>
+
+## Response
+
+<ResponseField name="users" type="object[]">
+  The database users.
+
+  <Expandable title="properties">
+    <ResponseField name="username" type="string">
+      Username used to authenticate against the database.
+    </ResponseField>
+
+    <ResponseField name="acl" type="string">
+      ACL string granting key patterns and commands.
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+```json 200 OK
+{
+  "users": [
+    { "username": "falkordb", "acl": "~* +GRAPH.QUERY +GRAPH.RO_QUERY +INFO +PING" },
+    { "username": "analytics", "acl": "~* +GRAPH.RO_QUERY +GRAPH.EXPLAIN +INFO +PING" }
+  ]
+}
+```
+
+## Errors
+
+Returns `401 Unauthorized` when the bearer token is missing or expired.

@@ -1,0 +1,94 @@
+---
+title: "FalkorDB Cloud"
+description: "Provision and manage FalkorDB instances with the FalkorDB Cloud console or API"
+---
+
+FalkorDB Cloud is the managed service for FalkorDB, the ultra-low-latency graph database. Use the [FalkorDB Cloud console](https://app.falkordb.cloud) or the FalkorDB Cloud API to create instances, change their configuration, take backups, and manage their lifecycle.
+
+<Note>
+  The FalkorDB Cloud API is in beta. The endpoints and request/response shapes may change without notice. Contact [support@falkordb.com](mailto:support@falkordb.com) if you have questions or feedback.
+</Note>
+
+## Get started in the console
+
+<Steps>
+  <Step title="Sign up and subscribe">
+    Create an account and subscribe to a tier. See [Sign up and subscribe](/cloud/console/sign-up).
+  </Step>
+  <Step title="Add a payment method">
+    Paid tiers need one. The Free tier doesn't. See [Add a payment method](/cloud/console/billing).
+  </Step>
+  <Step title="Create an instance">
+    Choose a tier, cloud provider, and region. If your tier offers more than one deployment type, choose one too. See [Create an instance](/cloud/console/create-instance).
+  </Step>
+  <Step title="Connect">
+    For a public instance, copy the endpoint or open FalkorDB Browser with one click. For a private instance, connect from inside your peered network. See [Connect to your instance](/cloud/console/connect).
+  </Step>
+</Steps>
+
+<CardGroup cols={2}>
+  <Card title="Create an instance" icon="rocket" href="/cloud/console/create-instance">
+    Create your first instance from the console.
+  </Card>
+  <Card title="API quickstart" icon="terminal" href="/cloud/quickstart">
+    Sign in, create an instance, and connect to it with the API.
+  </Card>
+  <Card title="API reference" icon="code" href="/cloud/api-reference/introduction">
+    Every endpoint, grouped by service tier and deployment component.
+  </Card>
+  <Card title="Dashboard" icon="grid-2" href="https://app.falkordb.cloud">
+    Manage the same resources from the FalkorDB Cloud console.
+  </Card>
+  <Card title="Support" icon="life-ring" href="mailto:support@falkordb.com">
+    Get help from the FalkorDB team.
+  </Card>
+</CardGroup>
+
+## Service tiers
+
+| Tier | Tenancy | Hosting | Guide |
+| --- | --- | --- | --- |
+| Free | Multi-tenant | FalkorDB-hosted | [Free Tier](/cloud/tiers/free) · [Demo](https://www.youtube.com/watch?v=z0XO4pb2t5Y) |
+| Startup | Multi-tenant | FalkorDB-hosted | [Startup Tier](/cloud/tiers/startup) · [Demo](https://www.youtube.com/watch?v=xjpLPoQgo2s) |
+| Pro | Dedicated | FalkorDB-hosted | [Pro Tier](/cloud/tiers/pro) · [Demo](https://youtu.be/UIzrW9otvYM) |
+| Enterprise | Dedicated | FalkorDB-hosted, optionally in a private [customer network](/cloud/operations/customer-networks) | [Enterprise Tier](/cloud/tiers/enterprise) · [Demo](https://youtu.be/fu_8CLFKYSs) |
+| Enterprise BYOA | Dedicated | Your own AWS account | [Enterprise Tier](/cloud/tiers/enterprise) |
+
+Every tier includes multi-graph tenancy and graph access control. TLS and automated backups start at Startup. High availability and continuous persistence start at Pro. Clustering, private customer networks, and dedicated support are Enterprise features. See [Features](/cloud/features) for the full breakdown.
+
+## Deployment components
+
+Each tier exposes the deployment components it supports:
+
+- **Standalone** — a single node.
+- **Single-Zone** (Pro, Enterprise, and Enterprise BYOA) — a primary with replicas in one availability zone.
+- **Multi-Zone** (Pro, Enterprise, and Enterprise BYOA) — a primary with replicas spread across availability zones.
+- **Cluster (Single-Zone)** and **Cluster (Multi-Zone)** (Enterprise and Enterprise BYOA) — sharded deployments for larger graphs.
+
+Free and Startup instances are Standalone.
+
+## Set up billing
+
+Paid tiers need a payment method before their instances can run. Add one from **Account Management** > **Payment Settings** in the console. See [Add a payment method](/cloud/console/billing).
+
+The Free tier doesn't need billing information.
+
+## Frequently asked questions
+
+<AccordionGroup>
+  <Accordion title="What cloud providers does FalkorDB support?">
+    FalkorDB Cloud is available on **AWS** and **GCP** for the Free, Startup, and Pro tiers. The Enterprise tier adds **Azure**. Enterprise BYOA (bring your own account) runs in your own **AWS** account.
+  </Accordion>
+  <Accordion title="Can I upgrade my plan later?">
+    Yes. On Startup, Pro, and Enterprise you can change an instance's size in place. To move to another tier or deployment type, create a new instance and import your data from the old one. See [Upgrading instances](/cloud/operations/upgrading-instances).
+  </Accordion>
+  <Accordion title="Do I need to set up billing before subscribing?">
+    No. You can subscribe first, but paid tiers need a payment method before their instances can run. See [Add a payment method](/cloud/console/billing). The Free tier doesn't need one.
+  </Accordion>
+  <Accordion title="What features are available across all tiers?">
+    Every tier includes **multi-graph tenancy** and **graph access control**. TLS and automated backups start at Startup, high availability starts at Pro, and clustering, private networking, and dedicated support are Enterprise features.
+  </Accordion>
+  <Accordion title="Is there a free trial available?">
+    Yes. The **Free tier** gives you a fully functional graph database instance with 100 MB of RAM on AWS or GCP, with no credit card required.
+  </Accordion>
+</AccordionGroup>

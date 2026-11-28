@@ -1,0 +1,32 @@
+---
+title: "Delete subscription"
+sidebarTitle: "Delete"
+api: "DELETE https://api.omnistrate.cloud/2022-09-01-00/subscription/{id}"
+description: "Cancel a subscription."
+---
+
+Cancels a subscription. Delete every deployment instance in the subscription first, otherwise the request fails.
+
+<Warning>
+  Cancelling a subscription is irreversible. You must create a new subscription to use the plan again.
+</Warning>
+
+## Authorization
+
+<ParamField header="Cookie" type="string" required>
+  Session cookie set by [Sign in](/cloud/api-reference/authentication/signin): `omnistrate_token=<jwt>`.
+</ParamField>
+
+## Path parameters
+
+<ParamField path="id" type="string" required>
+  The subscription ID, for example `sub-abc123`.
+</ParamField>
+
+## Response
+
+Returns `200 OK` with an empty body.
+
+## Errors
+
+See [Error](/cloud/api-reference/schemas#error) for the error response shape.

@@ -1,0 +1,120 @@
+---
+title: "FalkorDB MCP Server Configuration Reference"
+sidebarTitle: "Configuration"
+description: "Configure FalkorDB MCP Server environment variables, transport modes (stdio/SSE), connection settings, and multi-instance deployments."
+---
+
+## Environment Variables
+
+```bash
+# FalkorDB Configuration
+FALKORDB_HOST=localhost
+FALKORDB_PORT=6379
+FALKORDB_USERNAME=          # Optional
+FALKORDB_PASSWORD=          # Optional
+FALKORDB_DEFAULT_READONLY=false  # Set to 'true' for read-only mode
+FALKORDB_STRICT_READONLY=false   # Set to 'true' to block all writes
+
+# Transport Mode
+MCP_TRANSPORT=stdio         # 'stdio' (default) or 'http'
+MCP_PORT=3000              # Port for HTTP transport
+MCP_API_KEY=               # Optional API key for HTTP transport
+
+# Logging (optional)
+ENABLE_FILE_LOGGING=false
+```
+
+## Transport Modes
+
+### stdio (default)
+Used for direct integration with AI clients like Claude Desktop. Communication happens via standard input/output.
+
+```bash
+MCP_TRANSPORT=stdio
+```
+
+### HTTP
+Exposes the MCP server over HTTP for remote or networked access:
+
+```bash
+MCP_TRANSPORT=http
+MCP_PORT=3000
+MCP_API_KEY=your-secret-api-key  # Optional but recommended
+```
+
+When using HTTP transport, clients connect via the MCP Streamable HTTP protocol. API key authentication is enforced via the `Authorization: Bearer <key>` header when `MCP_API_KEY` is set.
+
+## Read-Only Mode for Replica Instances
+
+Make queries read-only by default:
+
+```bash
+FALKORDB_DEFAULT_READONLY=true
+```
+
+<Warning>
+`FALKORDB_DEFAULT_READONLY` only sets the default. An agent can still write by passing `readOnly: false` to the `query_graph` tool. To block every write, also set `FALKORDB_STRICT_READONLY=true`.
+</Warning>
+
+**Use cases:**
+- **Replica instances**: Prevent writes to read replicas in replication setups
+- **Production safety**: Ensure critical data isn't accidentally modified. Use [strict mode](#strict-read-only-mode) so an agent can't override it.
+- **Reporting/analytics**: Run queries for dashboards without risk of data changes
+- **Multi-tenant environments**: Provide read-only access to certain users. Strict mode applies to every client of a server, so give those users their own MCP server with [strict mode](#strict-read-only-mode) on.
+
+### Strict read-only mode
+
+```bash
+FALKORDB_DEFAULT_READONLY=true
+FALKORDB_STRICT_READONLY=true
+```
+
+With strict mode on, `query_graph` runs read-only queries only. It rejects a call if `readOnly` is `false`, or if `readOnly` is left out and `FALKORDB_DEFAULT_READONLY` is not `true`. It also rejects `delete_graph`. Use strict mode when you give an agent access to data it must not change.
+
+## Running Multiple Instances
+
+You can configure multiple MCP servers for different FalkorDB instances:
+
+```json
+{
+  "mcpServers": {
+    "falkordb-dev": {
+      "command": "npx",
+      "args": ["-y", "@falkordb/mcpserver@latest"],
+      "env": {
+        "FALKORDB_HOST": "dev.falkordb.local",
+        "FALKORDB_DEFAULT_READONLY": "false"
+      }
+    },
+    "falkordb-prod-replica": {
+      "command": "npx",
+      "args": ["-y", "@falkordb/mcpserver@latest"],
+      "env": {
+        "FALKORDB_HOST": "replica.falkordb.com",
+        "FALKORDB_DEFAULT_READONLY": "true",
+        "FALKORDB_STRICT_READONLY": "true"
+      }
+    }
+  }
+}
+```
+
+## Frequently Asked Questions
+
+<AccordionGroup>
+  <Accordion title="What environment variables are required?">
+    Only `FALKORDB_HOST` and `FALKORDB_PORT` are required (defaulting to `localhost` and `6379`). Username, password, transport mode, and logging are all optional configuration options.
+  </Accordion>
+  <Accordion title="What is the difference between stdio and HTTP transport?">
+    **stdio** is the default mode for direct integration with AI clients like Claude Desktop, communicating via standard input/output. **HTTP** exposes the server over a network port for remote access, supporting API key authentication via Bearer tokens.
+  </Accordion>
+  <Accordion title="How do I secure the HTTP transport mode?">
+    Set `MCP_API_KEY` to a secret value. When configured, clients must include an `Authorization: Bearer <key>` header in their requests. This is optional but recommended for any network-exposed deployment.
+  </Accordion>
+  <Accordion title="Can I connect to multiple FalkorDB instances?">
+    Yes. Configure multiple MCP server entries in your client config, each with different `FALKORDB_HOST` values and settings. For example, have a `falkordb-dev` instance with writes enabled and a `falkordb-prod-replica` in read-only mode.
+  </Accordion>
+  <Accordion title="When should I use read-only mode?">
+    Use it for replica instances, production environments, reporting dashboards, and users who should only read. `FALKORDB_DEFAULT_READONLY=true` only sets the default, and an agent can override it per call. When writes must be blocked, also set `FALKORDB_STRICT_READONLY=true`. Strict mode applies to the whole server, so give read-only users their own MCP server.
+  </Accordion>
+</AccordionGroup>

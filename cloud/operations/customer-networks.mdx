@@ -1,0 +1,70 @@
+---
+title: "Customer networks"
+description: "Create a customer network in FalkorDB Cloud to run Enterprise instances on a private network, and request network peering to reach them from your own cloud network."
+---
+
+A customer network is a dedicated private network that FalkorDB Cloud creates for your instances: a VPC on AWS and GCP, or a VNet on Azure. Instances in it have no public endpoint. Your applications reach them over network peering (VPC peering, or VNet peering on Azure) from your own cloud network.
+
+<Note>
+  Customer networks are available on the **Enterprise** tier. The **Customer Networks** page appears in the sidebar only when you have an Enterprise subscription.
+</Note>
+
+## Create a customer network
+
+1. In the sidebar, open **Deployments** > **Customer Networks**.
+2. Select **Create**.
+3. Fill in the form:
+   - **Name**: a name to help you find the network.
+   - **Cloud Provider**: the provider your instances will run on.
+   - **Region**: the region your instances will run in. It must match the region you choose for the instance.
+   - **CIDR**: the private IP range for the network. It must be a `/20` block or larger, for example `10.0.0.0/20` or `10.0.0.0/16`. Smaller blocks, such as `/24`, aren't supported.
+   - **Create for a shared subscription**: turn this on only to create the network for a subscription someone else shared with you. The subscription owner can then see and use it.
+4. Check the **Customer Network Summary** and select **Create**.
+
+<Frame>
+  ![The Create Customer Network form with Name, Cloud Provider, Region, and CIDR filled in, next to the Customer Network Summary](/cloud/images/console/create-customer-network.png)
+</Frame>
+
+<Warning>
+  Choose a CIDR range that doesn't overlap with the networks you plan to peer with. Overlapping ranges can't be peered. You can't change the CIDR after you create the network.
+</Warning>
+
+The network takes a few minutes to set up. Wait until its **Status** is `READY` before you use it for an instance or request peering. After you create it, you can change only the network's **Name**.
+
+## Use the network for an instance
+
+When you [create an instance](/cloud/console/create-instance):
+
+1. In **Network Configuration**, set **Network Type** to **Private**.
+2. Under **Customer Network ID**, choose your network. The list shows only networks in the cloud provider and region you selected.
+
+<Frame>
+  ![The Create Deployment Instance form for an Enterprise plan with Network Type set to Private and a customer network selected; the summary shows Network Type INTERNAL](/cloud/images/console/create-instance-private-network.png)
+</Frame>
+
+The **Deployment Instance Summary** shows the network type as **INTERNAL**. If you don't have a network yet, select **Click here** under the field to create one.
+
+## Set up network peering
+
+Peering is set up with the FalkorDB team through a support ticket.
+
+1. Open a ticket by emailing [support@falkordb.com](mailto:support@falkordb.com), or ask your account manager. Include:
+   - The **Network ID** of your customer network, from the **Customer Networks** page.
+   - Your cloud provider and region.
+   - The account, project, or subscription ID and the VPC or VNet you want to peer with.
+   - Its CIDR range.
+2. The FalkorDB team creates the peering connection and replies with the details.
+3. In your cloud provider's console, accept or approve the peering request as your provider requires.
+4. Add routes for the customer network's CIDR to your route tables, and allow traffic to the instance port shown on the **Connectivity** tab in your security groups or firewall rules.
+
+## Connect to a private instance
+
+Instances in a customer network show **Private** on the **Connectivity** tab. Connect to the endpoint from a machine inside your peered network. See [Connect to your instance](/cloud/console/connect).
+
+The **Connect** button for FalkorDB Browser is turned off for private instances, because the browser can't reach them.
+
+## Delete a customer network
+
+Delete the instances that use the network first. Then select the network, choose **Delete**, and type `deleteme` to confirm.
+
+To manage networks with the API, see [Custom networks](/cloud/api-reference/networking/list).

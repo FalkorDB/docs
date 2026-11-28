@@ -1,0 +1,116 @@
+---
+title: "Move FalkorDB deployments to a newer addon release"
+sidebarTitle: "Upgrade the addon"
+description: "Bring each deployment to the FalkorDB addon release that a chart upgrade installed."
+icon: "puzzle-piece"
+---
+
+Each FalkorDB Enterprise release ships one release of the FalkorDB addon, which
+defines how KubeBlocks runs FalkorDB pods. The addon release a deployment runs
+on is its `spec.componentDefinition`, for example `falkordb-4-1.7.11`.
+
+[Upgrading FalkorDB Enterprise](/enterprise/upgrades/enterprise) installs the new addon
+release, but doesn't restart any deployment. Afterwards, the Admin Server
+queues a patch release move (such as `1.7.15` to `1.7.16`) of each deployment
+that has a [maintenance window](/enterprise/operations/maintenance-windows) for that
+window (see
+[Deployments move to the new addon](/enterprise/upgrades/enterprise#deployments-move-to-the-new-addon)).
+Move a deployment yourself, as this page describes, when:
+
+- The new release is a new minor or major release, such as `1.7.15` to
+  `1.8.3`. Those moves are yours to schedule.
+- It has no maintenance window.
+- You want it moved before its window. You can also run its queued move now
+  from the **Maintenance** tab.
+
+Until it moves, a deployment stays on the release it runs. The older release
+stays installed, so nothing breaks in the meantime. A deployment only gets what
+a newer addon brings once it runs on it. For example, emptying a setting needs
+addon 1.7.11 or later.
+
+<Tip>
+  Moving a deployment with a maintenance window outside it queues the move for
+  the window. Add `--now` to the CLI command, or `maintenance=override` to the
+  API request, to move it right away.
+</Tip>
+
+## Before you start
+
+- Take a backup, and confirm it restores. See [Backups](/enterprise/operations/backups).
+- Check which addon releases you're moving between. A move goes straight to
+  the new release: nothing an addon release in between would have done runs.
+  CI tests that jump from the addon release of every supported earlier
+  Enterprise release to the newest one, so a deployment doesn't need to visit
+  the releases in between. [Tested upgrade paths](/enterprise/reference/compatibility#tested-upgrade-paths)
+  lists the starting points, and any release that must not be skipped.
+- The deployment must not be in a `Failed` state.
+
+See which release a deployment runs:
+
+```bash
+curl -s -b cookies.txt \
+  "http://localhost:3000/api/clusters/<name>?namespace=<namespace>&schemaVersion=1" |
+  jq -r '.spec.componentDefinition'
+```
+
+See which releases are installed:
+
+```bash
+kubectl get componentdefinitions.apps.kubeblocks.io | grep '^falkordb-4-'
+```
+
+## Move a deployment
+
+<Tabs>
+  <Tab title="Admin UI">
+    1. Open **Deployments**, then the deployment.
+    2. Select **Upgrade**.
+    3. Choose the addon component definition. The newest installed one is
+       selected.
+    4. Select **Confirm Upgrade**.
+  </Tab>
+  <Tab title="CLI">
+    ```bash
+    falkordb-admin deployments upgrade <name> \
+      --namespace <namespace> \
+      --component-definition falkordb-4-1.7.11
+    ```
+  </Tab>
+  <Tab title="API">
+    Send `falkordb-4` alone for the newest installed release. The Admin Server
+    replaces it with that release's full name.
+
+    ```bash
+    curl -s -b cookies.txt -X PATCH \
+      "http://localhost:3000/api/clusters/<name>?namespace=<namespace>" \
+      -H 'Content-Type: application/merge-patch+json' \
+      -H 'If-Match: "<metadata.generation>"' \
+      -d '{ "schemaVersion": 1, "spec": { "componentDefinition": "falkordb-4" } }'
+    ```
+  </Tab>
+</Tabs>
+
+Every component moves: the data nodes, the Sentinels of a replicated
+deployment, and every shard of a sharded one. On a replicated deployment
+moving to addon `1.8.3` or later, the data nodes move first, and the Sentinels
+follow once every data node runs on the new release. Data nodes on an addon
+release before `1.8.3` only find their Sentinels' password while the Sentinels
+run that same release, so moving the Sentinels first could leave a replica
+unable to start. Each half restarts its own pods; the deployment reads as
+being on the new release from the start.
+
+## Validate
+
+The deployment is back to `Running` once every component runs on the new
+release. On a replicated deployment, the Sentinels keep their previous
+definition until the data nodes have moved, usually for a few minutes. Check
+each component's definition:
+
+```bash
+kubectl get components.apps.kubeblocks.io -n <namespace> \
+  -l app.kubernetes.io/instance=<name> \
+  -o custom-columns=NAME:.metadata.name,DEFINITION:.spec.compDef,PHASE:.status.phase
+```
+
+Then confirm your data is intact, as you would after a
+[FalkorDB version upgrade](/enterprise/upgrades/falkordb-version).

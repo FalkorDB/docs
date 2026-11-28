@@ -1,0 +1,230 @@
+---
+title: "Schemas"
+description: "Shared request and response shapes used across the FalkorDB Cloud API."
+---
+
+Every endpoint page documents its own request and response fields. This page collects the shapes that are shared across endpoints.
+
+## Common parameters
+
+<ParamField header="Cookie" type="string" required>
+  Session cookie set by [Sign in](/cloud/api-reference/authentication/signin): `omnistrate_token=<jwt>`.
+</ParamField>
+
+<ParamField path="id" type="string" required>
+  ID of the resource instance. Present on every endpoint that targets a single instance.
+</ParamField>
+
+<ParamField query="subscriptionId" type="string">
+  ID of the subscription that owns the instance. Optional on every endpoint.
+</ParamField>
+
+## List response
+
+<ResponseField name="ids" type="string[]">
+  IDs of the resource instances.
+</ResponseField>
+
+```json 200 OK
+{
+  "ids": ["instance-abc123", "instance-def456"]
+}
+```
+
+## Create response
+
+<ResponseField name="id" type="string">
+  ID of the created resource instance.
+</ResponseField>
+
+```json 202 Accepted
+{
+  "id": "instance-abc123"
+}
+```
+
+## Describe response
+
+<ResponseField name="id" type="string">
+  ID of the resource instance.
+</ResponseField>
+
+<ResponseField name="status" type="string">
+  Lifecycle status of the instance, for example `RUNNING` or `STOPPED`.
+</ResponseField>
+
+<ResponseField name="cloud_provider" type="string">
+  Cloud provider the instance runs on.
+</ResponseField>
+
+<ResponseField name="region" type="string">
+  Region the instance runs in.
+</ResponseField>
+
+<ResponseField name="network_type" type="string">
+  Network type of the instance.
+</ResponseField>
+
+<ResponseField name="custom_network" type="string">
+  Custom network the instance is provisioned in. Returned only by Enterprise endpoints.
+</ResponseField>
+
+<ResponseField name="created_at" type="string">
+  Time the instance was created.
+</ResponseField>
+
+<ResponseField name="last_modified" type="string">
+  Time the instance was last modified.
+</ResponseField>
+
+<ResponseField name="result_params" type="object">
+  Deployment outputs, including connection endpoints and credentials.
+</ResponseField>
+
+```json 200 OK
+{
+  "id": "instance-abc123",
+  "status": "RUNNING",
+  "cloud_provider": "aws",
+  "region": "us-east-1",
+  "network_type": "PUBLIC",
+  "created_at": "2026-01-15T10:30:00Z",
+  "last_modified": "2026-01-20T08:12:00Z",
+  "result_params": {
+    "falkordbHostname": "abc123.instances.omnistrate.cloud",
+    "falkordbPort": 6379
+  }
+}
+```
+
+## Copy snapshot
+
+<ParamField body="target_region" type="string" required>
+  Region to copy the snapshot to.
+</ParamField>
+
+<ParamField body="source_snapshot_id" type="string">
+  ID of the snapshot to copy from.
+</ParamField>
+
+<ResponseField name="snapshot_id" type="string">
+  ID of the snapshot that was created.
+</ResponseField>
+
+## Failover
+
+<ParamField body="failed_replica_id" type="string" required>
+  ID of the failed replica to fail over from.
+</ParamField>
+
+<ParamField body="failed_replica_action" type="string" required>
+  Action to take on the failed replica.
+</ParamField>
+
+## Lifecycle operations
+
+`DELETE`, `UPDATE`, `BACKUP`, `FAILOVER`, `START`, `STOP`, and `RESTART` return `202 Accepted` with an empty body. The operation runs asynchronously; poll the Describe endpoint until `status` reflects the new state.
+
+## Instance configuration
+
+Create and update requests wrap instance settings in a `requestParams` object. The available settings depend on the service tier and component. Each create and update page has a **Sizing and tier availability** section listing the instance types and the fields that tier supports.
+
+Fields marked **Create only** are fixed once the instance is deployed and are rejected by [Update instance](/cloud/api-reference/enterprise/standalone/update). The remaining fields can be changed at any time.
+
+| Field | Type | Allowed values | Default | Modifiable |
+| --- | --- | --- | --- | --- |
+| `name` | string | Any string | `FalkorDB Instance` | Yes |
+| `description` | string | Any string | `Description` | Yes |
+| `nodeInstanceType` | string | A compute instance type offered by the tier. The Pro tier restricts the list; see the create page for each component | Tier specific | Yes |
+| `numReplicas` | number | `2` | `2` | Create only |
+| `maxMemory` | string | Memory size string, for example `6GB`. Do not exceed the instance type memory | `6GB` | Yes |
+| `memoryRequestsAndLimits` | string | `1200M` (1 GB) or `2200M` (2 GB) | `1GB` | Create only |
+| `falkordbUser` | string | Letters, digits, and underscores | `falkordb` | Create only |
+| `falkordbPassword` | string | Any password | — | Yes, restarts the instance |
+| `enableTLS` | boolean | `true`, `false` | `false` | Create only |
+| `enableEnterpriseModule` | boolean | `true`, `false` | `false` | Create only |
+| `AOFPersistenceConfig` | string | `everysec`, `always` | `everysec` | Create only |
+| `RDBPersistenceConfig` | string | `low`, `medium`, `high` | `low` | Create only |
+| `falkorDBCacheSize` | number | `1`–`256` | `25` | Create only |
+| `falkorDBMaxQueuedQueries` | number | `1`–`512` | `50` | Create only |
+| `falkorDBNodeCreationBuffer` | number | `256`–`32768` | `16384` | Create only |
+| `falkorDBQueryMemCapacity` | number | `5242880`–`21474836480` bytes | `21474836480` | Create only |
+| `falkorDBResultSetSize` | number | `0`–`1000000`, `0` means unlimited | `10000` | Create only |
+| `falkorDBTimeoutDefault` | number | `0`–`45000` ms, `0` disables the timeout | `0` | Create only |
+| `falkorDBTimeoutMax` | number | `0`–`45000` ms, `0` disables the limit | `0` | Create only |
+
+### FalkorDB configuration parameters
+
+The `falkorDB*` fields set FalkorDB configuration parameters on the deployed instance. See the [FalkorDB configuration reference](/getting-started/configuration.html) for the full behavior of each parameter.
+
+| Field | FalkorDB parameter |
+| --- | --- |
+| `falkorDBCacheSize` | [`CACHE_SIZE`](/getting-started/configuration.html#cache_size) |
+| `falkorDBMaxQueuedQueries` | [`MAX_QUEUED_QUERIES`](/getting-started/configuration.html#max_queued_queries) |
+| `falkorDBNodeCreationBuffer` | [`NODE_CREATION_BUFFER`](/getting-started/configuration.html#node_creation_buffer) |
+| `falkorDBQueryMemCapacity` | [`QUERY_MEM_CAPACITY`](/getting-started/configuration.html#query_mem_capacity) |
+| `falkorDBResultSetSize` | [`RESULTSET_SIZE`](/getting-started/configuration.html#resultset_size) |
+| `falkorDBTimeoutDefault` | [`TIMEOUT_DEFAULT`](/getting-started/configuration.html#timeout_default) |
+| `falkorDBTimeoutMax` | [`TIMEOUT_MAX`](/getting-started/configuration.html#timeout_max) |
+
+### Availability by tier
+
+| Field | Enterprise BYOA | Enterprise | Pro | Startup | Free |
+| --- | --- | --- | --- | --- | --- |
+| `name`, `description`, `falkordbUser`, `falkordbPassword` | Yes | Yes | Yes | Yes | Yes |
+| `nodeInstanceType` | Yes | Yes | Yes | No | No |
+| `enableTLS` | Yes | Yes | Yes | Yes | No |
+| `enableEnterpriseModule` | Yes | Yes | No | No | No |
+| `maxMemory` | Yes | Yes | No | No | No |
+| `memoryRequestsAndLimits` | No | No | No | Yes | No |
+| `numReplicas` | Single-Zone and Multi-Zone | Single-Zone and Multi-Zone | Single-Zone and Multi-Zone | No | No |
+| Persistence and `falkorDB*` tuning fields | Yes | Yes | Yes | Yes | No |
+
+Deployment-model fields are sent at the top level of the request body rather than inside `requestParams`:
+
+| Field | Tiers | Description |
+| --- | --- | --- |
+| `cloud_provider` | All | Cloud provider to provision the instance on. |
+| `region` | All | Region to provision the instance in. |
+| `custom_network_id` | Enterprise | Custom network to provision the instance in. |
+
+Enterprise BYOA adds two fields inside `requestParams`: `cloud_provider_account_config_id`, the cloud provider account configuration to deploy into, and `cloud_provider_native_network_id`, an existing network in your account to attach to.
+
+## Error
+
+Error responses use the `application/vnd.goa.error` content type.
+
+<ResponseField name="name" type="string" required>
+  Name of this class of errors, for example `bad_request`.
+</ResponseField>
+
+<ResponseField name="id" type="string" required>
+  Unique identifier for this particular occurrence of the problem.
+</ResponseField>
+
+<ResponseField name="message" type="string" required>
+  Human-readable explanation specific to this occurrence of the problem.
+</ResponseField>
+
+<ResponseField name="temporary" type="boolean" required>
+  Whether the error is temporary and the request can be retried.
+</ResponseField>
+
+<ResponseField name="timeout" type="boolean" required>
+  Whether the error was caused by a timeout.
+</ResponseField>
+
+<ResponseField name="fault" type="boolean" required>
+  Whether the error is a server-side fault.
+</ResponseField>
+
+```json 400 Bad Request
+{
+  "name": "bad_request",
+  "id": "3F1FKVRR",
+  "message": "parameter 'p' must be an integer",
+  "temporary": false,
+  "timeout": false,
+  "fault": false
+}
+```
